@@ -1,0 +1,32 @@
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+private.*
+
+# Dependencies and generated output
+**/node_modules/
+**/.git/
+**/.nuxt/
+**/.output/
+**/.nitro/
+**/.data/
+**/.cache/
+**/target/
+**/dist/
+**/unpackage/
+**/.hbuilderx/
+**/.playwright-cli/
+**/.vitepress/cache/
+*.log
+
+# Local tooling
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

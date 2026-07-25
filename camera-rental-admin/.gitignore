@@ -9,3 +9,8 @@ auto-*.d.ts
 .history
 output/
 .playwright-cli/
+
+# Local Vite env (keep *.example tracked)
+.env
+.env.*
+!.env.*.example

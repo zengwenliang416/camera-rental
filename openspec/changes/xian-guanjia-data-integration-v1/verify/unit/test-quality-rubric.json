@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "drives_shipped_code": true,
+    "covers_edges": true,
+    "no_hardcoded_oracles_for_secrets": true,
+    "no_reimplementation": true
+  },
+  "findings": []
+}

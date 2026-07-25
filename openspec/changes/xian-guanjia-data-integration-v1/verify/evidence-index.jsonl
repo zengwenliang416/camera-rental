@@ -1,0 +1,11 @@
+{"id": "ev-1", "kind": "command-summary", "domain": "unit", "path": "verify/command-results.md", "status": "pass"}
+{"id": "ev-2", "kind": "report", "domain": "unit", "path": "verify/unit/report.md", "status": "pass"}
+{"id": "ev-3", "kind": "report", "domain": "static", "path": "verify/static/report.md", "status": "pass"}
+{"id": "ev-4", "kind": "report", "domain": "facticity", "path": "verify/facticity/report.md", "status": "pass"}
+{"id": "ev-5", "kind": "report", "domain": "redteam", "path": "verify/redteam/report.md", "status": "blocked"}
+{"id": "ev-6", "kind": "report", "domain": "e2e", "path": "verify/e2e/report.md", "status": "pass"}
+{"id": "ev-7", "kind": "report", "domain": "sensory", "path": "verify/sensory/report.md", "status": "pass"}
+{"id": "ev-8", "kind": "runtime-evidence", "domain": "facticity", "path": "verify/runtime-evidence.json", "status": "pass"}
+{"id": "ev-9", "kind": "focused-regression", "domain": "redteam", "path": "verify/command-results.md#replayraw-tenant-pre-check-hardening", "status": "partial"}
+{"id": "ev-10", "kind": "focused-regression", "domain": "redteam", "path": "verify/command-results.md#tenant-sensitive-id-entrypoint-hardening", "status": "partial"}
+{"id": "ev-11", "kind": "focused-regression", "domain": "redteam", "path": "verify/command-results.md#framework-tenant-security-filter-regression", "status": "partial"}

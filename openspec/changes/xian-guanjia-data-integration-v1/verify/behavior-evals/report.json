@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "status": "green",
+  "scenarios": [
+    "be-config-redaction",
+    "be-order-cursor",
+    "be-conversion",
+    "be-assignment-conflict",
+    "be-assignment-idempotency"
+  ],
+  "unresolved_blockers": []
+}

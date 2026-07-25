@@ -1,0 +1,8 @@
+{
+  "id": "be-assignment-idempotency",
+  "status": "pass",
+  "prompt": "Does assignment replay safely?",
+  "expected": [
+    "same assignment ids on replay"
+  ]
+}

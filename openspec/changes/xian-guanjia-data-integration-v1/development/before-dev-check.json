@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "active_change": "xian-guanjia-data-integration-v1",
+  "status": "passed",
+  "ok": true,
+  "checked_at": "2026-07-23T09:59:45.744Z",
+  "checks": [
+    "requirements contract is valid",
+    "data-flow prototype verifier is green",
+    "user approved the data-flow prototype",
+    "scope lock binds the approved data-flow-map.md source",
+    "first vertical slice defines server module, configuration, and migration boundaries"
+  ]
+}

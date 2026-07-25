@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "domain": "facticity",
+  "verdict": "blocked",
+  "required": true,
+  "evidence": [
+    "verify/facticity/report.md",
+    "development/handoff-to-verify.md",
+    "verify/command-results.md",
+    "verify/runtime-evidence.json"
+  ],
+  "commands": [
+    "migration SHA-256 and manifest contract checks",
+    "disposable mysql:8.4 base import, migrations 001-016, checksum rerun, schema/index queries, and webhook dedupe probe"
+  ],
+  "findings": [
+    "Migration source consistency and MySQL 8.4 execution are proven; authenticated runtime behavior and real allocation concurrency are not."
+  ],
+  "required_fixes": [
+    "Record authenticated backend read-only API smoke results with explicit tenant configuration.",
+    "Record real concurrent device allocation and production-sized query-plan evidence."
+  ],
+  "residual_risk": [
+    "Runtime wiring, authenticated permissions, real allocation concurrency, and production-scale query plans remain unproven."
+  ],
+  "blocker_class": "insufficient-evidence"
+}

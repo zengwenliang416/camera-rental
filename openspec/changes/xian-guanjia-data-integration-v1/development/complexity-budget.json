@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "component cohesion",
+      "limit": "one user-facing responsibility per shared component"
+    },
+    {
+      "area": "coupling",
+      "limit": "no page-specific imports inside shared components"
+    },
+    {
+      "area": "integration boundary",
+      "limit": "only integration/xianyu clients construct signed third-party HTTP requests"
+    },
+    {
+      "area": "transaction boundary",
+      "limit": "one service transaction owns device assignment, schedule creation, and idempotency persistence"
+    }
+  ]
+}

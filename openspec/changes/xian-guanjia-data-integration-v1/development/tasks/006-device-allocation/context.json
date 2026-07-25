@@ -1,0 +1,47 @@
+{
+  "task_id": "006-device-allocation",
+  "goal": "Equipment operator can assign a physical device without occupied schedule conflicts.",
+  "must_read": [
+    "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/006-device-allocation/brief.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/requirements.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/acceptance.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/handoff.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/spec-map.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/component-impact-map.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/decision.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/data-flow-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "docs/domain/device-scheduling.md",
+    "docs/domain/rental-order.md",
+    "camera-rental-server/AGENTS.md",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/pom.xml"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental",
+    "docs/domain/device-scheduling.md",
+    "openspec/changes/xian-guanjia-data-integration-v1"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test"
+  ],
+  "non_goals": [
+    "Do not add a controller, permission, admin UI, device CRUD, lifecycle transition, schedule mutation flow, report, customer flow, database migration, third-party API call, or third-party write.",
+    "Do not change the existing foundation schema or fabricate occupied dates."
+  ],
+  "expected_evidence": [
+    "Focused assignment behavior tests",
+    "Maven rental-module test output",
+    "Diff and credential/write-path scans",
+    "Task report",
+    "Spec review",
+    "Quality review"
+  ],
+  "unsafe_assumptions": [
+    "Current converted orders remain PENDING_ALLOCATION after an accepted assignment; a later fulfillment slice determines fully allocated order state.",
+    "All future occupied-schedule writers will acquire the same rental_device row lock before querying or inserting schedules."
+  ],
+  "stop_condition": "Stop if the task needs an API/UI contract, lifecycle transition, schedule mutation flow, DDL change, third-party write, or files outside the allowed scope."
+}

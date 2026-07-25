@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-data-integration-v1",
+  "status": "approved",
+  "source": "goal-implementer",
+  "cases": [
+    {
+      "id": "utc-masked-config",
+      "title": "Operator views redacted integration status",
+      "actor": "integration operator",
+      "user_goal": "Confirm integration readiness without exposing secrets",
+      "preconditions": [
+        "Admin user has rental:xianyu:query permission",
+        "Server configured with or without XGJ credentials"
+      ],
+      "steps": [
+        "Open rental Xianyu operations page or call GET /admin-api/rental/xianyu/config/get",
+        "Inspect status fields"
+      ],
+      "expected_results": [
+        "Response includes status and masked AppKey",
+        "AppSecret is never returned",
+        "Disabled or missing credentials are represented safely"
+      ],
+      "boundary_cases": [
+        "Integration disabled",
+        "Missing credentials",
+        "Ready credentials"
+      ],
+      "acceptance_refs": [
+        "acceptance.md#security--quality"
+      ],
+      "source_refs": [
+        "requirements.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ]
+    },
+    {
+      "id": "utc-shop-order-sync",
+      "title": "Operator syncs shops and one order page",
+      "actor": "integration operator",
+      "user_goal": "Import authorized shops and a bounded order window",
+      "preconditions": [
+        "XGJ_ENABLED=true with valid credentials",
+        "Migrations applied",
+        "rental:xianyu:sync permission"
+      ],
+      "steps": [
+        "POST sync-authorized shops",
+        "Select shop with authorize_id",
+        "POST order sync-page with fixed window",
+        "Open channel order list"
+      ],
+      "expected_results": [
+        "Shops upserted locally",
+        "Orders persisted with pay_amount fen",
+        "Sync run counts recorded",
+        "Cursor advances only after success"
+      ],
+      "boundary_cases": [
+        "Disabled integration",
+        "Missing authorize_id",
+        "Window too large"
+      ],
+      "acceptance_refs": [
+        "acceptance.md#integration"
+      ],
+      "source_refs": [
+        "requirements.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ]
+    },
+    {
+      "id": "utc-convert-and-assign",
+      "title": "Operator converts order and assigns device",
+      "actor": "rental and equipment operator",
+      "user_goal": "Create internal rental order and assign physical device without schedule conflict",
+      "preconditions": [
+        "Channel order imported",
+        "Device inventory available",
+        "Required permissions"
+      ],
+      "steps": [
+        "POST convert channel order",
+        "Create device if needed",
+        "POST assign with half-open occupy range and idempotency key",
+        "Retry same key"
+      ],
+      "expected_results": [
+        "At most one rental order per channel order",
+        "Review record when mapping/date incomplete",
+        "Assignment+schedule atomic",
+        "Idempotent replay returns original result",
+        "Overlapping occupy range rejected"
+      ],
+      "boundary_cases": [
+        "Missing mapping",
+        "Adjacent half-open ranges allowed",
+        "Overlapping ranges rejected"
+      ],
+      "acceptance_refs": [
+        "acceptance.md#rental-operations"
+      ],
+      "source_refs": [
+        "requirements.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ]
+    }
+  ]
+}

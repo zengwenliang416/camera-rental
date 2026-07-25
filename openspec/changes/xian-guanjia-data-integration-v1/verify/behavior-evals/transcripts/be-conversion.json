@@ -1,0 +1,9 @@
+{
+  "id": "be-conversion",
+  "status": "pass",
+  "prompt": "Is conversion idempotent with review path?",
+  "expected": [
+    "at most one rental order",
+    "review on mapping failure"
+  ]
+}

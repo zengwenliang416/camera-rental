@@ -1,0 +1,8 @@
+{
+  "id": "be-order-cursor",
+  "status": "pass",
+  "prompt": "Does order sync advance cursor only after success?",
+  "expected": [
+    "cursor advance after persist"
+  ]
+}

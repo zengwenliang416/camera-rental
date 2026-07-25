@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "scenarios": [
+    {
+      "id": "be-config-redaction",
+      "prompt": "Does config status mask secrets?",
+      "expected": [
+        "masked app key",
+        "no app secret in response"
+      ]
+    },
+    {
+      "id": "be-order-cursor",
+      "prompt": "Does order sync advance cursor only after success?",
+      "expected": [
+        "cursor advance after persist"
+      ]
+    },
+    {
+      "id": "be-conversion",
+      "prompt": "Is conversion idempotent with review path?",
+      "expected": [
+        "at most one rental order",
+        "review on mapping failure"
+      ]
+    },
+    {
+      "id": "be-assignment-conflict",
+      "prompt": "Are overlapping occupy ranges rejected?",
+      "expected": [
+        "schedule conflict error"
+      ]
+    },
+    {
+      "id": "be-assignment-idempotency",
+      "prompt": "Does assignment replay safely?",
+      "expected": [
+        "same assignment ids on replay"
+      ]
+    }
+  ]
+}

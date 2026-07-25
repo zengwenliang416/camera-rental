@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-data-integration-v1",
+  "required": true,
+  "status": "ready",
+  "migrations": [
+    {
+      "id": "20260723_001_xianyu_rental_foundation",
+      "kind": "ddl",
+      "order": 1,
+      "path": "development/migrations/20260723_001_xianyu_rental_foundation.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260723_001_xianyu_rental_foundation.sql",
+      "sha256": "1f09b0050b4a99986f6c14bd5884140de315febdac3ed0f2d0be6b7f76de5d30"
+    },
+    {
+      "id": "20260723_002_xianyu_order_pay_amount_bigint",
+      "kind": "ddl",
+      "order": 2,
+      "path": "development/migrations/20260723_002_xianyu_order_pay_amount_bigint.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260723_002_xianyu_order_pay_amount_bigint.sql",
+      "sha256": "849e9c874a0c1c5b85ee3a3093c40e705d780e99a085e16e4dcaa9a56dd1ffe4"
+    },
+    {
+      "id": "20260723_003_rental_order_amount_bigint",
+      "kind": "ddl",
+      "order": 3,
+      "path": "development/migrations/20260723_003_rental_order_amount_bigint.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260723_003_rental_order_amount_bigint.sql",
+      "sha256": "3a6ad07989c90a2a145d18c3b99bf419a80ca6c7fd5ecd9e0873fc97f9bb197a"
+    },
+    {
+      "id": "20260723_004_xianyu_shop_authorize_id",
+      "kind": "ddl",
+      "order": 4,
+      "path": "development/migrations/20260723_004_xianyu_shop_authorize_id.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260723_004_xianyu_shop_authorize_id.sql",
+      "sha256": "269b749b9dd84be7a38dfa39296465a91221cf23478f908d027127142a8d75d0"
+    },
+    {
+      "id": "20260724_005_rental_admin_menus",
+      "kind": "seed",
+      "order": 5,
+      "path": "development/migrations/20260724_005_rental_admin_menus.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260724_005_rental_admin_menus.sql",
+      "sha256": "fb54a6617044375271459b18761523576ed27c85dca0dffcd784614323112272"
+    },
+    {
+      "id": "20260724_006_xianyu_order_detail_full",
+      "kind": "ddl",
+      "order": 6,
+      "path": "development/migrations/20260724_006_xianyu_order_detail_full.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260724_006_xianyu_order_detail_full.sql",
+      "sha256": "08f5eb212552c4a4b77953e3b00bf21ee8bca50353993b6ca86e601b93c5fd4b"
+    },
+    {
+      "id": "20260724_007_xianyu_shop_unique_authorize",
+      "kind": "ddl",
+      "order": 7,
+      "path": "development/migrations/20260724_007_xianyu_shop_unique_authorize.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260724_007_xianyu_shop_unique_authorize.sql",
+      "sha256": "68e1740f48eff0285eb3713749a79f8079a2da3861c71aef298e7db42244571a"
+    },
+    {
+      "id": "20260724_008_rental_dict_and_jobs",
+      "kind": "seed",
+      "order": 8,
+      "path": "development/migrations/20260724_008_rental_dict_and_jobs.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260724_008_rental_dict_and_jobs.sql",
+      "sha256": "3ee17ef5c1fa665817f6d31318d40090f2b4fdffcf990c8c1188f87f6b52e2c6"
+    },
+    {
+      "id": "20260724_009_xianyu_review_operational_hardening",
+      "kind": "ddl",
+      "order": 9,
+      "path": "development/migrations/20260724_009_xianyu_review_operational_hardening.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260724_009_xianyu_review_operational_hardening.sql",
+      "sha256": "52c67f7eeba91376ea45b160ed7d2c8b5ef06543a435306a315bf07020258b4c"
+    },
+    {
+      "id": "20260724_010_infra_job_handler_uniqueness",
+      "kind": "ddl",
+      "order": 10,
+      "path": "development/migrations/20260724_010_infra_job_handler_uniqueness.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260724_010_infra_job_handler_uniqueness.sql",
+      "sha256": "4fed7bd9cde9d9da81b04771f65f69381accef190e5d84e98c9e50acff228daf"
+    },
+    {
+      "id": "20260724_011_rental_schedule_sync_run_menus",
+      "kind": "seed",
+      "order": 11,
+      "path": "development/migrations/20260724_011_rental_schedule_sync_run_menus.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260724_011_rental_schedule_sync_run_menus.sql",
+      "sha256": "6f14c6a63f709a7576d9793964111a546e6bd528d4c3ae1e571cb698bbac3ef7"
+    },
+    {
+      "id": "20260724_012_rental_menu_i18n_keys",
+      "kind": "data",
+      "order": 12,
+      "path": "development/migrations/20260724_012_rental_menu_i18n_keys.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260724_012_rental_menu_i18n_keys.sql",
+      "sha256": "350f28d9758736ee7a3b4ef3aaa6e3da74520dde20369ad262bf67e2ec8981c0"
+    },
+    {
+      "id": "20260724_013_xianyu_webhook_hot_path_indexes",
+      "kind": "ddl",
+      "order": 13,
+      "path": "development/migrations/20260724_013_xianyu_webhook_hot_path_indexes.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260724_013_xianyu_webhook_hot_path_indexes.sql",
+      "sha256": "515c0aa4abd17e380103a570964e2aabf27472e2e5fef9aad738004b0e6826cc"
+    },
+    {
+      "id": "20260724_014_rental_admin_default_page_indexes",
+      "kind": "ddl",
+      "order": 14,
+      "path": "development/migrations/20260724_014_rental_admin_default_page_indexes.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260724_014_rental_admin_default_page_indexes.sql",
+      "sha256": "ce9745699862715be7e1f6c057761c0a185aa58e5c915260d84b7d7e1165d2df"
+    },
+    {
+      "id": "20260724_015_xianyu_order_shop_page_index",
+      "kind": "ddl",
+      "order": 15,
+      "path": "development/migrations/20260724_015_xianyu_order_shop_page_index.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260724_015_xianyu_order_shop_page_index.sql",
+      "sha256": "912dc9d925041996779ca14e8ce45a258c7a8801845caea06d1365c94f3b6c89"
+    },
+    {
+      "id": "20260724_016_xianyu_push_processing_token",
+      "kind": "ddl",
+      "order": 16,
+      "path": "development/migrations/20260724_016_xianyu_push_processing_token.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260724_016_xianyu_push_processing_token.sql",
+      "sha256": "7d1761e9a14147e23d10509811fcbc4d016598114045c520a1cdbb2f486c2ea5"
+    },
+    {
+      "id": "20260724_017_rental_reports",
+      "kind": "ddl",
+      "order": 17,
+      "path": "development/migrations/20260724_017_rental_reports.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260724_017_rental_reports.sql",
+      "sha256": "f9238ff68d016e804e2af35c8e8848b23512f9fcfed81e2e4fd20713a374640b"
+    },
+    {
+      "id": "20260725_018_rental_menu_role_grants",
+      "kind": "ddl",
+      "order": 18,
+      "path": "development/migrations/20260725_018_rental_menu_role_grants.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260725_018_rental_menu_role_grants.sql",
+      "sha256": "08f4b38e95fa3756a875f3e83b98c6586b402bf69a300384fb755d38328d497a"
+    },
+    {
+      "id": "20260725_019_rental_xianyu_raw_and_replay_permissions",
+      "kind": "seed",
+      "order": 19,
+      "path": "development/migrations/20260725_019_rental_xianyu_raw_and_replay_permissions.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260725_019_rental_xianyu_raw_and_replay_permissions.sql",
+      "sha256": "2e316af1c778c3bffe0169155db56d3e5e888844cb565f40feb64558062aafec"
+    },
+    {
+      "id": "20260725_020_xianyu_raw_payload_version_width",
+      "kind": "ddl",
+      "order": 20,
+      "path": "development/migrations/20260725_020_xianyu_raw_payload_version_width.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260725_020_xianyu_raw_payload_version_width.sql",
+      "sha256": "b5cf0cc4139161c50dda0a6dbd43fde07147bcd6fc921c128e3debb4f43990b1"
+    },
+    {
+      "id": "20260725_021_xianyu_product_after_sale_jobs",
+      "kind": "seed",
+      "order": 21,
+      "path": "development/migrations/20260725_021_xianyu_product_after_sale_jobs.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260725_021_xianyu_product_after_sale_jobs.sql",
+      "sha256": "eb7689e1b3589f134dd9b81bc853e3acc7b1a5f884c2b6a6b5c426d632d86c9f"
+    }
+  ],
+  "rollback": [],
+  "rollback_strategy": "Back up the target schema and roll back the application deployment first. Do not drop channel, rental, schedule, sync, or audit history. Menu/dictionary rollback and any destructive schema rollback require a separately approved migration with data-retention review.",
+  "verification": {
+    "commands": [
+      "cd camera-rental-server && bash -n scripts/setup-local.sh",
+      "for file in camera-rental-server/sql/mysql/migrations/*.sql; do name=$(basename \"$file\"); cmp \"$file\" \"openspec/changes/xian-guanjia-data-integration-v1/development/migrations/$name\"; done",
+      "cd camera-rental-server && mvn -pl yudao-module-rental/yudao-module-rental-biz -am test",
+      "cd camera-rental-admin && pnpm ts:check",
+      "git diff --check"
+    ],
+    "evidence": [
+      "All production migrations 001 through 021 have matching audit copies and recorded SHA-256 values as of 2026-07-25.",
+      "Migration 007 uses information_schema guards so the authorize-id unique-index transition is repeatable.",
+      "The local bootstrap records applied migration filename/checksum pairs and rejects checksum drift.",
+      "A disposable MySQL 8.4 verification on 2026-07-24 applied migrations 001 through 017 and validated checksum-based second-run skips; migration 020 was applied to the active local runtime database on 2026-07-25 and confirmed schema_version/redaction_version varchar(64) plus xianyu_push_event.processing_token; migration 021 is a repeatable infra_job seed for xianyuProductSyncJob and xianyuAfterSaleSyncJob."
+    ]
+  },
+  "notes": [
+    "Production-path SQL is the executable deployment source; development/migrations contains exact audit copies.",
+    "Migration 001's audit copy was refreshed for a comment-only production drift that points operators to migration 007.",
+    "No migration file contains AppKey, AppSecret, signatures, or customer payload values."
+  ]
+}

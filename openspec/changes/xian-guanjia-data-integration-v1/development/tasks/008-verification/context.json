@@ -1,0 +1,39 @@
+{
+  "task_id": "008-verification",
+  "goal": "Maintainer can validate V1 behavior, security boundaries, and migration readiness.",
+  "must_read": [
+    "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/008-verification/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/requirements.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/acceptance.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/spec-map.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/component-impact-map.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/handoff.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/decision.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/data-flow-map.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/007-admin-operations/report.md"
+  ],
+  "allowed_files": [
+    "openspec/changes/xian-guanjia-data-integration-v1",
+    "camera-rental-server/yudao-module-rental",
+    "camera-rental-admin/src"
+  ],
+  "non_goals": [
+    "Do not expand product scope while packaging verification evidence."
+  ],
+  "expected_evidence": [
+    "Maven test log",
+    "Security scan log",
+    "Handoff contract JSON",
+    "Task report",
+    "Spec review",
+    "Quality review"
+  ],
+  "unsafe_assumptions": [
+    "Codegraph index may remain unavailable; warnings are acceptable when not configured."
+  ],
+  "stop_condition": "Stop if verification demands product scope expansion outside Non-goals."
+}

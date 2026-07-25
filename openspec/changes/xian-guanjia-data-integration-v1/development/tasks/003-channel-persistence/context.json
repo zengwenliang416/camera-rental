@@ -1,0 +1,45 @@
+{
+  "task_id": "003-channel-persistence",
+  "goal": "Integration operator can durably preserve XianGuanJia order details and advance a stable cursor only after local persistence succeeds.",
+  "must_read": [
+    "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/003-channel-persistence/brief.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/requirements.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/acceptance.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/handoff.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/spec-map.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/component-impact-map.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/decision.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/data-flow-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "docs/integrations/xianyu/source.md",
+    "docs/integrations/xianyu/order-sync.md",
+    "camera-rental-server/AGENTS.md",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/pom.xml"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental",
+    "docs/integrations/xianyu",
+    "openspec/changes/xian-guanjia-data-integration-v1"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test"
+  ],
+  "non_goals": [
+    "Do not call a real XianGuanJia API, add a controller, scheduler, or admin page.",
+    "Do not implement third-party writes, product/shop/after-sale persistence, order conversion, or device allocation.",
+    "Do not place credentials, signatures, private recipient fields, or raw payloads in source, fixtures, logs, or responses."
+  ],
+  "expected_evidence": [
+    "Focused parser, persistence, and cursor ordering tests",
+    "Maven module test output and no-write-path scan",
+    "Task report and focused reviews"
+  ],
+  "unsafe_assumptions": [
+    "The existing additive foundation migration is deployed before this code is enabled.",
+    "A later orchestration layer supplies only successful order-detail data and advances the cursor after a fully durable page."
+  ],
+  "stop_condition": "Stop if the task would require a third-party write operation, an undocumented source field, a new schema decision, or files outside the scope lock."
+}

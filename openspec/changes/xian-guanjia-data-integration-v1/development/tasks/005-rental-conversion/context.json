@@ -1,0 +1,48 @@
+{
+  "task_id": "005-rental-conversion",
+  "goal": "Rental operator can convert eligible channel orders and review incomplete records.",
+  "must_read": [
+    "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/005-rental-conversion/brief.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/requirements.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/acceptance.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/spec-map.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/component-impact-map.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/handoff.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/decision.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/data-flow-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/specs/xian-guanjia-data-ingestion/spec.md",
+    "docs/domain/rental-order.md",
+    "docs/integrations/xianyu/{field-mapping,order-sync}.md",
+    "camera-rental-server/AGENTS.md",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/pom.xml"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental",
+    "camera-rental-server/sql/mysql/migrations",
+    "docs/domain/rental-order.md",
+    "docs/integrations/xianyu",
+    "openspec/changes/xian-guanjia-data-integration-v1"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test"
+  ],
+  "non_goals": [
+    "Do not add a controller, scheduler, admin UI, mapping correction flow, daily allocation, device schedule, device assignment, refund handling, raw payload access, third-party API call, or third-party write.",
+    "Do not save credentials, private customer fields, raw payloads, or fabricated rental periods."
+  ],
+  "expected_evidence": [
+    "Focused seller-remark parser and conversion transaction tests",
+    "Maven module test output and no-write-path scan",
+    "Task report",
+    "Spec review",
+    "Quality review"
+  ],
+  "unsafe_assumptions": [
+    "The current normalized channel order has at most one product/SKU pair; a future line-item normalization slice will extend the conversion service."
+  ],
+  "stop_condition": "Stop if the task requires a third-party write, an undocumented source field, a controller/scheduler, device allocation, a destructive migration, or files outside the allowed scope."
+}

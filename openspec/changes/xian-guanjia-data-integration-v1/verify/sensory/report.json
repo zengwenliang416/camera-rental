@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "domain": "sensory",
+  "verdict": "pass",
+  "required": true,
+  "evidence": [
+    "verify/sensory/report.md",
+    "development/handoff-to-verify.md",
+    "verify/command-results.md",
+    "verify/sensory/reviewer-independence.md"
+  ],
+  "commands": [
+    "pnpm ts:check",
+    "Chrome DevTools Protocol browser sensory/transition flow against admin 5176/backend 48086"
+  ],
+  "findings": [
+    "Current browser sensory flow covered six rental pages across zh-CN/en and light/dark states with route, loading, error, permission, API-status, privacy-pattern, and screenshot evidence."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "Only desktop 1440x1000 viewport was captured in this pass; mobile/responsive sensory evidence remains a follow-up, not a blocker for the current admin desktop V1 smoke."
+  ]
+}

@@ -1,0 +1,32 @@
+-- Store full order-detail payload on the order row + commonly queried fields.
+-- Full API `data` object is kept in detail_json; raw envelope remains in xianyu_raw_payload.
+
+ALTER TABLE `xianyu_order`
+  ADD COLUMN `detail_json` longtext NULL COMMENT '闲管家订单详情 data 全量 JSON' AFTER `rental_order_id`,
+  ADD COLUMN `order_type` int DEFAULT NULL COMMENT '订单类型' AFTER `detail_json`,
+  ADD COLUMN `order_time` datetime DEFAULT NULL COMMENT '下单时间' AFTER `order_type`,
+  ADD COLUMN `total_amount` bigint DEFAULT NULL COMMENT '订单总额(分)' AFTER `order_time`,
+  ADD COLUMN `pay_no` varchar(128) DEFAULT NULL COMMENT '支付单号' AFTER `total_amount`,
+  ADD COLUMN `pay_time` datetime DEFAULT NULL COMMENT '支付时间' AFTER `pay_no`,
+  ADD COLUMN `refund_status` int DEFAULT NULL COMMENT '退款状态' AFTER `pay_time`,
+  ADD COLUMN `refund_amount` bigint DEFAULT NULL COMMENT '退款金额(分)' AFTER `refund_status`,
+  ADD COLUMN `refund_time` datetime DEFAULT NULL COMMENT '退款时间' AFTER `refund_amount`,
+  ADD COLUMN `waybill_no` varchar(128) DEFAULT NULL COMMENT '运单号' AFTER `refund_time`,
+  ADD COLUMN `express_code` varchar(64) DEFAULT NULL COMMENT '快递编码' AFTER `waybill_no`,
+  ADD COLUMN `express_name` varchar(128) DEFAULT NULL COMMENT '快递名称' AFTER `express_code`,
+  ADD COLUMN `express_fee` bigint DEFAULT NULL COMMENT '运费(分)' AFTER `express_name`,
+  ADD COLUMN `consign_type` int DEFAULT NULL COMMENT '发货类型' AFTER `express_fee`,
+  ADD COLUMN `consign_time` datetime DEFAULT NULL COMMENT '发货时间' AFTER `consign_type`,
+  ADD COLUMN `confirm_time` datetime DEFAULT NULL COMMENT '确认收货时间' AFTER `consign_time`,
+  ADD COLUMN `cancel_reason` varchar(512) DEFAULT NULL COMMENT '取消原因' AFTER `confirm_time`,
+  ADD COLUMN `cancel_time` datetime DEFAULT NULL COMMENT '取消时间' AFTER `cancel_reason`,
+  ADD COLUMN `buyer_nick` varchar(128) DEFAULT NULL COMMENT '买家昵称' AFTER `cancel_time`,
+  ADD COLUMN `seller_name` varchar(128) DEFAULT NULL COMMENT '卖家名称' AFTER `buyer_nick`,
+  ADD COLUMN `goods_title` varchar(512) DEFAULT NULL COMMENT '商品标题' AFTER `seller_name`,
+  ADD COLUMN `goods_quantity` int DEFAULT NULL COMMENT '商品数量' AFTER `goods_title`,
+  ADD COLUMN `goods_price` bigint DEFAULT NULL COMMENT '商品单价(分)' AFTER `goods_quantity`,
+  ADD COLUMN `goods_json` longtext NULL COMMENT 'goods 对象全量 JSON' AFTER `goods_price`,
+  ADD COLUMN `xyb_seller_amount` bigint DEFAULT NULL COMMENT '闲鱼币抵扣(分)' AFTER `goods_json`,
+  ADD COLUMN `is_tax_included` tinyint DEFAULT NULL COMMENT '是否含税' AFTER `xyb_seller_amount`,
+  ADD COLUMN `idle_biz_type` int DEFAULT NULL AFTER `is_tax_included`,
+  ADD COLUMN `pin_group_status` int DEFAULT NULL AFTER `idle_biz_type`;

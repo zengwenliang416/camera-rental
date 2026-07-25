@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "change_id": "camera-rental-full-platform-v1",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "The Maven reactor compiles and tests with yudao-module-rental-api and yudao-module-rental-biz enabled.",
+      "verify_via": "static",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A2",
+      "statement": "Additive migrations create the approved rental schema with required uniqueness, indexes, audit, tenant, and retention behavior.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A3",
+      "statement": "Customer Web and uni-app return the same backend-authoritative catalog, quote, availability, order, payment, and deposit results.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A4",
+      "statement": "Concurrent order or assignment attempts cannot create duplicate orders or overlapping effective schedules.",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A5",
+      "statement": "Admin users can manage products, packages, devices, orders, schedules, fulfillment, inspection, maintenance, finance, channels, and reports under explicit permissions.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A6",
+      "statement": "Staff scan flows validate physical-device identity and lifecycle on the backend and remain idempotent under replay.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A7",
+      "statement": "Return inspection and maintenance correctly block and release device availability while preserving history.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A8",
+      "statement": "Rent, deposit, fees, discounts, refunds, forfeits, overdue charges, and compensation remain separately traceable and conserve integer-cent totals.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A9",
+      "statement": "Payment and refund callbacks are verified and idempotent and cannot apply a financial transition twice.",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A10",
+      "statement": "Reports reconcile to source orders, devices, schedules, maintenance, and finance records and preserve paid review-required Xianyu revenue.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A11",
+      "statement": "XianGuanJia configuration is disabled by default and no default test calls a real shop or exposes a credential.",
+      "verify_via": "static",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A12",
+      "statement": "The XianGuanJia signer hashes and sends the exact same canonical UTF-8 JSON body for all in-scope read endpoints.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A13",
+      "statement": "XianGuanJia sync is bounded, cursor-safe, replay-safe, traceable, and exposes no third-party write operation.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A14",
+      "statement": "All admin and app API contracts use typed VOs, server validation, safe errors, permissions, and actor-appropriate data masking.",
+      "verify_via": "static",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A15",
+      "statement": "Admin, customer uni-app, staff uni-app, and Nuxt Web pass their approved type, build, target, SSR, and cross-contract checks.",
+      "verify_via": "static",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A16",
+      "statement": "Visual acceptance covers all approved themes, locales, responsive layouts, and loading, empty, permission, validation, conflict, and error states.",
+      "verify_via": "sensory",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A17",
+      "statement": "Secret and PII scans find no real credential, signature, unrestricted raw payload, or unmasked restricted customer data.",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    }
+  ]
+}

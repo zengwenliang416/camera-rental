@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-data-integration-v1",
+  "status": "partial",
+  "surfaces": [
+    {
+      "surface": "runtime",
+      "required": true,
+      "status": "pass",
+      "command": "mvn -f camera-rental-server/pom.xml -pl yudao-module-rental/yudao-module-rental-biz -am install -DskipTests && mvn -f camera-rental-server/pom.xml -pl yudao-module-rental/yudao-module-rental-biz test; authenticated API smoke on 48082",
+      "evidence_refs": [
+        "verify/command-results.md",
+        "verify/unit/report.md"
+      ],
+      "notes": [
+        "Backend dependencies installed with upstream tests skipped, then rental module automated tests passed.",
+        "Current jar on 48082 connected to real local XianGuanJia data with scheduler/infra jobs disabled: config READY, shops 7, orders 730, sync-runs 1841 first check and 1861 repeat check.",
+        "Rebuilt current jar on 48082 verified 2026-07-25: config READY, shops 7 with 4 valid authorizations, orders 732, manual-review page total 1 without HTTP 500, express companies 94, after-sale one-page sync received and persisted 20 records with hasNextPage=true.",
+        "48080 is a stale real-data process missing the current sync-run route; 48081 is current isolated verification data.",
+        "Browser E2E on 2026-07-25 verified Xianyu, manual-review, sync-run, and report pages against admin 5174/backend 48082; all observed rental API calls returned HTTP 200 after migration 018/runtime menu repair.",
+        "Migration 018 repairs existing database menu-role drift for schedule, sync-run, and standalone report pages.",
+        "Runtime permission-denied API verification on 2026-07-25 created a temporary role/user with no rental grants: permission info returned code 0, rental report overview returned business code 403, then the temporary role/user were deleted.",
+        "Focused device assignment and assign-request validation regression passed: 11 tests, 0 failures.",
+        "Admin default channel-ID masking was added for ordinary order, Xianyu shop authorization, and after-sale list views; pnpm ts:check passed after this front-end change.",
+        "Admin order sellerRemark masking was added at the backend response boundary; focused XianyuOrderAdminServiceTest passed and admin pnpm ts:check passed after the defensive front-end display mask.",
+        "Backend-default external identifier masking was added for ordinary order, shop authorization, and after-sale pagination responses; focused admin list privacy regression passed: 6 tests, 0 failures.",
+        "Current rebuilt jar on 48083 verified real-data API masking for order, shop, and after-sale pagination: each returned business code 0; sampled remarks had no mainland mobile or 10+ digit identifier patterns; sampled external channel identifiers were masked.",
+        "Local XianGuanJia infra-job registration can be disabled with XGJ_JOB_REGISTER_INFRA_JOBS=false; the legacy XGJ_JOB_REGISTER_INFRA name remains supported. XianyuPropertiesTest passed 4 tests, start-local.sh passed bash syntax check, the current jar rebuilt successfully, and a temporary 48084 startup-log probe emitted zero [xianyu][job-register] lines before shutdown.",
+        "Permission-denied browser click-through on 2026-07-25 verified a temporary no-rental-grant user had no rental menu/permission, direct /rental/report navigation rendered a denied/not-found state without rental content, the sidebar had no rental entry, and the temporary user/role were deleted.",
+        "Authorization-loss alerting on 2026-07-25 added a backend/admin path over the existing xianyu_alert table: focused tests verified masked alert pages, dedupe keys, resolve behavior, and authorized-shop sync alert creation; admin pnpm ts:check passed after adding the alert list and resolve action.",
+        "Sync-failure alerting on 2026-07-25 now records deduplicated SYNC_FAILED alerts for order page and after-sale page sync failures after the failed sync-run is persisted. Focused backend regression passed for order failure, after-sale failure, alert dedupe-key construction, masking, and resolve behavior.",
+        "Guarantee-health alerting on 2026-07-25 now parses documented is_deposit_enough shop authorization values, persists xianyu_shop.guarantee_status, and records deduplicated GUARANTEE_HEALTH alerts for insufficient service deposit. Focused backend regression passed 12 tests with no failures.",
+        "Restricted raw-payload access on 2026-07-25 added separately permissioned backend/admin paths with metadata-only pagination, re-redacted detail JSON, sensitive key renaming, and response-body-disabled API access logging. Focused backend regression passed 7 tests and admin pnpm ts:check passed.",
+        "Manual order-push event replay on 2026-07-25 added a separately permissioned backend/admin path that requeues only durable local order-push payloads, skips succeeded or processing events, masks outcome messages, and disables response-body API access logging. Focused backend replay regression passed 14 tests and admin pnpm ts:check passed.",
+        "Order-detail raw-payload replay on 2026-07-25 added a separately permissioned backend/admin path that accepts only local ORDER_DETAIL raw payloads, reuses the existing order-detail persistence path, rejects unsupported source types, returns safe failure codes for persistence errors, does not advance sync cursors, and does not call XianGuanJia. Focused replay/persistence regression passed 22 tests and admin pnpm ts:check passed.",
+        "Order-page raw-payload replay on 2026-07-25 stores ORDER_PAGE list responses as restricted raw evidence before page parsing, replays only local ORDER_PAGE records through the existing page parser/detail-refresh logic, records a REPLAY sync run, preserves partial success counts on detail failures, and does not advance order page cursors. Focused backend regression passed 17 tests with no failures.",
+        "Product-push ingestion and replay on 2026-07-25 added POST /xianyu/webhooks/product, strict documented product-push parsing, redacted PRODUCT_PUSH raw-payload persistence, idempotent push-event storage, read-only PRODUCT_DETAIL refresh into xianyu_product, and event-type routed replay. Focused backend regression passed 20 tests with no failures.",
+        "Product-push signed webhook runtime fixture on 2026-07-25 verified the rebuilt jar on isolated backend 48086 with Quartz in standby: a signed PRODUCT_PUSH webhook returned HTTP 200/result success, the push event reached SUCCEEDED, processing_token was cleared, and the synthetic PRODUCT_PUSH raw payload plus push event rows were soft-deleted after polling. The fixture did not print AppKey, AppSecret, signatures, raw payloads, external product IDs, seller remarks, phone numbers, or addresses.",
+        "Product list/SKU orchestration on 2026-07-25 added PRODUCT_PAGE raw evidence, optional seller_id query scoping, fixed-window product paging, stale PRODUCT_DETAIL refresh, PRODUCT_SKUS chunking at 100 product IDs, xianyuProductSyncJob registration, XGJ_JOB_PRODUCT_CRON configuration, and a separate PRODUCT cursor. Focused backend regression passed 34 tests with no failures.",
+        "Express-company raw evidence on 2026-07-25 stores the complete read-only express-company response as EXPRESS_COMPANIES before returning the parsed admin list. Focused backend regression passed 1 test with no failures.",
+        "After-sale list/detail orchestration on 2026-07-25 stores AFTER_SALE_PAGE, AFTER_SALE_LIST_ITEM, and AFTER_SALE_DETAIL raw evidence, refreshes normalized rows from detail responses, adds xianyuAfterSaleSyncJob registration, XGJ_JOB_AFTER_SALE_CRON configuration, apply_time/refund_time window traversal, and a separate AFTER_SALE cursor. Focused backend regression passed 22 tests with no failures; live authorized-shop after-sale scheduled smoke remains pending.",
+        "Runtime migration 020 was applied to the active local MySQL database used by backend 48082; schema_version/redaction_version are varchar(64), xianyu_push_event.processing_token exists, and the production/audit-copy SHA-256 is b5cf0cc4139161c50dda0a6dbd43fde07147bcd6fc921c128e3debb4f43990b1.",
+        "Authenticated API smoke against backend 48082 after migration 020 returned code 0 for config, shop page, order page, after-sale page, express-company list, alert page, raw-payload page, manual-review page, sync-run page, and report overview with required dates. Observed sanitized counts: shops 7, orders 733, after-sales 20, express companies 94, raw payloads 815, manual reviews 1, sync-runs 2167, current-month report orders 702.",
+        "No-token raw-payload access returned business code 401; invalid raw-payload replay returned safe business code 1040001009; invalid push-event replay returned safe business code 1040001010. The previous express-company and invalid push replay HTTP 500 failures were not reproduced.",
+        "Runtime migration 021 was applied twice to the active local MySQL database and made xianyuProductSyncJob plus xianyuAfterSaleSyncJob visible in infra_job with status 1 and cron 0 0/10 * * * ?. /infra/job/sync returned code 0 and backend logs showed both handlers synced into Quartz.",
+        "Product job trigger smoke after migration 021 did not prove successful product synchronization: /infra/job/trigger returned code 0 and the job was visible, but repeated polling left infra_job_log status 0 with no end_time/duration/result, and xianyu_product, xianyu_product_sku, PRODUCT_PAGE, PRODUCT_DETAIL, PRODUCT_SKUS, and PRODUCT sync-run counts stayed 0. Thread dump showed Quartz workers waiting and no active product/OkHttp stack.",
+        "Manual product sync endpoint and real-data smoke on 2026-07-25 repaired the product runtime gap for the current integration mode: product list/detail/SKU requests omit seller_id per the live XianGuanJia docs for self-developed or third-party ERP integrations; focused backend regression passed 21 tests, admin pnpm ts:check passed, the corrected jar on 48080 returned code 0 for product sync with received 1, succeeded 1, PRODUCT raw-payload total 1, and PRODUCT sync-run total 1.",
+        "Scheduled product job real-data completion was verified on 2026-07-25 after the manual product-sync fix: xianyuProductSyncJob was enabled with cron 0 0/10 * * * ?, /infra/job/trigger returned code 0, the latest infra job log completed with status 1 and duration 1246 ms, scheduled PRODUCT sync-run total increased from 28 to 32, the latest scheduled run was SUCCEEDED with received 3, succeeded 3, deduplicated 3, failed 0, and PRODUCT_PAGE raw-payload total increased from 21 to 22 while PRODUCT_DETAIL and PRODUCT_SKUS stayed unchanged because every received product was already current.",
+        "Runtime raw-payload access smoke passed for an admin token: raw page returned code 0 with total 815, source identifiers were masked, and sampled raw detail returned maskedPayload without detected mainland mobile-number or unmasked address-keyword patterns.",
+        "Runtime raw-payload access-log audit passed on isolated backend 48086 with yudao.access-log.enable=true and Quartz in standby: admin login returned HTTP 200/code 0, raw detail returned HTTP 200/code 0, infra_api_access_log recorded one row for /admin-api/rental/xianyu/raw-payload/get, response_body was NULL, and request_params contained no maskedPayload, payloadHash, sourceIdentifier, secret, token, sign, phone, mobile, address, receiver, or recipient markers.",
+        "Runtime raw/replay permission smoke passed for a temporary no-rental-grant user: login succeeded, raw page returned business code 403, raw replay returned business code 403, and the temporary role/user were deleted through official admin APIs.",
+        "The broader -am test command is blocked by yudao-module-system Redis NOAUTH in the local environment before the rental module runs.",
+        "Replay/raw tenant pre-check hardening on 2026-07-25: XianyuReplayAdminService and XianyuRawPayloadAdminService now resolve sensitive replay/detail IDs through explicit current tenant_id plus id mapper lookups before processing; focused regression XianyuReplayAdminServiceTest,XianyuRawPayloadAdminServiceTest,XianyuPushRetryServiceTest ran 17 tests with 0 failures.",
+        "Tenant-sensitive ID hardening on 2026-07-25: push retry, product-push shop fallback, replay, raw-payload detail, alert resolve, and manual order/product/after-sale sync entrypoints now use explicit current-tenant lookup before processing sensitive IDs; focused regression ran 35 tests with 0 failures."
+      ]
+    },
+    {
+      "surface": "browser",
+      "required": true,
+      "status": "pass",
+      "command": "Authenticated browser E2E/sensory flow against isolated admin 5176/backend 48086 plus previous permission-denied probes",
+      "evidence_refs": [
+        "verify/e2e/report.md",
+        "verify/sensory/report.md",
+        "verify/command-results.md"
+      ],
+      "artifact_refs": [
+        "verify/e2e/report.md",
+        "verify/sensory/report.md",
+        "verify/e2e/artifacts/2026-07-24T17-49-42-075Z-rental-order-masked.png",
+        "verify/e2e/artifacts/2026-07-24T17-49-42-075Z-rental-xianyu-masked.png",
+        "verify/e2e/artifacts/2026-07-24T18-10-49-302Z-rental-permission-denied.png",
+        "verify/e2e/artifacts/2026-07-24T18-10-49-302Z-rental-permission-denied.json",
+        "verify/e2e/artifacts/2026-07-25T00-44-37-775Z-rental-browser-flow-sensory-48086.json",
+        "verify/e2e/artifacts/2026-07-25T00-44-37-775Z-xianyu-zh-CN-light.png",
+        "verify/e2e/artifacts/2026-07-25T00-44-37-775Z-xianyu-en-dark.png",
+        "verify/e2e/artifacts/2026-07-25T00-44-37-775Z-schedule-en-dark.png",
+        "verify/e2e/artifacts/2026-07-25T00-44-37-775Z-report-zh-CN-light.png"
+      ],
+      "screenshot_refs": [
+        "verify/e2e/artifacts/2026-07-25T00-44-37-775Z-xianyu-zh-CN-light.png",
+        "verify/e2e/artifacts/2026-07-25T00-44-37-775Z-xianyu-en-dark.png",
+        "verify/e2e/artifacts/2026-07-25T00-44-37-775Z-schedule-en-dark.png",
+        "verify/e2e/artifacts/2026-07-25T00-44-37-775Z-report-zh-CN-light.png"
+      ],
+      "notes": [
+        "Browser E2E recorded screenshots for Xianyu, manual-review, sync-run, and report pages after migration 018/runtime menu repair.",
+        "Permission-denied behavior is proven at API level and browser route level for a temporary user with no rental grants; the temporary user/role were deleted after both probes.",
+        "Masking-specific browser rerun on 2026-07-25 covered /rental/order and /rental/xianyu against admin 5175/backend 48085: both stayed authenticated, observed rental API HTTP 200 responses, showed masked markers, and visible table text had no mainland mobile-number or 10+ continuous-digit pattern.",
+        "Current browser sensory/transition flow on 2026-07-25 used isolated admin 5176 and rebuilt backend 48086 with Quartz in standby: 24 route/language/theme states across Xianyu, order, schedule, review, sync-run, and report all settled on target routes, had no loading/denied/error state, all observed rental APIs were HTTP 2xx, zh-CN/en UI markers and light/dark document classes were observed, visible text had no mainland mobile-number or 10+ continuous-digit pattern, and blurred screenshots were recorded for representative zh-CN light and en dark states."
+      ]
+    },
+    {
+      "surface": "database",
+      "required": true,
+      "status": "pass",
+      "command": "Disposable mysql:8.4 migration checks plus real MySQL 8.4 concurrency and schedule EXPLAIN ANALYZE verification",
+      "evidence_refs": [
+        "verify/command-results.md",
+        "verify/mysql-report.md",
+        "verify/mysql-concurrency-report.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/migrations/manifest.json"
+      ],
+      "query_refs": [
+        "verify/mysql-report.md",
+        "verify/mysql-concurrency-report.md"
+      ],
+      "artifact_refs": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/migrations/manifest.json",
+        "verify/facticity/report.md",
+        "verify/mysql-report.md",
+        "verify/mysql-concurrency-report.md"
+      ],
+      "notes": [
+        "MySQL 8.4 accepted all 17 migrations in order; the second pass verified recorded checksums and skipped every applied migration.",
+        "Migration 019 has production/audit-copy equality and a recorded SHA-256 value for the separate raw-payload and safe-replay permissions; disposable MySQL execution remains pending for this migration.",
+        "Migration 020 has production/audit-copy equality and was applied to the active local runtime database to align raw-payload version widths and push replay token schema.",
+        "The runtime product-push fixture on 48086 also verified successful processing clears xianyu_push_event.processing_token after FieldStrategy.ALWAYS was applied to nullable attempt/result fields.",
+        "Migration 021 has production/audit-copy equality and was applied twice to the active local runtime database to seed missing product and after-sale XianGuanJia infra jobs.",
+        "Webhook duplicate-key SQL retained one row for the same tenant and dedupe key.",
+        "Real MySQL concurrency verification on 2026-07-25 used two overlapping assignment attempts for one physical device: one assigned, the second waited 1356.9 ms on the device row lock and then rejected as schedule-conflict; final counts were exactly one effective overlap schedule and one assigned row.",
+        "Representative EXPLAIN ANALYZE evidence with 30001 schedule rows showed the overlap query using idx_rental_schedule_device_range and the default admin page query using idx_rental_schedule_admin_default."
+      ]
+    }
+  ]
+}

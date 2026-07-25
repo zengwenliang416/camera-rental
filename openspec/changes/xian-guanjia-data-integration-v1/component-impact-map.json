@@ -1,0 +1,83 @@
+{
+  "new_components": [
+    "RentalModule API and Biz Maven modules",
+    "XianGuanJia properties signer serializer client decoder and redactor",
+    "shop product order after-sale express sync services",
+    "push ingestion dedupe and detail-refresh service",
+    "cursor planner sync-run audit and retry services",
+    "authorization after-sale and sync-failure alert service",
+    "safe raw-event and page replay service",
+    "channel product SKU to equipment-model mapping service",
+    "channel-order conversion and manual-review services",
+    "physical device schedule conflict and assignment services",
+    "rental revenue refund source utilization idle and device-income reporting service",
+    "admin Xianyu pages and typed API modules"
+  ],
+  "reused_components": [
+    "existing common response PageResult validation and error contracts",
+    "existing Spring Security permission tenant and data-scope framework",
+    "existing infra file job configuration logging and audit capabilities",
+    "existing Element Plus admin layout table form drawer dictionary and request patterns",
+    "existing admin light-dark and vue-i18n infrastructure"
+  ],
+  "extraction_triggers": [
+    "one signer serializer client decoder and redactor serves all endpoints",
+    "one cursor planner handles all bounded list synchronization",
+    "sync status error and retry presentation repeats across admin pages",
+    "private-field masking repeats across order after-sale and raw views"
+  ],
+  "forbidden_dependencies": [
+    "frontend-to-XianGuanJia",
+    "business-service-to-ad-hoc-raw-http",
+    "controller-to-mapper",
+    "external-DTO-as-persistence-DO-or-client-VO",
+    "plaintext-secret-in-source-database-log-fixture-response-or-frontend",
+    "third-party-write-endpoint-or-client",
+    "SKU-quantity-used-as-physical-device-availability"
+  ],
+  "hooks": [
+    "useXianyuShopQuery",
+    "useXianyuProductQuery",
+    "useXianyuOrderQuery",
+    "useXianyuAfterSaleQuery",
+    "useXianyuSyncRun",
+    "useXianyuAlertQuery",
+    "useXianyuReplay",
+    "useRentalOrderQuery",
+    "useRentalScheduleQuery",
+    "useRentalAssignment",
+    "useRentalReportQuery"
+  ],
+  "utilities": [
+    "canonical UTF-8 JSON serialization and body-bound signing",
+    "fixed-window splitting and stable cursor comparison",
+    "external identifier normalization",
+    "safe private-field and error redaction",
+    "locale-safe money date and status formatting"
+  ],
+  "services": [
+    "XianGuanJia HTTP client",
+    "shop product order after-sale and express synchronization",
+    "push ingestion and deduplication",
+    "raw payload storage and normalized projection",
+    "sync run cursor retry and review",
+    "authorization after-sale alerting and safe replay",
+    "channel product SKU equipment-model mapping",
+    "channel-order conversion and seller-remark parsing",
+    "rental order device schedule conflict and assignment",
+    "source-linked rental reporting",
+    "typed admin API clients"
+  ],
+  "required_component_tests": [
+    "exact signed-body MockWebServer tests",
+    "pagination window cursor retry and idempotency tests",
+    "unknown-field ambiguous-unit and redaction tests",
+    "authorization after-sale alert dedupe and replay tests",
+    "product mapping and reporting reconciliation tests",
+    "order conversion remark parsing schedule overlap and assignment tests",
+    "permission tenant and raw-payload access tests",
+    "admin loading empty permission error retry theme locale tests",
+    "secret PII forbidden-dependency and third-party-write scans"
+  ],
+  "unresolved_gaps": []
+}

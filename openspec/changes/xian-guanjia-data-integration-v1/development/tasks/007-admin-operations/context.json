@@ -1,0 +1,44 @@
+{
+  "task_id": "007-admin-operations",
+  "goal": "Authorized admins can operate V1 channel/rental workflows in bilingual light/dark modes without third-party writes.",
+  "must_read": [
+    "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/007-admin-operations/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/requirements.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/acceptance.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/spec-map.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/component-impact-map.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/handoff.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/decision.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/data-flow-map.md",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/pom.xml"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental",
+    "camera-rental-server/yudao-server",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-admin/src",
+    "openspec/changes/xian-guanjia-data-integration-v1"
+  ],
+  "non_goals": [
+    "Do not implement customer checkout, payment, deposit, or real-name verification.",
+    "Do not add XianGuanJia write clients or write-capable admin endpoints."
+  ],
+  "expected_evidence": [
+    "Admin API and UI sources",
+    "Config redaction unit tests",
+    "Maven rental-module test output",
+    "Security scans",
+    "Task report",
+    "Spec review",
+    "Quality review"
+  ],
+  "unsafe_assumptions": [
+    "Existing theme and locale stores already persist light/dark and zh-CN/en preferences.",
+    "Menu permissions can be assigned later in runtime RBAC; code uses @PreAuthorize permission strings."
+  ],
+  "stop_condition": "Stop if third-party writes or customer checkout are required."
+}

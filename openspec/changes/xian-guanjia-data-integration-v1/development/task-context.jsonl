@@ -1,0 +1,6 @@
+{"task_id":"001-rental-foundation","status":"ready","source":"specnav-vertical-slices","note":"First vertical slice is scoped to server composition, runtime-safe configuration, and additive schema; it excludes live XianGuanJia calls and all third-party writes."}
+{"task_id":"002-channel-sync","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet created; fill brief.md and context.json before development entry can pass."}
+{"task_id":"003-channel-persistence","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet created; fill brief.md and context.json before development entry can pass."}
+{"task_id":"004-order-sync-orchestration","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet created; fill brief.md and context.json before development entry can pass."}
+{"task_id":"005-rental-conversion","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet created; fill brief.md and context.json before development entry can pass."}
+{"task_id":"006-device-allocation","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet created; fill brief.md and context.json before development entry can pass."}

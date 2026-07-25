@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-data-integration-v1",
+  "risk_tier": "standard",
+  "required_domains": [
+    "facticity",
+    "static",
+    "unit",
+    "redteam",
+    "e2e",
+    "sensory"
+  ],
+  "inputs": [
+    "requirements.md",
+    "acceptance.md",
+    "prototype/handoff.md",
+    "development/handoff-to-verify.md"
+  ],
+  "user_test_case_gate": {
+    "required": true,
+    "cases": "verify/user-test-cases.json",
+    "signoff": "verify/user-test-case-signoff.json",
+    "domain_matrix": "verify/domain-case-matrix.json"
+  },
+  "runtime_evidence_gate": {
+    "required": true,
+    "evidence": "verify/runtime-evidence.json",
+    "required_surfaces": [
+      "runtime",
+      "browser",
+      "database"
+    ]
+  },
+  "changed_files": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuConfigController.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuConfigAdminService.java",
+    "camera-rental-admin/src/views/rental/xianyu/index.vue",
+    "camera-rental-admin/src/api/rental/xianyu.ts",
+    "camera-rental-server/sql/mysql/migrations/20260723_004_xianyu_shop_authorize_id.sql",
+    "openspec/changes/xian-guanjia-data-integration-v1/development/handoff-to-verify.md"
+  ],
+  "commands": [
+    "mvn -f camera-rental-server/pom.xml -pl yudao-module-rental/yudao-module-rental-biz -am test",
+    "rg write-path and secret scans"
+  ],
+  "manual_reviews": [
+    "sensory"
+  ]
+}

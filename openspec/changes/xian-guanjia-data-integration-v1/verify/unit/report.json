@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "domain": "unit",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/unit/report.md",
+    "development/handoff-to-verify.md",
+    "verify/command-results.md"
+  ],
+  "commands": [
+    "mvn -pl yudao-module-rental/yudao-module-rental-biz -am test",
+    "focused XianGuanJia regression tests",
+    "XianyuPropertiesTest and XianyuScheduledJobTenantIsolationTest",
+    "XianyuAuthorizedShopListParserTest, XianyuShopAdminServiceTest, and XianyuAlertAdminServiceTest",
+    "XianyuOrderSyncServiceTest and XianyuReplayAdminServiceTest",
+    "XianyuProductPushPayloadParserTest, XianyuProductDetailPayloadParserTest, XianyuProductPersistenceServiceTest, XianyuProductWebhookPersistenceServiceTest, XianyuProductPushConsumerTest, XianyuPushRetryServiceTest, and XianyuOrderWebhookControllerTest",
+    "XianyuProductSyncServiceTest, XianyuChannelSyncServiceTest, XianyuPropertiesTest, XianyuProductListPageParserTest, XianyuProductSkuPayloadParserTest, XianyuProductSkuPersistenceServiceTest, and XianyuReadClientTest",
+    "XianyuExpressCompanyAdminServiceTest",
+    "XianyuAfterSaleAdminServiceTest, XianyuChannelSyncServiceTest, and XianyuPropertiesTest",
+    "pnpm ts:check in camera-rental-admin"
+  ],
+  "findings": [
+    "Implemented backend slices pass the current automated unit suite: 65 rental-module tests with no failures, errors, or skips.",
+    "Guarantee-health parser/shop-sync/alert regression passed on 2026-07-25: 12 tests with no failures, errors, or skips.",
+    "Order-page raw-payload persistence and replay regression passed on 2026-07-25: 17 tests with no failures, errors, or skips.",
+    "Product-push and product-detail persistence regression passed on 2026-07-25: 20 tests with no failures, errors, or skips.",
+    "Product list/SKU orchestration regression passed on 2026-07-25: 34 tests with no failures, errors, or skips.",
+    "Express-company raw evidence regression passed on 2026-07-25: 1 test with no failures, errors, or skips.",
+    "After-sale list/detail orchestration regression passed on 2026-07-25: 22 tests with no failures, errors, or skips.",
+    "Admin V1 loading/error/retry/i18n state changes passed pnpm ts:check on 2026-07-25."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "Real MySQL migration and concurrency behavior are not covered by this domain."
+  ],
+  "blocker_class": null
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "planning_status": "active",
+  "tasks": [
+    {
+      "id": "001-rental-foundation",
+      "status": "complete",
+      "goal": "Administrator can start the rental module with safe defaults and the additive foundation schema.",
+      "depends_on": []
+    },
+    {
+      "id": "002-channel-sync",
+      "status": "complete",
+      "goal": "Integration operator can issue only documented, signed XianGuanJia read requests through a safe transport boundary.",
+      "depends_on": [
+        "001-rental-foundation"
+      ]
+    },
+    {
+      "id": "003-channel-persistence",
+      "status": "complete",
+      "goal": "Integration operator can durably preserve XianGuanJia order details and advance a stable order cursor only after successful local persistence.",
+      "depends_on": [
+        "002-channel-sync"
+      ]
+    },
+    {
+      "id": "004-order-sync-orchestration",
+      "status": "complete",
+      "goal": "Integration operator can run a bounded local order-list page with detail refresh, durable run counts, and cursor advancement only after the page succeeds.",
+      "depends_on": [
+        "003-channel-persistence"
+      ]
+    },
+    {
+      "id": "005-rental-conversion",
+      "status": "complete",
+      "goal": "Rental operator can convert eligible channel orders and review incomplete records.",
+      "depends_on": [
+        "004-order-sync-orchestration"
+      ]
+    },
+    {
+      "id": "006-device-allocation",
+      "status": "complete",
+      "goal": "Equipment operator can assign a physical device without occupied schedule conflicts.",
+      "depends_on": [
+        "005-rental-conversion"
+      ]
+    },
+    {
+      "id": "007-admin-operations",
+      "status": "complete",
+      "goal": "Authorized admins can operate the V1 workflows in bilingual light and dark modes.",
+      "depends_on": [
+        "002-channel-sync",
+        "005-rental-conversion",
+        "006-device-allocation"
+      ]
+    },
+    {
+      "id": "008-verification",
+      "status": "complete",
+      "goal": "Maintainer can validate the V1 behavior, security boundaries, and migration readiness.",
+      "depends_on": [
+        "007-admin-operations"
+      ]
+    }
+  ]
+}

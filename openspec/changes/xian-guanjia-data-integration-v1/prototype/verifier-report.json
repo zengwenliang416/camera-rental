@@ -1,0 +1,61 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "data-flow-map.md",
+  "project_fidelity": {
+    "status": "not_applicable",
+    "inventory": "visual-inventory.json",
+    "shell_checked": false,
+    "generic_shell_detected": false,
+    "notes": [
+      "The declared data-flow branch has no HTML project shell."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [],
+    "theme_modes": [
+      "light",
+      "dark"
+    ],
+    "locales": [
+      "zh-CN",
+      "en"
+    ],
+    "states": [
+      "loading",
+      "empty",
+      "error",
+      "permission",
+      "retry",
+      "schedule-conflict",
+      "review-required"
+    ]
+  },
+  "checks": [
+    "Read data-flow-map.md against requirements.md, acceptance.md, and the frontend-backend data-flow foundation spec.",
+    "Executed node prototype/data-flow/flow-harness.js.",
+    "Verified unmapped products and invalid rental dates create manual review rather than schedules.",
+    "Verified channel-order conversion returns the same rental order on replay.",
+    "Verified overlapping half-open device schedules are rejected and adjacent schedules are accepted.",
+    "Verified assignment replay returns the accepted assignment without creating another schedule."
+  ],
+  "evidence": [
+    {
+      "command": "node openspec/changes/xian-guanjia-data-integration-v1/prototype/data-flow/flow-harness.js",
+      "result": "green",
+      "checks": [
+        "reviewRequiredForUnmappedProduct",
+        "reviewRequiredForInvalidDates",
+        "channelOrderConversionIdempotent",
+        "overlappingSchedulesRejected",
+        "adjacentSchedulesAccepted",
+        "assignmentIdempotent"
+      ]
+    },
+    {
+      "command": "git diff --check -- openspec/changes/xian-guanjia-data-integration-v1/prototype",
+      "result": "passed"
+    }
+  ],
+  "blockers": []
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-data-integration-v1",
+  "stage": "development",
+  "allowed_roots": [
+    "camera-rental-server/pom.xml",
+    "camera-rental-server/yudao-server",
+    "camera-rental-server/yudao-module-rental",
+    "camera-rental-server/yudao-module-infra/src/main/java/cn/iocoder/yudao/module/infra/service/job",
+    "camera-rental-server/yudao-module-infra/src/test/java/cn/iocoder/yudao/module/infra/service/job",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-admin/src",
+    "camera-rental-admin/package.json",
+    "camera-rental-admin/pnpm-lock.yaml",
+    "docs",
+    "openspec/changes/xian-guanjia-data-integration-v1"
+  ],
+  "denied_roots": [
+    ".git",
+    "node_modules",
+    "dist",
+    "coverage",
+    "camera-rental-uniapp",
+    "camera-rental-staff",
+    "camera-rental-web"
+  ],
+  "requires_review_on": [
+    "camera-rental-server/pom.xml",
+    "camera-rental-server/yudao-module-infra/src/main/java/cn/iocoder/yudao/module/infra/service/job",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-admin/package.json",
+    "camera-rental-admin/pnpm-lock.yaml"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": false,
+    "rename": false
+  },
+  "prototype_sources": [
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/data-flow-map.md"
+  ],
+  "expires_when": "verification_started"
+}

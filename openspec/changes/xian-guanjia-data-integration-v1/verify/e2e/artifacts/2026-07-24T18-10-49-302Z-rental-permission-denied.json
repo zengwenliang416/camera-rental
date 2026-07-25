@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-07-24T18:10:59.413Z",
+  "backend": "48082",
+  "admin": "5174",
+  "browser": "headless chrome cdp",
+  "tempUserCreated": true,
+  "tempRoleCreated": true,
+  "noRentalMenu": true,
+  "noRentalPermission": true,
+  "routeHref": "http://127.0.0.1:5174/rental/report",
+  "routeShowsDeniedOrNotFound": true,
+  "routeHasRentalVisibleText": false,
+  "sidebarHasRentalText": false,
+  "screenshot": "openspec/changes/xian-guanjia-data-integration-v1/verify/e2e/artifacts/2026-07-24T18-10-49-302Z-rental-permission-denied.png",
+  "passed": true,
+  "cleanupUserDeleted": true,
+  "cleanupRoleDeleted": true
+}

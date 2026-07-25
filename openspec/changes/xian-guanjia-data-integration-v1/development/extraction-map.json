@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "component_rules": [
+    "Extract duplicated UI behavior into shared components.",
+    "Extract repeated state machines into hooks.",
+    "Extract repeated formatting or validation into utilities or services.",
+    "Centralize canonical JSON signing, transport error classification, and private-field redaction in the XianGuanJia integration boundary.",
+    "Keep schedule-overlap checks and assignment idempotency in one rental domain service instead of controllers or mappers."
+  ]
+}

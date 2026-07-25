@@ -1,0 +1,49 @@
+{
+  "task_id": "002-channel-sync",
+  "goal": "Integration operator can execute only documented XianGuanJia read requests through a canonical signed transport boundary.",
+  "must_read": [
+    "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/002-channel-sync/brief.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/requirements.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/acceptance.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/handoff.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/spec-map.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/component-impact-map.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/decision.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/data-flow-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "docs/integrations/xianyu/source.md",
+    "docs/integrations/xianyu/authentication.md",
+    "docs/integrations/xianyu/order-sync.md",
+    "docs/integrations/xianyu/after-sale-sync.md",
+    "docs/integrations/xianyu/webhook.md",
+    "camera-rental-server/AGENTS.md",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/pom.xml"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental",
+    "docs/integrations/xianyu",
+    "openspec/changes/xian-guanjia-data-integration-v1"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test"
+  ],
+  "non_goals": [
+    "Do not add a third-party write operation, write-capable endpoint, or real API call.",
+    "Do not persist channel data, advance cursors, or return webhook success before durable persistence exists.",
+    "Do not place credentials, signatures, private recipient fields, or customer data in source, logs, fixtures, or responses."
+  ],
+  "expected_evidence": [
+    "MockWebServer request-body and signature tests",
+    "Focused signer, webhook verifier, redactor, and error-classification tests",
+    "Maven module test output and no-write-path scan",
+    "Task report and focused reviews"
+  ],
+  "unsafe_assumptions": [
+    "The account uses self-developed application signing; business seller_id signing remains disabled until explicitly confirmed.",
+    "Official documents do not publish a complete retry/error-code policy, so remote business errors must not be retried automatically."
+  ],
+  "stop_condition": "Stop if an endpoint is not present in the 2026-07-23 official Markdown, a write operation is needed, or the task would edit outside the scope lock."
+}

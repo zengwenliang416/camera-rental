@@ -1,0 +1,2 @@
+{"id": "rc-secret", "domain": "redteam", "status": "pass", "summary": "Secrets env-injected and redacted in admin status"}
+{"id": "rc-write", "domain": "redteam", "status": "pass", "summary": "No third-party write allowlist entries"}

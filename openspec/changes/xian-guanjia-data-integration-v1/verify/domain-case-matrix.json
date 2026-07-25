@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-data-integration-v1",
+  "cases": [
+    {
+      "case_id": "utc-masked-config",
+      "domains": {
+        "facticity": [
+          "Source paths and API surfaces exist for this case."
+        ],
+        "static": [
+          "Handoff, config boundary, and type/structure checks cover this case."
+        ],
+        "unit": [
+          "Shipped unit tests cover core behavior and boundaries for this case."
+        ],
+        "redteam": [
+          "No outbound XianGuanJia write client; internal admin writes require runtime permission testing."
+        ],
+        "e2e": [
+          "Live browser path not executed; E2E remains blocked."
+        ],
+        "sensory": [
+          "Admin pages reuse theme/i18n stores and Element Plus patterns."
+        ]
+      }
+    },
+    {
+      "case_id": "utc-shop-order-sync",
+      "domains": {
+        "facticity": [
+          "Source paths and API surfaces exist for this case."
+        ],
+        "static": [
+          "Handoff, config boundary, and type/structure checks cover this case."
+        ],
+        "unit": [
+          "Shipped unit tests cover core behavior and boundaries for this case."
+        ],
+        "redteam": [
+          "No outbound XianGuanJia write client; internal admin writes require runtime permission testing."
+        ],
+        "e2e": [
+          "Live browser path not executed; E2E remains blocked."
+        ],
+        "sensory": [
+          "Admin pages reuse theme/i18n stores and Element Plus patterns."
+        ]
+      }
+    },
+    {
+      "case_id": "utc-convert-and-assign",
+      "domains": {
+        "facticity": [
+          "Source paths and API surfaces exist for this case."
+        ],
+        "static": [
+          "Handoff, config boundary, and type/structure checks cover this case."
+        ],
+        "unit": [
+          "Shipped unit tests cover core behavior and boundaries for this case."
+        ],
+        "redteam": [
+          "No outbound XianGuanJia write client; internal admin writes require runtime permission testing."
+        ],
+        "e2e": [
+          "Live browser path not executed; E2E remains blocked."
+        ],
+        "sensory": [
+          "Admin pages reuse theme/i18n stores and Element Plus patterns."
+        ]
+      }
+    }
+  ]
+}

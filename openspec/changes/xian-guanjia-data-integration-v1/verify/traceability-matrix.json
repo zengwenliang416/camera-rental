@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-data-integration-v1",
+  "entries": [
+    {
+      "changed_file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuConfigController.java",
+      "requirement_refs": [
+        "requirements.md",
+        "acceptance.md"
+      ],
+      "task_refs": [
+        "development/tasks/007-admin-operations",
+        "development/tasks/008-verification"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuConfigAdminService.java",
+      "requirement_refs": [
+        "requirements.md",
+        "acceptance.md"
+      ],
+      "task_refs": [
+        "development/tasks/007-admin-operations",
+        "development/tasks/008-verification"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "camera-rental-admin/src/views/rental/xianyu/index.vue",
+      "requirement_refs": [
+        "requirements.md",
+        "acceptance.md"
+      ],
+      "task_refs": [
+        "development/tasks/007-admin-operations",
+        "development/tasks/008-verification"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "camera-rental-admin/src/api/rental/xianyu.ts",
+      "requirement_refs": [
+        "requirements.md",
+        "acceptance.md"
+      ],
+      "task_refs": [
+        "development/tasks/007-admin-operations",
+        "development/tasks/008-verification"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "camera-rental-server/sql/mysql/migrations/20260723_004_xianyu_shop_authorize_id.sql",
+      "requirement_refs": [
+        "requirements.md",
+        "acceptance.md"
+      ],
+      "task_refs": [
+        "development/tasks/007-admin-operations",
+        "development/tasks/008-verification"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "openspec/changes/xian-guanjia-data-integration-v1/development/handoff-to-verify.md",
+      "requirement_refs": [
+        "requirements.md",
+        "acceptance.md"
+      ],
+      "task_refs": [
+        "development/tasks/007-admin-operations",
+        "development/tasks/008-verification"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ],
+      "anchor_refs": []
+    }
+  ],
+  "unmapped_changes": []
+}

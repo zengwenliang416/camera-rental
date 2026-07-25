@@ -1,0 +1,406 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-07-24T02:23:49.926Z",
+  "active_change": "xian-guanjia-data-integration-v1",
+  "claims": [
+    {
+      "id": "development:task-001-rental-foundation",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-rental-foundation",
+      "text": "The server composition exposes the rental domain as a deployable capability",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/001-rental-foundation/brief.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/001-rental-foundation/context.json"
+      ],
+      "expected_evidence": [
+        "Maven module test or compilation output",
+        "Migration SQL review",
+        "Secret and write-operation scan",
+        "Task report and focused reviews"
+      ],
+      "allowed_files": [
+        "camera-rental-server/pom.xml",
+        "camera-rental-server/yudao-server",
+        "camera-rental-server/yudao-module-rental",
+        "camera-rental-server/sql/mysql/migrations",
+        "openspec/changes/xian-guanjia-data-integration-v1"
+      ],
+      "query_ids": [
+        "development:task-001-rental-foundation:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-channel-sync",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-channel-sync",
+      "text": "The backend can prepare a signed read request for authorized shops, product",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/002-channel-sync/brief.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/002-channel-sync/context.json"
+      ],
+      "expected_evidence": [
+        "MockWebServer request-body and signature tests",
+        "Focused signer, webhook verifier, redactor, and error-classification tests",
+        "Maven module test output and no-write-path scan",
+        "Task report and focused reviews"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental",
+        "docs/integrations/xianyu",
+        "openspec/changes/xian-guanjia-data-integration-v1"
+      ],
+      "query_ids": [
+        "development:task-002-channel-sync:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-channel-persistence",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-channel-persistence",
+      "text": "The backend parses a successful order-detail payload, stores it in restricted",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/003-channel-persistence/brief.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/003-channel-persistence/context.json"
+      ],
+      "expected_evidence": [
+        "Focused parser, persistence, and cursor ordering tests",
+        "Maven module test output and no-write-path scan",
+        "Task report and focused reviews"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental",
+        "docs/integrations/xianyu",
+        "openspec/changes/xian-guanjia-data-integration-v1"
+      ],
+      "query_ids": [
+        "development:task-003-channel-persistence:evidence"
+      ]
+    },
+    {
+      "id": "development:task-004-order-sync-orchestration",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "004-order-sync-orchestration",
+      "text": "The backend accepts a fixed local sync window and page request, creates a",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/004-order-sync-orchestration/brief.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/004-order-sync-orchestration/context.json"
+      ],
+      "expected_evidence": [
+        "Focused list parsing, fixed-window, run-state, detail-refresh, and cursor-safety tests",
+        "Maven module test output and no-write-path scan",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental",
+        "docs/integrations/xianyu",
+        "openspec/changes/xian-guanjia-data-integration-v1"
+      ],
+      "query_ids": [
+        "development:task-004-order-sync-orchestration:evidence"
+      ]
+    },
+    {
+      "id": "development:task-005-rental-conversion",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "005-rental-conversion",
+      "text": "The backend locks a normalized channel order, returns an already accepted",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/005-rental-conversion/brief.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/005-rental-conversion/context.json"
+      ],
+      "expected_evidence": [
+        "Focused seller-remark parser and conversion transaction tests",
+        "Maven module test output and no-write-path scan",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental",
+        "camera-rental-server/sql/mysql/migrations",
+        "docs/domain/rental-order.md",
+        "docs/integrations/xianyu",
+        "openspec/changes/xian-guanjia-data-integration-v1"
+      ],
+      "query_ids": [
+        "development:task-005-rental-conversion:evidence"
+      ]
+    },
+    {
+      "id": "development:task-006-device-allocation",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "006-device-allocation",
+      "text": "The backend accepts a local assignment command, returns a prior accepted",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/006-device-allocation/brief.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/006-device-allocation/context.json"
+      ],
+      "expected_evidence": [
+        "Focused assignment behavior tests",
+        "Maven rental-module test output",
+        "Diff and credential/write-path scans",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental",
+        "docs/domain/device-scheduling.md",
+        "openspec/changes/xian-guanjia-data-integration-v1"
+      ],
+      "query_ids": [
+        "development:task-006-device-allocation:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-001-rental-foundation",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "001-rental-foundation",
+      "text": "The server composition exposes the rental domain as a deployable capability",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/001-rental-foundation/brief.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/001-rental-foundation/context.json"
+      ],
+      "expected_evidence": [
+        "Maven module test or compilation output",
+        "Migration SQL review",
+        "Secret and write-operation scan",
+        "Task report and focused reviews"
+      ],
+      "allowed_files": [
+        "camera-rental-server/pom.xml",
+        "camera-rental-server/yudao-server",
+        "camera-rental-server/yudao-module-rental",
+        "camera-rental-server/sql/mysql/migrations",
+        "openspec/changes/xian-guanjia-data-integration-v1"
+      ],
+      "query_ids": [
+        "verification:task-001-rental-foundation:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-002-channel-sync",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "002-channel-sync",
+      "text": "The backend can prepare a signed read request for authorized shops, product",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/002-channel-sync/brief.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/002-channel-sync/context.json"
+      ],
+      "expected_evidence": [
+        "MockWebServer request-body and signature tests",
+        "Focused signer, webhook verifier, redactor, and error-classification tests",
+        "Maven module test output and no-write-path scan",
+        "Task report and focused reviews"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental",
+        "docs/integrations/xianyu",
+        "openspec/changes/xian-guanjia-data-integration-v1"
+      ],
+      "query_ids": [
+        "verification:task-002-channel-sync:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-003-channel-persistence",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "003-channel-persistence",
+      "text": "The backend parses a successful order-detail payload, stores it in restricted",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/003-channel-persistence/brief.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/003-channel-persistence/context.json"
+      ],
+      "expected_evidence": [
+        "Focused parser, persistence, and cursor ordering tests",
+        "Maven module test output and no-write-path scan",
+        "Task report and focused reviews"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental",
+        "docs/integrations/xianyu",
+        "openspec/changes/xian-guanjia-data-integration-v1"
+      ],
+      "query_ids": [
+        "verification:task-003-channel-persistence:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-004-order-sync-orchestration",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "004-order-sync-orchestration",
+      "text": "The backend accepts a fixed local sync window and page request, creates a",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/004-order-sync-orchestration/brief.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/004-order-sync-orchestration/context.json"
+      ],
+      "expected_evidence": [
+        "Focused list parsing, fixed-window, run-state, detail-refresh, and cursor-safety tests",
+        "Maven module test output and no-write-path scan",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental",
+        "docs/integrations/xianyu",
+        "openspec/changes/xian-guanjia-data-integration-v1"
+      ],
+      "query_ids": [
+        "verification:task-004-order-sync-orchestration:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-005-rental-conversion",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "005-rental-conversion",
+      "text": "The backend locks a normalized channel order, returns an already accepted",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/005-rental-conversion/brief.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/005-rental-conversion/context.json"
+      ],
+      "expected_evidence": [
+        "Focused seller-remark parser and conversion transaction tests",
+        "Maven module test output and no-write-path scan",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental",
+        "camera-rental-server/sql/mysql/migrations",
+        "docs/domain/rental-order.md",
+        "docs/integrations/xianyu",
+        "openspec/changes/xian-guanjia-data-integration-v1"
+      ],
+      "query_ids": [
+        "verification:task-005-rental-conversion:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-006-device-allocation",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "006-device-allocation",
+      "text": "The backend accepts a local assignment command, returns a prior accepted",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/006-device-allocation/brief.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/006-device-allocation/context.json"
+      ],
+      "expected_evidence": [
+        "Focused assignment behavior tests",
+        "Maven rental-module test output",
+        "Diff and credential/write-path scans",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental",
+        "docs/domain/device-scheduling.md",
+        "openspec/changes/xian-guanjia-data-integration-v1"
+      ],
+      "query_ids": [
+        "verification:task-006-device-allocation:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-007-admin-operations",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "007-admin-operations",
+      "text": "An admin can open operational pages, view redacted integration status, sync authorized shops, run a bounded order sync page, convert eligible channel orders, manage devices, assign schedules, and inspect review/revenue surfaces. All third-party calls stay backend-only and read-only.",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/007-admin-operations/brief.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/007-admin-operations/context.json"
+      ],
+      "expected_evidence": [
+        "Admin API and UI sources",
+        "Config redaction unit tests",
+        "Maven rental-module test output",
+        "Security scans",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental",
+        "camera-rental-server/yudao-server",
+        "camera-rental-server/sql/mysql/migrations",
+        "camera-rental-admin/src",
+        "openspec/changes/xian-guanjia-data-integration-v1"
+      ],
+      "query_ids": [
+        "verification:task-007-admin-operations:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-008-verification",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "008-verification",
+      "text": "A maintainer can re-run module tests, credential/write scans, config boundary checks, and SpecNav handoff/verify packaging without inventing completed work.",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/008-verification/brief.md",
+        "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/008-verification/context.json"
+      ],
+      "expected_evidence": [
+        "Maven test log",
+        "Security scan log",
+        "Handoff contract JSON",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "openspec/changes/xian-guanjia-data-integration-v1",
+        "camera-rental-server/yudao-module-rental",
+        "camera-rental-admin/src"
+      ],
+      "query_ids": [
+        "verification:task-008-verification:evidence"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "domain": "static",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/static/report.md",
+    "development/handoff-to-verify.md",
+    "verify/command-results.md"
+  ],
+  "commands": [
+    "mvn -pl yudao-module-rental/yudao-module-rental-biz -am test",
+    "pnpm ts:check",
+    "targeted ESLint and rental Vue Stylelint checks",
+    "bash -n camera-rental-server/scripts/setup-local.sh",
+    "migration SHA-256 and manifest contract checks",
+    "static security and third-party write-client scans"
+  ],
+  "findings": [
+    "Current backend/admin sources and migration audit artifacts pass the listed static checks."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "Static checks do not prove runtime authorization, browser behavior, or database execution."
+  ],
+  "blocker_class": null
+}

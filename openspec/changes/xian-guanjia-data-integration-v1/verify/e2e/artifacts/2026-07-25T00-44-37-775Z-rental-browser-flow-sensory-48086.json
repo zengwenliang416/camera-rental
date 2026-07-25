@@ -1,0 +1,978 @@
+{
+  "stamp": "2026-07-25T00-44-37-775Z",
+  "frontend": "http://127.0.0.1:5176",
+  "backend": "http://127.0.0.1:48086/admin-api",
+  "tenantLookup": {
+    "http": 200,
+    "code": 0
+  },
+  "login": {
+    "http": 200,
+    "code": 0,
+    "token": true
+  },
+  "routes": [
+    {
+      "route": "xianyu",
+      "locale": "zh-CN",
+      "dark": false,
+      "settled": true,
+      "path": "/rental/xianyu",
+      "title": "相机租赁管理后台 - 闲管家集成状态",
+      "tableRows": 121,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": false,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": false,
+      "denied": false,
+      "bodyChars": 6301,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/config/get",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/alert/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/after-sale/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/config/get",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/alert/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/after-sale/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/express-company/list",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/express-company/list",
+          "status": 200
+        }
+      ],
+      "screenshot": "/Volumes/zwl/camera-rental-github/openspec/changes/xian-guanjia-data-integration-v1/verify/e2e/artifacts/2026-07-25T00-44-37-775Z-xianyu-zh-CN-light.png"
+    },
+    {
+      "route": "order",
+      "locale": "zh-CN",
+      "dark": false,
+      "settled": true,
+      "path": "/rental/order",
+      "title": "相机租赁管理后台 - 渠道订单",
+      "tableRows": 10,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": false,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": false,
+      "denied": false,
+      "bodyChars": 1527,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/order/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/order/page",
+          "status": 200
+        }
+      ],
+      "screenshot": "/Volumes/zwl/camera-rental-github/openspec/changes/xian-guanjia-data-integration-v1/verify/e2e/artifacts/2026-07-25T00-44-37-775Z-order-zh-CN-light.png"
+    },
+    {
+      "route": "schedule",
+      "locale": "zh-CN",
+      "dark": false,
+      "settled": true,
+      "path": "/rental/schedule?deviceId=9101301&occupyStartDate=2026-06-25&occupyEndDateExclusive=2026-07-25",
+      "title": "相机租赁管理后台 - 设备排期",
+      "tableRows": 0,
+      "empty": true,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": false,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": false,
+      "denied": false,
+      "bodyChars": 425,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/schedule/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/schedule/page",
+          "status": 200
+        }
+      ],
+      "screenshot": "/Volumes/zwl/camera-rental-github/openspec/changes/xian-guanjia-data-integration-v1/verify/e2e/artifacts/2026-07-25T00-44-37-775Z-schedule-zh-CN-light.png"
+    },
+    {
+      "route": "review",
+      "locale": "zh-CN",
+      "dark": false,
+      "settled": true,
+      "path": "/rental/review",
+      "title": "相机租赁管理后台 - 人工复核",
+      "tableRows": 1,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": false,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": false,
+      "denied": false,
+      "bodyChars": 428,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/manual-review/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/manual-review/page",
+          "status": 200
+        }
+      ],
+      "screenshot": "/Volumes/zwl/camera-rental-github/openspec/changes/xian-guanjia-data-integration-v1/verify/e2e/artifacts/2026-07-25T00-44-37-775Z-review-zh-CN-light.png"
+    },
+    {
+      "route": "sync-run",
+      "locale": "zh-CN",
+      "dark": false,
+      "settled": true,
+      "path": "/rental/sync-run",
+      "title": "相机租赁管理后台 - 同步运行历史",
+      "tableRows": 10,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": false,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": false,
+      "denied": false,
+      "bodyChars": 1877,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/sync-run/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/sync-run/page",
+          "status": 200
+        }
+      ],
+      "screenshot": "/Volumes/zwl/camera-rental-github/openspec/changes/xian-guanjia-data-integration-v1/verify/e2e/artifacts/2026-07-25T00-44-37-775Z-sync-run-zh-CN-light.png"
+    },
+    {
+      "route": "report",
+      "locale": "zh-CN",
+      "dark": false,
+      "settled": true,
+      "path": "/rental/report",
+      "title": "相机租赁管理后台 - 经营报表",
+      "tableRows": 11,
+      "empty": true,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": false,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": false,
+      "denied": false,
+      "bodyChars": 1623,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/product-sku-page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/device-performance-page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/overview",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/overview",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/product-sku-page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/device-performance-page",
+          "status": 200
+        }
+      ],
+      "screenshot": "/Volumes/zwl/camera-rental-github/openspec/changes/xian-guanjia-data-integration-v1/verify/e2e/artifacts/2026-07-25T00-44-37-775Z-report-zh-CN-light.png"
+    },
+    {
+      "route": "xianyu",
+      "locale": "zh-CN",
+      "dark": true,
+      "settled": true,
+      "path": "/rental/xianyu",
+      "title": "相机租赁管理后台 - 闲管家集成状态",
+      "tableRows": 121,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": true,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": false,
+      "denied": false,
+      "bodyChars": 6301,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/config/get",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/alert/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/after-sale/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/config/get",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/alert/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/after-sale/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/express-company/list",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/express-company/list",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "order",
+      "locale": "zh-CN",
+      "dark": true,
+      "settled": true,
+      "path": "/rental/order",
+      "title": "相机租赁管理后台 - 渠道订单",
+      "tableRows": 10,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": true,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": false,
+      "denied": false,
+      "bodyChars": 1527,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/order/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/order/page",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "schedule",
+      "locale": "zh-CN",
+      "dark": true,
+      "settled": true,
+      "path": "/rental/schedule?deviceId=9101301&occupyStartDate=2026-06-25&occupyEndDateExclusive=2026-07-25",
+      "title": "相机租赁管理后台 - 设备排期",
+      "tableRows": 0,
+      "empty": true,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": true,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": false,
+      "denied": false,
+      "bodyChars": 425,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/schedule/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/schedule/page",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "review",
+      "locale": "zh-CN",
+      "dark": true,
+      "settled": true,
+      "path": "/rental/review",
+      "title": "相机租赁管理后台 - 人工复核",
+      "tableRows": 1,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": true,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": false,
+      "denied": false,
+      "bodyChars": 428,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/manual-review/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/manual-review/page",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "sync-run",
+      "locale": "zh-CN",
+      "dark": true,
+      "settled": true,
+      "path": "/rental/sync-run",
+      "title": "相机租赁管理后台 - 同步运行历史",
+      "tableRows": 10,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": true,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": false,
+      "denied": false,
+      "bodyChars": 1877,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/sync-run/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/sync-run/page",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "report",
+      "locale": "zh-CN",
+      "dark": true,
+      "settled": true,
+      "path": "/rental/report",
+      "title": "相机租赁管理后台 - 经营报表",
+      "tableRows": 11,
+      "empty": true,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": true,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": false,
+      "denied": false,
+      "bodyChars": 1623,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/product-sku-page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/device-performance-page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/overview",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/overview",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/product-sku-page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/device-performance-page",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "xianyu",
+      "locale": "en",
+      "dark": false,
+      "settled": true,
+      "path": "/rental/xianyu",
+      "title": "相机租赁管理后台 - 闲管家集成状态",
+      "tableRows": 121,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": false,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": true,
+      "denied": false,
+      "bodyChars": 7039,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/config/get",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/alert/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/after-sale/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/config/get",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/alert/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/after-sale/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/express-company/list",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/express-company/list",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "order",
+      "locale": "en",
+      "dark": false,
+      "settled": true,
+      "path": "/rental/order",
+      "title": "相机租赁管理后台 - 渠道订单",
+      "tableRows": 10,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": false,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": true,
+      "denied": false,
+      "bodyChars": 2253,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/order/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/order/page",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "schedule",
+      "locale": "en",
+      "dark": false,
+      "settled": true,
+      "path": "/rental/schedule?deviceId=9101301&occupyStartDate=2026-06-25&occupyEndDateExclusive=2026-07-25",
+      "title": "相机租赁管理后台 - Device schedules",
+      "tableRows": 0,
+      "empty": true,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": false,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": false,
+      "hasEn": true,
+      "denied": false,
+      "bodyChars": 762,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/schedule/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/schedule/page",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "review",
+      "locale": "en",
+      "dark": false,
+      "settled": true,
+      "path": "/rental/review",
+      "title": "相机租赁管理后台 - 人工复核",
+      "tableRows": 1,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": false,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": true,
+      "denied": false,
+      "bodyChars": 615,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/manual-review/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/manual-review/page",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "sync-run",
+      "locale": "en",
+      "dark": false,
+      "settled": true,
+      "path": "/rental/sync-run",
+      "title": "相机租赁管理后台 - Sync run history",
+      "tableRows": 10,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": false,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": false,
+      "hasEn": true,
+      "denied": false,
+      "bodyChars": 2290,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/sync-run/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/sync-run/page",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "report",
+      "locale": "en",
+      "dark": false,
+      "settled": true,
+      "path": "/rental/report",
+      "title": "相机租赁管理后台 - Business reports",
+      "tableRows": 11,
+      "empty": true,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": false,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": false,
+      "hasEn": true,
+      "denied": false,
+      "bodyChars": 2397,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/product-sku-page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/device-performance-page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/overview",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/overview",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/product-sku-page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/device-performance-page",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "xianyu",
+      "locale": "en",
+      "dark": true,
+      "settled": true,
+      "path": "/rental/xianyu",
+      "title": "相机租赁管理后台 - 闲管家集成状态",
+      "tableRows": 121,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": true,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": true,
+      "denied": false,
+      "bodyChars": 7039,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/config/get",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/alert/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/after-sale/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/config/get",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/alert/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/after-sale/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/express-company/list",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/express-company/list",
+          "status": 200
+        }
+      ],
+      "screenshot": "/Volumes/zwl/camera-rental-github/openspec/changes/xian-guanjia-data-integration-v1/verify/e2e/artifacts/2026-07-25T00-44-37-775Z-xianyu-en-dark.png"
+    },
+    {
+      "route": "order",
+      "locale": "en",
+      "dark": true,
+      "settled": true,
+      "path": "/rental/order",
+      "title": "相机租赁管理后台 - 渠道订单",
+      "tableRows": 10,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": true,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": true,
+      "denied": false,
+      "bodyChars": 2253,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/order/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/shop/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/order/page",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "schedule",
+      "locale": "en",
+      "dark": true,
+      "settled": true,
+      "path": "/rental/schedule?deviceId=9101301&occupyStartDate=2026-06-25&occupyEndDateExclusive=2026-07-25",
+      "title": "相机租赁管理后台 - Device schedules",
+      "tableRows": 0,
+      "empty": true,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": true,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": false,
+      "hasEn": true,
+      "denied": false,
+      "bodyChars": 762,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/schedule/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/schedule/page",
+          "status": 200
+        }
+      ],
+      "screenshot": "/Volumes/zwl/camera-rental-github/openspec/changes/xian-guanjia-data-integration-v1/verify/e2e/artifacts/2026-07-25T00-44-37-775Z-schedule-en-dark.png"
+    },
+    {
+      "route": "review",
+      "locale": "en",
+      "dark": true,
+      "settled": true,
+      "path": "/rental/review",
+      "title": "相机租赁管理后台 - 人工复核",
+      "tableRows": 1,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": true,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": true,
+      "hasEn": true,
+      "denied": false,
+      "bodyChars": 615,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/manual-review/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/manual-review/page",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "sync-run",
+      "locale": "en",
+      "dark": true,
+      "settled": true,
+      "path": "/rental/sync-run",
+      "title": "相机租赁管理后台 - Sync run history",
+      "tableRows": 10,
+      "empty": false,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": true,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": false,
+      "hasEn": true,
+      "denied": false,
+      "bodyChars": 2290,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/sync-run/page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/xianyu/sync-run/page",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "route": "report",
+      "locale": "en",
+      "dark": true,
+      "settled": true,
+      "path": "/rental/report",
+      "title": "相机租赁管理后台 - Business reports",
+      "tableRows": 11,
+      "empty": true,
+      "alertError": "",
+      "loading": false,
+      "htmlDark": true,
+      "hasMobile": false,
+      "hasLongDigits": false,
+      "hasZh": false,
+      "hasEn": true,
+      "denied": false,
+      "bodyChars": 2397,
+      "rentalResponses": [
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/product-sku-page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/device-performance-page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/overview",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/overview",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/product-sku-page",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:48086/admin-api/rental/report/device-performance-page",
+          "status": 200
+        }
+      ],
+      "screenshot": null
+    }
+  ],
+  "consoleEventTypes": [
+    "debug",
+    "log",
+    "warning"
+  ],
+  "assertions": {
+    "allSettled": true,
+    "allStayedOnTarget": true,
+    "allNotLoading": true,
+    "noDenied": true,
+    "noVisibleMobile": true,
+    "noVisibleLongDigits": true,
+    "zhObserved": true,
+    "enObserved": true,
+    "darkObserved": true,
+    "lightObserved": true,
+    "rentalApiHttpOk": true
+  }
+}

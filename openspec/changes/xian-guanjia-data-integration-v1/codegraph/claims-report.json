@@ -1,0 +1,42 @@
+{
+  "schema": "specnav.codegraph.claims_report.v1",
+  "generated_at": "2026-07-24T13:40:24.896Z",
+  "active_change": "xian-guanjia-data-integration-v1",
+  "claims_file": "openspec/changes/xian-guanjia-data-integration-v1/codegraph/claims-map.json",
+  "evidence_index": "openspec/changes/xian-guanjia-data-integration-v1/codegraph/evidence-index.json",
+  "claims_count": 14,
+  "verified_claims": [],
+  "unverified_claims": [
+    "development:task-001-rental-foundation",
+    "development:task-002-channel-sync",
+    "development:task-003-channel-persistence",
+    "development:task-004-order-sync-orchestration",
+    "development:task-005-rental-conversion",
+    "development:task-006-device-allocation",
+    "verification:task-001-rental-foundation",
+    "verification:task-002-channel-sync",
+    "verification:task-003-channel-persistence",
+    "verification:task-004-order-sync-orchestration",
+    "verification:task-005-rental-conversion",
+    "verification:task-006-device-allocation",
+    "verification:task-007-admin-operations",
+    "verification:task-008-verification"
+  ],
+  "blockers": [],
+  "warnings": [
+    "codegraph:claim-unverified:development:task-001-rental-foundation",
+    "codegraph:claim-unverified:development:task-002-channel-sync",
+    "codegraph:claim-unverified:development:task-003-channel-persistence",
+    "codegraph:claim-unverified:development:task-004-order-sync-orchestration",
+    "codegraph:claim-unverified:development:task-005-rental-conversion",
+    "codegraph:claim-unverified:development:task-006-device-allocation",
+    "codegraph:claim-unverified:verification:task-001-rental-foundation",
+    "codegraph:claim-unverified:verification:task-002-channel-sync",
+    "codegraph:claim-unverified:verification:task-003-channel-persistence",
+    "codegraph:claim-unverified:verification:task-004-order-sync-orchestration",
+    "codegraph:claim-unverified:verification:task-005-rental-conversion",
+    "codegraph:claim-unverified:verification:task-006-device-allocation",
+    "codegraph:claim-unverified:verification:task-007-admin-operations",
+    "codegraph:claim-unverified:verification:task-008-verification"
+  ]
+}

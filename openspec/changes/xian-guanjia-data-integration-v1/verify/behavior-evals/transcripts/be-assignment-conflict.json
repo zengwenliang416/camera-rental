@@ -1,0 +1,8 @@
+{
+  "id": "be-assignment-conflict",
+  "status": "pass",
+  "prompt": "Are overlapping occupy ranges rejected?",
+  "expected": [
+    "schedule conflict error"
+  ]
+}

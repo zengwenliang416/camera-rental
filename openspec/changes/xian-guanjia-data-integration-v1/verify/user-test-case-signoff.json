@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-data-integration-v1",
+  "status": "approved",
+  "user_decision": "approve",
+  "approved_case_ids": [
+    "utc-masked-config",
+    "utc-shop-order-sync",
+    "utc-convert-and-assign"
+  ],
+  "rejected_case_ids": [],
+  "notes": [
+    "The approved case definitions are frozen; approval does not waive browser, database, or runtime evidence."
+  ]
+}

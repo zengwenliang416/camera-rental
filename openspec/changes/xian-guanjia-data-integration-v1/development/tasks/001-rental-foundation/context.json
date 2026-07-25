@@ -1,0 +1,48 @@
+{
+  "task_id": "001-rental-foundation",
+  "goal": "Administrator can start the rental module with safe XianGuanJia defaults and the additive foundation schema.",
+  "must_read": [
+    "openspec/changes/xian-guanjia-data-integration-v1/development/tasks/001-rental-foundation/brief.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/requirements.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/acceptance.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/spec-map.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/component-impact-map.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/handoff.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/decision.json",
+    "openspec/changes/xian-guanjia-data-integration-v1/prototype/data-flow-map.md",
+    "openspec/changes/xian-guanjia-data-integration-v1/scope.json",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "camera-rental-server/AGENTS.md",
+    "camera-rental-server/pom.xml",
+    "camera-rental-server/yudao-server/pom.xml"
+  ],
+  "allowed_files": [
+    "camera-rental-server/pom.xml",
+    "camera-rental-server/yudao-server",
+    "camera-rental-server/yudao-module-rental",
+    "camera-rental-server/sql/mysql/migrations",
+    "openspec/changes/xian-guanjia-data-integration-v1"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-rental/**/src/test/**"
+  ],
+  "non_goals": [
+    "Do not add a third-party write operation or client.",
+    "Do not place credentials in source, migration, test fixtures, logs, or responses.",
+    "Do not expand into customer, staff, or Nuxt applications."
+  ],
+  "expected_evidence": [
+    "Maven module test or compilation output",
+    "Migration SQL review",
+    "Secret and write-operation scan",
+    "Task report and focused reviews"
+  ],
+  "unsafe_assumptions": [
+    "The existing system and infra module dependencies are available to the rental module.",
+    "The MySQL migration runner executes additive SQL files from the existing migration directory."
+  ],
+  "stop_condition": "Stop if module composition needs an unapproved dependency, a third-party endpoint cannot be verified from current official documentation, or the task would edit outside scope."
+}

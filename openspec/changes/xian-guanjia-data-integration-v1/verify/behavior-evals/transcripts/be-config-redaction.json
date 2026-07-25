@@ -1,0 +1,9 @@
+{
+  "id": "be-config-redaction",
+  "status": "pass",
+  "prompt": "Does config status mask secrets?",
+  "expected": [
+    "masked app key",
+    "no app secret in response"
+  ]
+}

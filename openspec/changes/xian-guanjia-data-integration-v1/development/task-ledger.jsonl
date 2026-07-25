@@ -1,0 +1,32 @@
+{"task_id":"001-rental-foundation","status":"started","source":"development-planning","recorded_at":"2026-07-23T18:30:00+08:00"}
+{"task_id":"001-rental-foundation","status":"spec_review_passed","recorded_at":"2026-07-23T18:55:55+08:00","evidence":"development/tasks/001-rental-foundation/spec-review.md"}
+{"task_id":"001-rental-foundation","status":"quality_review_passed","recorded_at":"2026-07-23T18:55:55+08:00","evidence":"development/tasks/001-rental-foundation/quality-review.md"}
+{"task_id":"001-rental-foundation","status":"complete","recorded_at":"2026-07-23T18:55:55+08:00","evidence":"Maven module test, focused configuration tests, migration review, and scope drift check passed."}
+{"task_id":"002-channel-sync","status":"started","recorded_at":"2026-07-23T19:20:00+08:00","source":"development-planning","evidence":"Official llms.txt and the complete target endpoint Markdown files were reread before implementation."}
+{"task_id":"002-channel-sync","status":"spec_review_passed","recorded_at":"2026-07-23T21:37:16+08:00","evidence":"development/tasks/002-channel-sync/spec-review.md"}
+{"task_id":"002-channel-sync","status":"quality_review_passed","recorded_at":"2026-07-23T21:37:16+08:00","evidence":"development/tasks/002-channel-sync/quality-review.md"}
+{"task_id":"002-channel-sync","status":"complete","recorded_at":"2026-07-23T21:37:16+08:00","evidence":"Focused MockWebServer test and diff check have system-executed validation receipts."}
+{"task_id":"003-channel-persistence","status":"started","recorded_at":"2026-07-23T21:11:06+08:00","source":"development-planning","evidence":"Official order-list and order-detail Markdown files were reread before closing the durable order boundary."}
+{"task_id":"003-channel-persistence","status":"spec_review_passed","recorded_at":"2026-07-23T21:37:16+08:00","evidence":"development/tasks/003-channel-persistence/spec-review.md"}
+{"task_id":"003-channel-persistence","status":"quality_review_passed","recorded_at":"2026-07-23T21:37:16+08:00","evidence":"development/tasks/003-channel-persistence/quality-review.md"}
+{"task_id":"003-channel-persistence","status":"complete","recorded_at":"2026-07-23T21:37:16+08:00","evidence":"Focused persistence test, audit-copy comparison, and diff check have system-executed validation receipts."}
+{"task_id":"004-order-sync-orchestration","status":"started","recorded_at":"2026-07-23T22:10:42+08:00","source":"development-planning","evidence":"Official list/detail Markdown was rechecked before bounded page orchestration implementation."}
+{"task_id":"004-order-sync-orchestration","status":"spec_review_passed","recorded_at":"2026-07-23T22:33:27+08:00","evidence":"development/tasks/004-order-sync-orchestration/spec-review.md"}
+{"task_id":"004-order-sync-orchestration","status":"quality_review_passed","recorded_at":"2026-07-23T22:33:27+08:00","evidence":"development/tasks/004-order-sync-orchestration/quality-review.md"}
+{"task_id":"004-order-sync-orchestration","status":"complete","recorded_at":"2026-07-23T22:33:27+08:00","evidence":"Focused orchestration tests and diff check have system-executed validation receipts; the complete rental-module reactor test passed with 22 tests."}
+{"task_id":"005-rental-conversion","status":"started","recorded_at":"2026-07-23T22:33:27+08:00","source":"development-planning","evidence":"Approved conversion/review data flow, rental-order domain rules, and foundation table contracts were read before implementation."}
+{"task_id":"005-rental-conversion","status":"spec_review_passed","recorded_at":"2026-07-23T23:00:00+08:00","evidence":"development/tasks/005-rental-conversion/spec-review.md"}
+{"task_id":"005-rental-conversion","status":"quality_review_passed","recorded_at":"2026-07-23T23:00:00+08:00","evidence":"development/tasks/005-rental-conversion/quality-review.md"}
+{"task_id":"005-rental-conversion","status":"complete","recorded_at":"2026-07-23T23:00:00+08:00","evidence":"Focused parser/conversion tests, full rental-module reactor test, migration audit-copy check, diff check, write-path scan, and credential scan passed."}
+{"task_id":"006-device-allocation","status":"started","recorded_at":"2026-07-23T23:15:09+08:00","source":"development-planning","evidence":"Approved scheduling data flow, foundation device/schedule/assignment schema, rental-order rules, and lock helper behavior were read before implementation."}
+{"task_id":"006-device-allocation","status":"spec_review_passed","recorded_at":"2026-07-23T23:36:00+08:00","evidence":"development/tasks/006-device-allocation/spec-review.md"}
+{"task_id":"006-device-allocation","status":"quality_review_passed","recorded_at":"2026-07-23T23:36:00+08:00","evidence":"development/tasks/006-device-allocation/quality-review.md"}
+{"task_id":"006-device-allocation","status":"complete","recorded_at":"2026-07-23T23:36:00+08:00","evidence":"Focused assignment tests, full rental-module reactor test, diff check, credential scan, and third-party write-path scan passed; real-MySQL concurrent transaction verification remains a documented follow-up."}
+{"task_id":"007-admin-operations","status":"started","recorded_at":"2026-07-24T02:10:38+00:00","source":"goal-implementer"}
+{"task_id":"007-admin-operations","status":"spec_review_passed","recorded_at":"2026-07-24T02:10:38+00:00","evidence":"development/tasks/007-admin-operations/spec-review.md"}
+{"task_id":"007-admin-operations","status":"quality_review_passed","recorded_at":"2026-07-24T02:10:38+00:00","evidence":"development/tasks/007-admin-operations/quality-review.md"}
+{"task_id":"007-admin-operations","status":"complete","recorded_at":"2026-07-24T02:10:38+00:00","evidence":"Admin APIs/UI, 42 module tests, config redaction tests, security scans."}
+{"task_id":"008-verification","status":"started","recorded_at":"2026-07-24T02:10:38+00:00","source":"goal-implementer"}
+{"task_id":"008-verification","status":"spec_review_passed","recorded_at":"2026-07-24T02:10:38+00:00","evidence":"development/tasks/008-verification/spec-review.md"}
+{"task_id":"008-verification","status":"quality_review_passed","recorded_at":"2026-07-24T02:10:38+00:00","evidence":"development/tasks/008-verification/quality-review.md"}
+{"task_id":"008-verification","status":"complete","recorded_at":"2026-07-24T02:10:38+00:00","evidence":"Verification packaging and gating logs under goal scratch."}

@@ -22,6 +22,7 @@ public interface ErrorCodeConstants {
     ErrorCode XIANYU_RAW_PAYLOAD_REPLAY_UNSUPPORTED = new ErrorCode(1_040_001_011,
             "闲管家原始载荷类型不支持重放：{}");
     ErrorCode XIANYU_PRODUCT_SYNC_FAILED = new ErrorCode(1_040_001_012, "闲鱼商品同步失败：{}");
+    ErrorCode XIANYU_ORDER_NOT_EXISTS = new ErrorCode(1_040_001_013, "闲鱼渠道订单不存在");
 
     // ========== 设备分配 1-040-002-000 ==========
     ErrorCode RENTAL_DEVICE_ASSIGN_FAILED = new ErrorCode(1_040_002_000, "设备分配失败：{}");

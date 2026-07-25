@@ -17,6 +17,8 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_ORDER_NOT_EXISTS;
 import static cn.iocoder.yudao.module.rental.enums.rental.RentalManualReviewStatusEnum.OPEN;
 
 /**
@@ -60,7 +62,8 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
         Objects.requireNonNull(channelOrderId, "channelOrderId");
         XianyuOrderDO source = xianyuOrderMapper.selectByIdForUpdate(channelOrderId);
         if (source == null) {
-            throw new IllegalArgumentException("Unknown channel order");
+            // Missing or cross-tenant id: do not leak existence; return business not-found (not 500).
+            throw exception(XIANYU_ORDER_NOT_EXISTS);
         }
         if (source.getRentalOrderId() != null) {
             return RentalConversionResult.converted(source.getRentalOrderId());

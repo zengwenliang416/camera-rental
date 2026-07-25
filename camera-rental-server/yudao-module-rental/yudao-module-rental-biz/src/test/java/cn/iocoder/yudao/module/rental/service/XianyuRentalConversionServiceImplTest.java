@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.rental.service;
 
+import cn.iocoder.yudao.framework.common.exception.ServiceException;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalManualReviewDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderItemDO;
@@ -19,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_ORDER_NOT_EXISTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -136,7 +138,9 @@ class XianyuRentalConversionServiceImplTest {
     void shouldNotCreateReviewForAnUnknownChannelOrder() {
         when(xianyuOrderMapper.selectByIdForUpdate(10L)).thenReturn(null);
 
-        assertThrows(IllegalArgumentException.class, () -> service.convert(10L));
+        ServiceException ex = assertThrows(ServiceException.class, () -> service.convert(10L));
+        assertEquals(XIANYU_ORDER_NOT_EXISTS.getCode(), ex.getCode());
+        assertEquals(XIANYU_ORDER_NOT_EXISTS.getMsg(), ex.getMessage());
 
         verify(manualReviewMapper, never()).insert(any(RentalManualReviewDO.class));
         verify(rentalOrderMapper, never()).insert(any(RentalOrderDO.class));

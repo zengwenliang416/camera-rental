@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.iocoder.yudao.framework.apilog.core.annotation.ApiAccessLog;
+import cn.iocoder.yudao.framework.apilog.core.util.ApiAccessLogSanitizer;
 import cn.iocoder.yudao.framework.common.util.servlet.ServletUtils;
 import cn.iocoder.yudao.framework.common.util.spring.SpringUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,13 +45,17 @@ public class ApiAccessLogInterceptor implements HandlerInterceptor {
 
         // 打印 request 日志
         if (!SpringUtils.isProd()) {
-            Map<String, String> queryString = ServletUtils.getParamMap(request);
-            String requestBody = ServletUtils.getBody(request);
-            if (CollUtil.isEmpty(queryString) && StrUtil.isEmpty(requestBody)) {
+            if (!isRequestLogEnabled(handlerMethod)) {
                 log.info("[preHandle][开始请求 URL({}) 无参数]", request.getRequestURI());
             } else {
-                log.info("[preHandle][开始请求 URL({}) 参数({})]", request.getRequestURI(),
-                        StrUtil.blankToDefault(requestBody, queryString.toString()));
+                Map<String, String> queryString = ServletUtils.getParamMap(request);
+                String requestBody = ServletUtils.getBody(request);
+                if (CollUtil.isEmpty(queryString) && StrUtil.isEmpty(requestBody)) {
+                    log.info("[preHandle][开始请求 URL({}) 无参数]", request.getRequestURI());
+                } else {
+                    log.info("[preHandle][开始请求 URL({}) 参数({})]", request.getRequestURI(),
+                            ApiAccessLogSanitizer.sanitizeForConsole(queryString, requestBody));
+                }
             }
             // 计时
             StopWatch stopWatch = new StopWatch();
@@ -98,6 +104,14 @@ public class ApiAccessLogInterceptor implements HandlerInterceptor {
         } catch (Exception ignore) {
             // 忽略异常。原因：仅仅打印，非重要逻辑
         }
+    }
+
+    private boolean isRequestLogEnabled(HandlerMethod handlerMethod) {
+        if (handlerMethod == null) {
+            return true;
+        }
+        ApiAccessLog accessLog = handlerMethod.getMethodAnnotation(ApiAccessLog.class);
+        return accessLog == null || accessLog.requestEnable();
     }
 
 }

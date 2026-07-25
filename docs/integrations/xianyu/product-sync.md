@@ -24,6 +24,46 @@
 
 创建、编辑、库存修改、上下架和删除均为写操作，默认禁用。
 
+已于 `2026-07-23` 核对当前在线只读接口：
+
+| 接口 | 方法与路径 | 关键约束 |
+| --- | --- | --- |
+| 查询商品类目 | `POST /api/open/product/category/list` | `item_biz_type` 必填 |
+| 查询商品属性 | `POST /api/open/product/pv/list` | 类目和业务类型必填，可按 `sub_property_id` 递归查询 |
+| 查询商品列表 | `POST /api/open/product/list` | 仅查询最近六个月更新；单条件最多翻取一万条 |
+| 查询商品详情 | `POST /api/open/product/detail` | `product_id` 必填 |
+| 查询商品规格 | `POST /api/open/product/sku/list` | 仅多规格商品；一次最多 100 个 `product_id` |
+
+商品推送已于 `2026-07-25` 核对并纳入 V1 只读闭环：
+
+| 接口 | 方法与路径 | 关键约束 |
+| --- | --- | --- |
+| 商品推送通知 | 商家配置的 `POST` 回调 URL | `appid`、秒级 `timestamp` 和 `sign` 验签；请求体包含 `seller_id`、`product_id`、状态、价格、库存和 `modify_time` |
+
+本地接收地址为 `POST /xianyu/webhooks/product`。商品推送只登记本地脱敏
+`PRODUCT_PUSH` 原始载荷和幂等事件，然后异步调用商品详情只读接口补拉完整详情
+并 upsert `xianyu_product`。推送和重放都不会执行商品创建、编辑、库存修改、
+上下架或删除。
+
+商品列表 `page_no` 和 `page_size` 均最大 100。常规同步使用固定
+`update_time` 窗口，并在触及一万条上限前拆分时间区间。
+
+商品列表和规格增量同步已于 `2026-07-25` 纳入 V1 只读编排：
+
+- `xianyuProductSyncJob` 和可选 Spring fallback 按 `XGJ_JOB_PRODUCT_CRON`
+  触发。
+- 每个有效授权店铺使用独立 `PRODUCT` cursor、独立租户锁和固定
+  `update_time` 窗口。
+- `PRODUCT_PAGE` 原始列表页先写入受限原始载荷表，再解析分页元数据。
+- 商品列表只作为刷新索引；缺失或过期详情通过 `POST /api/open/product/detail`
+  补拉并 upsert `xianyu_product`。
+- 多规格商品按最多 100 个 `product_id` 分块调用
+  `POST /api/open/product/sku/list` 并 upsert `xianyu_product_sku`。
+- 仅在固定窗口所有页成功且行数与探测 count 一致后推进 PRODUCT cursor。
+
+商品列表只返回基础信息，详情通过商品详情接口补拉。商品状态筛选为空时，官方
+默认不返回已删除商品；需要审计删除状态时必须显式使用允许的状态筛选并保留原值。
+
 ## 建议映射
 
 | 外部对象 | 内部对象 | 关系 |
@@ -33,18 +73,26 @@
 | 渠道库存 | 时间段可租数量 | 策略结果，不是设备实例 |
 | 商品外部 ID | 渠道商品记录 | 需唯一约束 |
 
-## 待补官方字段
+## 当前字段规则
 
 | 项目 | 状态 |
 | --- | --- |
-| 类目 / 属性查询 | 待从目标 Markdown 补录 |
-| 商品列表分页 | 待从目标 Markdown 补录 |
-| 详情和规格字段 | 待从目标 Markdown 补录 |
-| 商品库存单位 | 待从目标 Markdown 补录 |
+| 类目 / 属性查询 | 已核对；属性支持下级属性二次查询 |
+| 商品列表分页 | 已核对；页码/页大小最大 100，单条件最多一万条 |
+| 详情和规格字段 | 已核对；规格接口仅适用于多规格商品，一次最多 100 个商品 |
+| 商品金额 | `price`、`original_price`、`express_fee` 和 SKU `price` 单位为分 |
+| 商品库存 | 整数数量，是渠道展示库存，不是可分配设备实例数量 |
+| 外部 ID | 按字符串进入内部和前端边界，避免精度丢失 |
+| 商品详情原始数据 | 以 `PRODUCT_DETAIL` 保存到受限原始载荷表，标准化字段进入 `xianyu_product` |
+| 商品列表页原始数据 | 以 `PRODUCT_PAGE` 保存到受限原始载荷表，重放 / 审计不应推进 PRODUCT cursor |
+| 商品规格原始数据 | 以 `PRODUCT_SKUS` 保存到受限原始载荷表，标准化字段进入 `xianyu_product_sku` |
+| 商品推送原始数据 | 以 `PRODUCT_PUSH` 保存脱敏载荷，`user_name` 等敏感字段不进入普通日志 |
 
 ## 测试
 
 - 商品与 SKU 映射幂等。
 - 规格缺失和规格变化。
+- 近六个月边界、一万条窗口拆分和最多 100 个规格查询。
 - 排期结果到渠道库存的边界值。
 - 禁止在只读任务中触发商品写操作。
+- 商品推送重复、缺失店铺映射、人工重放和商品详情旧快照不覆盖新快照。

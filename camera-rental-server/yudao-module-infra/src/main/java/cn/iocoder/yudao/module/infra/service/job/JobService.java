@@ -4,6 +4,7 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.infra.controller.admin.job.vo.job.JobPageReqVO;
 import cn.iocoder.yudao.module.infra.controller.admin.job.vo.job.JobSaveReqVO;
 import cn.iocoder.yudao.module.infra.dal.dataobject.job.JobDO;
+import cn.iocoder.yudao.module.infra.service.job.dto.JobCreateReqDTO;
 import jakarta.validation.Valid;
 import org.quartz.SchedulerException;
 
@@ -23,6 +24,14 @@ public interface JobService {
      * @return 编号
      */
     Long createJob(@Valid JobSaveReqVO createReqVO) throws SchedulerException;
+
+    /**
+     * Create a programmatically managed job unless the handler is already registered.
+     *
+     * @param createReqDTO create information
+     * @return created or existing job id
+     */
+    Long createJobIfAbsentByHandler(@Valid JobCreateReqDTO createReqDTO) throws SchedulerException;
 
     /**
      * 更新定时任务

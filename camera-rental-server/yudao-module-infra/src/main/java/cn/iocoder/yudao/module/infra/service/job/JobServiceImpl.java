@@ -11,9 +11,11 @@ import cn.iocoder.yudao.module.infra.controller.admin.job.vo.job.JobSaveReqVO;
 import cn.iocoder.yudao.module.infra.dal.dataobject.job.JobDO;
 import cn.iocoder.yudao.module.infra.dal.mysql.job.JobMapper;
 import cn.iocoder.yudao.module.infra.enums.job.JobStatusEnum;
+import cn.iocoder.yudao.module.infra.service.job.dto.JobCreateReqDTO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.SchedulerException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,16 +55,38 @@ public class JobServiceImpl implements JobService {
         // 1.2 校验 JobHandler 是否存在
         validateJobHandlerExists(createReqVO.getHandlerName());
 
-        // 2. 插入 JobDO
-        JobDO job = BeanUtils.toBean(createReqVO, JobDO.class);
+        return insertAndSchedule(BeanUtils.toBean(createReqVO, JobDO.class));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Long createJobIfAbsentByHandler(JobCreateReqDTO createReqDTO) throws SchedulerException {
+        validateCronExpression(createReqDTO.getCronExpression());
+        validateJobHandlerExists(createReqDTO.getHandlerName());
+        JobDO existing = jobMapper.selectByHandlerName(createReqDTO.getHandlerName());
+        if (existing != null) {
+            return existing.getId();
+        }
+        try {
+            return insertAndSchedule(BeanUtils.toBean(createReqDTO, JobDO.class));
+        } catch (DuplicateKeyException ex) {
+            JobDO concurrentlyCreated = jobMapper.selectByHandlerName(createReqDTO.getHandlerName());
+            if (concurrentlyCreated != null) {
+                return concurrentlyCreated.getId();
+            }
+            throw ex;
+        }
+    }
+
+    private Long insertAndSchedule(JobDO job) throws SchedulerException {
         job.setStatus(JobStatusEnum.INIT.getStatus());
         fillJobMonitorTimeoutEmpty(job);
         jobMapper.insert(job);
 
-        // 3.1 添加 Job 到 Quartz 中
+        // 添加 Job 到 Quartz 中
         schedulerManager.addJob(job.getId(), job.getHandlerName(), job.getHandlerParam(), job.getCronExpression(),
-                createReqVO.getRetryCount(), createReqVO.getRetryInterval());
-        // 3.2 更新 JobDO
+                job.getRetryCount(), job.getRetryInterval());
+        // 更新 JobDO
         JobDO updateObj = JobDO.builder().id(job.getId()).status(JobStatusEnum.NORMAL.getStatus()).build();
         jobMapper.updateById(updateObj);
         return job.getId();

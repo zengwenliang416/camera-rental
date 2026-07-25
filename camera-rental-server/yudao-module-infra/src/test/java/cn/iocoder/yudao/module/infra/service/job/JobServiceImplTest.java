@@ -10,6 +10,7 @@ import cn.iocoder.yudao.module.infra.dal.dataobject.job.JobDO;
 import cn.iocoder.yudao.module.infra.dal.mysql.job.JobMapper;
 import cn.iocoder.yudao.module.infra.enums.job.JobStatusEnum;
 import cn.iocoder.yudao.module.infra.job.job.JobLogCleanJob;
+import cn.iocoder.yudao.module.infra.service.job.dto.JobCreateReqDTO;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -26,6 +27,7 @@ import static cn.iocoder.yudao.module.infra.enums.ErrorCodeConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verify;
 
 @Import(JobServiceImpl.class)
@@ -89,12 +91,58 @@ public class JobServiceImplTest extends BaseDbUnitTest {
     }
 
     @Test
+    public void testCreateJobIfAbsent_existingReturnsExistingId() throws SchedulerException {
+        JobDO existing = randomPojo(JobDO.class, o -> o.setHandlerName("jobLogCleanJob"));
+        jobMapper.insert(existing);
+        JobCreateReqDTO reqDTO = createProgrammaticJobReq("jobLogCleanJob");
+        try (MockedStatic<SpringUtil> springUtilMockedStatic = mockStatic(SpringUtil.class)) {
+            springUtilMockedStatic.when(() -> SpringUtil.getBean(eq(reqDTO.getHandlerName())))
+                    .thenReturn(jobLogCleanJob);
+
+            Long jobId = jobService.createJobIfAbsentByHandler(reqDTO);
+
+            assertEquals(existing.getId(), jobId);
+            verifyNoInteractions(schedulerManager);
+        }
+    }
+
+    @Test
+    public void testCreateJobIfAbsent_success() throws SchedulerException {
+        JobCreateReqDTO reqDTO = createProgrammaticJobReq("jobLogCleanJob");
+        try (MockedStatic<SpringUtil> springUtilMockedStatic = mockStatic(SpringUtil.class)) {
+            springUtilMockedStatic.when(() -> SpringUtil.getBean(eq(reqDTO.getHandlerName())))
+                    .thenReturn(jobLogCleanJob);
+
+            Long jobId = jobService.createJobIfAbsentByHandler(reqDTO);
+
+            JobDO job = jobMapper.selectById(jobId);
+            assertNotNull(job);
+            assertEquals(reqDTO.getName(), job.getName());
+            assertEquals(JobStatusEnum.NORMAL.getStatus(), job.getStatus());
+            verify(schedulerManager).addJob(eq(job.getId()), eq(job.getHandlerName()), eq(job.getHandlerParam()),
+                    eq(job.getCronExpression()), eq(reqDTO.getRetryCount()), eq(reqDTO.getRetryInterval()));
+        }
+    }
+
+    @Test
     public void testUpdateJob_jobNotExists(){
         // 准备参数
         JobSaveReqVO reqVO = randomPojo(JobSaveReqVO.class, o -> o.setCronExpression("0 0/1 * * * ? *"));
 
         // 调用，并断言异常
         assertServiceException(() -> jobService.updateJob(reqVO), JOB_NOT_EXISTS);
+    }
+
+    private JobCreateReqDTO createProgrammaticJobReq(String handlerName) {
+        JobCreateReqDTO reqDTO = new JobCreateReqDTO();
+        reqDTO.setName("Programmatic job");
+        reqDTO.setHandlerName(handlerName);
+        reqDTO.setHandlerParam("");
+        reqDTO.setCronExpression("0 0/1 * * * ? *");
+        reqDTO.setRetryCount(1);
+        reqDTO.setRetryInterval(1000);
+        reqDTO.setMonitorTimeout(0);
+        return reqDTO;
     }
 
     @Test

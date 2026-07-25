@@ -6,7 +6,8 @@ spring:
   autoconfigure:
     # noinspection SpringBootApplicationYaml
     exclude:
-      - org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration # 默认 local 环境，不开启 Quartz 的自动配置
+      # 开启 Quartz：闲管家同步走 infra 定时任务（xianyuShopSyncJob / xianyuOrderSyncJob）
+      # - org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration
       - org.springframework.ai.vectorstore.qdrant.autoconfigure.QdrantVectorStoreAutoConfiguration # 禁用 AI 模块的 Qdrant，手动创建
       - org.springframework.ai.vectorstore.milvus.autoconfigure.MilvusVectorStoreAutoConfiguration # 禁用 AI 模块的 Milvus，手动创建
   # 数据源配置项
@@ -20,7 +21,7 @@ spring:
         url-pattern: /druid/*
         login-username: # 控制台管理用户名和密码
         login-password:
-${REDACTED_SECRET:}      filter:
+      filter:
         stat:
           enabled: true
           log-slow-sql: true # 慢 SQL 记录
@@ -57,7 +58,7 @@ ${REDACTED_SECRET:}      filter:
           #          url: jdbc:postgresql://127.0.0.1:5432/postgres # OpenGauss 连接的示例
           #          url: jdbc:postgresql://127.0.0.1:5866/ruoyi-vue-pro # 瀚高 HighGo 连接的示例
           username: root
-          password: ${REDACTED_SECRET:}
+          password: root # local MySQL root
           #          username: sa # SQL Server 连接的示例
           #          password: Yudao@2024 # SQL Server 连接的示例
           #          username: SYSDBA # DM 连接的示例
@@ -70,7 +71,7 @@ ${REDACTED_SECRET:}      filter:
           lazy: true # 开启懒加载，保证启动速度
           url: jdbc:mysql://127.0.0.1:3306/ruoyi-vue-pro?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&nullCatalogMeansCurrent=true
           username: root
-          password: ${REDACTED_SECRET:}
+          password: root # local MySQL root
 #        tdengine: # IoT 数据库（需要 IoT 物联网再开启噢！）
 #          lazy: true # 开启懒加载，保证启动速度
 #          url: jdbc:TAOS-WS://127.0.0.1:6041/ruoyi_vue_pro?varcharAsString=true&enableAutoReconnect=true # 参见：https://t.zsxq.com/qaX9c，开启 TDengine WebSocket 自动重连
@@ -86,7 +87,7 @@ ${REDACTED_SECRET:}      filter:
       host: 127.0.0.1 # 地址
       port: 6379 # 端口
       database: 0 # 数据库索引
-#      password: dev # 密码，建议生产环境开启
+      password: ${REDIS_PASSWORD:} # set via scripts/start-local.sh or .env.local
 
 --- #################### 定时任务相关配置 ####################
 
@@ -131,7 +132,7 @@ spring:
     host: 127.0.0.1 # RabbitMQ 服务的地址
     port: 5672 # RabbitMQ 服务的端口
     username: rabbit # RabbitMQ 服务的账号
-    password: ${REDACTED_SECRET:}
+    password: rabbit
   # Kafka 配置项，对应 KafkaProperties 配置类
   kafka:
     bootstrap-servers: 127.0.0.1:9092 # 指定 Kafka Broker 地址，可以设置多个，以逗号分隔
@@ -163,7 +164,7 @@ spring:
         instance:
           service-host-type: IP # 注册实例时，优先使用 IP [IP, HOST_NAME, CANONICAL_HOST_NAME]
         username: admin
-        password: ${REDACTED_SECRET:}
+        password: admin
       # Spring Boot Admin Server 服务端的相关配置
       context-path: /admin # 配置 Spring
       # 允许嵌入 iframe 的域名（支持通配符），实际部署时，可以改为 "'self' [你的公网域名]"
@@ -183,6 +184,9 @@ logging:
     cn.iocoder.yudao.module.pay.dal.mysql: debug
     cn.iocoder.yudao.module.pay.dal.mysql.notify.PayNotifyTaskMapper: INFO # 配置 PayNotifyTaskMapper 的日志级别为 info
     cn.iocoder.yudao.module.system.dal.mysql: debug
+    cn.iocoder.yudao.module.system.dal.mysql.user.AdminUserMapper: INFO # 避免打印用户密码哈希、手机号等敏感字段
+    cn.iocoder.yudao.module.system.dal.mysql.logger.LoginLogMapper: INFO # 避免打印登录 IP、UA 等登录明细
+    cn.iocoder.yudao.module.system.dal.mysql.oauth2: INFO # 避免打印 accessToken / refreshToken / client secret
     cn.iocoder.yudao.module.system.dal.mysql.sms.SmsChannelMapper: INFO # 配置 SmsChannelMapper 的日志级别为 info
     cn.iocoder.yudao.module.tool.dal.mysql: debug
     cn.iocoder.yudao.module.member.dal.mysql: debug
@@ -205,26 +209,16 @@ debug: false
 --- #################### 微信公众号、小程序相关配置 ####################
 wx:
   mp: # 公众号配置（必填），参见 https://github.com/Wechat-Group/WxJava/blob/develop/spring-boot-starters/wx-java-mp-spring-boot-starter/README.md 文档
-#    app-id: wx041349c6f39b268b # 测试号（牛希尧提供的）
-#    secret: 5abee519483bc9f8cb37ce280e814bd0
-#    app-id: wx5b23ba7a5589ecbb # 测试号（自己的）
-#    secret: 2a7b3b20c537e52e74afd395eb85f61f
-    app-id: wxf56b1542b9e85f8a # 测试号（Kongdy 提供的）
-    secret: 496379dcef1ba869e9234de8d598cfd3
+    app-id: ${WX_MP_APP_ID:}
+    secret: ${WX_MP_SECRET:}
     # 存储配置，解决 AccessToken 的跨节点的共享
     config-storage:
       type: RedisTemplate # 采用 RedisTemplate 操作 Redis，会自动从 Spring 中获取
       key-prefix: wx # Redis Key 的前缀
       http-client-type: HttpComponents # 采用 HttpComponents（HttpClient 5）请求微信公众号平台
   miniapp: # 小程序配置（必填），参见 https://github.com/Wechat-Group/WxJava/blob/develop/spring-boot-starters/wx-java-miniapp-spring-boot-starter/README.md 文档
-    #    appid: wx62056c0d5e8db250 # 测试号（牛希尧提供的）
-    #    secret: 333ae72f41552af1e998fe1f54e1584a
-#    appid: wx63c280fe3248a3e7 # wenhualian的接口测试号
-#    secret: 6f270509224a7ae1296bbf1c8cb97aed
-    appid: wxc4598c446f8a9cb3 # 测试号（Kongdy 提供的）
-    secret: 4a1a04e07f6a4a0751b39c3064a92c8b
-#    appid: wx66186af0759f47c9 # 测试号（puhui 提供的）
-#    secret: 3218bcbd112cbc614c7264ceb20144ac
+    appid: ${WX_MINIAPP_APP_ID:}
+    secret: ${WX_MINIAPP_SECRET:}
     config-storage:
       type: RedisTemplate # 采用 RedisTemplate 操作 Redis，会自动从 Spring 中获取
       key-prefix: wa # Redis Key 的前缀
@@ -249,33 +243,33 @@ yudao:
     env-version: develop # 小程序版本: 正式版为 "release"；体验版为 "trial"；开发版为 "develop"
   wxa-subscribe-message:
     miniprogram-state: developer # 跳转小程序类型：开发版为 “developer”；体验版为 “trial”为；正式版为 “formal”
-  tencent-lbs-key: TVDBZ-TDILD-4ON4B-PFDZA-RNLKH-VVF6E # QQ 地图的密钥 https://lbs.qq.com/service/staticV2/staticGuide/staticDoc
+  tencent-lbs-key: ${TENCENT_LBS_KEY:} # QQ 地图的密钥 https://lbs.qq.com/service/staticV2/staticGuide/staticDoc
 
 justauth:
   enabled: true
   type:
     DINGTALK: # 钉钉
       client-id: dingvrnreaje3yqvzhxg
-      client-secret: ${REDACTED_SECRET:}
+      client-secret:
       ignore-check-redirect-uri: true
     WECHAT_ENTERPRISE: # 企业微信
       client-id: wwd411c69a39ad2e54
-      client-secret: ${REDACTED_SECRET:}
+      client-secret:
       agent-id: 1000004
       ignore-check-redirect-uri: true
     # noinspection SpringBootApplicationYaml
     WECHAT_MINI_PROGRAM: # 微信小程序
       client-id: ${wx.miniapp.appid}
-      client-secret: ${REDACTED_SECRET:}
+      client-secret:
       ignore-check-redirect-uri: true
       ignore-check-state: true # 微信小程序，不会使用到 state，所以不进行校验
     WECHAT_MP: # 微信公众号
       client-id: ${wx.mp.app-id}
-      client-secret: ${REDACTED_SECRET:}
+      client-secret:
       ignore-check-redirect-uri: true
     ALIPAY: # 支付宝小程序
       client-id: xx
-      client-secret: ${REDACTED_SECRET:}
+      client-secret:
       alipay-public-key: xx
       ignore-check-redirect-uri: true
       ignore-check-state: true
@@ -283,3 +277,38 @@ justauth:
     type: REDIS
     prefix: 'social_auth_state:' # 缓存前缀，目前只对 Redis 缓存生效，默认 JUSTAUTH::STATE::
     timeout: 24h # 超时时长，目前只对 Redis 缓存生效，默认 3 分钟
+
+--- #################### 相机租赁 / 闲管家（本地） ####################
+# 凭据只允许环境变量注入，例如：
+#   export XGJ_ENABLED=true
+#   export XGJ_APP_KEY=your-app-key
+#   export XGJ_APP_SECRET=your-app-secret
+# 不要在本文件写入真实 AppKey / AppSecret。
+rental:
+  xianyu:
+    enabled: ${XGJ_ENABLED:false}
+    base-url: ${XGJ_BASE_URL:https://open.goofish.pro}
+    app-key: ${XGJ_APP_KEY:}
+    app-secret: ${XGJ_APP_SECRET:}
+    webhook-base-url: ${XGJ_WEBHOOK_BASE_URL:}
+    tenant-id: ${XGJ_TENANT_ID:}
+    # 定时同步默认复用 infra Job + Quartz；Spring @Scheduled 仅作显式兜底。
+    # 关闭：export XGJ_JOB_ENABLED=false
+    job:
+      enabled: ${XGJ_JOB_ENABLED:true}
+      shop-cron: ${XGJ_JOB_SHOP_CRON:0 0/30 * * * ?}   # 每 30 分钟同步授权店铺
+      order-cron: ${XGJ_JOB_ORDER_CRON:0 * * * * ?}    # 每 1 分钟增量同步订单详情并入库
+      product-cron: ${XGJ_JOB_PRODUCT_CRON:0 0/10 * * * ?} # 每 10 分钟同步商品详情和多规格 SKU
+      after-sale-cron: ${XGJ_JOB_AFTER_SALE_CRON:0 0/10 * * * ?} # 每 10 分钟同步售后列表和详情
+      push-retry-cron: ${XGJ_JOB_PUSH_RETRY_CRON:0 0/5 * * * ?}
+      lookback-days: 7
+      overlap-minutes: 10
+      max-pages-per-shop: 20
+      page-size: 50
+      push-retry-stale-seconds: 120
+      push-retry-batch-size: 100
+      # 优先 infra Job（基础设施 → 定时任务）；仅当 Quartz 不可用时再开 spring-schedule
+      spring-schedule-enabled: ${XGJ_JOB_SPRING_SCHEDULE:false}
+      # 启动阶段同步会阻塞应用就绪，默认关闭；仅排障或一次性补数时显式开启
+      startup-sync-enabled: ${XGJ_JOB_STARTUP_SYNC:false}
+      register-infra-jobs: ${XGJ_JOB_REGISTER_INFRA_JOBS:${XGJ_JOB_REGISTER_INFRA:true}}

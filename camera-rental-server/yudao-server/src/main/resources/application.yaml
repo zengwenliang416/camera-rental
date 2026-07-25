@@ -352,3 +352,15 @@ yudao:
       type: redis # 消息总线的类型
 
 debug: false
+
+--- #################### 相机租赁与闲管家相关配置 ####################
+
+rental:
+  xianyu:
+    # 默认关闭。本地/部署通过环境变量注入，禁止把真实 AppSecret 写入仓库。
+    enabled: ${XGJ_ENABLED:false}
+    base-url: ${XGJ_BASE_URL:https://open.goofish.pro}
+    app-key: ${XGJ_APP_KEY:}
+    app-secret: ${XGJ_APP_SECRET:}
+    webhook-base-url: ${XGJ_WEBHOOK_BASE_URL:}
+    tenant-id: ${XGJ_TENANT_ID:}

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalReportMapper">
+
+    <sql id="OrderReportTimeRange">
+        AND COALESCE(o.order_time, o.source_created_at, o.create_time) &gt;= #{startDate}
+        AND COALESCE(o.order_time, o.source_created_at, o.create_time) &lt; #{endDateExclusive}
+    </sql>
+
+    <select id="selectOverview"
+            resultType="cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalReportOverviewRespVO">
+        SELECT
+            (
+                SELECT COUNT(1)
+                FROM xianyu_order o
+                WHERE o.tenant_id = #{tenantId}
+                  AND o.deleted = b'0'
+                  <include refid="OrderReportTimeRange"/>
+            ) AS order_count,
+            (
+                SELECT COALESCE(SUM(o.pay_amount), 0)
+                FROM xianyu_order o
+                WHERE o.tenant_id = #{tenantId}
+                  AND o.deleted = b'0'
+                  <include refid="OrderReportTimeRange"/>
+            ) AS rent_amount_fen,
+            (
+                SELECT COALESCE(SUM(o.refund_amount), 0)
+                FROM xianyu_order o
+                WHERE o.tenant_id = #{tenantId}
+                  AND o.deleted = b'0'
+                  <include refid="OrderReportTimeRange"/>
+            ) AS refund_amount_fen,
+            (
+                SELECT COUNT(1)
+                FROM rental_device d
+                WHERE d.tenant_id = #{tenantId}
+                  AND d.deleted = b'0'
+                  AND DATE(d.create_time) &lt; #{endDateExclusive}
+            ) AS device_count,
+            (
+                SELECT COALESCE(SUM(DATEDIFF(
+                    #{endDateExclusive},
+                    GREATEST(#{startDate}, DATE(d.create_time))
+                )), 0)
+                FROM rental_device d
+                WHERE d.tenant_id = #{tenantId}
+                  AND d.deleted = b'0'
+                  AND DATE(d.create_time) &lt; #{endDateExclusive}
+            ) AS total_device_days,
+            (
+                SELECT COALESCE(SUM(DATEDIFF(
+                    LEAST(s.occupy_end_date_exclusive, #{endDateExclusive}),
+                    GREATEST(s.occupy_start_date, #{startDate})
+                )), 0)
+                FROM rental_schedule s
+                INNER JOIN rental_device d
+                    ON d.id = s.device_id
+                   AND d.tenant_id = #{tenantId}
+                   AND d.deleted = b'0'
+                WHERE s.tenant_id = #{tenantId}
+                  AND s.deleted = b'0'
+                  AND s.status = 'EFFECTIVE'
+                  AND s.occupy_start_date &lt; #{endDateExclusive}
+                  AND s.occupy_end_date_exclusive &gt; #{startDate}
+            ) AS occupied_device_days,
+            (
+                SELECT COALESCE(SUM(oi.rent_amount), 0)
+                FROM rental_order_item oi
+                WHERE oi.tenant_id = #{tenantId}
+                  AND oi.deleted = b'0'
+                  AND oi.billable_start_date &gt;= #{startDate}
+                  AND oi.billable_start_date &lt; #{endDateExclusive}
+                  AND EXISTS (
+                      SELECT 1
+                      FROM rental_device_assignment a
+                      WHERE a.tenant_id = #{tenantId}
+                        AND a.deleted = b'0'
+                        AND a.status = 'ASSIGNED'
+                        AND a.rental_order_item_id = oi.id
+                  )
+            ) AS assigned_income_fen
+    </select>
+
+    <select id="selectSourceBreakdown"
+            resultType="cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalReportSourceRespVO">
+        SELECT
+            'XIANYU' AS source_type,
+            COUNT(1) AS order_count,
+            COALESCE(SUM(o.pay_amount), 0) AS rent_amount_fen,
+            COALESCE(SUM(o.refund_amount), 0) AS refund_amount_fen
+        FROM xianyu_order o
+        WHERE o.tenant_id = #{tenantId}
+          AND o.deleted = b'0'
+          <include refid="OrderReportTimeRange"/>
+    </select>
+
+    <select id="selectProductSkuPage"
+            resultType="cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalProductSkuReportRespVO">
+        SELECT
+            o.shop_id,
+            o.external_product_id,
+            o.external_sku_id,
+            MAX(o.goods_title) AS goods_title,
+            COUNT(1) AS order_count,
+            COALESCE(SUM(o.goods_quantity), 0) AS goods_quantity,
+            COALESCE(SUM(o.pay_amount), 0) AS rent_amount_fen,
+            COALESCE(SUM(o.refund_amount), 0) AS refund_amount_fen
+        FROM xianyu_order o
+        WHERE o.tenant_id = #{tenantId}
+          AND o.deleted = b'0'
+          <include refid="OrderReportTimeRange"/>
+        GROUP BY o.shop_id, o.external_product_id, o.external_sku_id
+        ORDER BY rent_amount_fen DESC, order_count DESC, o.shop_id,
+                 o.external_product_id, o.external_sku_id
+    </select>
+
+    <select id="selectDevicePerformancePage"
+            resultType="cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDevicePerformanceReportRespVO">
+        SELECT
+            d.id AS device_id,
+            d.device_no,
+            d.equipment_model_code,
+            d.status,
+            DATEDIFF(
+                #{endDateExclusive},
+                GREATEST(#{startDate}, DATE(d.create_time))
+            ) AS total_days,
+            COALESCE(s.occupied_days, 0) AS occupied_days,
+            COALESCE(s.schedule_count, 0) AS schedule_count,
+            COALESCE(i.assignment_count, 0) AS assignment_count,
+            COALESCE(i.assigned_income_fen, 0) AS assigned_income_fen,
+            COALESCE(i.latest_rental_order_id, s.latest_rental_order_id) AS latest_rental_order_id
+        FROM rental_device d
+        LEFT JOIN (
+            SELECT
+                rs.device_id,
+                SUM(DATEDIFF(
+                    LEAST(rs.occupy_end_date_exclusive, #{endDateExclusive}),
+                    GREATEST(rs.occupy_start_date, #{startDate})
+                )) AS occupied_days,
+                COUNT(1) AS schedule_count,
+                MAX(rs.rental_order_id) AS latest_rental_order_id
+            FROM rental_schedule rs
+            WHERE rs.tenant_id = #{tenantId}
+              AND rs.deleted = b'0'
+              AND rs.status = 'EFFECTIVE'
+              AND rs.occupy_start_date &lt; #{endDateExclusive}
+              AND rs.occupy_end_date_exclusive &gt; #{startDate}
+            GROUP BY rs.device_id
+        ) s ON s.device_id = d.id
+        LEFT JOIN (
+            SELECT
+                a.device_id,
+                COUNT(1) AS assignment_count,
+                SUM(
+                    (oi.rent_amount DIV ac.assignment_count)
+                    + IF(a.id = ac.remainder_assignment_id,
+                         MOD(oi.rent_amount, ac.assignment_count), 0)
+                ) AS assigned_income_fen,
+                MAX(a.rental_order_id) AS latest_rental_order_id
+            FROM rental_device_assignment a
+            INNER JOIN rental_order_item oi
+                ON oi.id = a.rental_order_item_id
+               AND oi.tenant_id = #{tenantId}
+               AND oi.deleted = b'0'
+            INNER JOIN (
+                SELECT
+                    rental_order_item_id,
+                    COUNT(1) AS assignment_count,
+                    MIN(id) AS remainder_assignment_id
+                FROM rental_device_assignment
+                WHERE tenant_id = #{tenantId}
+                  AND deleted = b'0'
+                  AND status = 'ASSIGNED'
+                GROUP BY rental_order_item_id
+            ) ac ON ac.rental_order_item_id = a.rental_order_item_id
+            WHERE a.tenant_id = #{tenantId}
+              AND a.deleted = b'0'
+              AND a.status = 'ASSIGNED'
+              AND oi.billable_start_date &gt;= #{startDate}
+              AND oi.billable_start_date &lt; #{endDateExclusive}
+            GROUP BY a.device_id
+        ) i ON i.device_id = d.id
+        WHERE d.tenant_id = #{tenantId}
+          AND d.deleted = b'0'
+          AND DATE(d.create_time) &lt; #{endDateExclusive}
+        ORDER BY assigned_income_fen DESC, occupied_days DESC, d.id
+    </select>
+
+</mapper>

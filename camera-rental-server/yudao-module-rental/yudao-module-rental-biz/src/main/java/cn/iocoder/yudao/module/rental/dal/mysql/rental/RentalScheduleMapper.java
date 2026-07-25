@@ -1,0 +1,28 @@
+package cn.iocoder.yudao.module.rental.dal.mysql.rental;
+
+import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
+import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalScheduleDO;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Mapper
+public interface RentalScheduleMapper extends BaseMapperX<RentalScheduleDO> {
+
+    /**
+     * Locks every effective schedule that overlaps the requested half-open period.
+     * The caller must already hold the physical-device row lock before this query.
+     */
+    default List<RentalScheduleDO> selectEffectiveOverlapsForUpdate(Long deviceId, LocalDate startDate,
+                                                                      LocalDate endDateExclusive) {
+        return selectList(new LambdaQueryWrapper<RentalScheduleDO>()
+                .eq(RentalScheduleDO::getDeviceId, deviceId)
+                .eq(RentalScheduleDO::getStatus, "EFFECTIVE")
+                .lt(RentalScheduleDO::getOccupyStartDate, endDateExclusive)
+                .gt(RentalScheduleDO::getOccupyEndDateExclusive, startDate)
+                .last("FOR UPDATE"));
+    }
+
+}

@@ -355,5 +355,13 @@ export enum DICT_TYPE {
   IM_RTC_CALL_END_REASON = 'im_rtc_call_end_reason', // IM 通话结束原因：1=通话结束 / 2=已拒绝 / 3=已取消 / 4=无人接听 / 5=对方正忙 / 9=通话异常
   IM_RTC_PARTICIPANT_ROLE = 'im_rtc_participant_role', // IM 通话参与角色：1=发起人 / 2=被邀请者 / 3=主动加入者
   IM_RTC_PARTICIPANT_STATUS = 'im_rtc_participant_status', // IM 通话参与状态：10=邀请中 / 20=已加入 / 30=已拒绝 / 40=未应答 / 50=已离开
-  IM_CHANNEL_MATERIAL_TYPE = 'im_channel_material_type' // IM 频道素材内容类型：1=富文本 / 2=外链
+  IM_CHANNEL_MATERIAL_TYPE = 'im_channel_material_type', // IM 频道素材内容类型：1=富文本 / 2=外链
+
+  // ========== Rental 租赁 / 闲管家 ==========
+  RENTAL_XIANYU_AUTH_STATUS = 'rental_xianyu_auth_status', // 授权状态 VALID/INVALID
+  RENTAL_XIANYU_INTEGRATION_STATUS = 'rental_xianyu_integration_status', // 集成状态 READY/...
+  RENTAL_CHANNEL_CONVERSION_STATUS = 'rental_channel_conversion_status', // 渠道订单转换状态
+  RENTAL_XIANYU_ORDER_STATUS = 'rental_xianyu_order_status', // 闲鱼订单状态码
+  RENTAL_MANUAL_REVIEW_STATUS = 'rental_manual_review_status', // 人工复核状态
+  RENTAL_DEVICE_STATUS = 'rental_device_status' // 租赁设备状态
 }

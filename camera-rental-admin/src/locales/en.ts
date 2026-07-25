@@ -54,7 +54,10 @@ export default {
     updateTime: 'Update Time',
     copy: 'Copy',
     copySuccess: 'Copy Success',
-    copyError: 'Copy Error'
+    copyError: 'Copy Error',
+    yes: 'Yes',
+    no: 'No',
+    refresh: 'Refresh'
   },
   lock: {
     lockScreen: 'Lock screen',
@@ -162,6 +165,15 @@ export default {
     fail: 'verification failed'
   },
   router: {
+    rental: 'Rental ops',
+    rentalXianyu: 'XianGuanJia integration',
+    rentalOrder: 'Channel orders',
+    rentalDevice: 'Rental devices',
+    rentalReview: 'Manual review',
+    rentalSchedule: 'Device schedules',
+    rentalSyncRun: 'Sync run history',
+    rentalReport: 'Business reports',
+
     login: 'Login',
     home: 'Home',
     analysis: 'Analysis',
@@ -465,5 +477,355 @@ export default {
     btn_zoom_in: 'Zoom in',
     btn_zoom_out: 'Zoom out',
     preview: 'Preivew'
+  },
+  rental: {
+    common: {
+      yuanAmount: 'CNY {amount}',
+      retry: 'Retry',
+      loadError: 'Failed to load data. Check the network or permissions and retry.'
+    },
+    labels: {
+      auth: {
+        VALID: 'Valid',
+        INVALID: 'Invalid',
+        UNKNOWN: 'Unknown'
+      },
+      integration: {
+        READY: 'Ready',
+        DISABLED: 'Disabled',
+        MISSING_CREDENTIALS: 'Missing credentials',
+        UNKNOWN: 'Unknown'
+      },
+      conversion: {
+        PENDING: 'Pending conversion',
+        CONVERTED: 'Converted',
+        REVIEW_REQUIRED: 'Needs review',
+        FAILED: 'Failed',
+        CLOSED: 'Conversion closed',
+        UNKNOWN: 'Unknown'
+      },
+      channelOrder: {
+        '11': 'Awaiting payment',
+        '12': 'Awaiting shipment',
+        '21': 'Shipped',
+        '22': 'Completed',
+        '23': 'Refunded',
+        '24': 'Closed',
+        UNKNOWN: 'Unknown',
+        other: 'Status {code}'
+      },
+      review: {
+        OPEN: 'Open',
+        RESOLVED: 'Resolved',
+        CLOSED: 'Closed',
+        UNKNOWN: 'Unknown'
+      },
+      device: {
+        AVAILABLE: 'Available',
+        RENTED: 'Rented',
+        MAINTENANCE: 'Maintenance',
+        RETIRED: 'Retired',
+        DISABLED: 'Disabled',
+        UNKNOWN: 'Unknown'
+      },
+      schedule: {
+        EFFECTIVE: 'Effective',
+        CANCELLED: 'Cancelled',
+        UNKNOWN: 'Unknown'
+      }
+    },
+    xianyu: {
+      configTitle: 'XianGuanJia Integration Status',
+      enabled: 'Enabled',
+      status: 'Status',
+      baseUrl: 'Base URL',
+      appKey: 'AppKey (masked)',
+      appSecretConfigured: 'AppSecret configured',
+      webhookConfigured: 'Webhook URL configured',
+      secretHint: 'Credentials are env-injected only. Admin never returns AppSecret.',
+      syncShops: 'Sync authorized shops',
+      syncShopsSuccess: 'Synced {count} shops',
+      shopName: 'Shop name',
+      externalShopId: 'External shop ID',
+      authorizeId: 'Authorize ID',
+      authStatus: 'Authorization status',
+      authorizationExpiresAt: 'Authorization expires at',
+      guaranteeStatus: 'Guarantee status',
+      shopListHint:
+        'Shops sync through infra jobs by default. Startup sync is opt-in. The button is for manual catch-up only.',
+      emptyHint: 'No shops yet. Wait for the scheduler when READY, or click Sync authorized shops.',
+      alertTitle: 'Operational alerts',
+      alertType: 'Alert type',
+      alertSeverity: 'Severity',
+      alertStatus: 'Status',
+      alertSource: 'Source identifier',
+      alertMessage: 'Alert message',
+      lastSeenAt: 'Last seen',
+      resolveAlert: 'Resolve',
+      resolveAlertSuccess: 'Alert resolved',
+      alertEmptyHint:
+        'No open alerts. Authorization failures, after-sale timeouts, and sync exceptions are summarized here.',
+      replayTitle: 'Safe replay',
+      replayHint:
+        'Replays persisted order-push events or order-detail payloads only. No third-party write operation is created.',
+      pushEventId: 'Push event ID',
+      rawPayloadId: 'Raw payload ID',
+      replayPushEvent: 'Replay order push',
+      replayRawPayload: 'Replay order detail payload',
+      replayEventRequired: 'Enter a push event ID',
+      replayRawPayloadRequired: 'Enter a raw payload ID',
+      replayResult: 'Replay result: {status}, {message}',
+      rawPayloadTitle: 'Restricted raw payloads',
+      rawPayloadHint:
+        'Only separately authorized users can view this. The detail API returns re-redacted JSON only and is audited by access logs.',
+      rawSourceType: 'Source type',
+      rawSourceIdentifier: 'Source identifier',
+      payloadHash: 'Payload hash',
+      schemaVersion: 'Schema version',
+      redactionVersion: 'Redaction version',
+      receivedAt: 'Received at',
+      viewMaskedPayload: 'View masked content',
+      rawPayloadDetailTitle: 'Restricted raw payload detail',
+      rawPayloadEmptyHint:
+        'No raw payloads yet. Order, after-sale, or push synchronization writes records here.',
+      afterSaleTitle: 'Read-only after-sale sync',
+      afterSaleHint:
+        'After-sales are queried by shop authorize ID. Refund amount unit is retained as the source value for now.',
+      applyTimeRange: 'Apply time',
+      dateSeparator: 'to',
+      startTime: 'Start time',
+      endTime: 'End time',
+      productSyncTitle: 'Read-only product sync',
+      productSyncHint:
+        'Sync one page of products, details, and multi-spec SKUs by update-time window. Read-only XianGuanJia APIs only.',
+      productUpdateTimeRange: 'Product update time',
+      syncProducts: 'Sync one product page',
+      syncProductsSuccess:
+        'Received {received}, saved {succeeded}, skipped unchanged {deduplicated}, SKUs {skus}',
+      productSyncRequired: 'Select a shop and product update-time window',
+      syncAfterSales: 'Sync one after-sale page',
+      syncAfterSalesSuccess: 'Received {received}, saved {succeeded}, has next page: {hasNextPage}',
+      afterSaleSyncRequired: 'Select a shop and after-sale apply-time window',
+      externalAfterSaleId: 'External after-sale no.',
+      afterSaleStatus: 'After-sale status',
+      refundAmountFen: 'Refund amount',
+      amountUnitStatus: 'Amount unit status',
+      timeoutAt: 'Timeout at',
+      sourceUpdatedAt: 'Source updated at',
+      afterSaleEmptyHint:
+        'No local after-sales yet. Select a shop and time window to sync one page.',
+      expressCompanyTitle: 'Read-only express companies',
+      expressCode: 'Express code',
+      expressName: 'Express company',
+      expressAlias: 'Express alias',
+      hotExpress: 'Hot',
+      expressEmptyHint: 'Click refresh to query express companies from XianGuanJia.'
+    },
+    order: {
+      pageTitle: 'Channel orders',
+      shopId: 'Shop',
+      shopPlaceholder: 'Select local shop',
+      conversionStatus: 'Conversion status',
+      externalOrderId: 'External order no.',
+      externalProductId: 'External product ID',
+      externalSkuId: 'External SKU ID',
+      reportDateRange: 'Order report dates',
+      orderStatus: 'Order status',
+      payAmountFen: 'Paid amount',
+      sellerRemark: 'Seller remark',
+      windowStart: 'Window start',
+      windowEnd: 'Window end',
+      pageSize: 'Page size',
+      syncCardTitle: 'Manual catch-up (daily pulls are scheduled)',
+      syncPage: 'Catch-up one page',
+      syncRequired: 'Select shop and time window',
+      windowInvalid: 'Window start must be before end',
+      syncSuccess: 'Received {received}, saved {succeeded}',
+      syncHint:
+        'Default: infra jobs incrementally sync all VALID shops every minute. The form below is only for manual window catch-up.',
+      listHint:
+        'List is local xianyu_order. Scheduler writes automatically; refresh to see new rows.',
+      emptyHint: 'No local orders yet. Wait for the scheduler, or use manual catch-up below.',
+      fillLast30Days: 'Last 30 days',
+      convert: 'Convert',
+      conversionResult: '{status} ({reasonCode})',
+      conversionReviewResult: '{status} (review #{reviewId}, {reasonCode})',
+      goodsTitle: 'Goods title',
+      expressName: 'Express',
+      shopLoadError: 'Shop list failed to load. Manual catch-up is currently unavailable.',
+      remarkParseStatus: 'Remark parsing',
+      remarkParse: {
+        PENDING: 'Pending',
+        SUCCESS: 'Succeeded',
+        FAILED: 'Failed',
+        UNKNOWN: 'Unknown'
+      }
+    },
+    device: {
+      pageTitle: 'Rental devices',
+      modelCode: 'Equipment model',
+      deviceNo: 'Device no.',
+      serialNumber: 'Serial number',
+      status: 'Status',
+      enabled: 'Enabled',
+      assign: 'Assign',
+      assignTitle: 'Assign device occupied schedule',
+      deviceId: 'Device ID',
+      orderItemId: 'Order item ID',
+      occupyStart: 'Occupy start date',
+      occupyEndExclusive: 'Occupy end (exclusive)',
+      idempotencyKey: 'Idempotency key',
+      assignRequired: 'Please fill all required assignment fields',
+      deviceNoRequired: 'Enter a device number',
+      modelCodeRequired: 'Enter an equipment model',
+      orderItemIdInvalid: 'Order item ID must be a positive integer',
+      assignSuccess: 'Assigned assignment={assignmentId} schedule={scheduleId}',
+      createTitle: 'Create device',
+      emptyHint: 'No matching devices'
+    },
+    schedule: {
+      pageTitle: 'Device schedules',
+      rangeHint:
+        'The billable range drives rent calculation. The occupied range covers dispatch through completed return inspection and is authoritative for conflicts. Occupy end is exclusive.',
+      deviceId: 'Device ID',
+      deviceNo: 'Device no.',
+      equipmentModelCode: 'Equipment model',
+      rentalOrderId: 'Rental order ID',
+      rentalOrderItemId: 'Order item ID',
+      status: 'Schedule status',
+      billableStartDate: 'Billable start',
+      billableEndDate: 'Billable end',
+      occupyStartDate: 'Occupy start',
+      occupyEndDateExclusive: 'Occupy end (exclusive)',
+      emptyHint: 'No matching device schedules'
+    },
+    syncRun: {
+      pageTitle: 'Sync run history',
+      filters: {
+        shopId: 'Shop ID',
+        shopIdInvalid: 'Shop ID must be a positive integer',
+        resourceType: 'Resource type',
+        status: 'Run status',
+        triggerType: 'Trigger type'
+      },
+      actions: {
+        query: 'Query',
+        reset: 'Reset'
+      },
+      table: {
+        id: 'Run ID',
+        shopId: 'Shop ID',
+        resourceType: 'Resource type',
+        triggerType: 'Trigger type',
+        status: 'Status',
+        windowStart: 'Window start',
+        windowEnd: 'Window end',
+        receivedCount: 'Received',
+        deduplicatedCount: 'Deduplicated',
+        succeededCount: 'Succeeded',
+        reviewRequiredCount: 'Needs review',
+        failedCount: 'Failed',
+        lastErrorCode: 'Last error code',
+        lastErrorMessage: 'Last error message',
+        startedAt: 'Started at',
+        finishedAt: 'Finished at'
+      },
+      resourceType: {
+        ORDER: 'Orders',
+        AFTER_SALE: 'After-sales'
+      },
+      status: {
+        RUNNING: 'Running',
+        SUCCEEDED: 'Succeeded',
+        FAILED: 'Failed'
+      },
+      triggerType: {
+        MANUAL: 'Manual',
+        SCHEDULED: 'Scheduled'
+      },
+      common: {
+        emptyValue: '-'
+      },
+      empty: 'No sync runs'
+    },
+    review: {
+      pageTitle: 'Manual review',
+      status: 'Status',
+      reviewType: 'Review type',
+      sourceType: 'Source type',
+      sourceIdentifier: 'Source id',
+      reasonCode: 'Reason code',
+      reasonMessage: 'Reason message',
+      resolutionNote: 'Resolution note',
+      resolvedBy: 'Handled by',
+      resolvedAt: 'Resolved at',
+      resolve: 'Resolve',
+      close: 'Close',
+      resolveTitle: 'Resolve manual review',
+      closeTitle: 'Close manual review',
+      resolutionNotePlaceholder: 'Describe the correction or reason for closing',
+      resolutionNoteRequired: 'Enter a resolution note',
+      handleSuccess: 'Manual review updated',
+      loadError: 'Failed to load manual reviews. Please retry.',
+      emptyHint: 'No matching manual reviews',
+      reason: {
+        MISSING_REMARK: 'The seller note is empty, so the rental period cannot be extracted',
+        MISSING_ORDER_DATE: 'The order date is missing, so the rental year cannot be inferred',
+        RENTAL_PERIOD_NOT_FOUND: 'No supported rental period was found in the seller note',
+        INVALID_RENTAL_DATE: 'The seller note contains an invalid rental date',
+        INVALID_RENTAL_RANGE: 'The rental start and end date range is invalid',
+        INVALID_PAY_AMOUNT: 'The order payment amount is invalid',
+        PRODUCT_MAPPING_REQUIRED: 'The Xianyu product or SKU is not mapped to an equipment model',
+        UNKNOWN: 'Unknown review reason ({code})'
+      }
+    },
+    report: {
+      kicker: 'Operational facts',
+      pageTitle: 'Rental business report',
+      scopeHint:
+        'Revenue uses channel order time, utilization uses effective occupied schedules, and device income uses the billable start date.',
+      dateRange: 'Report range',
+      dateSeparator: 'to',
+      startDate: 'Start date',
+      endDate: 'End date',
+      refresh: 'Refresh report',
+      dateRequired: 'Select both report start and end dates',
+      dateInvalid: 'The report range must be between 1 and 366 days',
+      loadError: 'Failed to load the business report. Check the network and retry.',
+      rentAmountFen: 'Rent revenue',
+      refundAmountFen: 'Refunds',
+      orderCount: 'Order count',
+      payAmountHint: 'Uses Xianyu pay_amount and is retained even when notes cannot be parsed',
+      refundHint: 'Refunds are reported separately and are not silently netted from rent',
+      sourceOrderHint: 'Local channel orders in the selected range',
+      utilization: 'Device utilization',
+      utilizationHint: 'Effective occupied device-days / reportable device-days',
+      deviceDays: 'Occupied / reportable device-days',
+      occupiedDays: 'Occupied days',
+      idleDays: 'Idle days',
+      idleDaysValue: '{days} idle device-days',
+      assignedIncome: 'Assigned-device income',
+      assignedIncomeHint:
+        'Only assigned order items are counted; cents are distributed exactly across assignments',
+      sourceBreakdown: 'Order source',
+      sourceBreakdownHint: 'V1 currently reads XianGuanJia data only',
+      sourceType: 'Source',
+      sourceEmpty: 'No source orders in this range',
+      productTab: 'Product / SKU',
+      deviceTab: 'Device utilization and income',
+      shopId: 'Shop ID',
+      goodsTitle: 'Goods title',
+      externalProductId: 'External product ID',
+      externalSkuId: 'External SKU ID',
+      goodsQuantity: 'Quantity',
+      assignmentCount: 'Assignments',
+      viewSource: 'View source',
+      viewSchedules: 'View schedules',
+      productEmpty: 'No product or SKU revenue in this range',
+      deviceEmpty: 'No device statistics in this range',
+      source: {
+        XIANYU: 'Xianyu / XianGuanJia'
+      }
+    }
   }
 }

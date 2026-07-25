@@ -824,6 +824,7 @@ const remainingRouter: AppRouteRecordRaw[] = [
       }
     ]
   }
+  // 租赁运营菜单由 system_menu（动态路由）提供，勿再写 remaining 静态路由，否则侧栏会重复两套。
 ]
 
 export default remainingRouter

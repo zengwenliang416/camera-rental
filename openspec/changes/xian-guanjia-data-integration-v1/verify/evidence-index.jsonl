@@ -2,10 +2,13 @@
 {"id": "ev-2", "kind": "report", "domain": "unit", "path": "verify/unit/report.md", "status": "pass"}
 {"id": "ev-3", "kind": "report", "domain": "static", "path": "verify/static/report.md", "status": "pass"}
 {"id": "ev-4", "kind": "report", "domain": "facticity", "path": "verify/facticity/report.md", "status": "pass"}
-{"id": "ev-5", "kind": "report", "domain": "redteam", "path": "verify/redteam/report.md", "status": "blocked"}
+{"id": "ev-5", "kind": "report", "domain": "redteam", "path": "verify/redteam/report.md", "status": "pass"}
 {"id": "ev-6", "kind": "report", "domain": "e2e", "path": "verify/e2e/report.md", "status": "pass"}
 {"id": "ev-7", "kind": "report", "domain": "sensory", "path": "verify/sensory/report.md", "status": "pass"}
 {"id": "ev-8", "kind": "runtime-evidence", "domain": "facticity", "path": "verify/runtime-evidence.json", "status": "pass"}
 {"id": "ev-9", "kind": "focused-regression", "domain": "redteam", "path": "verify/command-results.md#replayraw-tenant-pre-check-hardening", "status": "partial"}
 {"id": "ev-10", "kind": "focused-regression", "domain": "redteam", "path": "verify/command-results.md#tenant-sensitive-id-entrypoint-hardening", "status": "partial"}
 {"id": "ev-11", "kind": "focused-regression", "domain": "redteam", "path": "verify/command-results.md#framework-tenant-security-filter-regression", "status": "partial"}
+{"id": "ev-12", "kind": "runtime-probe", "domain": "redteam", "path": "verify/redteam/cross-tenant-runtime-probe-2026-07-25.json", "status": "pass", "summary": "Dual-tenant authenticated runtime cross-tenant penetration on :48087; tenants A=1 admin B=121 admin110; 18/18 pass (C1-C4, I1-I6, L1-L2, U1, W1, S1-S3)"}
+{"id": "ev-13", "kind": "probes", "domain": "redteam", "path": "verify/redteam/probes.jsonl", "status": "pass"}
+{"id": "ev-14", "kind": "command-summary", "domain": "redteam", "path": "verify/command-results.md#dual-tenant-runtime-cross-tenant-penetration-2026-07-25", "status": "pass"}

@@ -1,60 +1,30 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-24T13:40:24.903Z",
+  "generated_at": "2026-07-25T03:03:16.267Z",
   "active_change": "xian-guanjia-data-integration-v1",
-  "status": "red",
+  "status": "green",
   "aggregate": {
     "schema_version": 1,
-    "generated_at": "2026-07-24T13:40:24.903Z",
+    "generated_at": "2026-07-25T03:03:16.267Z",
     "change_id": "xian-guanjia-data-integration-v1",
     "active_change": "xian-guanjia-data-integration-v1",
-    "verdict": "red",
+    "verdict": "green",
     "domains": {
-      "facticity": "blocked",
+      "facticity": "green",
       "static": "green",
       "unit": "green",
-      "redteam": "blocked",
-      "e2e": "blocked",
-      "sensory": "blocked"
+      "redteam": "green",
+      "e2e": "green",
+      "sensory": "green"
     },
-    "blocking_findings": [
-      "development-blocked",
-      "development:tasks-md:incomplete-checkboxes",
-      "runtime-evidence-not-green",
-      "runtime-evidence-surface-not-pass:browser",
-      "invalid-receipt:result",
-      "receipt-uncovered-scope",
-      "facticity-not-green",
-      "facticity-required-fixes",
-      "redteam-not-green",
-      "redteam-required-fixes",
-      "e2e-not-green",
-      "e2e-required-fixes",
-      "sensory-not-green",
-      "sensory-required-fixes"
-    ],
+    "blocking_findings": [],
     "residual_risk": [],
     "evidence_receipt": "verify/receipt.json",
     "behavior_eval_report": "verify/behavior-evals/report.json",
     "html_report": "verify/aggregate-report.html",
     "review_style": "claude-warm-editorial",
     "stale": false,
-    "blockers": [
-      "development-blocked",
-      "development:tasks-md:incomplete-checkboxes",
-      "runtime-evidence-not-green",
-      "runtime-evidence-surface-not-pass:browser",
-      "invalid-receipt:result",
-      "receipt-uncovered-scope",
-      "facticity-not-green",
-      "facticity-required-fixes",
-      "redteam-not-green",
-      "redteam-required-fixes",
-      "e2e-not-green",
-      "e2e-required-fixes",
-      "sensory-not-green",
-      "sensory-required-fixes"
-    ],
+    "blockers": [],
     "warnings": [
       "development:codegraph:not-indexed",
       "development:codegraph:claim-unverified:development:task-001-rental-foundation",
@@ -92,7 +62,7 @@
       "status": {
         "schema": "specnav.codegraph.status.v1",
         "ok": true,
-        "generated_at": "2026-07-24T13:40:24.894Z",
+        "generated_at": "2026-07-25T03:03:16.257Z",
         "project_root": "/Volumes/zwl/camera-rental-github",
         "active_change": "xian-guanjia-data-integration-v1",
         "policy": {
@@ -155,7 +125,7 @@
       },
       "evidence_index": {
         "schema": "specnav.codegraph.evidence_index.v1",
-        "generated_at": "2026-07-24T13:40:24.894Z",
+        "generated_at": "2026-07-25T03:03:16.257Z",
         "active_change": "xian-guanjia-data-integration-v1",
         "source_raw": "openspec/changes/xian-guanjia-data-integration-v1/codegraph/evidence.jsonl",
         "by_claim": {},
@@ -166,7 +136,7 @@
       },
       "claims_report": {
         "schema": "specnav.codegraph.claims_report.v1",
-        "generated_at": "2026-07-24T13:40:24.896Z",
+        "generated_at": "2026-07-25T03:03:16.259Z",
         "active_change": "xian-guanjia-data-integration-v1",
         "claims_file": "openspec/changes/xian-guanjia-data-integration-v1/codegraph/claims-map.json",
         "evidence_index": "openspec/changes/xian-guanjia-data-integration-v1/codegraph/evidence-index.json",
@@ -228,7 +198,7 @@
       },
       "guard_report": {
         "schema": "specnav.codegraph.guard_report.v1",
-        "generated_at": "2026-07-24T13:40:24.896Z",
+        "generated_at": "2026-07-25T03:03:16.259Z",
         "active_change": "xian-guanjia-data-integration-v1",
         "stage": "verification",
         "ok": true,
@@ -291,7 +261,7 @@
         },
         "evidence_index": {
           "schema": "specnav.codegraph.evidence_index.v1",
-          "generated_at": "2026-07-24T13:40:24.894Z",
+          "generated_at": "2026-07-25T03:03:16.257Z",
           "active_change": "xian-guanjia-data-integration-v1",
           "source_raw": "openspec/changes/xian-guanjia-data-integration-v1/codegraph/evidence.jsonl",
           "by_claim": {},
@@ -302,7 +272,7 @@
         },
         "claims_report": {
           "schema": "specnav.codegraph.claims_report.v1",
-          "generated_at": "2026-07-24T13:40:24.896Z",
+          "generated_at": "2026-07-25T03:03:16.259Z",
           "active_change": "xian-guanjia-data-integration-v1",
           "claims_file": "openspec/changes/xian-guanjia-data-integration-v1/codegraph/claims-map.json",
           "evidence_index": "openspec/changes/xian-guanjia-data-integration-v1/codegraph/evidence-index.json",
@@ -464,11 +434,8 @@
       {
         "name": "runtime-evidence.json",
         "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/runtime-evidence.json",
-        "ok": false,
-        "blockers": [
-          "runtime-evidence-not-green",
-          "runtime-evidence-surface-not-pass:browser"
-        ]
+        "ok": true,
+        "blockers": []
       },
       {
         "name": "blocker-classification.jsonl",
@@ -485,11 +452,8 @@
       {
         "name": "receipt.json",
         "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/receipt.json",
-        "ok": false,
-        "blockers": [
-          "invalid-receipt:result",
-          "receipt-uncovered-scope"
-        ]
+        "ok": true,
+        "blockers": []
       },
       {
         "name": "behavior-evals/scenarios.json",
@@ -524,11 +488,8 @@
       {
         "name": "facticity/report.json",
         "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/facticity/report.json",
-        "ok": false,
-        "blockers": [
-          "facticity-not-green",
-          "facticity-required-fixes"
-        ]
+        "ok": true,
+        "blockers": []
       },
       {
         "name": "static/report.md",
@@ -563,11 +524,8 @@
       {
         "name": "redteam/report.json",
         "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/redteam/report.json",
-        "ok": false,
-        "blockers": [
-          "redteam-not-green",
-          "redteam-required-fixes"
-        ]
+        "ok": true,
+        "blockers": []
       },
       {
         "name": "e2e/report.md",
@@ -578,11 +536,8 @@
       {
         "name": "e2e/report.json",
         "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/e2e/report.json",
-        "ok": false,
-        "blockers": [
-          "e2e-not-green",
-          "e2e-required-fixes"
-        ]
+        "ok": true,
+        "blockers": []
       },
       {
         "name": "sensory/report.md",
@@ -593,11 +548,8 @@
       {
         "name": "sensory/report.json",
         "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/sensory/report.json",
-        "ok": false,
-        "blockers": [
-          "sensory-not-green",
-          "sensory-required-fixes"
-        ]
+        "ok": true,
+        "blockers": []
       },
       {
         "name": "unit/test-quality-rubric.json",

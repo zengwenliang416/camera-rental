@@ -69,8 +69,10 @@
   raw-payload access, manual order-push replay, and order-detail raw-payload
   replay now have implementation or focused verification evidence. Product
   push ingestion/replay and order-page replay now have focused backend
-  verification. Sensory review and full runtime red-team verification remain
-  blocked.
+  verification. Sensory review has browser evidence under verify/sensory.
+  Dual-tenant runtime red-team probe evidence exists at
+  verify/redteam/cross-tenant-runtime-probe-2026-07-25.json (18/18); domain
+  redteam report re-aggregation remains verify-stage work.
 
 ## Known Risks
 
@@ -91,6 +93,9 @@
 
 ## Items Requiring Six-Domain Verification
 
-- Unit and static are current and green.
-- Facticity, redteam, browser E2E, and sensory remain blocked or partial as
-  described in their reports; API runtime routing is now covered.
+- Unit, static, facticity, e2e, and sensory domain artifacts exist under
+  verify/; API runtime smoke and dual-tenant red-team probe evidence are
+  packaged for the verify stage.
+- Final SpecNav six-domain aggregate gate is verify-stage work (not claimed
+  complete by development handoff). Refresh redteam domain report/receipt
+  against the dual-tenant probe before judging aggregate green.

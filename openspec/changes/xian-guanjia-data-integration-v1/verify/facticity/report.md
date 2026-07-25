@@ -6,7 +6,7 @@ facticity
 
 ## Verdict
 
-pass
+green
 
 ## Inputs Reviewed
 

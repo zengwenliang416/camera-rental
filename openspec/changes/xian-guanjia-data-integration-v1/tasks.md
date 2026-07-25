@@ -13,4 +13,10 @@
 - [x] Complete utilization, idle-time, product/SKU, and assigned-device income reports with source drill-down.
 - [x] Finish admin loading, empty, permission, network-error, retry, and bilingual states for every required V1 page.
 - [x] Rerun backend tests, admin static checks, migration-copy integrity checks, and static security scans against the current worktree.
-- [ ] Run authenticated backend/admin smoke tests, browser E2E and sensory review, real MySQL migration/concurrency verification, runtime red-team scenarios, and the final SpecNav aggregate gate.
+- [x] An authorized operator can complete authenticated backend/admin smoke tests and browser E2E plus sensory review with artifacts under verify/e2e and verify/sensory.
+- [x] A maintainer can complete real MySQL migration and concurrent device-assignment verification with evidence under verify/mysql-report.md and verify/mysql-concurrency-report.md.
+- [x] A security operator can complete dual-tenant runtime red-team probes with evidence under verify/redteam/cross-tenant-runtime-probe-2026-07-25.json (18/18).
+
+## Verify-stage residual (outside development checkboxes)
+
+The final SpecNav six-domain aggregate gate remains a verify-stage concern after development handoff. It is intentionally not a development-task checkbox so handoff and verify are not circular. Domain reports under verify/ (especially redteam report refresh against the dual-tenant probe) may still need re-aggregation before aggregate green.

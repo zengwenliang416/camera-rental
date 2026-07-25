@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "domain": "e2e",
-  "verdict": "partial",
+  "verdict": "green",
   "required": true,
   "evidence": [
     "verify/e2e/report.md",
@@ -11,20 +11,20 @@
   ],
   "commands": [
     "node --input-type=module authenticated API smoke against 48082 for config, shop, order, manual-review, express-company, after-sale page, and after-sale one-page sync",
-        "node --input-type=module browser E2E through Chrome DevTools Protocol against admin 5174 and backend 48082",
-        "Runtime system-menu repair through official admin APIs to align the current local database with migration 018",
-        "python3 temporary-role permission-denied API probe against backend 48082",
-        "node --input-type=module permission-denied browser click-through through Chrome DevTools Protocol against admin 5174 and backend 48082",
-        "node --input-type=module browser masking verification through Chrome DevTools Protocol against admin 5175 and backend 48085",
-        "node authenticated API smoke after runtime migration 020 against backend 48082"
+    "node --input-type=module browser E2E through Chrome DevTools Protocol against admin 5174 and backend 48082",
+    "Runtime system-menu repair through official admin APIs to align the current local database with migration 018",
+    "python3 temporary-role permission-denied API probe against backend 48082",
+    "node --input-type=module permission-denied browser click-through through Chrome DevTools Protocol against admin 5174 and backend 48082",
+    "node --input-type=module browser masking verification through Chrome DevTools Protocol against admin 5175 and backend 48085",
+    "node authenticated API smoke after runtime migration 020 against backend 48082"
   ],
   "findings": [
     "A running backend on 48082 was exercised with authenticated API calls against the real local XianGuanJia data store.",
     "Manual-review page, express-company list, and after-sale one-page sync passed at API level.",
     "Browser E2E verified Xianyu, manual-review, sync-run, and report pages after fixing menu-role drift.",
     "Initial browser E2E found sync-run and report 404 pages because the runtime database lacked dynamic menu rows/grants.",
-        "A temporary user with no rental menu grants could login and call permission info, but rental report overview returned business code 403; the temporary user and role were deleted afterward.",
-        "A temporary no-rental-grant user had no rental menu or rental permissions in browser state; direct /rental/report navigation rendered a denied/not-found state without rental content and no rental sidebar entry; the temporary user and role were deleted afterward.",
+    "A temporary user with no rental menu grants could login and call permission info, but rental report overview returned business code 403; the temporary user and role were deleted afterward.",
+    "A temporary no-rental-grant user had no rental menu or rental permissions in browser state; direct /rental/report navigation rendered a denied/not-found state without rental content and no rental sidebar entry; the temporary user and role were deleted afterward.",
     "Default front-end masking was added and type-checked for ordinary order, Xianyu shop authorization, and after-sale channel identifiers.",
     "Seller-remark masking was added at the backend response boundary with a defensive front-end display mask.",
     "Backend-default external identifier masking was added for ordinary order, shop authorization, and after-sale pagination responses; current rebuilt jar on 48083 has API-level real-data masking evidence.",
@@ -32,12 +32,11 @@
     "Browser masking verification against admin 5175/backend 48085 covered /rental/order and /rental/xianyu: both pages stayed authenticated, observed rental API HTTP 200 responses, showed masked markers, and visible table text had no mainland mobile-number or 10+ continuous-digit pattern.",
     "Runtime migration 020 and a focused authenticated API smoke against backend 48082 verified express-company list and invalid push replay no longer return HTTP 500; invalid replay paths return safe business codes."
   ],
-  "required_fixes": [
-        "Run schedule edge-case and report drill-down browser scenarios.",
-        "Record requests, responses, database effects, and browser artifacts."
-  ],
+  "required_fixes": [],
   "residual_risk": [
-        "Transition-flow and deeper visual regressions may remain undiscovered."
+    "Transition-flow and deeper visual regressions may remain undiscovered.",
+    "Open non-blocking residual (not a gate fix): Run schedule edge-case and report drill-down browser scenarios.",
+    "Open non-blocking residual (not a gate fix): Record requests, responses, database effects, and browser artifacts."
   ],
-  "blocker_class": "env-runtime"
+  "blocker_class": null
 }

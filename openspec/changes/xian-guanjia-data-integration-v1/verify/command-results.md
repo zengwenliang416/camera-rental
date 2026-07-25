@@ -658,9 +658,37 @@ worktree.
   - Focused regression passed:
     `mvn -pl yudao-framework/yudao-spring-boot-starter-biz-tenant -Dtest=TenantSecurityWebFilterTest -Dsurefire.failIfNoSpecifiedTests=false test`
     ran 1 test with 0 failures.
+- Dual-tenant runtime cross-tenant penetration 2026-07-25:
+  - Isolated backend `http://127.0.0.1:48087` (original `:48080` left untouched).
+  - Tenants: A=`1` username `admin`; B=`121` username `admin110`.
+  - Setup (no secrets recorded): extended tenant `121` expire_time; granted
+    rental menus (incl. raw/replay) to role/package for tenant B; cleared
+    redis menu/permission/role caches; restarted isolated server on `:48087`.
+  - Artifact:
+    `verify/redteam/cross-tenant-runtime-probe-2026-07-25.json`
+    and case log `verify/redteam/probes.jsonl`.
+  - Totals: **18/18 passed**, 0 failed.
+  - Case IDs:
+    - Own-tenant positive: `S1`, `S2`, `S3`.
+    - Header/token mismatch business `403` 「您无权访问该租户的数据」:
+      `C1`, `C2`, `C3`, `C4`.
+    - IDOR deny / no foreign-body leak (raw get, replay, push replay, alert
+      resolve, convert) plus own raw get: `I1`–`I6`.
+    - List isolation no ID overlap: order `L1`, shop `L2`.
+    - Unauthenticated deny `401`: `U1`.
+    - Webhook invalid payload no secret leak: `W1` (admin-api and public paths).
+  - Scope note: local dual-tenant authenticated runtime on shared MySQL; not
+    multi-cloud / multi-region production penetration. Probe was read /
+    IDOR-deny oriented.
 
 ## Evidence Rule
 
 Static source checks and unit tests do not substitute for browser, database,
-or authenticated runtime evidence. The blocked verification domains remain
-blocked until those commands and artifacts exist.
+or authenticated runtime evidence. Domain reports must cite concrete command
+or runtime artifacts before a non-blocked verdict.
+
+
+## I5 convert not-found fix (2026-07-25)
+
+- `mvn -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=XianyuRentalConversionServiceImplTest -Dsurefire.failIfNoSpecifiedTests=false test` → 5 tests, 0 failures.
+- Runtime on `:48087`: tenant B convert foreign/missing order → code `1040001013` / 闲鱼渠道订单不存在.

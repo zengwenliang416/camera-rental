@@ -10,6 +10,7 @@
   ],
   "rejected_case_ids": [],
   "notes": [
-    "The approved case definitions are frozen; approval does not waive browser, database, or runtime evidence."
+    "The approved case definitions are frozen; approval does not waive browser, database, or runtime evidence.",
+    "Evidence link (no status change): dual-tenant runtime cross-tenant probe 2026-07-25 on 48087 — verify/redteam/cross-tenant-runtime-probe-2026-07-25.json (18/18 pass); covered-scope id runtime-dual-tenant-cross-tenant-penetration-48087-2026-07-25."
   ]
 }

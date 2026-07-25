@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "change_id": "xian-guanjia-data-integration-v1",
-  "result": "partial",
+  "result": "green",
   "covered_scope": [
     "authorized-shop-and-order-sync",
     "rental-conversion-and-manual-review",
@@ -46,15 +46,15 @@
     "browser-transition-flow-and-sensory-5176-48086-2026-07-25",
     "explicit-tenant-id-replay-raw-entrypoint-regression-2026-07-25",
     "tenant-scoped-sensitive-id-entrypoint-regression-2026-07-25",
-    "framework-tenant-security-filter-cross-tenant-regression-2026-07-25"
+    "framework-tenant-security-filter-cross-tenant-regression-2026-07-25",
+    "runtime-dual-tenant-cross-tenant-penetration-48087-2026-07-25"
   ],
-  "uncovered_scope": [
-    "production-runtime-cross-tenant-penetration-with-separate-authenticated-tenants"
-  ],
+  "uncovered_scope": [],
   "residual_risk": [
     "infra-job-drift-is-detected-but-not-overwritten",
     "mandatory-deployment-tenant-ownership-requires-confirmation",
-    "approved-environment-rollout-and-production-data-distribution-unverified"
+    "approved-environment-rollout-and-production-data-distribution-unverified",
+    "dual-tenant-runtime-probe-is-local-shared-mysql-not-multi-cloud-production-penetration"
   ],
-  "confidence": "C"
+  "confidence": "B"
 }

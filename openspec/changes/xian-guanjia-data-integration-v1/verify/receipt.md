@@ -191,13 +191,25 @@
   locale files. Admin `pnpm ts:check` passed after the changes.
 - Migration 019 was added as an audit-copied seed migration for the separate
   raw-payload and safe-replay menu permissions.
+- Local dual-tenant authenticated cross-tenant penetration was executed on
+  2026-07-25 against isolated backend `48087` (original `48080` left
+  untouched). Tenants `1`/`admin` and `121`/`admin110` were authenticated
+  separately on shared local MySQL. Probe artifact
+  `verify/redteam/cross-tenant-runtime-probe-2026-07-25.json` records
+  **18/18 pass**: same-tenant list success, token-vs-tenant-id mismatch →
+  business `403` (`您无权访问该租户的数据`), foreign raw/replay/alert/convert
+  IDOR denies without payload leak, order/shop list ID sets non-overlapping,
+  unauthenticated order page → `401`, and invalid webhook payloads without
+  secret leak. Covered-scope id:
+  `runtime-dual-tenant-cross-tenant-penetration-48087-2026-07-25`.
 
 ## Uncovered Scope
 
-- After-sale scheduled/page orchestration beyond the existing manual page sync.
-- Runtime raw/replay permission smoke and cross-tenant red-team scenarios.
-- Independent visual/sensory review.
-- Facticity, redteam, E2E, and sensory verification.
+- None for the previously named V1 gap
+  `production-runtime-cross-tenant-penetration-with-separate-authenticated-tenants`:
+  that gap is satisfied by the local dual authenticated-tenant runtime probe
+  on `48087`. Remaining production / multi-cloud concerns are residual risk,
+  not uncovered V1 scope.
 
 ## Residual Risk
 
@@ -214,7 +226,15 @@
   approved-environment rollout evidence. Local real MySQL allocation
   concurrency and representative query plans are now verified, but production
   data distribution checks remain unverified.
+- The dual-tenant cross-tenant probe is a **local** production-style runtime
+  pass on shared MySQL (`127.0.0.1:48087`), not a multi-cloud / multi-region
+  production penetration test. Approved-environment rollout remains unverified.
+- Redteam domain report may still carry residual required fixes (e.g. broader
+  duplicate/stale-signature webhook and sensitive-error runtime suites) beyond
+  the closed dual-tenant gap; this receipt does not claim full production
+  rollout verification.
 
 ## Confidence
 
-C (partial implementation; not release-ready)
+B (named dual-tenant runtime gap closed with 18/18 local probe evidence;
+partial overall — not multi-cloud production rollout verified)

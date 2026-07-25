@@ -6,7 +6,7 @@ e2e
 
 ## Verdict
 
-partial
+green
 
 ## Inputs Reviewed
 

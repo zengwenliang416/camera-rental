@@ -1,16 +1,17 @@
 {
   "schema_version": 1,
   "change_id": "xian-guanjia-data-integration-v1",
-  "status": "partial",
+  "status": "green",
   "surfaces": [
     {
       "surface": "runtime",
       "required": true,
       "status": "pass",
-      "command": "mvn -f camera-rental-server/pom.xml -pl yudao-module-rental/yudao-module-rental-biz -am install -DskipTests && mvn -f camera-rental-server/pom.xml -pl yudao-module-rental/yudao-module-rental-biz test; authenticated API smoke on 48082",
+      "command": "mvn -f camera-rental-server/pom.xml -pl yudao-module-rental/yudao-module-rental-biz -am install -DskipTests && mvn -f camera-rental-server/pom.xml -pl yudao-module-rental/yudao-module-rental-biz test; authenticated API smoke on 48082; dual-tenant cross-tenant probe on 48087",
       "evidence_refs": [
         "verify/command-results.md",
-        "verify/unit/report.md"
+        "verify/unit/report.md",
+        "verify/redteam/cross-tenant-runtime-probe-2026-07-25.json"
       ],
       "notes": [
         "Backend dependencies installed with upstream tests skipped, then rental module automated tests passed.",
@@ -51,7 +52,8 @@
         "Runtime raw/replay permission smoke passed for a temporary no-rental-grant user: login succeeded, raw page returned business code 403, raw replay returned business code 403, and the temporary role/user were deleted through official admin APIs.",
         "The broader -am test command is blocked by yudao-module-system Redis NOAUTH in the local environment before the rental module runs.",
         "Replay/raw tenant pre-check hardening on 2026-07-25: XianyuReplayAdminService and XianyuRawPayloadAdminService now resolve sensitive replay/detail IDs through explicit current tenant_id plus id mapper lookups before processing; focused regression XianyuReplayAdminServiceTest,XianyuRawPayloadAdminServiceTest,XianyuPushRetryServiceTest ran 17 tests with 0 failures.",
-        "Tenant-sensitive ID hardening on 2026-07-25: push retry, product-push shop fallback, replay, raw-payload detail, alert resolve, and manual order/product/after-sale sync entrypoints now use explicit current-tenant lookup before processing sensitive IDs; focused regression ran 35 tests with 0 failures."
+        "Tenant-sensitive ID hardening on 2026-07-25: push retry, product-push shop fallback, replay, raw-payload detail, alert resolve, and manual order/product/after-sale sync entrypoints now use explicit current-tenant lookup before processing sensitive IDs; focused regression ran 35 tests with 0 failures.",
+        "Dual-tenant authenticated cross-tenant penetration on 2026-07-25 against isolated backend 48087 (original 48080 process left untouched): tenants 1/admin and 121/admin110 on shared local MySQL; probe verify/redteam/cross-tenant-runtime-probe-2026-07-25.json recorded 18/18 pass — same-tenant order/raw lists succeeded, token+foreign tenant-id requests returned business 403, foreign raw/replay/alert/convert IDs denied without payload leak, order and shop list ID sets non-overlapping, unauthenticated order page returned 401, invalid webhook payloads returned without secret leak. Not a multi-cloud production pen-test."
       ]
     },
     {

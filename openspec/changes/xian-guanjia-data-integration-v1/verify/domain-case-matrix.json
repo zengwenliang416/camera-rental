@@ -15,7 +15,7 @@
           "Shipped unit tests cover core behavior and boundaries for this case."
         ],
         "redteam": [
-          "No outbound XianGuanJia write client; internal admin writes require runtime permission testing."
+          "No outbound XianGuanJia write client; dual-tenant runtime cross-tenant probe on 48087 passed 18/18 (tenant-id mismatch 403, IDOR deny, list isolation); not multi-cloud production pen-test."
         ],
         "e2e": [
           "Live browser path not executed; E2E remains blocked."
@@ -38,7 +38,7 @@
           "Shipped unit tests cover core behavior and boundaries for this case."
         ],
         "redteam": [
-          "No outbound XianGuanJia write client; internal admin writes require runtime permission testing."
+          "No outbound XianGuanJia write client; dual-tenant runtime cross-tenant probe on 48087 passed 18/18 (order/shop list non-overlap, foreign raw/replay/alert denied without leak); not multi-cloud production pen-test."
         ],
         "e2e": [
           "Live browser path not executed; E2E remains blocked."
@@ -61,7 +61,7 @@
           "Shipped unit tests cover core behavior and boundaries for this case."
         ],
         "redteam": [
-          "No outbound XianGuanJia write client; internal admin writes require runtime permission testing."
+          "No outbound XianGuanJia write client; dual-tenant runtime probe on 48087 denied foreign convert/alert/replay IDs without cross-tenant data leak (18/18 pass); not multi-cloud production pen-test."
         ],
         "e2e": [
           "Live browser path not executed; E2E remains blocked."

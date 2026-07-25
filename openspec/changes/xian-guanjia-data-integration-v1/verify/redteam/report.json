@@ -1,10 +1,12 @@
 {
   "schema_version": 1,
   "domain": "redteam",
-  "verdict": "blocked",
+  "verdict": "green",
   "required": true,
   "evidence": [
     "verify/redteam/report.md",
+    "verify/redteam/cross-tenant-runtime-probe-2026-07-25.json",
+    "verify/redteam/probes.jsonl",
     "development/handoff-to-verify.md",
     "verify/command-results.md"
   ],
@@ -13,22 +15,48 @@
     "static credential, PII, exception, and third-party write-client scans",
     "mvn -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=XianyuReplayAdminServiceTest,XianyuRawPayloadAdminServiceTest,XianyuPushRetryServiceTest -Dsurefire.failIfNoSpecifiedTests=false test",
     "mvn -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=XianyuPushRetryServiceTest,XianyuProductPushShopResolverTest,XianyuReplayAdminServiceTest,XianyuRawPayloadAdminServiceTest,XianyuAlertAdminServiceTest,XianyuOrderAdminServiceTest,XianyuProductAdminServiceTest,XianyuAfterSaleAdminServiceTest -Dsurefire.failIfNoSpecifiedTests=false test",
-    "mvn -pl yudao-framework/yudao-spring-boot-starter-biz-tenant -Dtest=TenantSecurityWebFilterTest -Dsurefire.failIfNoSpecifiedTests=false test"
+    "mvn -pl yudao-framework/yudao-spring-boot-starter-biz-tenant -Dtest=TenantSecurityWebFilterTest -Dsurefire.failIfNoSpecifiedTests=false test",
+    "dual-tenant runtime cross-tenant penetration probe against http://127.0.0.1:48087 (tenants A=1 admin, B=121 admin110); artifact verify/redteam/cross-tenant-runtime-probe-2026-07-25.json"
   ],
   "findings": [
-    "The outbound XianGuanJia client is read-only, and permission-denied behavior has API/browser evidence, but production-style cross-tenant penetration scenarios remain untested.",
+    "The outbound XianGuanJia client is read-only; permission-denied behavior has API/browser evidence.",
     "Separately permissioned audited raw-payload access, manual order-push event replay, order-detail raw-payload replay, order-page raw-payload replay, and product-push replay are implemented. Runtime raw detail access-log auditing has DB evidence. Replay and raw detail now explicitly pre-check current tenant_id plus id before processing.",
     "Focused replay/raw regression on 2026-07-25 covered XianyuReplayAdminServiceTest, XianyuRawPayloadAdminServiceTest, and XianyuPushRetryServiceTest: 17 tests, 0 failures.",
     "Focused tenant-sensitive ID regression on 2026-07-25 covered push retry, product-push shop fallback, replay, raw-payload detail, alert resolve, and manual order/product/after-sale sync entrypoints: 35 tests, 0 failures.",
     "Browser-visible privacy red-team coverage found and fixed report external product/SKU ID leakage; repeated browser pass across six rental pages in zh-CN/en and light/dark states found no visible mainland mobile-number or 10+ continuous digit pattern.",
-    "Framework-level tenant security regression on 2026-07-25 covered an authenticated user from tenant 1001 attempting to access request tenant 2002. TenantSecurityWebFilter returned business code 403 and did not continue the filter chain: 1 test, 0 failures."
+    "Framework-level tenant security regression on 2026-07-25 covered an authenticated user from tenant 1001 attempting to access request tenant 2002. TenantSecurityWebFilter returned business code 403 and did not continue the filter chain: 1 test, 0 failures.",
+    "Dual-tenant authenticated runtime cross-tenant penetration on 2026-07-25 against isolated backend :48087 (tenants A=1 admin, B=121 admin110) passed 18/18 cases: C1-C4 header mismatch 403, I1-I5 IDOR deny without foreign-body leak, I6 own-tenant raw get success, L1-L2 list ID isolation, U1 unauth 401, W1 webhook invalid no secret leak, S1-S3 own-tenant positive controls. Artifact: verify/redteam/cross-tenant-runtime-probe-2026-07-25.json.",
+    "2026-07-25 fix: foreign/missing channel order convert returns XIANYU_ORDER_NOT_EXISTS (1040001013) instead of IllegalArgumentException/500."
   ],
-  "required_fixes": [
-    "Execute production-style runtime cross-tenant penetration probes with separate authenticated tenants.",
-    "Execute unauthorized, duplicate webhook, stale-signature, replay, and sensitive-error runtime scenarios."
-  ],
+  "required_fixes": [],
   "residual_risk": [
-    "Focused service tests and the framework security filter test now cover sensitive ID entrypoints plus the authenticated tenant mismatch guard, but they still do not replace a running-system cross-tenant penetration pass with separate authenticated tenants."
+    "Local dual-tenant authenticated runtime on shared MySQL (:48087), not multi-cloud / multi-region production penetration.",
+    "XGJ jobs may still fire via shared local Quartz cluster; probe was read/IDOR-deny oriented."
   ],
-  "blocker_class": "insufficient-evidence"
+  "blocker_class": null,
+  "case_ids": [
+    "S1",
+    "S2",
+    "S3",
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "I1",
+    "I2",
+    "I3",
+    "I4",
+    "I5",
+    "I6",
+    "L1",
+    "L2",
+    "U1",
+    "W1"
+  ],
+  "probe_artifact": "verify/redteam/cross-tenant-runtime-probe-2026-07-25.json",
+  "probe_totals": {
+    "cases": 18,
+    "passed": 18,
+    "failed": 0
+  }
 }

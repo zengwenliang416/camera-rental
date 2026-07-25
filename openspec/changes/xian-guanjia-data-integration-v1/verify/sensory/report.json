@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "domain": "sensory",
-  "verdict": "pass",
+  "verdict": "green",
   "required": true,
   "evidence": [
     "verify/sensory/report.md",

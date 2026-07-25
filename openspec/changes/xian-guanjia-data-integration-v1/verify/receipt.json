@@ -47,7 +47,9 @@
     "explicit-tenant-id-replay-raw-entrypoint-regression-2026-07-25",
     "tenant-scoped-sensitive-id-entrypoint-regression-2026-07-25",
     "framework-tenant-security-filter-cross-tenant-regression-2026-07-25",
-    "runtime-dual-tenant-cross-tenant-penetration-48087-2026-07-25"
+    "runtime-dual-tenant-cross-tenant-penetration-48087-2026-07-25",
+    "formal-local-dual-tenant-cross-tenant-penetration-post-i5-48087-2026-07-25",
+    "primary-48080-dual-tenant-after-restart-with-i5-2026-07-25"
   ],
   "uncovered_scope": [],
   "residual_risk": [

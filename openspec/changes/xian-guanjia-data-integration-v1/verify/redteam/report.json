@@ -26,7 +26,8 @@
     "Browser-visible privacy red-team coverage found and fixed report external product/SKU ID leakage; repeated browser pass across six rental pages in zh-CN/en and light/dark states found no visible mainland mobile-number or 10+ continuous digit pattern.",
     "Framework-level tenant security regression on 2026-07-25 covered an authenticated user from tenant 1001 attempting to access request tenant 2002. TenantSecurityWebFilter returned business code 403 and did not continue the filter chain: 1 test, 0 failures.",
     "Dual-tenant authenticated runtime cross-tenant penetration on 2026-07-25 against isolated backend :48087 (tenants A=1 admin, B=121 admin110) passed 18/18 cases: C1-C4 header mismatch 403, I1-I5 IDOR deny without foreign-body leak, I6 own-tenant raw get success, L1-L2 list ID isolation, U1 unauth 401, W1 webhook invalid no secret leak, S1-S3 own-tenant positive controls. Artifact: verify/redteam/cross-tenant-runtime-probe-2026-07-25.json.",
-    "2026-07-25 fix: foreign/missing channel order convert returns XIANYU_ORDER_NOT_EXISTS (1040001013) instead of IllegalArgumentException/500."
+    "2026-07-25 fix: foreign/missing channel order convert returns XIANYU_ORDER_NOT_EXISTS (1040001013) instead of IllegalArgumentException/500.",
+    "2026-07-25 formal local re-probe (cross-tenant-runtime-probe-formal-2026-07-25.json): I5 now 1040001013; still local shared MySQL, confidence B retained."
   ],
   "required_fixes": [],
   "residual_risk": [

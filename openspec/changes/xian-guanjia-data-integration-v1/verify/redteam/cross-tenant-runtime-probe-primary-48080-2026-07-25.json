@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "probe": "primary-48080-dual-tenant-after-restart-with-i5",
+  "timestamp": "2026-07-25T03:17:01.004628+00:00",
+  "base_url": "http://127.0.0.1:48080",
+  "tenants": {
+    "A": {
+      "tenant_id": 1,
+      "username": "admin"
+    },
+    "B": {
+      "tenant_id": 121,
+      "username": "admin110"
+    }
+  },
+  "fix_actions": [
+    "Restarted primary :48080 on rebuilt jar including XIANYU_ORDER_NOT_EXISTS",
+    "Stopped isolated :48087 to avoid dual Quartz contention",
+    "Cleared redis permission/menu role cache samples"
+  ],
+  "totals": {
+    "cases": 11,
+    "passed": 11,
+    "failed": 0
+  },
+  "results": [
+    {
+      "id": "S1",
+      "title": "Tenant A lists own orders",
+      "expect": null,
+      "pass": true,
+      "reason": "code=0 total=739",
+      "response": {
+        "http": 200,
+        "code": 0,
+        "msg": "",
+        "ms": 102,
+        "error": null,
+        "data_summary": {
+          "total": 739,
+          "list_len": 3
+        }
+      }
+    },
+    {
+      "id": "S2",
+      "title": "Tenant B lists own orders",
+      "expect": null,
+      "pass": true,
+      "reason": "code=0 msg= total=791",
+      "response": {
+        "http": 200,
+        "code": 0,
+        "msg": "",
+        "ms": 42,
+        "error": null,
+        "data_summary": {
+          "total": 791,
+          "list_len": 3
+        }
+      }
+    },
+    {
+      "id": "C1",
+      "title": "Token A + tenant-id B => 403",
+      "expect": null,
+      "pass": true,
+      "reason": "code=403 msg=您无权访问该租户的数据",
+      "response": {
+        "http": 200,
+        "code": 403,
+        "msg": "您无权访问该租户的数据",
+        "ms": 3,
+        "error": null
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Token B + tenant-id A => 403",
+      "expect": null,
+      "pass": true,
+      "reason": "code=403 msg=您无权访问该租户的数据",
+      "response": {
+        "http": 200,
+        "code": 403,
+        "msg": "您无权访问该租户的数据",
+        "ms": 4,
+        "error": null
+      }
+    },
+    {
+      "id": "I1",
+      "title": "B raw get foreign 4993",
+      "expect": null,
+      "pass": true,
+      "reason": "code=1040001009 msg=闲管家原始载荷不存在",
+      "response": {
+        "http": 200,
+        "code": 1040001009,
+        "msg": "闲管家原始载荷不存在",
+        "ms": 41,
+        "error": null
+      }
+    },
+    {
+      "id": "I5",
+      "title": "B convert foreign 56",
+      "expect": null,
+      "pass": true,
+      "reason": "code=1040001013 msg=闲鱼渠道订单不存在",
+      "response": {
+        "http": 200,
+        "code": 1040001013,
+        "msg": "闲鱼渠道订单不存在",
+        "ms": 52,
+        "error": null
+      }
+    },
+    {
+      "id": "I5b",
+      "title": "B convert missing",
+      "expect": null,
+      "pass": true,
+      "reason": "code=1040001013 msg=闲鱼渠道订单不存在",
+      "response": {
+        "http": 200,
+        "code": 1040001013,
+        "msg": "闲鱼渠道订单不存在",
+        "ms": 15,
+        "error": null
+      }
+    },
+    {
+      "id": "I4",
+      "title": "B resolve foreign alert 195",
+      "expect": null,
+      "pass": true,
+      "reason": "code=1040001008 msg=闲鱼告警不存在",
+      "response": {
+        "http": 200,
+        "code": 1040001008,
+        "msg": "闲鱼告警不存在",
+        "ms": 37,
+        "error": null
+      }
+    },
+    {
+      "id": "I6",
+      "title": "B raw get own 2519",
+      "expect": null,
+      "pass": true,
+      "reason": "code=0 msg=",
+      "response": {
+        "http": 200,
+        "code": 0,
+        "msg": "",
+        "ms": 16,
+        "error": null,
+        "data_summary": {
+          "total": null,
+          "list_len": null
+        }
+      }
+    },
+    {
+      "id": "L1",
+      "title": "order list no overlap",
+      "expect": null,
+      "pass": true,
+      "reason": "a=[56, 2320, 451] b=[2313, 868, 2307]",
+      "response": null
+    },
+    {
+      "id": "U1",
+      "title": "unauth denied",
+      "expect": null,
+      "pass": true,
+      "reason": "code=401 msg=账号未登录",
+      "response": {
+        "http": 200,
+        "code": 401,
+        "msg": "账号未登录",
+        "ms": 2,
+        "error": null
+      }
+    }
+  ]
+}

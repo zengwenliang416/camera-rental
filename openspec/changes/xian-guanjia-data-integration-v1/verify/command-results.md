@@ -692,3 +692,20 @@ or runtime artifacts before a non-blocked verdict.
 
 - `mvn -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=XianyuRentalConversionServiceImplTest -Dsurefire.failIfNoSpecifiedTests=false test` → 5 tests, 0 failures.
 - Runtime on `:48087`: tenant B convert foreign/missing order → code `1040001013` / 闲鱼渠道订单不存在.
+
+
+## Formal dual-tenant re-probe post-I5 (2026-07-25)
+
+- Environment: isolated `http://127.0.0.1:48087` (jar rebuilt with `XIANYU_ORDER_NOT_EXISTS`).
+- Tenants: `1/admin` and `121/admin110`.
+- Artifact: `verify/redteam/cross-tenant-runtime-probe-formal-2026-07-25.json`.
+- I5 foreign/missing convert: business code `1040001013` / 闲鱼渠道订单不存在.
+- Preflight: primary `:48080` could not login tenant 121 this run; formal probe stayed on `:48087`.
+- Confidence: remains **B** (SpecNav forbids **A** while `residual_risk` is non-empty; multi-cloud/production dual-tenant still residual).
+
+
+## Primary :48080 fix (2026-07-25)
+
+- Root cause: stale morning JVM on :48080 hung tenant-121 login; jar on disk already rebuilt with I5 but process not restarted.
+- Action: stopped :48087, restarted :48080 on current `yudao-server.jar`, cleared redis permission caches.
+- Probe: `verify/redteam/cross-tenant-runtime-probe-primary-48080-2026-07-25.json` dual-tenant + I5 `1040001013`.

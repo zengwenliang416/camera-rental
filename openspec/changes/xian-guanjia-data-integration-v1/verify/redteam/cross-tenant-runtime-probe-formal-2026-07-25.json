@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "probe": "formal-local-dual-tenant-cross-tenant-penetration-post-i5",
+  "timestamp": "2026-07-25T03:13:35.923055+00:00",
+  "base_url": "http://127.0.0.1:48087",
+  "environment_class": "formal-local-isolated-process",
+  "not_environment_class": "multi-cloud-or-approved-production-dual-tenant",
+  "tenants": {
+    "A": {
+      "tenant_id": 1,
+      "username": "admin"
+    },
+    "B": {
+      "tenant_id": 121,
+      "username": "admin110"
+    }
+  },
+  "preflight": {
+    "48080_tenant_b_login": "failed_or_unavailable_this_run",
+    "48087_build": "rebuilt jar including XIANYU_ORDER_NOT_EXISTS I5 fix",
+    "original_48080_left_running": true
+  },
+  "notes": [
+    "Formal local dual-tenant re-probe after I5 convert not-found fix.",
+    "I5 now asserts business code 1040001013 rather than generic 500.",
+    "This still is not multi-cloud / approved production dual-tenant penetration.",
+    "SpecNav receipt confidence remains B while residual risks exist (A forbidden with residual_risk)."
+  ],
+  "totals": {
+    "cases": 18,
+    "passed": 18,
+    "failed": 0
+  },
+  "results": [
+    {
+      "id": "S1",
+      "title": "Tenant A lists own orders",
+      "expect": "success",
+      "pass": true,
+      "reason": "code=0 total=739",
+      "response": {
+        "http": 200,
+        "code": 0,
+        "msg": "",
+        "ms": 35,
+        "error": null,
+        "data_summary": {
+          "total": 739,
+          "list_len": 3,
+          "id": null
+        }
+      }
+    },
+    {
+      "id": "S2",
+      "title": "Tenant B lists own orders",
+      "expect": "success",
+      "pass": true,
+      "reason": "code=0 total=791",
+      "response": {
+        "http": 200,
+        "code": 0,
+        "msg": "",
+        "ms": 44,
+        "error": null,
+        "data_summary": {
+          "total": 791,
+          "list_len": 3,
+          "id": null
+        }
+      }
+    },
+    {
+      "id": "C1",
+      "title": "Token A + tenant-id B order page",
+      "expect": "biz_403",
+      "pass": true,
+      "reason": "code=403 msg=您无权访问该租户的数据",
+      "response": {
+        "http": 200,
+        "code": 403,
+        "msg": "您无权访问该租户的数据",
+        "ms": 3,
+        "error": null
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Token B + tenant-id A order page",
+      "expect": "biz_403",
+      "pass": true,
+      "reason": "code=403 msg=您无权访问该租户的数据",
+      "response": {
+        "http": 200,
+        "code": 403,
+        "msg": "您无权访问该租户的数据",
+        "ms": 2,
+        "error": null
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Token A + tenant-id B raw page",
+      "expect": "biz_403",
+      "pass": true,
+      "reason": "code=403 msg=您无权访问该租户的数据",
+      "response": {
+        "http": 200,
+        "code": 403,
+        "msg": "您无权访问该租户的数据",
+        "ms": 2,
+        "error": null
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Token B + tenant-id A permission-info",
+      "expect": "biz_403",
+      "pass": true,
+      "reason": "code=403 msg=您无权访问该租户的数据",
+      "response": {
+        "http": 200,
+        "code": 403,
+        "msg": "您无权访问该租户的数据",
+        "ms": 2,
+        "error": null
+      }
+    },
+    {
+      "id": "I1",
+      "title": "Tenant B raw get foreign id=4993",
+      "expect": "deny_no_leak",
+      "pass": true,
+      "reason": "code=1040001009 msg=闲管家原始载荷不存在 leaked=False",
+      "response": {
+        "http": 200,
+        "code": 1040001009,
+        "msg": "闲管家原始载荷不存在",
+        "ms": 18,
+        "error": null
+      }
+    },
+    {
+      "id": "I2",
+      "title": "Tenant B replay foreign raw id=4993",
+      "expect": "deny",
+      "pass": true,
+      "reason": "code=1040001009 msg=闲管家原始载荷不存在",
+      "response": {
+        "http": 200,
+        "code": 1040001009,
+        "msg": "闲管家原始载荷不存在",
+        "ms": 14,
+        "error": null
+      }
+    },
+    {
+      "id": "I3",
+      "title": "Tenant B replay foreign push-event id=2",
+      "expect": "deny",
+      "pass": true,
+      "reason": "code=1040001010 msg=闲管家推送事件不存在",
+      "response": {
+        "http": 200,
+        "code": 1040001010,
+        "msg": "闲管家推送事件不存在",
+        "ms": 17,
+        "error": null
+      }
+    },
+    {
+      "id": "I4",
+      "title": "Tenant B resolve foreign alert id=195",
+      "expect": "deny",
+      "pass": true,
+      "reason": "code=1040001008 msg=闲鱼告警不存在",
+      "response": {
+        "http": 200,
+        "code": 1040001008,
+        "msg": "闲鱼告警不存在",
+        "ms": 20,
+        "error": null
+      }
+    },
+    {
+      "id": "I5",
+      "title": "Tenant B convert foreign order id=56 business not-found",
+      "expect": "biz_not_found_1040001013",
+      "pass": true,
+      "reason": "code=1040001013 msg=闲鱼渠道订单不存在",
+      "response": {
+        "http": 200,
+        "code": 1040001013,
+        "msg": "闲鱼渠道订单不存在",
+        "ms": 14,
+        "error": null
+      }
+    },
+    {
+      "id": "I5b",
+      "title": "Tenant B convert missing order business not-found",
+      "expect": "biz_not_found_1040001013",
+      "pass": true,
+      "reason": "code=1040001013 msg=闲鱼渠道订单不存在",
+      "response": {
+        "http": 200,
+        "code": 1040001013,
+        "msg": "闲鱼渠道订单不存在",
+        "ms": 12,
+        "error": null
+      }
+    },
+    {
+      "id": "I6",
+      "title": "Tenant B raw get own id=2519",
+      "expect": "success",
+      "pass": true,
+      "reason": "code=0 msg=",
+      "response": {
+        "http": 200,
+        "code": 0,
+        "msg": "",
+        "ms": 16,
+        "error": null,
+        "data_summary": {
+          "total": null,
+          "list_len": null,
+          "id": 2519
+        }
+      }
+    },
+    {
+      "id": "L1",
+      "title": "Order list IDs A vs B no overlap",
+      "expect": "no_overlap",
+      "pass": true,
+      "reason": "ids_a=[56, 2320, 451] ids_b=[2313, 868, 2307]",
+      "response": null
+    },
+    {
+      "id": "L2",
+      "title": "Shop list IDs A vs B no overlap",
+      "expect": "no_overlap",
+      "pass": true,
+      "reason": "sa=[7, 6, 5, 4, 3, 2, 1] sb=[15, 13, 11, 10, 9, 8]",
+      "response": null
+    },
+    {
+      "id": "U1",
+      "title": "Unauthenticated order page denied",
+      "expect": "deny",
+      "pass": true,
+      "reason": "code=401 msg=账号未登录",
+      "response": {
+        "http": 200,
+        "code": 401,
+        "msg": "账号未登录",
+        "ms": 1,
+        "error": null
+      }
+    },
+    {
+      "id": "W1:/admin-api/xianyu/webhooks/order",
+      "title": "Webhook invalid payload no secret leak",
+      "expect": "no_secret",
+      "pass": true,
+      "reason": "code=401 msg=账号未登录 leak=False",
+      "response": {
+        "http": 200,
+        "code": 401,
+        "msg": "账号未登录",
+        "ms": 4,
+        "error": null
+      }
+    },
+    {
+      "id": "W1:/xianyu/webhooks/order",
+      "title": "Webhook invalid payload no secret leak",
+      "expect": "no_secret",
+      "pass": true,
+      "reason": "code=None msg=签名失败 leak=False",
+      "response": {
+        "http": 200,
+        "code": null,
+        "msg": "签名失败",
+        "ms": 20,
+        "error": null
+      }
+    }
+  ]
+}

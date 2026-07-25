@@ -12,3 +12,4 @@
 {"id": "ev-12", "kind": "runtime-probe", "domain": "redteam", "path": "verify/redteam/cross-tenant-runtime-probe-2026-07-25.json", "status": "pass", "summary": "Dual-tenant authenticated runtime cross-tenant penetration on :48087; tenants A=1 admin B=121 admin110; 18/18 pass (C1-C4, I1-I6, L1-L2, U1, W1, S1-S3)"}
 {"id": "ev-13", "kind": "probes", "domain": "redteam", "path": "verify/redteam/probes.jsonl", "status": "pass"}
 {"id": "ev-14", "kind": "command-summary", "domain": "redteam", "path": "verify/command-results.md#dual-tenant-runtime-cross-tenant-penetration-2026-07-25", "status": "pass"}
+{"id": "ev-formal-dual-tenant-post-i5", "kind": "runtime-probe", "domain": "redteam", "path": "verify/redteam/cross-tenant-runtime-probe-formal-2026-07-25.json", "status": "pass", "note": "formal local dual-tenant re-probe post I5; confidence remains B"}

@@ -186,9 +186,10 @@ jobs:
           USER="${DEPLOY_USER:-root}"
           ROOT="${DEPLOY_ROOT:-/opt/camera-rental}"
           REMOTE_RELEASE="/tmp/camera-rental-${GITHUB_SHA}.tgz"
-          SSH_OPTS="-i ~/.ssh/deploy_key -p ${PORT} -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
+          SSH_OPTS=(-i ~/.ssh/deploy_key -p "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes)
+          SCP_OPTS=(-i ~/.ssh/deploy_key -P "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes)
 
-          scp $SSH_OPTS camera-rental-release.tgz "${USER}@${HOST}:${REMOTE_RELEASE}"
-          scp $SSH_OPTS ops/github-deploy/server-deploy.sh "${USER}@${HOST}:/tmp/camera-rental-server-deploy.sh"
-          ssh $SSH_OPTS "${USER}@${HOST}" \
+          scp "${SCP_OPTS[@]}" camera-rental-release.tgz "${USER}@${HOST}:${REMOTE_RELEASE}"
+          scp "${SCP_OPTS[@]}" ops/github-deploy/server-deploy.sh "${USER}@${HOST}:/tmp/camera-rental-server-deploy.sh"
+          ssh "${SSH_OPTS[@]}" "${USER}@${HOST}" \
             "DEPLOY_ROOT='${ROOT}' RELEASE_SHA='${GITHUB_SHA}' bash /tmp/camera-rental-server-deploy.sh '${REMOTE_RELEASE}'"

@@ -4,8 +4,12 @@
 // Generated minimal stubs so vue-tsc can resolve unplugin-auto-import globals.
 export {}
 declare global {
+  type Ref<T = any> = import('vue').Ref<T>
+  type PropType<T = any> = import('vue').PropType<T>
+
   const ref: typeof import('vue')['ref']
   const reactive: typeof import('vue')['reactive']
+  const readonly: typeof import('vue')['readonly']
   const computed: typeof import('vue')['computed']
   const watch: typeof import('vue')['watch']
   const watchEffect: typeof import('vue')['watchEffect']

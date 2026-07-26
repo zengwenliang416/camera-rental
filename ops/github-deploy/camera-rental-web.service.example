@@ -1,0 +1,14 @@
+[Unit]
+Description=Camera Rental PC Web
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/camera-rental/current/web
+EnvironmentFile=-/opt/camera-rental/shared/web.env
+ExecStart=/usr/bin/node /opt/camera-rental/current/web/server/index.mjs
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

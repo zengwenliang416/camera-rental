@@ -1,0 +1,194 @@
+name: Deploy camera rental to 211
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/deploy-211.yml'
+      - 'ops/github-deploy/**'
+      - 'camera-rental-server/**'
+      - 'camera-rental-admin/**'
+      - 'camera-rental-staff/**'
+      - 'camera-rental-web/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: camera-rental-211-deploy
+  cancel-in-progress: false
+
+jobs:
+  build-server:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Build backend jar
+        working-directory: camera-rental-server
+        run: mvn -pl yudao-server -am -DskipTests package
+
+      - name: Prepare backend artifact
+        run: |
+          mkdir -p .deploy-artifacts/server
+          cp camera-rental-server/yudao-server/target/yudao-server.jar .deploy-artifacts/server/yudao-server.jar
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: server
+          path: .deploy-artifacts/server
+          if-no-files-found: error
+
+  build-admin:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        run: npm i -g pnpm@10
+
+      - name: Build admin
+        working-directory: camera-rental-admin
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm ts:check
+          pnpm build:prod
+
+      - name: Prepare admin artifact
+        run: |
+          mkdir -p .deploy-artifacts/admin
+          cp -R camera-rental-admin/dist/. .deploy-artifacts/admin/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: admin
+          path: .deploy-artifacts/admin
+          if-no-files-found: error
+
+  build-staff-h5:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        run: npm i -g pnpm@10
+
+      - name: Build staff H5
+        working-directory: camera-rental-staff
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm type-check
+          pnpm build:h5:prod
+
+      - name: Prepare staff artifact
+        run: |
+          mkdir -p .deploy-artifacts/staff
+          cp -R camera-rental-staff/dist/build/h5/. .deploy-artifacts/staff/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: staff
+          path: .deploy-artifacts/staff
+          if-no-files-found: error
+
+  build-web:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Build PC web
+        working-directory: camera-rental-web
+        run: |
+          bun install --frozen-lockfile
+          bun run build
+
+      - name: Prepare web artifact
+        run: |
+          mkdir -p .deploy-artifacts/web
+          cp -R camera-rental-web/.output/. .deploy-artifacts/web/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web
+          path: .deploy-artifacts/web
+          if-no-files-found: error
+
+  deploy:
+    runs-on: ubuntu-24.04
+    needs:
+      - build-server
+      - build-admin
+      - build-staff-h5
+      - build-web
+    environment: production-211
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: release
+          merge-multiple: false
+
+      - name: Pack release
+        run: |
+          tar -czf camera-rental-release.tgz -C release .
+          tar -tzf camera-rental-release.tgz | sed -n '1,80p'
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.DEPLOY_SSH_KNOWN_HOSTS }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+        run: |
+          test -n "$SSH_PRIVATE_KEY"
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          HOST="${DEPLOY_HOST:-211.101.246.160}"
+          PORT="${DEPLOY_PORT:-22}"
+          if [ -n "$SSH_KNOWN_HOSTS" ]; then
+            printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            ssh-keyscan -p "$PORT" "$HOST" > ~/.ssh/known_hosts
+          fi
+
+      - name: Upload and deploy
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_ROOT: ${{ secrets.DEPLOY_ROOT }}
+        run: |
+          HOST="${DEPLOY_HOST:-211.101.246.160}"
+          PORT="${DEPLOY_PORT:-22}"
+          USER="${DEPLOY_USER:-root}"
+          ROOT="${DEPLOY_ROOT:-/opt/camera-rental}"
+          REMOTE_RELEASE="/tmp/camera-rental-${GITHUB_SHA}.tgz"
+          SSH_OPTS="-i ~/.ssh/deploy_key -p ${PORT} -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
+
+          scp $SSH_OPTS camera-rental-release.tgz "${USER}@${HOST}:${REMOTE_RELEASE}"
+          scp $SSH_OPTS ops/github-deploy/server-deploy.sh "${USER}@${HOST}:/tmp/camera-rental-server-deploy.sh"
+          ssh $SSH_OPTS "${USER}@${HOST}" \
+            "DEPLOY_ROOT='${ROOT}' RELEASE_SHA='${GITHUB_SHA}' bash /tmp/camera-rental-server-deploy.sh '${REMOTE_RELEASE}'"

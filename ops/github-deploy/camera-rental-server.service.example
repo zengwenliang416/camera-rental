@@ -1,0 +1,16 @@
+[Unit]
+Description=Camera Rental Backend
+After=network.target mysql.service redis-server.service
+Wants=mysql.service redis-server.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/camera-rental/current/server
+EnvironmentFile=/opt/camera-rental/shared/backend.env
+ExecStart=/usr/bin/java $JAVA_OPTS -jar /opt/camera-rental/current/server/yudao-server.jar $ARGS
+Restart=always
+RestartSec=10
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

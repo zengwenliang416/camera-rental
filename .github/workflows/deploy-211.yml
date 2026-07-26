@@ -145,6 +145,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/download-artifact@v4
+        with:
+          name: server
+          path: .deploy-artifacts/release/server
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: admin
+          path: .deploy-artifacts/release/admin
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: staff
+          path: .deploy-artifacts/release/staff
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: web
+          path: .deploy-artifacts/release/web
+
+      - name: Pack release artifact
+        run: |
+          test -f .deploy-artifacts/release/server/yudao-server.jar
+          test -f .deploy-artifacts/release/admin/index.html
+          test -f .deploy-artifacts/release/staff/index.html
+          test -f .deploy-artifacts/release/web/server/index.mjs
+          tar -czf camera-rental-release.tgz -C .deploy-artifacts/release .
+
       - name: Configure SSH
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
@@ -181,10 +209,11 @@ jobs:
           SCP_OPTS=(-i ~/.ssh/deploy_key -P "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20)
 
           scp "${SCP_OPTS[@]}" ops/github-deploy/server-deploy.sh "${USER}@${HOST}:/tmp/camera-rental-server-deploy.sh"
-          scp "${SCP_OPTS[@]}" ops/github-deploy/server-build-deploy.sh "${USER}@${HOST}:/tmp/camera-rental-server-build-deploy.sh"
+          scp "${SCP_OPTS[@]}" camera-rental-release.tgz "${USER}@${HOST}:/tmp/camera-rental-${GH_SHA}.tgz"
 
           printf -v root_q '%q' "${ROOT}"
           printf -v sha_q '%q' "${GH_SHA}"
+          printf -v archive_q '%q' "/tmp/camera-rental-${GH_SHA}.tgz"
 
           ssh "${SSH_OPTS[@]}" "${USER}@${HOST}" \
-            "DEPLOY_ROOT=${root_q} RELEASE_SHA=${sha_q} bash /tmp/camera-rental-server-build-deploy.sh"
+            "DEPLOY_ROOT=${root_q} RELEASE_SHA=${sha_q} bash /tmp/camera-rental-server-deploy.sh ${archive_q}"

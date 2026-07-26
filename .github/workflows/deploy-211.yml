@@ -171,9 +171,6 @@ jobs:
           DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_ROOT: ${{ secrets.DEPLOY_ROOT }}
-          GH_TOKEN_FOR_ARTIFACTS: ${{ github.token }}
-          GH_REPOSITORY: ${{ github.repository }}
-          GH_RUN_ID: ${{ github.run_id }}
           GH_SHA: ${{ github.sha }}
         run: |
           HOST="${DEPLOY_HOST:-211.101.246.160}"
@@ -184,13 +181,10 @@ jobs:
           SCP_OPTS=(-i ~/.ssh/deploy_key -P "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes)
 
           scp "${SCP_OPTS[@]}" ops/github-deploy/server-deploy.sh "${USER}@${HOST}:/tmp/camera-rental-server-deploy.sh"
-          scp "${SCP_OPTS[@]}" ops/github-deploy/server-pull-artifacts.sh "${USER}@${HOST}:/tmp/camera-rental-server-pull-artifacts.sh"
+          scp "${SCP_OPTS[@]}" ops/github-deploy/server-build-deploy.sh "${USER}@${HOST}:/tmp/camera-rental-server-build-deploy.sh"
 
-          printf -v token_q '%q' "${GH_TOKEN_FOR_ARTIFACTS}"
-          printf -v repo_q '%q' "${GH_REPOSITORY}"
-          printf -v run_id_q '%q' "${GH_RUN_ID}"
           printf -v root_q '%q' "${ROOT}"
           printf -v sha_q '%q' "${GH_SHA}"
 
           ssh "${SSH_OPTS[@]}" "${USER}@${HOST}" \
-            "GITHUB_TOKEN=${token_q} GITHUB_REPOSITORY=${repo_q} GITHUB_RUN_ID=${run_id_q} DEPLOY_ROOT=${root_q} RELEASE_SHA=${sha_q} bash /tmp/camera-rental-server-pull-artifacts.sh"
+            "DEPLOY_ROOT=${root_q} RELEASE_SHA=${sha_q} bash /tmp/camera-rental-server-build-deploy.sh"

@@ -7,6 +7,8 @@ REPO_URL="${REPO_URL:-git@github.com:zengwenliang416/camera-rental.git}"
 SOURCE_DIR="${SOURCE_DIR:-${DEPLOY_ROOT}/source}"
 GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh -i ~/.ssh/camera_rental_github_pull -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20 -C}"
 export GIT_SSH_COMMAND
+NODE_VERSION="${NODE_VERSION:-22.14.0}"
+NODE_ARCHIVE_ARCH=""
 
 build_dir="$(mktemp -d /tmp/camera-rental-build.XXXXXX)"
 release_dir="${build_dir}/release"
@@ -17,8 +19,38 @@ cleanup() {
 }
 trap cleanup EXIT
 
+ensure_node_runtime() {
+  case "$(uname -m)" in
+    x86_64|amd64) NODE_ARCHIVE_ARCH="x64" ;;
+    aarch64|arm64) NODE_ARCHIVE_ARCH="arm64" ;;
+    *) echo "[build-deploy] unsupported node arch: $(uname -m)" >&2; exit 1 ;;
+  esac
+
+  local toolchain_dir="${DEPLOY_ROOT}/toolchain"
+  local node_dir="${toolchain_dir}/node-v${NODE_VERSION}-linux-${NODE_ARCHIVE_ARCH}"
+  local node_tgz="${toolchain_dir}/node-v${NODE_VERSION}-linux-${NODE_ARCHIVE_ARCH}.tar.xz"
+
+  mkdir -p "${toolchain_dir}"
+  if [ ! -x "${node_dir}/bin/node" ]; then
+    echo "[build-deploy] install node v${NODE_VERSION}"
+    rm -rf "${node_dir}" "${node_tgz}"
+    curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${NODE_ARCHIVE_ARCH}.tar.xz" -o "${node_tgz}"
+    tar -xJf "${node_tgz}" -C "${toolchain_dir}"
+    rm -f "${node_tgz}"
+  fi
+
+  export PATH="${node_dir}/bin:${PATH}"
+  node --version
+
+  if ! command -v pnpm >/dev/null 2>&1 || ! pnpm --version | grep -q '^10\.'; then
+    npm install -g pnpm@10
+  fi
+  pnpm --version
+}
+
 echo "[build-deploy] source=${SOURCE_DIR}"
 mkdir -p "${DEPLOY_ROOT}" "$(dirname "${SOURCE_DIR}")"
+ensure_node_runtime
 
 if [ -d "${SOURCE_DIR}/.git" ]; then
   git -C "${SOURCE_DIR}" remote set-url origin "${REPO_URL}"

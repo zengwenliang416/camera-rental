@@ -24,10 +24,13 @@ import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHO
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class XianyuOrderAdminServiceTest {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setTenantContext() {
@@ -40,7 +43,7 @@ class XianyuOrderAdminServiceTest {
     }
 
     @Test
-    void orderPageMustNotExposeRestrictedPayloadOrIdentifiers() throws Exception {
+    void orderPageExposesOrderNoAndReceiverForOpsButNotRawPayloads() throws Exception {
         XianyuOrderMapper orderMapper = mock(XianyuOrderMapper.class);
         XianyuOrderDO order = XianyuOrderDO.builder()
                 .id(1L)
@@ -50,8 +53,19 @@ class XianyuOrderAdminServiceTest {
                 .payAmount(100L)
                 .currency("CNY")
                 .conversionStatus("PENDING")
-                .sellerRemark("收件人：张三，手机 13800138000，收货地址：杭州市 secret 路，运单 SF1234567890")
-                .detailJson("{\"receiver_mobile\":\"13800138000\",\"address\":\"secret\"}")
+                .sellerRemark("发货7.25/收货7.26/发回8.02")
+                .detailJson("{"
+                        + "\"receiver_mobile\":\"13800138000\","
+                        + "\"receiver_name\":\"张三\","
+                        + "\"prov_name\":\"浙江省\","
+                        + "\"city_name\":\"杭州市\","
+                        + "\"area_name\":\"西湖区\","
+                        + "\"town_name\":\"\","
+                        + "\"address\":\"secret 路1号\","
+                        + "\"pay_no\":\"202600000000000000\","
+                        + "\"waybill_no\":\"SF1234567890\","
+                        + "\"buyer_nick\":\"private-buyer\""
+                        + "}")
                 .goodsJson("{\"images\":[\"secret\"]}")
                 .payNo("202600000000000000")
                 .waybillNo("SF1234567890")
@@ -64,20 +78,27 @@ class XianyuOrderAdminServiceTest {
                 orderMapper,
                 mock(XianyuShopMapper.class),
                 mock(XianyuOrderSyncService.class),
-                mock(XianyuRentalConversionService.class));
+                mock(XianyuRentalConversionService.class),
+                objectMapper);
 
         PageResult<XianyuOrderRespVO> page = service.getOrderPage(pageParam);
-        String json = new ObjectMapper().writeValueAsString(page.getList().get(0));
+        XianyuOrderRespVO vo = page.getList().get(0);
+        String json = objectMapper.writeValueAsString(vo);
 
+        // Ops-required fields stay full.
+        assertEquals("3364202298717566229", vo.getExternalOrderId());
+        assertEquals("张三", vo.getReceiverName());
+        assertEquals("13800138000", vo.getReceiverMobile());
+        assertEquals("浙江省杭州市西湖区secret 路1号", vo.getReceiverAddress());
+        assertTrue(json.contains("3364202298717566229"));
+        assertTrue(json.contains("13800138000"));
+
+        // Raw blobs and non-shipping secrets stay out of list VO.
         assertFalse(json.contains("detailJson"));
         assertFalse(json.contains("goodsJson"));
-        assertFalse(json.contains("3364202298717566229"));
         assertFalse(json.contains("202600000000000000"));
-        assertFalse(json.contains("SF1234567890"));
-        assertFalse(json.contains("1234567890"));
         assertFalse(json.contains("private-buyer"));
-        assertFalse(json.contains("13800138000"));
-        assertFalse(json.contains("secret"));
+        assertFalse(json.contains("SF1234567890"));
     }
 
     @Test
@@ -92,7 +113,7 @@ class XianyuOrderAdminServiceTest {
                 .authorizationExpiresAt(LocalDateTime.of(2026, 7, 23, 23, 59))
                 .build());
         XianyuOrderAdminService service = new XianyuOrderAdminService(
-                orderMapper, shopMapper, syncService, mock(XianyuRentalConversionService.class));
+                orderMapper, shopMapper, syncService, mock(XianyuRentalConversionService.class), objectMapper);
         XianyuOrderSyncReqVO reqVO = new XianyuOrderSyncReqVO();
         reqVO.setShopId(2L);
 

@@ -181,13 +181,19 @@ const adaptTenant = async () => {
 
 /** 初始化装修模版 */
 const adaptTemplate = async (appTemplate, templateId) => {
-  const { data: diyTemplate } = templateId
-    ? // 查询指定模板，一般是预览时使用
-      await DiyApi.getDiyTemplate(templateId)
-    : await DiyApi.getUsedDiyTemplate();
+  let diyTemplate = null;
+  try {
+    const { data } = templateId
+      ? // 查询指定模板，一般是预览时使用
+        await DiyApi.getDiyTemplate(templateId)
+      : await DiyApi.getUsedDiyTemplate();
+    diyTemplate = data;
+  } catch (error) {
+    console.warn('加载商城装修模板失败，使用本地开发兜底模板:', error);
+  }
   // 模板不存在
   if (!diyTemplate) {
-    $router.error('TemplateError');
+    applyFallbackTemplate(appTemplate);
     return;
   }
 
@@ -208,6 +214,42 @@ const adaptTemplate = async (appTemplate, templateId) => {
   }
   appTemplate.home = diyTemplate?.home;
   appTemplate.user = diyTemplate?.user;
+};
+
+const createFallbackPage = () => ({
+  page: {
+    bgType: 'color',
+    bgColor: '#f7f8fa',
+  },
+  navigationBar: {
+    type: 'default',
+    title: '相机租赁',
+  },
+  components: [],
+});
+
+const applyFallbackTemplate = (appTemplate) => {
+  appTemplate.basic.tabbar = {
+    mode: 1,
+    style: {
+      color: '#7a7a7a',
+      activeColor: '#ff5a5f',
+      bgType: 'color',
+      bgColor: '#ffffff',
+    },
+    items: [
+      {
+        text: '首页',
+        url: '/pages/index/index',
+      },
+      {
+        text: '我的',
+        url: '/pages/index/user',
+      },
+    ],
+  };
+  appTemplate.home = createFallbackPage();
+  appTemplate.user = createFallbackPage();
 };
 
 export default app;

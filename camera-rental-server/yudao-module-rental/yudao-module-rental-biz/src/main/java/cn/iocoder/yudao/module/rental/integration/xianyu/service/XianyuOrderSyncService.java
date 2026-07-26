@@ -11,6 +11,7 @@ import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadClient
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadEndpoint;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadResponse;
 import cn.iocoder.yudao.module.rental.integration.xianyu.security.XianyuSafeErrorCode;
+import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
 import cn.iocoder.yudao.module.rental.service.admin.XianyuAlertAdminService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,6 +48,7 @@ public class XianyuOrderSyncService {
     private final XianyuRawPayloadMapper rawPayloadMapper;
     private final XianyuSyncRunMapper syncRunMapper;
     private final XianyuAlertAdminService alertAdminService;
+    private final XianyuRentalConversionService conversionService;
     private final XianyuPayloadHasher payloadHasher;
     private final ObjectMapper objectMapper;
     private final Clock clock;
@@ -55,6 +57,7 @@ public class XianyuOrderSyncService {
                                   XianyuOrderPersistenceService persistenceService,
                                   XianyuOrderMapper orderMapper, XianyuRawPayloadMapper rawPayloadMapper,
                                   XianyuSyncRunMapper syncRunMapper, XianyuAlertAdminService alertAdminService,
+                                  XianyuRentalConversionService conversionService,
                                   XianyuPayloadHasher payloadHasher, ObjectMapper objectMapper,
                                   @Qualifier("xianyuClock") Clock clock) {
         this.readClient = readClient;
@@ -64,6 +67,7 @@ public class XianyuOrderSyncService {
         this.rawPayloadMapper = rawPayloadMapper;
         this.syncRunMapper = syncRunMapper;
         this.alertAdminService = alertAdminService;
+        this.conversionService = conversionService;
         this.payloadHasher = payloadHasher;
         this.objectMapper = objectMapper;
         this.clock = clock;
@@ -225,7 +229,12 @@ public class XianyuOrderSyncService {
         Map<String, XianyuOrderDO> existingOrders = loadRefreshState(shopId, page);
         try {
             for (XianyuOrderListEntry entry : page.entries()) {
-                if (isDetailCurrent(existingOrders.get(entry.externalOrderId()), entry)) {
+                XianyuOrderDO existing = existingOrders.get(entry.externalOrderId());
+                if (isDetailCurrent(existing, entry)) {
+                    // Detail is fresh, but Hermes-style conversion may still be pending/review.
+                    if (needsAutoConvert(existing)) {
+                        conversionService.autoConvertAfterPersist(existing.getId());
+                    }
                     succeeded++;
                     deduplicated++;
                     continue;
@@ -239,6 +248,14 @@ public class XianyuOrderSyncService {
             throw new DetailRefreshException(exception, succeeded);
         }
         return new DetailRefreshCounts(succeeded, deduplicated);
+    }
+
+    private static boolean needsAutoConvert(XianyuOrderDO order) {
+        if (order == null || order.getId() == null) {
+            return false;
+        }
+        String status = order.getConversionStatus();
+        return status == null || "PENDING".equals(status) || "REVIEW_REQUIRED".equals(status);
     }
 
     private void persistOrderPageRawPayload(Long shopId, String rawPayload) {

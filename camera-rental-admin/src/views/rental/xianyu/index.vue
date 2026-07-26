@@ -43,6 +43,11 @@
         <el-descriptions-item :label="t('rental.xianyu.webhookConfigured')">
           {{ config?.webhookBaseUrlConfigured ? t('common.yes') : t('common.no') }}
         </el-descriptions-item>
+        <el-descriptions-item :label="t('rental.xianyu.writeEnabled')">
+          <el-tag :type="config?.writeEnabled ? 'warning' : 'info'">
+            {{ config?.writeEnabled ? t('common.yes') : t('common.no') }}
+          </el-tag>
+        </el-descriptions-item>
       </el-descriptions>
       <el-alert
         class="mt-12px"
@@ -200,11 +205,7 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            @click="getRawPayloadList"
-            v-hasPermi="['rental:xianyu:raw']"
-          >
+          <el-button type="primary" @click="getRawPayloadList" v-hasPermi="['rental:xianyu:raw']">
             {{ t('common.query') }}
           </el-button>
         </el-form-item>
@@ -217,8 +218,16 @@
             {{ maskChannelIdentifier(row.sourceIdentifier) }}
           </template>
         </el-table-column>
-        <el-table-column prop="payloadHash" :label="t('rental.xianyu.payloadHash')" min-width="220" />
-        <el-table-column prop="schemaVersion" :label="t('rental.xianyu.schemaVersion')" width="130" />
+        <el-table-column
+          prop="payloadHash"
+          :label="t('rental.xianyu.payloadHash')"
+          min-width="220"
+        />
+        <el-table-column
+          prop="schemaVersion"
+          :label="t('rental.xianyu.schemaVersion')"
+          width="130"
+        />
         <el-table-column
           prop="redactionVersion"
           :label="t('rental.xianyu.redactionVersion')"
@@ -427,11 +436,12 @@
             {{ maskChannelIdentifier(row.externalAfterSaleId) }}
           </template>
         </el-table-column>
-        <el-table-column :label="t('rental.order.externalOrderId')" min-width="180">
-          <template #default="{ row }">
-            {{ maskChannelIdentifier(row.externalOrderId) }}
-          </template>
-        </el-table-column>
+        <el-table-column
+          prop="externalOrderId"
+          :label="t('rental.order.externalOrderId')"
+          min-width="180"
+          show-overflow-tooltip
+        />
         <el-table-column
           prop="afterSaleStatus"
           :label="t('rental.xianyu.afterSaleStatus')"
@@ -527,9 +537,10 @@
           {{ rawPayloadDetail.payloadHash }}
         </el-descriptions-item>
       </el-descriptions>
-      <pre class="max-h-520px overflow-auto rounded bg-[var(--el-fill-color-light)] p-12px text-12px leading-5">{{
-        rawPayloadDetail?.maskedPayload || '-'
-      }}</pre>
+      <pre
+        class="max-h-520px overflow-auto rounded bg-[var(--el-fill-color-light)] p-12px text-12px leading-5"
+        >{{ rawPayloadDetail?.maskedPayload || '-' }}</pre
+      >
       <template #footer>
         <el-button @click="rawPayloadDialogVisible = false">{{ t('common.close') }}</el-button>
       </template>

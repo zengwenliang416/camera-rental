@@ -6,6 +6,7 @@ const DiyApi = {
       url: '/promotion/diy-template/used',
       method: 'GET',
       custom: {
+        isToken: false,
         showError: false,
         showLoading: false,
       },
@@ -19,6 +20,7 @@ const DiyApi = {
         id
       },
       custom: {
+        isToken: false,
         showError: false,
         showLoading: false,
       },
@@ -30,7 +32,10 @@ const DiyApi = {
       method: 'GET',
       params: {
         id
-      }
+      },
+      custom: {
+        isToken: false,
+      },
     });
   },
 };

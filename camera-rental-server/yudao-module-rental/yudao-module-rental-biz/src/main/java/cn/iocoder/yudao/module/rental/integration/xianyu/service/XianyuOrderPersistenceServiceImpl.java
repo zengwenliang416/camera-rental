@@ -7,6 +7,7 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuSyncCursorDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuRawPayloadMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuSyncCursorMapper;
+import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.Objects;
 
 /**
  * Persists channel evidence before normalized order facts and never performs transport or logging.
+ * After a successful order-detail upsert, triggers Hermes-style automatic conversion.
  */
 @Service
 public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistenceService {
@@ -32,6 +34,7 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
     private final XianyuOrderMapper orderMapper;
     private final XianyuSyncCursorMapper cursorMapper;
     private final XianyuSyncCursorAdvancer cursorAdvancer;
+    private final XianyuRentalConversionService conversionService;
     private final Clock clock;
 
     public XianyuOrderPersistenceServiceImpl(XianyuOrderPayloadParser payloadParser,
@@ -40,6 +43,7 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
                                              XianyuOrderMapper orderMapper,
                                              XianyuSyncCursorMapper cursorMapper,
                                              XianyuSyncCursorAdvancer cursorAdvancer,
+                                             XianyuRentalConversionService conversionService,
                                              @Qualifier("xianyuClock") Clock clock) {
         this.payloadParser = payloadParser;
         this.payloadHasher = payloadHasher;
@@ -47,6 +51,7 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
         this.orderMapper = orderMapper;
         this.cursorMapper = cursorMapper;
         this.cursorAdvancer = cursorAdvancer;
+        this.conversionService = conversionService;
         this.clock = clock;
     }
 
@@ -120,6 +125,8 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
             order.setUpdater("system");
             orderMapper.updateById(order);
         }
+        // Hermes-style: durable channel fact → automatic remark parse / convert / review.
+        conversionService.autoConvertAfterPersist(order.getId());
         return order;
     }
 

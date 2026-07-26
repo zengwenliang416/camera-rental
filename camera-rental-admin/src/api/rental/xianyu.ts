@@ -7,6 +7,7 @@ export interface XianyuConfigVO {
   appKeyMasked: string
   appSecretConfigured: boolean
   webhookBaseUrlConfigured: boolean
+  writeEnabled?: boolean
 }
 
 export interface XianyuShopVO {
@@ -23,6 +24,7 @@ export interface XianyuShopVO {
 export interface XianyuOrderVO {
   id: number
   shopId: number
+  /** Full order no. (not redacted) for ops lookup */
   externalOrderId: string
   externalProductId?: string
   externalSkuId?: string
@@ -30,6 +32,9 @@ export interface XianyuOrderVO {
   payAmount: number
   currency: string
   sellerRemark?: string
+  receiverName?: string
+  receiverMobile?: string
+  receiverAddress?: string
   remarkParseStatus?: string
   conversionStatus: string
   rentalOrderId?: number
@@ -176,6 +181,56 @@ export interface RentalConversionResultVO {
   reasonCode?: string
 }
 
+export interface XianyuPendingShipOrderVO {
+  id: number
+  shopId: number
+  externalOrderId: string
+  orderStatus: string
+  goodsTitle?: string
+  goodsQuantity?: number
+  payAmount?: number
+  buyerNick?: string
+  rentalOrderId?: number
+  conversionStatus: string
+  orderTime?: string
+  sourceUpdatedAt?: string
+}
+
+export interface XianyuShipmentOcrRespVO {
+  waybillNo?: string
+  expressCode?: string
+  expressName?: string
+  confidence?: number
+  extractionSource?: string
+}
+
+export interface XianyuOrderShipReqVO {
+  channelOrderId: number
+  deviceId?: number
+  deviceNo?: string
+  idempotencyKey: string
+  expressCode: string
+  expressName: string
+  waybillNo: string
+  source: 'ADMIN' | 'STAFF'
+  ocrConfirmed?: boolean
+}
+
+export interface XianyuOrderShipRespVO {
+  shipmentId: number
+  channelOrderId: number
+  assignmentId?: number
+  deviceId: number
+  deviceNo: string
+  maskedWaybillNo: string
+  expressCode: string
+  expressName: string
+  remoteCode?: number
+  remoteMsg?: string
+  assignmentStatus?: string
+  source: string
+}
+
 export const getXianyuConfig = () => {
   return request.get<XianyuConfigVO>({ url: '/rental/xianyu/config/get' })
 }
@@ -192,6 +247,7 @@ export const getXianyuOrderPage = (
   params: PageParam & {
     shopId?: number
     conversionStatus?: string
+    externalOrderId?: string
     externalProductId?: string
     externalSkuId?: string
     startDate?: string
@@ -210,6 +266,32 @@ export const convertXianyuOrder = (channelOrderId: number) => {
     url: '/rental/xianyu/order/convert',
     params: { channelOrderId }
   })
+}
+
+export const getXianyuPendingShipOrderPage = (
+  params: PageParam & {
+    shopId?: number
+    keyword?: string
+  }
+) => {
+  return request.get<PageResult<XianyuPendingShipOrderVO[]>>({
+    url: '/rental/xianyu/order/pending-ship/page',
+    params
+  })
+}
+
+export const recognizeXianyuShipmentImage = async (file: File) => {
+  const data = new FormData()
+  data.append('file', file)
+  const res = await request.upload<{ data: XianyuShipmentOcrRespVO }>({
+    url: '/rental/xianyu/order/ship/ocr',
+    data
+  })
+  return res.data
+}
+
+export const shipXianyuOrder = (data: XianyuOrderShipReqVO) => {
+  return request.post<XianyuOrderShipRespVO>({ url: '/rental/xianyu/order/ship', data })
 }
 
 export const getXianyuAfterSalePage = (

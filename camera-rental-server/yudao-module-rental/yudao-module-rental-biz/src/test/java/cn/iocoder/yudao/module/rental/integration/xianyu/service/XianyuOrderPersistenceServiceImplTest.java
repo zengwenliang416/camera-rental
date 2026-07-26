@@ -7,6 +7,7 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuSyncCursorDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuRawPayloadMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuSyncCursorMapper;
+import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -41,6 +43,8 @@ class XianyuOrderPersistenceServiceImplTest {
     private XianyuOrderMapper orderMapper;
     @Mock
     private XianyuSyncCursorMapper cursorMapper;
+    @Mock
+    private XianyuRentalConversionService conversionService;
 
     private XianyuOrderPersistenceService service;
 
@@ -54,6 +58,7 @@ class XianyuOrderPersistenceServiceImplTest {
                 orderMapper,
                 cursorMapper,
                 new XianyuSyncCursorAdvancer(),
+                conversionService,
                 Clock.fixed(Instant.parse("2026-07-23T10:11:12Z"), ZoneOffset.UTC));
     }
 
@@ -71,6 +76,10 @@ class XianyuOrderPersistenceServiceImplTest {
         when(rawPayloadMapper.selectByTenantIdAndSourceAndHashForUpdate(eq(9L), any(), any(), any()))
                 .thenReturn(XianyuRawPayloadDO.builder().id(99L).build());
         when(orderMapper.selectByShopIdAndExternalOrderIdForUpdate(7L, "order-100")).thenReturn(null);
+        doAnswer(invocation -> {
+            invocation.getArgument(0, XianyuOrderDO.class).setId(1001L);
+            return 1;
+        }).when(orderMapper).insert(any(XianyuOrderDO.class));
 
         XianyuOrderDO result = service.persistOrderDetail(7L, rawPayload);
 
@@ -78,11 +87,12 @@ class XianyuOrderPersistenceServiceImplTest {
         ArgumentCaptor<XianyuOrderDO> orderCaptor = ArgumentCaptor.forClass(XianyuOrderDO.class);
         verify(rawPayloadMapper).insertOrReuse(eq(9L), rawCaptor.capture());
         verify(orderMapper).insert(orderCaptor.capture());
-        InOrder writeOrder = inOrder(rawPayloadMapper, orderMapper);
+        InOrder writeOrder = inOrder(rawPayloadMapper, orderMapper, conversionService);
         writeOrder.verify(rawPayloadMapper).insertOrReuse(eq(9L), any(XianyuRawPayloadDO.class));
         writeOrder.verify(rawPayloadMapper)
                 .selectByTenantIdAndSourceAndHashForUpdate(eq(9L), any(), any(), any());
         writeOrder.verify(orderMapper).insert(any(XianyuOrderDO.class));
+        writeOrder.verify(conversionService).autoConvertAfterPersist(1001L);
         assertEquals(rawPayload, rawCaptor.getValue().getPayload());
         assertEquals("order:7:order-100", rawCaptor.getValue().getSourceIdentifier());
         assertEquals(64, rawCaptor.getValue().getPayloadHash().length());
@@ -108,6 +118,7 @@ class XianyuOrderPersistenceServiceImplTest {
 
         verify(rawPayloadMapper).insertOrReuse(eq(9L), any(XianyuRawPayloadDO.class));
         verify(orderMapper).updateById(result);
+        verify(conversionService).autoConvertAfterPersist(6L);
         assertEquals(6L, result.getId());
         assertEquals(5L, result.getRawPayloadId());
         assertEquals("REVIEW_REQUIRED", result.getConversionStatus());
@@ -140,6 +151,7 @@ class XianyuOrderPersistenceServiceImplTest {
         assertEquals(200L, result.getPayAmount());
         verify(rawPayloadMapper).insertOrReuse(eq(9L), any(XianyuRawPayloadDO.class));
         verify(orderMapper, never()).updateById(any(XianyuOrderDO.class));
+        verify(conversionService, never()).autoConvertAfterPersist(any());
     }
 
     @Test

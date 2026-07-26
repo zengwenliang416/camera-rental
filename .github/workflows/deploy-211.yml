@@ -93,8 +93,8 @@ jobs:
         working-directory: camera-rental-staff
         run: |
           pnpm install --frozen-lockfile
-          pnpm type-check
           pnpm build:h5:prod
+          pnpm type-check
 
       - name: Prepare staff artifact
         run: |

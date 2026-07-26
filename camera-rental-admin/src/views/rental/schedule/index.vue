@@ -1,12 +1,6 @@
 <template>
   <ContentWrap>
     <el-alert
-      class="mb-16px"
-      type="info"
-      :closable="false"
-      :title="t('rental.schedule.rangeHint')"
-    />
-    <el-alert
       v-if="loadError"
       class="mb-12px"
       type="error"
@@ -17,27 +11,22 @@
         {{ t('rental.common.retry') }}
       </el-button>
     </el-alert>
-    <el-form class="-mb-15px" :inline="true" :model="queryParams">
+
+    <!-- Primary: status + occupy window + device; IDs folded under advanced -->
+    <el-form class="schedule-filter-form" :inline="true" :model="queryParams" @submit.prevent>
       <el-form-item :label="t('rental.schedule.deviceId')">
         <el-input-number
           v-model="queryParams.deviceId"
-          class="!w-160px"
+          class="!w-140px"
           :min="1"
           controls-position="right"
-        />
-      </el-form-item>
-      <el-form-item :label="t('rental.schedule.rentalOrderId')">
-        <el-input-number
-          v-model="queryParams.rentalOrderId"
-          class="!w-160px"
-          :min="1"
-          controls-position="right"
+          :placeholder="t('rental.schedule.deviceId')"
         />
       </el-form-item>
       <el-form-item :label="t('rental.schedule.status')">
         <el-select
           v-model="queryParams.status"
-          class="!w-160px"
+          class="!w-150px"
           clearable
           :placeholder="t('common.selectText')"
         >
@@ -49,27 +38,48 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item :label="t('rental.schedule.occupyStartDate')">
+      <el-form-item :label="t('rental.schedule.occupyRange')">
         <el-date-picker
-          v-model="queryParams.occupyStartDate"
-          type="date"
+          v-model="occupyRange"
+          type="daterange"
           value-format="YYYY-MM-DD"
-          class="!w-160px"
-        />
-      </el-form-item>
-      <el-form-item :label="t('rental.schedule.occupyEndDateExclusive')">
-        <el-date-picker
-          v-model="queryParams.occupyEndDateExclusive"
-          type="date"
-          value-format="YYYY-MM-DD"
-          class="!w-160px"
+          class="!w-260px"
+          :start-placeholder="t('rental.schedule.occupyStartDate')"
+          :end-placeholder="t('rental.schedule.occupyEndDateExclusive')"
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery">{{ t('common.query') }}</el-button>
+        <el-button type="primary" @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" />{{ t('common.query') }}
+        </el-button>
         <el-button @click="resetQuery">{{ t('common.reset') }}</el-button>
+        <el-button link type="primary" @click="showAdvanced = !showAdvanced">
+          {{ showAdvanced ? t('rental.schedule.hideAdvanced') : t('rental.schedule.showAdvanced') }}
+          <Icon :icon="showAdvanced ? 'ep:arrow-up' : 'ep:arrow-down'" class="ml-4px" />
+        </el-button>
       </el-form-item>
     </el-form>
+
+    <el-form
+      v-show="showAdvanced"
+      class="schedule-advanced-form mb-12px"
+      :inline="true"
+      :model="queryParams"
+      @submit.prevent
+    >
+      <el-form-item :label="t('rental.schedule.rentalOrderId')">
+        <el-input-number
+          v-model="queryParams.rentalOrderId"
+          class="!w-160px"
+          :min="1"
+          controls-position="right"
+        />
+      </el-form-item>
+    </el-form>
+
+    <p class="schedule-hint mb-12px">
+      {{ t('rental.schedule.rangeHintShort') }}
+    </p>
 
     <el-table v-loading="loading" :data="list">
       <el-table-column prop="deviceNo" :label="t('rental.schedule.deviceNo')" min-width="130" />
@@ -113,7 +123,7 @@
       <el-table-column
         prop="occupyEndDateExclusive"
         :label="t('rental.schedule.occupyEndDateExclusive')"
-        width="180"
+        width="160"
       />
       <template #empty>
         <div class="py-24px text-[var(--el-text-color-secondary)]">
@@ -131,7 +141,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import {
   getRentalSchedulePage,
@@ -146,14 +156,27 @@ const route = useRoute()
 
 const loading = ref(false)
 const loadError = ref(false)
+const showAdvanced = ref(false)
 const list = ref<RentalScheduleVO[]>([])
 const total = ref(0)
 const queryParams = reactive<RentalSchedulePageReqVO>({ pageNo: 1, pageSize: 10 })
+/** UI-only daterange → occupyStartDate / occupyEndDateExclusive */
+const occupyRange = ref<[string, string] | undefined>()
+
 const statusOptions = computed(() =>
   getRentalStatusValues('schedule').map((value) => ({
     value,
     label: t(getRentalLabelKey('schedule', value))
   }))
+)
+
+watch(
+  occupyRange,
+  (range) => {
+    queryParams.occupyStartDate = range?.[0]
+    queryParams.occupyEndDateExclusive = range?.[1]
+  },
+  { deep: true }
 )
 
 const getList = async () => {
@@ -183,19 +206,50 @@ const resetQuery = async () => {
   queryParams.status = undefined
   queryParams.occupyStartDate = undefined
   queryParams.occupyEndDateExclusive = undefined
+  occupyRange.value = undefined
   queryParams.pageNo = 1
+  showAdvanced.value = false
   await getList()
 }
 
 onMounted(() => {
   const deviceId = Number(route.query.deviceId)
   queryParams.deviceId = Number.isInteger(deviceId) && deviceId > 0 ? deviceId : undefined
-  queryParams.occupyStartDate =
+  const start =
     typeof route.query.occupyStartDate === 'string' ? route.query.occupyStartDate : undefined
-  queryParams.occupyEndDateExclusive =
+  const end =
     typeof route.query.occupyEndDateExclusive === 'string'
       ? route.query.occupyEndDateExclusive
       : undefined
+  queryParams.occupyStartDate = start
+  queryParams.occupyEndDateExclusive = end
+  if (start && end) {
+    occupyRange.value = [start, end]
+  }
+  const orderId = Number(route.query.rentalOrderId)
+  if (Number.isInteger(orderId) && orderId > 0) {
+    queryParams.rentalOrderId = orderId
+    showAdvanced.value = true
+  }
   return getList()
 })
 </script>
+
+<style scoped>
+.schedule-filter-form {
+  margin-bottom: 4px;
+}
+
+.schedule-advanced-form {
+  padding: 12px 12px 0;
+  background: var(--el-fill-color-lighter);
+  border-radius: 6px;
+}
+
+.schedule-hint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--el-text-color-secondary);
+}
+</style>

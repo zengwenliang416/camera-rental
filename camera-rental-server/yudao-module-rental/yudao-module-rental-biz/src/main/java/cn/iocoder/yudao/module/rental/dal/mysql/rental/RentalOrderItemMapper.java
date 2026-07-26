@@ -13,4 +13,11 @@ public interface RentalOrderItemMapper extends BaseMapperX<RentalOrderItemDO> {
                 .eq(RentalOrderItemDO::getId, id));
     }
 
+    default RentalOrderItemDO selectFirstByRentalOrderIdForUpdate(Long rentalOrderId) {
+        return selectOneForUpdate(new LambdaQueryWrapper<RentalOrderItemDO>()
+                .eq(RentalOrderItemDO::getRentalOrderId, rentalOrderId)
+                .orderByAsc(RentalOrderItemDO::getId)
+                .last("LIMIT 1"));
+    }
+
 }

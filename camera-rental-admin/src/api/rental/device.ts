@@ -52,3 +52,65 @@ export const createRentalDevice = (data: RentalDeviceCreateReqVO) => {
 export const assignRentalDevice = (data: RentalDeviceAssignReqVO) => {
   return request.post<RentalDeviceAssignmentResultVO>({ url: '/rental/device/assign', data })
 }
+
+export interface RentalDeviceQrVO {
+  deviceId: number
+  deviceNo: string
+  equipmentModelCode: string
+  payload: string
+  payloadVersion: string
+  signed: boolean
+}
+
+export const getRentalDeviceQr = (id: number) => {
+  return request.get<RentalDeviceQrVO>({ url: '/rental/device/get-qr', params: { id } })
+}
+
+export const resolveRentalDeviceQr = (payload: string) => {
+  return request.post<RentalDeviceVO>({ url: '/rental/device/resolve-qr', data: { payload } })
+}
+
+export interface RentalDeviceOpsResultVO {
+  deviceId: number
+  deviceNo: string
+  deviceStatus: string
+  assignmentId: number
+  assignmentStatus: string
+}
+
+export const dispatchRentalDevice = (data: { deviceId: number; assignmentId?: number }) => {
+  return request.post<RentalDeviceOpsResultVO>({ url: '/rental/device/dispatch', data })
+}
+
+export const returnRentalDevice = (data: {
+  deviceId: number
+  inspectPassed?: boolean
+  note?: string
+}) => {
+  return request.post<RentalDeviceOpsResultVO>({ url: '/rental/device/return', data })
+}
+
+export interface RentalDeviceGenerateFromPurchaseReqVO {
+  purchaseInId: number
+  purchaseInItemId?: number
+  deviceNoPrefix?: string
+  equipmentModelCode?: string
+  warehouseCode?: string
+}
+
+export interface RentalDeviceGenerateFromPurchaseRespVO {
+  purchaseInId: number
+  purchaseInNo: string
+  requestedCount: number
+  alreadyExistedCount: number
+  createdCount: number
+  createdDeviceIds: number[]
+  createdDeviceNos: string[]
+}
+
+export const generateDevicesFromPurchaseIn = (data: RentalDeviceGenerateFromPurchaseReqVO) => {
+  return request.post<RentalDeviceGenerateFromPurchaseRespVO>({
+    url: '/rental/device/generate-from-purchase-in',
+    data
+  })
+}

@@ -4,6 +4,7 @@ node_modules/*
 deploy.sh
 .hbuilderx/
 .vscode/
+.env*.local
 **/.DS_Store
 yarn.lock
 package-lock.json

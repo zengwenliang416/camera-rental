@@ -25,4 +25,7 @@ public class XianyuConfigRespVO {
     @Schema(description = "是否已配置 webhook 基址")
     private Boolean webhookBaseUrlConfigured;
 
+    @Schema(description = "是否开启闲管家写操作")
+    private Boolean writeEnabled;
+
 }

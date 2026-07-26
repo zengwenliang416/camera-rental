@@ -99,12 +99,12 @@
 <!--            <version>${revision}</version>-->
 <!--        </dependency>-->
 
-        <!-- ERP 相关模块。默认注释，保证编译速度 -->
-<!--        <dependency>-->
-<!--            <groupId>cn.iocoder.boot</groupId>-->
-<!--            <artifactId>yudao-module-erp</artifactId>-->
-<!--            <version>${revision}</version>-->
-<!--        </dependency>-->
+        <!-- ERP：采购 / 供应商 / 数量库存（与租赁设备实例互通，见 docs/decisions/0002） -->
+        <dependency>
+            <groupId>cn.iocoder.boot</groupId>
+            <artifactId>yudao-module-erp</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
         <!-- AI 大模型相关模块。默认注释，保证编译速度 -->
 <!--        <dependency>-->

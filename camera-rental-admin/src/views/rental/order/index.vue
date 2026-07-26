@@ -1,6 +1,6 @@
 <template>
   <ContentWrap>
-    <el-alert class="mb-12px" type="info" :closable="false" :title="t('rental.order.listHint')" />
+    <!-- Errors only; long help text moved out of the filter chrome -->
     <el-alert
       v-if="loadError"
       class="mb-12px"
@@ -24,11 +24,23 @@
       </el-button>
     </el-alert>
 
-    <el-form class="-mb-15px" :inline="true" :model="queryParams">
-      <el-form-item :label="t('rental.order.shopId')">
+    <XianyuShipWorkbench />
+
+    <!-- Primary filter: local list only -->
+    <el-form class="order-filter-form" :inline="true" :model="queryParams" @submit.prevent>
+      <el-form-item :label="t('rental.order.externalOrderId')">
+        <el-input
+          v-model="queryParams.externalOrderId"
+          class="!w-200px"
+          clearable
+          :placeholder="t('rental.order.externalOrderIdPlaceholder')"
+          @keyup.enter="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item :label="t('rental.order.filterShop')">
         <el-select
           v-model="queryParams.shopId"
-          class="!w-220px"
+          class="!w-200px"
           clearable
           filterable
           :placeholder="t('rental.order.shopPlaceholder')"
@@ -44,7 +56,7 @@
       <el-form-item :label="t('rental.order.conversionStatus')">
         <el-select
           v-model="queryParams.conversionStatus"
-          class="!w-160px"
+          class="!w-150px"
           clearable
           :placeholder="t('common.selectText')"
         >
@@ -56,6 +68,39 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item :label="t('rental.order.reportDateRange')">
+        <el-date-picker
+          v-model="queryParams.dateRange"
+          type="daterange"
+          value-format="YYYY-MM-DD"
+          class="!w-240px"
+          :start-placeholder="t('rental.report.startDate')"
+          :end-placeholder="t('rental.report.endDate')"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" />{{ t('common.query') }}
+        </el-button>
+        <el-button @click="resetQuery">{{ t('common.reset') }}</el-button>
+        <el-button link type="primary" @click="showAdvanced = !showAdvanced">
+          {{ showAdvanced ? t('rental.order.hideAdvanced') : t('rental.order.showAdvanced') }}
+          <Icon :icon="showAdvanced ? 'ep:arrow-up' : 'ep:arrow-down'" class="ml-4px" />
+        </el-button>
+        <el-button v-hasPermi="['rental:xianyu:sync']" @click="openSyncDialog">
+          <Icon icon="ep:refresh" class="mr-5px" />{{ t('rental.order.syncAction') }}
+        </el-button>
+      </el-form-item>
+    </el-form>
+
+    <!-- Secondary filter: rarely used IDs -->
+    <el-form
+      v-show="showAdvanced"
+      class="order-advanced-form mb-12px"
+      :inline="true"
+      :model="queryParams"
+      @submit.prevent
+    >
       <el-form-item :label="t('rental.order.externalProductId')">
         <el-input
           v-model="queryParams.externalProductId"
@@ -72,84 +117,11 @@
           :placeholder="t('rental.order.externalSkuId')"
         />
       </el-form-item>
-      <el-form-item :label="t('rental.order.reportDateRange')">
-        <el-date-picker
-          v-model="queryParams.dateRange"
-          type="daterange"
-          value-format="YYYY-MM-DD"
-          class="!w-260px"
-          :start-placeholder="t('rental.report.startDate')"
-          :end-placeholder="t('rental.report.endDate')"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="handleQuery">
-          <Icon icon="ep:search" class="mr-5px" />{{ t('common.query') }}
-        </el-button>
-        <el-button @click="resetQuery">{{ t('common.reset') }}</el-button>
-      </el-form-item>
     </el-form>
 
-    <el-card class="mb-12px" shadow="never">
-      <template #header>
-        <span>{{ t('rental.order.syncCardTitle') }}</span>
-      </template>
-      <el-form :inline="true" :model="syncForm">
-        <el-form-item :label="t('rental.order.shopId')" required>
-          <el-select
-            v-model="syncForm.shopId"
-            class="!w-220px"
-            filterable
-            :placeholder="t('rental.order.shopPlaceholder')"
-          >
-            <el-option
-              v-for="shop in shops"
-              :key="shop.id"
-              :label="shopLabel(shop)"
-              :value="shop.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="t('rental.order.windowStart')" required>
-          <el-date-picker
-            v-model="syncForm.windowStart"
-            type="datetime"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            :placeholder="t('rental.order.windowStart')"
-          />
-        </el-form-item>
-        <el-form-item :label="t('rental.order.windowEnd')" required>
-          <el-date-picker
-            v-model="syncForm.windowEnd"
-            type="datetime"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            :placeholder="t('rental.order.windowEnd')"
-          />
-        </el-form-item>
-        <el-form-item :label="t('rental.order.pageSize')">
-          <el-input-number
-            v-model="syncForm.pageSize"
-            :min="1"
-            :max="100"
-            controls-position="right"
-          />
-        </el-form-item>
-        <el-form-item>
-          <el-button
-            type="primary"
-            :loading="syncing"
-            v-hasPermi="['rental:xianyu:sync']"
-            @click="handleSync"
-          >
-            {{ t('rental.order.syncPage') }}
-          </el-button>
-          <el-button @click="fillLast30Days">{{ t('rental.order.fillLast30Days') }}</el-button>
-        </el-form-item>
-      </el-form>
-      <div class="text-13px text-[var(--el-text-color-secondary)]">
-        {{ t('rental.order.syncHint') }}
-      </div>
-    </el-card>
+    <p class="order-hint mb-12px">
+      {{ t('rental.order.listHintShort') }}
+    </p>
 
     <el-table v-loading="loading" :data="list">
       <el-table-column prop="id" label="ID" width="70" />
@@ -157,11 +129,12 @@
       <el-table-column :label="t('rental.xianyu.shopName')" min-width="110">
         <template #default="{ row }">{{ shopNameById(row.shopId) }}</template>
       </el-table-column>
-      <el-table-column :label="t('rental.order.externalOrderId')" min-width="160">
-        <template #default="{ row }">
-          {{ maskChannelIdentifier(row.externalOrderId) }}
-        </template>
-      </el-table-column>
+      <el-table-column
+        prop="externalOrderId"
+        :label="t('rental.order.externalOrderId')"
+        min-width="180"
+        show-overflow-tooltip
+      />
       <el-table-column
         prop="goodsTitle"
         :label="t('rental.order.goodsTitle')"
@@ -180,6 +153,23 @@
           {{ formatYuan(row.payAmount) }}
         </template>
       </el-table-column>
+      <el-table-column
+        prop="receiverName"
+        :label="t('rental.order.receiverName')"
+        width="100"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        prop="receiverMobile"
+        :label="t('rental.order.receiverMobile')"
+        width="120"
+      />
+      <el-table-column
+        prop="receiverAddress"
+        :label="t('rental.order.receiverAddress')"
+        min-width="180"
+        show-overflow-tooltip
+      />
       <el-table-column prop="expressName" :label="t('rental.order.expressName')" width="100" />
       <el-table-column :label="t('rental.order.conversionStatus')" width="120">
         <template #default="{ row }">
@@ -188,27 +178,30 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="t('rental.order.sellerRemark')" min-width="120" show-overflow-tooltip>
-        <template #default="{ row }">
-          {{ maskSensitiveText(row.sellerRemark) }}
-        </template>
-      </el-table-column>
+      <el-table-column
+        prop="sellerRemark"
+        :label="t('rental.order.sellerRemark')"
+        min-width="140"
+        show-overflow-tooltip
+      />
       <el-table-column :label="t('rental.order.remarkParseStatus')" width="120">
         <template #default="{ row }">
           {{ remarkParseStatusLabel(row.remarkParseStatus) }}
         </template>
       </el-table-column>
-      <el-table-column :label="t('table.action')" width="100" fixed="right">
+      <el-table-column :label="t('table.action')" width="110" fixed="right">
         <template #default="{ row }">
           <el-button
+            v-if="canRetryConvert(row.conversionStatus)"
             link
             type="primary"
             v-hasPermi="['rental:order:convert']"
-            :disabled="['CONVERTED', 'CLOSED'].includes(row.conversionStatus)"
+            :title="t('rental.order.convertHint')"
             @click="handleConvert(row.id)"
           >
             {{ t('rental.order.convert') }}
           </el-button>
+          <span v-else class="text-[var(--el-text-color-placeholder)]">—</span>
         </template>
       </el-table-column>
       <template #empty>
@@ -224,6 +217,66 @@
       v-model:limit="queryParams.pageSize"
       @pagination="getList"
     />
+
+    <!-- Manual catch-up: secondary, not mixed into filter bar -->
+    <el-dialog
+      v-model="syncVisible"
+      :title="t('rental.order.syncDialogTitle')"
+      width="560px"
+      destroy-on-close
+    >
+      <el-alert class="mb-16px" type="info" :closable="false" :title="t('rental.order.syncHint')" />
+      <el-form ref="syncFormRef" :model="syncForm" label-width="110px" @submit.prevent>
+        <el-form-item :label="t('rental.order.syncShop')" required>
+          <el-select
+            v-model="syncForm.shopId"
+            class="!w-100%"
+            filterable
+            :placeholder="t('rental.order.shopPlaceholder')"
+          >
+            <el-option
+              v-for="shop in shops"
+              :key="shop.id"
+              :label="shopLabel(shop)"
+              :value="shop.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="t('rental.order.windowStart')" required>
+          <el-date-picker
+            v-model="syncForm.windowStart"
+            type="datetime"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            class="!w-100%"
+            :placeholder="t('rental.order.windowStart')"
+          />
+        </el-form-item>
+        <el-form-item :label="t('rental.order.windowEnd')" required>
+          <el-date-picker
+            v-model="syncForm.windowEnd"
+            type="datetime"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            class="!w-100%"
+            :placeholder="t('rental.order.windowEnd')"
+          />
+        </el-form-item>
+        <el-form-item :label="t('rental.order.pageSize')">
+          <el-input-number
+            v-model="syncForm.pageSize"
+            :min="1"
+            :max="100"
+            controls-position="right"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="fillLast30Days">{{ t('rental.order.fillLast30Days') }}</el-button>
+        <el-button @click="syncVisible = false">{{ t('common.cancel') }}</el-button>
+        <el-button type="primary" :loading="syncing" @click="handleSync">
+          {{ t('rental.order.syncPage') }}
+        </el-button>
+      </template>
+    </el-dialog>
   </ContentWrap>
 </template>
 
@@ -242,13 +295,13 @@ import {
 import { toEpochMillis } from '@/utils/rentalDate'
 import { formatDate } from '@/utils/formatTime'
 import { fenToYuan } from '@/utils'
-import { maskChannelIdentifier, maskSensitiveText } from '@/utils/rentalPrivacy'
 import {
   getRentalLabelKey,
   getRentalStatusValues,
   getRentalTagType,
   type RentalLabelGroup
 } from '@/utils/rentalLabels'
+import XianyuShipWorkbench from './components/XianyuShipWorkbench.vue'
 
 defineOptions({ name: 'RentalChannelOrder' })
 const { t } = useI18n()
@@ -258,6 +311,8 @@ const loading = ref(false)
 const syncing = ref(false)
 const loadError = ref(false)
 const shopLoadError = ref(false)
+const showAdvanced = ref(false)
+const syncVisible = ref(false)
 const list = ref<XianyuOrderVO[]>([])
 const shops = ref<XianyuShopVO[]>([])
 const total = ref(0)
@@ -273,6 +328,7 @@ const queryParams = reactive<{
   pageSize: number
   shopId?: number
   conversionStatus?: string
+  externalOrderId?: string
   externalProductId?: string
   externalSkuId?: string
   dateRange?: [string, string]
@@ -314,6 +370,21 @@ const fillLast30Days = () => {
   syncForm.windowEnd = formatDate(end)
 }
 
+const openSyncDialog = () => {
+  if (!syncForm.windowStart || !syncForm.windowEnd) {
+    fillLast30Days()
+  }
+  if (!syncForm.shopId && shops.value.length > 0) {
+    const preferred = shops.value.find((s) => s.authorizationStatus === 'VALID') || shops.value[0]
+    syncForm.shopId = preferred.id
+  }
+  // Prefer aligning with current list filter when set
+  if (queryParams.shopId) {
+    syncForm.shopId = queryParams.shopId
+  }
+  syncVisible.value = true
+}
+
 const loadShops = async () => {
   shopLoadError.value = false
   try {
@@ -346,6 +417,7 @@ const getList = async () => {
       pageSize: queryParams.pageSize,
       shopId: queryParams.shopId,
       conversionStatus: queryParams.conversionStatus || undefined,
+      externalOrderId: queryParams.externalOrderId?.trim() || undefined,
       externalProductId: queryParams.externalProductId || undefined,
       externalSkuId: queryParams.externalSkuId || undefined,
       startDate: queryParams.dateRange?.[0],
@@ -370,10 +442,12 @@ const handleQuery = async () => {
 const resetQuery = async () => {
   queryParams.shopId = undefined
   queryParams.conversionStatus = undefined
+  queryParams.externalOrderId = undefined
   queryParams.externalProductId = undefined
   queryParams.externalSkuId = undefined
   queryParams.dateRange = undefined
   queryParams.pageNo = 1
+  showAdvanced.value = false
   await getList()
 }
 
@@ -403,6 +477,7 @@ const handleSync = async () => {
         succeeded: result.succeededCount
       })
     )
+    syncVisible.value = false
     queryParams.shopId = syncForm.shopId
     queryParams.pageNo = 1
     await getList()
@@ -410,6 +485,9 @@ const handleSync = async () => {
     syncing.value = false
   }
 }
+
+/** Hermes-style auto-convert is primary; manual retry only for pending/review rows. */
+const canRetryConvert = (status?: string) => status === 'PENDING' || status === 'REVIEW_REQUIRED'
 
 const handleConvert = async (id: number) => {
   const result = await convertXianyuOrder(id)
@@ -434,10 +512,15 @@ const handleConvert = async (id: number) => {
 onMounted(async () => {
   const shopId = Number(route.query.shopId)
   queryParams.shopId = Number.isInteger(shopId) && shopId > 0 ? shopId : undefined
+  queryParams.externalOrderId =
+    typeof route.query.externalOrderId === 'string' ? route.query.externalOrderId : undefined
   queryParams.externalProductId =
     typeof route.query.externalProductId === 'string' ? route.query.externalProductId : undefined
   queryParams.externalSkuId =
     typeof route.query.externalSkuId === 'string' ? route.query.externalSkuId : undefined
+  if (queryParams.externalProductId || queryParams.externalSkuId) {
+    showAdvanced.value = true
+  }
   if (typeof route.query.startDate === 'string' && typeof route.query.endDate === 'string') {
     queryParams.dateRange = [route.query.startDate, route.query.endDate]
   }
@@ -446,3 +529,22 @@ onMounted(async () => {
   await getList()
 })
 </script>
+
+<style scoped>
+.order-filter-form {
+  margin-bottom: 4px;
+}
+
+.order-advanced-form {
+  padding: 12px 12px 0;
+  background: var(--el-fill-color-lighter);
+  border-radius: 6px;
+}
+
+.order-hint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--el-text-color-secondary);
+}
+</style>

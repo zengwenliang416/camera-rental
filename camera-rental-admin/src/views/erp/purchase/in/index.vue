@@ -240,7 +240,7 @@
           <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="220">
+      <el-table-column label="操作" align="center" fixed="right" width="300">
         <template #default="scope">
           <el-button
             link
@@ -275,6 +275,16 @@
             v-else
           >
             反审批
+          </el-button>
+          <el-button
+            link
+            type="success"
+            @click="handleGenerateDevices(scope.row)"
+            v-hasPermi="['rental:device:create']"
+            v-if="scope.row.status === 20"
+            :loading="generatingId === scope.row.id"
+          >
+            生成设备
           </el-button>
           <el-button
             link
@@ -317,6 +327,7 @@ import {
 import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
 import { AccountApi, AccountVO } from '@/api/erp/finance/account'
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
+import { generateDevicesFromPurchaseIn } from '@/api/rental/device'
 
 /** ERP 销售入库列表 */
 defineOptions({ name: 'ErpPurchaseIn' })
@@ -327,6 +338,7 @@ const { t } = useI18n() // 国际化
 const loading = ref(true) // 列表的加载中
 const list = ref<PurchaseInVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
+const generatingId = ref<number | null>(null)
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
@@ -405,6 +417,23 @@ const handleUpdateStatus = async (id: number, status: number) => {
     // 刷新列表
     await getList()
   } catch {}
+}
+
+/** 已审批入库 → 生成租赁设备实例（幂等，可重复点） */
+const handleGenerateDevices = async (row: PurchaseInVO) => {
+  try {
+    await message.confirm(
+      `按入库数量为「${row.no}」生成租赁设备实例？已生成过的明细会跳过。`
+    )
+    generatingId.value = row.id
+    const result = await generateDevicesFromPurchaseIn({ purchaseInId: row.id })
+    message.success(
+      `应生成 ${result.requestedCount} 台，已有 ${result.alreadyExistedCount}，新建 ${result.createdCount}`
+    )
+  } catch {
+  } finally {
+    generatingId.value = null
+  }
 }
 
 /** 导出按钮操作 */

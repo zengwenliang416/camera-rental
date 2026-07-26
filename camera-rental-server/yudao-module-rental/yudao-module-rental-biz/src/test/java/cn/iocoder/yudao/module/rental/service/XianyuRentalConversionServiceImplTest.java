@@ -92,6 +92,9 @@ class XianyuRentalConversionServiceImplTest {
         verify(productMappingMapper, never()).selectByShopProductSkuForUpdate(any(), any(), any());
         verify(rentalOrderMapper, never()).insert(any(RentalOrderDO.class));
         verify(rentalOrderItemMapper, never()).insert(any(RentalOrderItemDO.class));
+        // Hermes re-reads remarks even for already-linked channel rows.
+        verify(xianyuOrderMapper).updateById(source);
+        assertEquals("SUCCESS", source.getRemarkParseStatus());
     }
 
     @Test
@@ -145,6 +148,31 @@ class XianyuRentalConversionServiceImplTest {
         verify(manualReviewMapper, never()).insert(any(RentalManualReviewDO.class));
         verify(rentalOrderMapper, never()).insert(any(RentalOrderDO.class));
         verify(rentalOrderItemMapper, never()).insert(any(RentalOrderItemDO.class));
+    }
+
+    @Test
+    void shouldRefreshRemarkParseWhenAlreadyConverted() {
+        XianyuOrderDO source = sourceOrder();
+        source.setRentalOrderId(31L);
+        source.setConversionStatus("CONVERTED");
+        when(xianyuOrderMapper.selectByIdForUpdate(10L)).thenReturn(source);
+
+        RentalConversionResult result = service.convert(10L);
+
+        assertEquals("CONVERTED", result.status());
+        assertEquals(31L, result.rentalOrderId());
+        verify(xianyuOrderMapper).updateById(source);
+        assertEquals("SUCCESS", source.getRemarkParseStatus());
+        verify(rentalOrderMapper, never()).insert(any(RentalOrderDO.class));
+    }
+
+    @Test
+    void autoConvertAfterPersistShouldSwallowUnexpectedFailures() {
+        when(xianyuOrderMapper.selectByIdForUpdate(10L)).thenThrow(new RuntimeException("db down"));
+
+        service.autoConvertAfterPersist(10L);
+
+        verify(manualReviewMapper, never()).insert(any(RentalManualReviewDO.class));
     }
 
     private XianyuOrderDO sourceOrder() {

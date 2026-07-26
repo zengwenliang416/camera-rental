@@ -3,6 +3,7 @@ package cn.iocoder.yudao.module.rental.integration.xianyu.config;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuCanonicalJson;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadClient;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuRequestSigner;
+import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuWriteClient;
 import cn.iocoder.yudao.module.rental.integration.xianyu.security.XianyuLogRedactor;
 import cn.iocoder.yudao.module.rental.integration.xianyu.security.XianyuWebhookSignatureVerifier;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,6 +55,15 @@ public class XianyuConfiguration {
                                               ObjectMapper objectMapper,
                                               @Qualifier("xianyuClock") Clock clock) {
         return new XianyuReadClient(properties, canonicalJson, requestSigner, xianyuReadOkHttpClient,
+                objectMapper, clock);
+    }
+
+    @Bean
+    public XianyuWriteClient xianyuWriteClient(XianyuProperties properties, XianyuCanonicalJson canonicalJson,
+                                               XianyuRequestSigner requestSigner, OkHttpClient xianyuReadOkHttpClient,
+                                               ObjectMapper objectMapper,
+                                               @Qualifier("xianyuClock") Clock clock) {
+        return new XianyuWriteClient(properties, canonicalJson, requestSigner, xianyuReadOkHttpClient,
                 objectMapper, clock);
     }
 

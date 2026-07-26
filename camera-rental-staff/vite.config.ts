@@ -81,6 +81,7 @@ export default defineConfig(({ command, mode }) => {
   } = env
   const { WECHAT_DEVTOOLS_CLI_PATH } = localEnv
   console.log('环境变量 env -> ', env)
+  const proxyEnabled = JSON.parse(VITE_APP_PROXY_ENABLE || 'false')
 
   return defineConfig({
     envDir: './env', // 自定义env目录
@@ -118,6 +119,7 @@ export default defineConfig(({ command, mode }) => {
           'src/pages-im', // “即时通讯”模块
           'src/pages-erp', // “ERP 管理”模块
           'src/pages-wms', // “仓储管理”模块
+          'src/pages-rental', // “租赁运营”模块
         ],
         dts: 'src/types/uni-pages.d.ts',
       }),
@@ -226,9 +228,9 @@ export default defineConfig(({ command, mode }) => {
     server: {
       host: '0.0.0.0',
       hmr: true,
-      port: Number.parseInt(VITE_APP_PORT, 10),
+      port: Number.parseInt(VITE_APP_PORT || '3000', 10),
       // 仅 H5 端生效，其他端不生效（其他端走build，不走devServer)
-      proxy: JSON.parse(VITE_APP_PROXY_ENABLE)
+      proxy: proxyEnabled
         ? {
             [VITE_APP_PROXY_PREFIX]: {
               target: VITE_SERVER_BASEURL,

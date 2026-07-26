@@ -302,7 +302,8 @@ public class XianyuAfterSaleAdminService {
         vo.setId(afterSale.getId());
         vo.setShopId(afterSale.getShopId());
         vo.setExternalAfterSaleId(XianyuAdminPrivacyMasker.maskIdentifier(afterSale.getExternalAfterSaleId()));
-        vo.setExternalOrderId(XianyuAdminPrivacyMasker.maskIdentifier(afterSale.getExternalOrderId()));
+        // Full order no. for ops lookup (same policy as channel order list).
+        vo.setExternalOrderId(afterSale.getExternalOrderId());
         vo.setAfterSaleStatus(afterSale.getAfterSaleStatus());
         vo.setRefundAmount(afterSale.getRefundAmount());
         vo.setAmountUnitStatus(afterSale.getAmountUnitStatus());

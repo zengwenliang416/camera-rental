@@ -285,6 +285,8 @@ justauth:
 #   export XGJ_APP_SECRET=your-app-secret
 # 不要在本文件写入真实 AppKey / AppSecret。
 rental:
+  device:
+    qr-secret: ${RENTAL_DEVICE_QR_SECRET:}
   xianyu:
     enabled: ${XGJ_ENABLED:false}
     base-url: ${XGJ_BASE_URL:https://open.goofish.pro}
@@ -292,6 +294,7 @@ rental:
     app-secret: ${XGJ_APP_SECRET:}
     webhook-base-url: ${XGJ_WEBHOOK_BASE_URL:}
     tenant-id: ${XGJ_TENANT_ID:}
+    write-enabled: ${XGJ_WRITE_ENABLED:false}
     # 定时同步默认复用 infra Job + Quartz；Spring @Scheduled 仅作显式兜底。
     # 关闭：export XGJ_JOB_ENABLED=false
     job:
@@ -312,3 +315,18 @@ rental:
       # 启动阶段同步会阻塞应用就绪，默认关闭；仅排障或一次性补数时显式开启
       startup-sync-enabled: ${XGJ_JOB_STARTUP_SYNC:false}
       register-infra-jobs: ${XGJ_JOB_REGISTER_INFRA_JOBS:${XGJ_JOB_REGISTER_INFRA:true}}
+
+--- #################### 发货图片 OCR / New API 中转站（本地） ####################
+# OpenAI-compatible / New API 中转站配置。不要在本文件写真实 Key：
+#   export NEWAPI_ENABLE=true
+#   export NEWAPI_BASE_URL=https://your-relay.example.com/v1
+#   export NEWAPI_API_KEY=your-relay-key
+#   export NEWAPI_MODEL=your-vision-model
+# 兼容 SHIPMENT_OCR_* 和 OPENAI_* 作为变量名兜底。
+yudao:
+  ai:
+    shipment-ocr:
+      enable: ${SHIPMENT_OCR_ENABLE:${NEWAPI_ENABLE:false}}
+      base-url: ${SHIPMENT_OCR_BASE_URL:${NEWAPI_BASE_URL:${OPENAI_BASE_URL:}}}
+      api-key: ${SHIPMENT_OCR_API_KEY:${NEWAPI_API_KEY:${OPENAI_API_KEY:}}}
+      model: ${SHIPMENT_OCR_MODEL:${NEWAPI_MODEL:${OPENAI_MODEL:}}}

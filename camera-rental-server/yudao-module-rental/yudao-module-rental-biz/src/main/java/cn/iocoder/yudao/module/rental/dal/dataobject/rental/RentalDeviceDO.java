@@ -29,5 +29,9 @@ public class RentalDeviceDO extends TenantBaseDO {
     private String warehouseCode;
     private Integer purchaseAmount;
     private Boolean enabled;
+    /** e.g. ERP_PURCHASE_IN */
+    private String sourceType;
+    private Long sourceBizId;
+    private Long sourceItemId;
 
 }

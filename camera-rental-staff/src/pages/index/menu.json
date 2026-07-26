@@ -2190,6 +2190,26 @@
       ]
     },
     {
+      "key": "rental",
+      "name": "租赁运营",
+      "subGroups": [
+        {
+          "key": "xianyu",
+          "name": "闲鱼发货",
+          "menus": [
+            {
+              "key": "rentalXianyuShip",
+              "name": "扫码发货",
+              "icon": "scan",
+              "iconColor": "#1677ff",
+              "url": "/pages-rental/xianyu-ship/index",
+              "permission": "rental:xianyu:ship"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "key": "ai",
       "name": "AI 大模型",
       "subGroups": [

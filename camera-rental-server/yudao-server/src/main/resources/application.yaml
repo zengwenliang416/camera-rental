@@ -254,6 +254,11 @@ yudao:
     web-search:
       enable: true
       api-key: ${REDACTED_SECRET:}
+    shipment-ocr: # 发货图片 OCR：OpenAI-compatible / New API 中转站
+      enable: ${SHIPMENT_OCR_ENABLE:${NEWAPI_ENABLE:false}}
+      base-url: ${SHIPMENT_OCR_BASE_URL:${NEWAPI_BASE_URL:${OPENAI_BASE_URL:}}}
+      api-key: ${SHIPMENT_OCR_API_KEY:${NEWAPI_API_KEY:${OPENAI_API_KEY:}}}
+      model: ${SHIPMENT_OCR_MODEL:${NEWAPI_MODEL:${OPENAI_MODEL:}}}
 
 --- #################### 芋道相关配置 ####################
 
@@ -356,6 +361,10 @@ debug: false
 --- #################### 相机租赁与闲管家相关配置 ####################
 
 rental:
+  device:
+    # Permanent device QR HMAC secret. Signs deviceNo + equipmentModelCode.
+    # Leave empty for local/dev unsigned QR; set in prod via env.
+    qr-secret: ${RENTAL_DEVICE_QR_SECRET:}
   xianyu:
     # 默认关闭。本地/部署通过环境变量注入，禁止把真实 AppSecret 写入仓库。
     enabled: ${XGJ_ENABLED:false}
@@ -364,3 +373,4 @@ rental:
     app-secret: ${XGJ_APP_SECRET:}
     webhook-base-url: ${XGJ_WEBHOOK_BASE_URL:}
     tenant-id: ${XGJ_TENANT_ID:}
+    write-enabled: ${XGJ_WRITE_ENABLED:false}

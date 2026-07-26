@@ -23,7 +23,9 @@
 | `camera-rental-staff` | 员工扫码、出库、回仓、检测和维修 | 已存在，`master` |
 | `camera-rental-web` | Nuxt PC 客户官网和 SEO 页面 | 已创建，`main`，尚未形成稳定提交基线 |
 
-当前后端根 `pom.xml` 已启用 `yudao-module-system` 和 `yudao-module-infra`；会员、支付、商城、ERP、WMS 等模块位于仓库中，但是否启用必须根据实际功能和依赖逐项确认。租赁模块尚未创建。
+当前后端已启用 `yudao-module-system`、`yudao-module-infra`、`yudao-module-rental`、`yudao-module-erp`。
+ERP 负责采购/数量库存；出库回仓与设备实例状态以租赁模块为准（见 `docs/decisions/0002-rental-erp-inventory-ops.md`）。
+会员、支付、商城、WMS 等仍按需启用。
 
 ## 逻辑架构
 

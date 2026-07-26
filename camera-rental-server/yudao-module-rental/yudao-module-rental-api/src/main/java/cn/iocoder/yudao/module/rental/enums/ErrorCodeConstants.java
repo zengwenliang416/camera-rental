@@ -23,9 +23,22 @@ public interface ErrorCodeConstants {
             "闲管家原始载荷类型不支持重放：{}");
     ErrorCode XIANYU_PRODUCT_SYNC_FAILED = new ErrorCode(1_040_001_012, "闲鱼商品同步失败：{}");
     ErrorCode XIANYU_ORDER_NOT_EXISTS = new ErrorCode(1_040_001_013, "闲鱼渠道订单不存在");
+    ErrorCode XIANYU_WRITE_DISABLED = new ErrorCode(1_040_001_020, "闲管家写操作未启用");
+    ErrorCode XIANYU_SHIP_IDEMPOTENT_KEY_REUSED = new ErrorCode(1_040_001_021, "发货幂等键已绑定其它请求");
+    ErrorCode XIANYU_SHIP_REMOTE_ERROR = new ErrorCode(1_040_001_022, "闲管家发货失败：{}");
+    ErrorCode XIANYU_SHIP_ORDER_NOT_PENDING = new ErrorCode(1_040_001_023, "闲鱼订单不是待发货状态");
+    ErrorCode XIANYU_SHIP_ORDER_NOT_CONVERTED = new ErrorCode(1_040_001_024, "闲鱼订单尚未转换为租赁订单");
+    ErrorCode XIANYU_SHIP_DEVICE_NOT_SHIPPABLE = new ErrorCode(1_040_001_025, "设备当前不可发货：{}");
+    ErrorCode XIANYU_SHIP_OCR_FAILED = new ErrorCode(1_040_001_026, "未识别到有效快递单号");
 
-    // ========== 设备分配 1-040-002-000 ==========
+    // ========== 设备分配 / 设备二维码 1-040-002-000 ==========
     ErrorCode RENTAL_DEVICE_ASSIGN_FAILED = new ErrorCode(1_040_002_000, "设备分配失败：{}");
+    ErrorCode RENTAL_DEVICE_NOT_EXISTS = new ErrorCode(1_040_002_001, "租赁设备不存在");
+    ErrorCode RENTAL_DEVICE_QR_INVALID = new ErrorCode(1_040_002_002, "设备二维码无效：{}");
+    ErrorCode RENTAL_DEVICE_QR_MODEL_MISMATCH = new ErrorCode(1_040_002_003, "设备二维码型号与设备档案不一致");
+    ErrorCode RENTAL_DEVICE_DISPATCH_FAILED = new ErrorCode(1_040_002_004, "设备出库失败：{}");
+    ErrorCode RENTAL_DEVICE_RETURN_FAILED = new ErrorCode(1_040_002_005, "设备回仓失败：{}");
+    ErrorCode RENTAL_DEVICE_INBOUND_FAILED = new ErrorCode(1_040_002_006, "采购入库生成设备失败：{}");
 
     // ========== 人工复核 1-040-003-000 ==========
     ErrorCode RENTAL_MANUAL_REVIEW_NOT_EXISTS = new ErrorCode(1_040_003_000, "人工复核记录不存在");

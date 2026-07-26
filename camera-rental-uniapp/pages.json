@@ -454,6 +454,95 @@
 			]
 		},
 		{
+			"root": "pages/rental",
+			"pages": [
+				{
+					"path": "products",
+					"style": {
+						"navigationBarTitleText": "租赁器材"
+					},
+					"meta": {
+						"auth": false,
+						"sync": true,
+						"title": "租赁器材",
+						"group": "租赁客户端"
+					}
+				},
+				{
+					"path": "schedule",
+					"style": {
+						"navigationBarTitleText": "租期选择"
+					},
+					"meta": {
+						"auth": false,
+						"sync": true,
+						"title": "租期选择",
+						"group": "租赁客户端"
+					}
+				},
+				{
+					"path": "orders",
+					"style": {
+						"navigationBarTitleText": "租赁订单"
+					},
+					"meta": {
+						"auth": false,
+						"sync": true,
+						"title": "租赁订单",
+						"group": "租赁客户端"
+					}
+				},
+				{
+					"path": "logistics",
+					"style": {
+						"navigationBarTitleText": "物流进度"
+					},
+					"meta": {
+						"auth": false,
+						"sync": true,
+						"title": "物流进度",
+						"group": "租赁客户端"
+					}
+				},
+				{
+					"path": "address",
+					"style": {
+						"navigationBarTitleText": "租赁地址"
+					},
+					"meta": {
+						"auth": false,
+						"sync": true,
+						"title": "租赁地址",
+						"group": "租赁客户端"
+					}
+				},
+				{
+					"path": "favorites",
+					"style": {
+						"navigationBarTitleText": "收藏器材"
+					},
+					"meta": {
+						"auth": false,
+						"sync": true,
+						"title": "收藏器材",
+						"group": "租赁客户端"
+					}
+				},
+				{
+					"path": "wallet",
+					"style": {
+						"navigationBarTitleText": "押金与钱包"
+					},
+					"meta": {
+						"auth": false,
+						"sync": true,
+						"title": "押金与钱包",
+						"group": "租赁客户端"
+					}
+				}
+			]
+		},
+		{
 			"root": "pages/app",
 			"pages": [{
 				"path": "sign",

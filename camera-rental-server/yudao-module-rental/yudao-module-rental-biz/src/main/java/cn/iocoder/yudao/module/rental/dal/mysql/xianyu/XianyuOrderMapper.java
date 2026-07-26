@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +21,10 @@ import java.util.Map;
 public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
 
     default PageResult<XianyuOrderDO> selectAdminPage(XianyuOrderPageReqVO pageReqVO) {
-        LambdaQueryWrapperX<XianyuOrderDO> query = new LambdaQueryWrapperX<XianyuOrderDO>()
+        LambdaQueryWrapper<XianyuOrderDO> query = new LambdaQueryWrapperX<XianyuOrderDO>()
                 .eqIfPresent(XianyuOrderDO::getShopId, pageReqVO.getShopId())
                 .eqIfPresent(XianyuOrderDO::getConversionStatus, pageReqVO.getConversionStatus())
+                .likeIfPresent(XianyuOrderDO::getExternalOrderId, pageReqVO.getExternalOrderId())
                 .eqIfPresent(XianyuOrderDO::getExternalProductId, pageReqVO.getExternalProductId())
                 .eqIfPresent(XianyuOrderDO::getExternalSkuId, pageReqVO.getExternalSkuId())
                 .orderByDesc(XianyuOrderDO::getSourceUpdatedAt)
@@ -33,8 +35,8 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
         query.apply(pageReqVO.getEndDate() != null,
                 "COALESCE(order_time, source_created_at, create_time) < {0}",
                 pageReqVO.getEndDate() != null ? pageReqVO.getEndDate().plusDays(1).atStartOfDay() : null);
-        query.select(XianyuOrderDO.class, field -> !"detailJson".equals(field.getProperty())
-                && !"goodsJson".equals(field.getProperty()));
+        // Keep detail_json so admin can surface receiver phone/address; goods_json stays out of list.
+        query.select(XianyuOrderDO.class, field -> !"goodsJson".equals(field.getProperty()));
         return selectPage(pageReqVO, query);
     }
 
@@ -96,6 +98,27 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
     default XianyuOrderDO selectByIdForUpdate(Long id) {
         return selectOneForUpdate(new LambdaQueryWrapper<XianyuOrderDO>()
                 .eq(XianyuOrderDO::getId, id));
+    }
+
+    default PageResult<XianyuOrderDO> selectPendingShipPage(Long shopId, String keyword, Collection<String> statuses,
+                                                            cn.iocoder.yudao.framework.common.pojo.PageParam pageParam) {
+        LambdaQueryWrapperX<XianyuOrderDO> query = new LambdaQueryWrapperX<>();
+        query.eqIfPresent(XianyuOrderDO::getShopId, shopId);
+        query.in(statuses != null && !statuses.isEmpty(), XianyuOrderDO::getOrderStatus, statuses);
+        query.isNull(XianyuOrderDO::getWaybillNo);
+        query.isNull(XianyuOrderDO::getConsignTime);
+        query.isNull(XianyuOrderDO::getCancelTime);
+        query.orderByDesc(XianyuOrderDO::getOrderTime);
+        query.orderByDesc(XianyuOrderDO::getId);
+        if (org.springframework.util.StringUtils.hasText(keyword)) {
+            query.and(wrapper -> wrapper
+                    .like(XianyuOrderDO::getExternalOrderId, keyword)
+                    .or().like(XianyuOrderDO::getGoodsTitle, keyword)
+                    .or().like(XianyuOrderDO::getBuyerNick, keyword));
+        }
+        query.select(XianyuOrderDO.class, field -> !"detailJson".equals(field.getProperty())
+                && !"goodsJson".equals(field.getProperty()));
+        return selectPage(pageParam, query);
     }
 
     default XianyuOrderDO selectNewestCursorCandidate(Long shopId, LocalDateTime windowStart,

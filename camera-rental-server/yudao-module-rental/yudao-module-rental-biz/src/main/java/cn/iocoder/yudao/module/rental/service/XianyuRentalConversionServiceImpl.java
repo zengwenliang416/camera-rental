@@ -10,6 +10,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuProductMappingMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -23,8 +24,10 @@ import static cn.iocoder.yudao.module.rental.enums.rental.RentalManualReviewStat
 
 /**
  * Converts one durable channel order after all local conversion prerequisites are explicitly satisfied.
+ * Hermes-aligned default path is automatic conversion after order-detail persistence.
  */
 @Service
+@Slf4j
 public class XianyuRentalConversionServiceImpl implements XianyuRentalConversionService {
 
     static final String CHANNEL_SOURCE_TYPE = "XIANYU";
@@ -33,6 +36,7 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
     static final String MAPPING_STATUS_MAPPED = "MAPPED";
     static final String CONVERSION_STATUS_CONVERTED = "CONVERTED";
     static final String CONVERSION_STATUS_REVIEW_REQUIRED = "REVIEW_REQUIRED";
+    static final String CONVERSION_STATUS_CLOSED = "CLOSED";
     static final String RENTAL_STATUS_PENDING_ALLOCATION = "PENDING_ALLOCATION";
 
     private final XianyuOrderMapper xianyuOrderMapper;
@@ -57,6 +61,22 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
     }
 
     @Override
+    public void autoConvertAfterPersist(Long channelOrderId) {
+        if (channelOrderId == null) {
+            return;
+        }
+        try {
+            RentalConversionResult result = convert(channelOrderId);
+            log.info("[xianyu][auto-convert] channelOrderId={} status={} rentalOrderId={} reviewId={} reason={}",
+                    channelOrderId, result.status(), result.rentalOrderId(), result.reviewId(), result.reasonCode());
+        } catch (RuntimeException exception) {
+            // Never break channel sync / webhook ingestion on conversion failures.
+            log.warn("[xianyu][auto-convert] channelOrderId={} failed: {}",
+                    channelOrderId, exception.toString());
+        }
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public RentalConversionResult convert(Long channelOrderId) {
         Objects.requireNonNull(channelOrderId, "channelOrderId");
@@ -65,7 +85,23 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
             // Missing or cross-tenant id: do not leak existence; return business not-found (not 500).
             throw exception(XIANYU_ORDER_NOT_EXISTS);
         }
+        if (CONVERSION_STATUS_CLOSED.equals(source.getConversionStatus())) {
+            // Closed channel rows stay closed; Hermes does not re-open them automatically.
+            SellerRemarkRentalPeriod closedPeriod = periodParser.parse(source.getSellerRemark(), sourceDate(source));
+            source.setRemarkParseVersion(closedPeriod.version());
+            source.setRemarkParseStatus(closedPeriod.status());
+            xianyuOrderMapper.updateById(source);
+            return RentalConversionResult.reviewRequired(null, "CLOSED");
+        }
         if (source.getRentalOrderId() != null) {
+            // Already linked: still refresh remark parse metadata (Hermes re-reads remarks on updates).
+            SellerRemarkRentalPeriod linkedPeriod = periodParser.parse(source.getSellerRemark(), sourceDate(source));
+            source.setRemarkParseVersion(linkedPeriod.version());
+            source.setRemarkParseStatus(linkedPeriod.status());
+            if (!CONVERSION_STATUS_CONVERTED.equals(source.getConversionStatus())) {
+                source.setConversionStatus(CONVERSION_STATUS_CONVERTED);
+            }
+            xianyuOrderMapper.updateById(source);
             return RentalConversionResult.converted(source.getRentalOrderId());
         }
 

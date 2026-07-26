@@ -50,8 +50,16 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="t('table.action')" width="120" fixed="right">
+      <el-table-column :label="t('table.action')" width="280" fixed="right">
         <template #default="{ row }">
+          <el-button
+            link
+            type="primary"
+            v-hasPermi="['rental:device:query']"
+            @click="openQr(row)"
+          >
+            {{ t('rental.device.qr') }}
+          </el-button>
           <el-button
             link
             type="primary"
@@ -59,6 +67,25 @@
             @click="openAssign(row)"
           >
             {{ t('rental.device.assign') }}
+          </el-button>
+          <el-button
+            v-if="row.status === 'AVAILABLE'"
+            link
+            type="warning"
+            v-hasPermi="['rental:device:assign']"
+            :loading="opsDeviceId === row.id"
+            @click="handleDispatch(row)"
+          >
+            {{ t('rental.device.dispatch') }}
+          </el-button>
+          <el-button
+            v-if="row.status === 'RENTED'"
+            link
+            type="success"
+            v-hasPermi="['rental:device:assign']"
+            @click="openReturn(row)"
+          >
+            {{ t('rental.device.return') }}
           </el-button>
         </template>
       </el-table-column>
@@ -130,6 +157,54 @@
         }}</el-button>
       </template>
     </el-dialog>
+
+    <el-dialog v-model="qrVisible" :title="t('rental.device.qrTitle')" width="420px">
+      <div v-loading="qrLoading" class="flex flex-col items-center gap-12px">
+        <div class="text-14px">
+          {{ qrInfo?.deviceNo }} / {{ qrInfo?.equipmentModelCode }}
+        </div>
+        <el-tag size="small" :type="qrInfo?.signed ? 'success' : 'info'">
+          {{ qrInfo?.signed ? t('rental.device.qrSigned') : t('rental.device.qrUnsigned') }}
+        </el-tag>
+        <Qrcode v-if="qrInfo?.payload" :text="qrInfo.payload" :width="220" />
+        <el-input
+          v-if="qrInfo?.payload"
+          type="textarea"
+          :rows="3"
+          :model-value="qrInfo.payload"
+          readonly
+        />
+      </div>
+      <template #footer>
+        <el-button @click="qrVisible = false">{{ t('common.close') }}</el-button>
+        <el-button type="primary" :disabled="!qrInfo?.payload" @click="copyQrPayload">
+          {{ t('rental.device.qrCopy') }}
+        </el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog v-model="returnVisible" :title="t('rental.device.returnTitle')" width="440px">
+      <el-form label-width="120px">
+        <el-form-item :label="t('rental.device.deviceNo')">
+          <el-input :model-value="returnForm.deviceNo" disabled />
+        </el-form-item>
+        <el-form-item :label="t('rental.device.status')">
+          <el-radio-group v-model="returnForm.inspectPassed">
+            <el-radio :value="true">{{ t('rental.device.inspectPassed') }}</el-radio>
+            <el-radio :value="false">{{ t('rental.device.inspectFailed') }}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item :label="t('rental.device.returnNote')">
+          <el-input v-model="returnForm.note" type="textarea" :rows="2" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="returnVisible = false">{{ t('common.cancel') }}</el-button>
+        <el-button type="primary" :loading="returning" @click="submitReturn">
+          {{ t('common.ok') }}
+        </el-button>
+      </template>
+    </el-dialog>
   </ContentWrap>
 </template>
 
@@ -138,10 +213,15 @@ import { computed, ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
+import { Qrcode } from '@/components/Qrcode'
 import {
   assignRentalDevice,
   createRentalDevice,
+  dispatchRentalDevice,
   getRentalDevicePage,
+  getRentalDeviceQr,
+  returnRentalDevice,
+  type RentalDeviceQrVO,
   type RentalDeviceVO
 } from '@/api/rental/device'
 import { getRentalLabelKey, getRentalTagType } from '@/utils/rentalLabels'
@@ -192,6 +272,85 @@ const assignRules = computed<FormRules>(() => ({
   ],
   idempotencyKey: [{ required: true, message: t('rental.device.assignRequired'), trigger: 'blur' }]
 }))
+
+const qrVisible = ref(false)
+const qrLoading = ref(false)
+const qrInfo = ref<RentalDeviceQrVO | null>(null)
+
+const openQr = async (row: RentalDeviceVO) => {
+  qrVisible.value = true
+  qrLoading.value = true
+  qrInfo.value = null
+  try {
+    qrInfo.value = await getRentalDeviceQr(row.id)
+  } catch {
+    qrVisible.value = false
+  } finally {
+    qrLoading.value = false
+  }
+}
+
+const copyQrPayload = async () => {
+  const payload = qrInfo.value?.payload
+  if (!payload) return
+  try {
+    await navigator.clipboard.writeText(payload)
+    message.success(t('rental.device.qrCopySuccess'))
+  } catch {
+    // HTTP / restricted clipboard: select textarea fallback is enough for ops
+    message.warning(t('rental.device.qrPayload'))
+  }
+}
+
+const opsDeviceId = ref<number | null>(null)
+const returnVisible = ref(false)
+const returning = ref(false)
+const returnForm = reactive({
+  deviceId: undefined as number | undefined,
+  deviceNo: '',
+  inspectPassed: true,
+  note: ''
+})
+
+const statusLabel = (status: string) => t(getRentalLabelKey('device', status))
+
+const handleDispatch = async (row: RentalDeviceVO) => {
+  opsDeviceId.value = row.id
+  try {
+    const result = await dispatchRentalDevice({ deviceId: row.id })
+    message.success(
+      t('rental.device.dispatchSuccess', { status: statusLabel(result.deviceStatus) })
+    )
+    await getList()
+  } finally {
+    opsDeviceId.value = null
+  }
+}
+
+const openReturn = (row: RentalDeviceVO) => {
+  returnForm.deviceId = row.id
+  returnForm.deviceNo = row.deviceNo
+  returnForm.inspectPassed = true
+  returnForm.note = ''
+  returnVisible.value = true
+}
+
+const submitReturn = async () => {
+  if (!returnForm.deviceId) return
+  returning.value = true
+  try {
+    const result = await returnRentalDevice({
+      deviceId: returnForm.deviceId,
+      inspectPassed: returnForm.inspectPassed,
+      note: returnForm.note.trim() || undefined
+    })
+    message.success(t('rental.device.returnSuccess', { status: statusLabel(result.deviceStatus) }))
+    returnVisible.value = false
+    await getList()
+  } finally {
+    returning.value = false
+  }
+}
 
 const getList = async () => {
   loading.value = true

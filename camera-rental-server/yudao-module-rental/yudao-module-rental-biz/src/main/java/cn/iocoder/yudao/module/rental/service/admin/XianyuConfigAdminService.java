@@ -25,6 +25,7 @@ public class XianyuConfigAdminService {
         vo.setAppKeyMasked(maskAppKey(properties.getAppKey()));
         vo.setAppSecretConfigured(StringUtils.hasText(properties.getAppSecret()));
         vo.setWebhookBaseUrlConfigured(StringUtils.hasText(properties.getWebhookBaseUrl()));
+        vo.setWriteEnabled(properties.isWriteEnabled());
         return vo;
     }
 

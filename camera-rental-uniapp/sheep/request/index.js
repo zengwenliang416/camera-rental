@@ -123,6 +123,9 @@ http.interceptors.response.use(
     if (response.data.code !== 0) {
       // 特殊：如果 401 错误码，则跳转到登录页 or 刷新令牌
       if (response.data.code === 401) {
+        if (response.config.custom.isToken === false) {
+          return Promise.resolve(response.data);
+        }
         return refreshToken(response.config);
       }
       // 特殊：处理分销用户绑定失败的提示

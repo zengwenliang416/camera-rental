@@ -14,9 +14,23 @@ public interface RentalDeviceAssignmentMapper extends BaseMapperX<RentalDeviceAs
     }
 
     default long countAssignedByOrderItem(Long rentalOrderItemId) {
+        // Active links still occupy the order item slot until returned.
         return selectCount(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
                 .eq(RentalDeviceAssignmentDO::getRentalOrderItemId, rentalOrderItemId)
-                .eq(RentalDeviceAssignmentDO::getStatus, "ASSIGNED"));
+                .in(RentalDeviceAssignmentDO::getStatus, "ASSIGNED", "DISPATCHED"));
+    }
+
+    default RentalDeviceAssignmentDO selectActiveByDeviceIdForUpdate(Long deviceId) {
+        return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
+                .eq(RentalDeviceAssignmentDO::getDeviceId, deviceId)
+                .in(RentalDeviceAssignmentDO::getStatus, "ASSIGNED", "DISPATCHED")
+                .orderByDesc(RentalDeviceAssignmentDO::getId)
+                .last("LIMIT 1"));
+    }
+
+    default RentalDeviceAssignmentDO selectByIdForUpdate(Long id) {
+        return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
+                .eq(RentalDeviceAssignmentDO::getId, id));
     }
 
 }

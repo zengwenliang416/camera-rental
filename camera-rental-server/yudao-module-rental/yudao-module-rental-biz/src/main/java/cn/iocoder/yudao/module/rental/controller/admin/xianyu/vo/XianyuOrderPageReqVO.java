@@ -16,6 +16,8 @@ public class XianyuOrderPageReqVO extends PageParam {
 
     private Long shopId;
     private String conversionStatus;
+    /** Exact or partial match for ops lookup (full value, not redacted). */
+    private String externalOrderId;
     private String externalProductId;
     private String externalSkuId;
 

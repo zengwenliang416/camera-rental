@@ -4,10 +4,17 @@ import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderPageReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderRespVO;
+import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderShipReqVO;
+import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderShipRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderSyncReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderSyncRespVO;
+import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuPendingShipOrderPageReqVO;
+import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuPendingShipOrderRespVO;
+import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuShipmentOcrRespVO;
 import cn.iocoder.yudao.module.rental.service.RentalConversionResult;
+import cn.iocoder.yudao.module.rental.service.admin.ShipmentOcrService;
 import cn.iocoder.yudao.module.rental.service.admin.XianyuOrderAdminService;
+import cn.iocoder.yudao.module.rental.service.admin.XianyuOrderShipService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
@@ -30,9 +38,15 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 public class XianyuOrderController {
 
     private final XianyuOrderAdminService orderAdminService;
+    private final XianyuOrderShipService orderShipService;
+    private final ShipmentOcrService shipmentOcrService;
 
-    public XianyuOrderController(XianyuOrderAdminService orderAdminService) {
+    public XianyuOrderController(XianyuOrderAdminService orderAdminService,
+                                 XianyuOrderShipService orderShipService,
+                                 ShipmentOcrService shipmentOcrService) {
         this.orderAdminService = orderAdminService;
+        this.orderShipService = orderShipService;
+        this.shipmentOcrService = shipmentOcrService;
     }
 
     @GetMapping("/page")
@@ -41,6 +55,28 @@ public class XianyuOrderController {
     public CommonResult<PageResult<XianyuOrderRespVO>> getOrderPage(
             @Valid XianyuOrderPageReqVO pageReqVO) {
         return success(orderAdminService.getOrderPage(pageReqVO));
+    }
+
+    @GetMapping("/pending-ship/page")
+    @Operation(summary = "搜索闲鱼待发货订单")
+    @PreAuthorize("@ss.hasPermission('rental:xianyu:ship')")
+    public CommonResult<PageResult<XianyuPendingShipOrderRespVO>> getPendingShipOrderPage(
+            @Valid XianyuPendingShipOrderPageReqVO pageReqVO) {
+        return success(orderShipService.searchPendingOrders(pageReqVO));
+    }
+
+    @PostMapping("/ship/ocr")
+    @Operation(summary = "识别发货图片中的运单号和快递公司")
+    @PreAuthorize("@ss.hasPermission('rental:xianyu:ship:ocr')")
+    public CommonResult<XianyuShipmentOcrRespVO> ocrShipment(@RequestParam("file") MultipartFile file) {
+        return success(shipmentOcrService.extract(file));
+    }
+
+    @PostMapping("/ship")
+    @Operation(summary = "绑定设备并调用闲管家订单发货")
+    @PreAuthorize("@ss.hasPermission('rental:xianyu:ship')")
+    public CommonResult<XianyuOrderShipRespVO> ship(@Valid @RequestBody XianyuOrderShipReqVO reqVO) {
+        return success(orderShipService.ship(reqVO));
     }
 
     @PostMapping("/sync-page")

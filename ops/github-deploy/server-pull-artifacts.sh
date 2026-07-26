@@ -11,6 +11,7 @@ API_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB
 
 workdir="$(mktemp -d /tmp/camera-rental-artifacts.XXXXXX)"
 artifact_index="${workdir}/artifacts.json"
+curl_config="${workdir}/curl-headers.conf"
 release_dir="${workdir}/release"
 release_archive="/tmp/camera-rental-${RELEASE_SHA}.tgz"
 
@@ -20,12 +21,17 @@ cleanup() {
 trap cleanup EXIT
 
 mkdir -p "${release_dir}"
+umask 077
+cat > "${curl_config}" <<EOF
+header = "Authorization: Bearer ${GITHUB_TOKEN}"
+header = "Accept: application/vnd.github+json"
+header = "X-GitHub-Api-Version: 2022-11-28"
+EOF
+unset GITHUB_TOKEN
 
 echo "[deploy] fetch artifact index for run ${GITHUB_RUN_ID}"
 curl -fsSL \
-  -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-  -H "Accept: application/vnd.github+json" \
-  -H "X-GitHub-Api-Version: 2022-11-28" \
+  --config "${curl_config}" \
   "${API_URL}" \
   -o "${artifact_index}"
 
@@ -49,8 +55,7 @@ PY
 
   echo "[deploy] download artifact ${artifact_name}"
   curl -fL --retry 5 --retry-delay 3 \
-    -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-    -H "Accept: application/vnd.github+json" \
+    --config "${curl_config}" \
     "${artifact_url}" \
     -o "${workdir}/${artifact_name}.zip"
 
@@ -62,5 +67,4 @@ echo "[deploy] pack release archive ${release_archive}"
 rm -f "${release_archive}"
 tar -czf "${release_archive}" -C "${release_dir}" .
 
-unset GITHUB_TOKEN
 exec bash /tmp/camera-rental-server-deploy.sh "${release_archive}"

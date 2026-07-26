@@ -15,6 +15,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: camera-rental-211-deploy
@@ -144,16 +145,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
-        with:
-          path: release
-          merge-multiple: false
-
-      - name: Pack release
-        run: |
-          tar -czf camera-rental-release.tgz -C release .
-          tar -tzf camera-rental-release.tgz | sed -n '1,80p'
-
       - name: Configure SSH
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
@@ -180,16 +171,26 @@ jobs:
           DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_ROOT: ${{ secrets.DEPLOY_ROOT }}
+          GH_TOKEN_FOR_ARTIFACTS: ${{ github.token }}
+          GH_REPOSITORY: ${{ github.repository }}
+          GH_RUN_ID: ${{ github.run_id }}
+          GH_SHA: ${{ github.sha }}
         run: |
           HOST="${DEPLOY_HOST:-211.101.246.160}"
           PORT="${DEPLOY_PORT:-22}"
           USER="${DEPLOY_USER:-root}"
           ROOT="${DEPLOY_ROOT:-/opt/camera-rental}"
-          REMOTE_RELEASE="/tmp/camera-rental-${GITHUB_SHA}.tgz"
           SSH_OPTS=(-i ~/.ssh/deploy_key -p "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes)
           SCP_OPTS=(-i ~/.ssh/deploy_key -P "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes)
 
-          scp "${SCP_OPTS[@]}" camera-rental-release.tgz "${USER}@${HOST}:${REMOTE_RELEASE}"
           scp "${SCP_OPTS[@]}" ops/github-deploy/server-deploy.sh "${USER}@${HOST}:/tmp/camera-rental-server-deploy.sh"
+          scp "${SCP_OPTS[@]}" ops/github-deploy/server-pull-artifacts.sh "${USER}@${HOST}:/tmp/camera-rental-server-pull-artifacts.sh"
+
+          printf -v token_q '%q' "${GH_TOKEN_FOR_ARTIFACTS}"
+          printf -v repo_q '%q' "${GH_REPOSITORY}"
+          printf -v run_id_q '%q' "${GH_RUN_ID}"
+          printf -v root_q '%q' "${ROOT}"
+          printf -v sha_q '%q' "${GH_SHA}"
+
           ssh "${SSH_OPTS[@]}" "${USER}@${HOST}" \
-            "DEPLOY_ROOT='${ROOT}' RELEASE_SHA='${GITHUB_SHA}' bash /tmp/camera-rental-server-deploy.sh '${REMOTE_RELEASE}'"
+            "GITHUB_TOKEN=${token_q} GITHUB_REPOSITORY=${repo_q} GITHUB_RUN_ID=${run_id_q} DEPLOY_ROOT=${root_q} RELEASE_SHA=${sha_q} bash /tmp/camera-rental-server-pull-artifacts.sh"

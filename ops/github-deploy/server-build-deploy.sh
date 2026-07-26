@@ -5,7 +5,7 @@ DEPLOY_ROOT="${DEPLOY_ROOT:-/opt/camera-rental}"
 RELEASE_SHA="${RELEASE_SHA:?RELEASE_SHA is required}"
 REPO_URL="${REPO_URL:-git@github.com:zengwenliang416/camera-rental.git}"
 SOURCE_DIR="${SOURCE_DIR:-${DEPLOY_ROOT}/source}"
-GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh -i ~/.ssh/camera_rental_github_pull -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes}"
+GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh -i ~/.ssh/camera_rental_github_pull -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20 -C}"
 export GIT_SSH_COMMAND
 
 build_dir="$(mktemp -d /tmp/camera-rental-build.XXXXXX)"
@@ -22,11 +22,11 @@ mkdir -p "${DEPLOY_ROOT}" "$(dirname "${SOURCE_DIR}")"
 
 if [ -d "${SOURCE_DIR}/.git" ]; then
   git -C "${SOURCE_DIR}" remote set-url origin "${REPO_URL}"
-  git -C "${SOURCE_DIR}" fetch --no-tags --depth 1 origin "${RELEASE_SHA}"
+  git -C "${SOURCE_DIR}" fetch --progress --no-tags --depth 1 origin "${RELEASE_SHA}"
 else
   rm -rf "${SOURCE_DIR}"
-  git clone --no-tags --depth 1 "${REPO_URL}" "${SOURCE_DIR}"
-  git -C "${SOURCE_DIR}" fetch --no-tags --depth 1 origin "${RELEASE_SHA}"
+  git clone --progress --no-tags --depth 1 "${REPO_URL}" "${SOURCE_DIR}"
+  git -C "${SOURCE_DIR}" fetch --progress --no-tags --depth 1 origin "${RELEASE_SHA}"
 fi
 
 git -C "${SOURCE_DIR}" checkout --force "${RELEASE_SHA}"

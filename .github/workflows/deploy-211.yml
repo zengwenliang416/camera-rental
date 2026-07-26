@@ -177,8 +177,8 @@ jobs:
           PORT="${DEPLOY_PORT:-22}"
           USER="${DEPLOY_USER:-root}"
           ROOT="${DEPLOY_ROOT:-/opt/camera-rental}"
-          SSH_OPTS=(-i ~/.ssh/deploy_key -p "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes)
-          SCP_OPTS=(-i ~/.ssh/deploy_key -P "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes)
+          SSH_OPTS=(-i ~/.ssh/deploy_key -p "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20)
+          SCP_OPTS=(-i ~/.ssh/deploy_key -P "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20)
 
           scp "${SCP_OPTS[@]}" ops/github-deploy/server-deploy.sh "${USER}@${HOST}:/tmp/camera-rental-server-deploy.sh"
           scp "${SCP_OPTS[@]}" ops/github-deploy/server-build-deploy.sh "${USER}@${HOST}:/tmp/camera-rental-server-build-deploy.sh"

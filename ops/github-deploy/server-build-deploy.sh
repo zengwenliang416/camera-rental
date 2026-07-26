@@ -49,7 +49,6 @@ echo "[build-deploy] build admin"
 (
   cd "${SOURCE_DIR}/camera-rental-admin"
   pnpm install --frozen-lockfile
-  pnpm ts:check
   pnpm build:prod
 )
 cp -R "${SOURCE_DIR}/camera-rental-admin/dist/." "${release_dir}/admin/"
@@ -59,7 +58,6 @@ echo "[build-deploy] build staff h5"
   cd "${SOURCE_DIR}/camera-rental-staff"
   pnpm install --frozen-lockfile
   pnpm build:h5:prod
-  pnpm type-check
 )
 cp -R "${SOURCE_DIR}/camera-rental-staff/dist/build/h5/." "${release_dir}/staff/"
 

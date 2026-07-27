@@ -19,6 +19,13 @@ import {
   Clock,
 } from 'lucide-react';
 
+function toLocalDateString(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 export const GanttScheduleView: React.FC = () => {
   const {
     categories,
@@ -38,10 +45,11 @@ export const GanttScheduleView: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
 
-  // Date range generator (14 days starting 2026-07-27)
+  // Date range generator (14 days from the real client date)
   const days = useMemo(() => {
     const list: { dateStr: string; displayDay: string; weekday: string; isToday: boolean }[] = [];
-    const base = new Date('2026-07-27T00:00:00');
+    const base = new Date();
+    base.setHours(0, 0, 0, 0);
     const weekMap = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
 
     for (let i = 0; i < 14; i++) {
@@ -49,7 +57,7 @@ export const GanttScheduleView: React.FC = () => {
       d.setDate(base.getDate() + i);
       const m = d.getMonth() + 1;
       const dayNum = d.getDate();
-      const dateStr = `${d.getFullYear()}-${m.toString().padStart(2, '0')}-${dayNum.toString().padStart(2, '0')}`;
+      const dateStr = toLocalDateString(d);
       const displayDay = `${m}/${dayNum}`;
       const weekday = weekMap[d.getDay()];
 
@@ -68,11 +76,23 @@ export const GanttScheduleView: React.FC = () => {
 
   // Stats for selected model
   const modelStats = useMemo(() => {
-    return calculateModelStats(currentModel.id, devices, blocks);
+    return currentModel
+      ? calculateModelStats(currentModel.id, devices, blocks)
+      : {
+          totalUnits: 0,
+          idleCount: 0,
+          rentingCount: 0,
+          reservedCount: 0,
+          pendingReturnCount: 0,
+          repairCount: 0,
+          lockedCount: 0,
+          utilizationRate: 0,
+        };
   }, [currentModel, devices, blocks]);
 
   // Devices for selected model
   const filteredDevices = useMemo(() => {
+    if (!currentModel) return [];
     return devices
       .filter((d) => d.modelId === currentModel.id)
       .filter((d) => {
@@ -104,6 +124,17 @@ export const GanttScheduleView: React.FC = () => {
         return 'bg-zinc-500 text-white';
     }
   };
+
+  if (!currentModel) {
+    return (
+      <div className="bg-white rounded-2xl p-10 border border-zinc-200/80 shadow-2xs text-center">
+        <div className="text-sm font-extrabold text-zinc-900">暂无真实排期数据</div>
+        <p className="text-xs text-zinc-500 mt-2">
+          请先完成管理端数据同步，或检查当前账号是否拥有设备、排期和闲鱼订单查询权限。
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 items-start select-none">
@@ -493,7 +524,7 @@ export const GanttScheduleView: React.FC = () => {
                       </span>
                     </td>
                     <td className="p-3 font-mono text-zinc-800">
-                      {dev.currentOrderId ? 'XY20260726' : '-'}
+                      {dev.currentOrderId || '-'}
                     </td>
                     <td className="p-3 text-zinc-700 font-medium">{dev.currentCustomer || '-'}</td>
                     <td className="p-3 font-mono text-zinc-600">

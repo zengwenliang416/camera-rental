@@ -20,6 +20,7 @@ export const DashboardView: React.FC = () => {
   const {
     orders,
     devices,
+    models,
     exceptions,
     setActiveTab,
     openAllocationModal,
@@ -35,6 +36,7 @@ export const DashboardView: React.FC = () => {
   const pendingReturnOrders = orders.filter((o) => o.status === 'PENDING_RETURN' || o.status === 'RENTING');
   const overdueOrders = orders.filter((o) => o.status === 'EXCEPTION');
   const repairDevices = devices.filter((d) => d.status === 'REPAIR' || d.status === 'LOCKED');
+  const firstModel = models[0];
 
   return (
     <div className="space-y-6 select-none">
@@ -57,13 +59,13 @@ export const DashboardView: React.FC = () => {
 
           <button
             onClick={() => {
-              setSelectedModelId('p4p');
+              if (firstModel) setSelectedModelId(firstModel.id);
               setActiveTab('schedule');
             }}
             className="flex items-center gap-2 px-5 py-3 bg-white hover:bg-zinc-100 text-zinc-900 rounded-2xl text-xs font-extrabold shadow-md transition-all active:scale-95 shrink-0"
           >
             <CalendarDays className="w-4 h-4 text-blue-600" />
-            <span>进入 P4P 甘特图排期视图</span>
+            <span>进入{firstModel ? ` ${firstModel.name} ` : ' '}甘特图排期视图</span>
           </button>
         </div>
       </div>
@@ -300,7 +302,7 @@ export const DashboardView: React.FC = () => {
               <span>智能排期与独立 SN 控制面板</span>
             </div>
             <p className="leading-relaxed text-zinc-400">
-              精准管理大疆 P4P 及热门无人机设备，实现闲鱼订单到实际 SN 码的秒级分配与全流程锁机保护。
+              精准管理管理端同步的真实设备实例，实现闲鱼订单到实际 SN 码的秒级分配与全流程锁机保护。
             </p>
             <ul className="space-y-1.5 list-disc list-inside text-zinc-300">
               <li>自动检测无碰撞交叠时段</li>

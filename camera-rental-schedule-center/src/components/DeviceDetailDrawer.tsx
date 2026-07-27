@@ -12,6 +12,13 @@ import {
   Zap,
 } from 'lucide-react';
 
+function toLocalDateString(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 export const DeviceDetailDrawer: React.FC = () => {
   const {
     devices,
@@ -32,7 +39,7 @@ export const DeviceDetailDrawer: React.FC = () => {
   const deviceBlocks = blocks.filter((b) => b.deviceId === device.id);
 
   // Future and past schedule logs
-  const today = '2026-07-27';
+  const today = toLocalDateString(new Date());
   const futureBlocks = deviceBlocks.filter((b) => b.endDate >= today);
   const pastBlocks = deviceBlocks.filter((b) => b.endDate < today);
 
@@ -193,15 +200,9 @@ export const DeviceDetailDrawer: React.FC = () => {
             </h4>
 
             {pastBlocks.length === 0 ? (
-              <div className="space-y-2">
-                <div className="p-3 bg-zinc-50 border border-zinc-200/80 rounded-xl space-y-1">
-                  <div className="flex items-center justify-between font-bold text-zinc-800">
-                    <span>XY20260715002 (历史示例)</span>
-                    <span className="font-mono text-[11px] text-zinc-500">2026-07-15 ~ 2026-07-20</span>
-                  </div>
-                  <div className="text-zinc-500">客户: 成都摄影工作室 · 运单: SF1920384210 · 正常归还</div>
-                </div>
-              </div>
+              <p className="text-zinc-400 py-3 text-center bg-zinc-50 rounded-xl border border-zinc-200/60 font-semibold">
+                暂无管理端历史排期履历
+              </p>
             ) : (
               <div className="space-y-2">
                 {pastBlocks.map((blk) => (

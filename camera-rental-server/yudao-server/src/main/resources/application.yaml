@@ -373,4 +373,4 @@ rental:
     app-secret: ${XGJ_APP_SECRET:}
     webhook-base-url: ${XGJ_WEBHOOK_BASE_URL:}
     tenant-id: ${XGJ_TENANT_ID:}
-    write-enabled: ${XGJ_WRITE_ENABLED:false}
+    write-enabled: ${XGJ_WRITE_ENABLED:true}

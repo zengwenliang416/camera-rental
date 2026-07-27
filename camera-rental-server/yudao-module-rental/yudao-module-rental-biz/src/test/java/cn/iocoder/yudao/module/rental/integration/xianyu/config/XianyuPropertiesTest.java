@@ -15,10 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class XianyuPropertiesTest {
 
     @Test
-    void shouldRemainDisabledByDefault() {
+    void shouldKeepReadIntegrationDisabledAndWriteSwitchEnabledByDefault() {
         XianyuProperties properties = new XianyuProperties();
 
         assertEquals(XianyuProperties.IntegrationStatus.DISABLED, properties.getIntegrationStatus());
+        assertTrue(properties.isWriteEnabled());
         assertTrue(properties.isTenantConfigurationValid());
         assertFalse(properties.getJob().isStartupSyncEnabled());
     }

@@ -408,7 +408,7 @@ type BarcodeDetectorConstructor = new (options?: { formats?: string[] }) => Barc
 const { t } = useI18n()
 const message = useMessage()
 
-const activePanels = ref<string[]>(['ship'])
+const activePanels = ref<string[]>([])
 const currentStep = ref(0)
 const config = ref<XianyuConfigVO>()
 const loadError = ref(false)

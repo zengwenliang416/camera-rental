@@ -17,6 +17,16 @@ export const DevicesView: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('ALL');
 
   const currentModel = models.find((m) => m.id === selectedModelId) || models[0];
+  if (!currentModel) {
+    return (
+      <div className="bg-white rounded-2xl p-10 border border-zinc-200/80 shadow-2xs text-center">
+        <div className="text-sm font-extrabold text-zinc-900">暂无真实设备台账数据</div>
+        <p className="text-xs text-zinc-500 mt-2">
+          请先确认管理端 `/rental/device/page` 接口可访问，并且当前账号拥有设备查询权限。
+        </p>
+      </div>
+    );
+  }
   const modelStats = calculateModelStats(currentModel.id, devices, blocks);
 
   const modelDevices = devices
@@ -129,7 +139,13 @@ export const DevicesView: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100">
-              {modelDevices.map((dev) => (
+              {modelDevices.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="p-8 text-center text-zinc-400">
+                    未查询到符合条件的真实设备实例
+                  </td>
+                </tr>
+              ) : modelDevices.map((dev) => (
                 <tr key={dev.id} className="hover:bg-zinc-50/80 transition-colors">
                   <td className="p-3 font-extrabold text-zinc-900 text-sm">{dev.unitCode}</td>
                   <td className="p-3 font-mono text-zinc-700 font-bold">{dev.sn}</td>
@@ -157,7 +173,7 @@ export const DevicesView: React.FC = () => {
                     </span>
                   </td>
                   <td className="p-3 font-mono font-bold text-zinc-800">
-                    {dev.currentOrderId ? 'XY20260726' : '-'}
+                    {dev.currentOrderId || '-'}
                   </td>
                   <td className="p-3 text-zinc-700 font-bold">{dev.currentCustomer || '-'}</td>
                   <td className="p-3 text-zinc-600 font-mono">{dev.expectedAvailableDate || '立即可用'}</td>

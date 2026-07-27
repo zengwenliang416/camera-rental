@@ -131,7 +131,8 @@ export interface RentalDeviceOpsResultVO {
   assignmentStatus: string;
 }
 
-const PAGE_SIZE = 500;
+// 后端 PageParam 限制 pageSize 最大为 200；这里循环分页拉完整列表。
+const PAGE_SIZE = 200;
 
 async function fetchAllPages<T>(
   path: string,

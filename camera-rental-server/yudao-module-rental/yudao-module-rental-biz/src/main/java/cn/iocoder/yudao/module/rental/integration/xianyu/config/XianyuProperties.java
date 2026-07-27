@@ -28,7 +28,7 @@ public class XianyuProperties {
      * Explicit switch for XianGuanJia write APIs. Read integration can be ready
      * while writes remain disabled.
      */
-    private boolean writeEnabled = false;
+    private boolean writeEnabled = true;
 
     /**
      * Tenant that owns the process-level XianGuanJia credentials.

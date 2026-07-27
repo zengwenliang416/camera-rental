@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '../context/AppContext';
 import { QRCodeSVG } from 'qrcode.react';
 import jsQR from 'jsqr';
+import { recognizeXianyuShipmentImage, resolveRentalDeviceQr } from '../api/rental';
 import {
   X,
   QrCode,
@@ -24,6 +25,22 @@ import {
   ScanLine,
 } from 'lucide-react';
 
+function toLocalDateString(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function addDays(date: Date, days: number) {
+  const next = new Date(date);
+  next.setDate(next.getDate() + days);
+  return next;
+}
+
+const today = toLocalDateString(new Date());
+const defaultEndDate = toLocalDateString(addDays(new Date(), 6));
+
 export const QuickBindingModal: React.FC = () => {
   const {
     devices,
@@ -33,14 +50,15 @@ export const QuickBindingModal: React.FC = () => {
     preselectedOrderForBinding,
     setPreselectedOrderForBinding,
     bindDeviceWithOrderAndLogistics,
+    hasPermission,
   } = useApp();
 
   const [selectedDeviceId, setSelectedDeviceId] = useState<string>('');
   const [selectedOrderId, setSelectedOrderId] = useState<string>('');
   const [logisticsNumber, setLogisticsNumber] = useState<string>('');
   const [carrier, setCarrier] = useState<string>('顺丰速运');
-  const [startDate, setStartDate] = useState<string>('2026-07-27');
-  const [endDate, setEndDate] = useState<string>('2026-08-02');
+  const [startDate, setStartDate] = useState<string>(today);
+  const [endDate, setEndDate] = useState<string>(defaultEndDate);
   const [notes, setNotes] = useState<string>('');
 
   const [deviceSearch, setDeviceSearch] = useState<string>('');
@@ -123,7 +141,7 @@ export const QuickBindingModal: React.FC = () => {
       setDeviceImagePreview(imgUrl);
 
       const img = new Image();
-      img.onload = () => {
+      img.onload = async () => {
         const canvas = document.createElement('canvas');
         canvas.width = img.width;
         canvas.height = img.height;
@@ -138,18 +156,22 @@ export const QuickBindingModal: React.FC = () => {
           const code = jsQR(imageData.data, imageData.width, imageData.height);
 
           if (code && code.data) {
-            // QR Code decoded
             const qrText = code.data;
-            // Match SN or unit code inside QR string (e.g. SN:ANHXP5L002-2JCW or UNIT:01号)
+            try {
+              const resolved = await resolveRentalDeviceQr(qrText);
+              foundSN = resolved.serialNumber || resolved.deviceNo;
+              foundUnitCode = devices.find((device) => device.id === String(resolved.id))?.unitCode || null;
+            } catch {
+              // Fall through to local matching for legacy unsigned QR payloads.
+            }
             const snMatch = qrText.match(/SN:([A-Z0-9-]+)/i) || qrText.match(/ANH[A-Z0-9-]+/i);
             const unitMatch = qrText.match(/(\d{1,2}号)/);
 
-            if (snMatch) foundSN = snMatch[1] || snMatch[0];
-            if (unitMatch) foundUnitCode = unitMatch[1];
+            if (!foundSN && snMatch) foundSN = snMatch[1] || snMatch[0];
+            if (!foundUnitCode && unitMatch) foundUnitCode = unitMatch[1];
           }
         }
 
-        // Fallback OCR filename or smart matching if no direct QR code binary detected
         if (!foundSN && !foundUnitCode) {
           const fileName = file.name;
           const matchedDev = devices.find(
@@ -160,11 +182,6 @@ export const QuickBindingModal: React.FC = () => {
           if (matchedDev) {
             foundSN = matchedDev.sn;
             foundUnitCode = matchedDev.unitCode;
-          } else {
-            // Default select first available idle device or 01号 for demo scan
-            const demoDev = devices.find((d) => d.status === 'IDLE') || devices[0];
-            foundSN = demoDev.sn;
-            foundUnitCode = demoDev.unitCode;
           }
         }
 
@@ -199,112 +216,57 @@ export const QuickBindingModal: React.FC = () => {
     }
   };
 
-  // Preset Mock Device Scans (For Instant Testing)
-  const handlePresetDeviceScan = (devUnitCode: string) => {
-    const matched = devices.find((d) => d.unitCode === devUnitCode);
-    if (!matched) return;
-
-    setIsScanningDevice(true);
-    setDeviceImagePreview('PRESET_DEV');
-    setTimeout(() => {
-      setIsScanningDevice(false);
-      setSelectedDeviceId(matched.id);
-      setDeviceSearch(matched.unitCode);
-      setDeviceScanResult(`[识别样例] 智能识别二维码/铭牌成功：${matched.unitCode} (${matched.sn})`);
-    }, 400);
-  };
-
   // -------------------------------------------------------------
   // Image Recognition Handlers: 2. Logistics Waybill Label Photo Scan
   // -------------------------------------------------------------
-  const processLogisticsImage = (file: File) => {
+  const processLogisticsImage = async (file: File) => {
     setIsScanningLogistics(true);
     setLogisticsScanResult(null);
+    if (!hasPermission('rental:xianyu:ship:ocr')) {
+      setIsScanningLogistics(false);
+      setLogisticsScanResult('当前账号缺少 rental:xianyu:ship:ocr，不能识别运单图片。');
+      return;
+    }
 
     const reader = new FileReader();
     reader.onload = (e) => {
       const imgUrl = e.target?.result as string;
       setLogisticsImagePreview(imgUrl);
-
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-
-        let detectedWaybill: string | null = null;
-        let detectedCarrier: string = '顺丰速运';
-
-        if (ctx) {
-          ctx.drawImage(img, 0, 0);
-          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const code = jsQR(imageData.data, imageData.width, imageData.height);
-
-          if (code && code.data) {
-            const qrText = code.data;
-            if (qrText.toUpperCase().includes('SF') || qrText.includes('顺丰')) {
-              detectedCarrier = '顺丰速运';
-            } else if (qrText.toUpperCase().includes('JD') || qrText.includes('京东')) {
-              detectedCarrier = '京东快递';
-            }
-            const waybillMatch = qrText.match(/(SF|JD)?[0-9]{10,14}/i);
-            if (waybillMatch) detectedWaybill = waybillMatch[0];
-          }
-        }
-
-        if (!detectedWaybill) {
-          // Smart simulation for waybill image parsing
-          const fileName = file.name.toUpperCase();
-          if (fileName.includes('JD') || fileName.includes('京东')) {
-            detectedCarrier = '京东快递';
-            detectedWaybill = `JD${Math.floor(100000000000 + Math.random() * 900000000000)}`;
-          } else {
-            detectedCarrier = '顺丰速运';
-            detectedWaybill = `SF${Math.floor(100000000000 + Math.random() * 900000000000)}`;
-          }
-        }
-
-        setTimeout(() => {
-          setIsScanningLogistics(false);
-          setCarrier(detectedCarrier);
-          setLogisticsNumber(detectedWaybill || '');
-          setLogisticsScanResult(`面单图像识别成功！已自动选择【${detectedCarrier}】并填充单号: ${detectedWaybill}`);
-        }, 600);
-      };
-      img.src = imgUrl;
     };
     reader.readAsDataURL(file);
+
+    try {
+      const result = await recognizeXianyuShipmentImage(file);
+      setCarrier(result.expressName || result.expressCode || '其他');
+      setLogisticsNumber(result.waybillNo || '');
+      setLogisticsScanResult(
+        result.waybillNo
+          ? `后端 OCR 识别成功：${result.expressName || result.expressCode || '未知快递'} ${result.waybillNo}`
+          : '后端 OCR 未识别到运单号，请人工录入。'
+      );
+    } catch (error) {
+      setLogisticsScanResult(error instanceof Error ? error.message : '运单 OCR 识别失败');
+    } finally {
+      setIsScanningLogistics(false);
+    }
   };
 
   const handleLogisticsImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      processLogisticsImage(file);
+      void processLogisticsImage(file);
     }
-  };
-
-  // Preset Mock Waybill Scans
-  const handlePresetLogisticsScan = (carrierName: string, prefix: string) => {
-    setIsScanningLogistics(true);
-    setLogisticsImagePreview('PRESET_LOGI');
-    const fakeNo = `${prefix}${Math.floor(100000000000 + Math.random() * 900000000000)}`;
-
-    setTimeout(() => {
-      setIsScanningLogistics(false);
-      setCarrier(carrierName);
-      setLogisticsNumber(fakeNo);
-      setLogisticsScanResult(`[识别样例] 识别快递面单图成功：${carrierName} (${fakeNo})`);
-    }, 400);
   };
 
   // Handle Submit
   const handleConfirmBinding = () => {
     if (!selectedDeviceId || !selectedOrderId) return;
+    if (!logisticsNumber.trim()) {
+      setLogisticsScanResult('请先识别或手工录入真实运单号，再提交后端发货。');
+      return;
+    }
 
-    const fullLogistics = logisticsNumber
-      ? `${carrier}: ${logisticsNumber.trim()}`
-      : `${carrier} (现场发货待扫描)`;
+    const fullLogistics = `${carrier}: ${logisticsNumber.trim()}`;
 
     bindDeviceWithOrderAndLogistics({
       deviceId: selectedDeviceId,
@@ -322,11 +284,6 @@ export const QuickBindingModal: React.FC = () => {
     openQuickBindingModal(false);
     setPreselectedOrderForBinding(null);
     setIsSuccess(false);
-  };
-
-  const generateLogisticsPreset = (prefix: string) => {
-    const randomCode = Math.floor(100000000000 + Math.random() * 900000000000);
-    setLogisticsNumber(`${prefix}${randomCode}`);
   };
 
   return (
@@ -432,7 +389,6 @@ export const QuickBindingModal: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* Recognition Status / Sample quick scan triggers */}
                   {isScanningDevice ? (
                     <div className="p-2 bg-blue-50 text-blue-700 rounded-lg text-[11px] font-bold flex items-center justify-center gap-2 animate-pulse">
                       <ScanLine className="w-3.5 h-3.5 animate-spin" />
@@ -444,20 +400,8 @@ export const QuickBindingModal: React.FC = () => {
                       <span className="truncate">{deviceScanResult}</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-medium pt-0.5">
-                      <span>快捷示例测试:</span>
-                      <button
-                        onClick={() => handlePresetDeviceScan('01号')}
-                        className="px-2 py-0.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded font-bold transition-all"
-                      >
-                        01号贴纸图
-                      </button>
-                      <button
-                        onClick={() => handlePresetDeviceScan('13号')}
-                        className="px-2 py-0.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded font-bold transition-all"
-                      >
-                        13号铭牌图
-                      </button>
+                    <div className="text-[10px] text-zinc-500 font-medium pt-0.5">
+                      请上传真实设备二维码/铭牌图片，或在下方手工搜索管理端真实设备。
                     </div>
                   )}
                 </div>
@@ -622,20 +566,8 @@ export const QuickBindingModal: React.FC = () => {
                       <span className="truncate">{logisticsScanResult}</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-medium">
-                      <span>快捷识图示例:</span>
-                      <button
-                        onClick={() => handlePresetLogisticsScan('顺丰速运', 'SF')}
-                        className="px-2 py-0.5 bg-white border border-zinc-200 hover:bg-zinc-100 text-zinc-800 rounded font-bold transition-all"
-                      >
-                        顺丰面单样例
-                      </button>
-                      <button
-                        onClick={() => handlePresetLogisticsScan('京东快递', 'JD')}
-                        className="px-2 py-0.5 bg-white border border-zinc-200 hover:bg-zinc-100 text-zinc-800 rounded font-bold transition-all"
-                      >
-                        京东面单样例
-                      </button>
+                    <div className="text-[10px] text-zinc-500 font-medium">
+                      请上传真实快递面单图片，或在下方手工录入已确认运单号。
                     </div>
                   )}
                 </div>
@@ -662,21 +594,6 @@ export const QuickBindingModal: React.FC = () => {
                   />
                 </div>
 
-                <div className="flex items-center gap-2 pt-0.5">
-                  <span className="text-[11px] text-zinc-500 font-semibold">生成测试运单:</span>
-                  <button
-                    onClick={() => generateLogisticsPreset('SF')}
-                    className="px-2.5 py-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg text-[10px] font-bold"
-                  >
-                    + 顺丰运单
-                  </button>
-                  <button
-                    onClick={() => generateLogisticsPreset('JD')}
-                    className="px-2.5 py-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg text-[10px] font-bold"
-                  >
-                    + 京东运单
-                  </button>
-                </div>
               </div>
 
               {/* Step 4: Record Rental Period */}

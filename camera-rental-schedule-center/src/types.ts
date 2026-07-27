@@ -45,7 +45,7 @@ export interface DeviceInstance {
   currentOrderId?: string;
   currentCustomer?: string;
   logisticsNumber?: string; // 物流运单号 e.g. "SF1893029104"
-  qrCode?: string;          // 设备二维码内容 e.g. "DJI-P4P-01-SN:ANHXP5L002-2JCW"
+  qrCode?: string;          // 设备二维码内容
   currentPeriod?: {
     startDate: string; // YYYY-MM-DD
     endDate: string;
@@ -66,7 +66,7 @@ export interface RentalOrder {
   id: string;
   rentalOrderId?: number;
   shopId?: number;
-  orderNumber: string; // e.g. "XY34982103"
+  orderNumber: string;
   orderStatus?: string;
   conversionStatus?: string;
   channel: OrderChannel;

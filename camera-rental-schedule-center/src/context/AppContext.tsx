@@ -8,14 +8,6 @@ import {
   ExceptionItem,
   DeviceStatus,
 } from '../types';
-import {
-  mockCategories,
-  mockModels,
-  initialDevices,
-  initialOrders,
-  initialScheduleBlocks,
-  initialExceptions,
-} from '../data/mockData';
 import { getAccessToken, getAdminUser, getCachedPermissionInfo } from '../api/auth';
 import { loginWithAdminPassword, logoutFromAdmin } from '../api/client';
 import {
@@ -98,12 +90,12 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [categories, setCategories] = useState<ModelCategory[]>(mockCategories);
-  const [models, setModels] = useState<EquipmentModel[]>(mockModels);
-  const [devices, setDevices] = useState<DeviceInstance[]>(initialDevices);
-  const [orders, setOrders] = useState<RentalOrder[]>(initialOrders);
-  const [blocks, setBlocks] = useState<ScheduleBlock[]>(initialScheduleBlocks);
-  const [exceptions, setExceptions] = useState<ExceptionItem[]>(initialExceptions);
+  const [categories, setCategories] = useState<ModelCategory[]>([]);
+  const [models, setModels] = useState<EquipmentModel[]>([]);
+  const [devices, setDevices] = useState<DeviceInstance[]>([]);
+  const [orders, setOrders] = useState<RentalOrder[]>([]);
+  const [blocks, setBlocks] = useState<ScheduleBlock[]>([]);
+  const [exceptions, setExceptions] = useState<ExceptionItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [authRequired, setAuthRequired] = useState<boolean>(false);
@@ -113,7 +105,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [permissions, setPermissions] = useState<string[]>(getCachedPermissionInfo()?.permissions || []);
   const [currentUser, setCurrentUser] = useState(getAdminUser());
 
-  const [selectedModelId, setSelectedModelId] = useState<string>('p4p');
+  const [selectedModelId, setSelectedModelId] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'dashboard' | 'schedule' | 'orders' | 'devices' | 'exceptions' | 'binding'>('dashboard');
 
   const [selectedOrderIdForAllocation, setSelectedOrderIdForAllocation] = useState<string | null>(null);
@@ -143,6 +135,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const loadManagementData = useCallback(async () => {
     if (!getAccessToken()) {
+      setCategories([]);
+      setModels([]);
+      setDevices([]);
+      setOrders([]);
+      setBlocks([]);
+      setExceptions([]);
       setAuthRequired(true);
       setIsLoggedIn(false);
       setLoadError('需要先登录管理后台');
@@ -184,11 +182,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const snapshot = await fetchScheduleCenterSnapshot();
       const mappedDevices = mapDevices(snapshot.devices);
       const mappedModels = deriveModels(snapshot.devices);
-      setCategories(deriveCategories());
+      setCategories(mappedModels.length > 0 ? deriveCategories() : []);
       setModels(mappedModels);
-      if (mappedModels.length > 0) {
-        setSelectedModelId(mappedModels[0].id);
-      }
+      setSelectedModelId(mappedModels[0]?.id || '');
       setDevices(mappedDevices);
       setBlocks(mapSchedules(snapshot.schedules));
       setOrders(mapChannelOrders(snapshot.channelOrders, snapshot.pendingShipOrders));
@@ -203,6 +199,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       );
     } catch (error) {
       const message = error instanceof Error ? error.message : '管理端数据同步失败';
+      setCategories([]);
+      setModels([]);
+      setDevices([]);
+      setOrders([]);
+      setBlocks([]);
+      setExceptions([]);
+      setSelectedModelId('');
+      setLastSyncTime('管理端数据同步失败');
       if (message === 'AUTH_REQUIRED' || message === 'NO_REFRESH_TOKEN') {
         setAuthRequired(true);
         setIsLoggedIn(false);

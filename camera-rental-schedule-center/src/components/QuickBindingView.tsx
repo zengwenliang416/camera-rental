@@ -26,6 +26,22 @@ import {
   ExternalLink,
 } from 'lucide-react';
 
+function toLocalDateString(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function addDays(date: Date, days: number) {
+  const next = new Date(date);
+  next.setDate(next.getDate() + days);
+  return next;
+}
+
+const today = toLocalDateString(new Date());
+const defaultEndDate = toLocalDateString(addDays(new Date(), 6));
+
 export const QuickBindingView: React.FC = () => {
   const {
     devices,
@@ -41,8 +57,8 @@ export const QuickBindingView: React.FC = () => {
   const [selectedOrderId, setSelectedOrderId] = useState<string>('');
   const [logisticsNumber, setLogisticsNumber] = useState<string>('');
   const [carrier, setCarrier] = useState<string>('顺丰速运');
-  const [startDate, setStartDate] = useState<string>('2026-07-27');
-  const [endDate, setEndDate] = useState<string>('2026-08-02');
+  const [startDate, setStartDate] = useState<string>(today);
+  const [endDate, setEndDate] = useState<string>(defaultEndDate);
   const [notes, setNotes] = useState<string>('');
 
   const [deviceSearch, setDeviceSearch] = useState<string>('');
@@ -194,10 +210,6 @@ export const QuickBindingView: React.FC = () => {
     if (file) processDeviceImage(file);
   };
 
-  const handlePresetDeviceScan = (devUnitCode: string) => {
-    setDeviceScanResult(`样例按钮已停用，请上传真实设备二维码图片。原样例：${devUnitCode}`);
-  };
-
   // 2. Process Logistics Waybill Image
   const processLogisticsImage = async (file: File) => {
     setIsScanningLogistics(true);
@@ -236,15 +248,6 @@ export const QuickBindingView: React.FC = () => {
     if (file) void processLogisticsImage(file);
   };
 
-  const handlePresetLogisticsScan = (carrierName: string, prefix: string) => {
-    setLogisticsScanResult(`样例按钮已停用，请上传真实${carrierName}面单图片。原前缀：${prefix}`);
-  };
-
-  const generateLogisticsPreset = (prefix: string) => {
-    const randomCode = Math.floor(100000000000 + Math.random() * 900000000000);
-    setLogisticsNumber(`${prefix}${randomCode}`);
-  };
-
   // Confirm Binding submit
   const handleConfirmBinding = async () => {
     if (!selectedDeviceId || !selectedOrderId) return;
@@ -254,9 +257,13 @@ export const QuickBindingView: React.FC = () => {
       return;
     }
 
-    const fullLogistics = logisticsNumber
-      ? `${carrier}: ${logisticsNumber.trim()}`
-      : `${carrier} (现场发货待扫描)`;
+    if (!logisticsNumber.trim()) {
+      setToastMessage('请先识别或手工录入真实运单号，再提交后端发货。');
+      setTimeout(() => setToastMessage(null), 4000);
+      return;
+    }
+
+    const fullLogistics = `${carrier}: ${logisticsNumber.trim()}`;
 
     setIsSubmitting(true);
     try {
@@ -381,21 +388,7 @@ export const QuickBindingView: React.FC = () => {
               ) : (
                 <div className="flex items-center justify-between text-[11px] text-zinc-500 font-medium">
                   <span>支持 JPG/PNG 或机身照片</span>
-                  <div className="flex items-center gap-1">
-                    <span>快捷识别试用:</span>
-                    <button
-                      onClick={() => handlePresetDeviceScan('01号')}
-                      className="px-2 py-0.5 bg-white border border-zinc-200 hover:bg-zinc-100 text-zinc-800 rounded font-bold"
-                    >
-                      01号照片
-                    </button>
-                    <button
-                      onClick={() => handlePresetDeviceScan('13号')}
-                      className="px-2 py-0.5 bg-white border border-zinc-200 hover:bg-zinc-100 text-zinc-800 rounded font-bold"
-                    >
-                      13号照片
-                    </button>
-                  </div>
+                  <span>也可在下方手工搜索管理端真实设备</span>
                 </div>
               )}
             </div>
@@ -502,21 +495,7 @@ export const QuickBindingView: React.FC = () => {
               ) : (
                 <div className="flex items-center justify-between text-[11px] text-zinc-500 font-medium">
                   <span>自动提取单号与快递公司</span>
-                  <div className="flex items-center gap-1">
-                    <span>面单测试:</span>
-                    <button
-                      onClick={() => handlePresetLogisticsScan('顺丰速运', 'SF')}
-                      className="px-2 py-0.5 bg-white border border-zinc-200 hover:bg-zinc-100 text-zinc-800 rounded font-bold"
-                    >
-                      顺丰面单
-                    </button>
-                    <button
-                      onClick={() => handlePresetLogisticsScan('京东快递', 'JD')}
-                      className="px-2 py-0.5 bg-white border border-zinc-200 hover:bg-zinc-100 text-zinc-800 rounded font-bold"
-                    >
-                      京东面单
-                    </button>
-                  </div>
+                  <span>也可手工录入已确认运单号</span>
                 </div>
               )}
             </div>

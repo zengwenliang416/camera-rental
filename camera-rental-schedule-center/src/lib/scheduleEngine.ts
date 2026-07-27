@@ -1,5 +1,18 @@
 import { DeviceInstance, ScheduleBlock, RentalOrder, DeviceStatus } from '../types';
 
+function toLocalDateString(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function addDays(date: Date, days: number) {
+  const next = new Date(date);
+  next.setDate(next.getDate() + days);
+  return next;
+}
+
 /**
  * Check whether a date range overlaps with another date range
  */
@@ -113,9 +126,10 @@ export function calculateModelStats(
     }
   });
 
-  // Calculate next 7 days occupancy
-  const today = '2026-07-27';
-  const sevenDaysLater = '2026-08-02';
+  // Calculate next 7 days occupancy from the real client date.
+  const now = new Date();
+  const today = toLocalDateString(now);
+  const sevenDaysLater = toLocalDateString(addDays(now, 6));
 
   const busyDeviceIds = new Set<string>();
   blocks.forEach((b) => {

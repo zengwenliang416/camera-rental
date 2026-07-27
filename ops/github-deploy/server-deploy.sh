@@ -21,8 +21,19 @@ tar -xzf "${RELEASE_ARCHIVE}" -C "${release_dir}"
 
 test -f "${release_dir}/server/yudao-server.jar"
 test -f "${release_dir}/admin/index.html"
-test -f "${release_dir}/staff/index.html"
-test -f "${release_dir}/web/server/index.mjs"
+test -f "${release_dir}/admin/schedule-center/index.html"
+
+has_web_artifact=false
+if [ -f "${release_dir}/web/server/index.mjs" ]; then
+  has_web_artifact=true
+fi
+
+for preserved_dir in staff web; do
+  if [ ! -e "${release_dir}/${preserved_dir}" ] && [ -e "${DEPLOY_ROOT}/current/${preserved_dir}" ]; then
+    echo "[deploy] preserve existing ${preserved_dir} artifact"
+    cp -a "${DEPLOY_ROOT}/current/${preserved_dir}" "${release_dir}/${preserved_dir}"
+  fi
+done
 
 ln -sfn "${release_dir}" "${DEPLOY_ROOT}/current"
 
@@ -33,9 +44,11 @@ else
   echo "[deploy][warn] ${SERVER_SERVICE} not found; backend artifact deployed but not restarted"
 fi
 
-if systemctl list-unit-files "${WEB_SERVICE}" >/dev/null 2>&1; then
+if [ "${has_web_artifact}" = true ] && systemctl list-unit-files "${WEB_SERVICE}" >/dev/null 2>&1; then
   echo "[deploy] restart ${WEB_SERVICE}"
   systemctl restart "${WEB_SERVICE}"
+elif [ "${has_web_artifact}" = false ]; then
+  echo "[deploy] skip ${WEB_SERVICE}; web artifact not included"
 else
   echo "[deploy][warn] ${WEB_SERVICE} not found; PC web artifact deployed but not restarted"
 fi

@@ -11,8 +11,6 @@ on:
       - 'camera-rental-server/**'
       - 'camera-rental-admin/**'
       - 'camera-rental-schedule-center/**'
-      - 'camera-rental-staff/**'
-      - 'camera-rental-web/**'
 
 permissions:
   contents: read
@@ -20,7 +18,7 @@ permissions:
 
 concurrency:
   group: camera-rental-211-deploy
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build-server:
@@ -113,69 +111,11 @@ jobs:
           path: .deploy-artifacts/admin
           if-no-files-found: error
 
-  build-staff-h5:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Install pnpm
-        run: npm i -g pnpm@10
-
-      - name: Build staff H5
-        working-directory: camera-rental-staff
-        run: |
-          pnpm install --frozen-lockfile
-          pnpm build:h5:prod
-          pnpm type-check
-
-      - name: Prepare staff artifact
-        run: |
-          mkdir -p .deploy-artifacts/staff
-          cp -R camera-rental-staff/dist/build/h5/. .deploy-artifacts/staff/
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: staff
-          path: .deploy-artifacts/staff
-          if-no-files-found: error
-
-  build-web:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Build PC web
-        working-directory: camera-rental-web
-        run: |
-          bun install --frozen-lockfile
-          bun run build
-
-      - name: Prepare web artifact
-        run: |
-          mkdir -p .deploy-artifacts/web
-          cp -R camera-rental-web/.output/. .deploy-artifacts/web/
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: web
-          path: .deploy-artifacts/web
-          if-no-files-found: error
-
   deploy:
     runs-on: ubuntu-24.04
     needs:
       - build-server
       - build-admin
-      - build-staff-h5
-      - build-web
     environment: production-211
     steps:
       - uses: actions/checkout@v4
@@ -190,23 +130,11 @@ jobs:
           name: admin
           path: .deploy-artifacts/release/admin
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: staff
-          path: .deploy-artifacts/release/staff
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: web
-          path: .deploy-artifacts/release/web
-
       - name: Pack release artifact
         run: |
           test -f .deploy-artifacts/release/server/yudao-server.jar
           test -f .deploy-artifacts/release/admin/index.html
           test -f .deploy-artifacts/release/admin/schedule-center/index.html
-          test -f .deploy-artifacts/release/staff/index.html
-          test -f .deploy-artifacts/release/web/server/index.mjs
           tar -czf camera-rental-release.tgz -C .deploy-artifacts/release .
 
       - name: Configure SSH

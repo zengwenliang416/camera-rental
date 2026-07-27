@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "component_rules": [
+    "Extract courier-code OCR/barcode calls into ShipmentOcrService and typed frontend API methods.",
+    "Extract pending-order search into typed API methods instead of embedding request logic in panels.",
+    "Extract device-code resolution into a reusable admin/staff helper that delegates to the existing resolve-qr endpoint.",
+    "Keep XianGuanJia write signing in the write client and reuse existing signer/canonical JSON utilities.",
+    "Extract repeated waybill masking and express-name mapping into shared utilities when duplication appears."
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "touched_specs": ["ui-design", "system-architecture", "frontend-backend-data-flow", "component-architecture"],
+  "ui_rules": [
+    "Admin shipment panel reuses Element Plus dialog, form, upload, status tags; no new design tokens.",
+    "Staff shipment screen follows camera-rental-staff uni-app scan-first conventions, platform-safe (no DOM-only APIs), mobile-network-aware upload.",
+    "Both surfaces render loading, empty pending-order search, permission-denied, write-disabled, shop-not-authorized, OCR-failed, scan-rejected, stale-order, device-not-shippable, and ship-failed states."
+  ],
+  "architecture_modules": [
+    "yudao-module-rental-biz: NEW XianyuWriteClient + XianyuWriteEndpoint (reuses XianyuRequestSigner + XianyuCanonicalJson + shared OkHttp/ObjectMapper/Clock; does NOT modify XianyuReadClient/XianyuReadEndpoint read-only allowlist)",
+    "yudao-module-rental-biz: new XianyuOrderShipService, ShipmentOcrService, integration/ocr adapter",
+    "yudao-module-rental-biz: new rental_device_shipment table + DO (extends TenantBaseDO, BaseMapperX) and mapper",
+    "yudao-module-rental-api: new ErrorCodeConstants XIANYU_WRITE_DISABLED / XIANYU_SHIP_IDEMPOTENT_KEY_REUSED / XIANYU_SHIP_REMOTE_ERROR at 1_040_001_020+ (reuses existing XIANYU_SHOP_AUTHORIZATION_INVALID)",
+    "yudao-server application.yaml: new yudao.ai.shipment-ocr block, new rental.xianyu.write-enabled flag",
+    "camera-rental-staff: NEW RentalStaffShip shipment screen + NEW src/api/rental module (staff currently has neither); uses courier code image capture, uni.scanCode device resolution, pending-order search, staff http interceptor, useAccess, and the same /admin-api/rental/xianyu/order/ship endpoint"
+  ],
+  "api_contracts": [
+    "GET /admin-api/rental/xianyu/order/pending-ship/page  (shop/order/product/buyer/contact keyword filters) -> candidate pending-dispatch channel orders",
+    "POST /admin-api/rental/xianyu/order/ship  (channelOrderId, deviceId or deviceNo, idempotencyKey, expressCode, expressName, waybillNo, source ADMIN|STAFF) -> masked ship result",
+    "POST /admin-api/rental/xianyu/order/ship/ocr  (courier label photo or courier-app one-dimensional barcode screenshot file) -> {waybillNo, expressName, confidence, extractionSource}",
+    "POST https://open.goofish.pro/api/open/order/ship  (order_no, waybill_no, express_code, express_name, optional sender fields) per docs/integrations/xianyu"
+  ],
+  "database_entities": [
+    "rental_device_shipment (id, tenant_id, channel_order_id, assignment_id, device_id, waybill_no, express_code, express_name, ship_request_hash, ship_response_code, ship_response_msg, ocr_confirmed, source, creator, create_time, updater, update_time, deleted)",
+    "unique uk_shipment_idem (tenant_id, idempotency_key)",
+    "unique uk_shipment_waybill (tenant_id, channel_order_id, waybill_no, express_code)"
+  ],
+  "permissions": [
+    "rental:xianyu:ship  (new single code; @PreAuthorize on ship endpoint; used by BOTH admin and staff)",
+    "rental:xianyu:ship:ocr (new; @PreAuthorize on OCR endpoint, defaults same role as rental:xianyu:ship)",
+    "Both seeded into system_menu by an incremental migration (ids 7070/7071, parent 7001, type 3, INSERT...WHERE NOT EXISTS) under rental; assigned to existing roles via role management, no new role created"
+  ],
+  "operational_constraints": [
+    "rental.xianyu.write-enabled defaults false (env XGJ_WRITE_ENABLED)",
+    "Ship refuses when switch off (XIANYU_WRITE_DISABLED 1_040_001_020) or shop not authorized (reuses XIANYU_SHOP_AUTHORIZATION_INVALID 1_040_001_006)",
+    "Production MUST set RENTAL_DEVICE_QR_SECRET to enforce signed device QRs (RentalDeviceQrCodec enforces HMAC only when qr-secret non-empty); unsigned local fallback is existing behavior",
+    "Device scan refuses an undecodable QR with RENTAL_DEVICE_QR_INVALID / RENTAL_DEVICE_NOT_EXISTS; QR generated via existing get-qr, resolved via existing resolve-qr",
+    "Pending-order search lists only XianGuanJia orders eligible for shipment; ship rechecks pending status and rejects stale results before any write call",
+    "Shipment is operator-triggered only; no scheduled/auto shipment",
+    "No other XianGuanJia write endpoint is enabled in this change",
+    "AppSecret and full phone/waybill never logged; waybill masked in kanban/export; audit log records source (admin/staff)",
+    "OCR api-key never written to logs/frontend/fixtures; OCR failure degrades to empty draft, manual entry always available"
+  ],
+  "data_flows": [
+    "FLOW-XIANYU-PENDING-ORDER-SEARCH: admin or staff searches after capturing courier/device codes -> /rental/xianyu/order/pending-ship/page -> candidate pending-dispatch channel orders (no persistence, no third-party write)",
+    "FLOW-XIANYU-ORDER-SHIP: admin or staff confirms courier waybill + physical device + selected pending order -> /rental/xianyu/order/ship (carries source) -> check write switch + shop auth + pending status + device shippability -> call XianGuanJia /api/open/order/ship -> on success persist binding, rental_device_shipment, and assignment DISPATCHED -> masked result",
+    "FLOW-SHIPMENT-OCR: admin or staff uploads a courier label photo, courier QR, or courier-app one-dimensional barcode screenshot -> /rental/xianyu/order/ship/ocr -> ShipmentOcrService -> yudao.ai.shipment-ocr multimodal -> structured barcode/OCR draft (no persistence, no third-party write)",
+    "FLOW-DEVICE-CODE-RESOLVE-FOR-SHIP: admin or staff scans/pastes device QR or serial-number code -> /rental/device/resolve-qr -> resolved physical device and shippability summary (no persistence, no third-party write)"
+  ],
+  "theme_modes": ["light-dark"],
+  "locale_policy": ["i18n:enabled", "locales:en,zh-CN", "default-locale:zh-CN"],
+  "unresolved_gaps": []
+}

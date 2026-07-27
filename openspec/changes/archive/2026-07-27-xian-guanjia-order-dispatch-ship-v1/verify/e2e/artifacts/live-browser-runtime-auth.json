@@ -1,0 +1,86 @@
+{
+  "startedAt": "2026-07-27T06:42:05.853Z",
+  "admin": {
+    "url": "http://127.0.0.1:5174/rental/order",
+    "title": "相机租赁管理后台",
+    "hasShipmentWorkbench": false,
+    "hasOcrUpload": false,
+    "hasDeviceField": false,
+    "hasWriteDisabled": false,
+    "bodySample": "相机租赁管理后台"
+  },
+  "staff": {
+    "url": "http://127.0.0.1:5173/#/pages-rental/xianyu-ship/index?tenantId=1",
+    "title": "",
+    "hasShipTitle": false,
+    "hasOcrUpload": false,
+    "hasDeviceScan": false,
+    "hasOrderSearch": false,
+    "bodySample": ""
+  },
+  "console": [
+    {
+      "page": "http://127.0.0.1:5174/rental/order",
+      "type": "warning",
+      "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`."
+    },
+    {
+      "page": "http://127.0.0.1:5174/rental/order",
+      "type": "warning",
+      "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`."
+    },
+    {
+      "page": "http://127.0.0.1:5174/rental/order",
+      "type": "warning",
+      "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`."
+    },
+    {
+      "page": "http://127.0.0.1:5174/rental/order",
+      "type": "warning",
+      "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`."
+    }
+  ],
+  "failedRequests": [
+    {
+      "url": "http://127.0.0.1:48080/admin-api/rental/xianyu/shop/page?pageNo=1&pageSize=100",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:48080/admin-api/system/tenant/simple-list",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:48080/admin-api/rental/xianyu/config/get",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:48080/admin-api/rental/xianyu/express-company/list",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:48080/admin-api/system/notify-message/get-unread-count",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:48080/admin-api/rental/xianyu/shop/page?pageNo=1&pageSize=100",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://test.yudao.iocoder.cn/20260517/blob_1778998103688.png",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5174/src/assets/imgs/logo.png",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    }
+  ],
+  "finishedAt": "2026-07-27T06:42:42.867Z"
+}

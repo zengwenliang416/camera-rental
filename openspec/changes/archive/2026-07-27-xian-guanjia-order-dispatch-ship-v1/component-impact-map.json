@@ -1,0 +1,59 @@
+{
+  "new_components": [
+    "Admin: RentalXianyuOrderShipPanel (domain component: courier code image upload/OCR + device QR/serial resolve + pending-order search + association preview + express selector + confirm-submit)",
+    "Staff (camera-rental-staff): NEW RentalStaffShip screen + NEW src/api/rental module (staff has neither today); courier code image -> device QR scan -> resolve-qr -> pending-order search -> association confirm -> submit",
+    "Backend: XianyuWriteClient + XianyuWriteEndpoint (NEW; reuses XianyuRequestSigner + XianyuCanonicalJson + shared OkHttp/ObjectMapper/Clock; does NOT touch XianyuReadClient/XianyuReadEndpoint read-only allowlist)",
+    "Backend: XianyuOrderShipService (write orchestration; checks switch + shop auth + pending-order status + device shippability, calls XianyuWriteClient.orderShip, persists binding + shipment + dispatch on success)",
+    "Backend: ShipmentOcrService + integration/ocr OpenAI-compatible adapter (multimodal barcode/OCR extraction only; supports courier-label photos and courier-app one-dimensional barcode screenshots; never ships)",
+    "Database: rental_device_shipment table/DO (extends TenantBaseDO, BaseMapperX), mapper",
+    "API module: ErrorCodeConstants additions XIANYU_WRITE_DISABLED / XIANYU_SHIP_IDEMPOTENT_KEY_REUSED / XIANYU_SHIP_REMOTE_ERROR (1_040_001_020+)"
+  ],
+  "reused_components": [
+    "RentalDeviceOpsService.dispatch (ASSIGNED->DISPATCHED transition reused after successful ship)",
+    "RentalDeviceQrCodec + existing /rental/device/get-qr + /rental/device/resolve-qr endpoints (admin/staff device code resolution reuses them; no duplicate decode)",
+    "XianyuRequestSigner + XianyuCanonicalJson + shared OkHttpClient/ObjectMapper/Clock (reused by the new XianyuWriteClient)",
+    "Existing XianGuanJia read plumbing is NOT modified (read-only closed allowlist stays closed)",
+    "Existing XianGuanJia channel order persistence/search model as the source for pending-dispatch order candidates",
+    "Existing express-company list (/api/open/express/companies) as controlled vocabulary for express code/name",
+    "Existing Element Plus dialog, form, upload, status-tag components and amount/identifier formatters (admin); components/UploadFile (UploadImg/useUpload) for the label photo",
+    "Existing staff http interceptor, useAccess().hasAccessByCodes, and menu.json menu-visibility model (staff adds one entry, filtered by useAccess)",
+    "XIANYU_SHOP_AUTHORIZATION_INVALID existing error code reused for shop-not-authorized",
+    "system_menu INSERT...SELECT...WHERE NOT EXISTS idempotent template (20260724_005 / 019)"
+  ],
+  "extraction_triggers": [
+    "ShipmentOcrService and its adapter are extracted under integration/ocr rather than inlined in the ship service, so future OCR needs reuse the same multimodal call path.",
+    "A shared 'write-call audit log' helper is extracted if more XianGuanJia write endpoints are added later (not needed for v1 of this change)"
+  ],
+  "forbidden_dependencies": [
+    "integration/ocr adapter must NOT live inside integration/xianyu/client package",
+    "Write client must NOT be added to XianyuReadClient / XianyuReadEndpoint (read-only closed allowlist stays unmodified)",
+    "Admin ship panel must NOT embed a raw API client; it must use typed api/rental/xianyu methods for OCR, device resolve, pending-order search, and ship",
+    "Staff shipment screen must NOT embed a raw HTTP client or QR decode; it must use the new src/api/rental module + existing resolve-qr endpoint",
+    "Admin/staff shipment UI must NOT implement pending-order eligibility, device availability, or schedule logic (backend remains authoritative and rechecks before write)",
+    "Ship service must NOT call any XianGuanJia endpoint other than /api/open/order/ship",
+    "Shipment must NOT be issued from the customer camera-rental-uniapp or -web clients",
+    "OCR api-key must NOT appear in any frontend payload, log, or test fixture",
+    "No new role is created; no duplicate error code for shop-not-authorized (reuse XIANYU_SHOP_AUTHORIZATION_INVALID)"
+  ],
+  "hooks": [
+    "useXianyuShip (typed submit guard with idempotency key + retry-with-same-key semantics; shared by admin and staff)",
+    "useShipmentOcr (upload label photo, courier QR, or barcode screenshot -> extraction draft, no submit coupling; shared by admin and staff)",
+    "usePendingShipOrderSearch (keyword -> pending-dispatch order candidates, no submit coupling; shared by admin and staff)",
+    "useDeviceCodeResolveForShip (admin/staff: scan or paste device QR/serial -> resolved device)"
+  ],
+  "utilities": [
+    "maskWaybill (last-4 masking reused from rentalPrivacy where available; otherwise reused maskChannelIdentifier)",
+    "expressCodeFromName (maps OCR-filled express name to express code via the express-company list)"
+  ],
+  "services": [
+    "XianyuOrderShipService",
+    "ShipmentOcrService"
+  ],
+  "required_component_tests": [
+    "XianyuOrderShipService: write-disabled refusal, shop-not-authorized refusal, idempotent replay (same key returns first result, no second channel call), pending-order stale rejection, non-shippable device rejection, ship-success-only binding/local mutation, unique-waybill rejection, cross-tenant rejection (covers source=ADMIN and source=STAFF)",
+    "ShipmentOcrService: pinned multimodal prompt + base64 image_url shape against a mocked OpenAI-compatible endpoint; extracts SF-style waybill number from one-dimensional barcode screenshots or visible text; degraded empty-draft on transport error",
+    "Admin: panel submit disabled until confirm; surfaces all typed failure states in story fixtures",
+    "Staff: courier code image -> device scan -> resolve -> pending-order search -> association confirm -> ship screen; surfaces scan-rejected, empty search, stale-order, write-disabled, shop-not-authorized, OCR-failed, ship-failed; builds for H5 and WeChat Mini Program"
+  ],
+  "unresolved_gaps": []
+}

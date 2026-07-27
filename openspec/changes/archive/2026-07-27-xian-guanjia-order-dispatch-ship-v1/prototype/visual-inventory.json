@@ -1,0 +1,98 @@
+{
+  "schema": "specnav.prototype.visualInventory.v1",
+  "version": "1",
+  "discovery_status": "complete",
+  "source_project": "camera-rental",
+  "evidence": {
+    "screenshots": [
+      "openspec/specs/ui-design/design.md#Current Screenshots"
+    ],
+    "routes": [
+      "camera-rental-admin/src/views/rental/order/index.vue (渠道订单 list)",
+      "camera-rental-admin/src/views/rental/xianyu/index.vue (闲管家集成 ops)",
+      "camera-rental-admin/src/views/rental/device/index.vue (租赁设备)"
+    ],
+    "design_specs": [
+      "openspec/specs/ui-design/design.md"
+    ],
+    "component_sources": [
+      "openspec/changes/xian-guanjia-order-dispatch-ship-v1/component-impact-map.json"
+    ],
+    "codegraph_claims": []
+  },
+  "project_shell": {
+    "source": "existing admin shell (Element Plus) + staff uni-app shell",
+    "required_elements": [
+      "admin: sidebar nav + topbar + breadcrumb + ContentWrap card + el-table + el-dialog panel + el-form",
+      "staff: top status bar + scan-first screen + compact confirm form + bottom action button",
+      "primary action (发货/提交)",
+      "content region (order + assigned device + upload + OCR preview + express select)"
+    ],
+    "omitted_elements": [],
+    "theme_policy": "light-dark toggle in prototype",
+    "i18n_policy": "zh-CN default; en supported (manifest); no in-prototype locale switch"
+  },
+  "business_surface": {
+    "screens": [
+      "admin-ship-panel",
+      "staff-ship-screen"
+    ],
+    "fields": [
+      "订单号 (masked in kanban, full in detail)",
+      "设备编号 deviceNo",
+      "设备型号 equipmentModelCode",
+      "快递公司 express (select, controlled vocab)",
+      "运单号 waybillNo (OCR -> confirm)",
+      "OCR 识别结果 preview",
+      "幂等键 idempotencyKey (auto/copyable)"
+    ],
+    "actions": [
+      "选订单",
+      "选设备",
+      "上传快递单图",
+      "OCR 识别",
+      "确认/编辑运单+快递",
+      "提交发货",
+      "重试 (same key)",
+      "关闭"
+    ],
+    "states": [
+      "loading",
+      "empty (no assignable device / no active assignment)",
+      "permission-denied",
+      "write-disabled",
+      "shop-not-authorized",
+      "ocr-failed",
+      "scan-rejected (staff only)",
+      "ship-failed",
+      "ship-success",
+      "populated"
+    ]
+  },
+  "verification_matrix": {
+    "viewports": [
+      "desktop",
+      "mobile"
+    ],
+    "theme_modes": [
+      "light",
+      "dark"
+    ],
+    "locales": [
+      "zh-CN"
+    ],
+    "states": [
+      "loading",
+      "empty",
+      "permission-denied",
+      "write-disabled",
+      "shop-not-authorized",
+      "ocr-failed",
+      "scan-rejected",
+      "ship-failed",
+      "ship-success",
+      "populated"
+    ]
+  },
+  "unsupported_capabilities": []
+}

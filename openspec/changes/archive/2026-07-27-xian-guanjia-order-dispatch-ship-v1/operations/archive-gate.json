@@ -1,0 +1,267 @@
+{
+  "schema": "specnav.ops.archiveGate.v1",
+  "generated_at": "2026-07-27T11:20:55.907Z",
+  "active_change": "xian-guanjia-order-dispatch-ship-v1",
+  "release_target": "project-deploy",
+  "lane": "standard",
+  "verdict": "green",
+  "blockers": [],
+  "warnings": [
+    "codegraph:not-indexed",
+    "codegraph:claim-unverified:verification:task-001-backend-ship-core",
+    "codegraph:claim-unverified:verification:task-002-admin-ship-panel",
+    "codegraph:claim-unverified:verification:task-003-staff-ship-screen",
+    "codegraph:claim-unverified:verification:task-004-verification"
+  ],
+  "codegraph": {
+    "ok": true,
+    "status": {
+      "schema": "specnav.codegraph.status.v1",
+      "ok": true,
+      "generated_at": "2026-07-27T11:20:55.893Z",
+      "project_root": "/Volumes/zwl/camera-rental-github",
+      "active_change": "xian-guanjia-order-dispatch-ship-v1",
+      "policy": {
+        "enabled": true,
+        "profile": "bootstrap",
+        "mode": "observe",
+        "stage": "operations",
+        "required_for_stage": false,
+        "disabled_reason": null
+      },
+      "execution_surface": "cli",
+      "decision": {
+        "stage": "operations",
+        "result": "warn",
+        "reason": "CodeGraph policy has advisory warnings for operations."
+      },
+      "cli": {
+        "available": true,
+        "version": "1.3.1",
+        "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+        "unsupported": false,
+        "error": null
+      },
+      "mcp": {
+        "configured": true,
+        "visible_in_current_session": false,
+        "restart_required": true,
+        "config_files": [
+          "/Users/wenliang_zeng/.claude.json",
+          "/Users/wenliang_zeng/.codex/config.toml"
+        ]
+      },
+      "index": {
+        "initialized": false,
+        "projectPath": "/Volumes/zwl/camera-rental-github",
+        "indexPath": null,
+        "lastIndexed": null,
+        "fileCount": 0,
+        "nodeCount": 0,
+        "edgeCount": 0,
+        "pendingChanges": {
+          "added": 0,
+          "modified": 0,
+          "removed": 0
+        },
+        "reindexRecommended": false,
+        "worktreeMismatch": null
+      },
+      "blockers": [],
+      "warnings": [
+        "codegraph:not-indexed"
+      ],
+      "raw_codegraph_status": {
+        "initialized": false,
+        "version": "1.3.1",
+        "projectPath": "/Volumes/zwl/camera-rental-github",
+        "indexPath": "/Volumes/zwl/camera-rental-github/.codegraph",
+        "lastIndexed": null
+      }
+    },
+    "evidence_index": {
+      "schema": "specnav.codegraph.evidence_index.v1",
+      "generated_at": "2026-07-27T11:20:55.893Z",
+      "active_change": "xian-guanjia-order-dispatch-ship-v1",
+      "source_raw": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/evidence.jsonl",
+      "by_claim": {},
+      "by_stage": {},
+      "blockers": [],
+      "raw_exists": false,
+      "record_count": 0
+    },
+    "claims_report": {
+      "schema": "specnav.codegraph.claims_report.v1",
+      "generated_at": "2026-07-27T11:20:55.895Z",
+      "active_change": "xian-guanjia-order-dispatch-ship-v1",
+      "claims_file": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/claims-map.json",
+      "evidence_index": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/evidence-index.json",
+      "claims_count": 4,
+      "verified_claims": [],
+      "unverified_claims": [
+        "verification:task-001-backend-ship-core",
+        "verification:task-002-admin-ship-panel",
+        "verification:task-003-staff-ship-screen",
+        "verification:task-004-verification"
+      ],
+      "blockers": [],
+      "warnings": [
+        "codegraph:claim-unverified:verification:task-001-backend-ship-core",
+        "codegraph:claim-unverified:verification:task-002-admin-ship-panel",
+        "codegraph:claim-unverified:verification:task-003-staff-ship-screen",
+        "codegraph:claim-unverified:verification:task-004-verification"
+      ]
+    },
+    "drift": {
+      "schema": "specnav.codegraph.drift.v1",
+      "active_change": "xian-guanjia-order-dispatch-ship-v1",
+      "drift": [],
+      "blockers": []
+    },
+    "decision": {
+      "schema": "specnav.codegraph.decision.v1",
+      "stage": "operations",
+      "profile": "bootstrap",
+      "effective_mode": "observe",
+      "required_for_stage": false,
+      "execution_surface": "cli",
+      "result": "warn",
+      "blockers": [],
+      "warnings": [
+        "codegraph:not-indexed"
+      ],
+      "explanation": "CodeGraph policy has advisory warnings for operations."
+    },
+    "guard_report": {
+      "schema": "specnav.codegraph.guard_report.v1",
+      "generated_at": "2026-07-27T11:20:55.895Z",
+      "active_change": "xian-guanjia-order-dispatch-ship-v1",
+      "stage": "operations",
+      "ok": true,
+      "status": {
+        "policy": {
+          "enabled": true,
+          "profile": "bootstrap",
+          "mode": "observe",
+          "stage": "operations",
+          "required_for_stage": false,
+          "disabled_reason": null
+        },
+        "execution_surface": "cli",
+        "cli": {
+          "available": true,
+          "version": "1.3.1",
+          "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+          "unsupported": false,
+          "error": null
+        },
+        "mcp": {
+          "configured": true,
+          "visible_in_current_session": false,
+          "restart_required": true,
+          "config_files": [
+            "/Users/wenliang_zeng/.claude.json",
+            "/Users/wenliang_zeng/.codex/config.toml"
+          ]
+        },
+        "index": {
+          "initialized": false,
+          "projectPath": "/Volumes/zwl/camera-rental-github",
+          "indexPath": null,
+          "lastIndexed": null,
+          "fileCount": 0,
+          "nodeCount": 0,
+          "edgeCount": 0,
+          "pendingChanges": {
+            "added": 0,
+            "modified": 0,
+            "removed": 0
+          },
+          "reindexRecommended": false,
+          "worktreeMismatch": null
+        }
+      },
+      "decision": {
+        "schema": "specnav.codegraph.decision.v1",
+        "stage": "operations",
+        "profile": "bootstrap",
+        "effective_mode": "observe",
+        "required_for_stage": false,
+        "execution_surface": "cli",
+        "result": "warn",
+        "blockers": [],
+        "warnings": [
+          "codegraph:not-indexed"
+        ],
+        "explanation": "CodeGraph policy has advisory warnings for operations."
+      },
+      "evidence_index": {
+        "schema": "specnav.codegraph.evidence_index.v1",
+        "generated_at": "2026-07-27T11:20:55.893Z",
+        "active_change": "xian-guanjia-order-dispatch-ship-v1",
+        "source_raw": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/evidence.jsonl",
+        "by_claim": {},
+        "by_stage": {},
+        "blockers": [],
+        "raw_exists": false,
+        "record_count": 0
+      },
+      "claims_report": {
+        "schema": "specnav.codegraph.claims_report.v1",
+        "generated_at": "2026-07-27T11:20:55.895Z",
+        "active_change": "xian-guanjia-order-dispatch-ship-v1",
+        "claims_file": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/claims-map.json",
+        "evidence_index": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/evidence-index.json",
+        "claims_count": 4,
+        "verified_claims": [],
+        "unverified_claims": [
+          "verification:task-001-backend-ship-core",
+          "verification:task-002-admin-ship-panel",
+          "verification:task-003-staff-ship-screen",
+          "verification:task-004-verification"
+        ],
+        "blockers": [],
+        "warnings": [
+          "codegraph:claim-unverified:verification:task-001-backend-ship-core",
+          "codegraph:claim-unverified:verification:task-002-admin-ship-panel",
+          "codegraph:claim-unverified:verification:task-003-staff-ship-screen",
+          "codegraph:claim-unverified:verification:task-004-verification"
+        ]
+      },
+      "drift": {
+        "schema": "specnav.codegraph.drift.v1",
+        "active_change": "xian-guanjia-order-dispatch-ship-v1",
+        "drift": [],
+        "blockers": []
+      },
+      "blockers": [],
+      "warnings": [
+        "codegraph:not-indexed",
+        "codegraph:claim-unverified:verification:task-001-backend-ship-core",
+        "codegraph:claim-unverified:verification:task-002-admin-ship-panel",
+        "codegraph:claim-unverified:verification:task-003-staff-ship-screen",
+        "codegraph:claim-unverified:verification:task-004-verification"
+      ]
+    },
+    "artifacts": {
+      "status": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/status.json",
+      "decision": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/decision.json",
+      "guard_report": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/guard-report.json",
+      "evidence_raw": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/evidence.jsonl",
+      "evidence_index": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/evidence-index.json",
+      "claims_map": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/claims-map.json",
+      "claims_report": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/claims-report.json",
+      "drift_report": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/drift-report.json",
+      "impact_report": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/impact-report.json"
+    },
+    "blockers": [],
+    "warnings": [
+      "codegraph:not-indexed",
+      "codegraph:claim-unverified:verification:task-001-backend-ship-core",
+      "codegraph:claim-unverified:verification:task-002-admin-ship-panel",
+      "codegraph:claim-unverified:verification:task-003-staff-ship-screen",
+      "codegraph:claim-unverified:verification:task-004-verification"
+    ]
+  },
+  "operations_ready": true
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "active_change": "xian-guanjia-order-dispatch-ship-v1",
+  "status": "passed",
+  "ok": true,
+  "checked_at": "2026-07-26T00:00:00+08:00",
+  "checks": [
+    "requirements contract is valid",
+    "prototype verifier is green",
+    "user approved code-first courier/device scan, pending-order search, bind, and ship flow",
+    "live XianGuanJia order ship API documentation was checked before design",
+    "scope lock binds the approved ui-html prototype source"
+  ]
+}

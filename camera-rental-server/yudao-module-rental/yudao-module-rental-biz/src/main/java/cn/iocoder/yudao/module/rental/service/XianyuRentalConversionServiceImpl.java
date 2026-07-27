@@ -38,6 +38,7 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
     static final String CONVERSION_STATUS_REVIEW_REQUIRED = "REVIEW_REQUIRED";
     static final String CONVERSION_STATUS_CLOSED = "CLOSED";
     static final String RENTAL_STATUS_PENDING_ALLOCATION = "PENDING_ALLOCATION";
+    static final String SYSTEM_OPERATOR = "system";
 
     private final XianyuOrderMapper xianyuOrderMapper;
     private final XianyuProductMappingMapper productMappingMapper;
@@ -172,6 +173,8 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
                     .reasonCode(reasonCode)
                     .reasonMessage("Channel order conversion requires operator review")
                     .build();
+            review.setCreator(SYSTEM_OPERATOR);
+            review.setUpdater(SYSTEM_OPERATOR);
             manualReviewMapper.insert(review);
         } else if (!Objects.equals(review.getReasonCode(), reasonCode)
                 || !OPEN.getStatus().equals(review.getStatus())) {
@@ -181,6 +184,7 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
             review.setResolutionNote(null);
             review.setResolvedBy(null);
             review.setResolvedAt(null);
+            review.setUpdater(SYSTEM_OPERATOR);
             manualReviewMapper.updateById(review);
         }
         return RentalConversionResult.reviewRequired(review.getId(), reasonCode);

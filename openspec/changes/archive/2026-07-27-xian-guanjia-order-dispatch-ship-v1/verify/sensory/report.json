@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "domain": "sensory",
+  "required": true,
+  "verdict": "green",
+  "blocker_class": null,
+  "evidence": [
+    "verify/e2e/artifacts/admin-rental-order-live-auth.png",
+    "verify/e2e/artifacts/staff-ship-page-after-env-fix.png",
+    "verify/e2e/artifacts/live-browser-runtime-after-qr-fix.json",
+    "verify/e2e/artifacts/staff-ui-search-candidate.png",
+    "verify/e2e/artifacts/staff-ui-ready-to-submit.png",
+    "verify/e2e/artifacts/staff-ui-submit-success.json",
+    "verify/e2e/artifacts/staff-ui-after-submit.png",
+    "verify/unit/report.json",
+    "verify/redteam/report.json"
+  ],
+  "commands": [
+    "Reviewed Playwright screenshots and text snapshots for admin and staff shipment surfaces.",
+    "Reviewed staff browser submit transcript for enabled/disabled button and confirmation dialog behavior.",
+    "Cross-checked negative states against unit and redteam reports for write-disabled, shop-not-authorized, OCR-failed, scan-rejected, idempotency conflict, and remote failure."
+  ],
+  "findings": [
+    "Admin shipment workbench is visible, not blank, and presents the flow as ordered steps: waybill, device, order, shipment confirmation.",
+    "Staff H5 screen is visible on mobile viewport and separates waybill input/upload, device scan/input, order search, and final confirmation.",
+    "Empty state is explicit: staff search shows no pending candidates before matching data, and after successful submit the candidate list returns to empty.",
+    "Disabled state is explicit: staff submit is disabled until waybill, device, express, and selected order are complete.",
+    "Confirmation state is explicit: staff dialog shows masked order, full device number, and waybill before final submit.",
+    "Success state is explicit in the response transcript and database proof: masked waybill, remote message, source STAFF, and DISPATCHED assignment.",
+    "Negative states are covered by typed backend/frontend evidence: write-disabled, shop-not-authorized, OCR missing-file failure, invalid QR/scan rejection, idempotency conflict, and remote ship failure do not mutate assignment state.",
+    "Permission-denied is covered by server-side @PreAuthorize evidence and permission-gated admin/staff controls."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "Independent visual review did not use real handset hardware; it used H5 mobile viewport screenshots and runtime text snapshots."
+  ]
+}

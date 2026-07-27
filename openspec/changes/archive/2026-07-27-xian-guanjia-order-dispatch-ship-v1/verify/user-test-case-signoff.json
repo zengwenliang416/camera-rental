@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "status": "approved",
+  "user_decision": "Approved by user direction to proceed with recommended testing: '按照你的建议做吧', '去测试吧', and subsequent '继续'. Approval is scoped to local/mock verification and does not authorize real XianGuanJia writes.",
+  "approved_case_ids": [
+    "utc-staff-shipment-primary-flow"
+  ],
+  "rejected_case_ids": [],
+  "notes": [
+    "The approved case was executed through staff H5 Playwright and a local XianGuanJia-compatible mock server.",
+    "Real XianGuanJia write operations remain outside this approval."
+  ]
+}

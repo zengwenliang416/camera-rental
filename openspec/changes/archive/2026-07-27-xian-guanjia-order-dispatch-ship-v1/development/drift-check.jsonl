@@ -1,0 +1,4 @@
+{"task":"001-backend-ship-core","blocking":false,"at":"2026-07-27T10:32:00+08:00","note":"Diff remains within allowed backend/server migration and active OpenSpec paths."}
+{"task":"002-admin-ship-panel","blocking":false,"at":"2026-07-27T10:32:00+08:00","note":"Admin implementation remains within typed API and existing rental order workbench paths."}
+{"task":"003-staff-ship-screen","blocking":false,"at":"2026-07-27T10:32:00+08:00","note":"Staff changes remain within staff rental API/screen paths and reuse backend endpoints."}
+{"task":"004-verification","blocking":false,"at":"2026-07-27T10:32:00+08:00","note":"Verification gaps are documented as release/archive blockers, not scope drift."}

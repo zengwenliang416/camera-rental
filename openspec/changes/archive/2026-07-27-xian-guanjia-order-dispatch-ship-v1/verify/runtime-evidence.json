@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "status": "green",
+  "surfaces": [
+    {
+      "surface": "runtime",
+      "required": true,
+      "status": "pass",
+      "command": "Backend/admin/staff local runtime smoke checks; backend PID 83482 on 48080, admin 5174, staff H5 5173; /rental/device/resolve-qr and /rental/xianyu/order/ship/ocr missing-file API probes",
+      "evidence_refs": [
+        "verify/e2e/artifacts/live-browser-runtime-after-qr-fix.json"
+      ],
+      "notes": [
+        "Backend was rebuilt/restarted with write and jobs disabled; QR resolve returned code 0 for P4-65-ANGVP5E00209KU; missing multipart file returns business code 400."
+      ]
+    },
+    {
+      "surface": "browser",
+      "required": true,
+      "status": "pass",
+      "command": "NODE_PATH=/Users/wenliang_zeng/.agents/skills/gstack/node_modules Playwright against admin http://127.0.0.1:5174/rental/order and staff http://127.0.0.1:5173/#/pages-rental/xianyu-ship/index?tenantId=1",
+      "evidence_refs": [
+        "verify/e2e/artifacts/live-browser-runtime-after-qr-fix.json"
+      ],
+      "artifact_refs": [
+        "verify/e2e/artifacts/admin-rental-order-live-auth.png",
+        "verify/e2e/artifacts/staff-ship-page-after-env-fix.png"
+      ],
+      "notes": [
+        "Admin shipment workbench and staff shipment flow rendered; staff page includes waybill upload and device QR upload/scan area; no raw mobile or 11+ digit runs detected by the Playwright privacy probe."
+      ]
+    },
+    {
+      "surface": "database",
+      "required": true,
+      "status": "pass",
+      "command": "python3 pymysql read-only information_schema/system_menu/rental_device checks",
+      "evidence_refs": [
+        "verify/e2e/artifacts/database-runtime-20260727.json"
+      ],
+      "query_refs": [
+        "information_schema.tables rental_device_shipment exists",
+        "information_schema.statistics unique indexes",
+        "system_menu ids 7070/7071 permissions",
+        "rental_device target device row"
+      ],
+      "artifact_refs": [
+        "verify/e2e/artifacts/database-runtime-20260727.json"
+      ],
+      "notes": [
+        "Local database has rental_device_shipment, both required unique indexes, seeded ship/OCR permission codes, and the requested P4-65-ANGVP5E00209KU device row."
+      ]
+    }
+  ]
+}

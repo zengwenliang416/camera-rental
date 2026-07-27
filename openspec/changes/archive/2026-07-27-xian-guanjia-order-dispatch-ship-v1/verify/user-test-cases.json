@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "status": "pending-user-review",
+  "source": "codex-verified-draft-2026-07-27",
+  "cases": [
+    {
+      "id": "utc-staff-shipment-primary-flow",
+      "title": "Warehouse staff can prepare a XianGuanJia shipment from scans and OCR",
+      "actor": "Authorized warehouse staff user with rental:xianyu:ship permission",
+      "user_goal": "Bind an assigned rental device to a pending XianGuanJia order and submit shipment after confirming the waybill OCR draft.",
+      "preconditions": [
+        "Backend runtime is available with tenant 1 and an authorized XianGuanJia shop.",
+        "The staff app has a valid login token and tenant id.",
+        "There is one ASSIGNED device assignment linked to a pending channel order.",
+        "XianGuanJia write switch is enabled only for the controlled test shop."
+      ],
+      "steps": [
+        "Open /pages-rental/xianyu-ship/index from the staff app.",
+        "Scan or upload a waybill label image and confirm or correct the OCR draft.",
+        "Scan the signed device QR and verify the resolved device number.",
+        "Search pending shipment orders and select the matching order.",
+        "Confirm the final shipment dialog and submit."
+      ],
+      "expected_results": [
+        "The page renders waybill OCR, device scan, order search, and shipment confirmation sections.",
+        "Submit remains disabled until order, device, express company, and waybill fields are complete.",
+        "A successful controlled submission records source STAFF and returns a masked waybill.",
+        "Failures for write-disabled, unauthorized shop, invalid device, and remote errors leave local assignment state unchanged."
+      ],
+      "boundary_cases": [
+        "Write switch disabled emits no remote ship call.",
+        "Unauthorized shop emits no remote ship call.",
+        "Repeated idempotency key returns the original successful result.",
+        "Backend unavailable must not render a blank page."
+      ],
+      "acceptance_refs": [
+        "acceptance.md"
+      ],
+      "source_refs": [
+        "requirements.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ]
+    }
+  ]
+}

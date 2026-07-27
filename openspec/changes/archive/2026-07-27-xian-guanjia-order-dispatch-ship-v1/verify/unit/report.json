@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "domain": "unit",
+  "required": true,
+  "verdict": "green",
+  "blocker_class": null,
+  "evidence": [
+    "XianyuOrderShipServiceTest: 6 tests passed.",
+    "ShipmentOcrServiceTest: 2 tests passed.",
+    "OpenAiCompatibleShipmentOcrClientTest: 2 tests passed."
+  ],
+  "commands": [
+    "mvn -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=XianyuOrderShipServiceTest,ShipmentOcrServiceTest,OpenAiCompatibleShipmentOcrClientTest -Dsurefire.failIfNoSpecifiedTests=false test"
+  ],
+  "findings": [],
+  "required_fixes": [],
+  "residual_risk": [
+    "Unit tests do not prove live database migration application or remote XianGuanJia write behavior."
+  ]
+}

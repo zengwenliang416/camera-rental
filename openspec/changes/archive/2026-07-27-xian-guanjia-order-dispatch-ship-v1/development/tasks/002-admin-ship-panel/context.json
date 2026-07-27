@@ -1,0 +1,39 @@
+{
+  "task_id": "002-admin-ship-panel",
+  "goal": "Admin user can capture courier/device codes, search pending orders, confirm association, and ship from Web.",
+  "stop_condition": "Admin type check passes and panel uses only typed APIs with confirm-before-submit behavior.",
+  "must_read": [
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/development/tasks/002-admin-ship-panel/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/requirements.md",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/acceptance.md",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/spec-map.json",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/component-impact-map.json",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/prototype/artifact/index.html",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/prototype/handoff.md",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/prototype/decision.json"
+  ],
+  "allowed_files": [
+    "camera-rental-admin/src",
+    "camera-rental-admin/package.json",
+    "camera-rental-admin/pnpm-lock.yaml",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1"
+  ],
+  "non_goals": [
+    "Do not implement authoritative order eligibility or device availability in the frontend.",
+    "Do not add another UI framework.",
+    "Do not add customer-facing logistics UI."
+  ],
+  "expected_evidence": [
+    "Admin type-check output.",
+    "Screenshot or sensory note for core states.",
+    "Spec-review and quality-review notes for admin touched files."
+  ],
+  "unsafe_assumptions": [
+    "Assuming search results are still valid without backend submit recheck.",
+    "Assuming OCR confidence removes the need for manual confirmation."
+  ]
+}

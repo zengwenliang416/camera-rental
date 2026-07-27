@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "domain": "redteam",
+  "required": true,
+  "verdict": "green",
+  "blocker_class": null,
+  "evidence": [
+    "Write-disabled rejection unit test passed and verifies no local mutation or remote write.",
+    "Unauthorized-shop rejection unit test passed and verifies no assignment or remote write.",
+    "Remote-failure test passed and verifies no dispatch/shipment/order update.",
+    "Assignment idempotency conflict test passed and verifies no remote write.",
+    "Cross-tenant shop reference test passed for ADMIN and STAFF sources and verifies no XianGuanJia write call.",
+    "Local database unique index uk_rental_shipment_waybill exists."
+  ],
+  "commands": [
+    "mvn -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=XianyuOrderShipServiceTest,ShipmentOcrServiceTest,OpenAiCompatibleShipmentOcrClientTest,RentalDeviceQrCodecTest -Dsurefire.failIfNoSpecifiedTests=false test",
+    "python3 pymysql read-only information_schema checks"
+  ],
+  "findings": [
+    "Safe negative paths, source parity, tenant-scoped shop lookup, and uniqueness guard evidence are covered without real external writes."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "This remains a unit/database-evidence redteam pass; a full browser-driven abuse probe can still be added before production rollout."
+  ]
+}

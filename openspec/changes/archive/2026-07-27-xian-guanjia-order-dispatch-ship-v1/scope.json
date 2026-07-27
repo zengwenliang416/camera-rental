@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "stage": "development",
+  "allowed_roots": [
+    "camera-rental-server/pom.xml",
+    "camera-rental-server/yudao-server",
+    "camera-rental-server/yudao-module-rental",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-admin/src",
+    "camera-rental-admin/package.json",
+    "camera-rental-admin/pnpm-lock.yaml",
+    "camera-rental-staff/src",
+    "camera-rental-staff/package.json",
+    "camera-rental-staff/pnpm-lock.yaml",
+    "docs",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1"
+  ],
+  "denied_roots": [
+    ".git",
+    "node_modules",
+    "dist",
+    "coverage",
+    "camera-rental-uniapp",
+    "camera-rental-web"
+  ],
+  "requires_review_on": [
+    "camera-rental-server/pom.xml",
+    "camera-rental-server/yudao-server/src/main/resources/application.yaml",
+    "camera-rental-server/yudao-server/src/main/resources/application-local.yaml",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-admin/package.json",
+    "camera-rental-admin/pnpm-lock.yaml",
+    "camera-rental-staff/package.json",
+    "camera-rental-staff/pnpm-lock.yaml"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": false,
+    "rename": false
+  },
+  "prototype_sources": [
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/prototype/artifact/index.html"
+  ],
+  "expires_when": "verification_started"
+}

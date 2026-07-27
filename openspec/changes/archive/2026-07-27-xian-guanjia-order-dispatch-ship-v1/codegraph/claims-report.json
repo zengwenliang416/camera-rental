@@ -1,0 +1,22 @@
+{
+  "schema": "specnav.codegraph.claims_report.v1",
+  "generated_at": "2026-07-27T11:20:55.895Z",
+  "active_change": "xian-guanjia-order-dispatch-ship-v1",
+  "claims_file": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/claims-map.json",
+  "evidence_index": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/evidence-index.json",
+  "claims_count": 4,
+  "verified_claims": [],
+  "unverified_claims": [
+    "verification:task-001-backend-ship-core",
+    "verification:task-002-admin-ship-panel",
+    "verification:task-003-staff-ship-screen",
+    "verification:task-004-verification"
+  ],
+  "blockers": [],
+  "warnings": [
+    "codegraph:claim-unverified:verification:task-001-backend-ship-core",
+    "codegraph:claim-unverified:verification:task-002-admin-ship-panel",
+    "codegraph:claim-unverified:verification:task-003-staff-ship-screen",
+    "codegraph:claim-unverified:verification:task-004-verification"
+  ]
+}

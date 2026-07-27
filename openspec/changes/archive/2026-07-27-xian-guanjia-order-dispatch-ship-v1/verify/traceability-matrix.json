@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "entries": [
+    {
+      "changed_file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+      "requirement_refs": [
+        "requirements.md"
+      ],
+      "task_refs": [
+        "development/tasks/001-backend-ship-core"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "system-architecture",
+        "frontend-backend-data-flow"
+      ],
+      "verification_domains": [
+        "unit",
+        "redteam",
+        "e2e"
+      ],
+      "anchor_refs": [
+        "A6",
+        "A7",
+        "A9",
+        "A10",
+        "A11",
+        "A22",
+        "A23"
+      ]
+    },
+    {
+      "changed_file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java",
+      "requirement_refs": [
+        "requirements.md"
+      ],
+      "task_refs": [
+        "development/tasks/001-backend-ship-core",
+        "development/tasks/004-verification"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "system-architecture"
+      ],
+      "verification_domains": [
+        "unit",
+        "redteam"
+      ],
+      "anchor_refs": [
+        "A6",
+        "A7",
+        "A9",
+        "A10",
+        "A11",
+        "A22",
+        "A23"
+      ]
+    },
+    {
+      "changed_file": "camera-rental-staff/src/api/rental/xianyu.ts",
+      "requirement_refs": [
+        "requirements.md"
+      ],
+      "task_refs": [
+        "development/tasks/003-staff-ship-screen"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "frontend-backend-data-flow"
+      ],
+      "verification_domains": [
+        "static",
+        "e2e"
+      ],
+      "anchor_refs": [
+        "A4",
+        "A20c"
+      ]
+    },
+    {
+      "changed_file": "camera-rental-staff/src/pages-rental/xianyu-ship/index.vue",
+      "requirement_refs": [
+        "requirements.md"
+      ],
+      "task_refs": [
+        "development/tasks/003-staff-ship-screen"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "static",
+        "e2e",
+        "sensory"
+      ],
+      "anchor_refs": [
+        "A4",
+        "A5",
+        "A20c"
+      ]
+    },
+    {
+      "changed_file": "camera-rental-staff/src/pages.json",
+      "requirement_refs": [
+        "requirements.md"
+      ],
+      "task_refs": [
+        "development/tasks/003-staff-ship-screen"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "frontend-backend-data-flow"
+      ],
+      "verification_domains": [
+        "static",
+        "e2e"
+      ],
+      "anchor_refs": [
+        "A20c"
+      ]
+    },
+    {
+      "changed_file": "camera-rental-staff/src/pages/index/menu.json",
+      "requirement_refs": [
+        "requirements.md"
+      ],
+      "task_refs": [
+        "development/tasks/003-staff-ship-screen"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "frontend-backend-data-flow"
+      ],
+      "verification_domains": [
+        "static",
+        "e2e"
+      ],
+      "anchor_refs": [
+        "A20c"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/development/handoff-to-verify.md",
+      "requirement_refs": [
+        "requirements.md"
+      ],
+      "task_refs": [
+        "development/tasks"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ],
+      "anchor_refs": []
+    }
+  ],
+  "unmapped_changes": []
+}

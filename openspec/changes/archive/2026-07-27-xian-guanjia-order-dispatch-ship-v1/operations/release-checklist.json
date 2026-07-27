@@ -1,0 +1,23 @@
+{
+  "schema": "specnav.ops.releaseChecklist.v1",
+  "change": "xian-guanjia-order-dispatch-ship-v1",
+  "release_target": "project-deploy",
+  "checks": [
+    {
+      "name": "verification green",
+      "status": "pass"
+    },
+    {
+      "name": "release docs prepared",
+      "status": "pass"
+    },
+    {
+      "name": "migration manifest and rollback recorded",
+      "status": "pass"
+    },
+    {
+      "name": "write operations remain disabled outside explicit controlled test",
+      "status": "pass"
+    }
+  ]
+}

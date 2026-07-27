@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "green",
+  "scenarios": [
+    "verify-runs-six-domains",
+    "staff-shipment-primary-flow"
+  ],
+  "passed_checks": [
+    "Six verification domains have green reports: facticity, static, unit, redteam, e2e, sensory.",
+    "Staff H5 primary flow searched a pending order, enabled submit, confirmed final dialog, submitted source STAFF, and received code 0 success.",
+    "Mock-server success chain persisted shipment, assignment DISPATCHED, xianyu order waybill fields, and device RENTED."
+  ],
+  "unresolved_blockers": []
+}

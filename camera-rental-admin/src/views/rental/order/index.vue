@@ -129,12 +129,9 @@
       <el-table-column :label="t('rental.xianyu.shopName')" min-width="110">
         <template #default="{ row }">{{ shopNameById(row.shopId) }}</template>
       </el-table-column>
-      <el-table-column
-        prop="externalOrderId"
-        :label="t('rental.order.externalOrderId')"
-        min-width="180"
-        show-overflow-tooltip
-      />
+      <el-table-column :label="t('rental.order.externalOrderId')" min-width="180" show-overflow-tooltip>
+        <template #default="{ row }">{{ maskOrderId(row.externalOrderId) }}</template>
+      </el-table-column>
       <el-table-column
         prop="goodsTitle"
         :label="t('rental.order.goodsTitle')"
@@ -153,23 +150,15 @@
           {{ formatYuan(row.payAmount) }}
         </template>
       </el-table-column>
-      <el-table-column
-        prop="receiverName"
-        :label="t('rental.order.receiverName')"
-        width="100"
-        show-overflow-tooltip
-      />
-      <el-table-column
-        prop="receiverMobile"
-        :label="t('rental.order.receiverMobile')"
-        width="120"
-      />
-      <el-table-column
-        prop="receiverAddress"
-        :label="t('rental.order.receiverAddress')"
-        min-width="180"
-        show-overflow-tooltip
-      />
+      <el-table-column :label="t('rental.order.receiverName')" width="100" show-overflow-tooltip>
+        <template #default="{ row }">{{ maskName(row.receiverName) }}</template>
+      </el-table-column>
+      <el-table-column :label="t('rental.order.receiverMobile')" width="120">
+        <template #default="{ row }">{{ maskMobile(row.receiverMobile) }}</template>
+      </el-table-column>
+      <el-table-column :label="t('rental.order.receiverAddress')" min-width="180" show-overflow-tooltip>
+        <template #default="{ row }">{{ maskAddress(row.receiverAddress) }}</template>
+      </el-table-column>
       <el-table-column prop="expressName" :label="t('rental.order.expressName')" width="100" />
       <el-table-column :label="t('rental.order.conversionStatus')" width="120">
         <template #default="{ row }">
@@ -356,6 +345,30 @@ const rentalLabel = (group: RentalLabelGroup, value?: string | number | null) =>
 
 const formatYuan = (amount?: number) => {
   return amount == null ? '-' : t('rental.common.yuanAmount', { amount: fenToYuan(amount) })
+}
+
+const maskName = (name?: string) => {
+  const value = name?.trim()
+  if (!value) return ''
+  return value.length <= 1 ? '*' : `${value.slice(0, 1)}*`
+}
+
+const maskMobile = (mobile?: string) => {
+  const value = mobile?.trim()
+  if (!value) return ''
+  return value.replace(/(\d{3})\d+(\d{4})$/, '$1****$2')
+}
+
+const maskOrderId = (orderId?: string) => {
+  const value = orderId?.trim()
+  if (!value) return ''
+  return value.length <= 10 ? '***' : `${value.slice(0, 6)}***${value.slice(-4)}`
+}
+
+const maskAddress = (address?: string) => {
+  const value = address?.trim()
+  if (!value) return ''
+  return value.length <= 8 ? '***' : `${value.slice(0, 8)}***`
 }
 
 const shopNameById = (id?: number) => {

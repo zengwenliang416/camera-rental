@@ -1,0 +1,24 @@
+{
+  "schema": "specnav.ops.migrationDeployment.v1",
+  "change": "xian-guanjia-order-dispatch-ship-v1",
+  "status": "pass",
+  "source_manifest": "development/migrations/manifest.json",
+  "applied_migrations": [
+    "20260726_023_xianyu_ship_workflow"
+  ],
+  "evidence_refs": [
+    "development/migrations/manifest.json",
+    "camera-rental-server/sql/mysql/migrations/20260726_023_xianyu_ship_workflow.sql",
+    "verify/e2e/artifacts/mock-ship-success-db-proof-20260727.json",
+    "verify/aggregate-report.json"
+  ],
+  "rollback_refs": [
+    "development/migrations/manifest.json",
+    "operations/rollback-plan.md"
+  ],
+  "rollback_strategy": "Delete system_role_menu rows for menu ids 7070 and 7071, delete system_menu ids 7070 and 7071, and drop rental_device_shipment only after exporting any real shipment audit rows.",
+  "notes": [
+    "Local E2E persisted shipment rows, proving the migration surface exists in the local verification database.",
+    "Production deployment still must apply the SQL migration before starting the updated backend if the target database has not already been migrated."
+  ]
+}

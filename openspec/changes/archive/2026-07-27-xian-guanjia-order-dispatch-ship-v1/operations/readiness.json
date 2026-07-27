@@ -1,0 +1,33 @@
+{
+  "schema": "specnav.ops.readiness.v1",
+  "change": "xian-guanjia-order-dispatch-ship-v1",
+  "release_target": "project-deploy",
+  "ready": true,
+  "verification": {
+    "aggregate_verdict": "green",
+    "receipt_confidence": "B",
+    "uncovered_scope": [],
+    "residual_risk": [
+      "Neighboring xian-guanjia-data-integration-v1 generated/status artifacts remain dirty and must be handled as a separate change.",
+      "Production XianGuanJia writes remain disabled by default and require explicit operator approval plus controlled shop credentials."
+    ]
+  },
+  "git": {
+    "branch": "main",
+    "dirty": true,
+    "untracked_reviewed": true,
+    "worktree_mode": "dirty multi-repo workspace; no commit or push performed"
+  },
+  "docs": {
+    "user_facing": true,
+    "changelog": true,
+    "release_notes": true,
+    "readme_updated": false
+  },
+  "ops": {
+    "migrations": "pass",
+    "rollback_plan": "pass",
+    "monitor_plan": "pass",
+    "postmortem_required": false
+  }
+}

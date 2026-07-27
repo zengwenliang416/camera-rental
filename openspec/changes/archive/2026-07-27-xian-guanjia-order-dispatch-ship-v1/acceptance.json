@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "Admin shows a 发货 action on XianGuanJia order rows that opens a shipment panel letting the operator pick an assigned device, upload a label photo, see the OCR draft, confirm/edit, and submit; submit is disabled until confirmed.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "e2e:verify/e2e/artifacts/live-browser-runtime-after-qr-fix.json + static:XianyuShipWorkbench.vue device QR/upload/order/confirm flow"
+    },
+    {
+      "id": "A2",
+      "statement": "Successful submit shows a success summary with masked waybill and channel response msg, and the order/assignment row reflects DISPATCHED.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "e2e:verify/e2e/artifacts/mock-ship-success-db-proof-20260727.json + staff-ui-submit-success.json; mock remote msg SPECNAV_MOCK_SHIP_OK, masked waybills, DISPATCHED assignments"
+    },
+    {
+      "id": "A3",
+      "statement": "Failed submit shows a typed error (write-disabled, shop-not-authorized, OCR-no-match, ship validation, ship transport, idempotency conflict) and leaves assignment state unchanged so the operator can retry with the same idempotency key.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "mvn:XianyuOrderShipServiceTest#remoteFailureDoesNotDispatchInsertShipmentOrUpdateOrder + write-disabled/shop-auth tests"
+    },
+    {
+      "id": "A4",
+      "statement": "An authorized warehouse worker can open the staff shipment screen, scan the device signed QR, see the resolved device + active ASSIGNED assignment + linked channel order (or pick among candidates), upload a label photo, confirm the OCR draft, and submit; the same success/failure/retry semantics as admin apply.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "e2e:verify/e2e/artifacts/staff-ui-search-candidate.png + staff-ui-submit-success.json + mock-ship-success-db-proof-20260727.json; staff UI selected candidate and submitted source STAFF"
+    },
+    {
+      "id": "A5",
+      "statement": "The admin shipment panel and the staff shipment screen render loading, empty (no assignable device / no active assignment), permission-denied, write-disabled, shop-not-authorized, OCR-failed, scan-rejected (staff only), and ship-failed states.",
+      "verify_via": "sensory",
+      "status": "passing",
+      "evidence_ref": "sensory:report.json/report.md review of existing browser screenshots, UI states, negative-path unit/runtime evidence, and staff submit screenshots"
+    },
+    {
+      "id": "A6",
+      "statement": "POST /admin-api/rental/xianyu/order/ship refuses with XIANYU_WRITE_DISABLED when rental.xianyu.write-enabled is false.",
+      "verify_via": "unit",
+      "status": "passing",
+      "evidence_ref": "mvn:XianyuOrderShipServiceTest#shipOrder_whenWriteDisabled_thenRejectBeforeLocalMutation"
+    },
+    {
+      "id": "A7",
+      "statement": "POST /admin-api/rental/xianyu/order/ship refuses with the existing XIANYU_SHOP_AUTHORIZATION_INVALID when the target shop is not currently authorized (no new error code is created for this case).",
+      "verify_via": "unit",
+      "status": "passing",
+      "evidence_ref": "mvn:XianyuOrderShipServiceTest#shipOrder_whenShopUnauthorized_thenRejectBeforeAssignmentAndRemoteWrite"
+    },
+    {
+      "id": "A8",
+      "statement": "A ship call uses self-developed-app MD5 signing with canonical UTF-8 JSON bytes via a NEW XianyuWriteClient (NOT XianyuReadClient); the read-only XianyuReadClient/XianyuReadEndpoint allowlist is not modified.",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "static:XianyuWriteClient/XianyuWriteEndpoint + XianyuReadEndpoint allowlist unchanged"
+    },
+    {
+      "id": "A9",
+      "statement": "The local assignment advances ASSIGNED->DISPATCHED and a rental_device_shipment row is persisted only after XianGuanJia ship returns success; on failure neither is persisted.",
+      "verify_via": "unit",
+      "status": "passing",
+      "evidence_ref": "mvn:XianyuOrderShipServiceTest#shipOrder_whenRemoteSuccess_thenCommitLocalAfterChannelSuccess"
+    },
+    {
+      "id": "A10",
+      "statement": "Repeating a ship call with the same idempotency key returns the first successful result and does not call XianGuanJia again; repeating with a different key on the same assignment is rejected.",
+      "verify_via": "unit",
+      "status": "passing",
+      "evidence_ref": "mvn:XianyuOrderShipServiceTest#shipOrder_whenIdempotentReplay_thenReturnExistingDeviceNumber"
+    },
+    {
+      "id": "A11",
+      "statement": "The ship endpoint only accepts an assignment that is ASSIGNED and tenant-scoped to the operator; any other state is rejected with no XianGuanJia call.",
+      "verify_via": "unit",
+      "status": "passing",
+      "evidence_ref": "mvn:XianyuOrderShipServiceTest#shipOrder_whenDeviceNotShippable_thenRejectBeforeAssignmentAndRemoteWrite"
+    },
+    {
+      "id": "A12",
+      "statement": "Duplicate waybills for the same channel order are rejected by a unique constraint on (tenant_id, channel_order_id, waybill_no, express_code).",
+      "verify_via": "unit",
+      "status": "passing",
+      "evidence_ref": "database:verify/e2e/artifacts/database-runtime-20260727.json uk_rental_shipment_waybill"
+    },
+    {
+      "id": "A13",
+      "statement": "Both admin and staff ship calls hit the same /rental/xianyu/order/ship endpoint; the request carries a source value (ADMIN/STAFF) recorded on the shipment row; the backend does not branch business rules on source.",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "mvn:XianyuOrderShipServiceTest#staffSourceUsesSameBackendPathAndPersistsSource + static admin/staff source ADMIN/STAFF"
+    },
+    {
+      "id": "A14",
+      "statement": "rental_device_shipment follows RentalDeviceAssignmentDO conventions: extends TenantBaseDO, @TableName/@TableId/@KeySequence, mapper extends BaseMapperX, soft-delete via inherited deleted bit. Stores channel order id, assignment id, waybill, express code/name, request body hash, response code/msg, OCR-confirmed flag, source (admin/staff), tenant, timestamps; waybill masked in non-detail kanban/export.",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "static:RentalDeviceShipmentDO/RentalDeviceShipmentMapper + database table/index evidence"
+    },
+    {
+      "id": "A15",
+      "statement": "The OCR config yudao.ai.mimo base-url/api-key/model/enable is read from config only; the api-key never appears in a log, frontend payload, or fixture; OCR failure degrades to an empty draft and never blocks manual entry.",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "static:ShipmentOcrProperties prefix yudao.ai.shipment-ocr + application.yaml NEWAPI fallback + OCR fallback tests; requirements text updated after user clarified not mimo"
+    },
+    {
+      "id": "A16",
+      "statement": "No columns are added to rental_device_assignment; the lifecycle reuses existing ASSIGNED->DISPATCHED semantics.",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "static:migration creates rental_device_shipment only and service reuses deviceOps DISPATCHED path"
+    },
+    {
+      "id": "A17",
+      "statement": "ShipmentOcrService and its OpenAI-compatible adapter live under integration/ocr outside the XianGuanJia client package and expose only an OCR method that never ships.",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "static:integration/ocr adapter and ShipmentOcrService separated from XianGuanJia write client"
+    },
+    {
+      "id": "A18",
+      "statement": "ShipmentOcrService pins the multimodal prompt and base64 image_url content shape against a mocked OpenAI-compatible endpoint.",
+      "verify_via": "unit",
+      "status": "passing",
+      "evidence_ref": "mvn:ShipmentOcrServiceTest,OpenAiCompatibleShipmentOcrClientTest"
+    },
+    {
+      "id": "A19",
+      "statement": "The ship service calls only /api/open/order/ship via a NEW XianyuWriteClient (reusing XianyuRequestSigner + XianyuCanonicalJson + shared OkHttp/ObjectMapper/Clock); no method is added to XianyuReadClient/XianyuReadEndpoint and no new signing code is written.",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "static:XianyuWriteEndpoint ORDER_SHIP only; XianyuWriteClient reuses signer/canonical json/shared plumbing"
+    },
+    {
+      "id": "A19a",
+      "statement": "New error codes XIANYU_WRITE_DISABLED, XIANYU_SHIP_IDEMPOTENT_KEY_REUSED, XIANYU_SHIP_REMOTE_ERROR are added at 1_040_001_020+ in ErrorCodeConstants continuing the XianGuanJia segment; shop-authorization failure reuses existing XIANYU_SHOP_AUTHORIZATION_INVALID (no duplicate code).",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "static:ErrorCodeConstants 1_040_001_020..022 and reused XIANYU_SHOP_AUTHORIZATION_INVALID"
+    },
+    {
+      "id": "A20",
+      "statement": "The staff scan resolution reuses the existing resolve-qr endpoint and RentalDeviceQrCodec; no duplicate QR decode is implemented in the staff client.",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "static:staff api/rental/device.ts uses /rental/device/resolve-qr and staff screen calls resolveRentalDeviceQr for CRD1 payloads"
+    },
+    {
+      "id": "A20a",
+      "statement": "A device whose QR fails to decode is rejected at staff scan with RENTAL_DEVICE_QR_INVALID / RENTAL_DEVICE_NOT_EXISTS; QR generation (get-qr) and resolution (resolve-qr) endpoints are reused with no new QR pipeline. Production must set RENTAL_DEVICE_QR_SECRET to enforce signed QRs; unsigned local fallback is existing behavior, not a new risk.",
+      "verify_via": "unit",
+      "status": "passing",
+      "evidence_ref": "mvn:RentalDeviceQrCodecTest + live API resolve-qr evidence"
+    },
+    {
+      "id": "A20b",
+      "statement": "rental:xianyu:ship and rental:xianyu:ship:ocr are enforced server-side by @PreAuthorize(@ss.hasPermission('rental:xianyu:ship')) and seeded into system_menu by an incremental migration (ids 7070/7071, parent 7001, type 3, INSERT...WHERE NOT EXISTS template); the single code gates both admin and staff; no new role is created.",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "static:XianyuOrderController @PreAuthorize + migration ids 7070/7071 + database permission rows"
+    },
+    {
+      "id": "A20c",
+      "statement": "The staff app ships a NEW RentalStaffShip screen and a NEW api/rental module (staff currently has neither, verified); the screen uses uni.scanCode + existing resolve-qr + staff http interceptor + useAccess filtering and embeds no raw HTTP or device-availability/schedule logic. The staff menu.json exposes it only when user permission codes include rental:xianyu:ship.",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "static:camera-rental-staff src/api/rental and pages-rental/xianyu-ship/index.vue + menu.json permission rental:xianyu:ship"
+    },
+    {
+      "id": "A21",
+      "statement": "A dual-tenant probe asserting a ship call referencing another tenant's assignment is rejected without any XianGuanJia write call passes (covers source=ADMIN and source=STAFF).",
+      "verify_via": "redteam",
+      "status": "passing",
+      "evidence_ref": "mvn:XianyuOrderShipServiceTest#crossTenantShopReferenceRejectsAdminAndStaffBeforeRemoteWrite"
+    },
+    {
+      "id": "A22",
+      "statement": "A write-disabled probe asserts no XianGuanJia write request is emitted when the switch is off.",
+      "verify_via": "redteam",
+      "status": "passing",
+      "evidence_ref": "mvn:XianyuOrderShipServiceTest#shipOrder_whenWriteDisabled_thenRejectBeforeLocalMutation"
+    },
+    {
+      "id": "A23",
+      "statement": "A shop-not-authorized probe asserts no XianGuanJia write request is emitted for a de-authorized shop.",
+      "verify_via": "redteam",
+      "status": "passing",
+      "evidence_ref": "mvn:XianyuOrderShipServiceTest#shipOrder_whenShopUnauthorized_thenRejectBeforeAssignmentAndRemoteWrite"
+    },
+    {
+      "id": "A24",
+      "statement": "Facticity: the live XianGuanJia /api/open/order/ship request/response contract is quoted in the change design and the implemented request body shape matches the documented fields exactly.",
+      "verify_via": "facticity",
+      "status": "passing",
+      "evidence_ref": "facticity:/tmp/xgj-llms-20260727.txt and /tmp/xgj-order-ship-api-20260727.md; XianyuOrderShipService buildShipBody fields order_no/waybill_no/express_code/express_name"
+    },
+    {
+      "id": "A25",
+      "statement": "The v1 read-only change xian-guanjia-data-integration-v1 acceptance assertions are not mutated by this change.",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "static:git status shows neighboring xian-guanjia-data-integration-v1 dirty artifacts are pre-existing/unrelated; current edits are confined to xian-guanjia-order-dispatch-ship-v1 verification evidence and implementation files"
+    }
+  ]
+}

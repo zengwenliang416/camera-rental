@@ -1,5 +1,8 @@
 import type { IResponse, PageParam, PageResult } from '@/http/types'
 import { http } from '@/http/http'
+import { useTokenStore } from '@/store/token'
+import { useUserStore } from '@/store/user'
+import { getEnvBaseUrl } from '@/utils'
 
 export interface XianyuExpressCompany {
   code: string
@@ -77,12 +80,19 @@ export function shipXianyuOrder(data: XianyuOrderShipReq) {
   return http.post<XianyuOrderShipResult>('/rental/xianyu/order/ship', data)
 }
 
-export function recognizeXianyuShipmentImage(filePath: string) {
+export async function recognizeXianyuShipmentImage(filePath: string) {
+  const token = await useTokenStore().tryGetValidToken()
+  const userStore = useUserStore()
   return new Promise<XianyuShipmentOcrResult>((resolve, reject) => {
     uni.uploadFile({
-      url: '/rental/xianyu/order/ship/ocr',
+      url: `${getEnvBaseUrl()}/rental/xianyu/order/ship/ocr`,
       filePath,
       name: 'file',
+      header: {
+        'Accept': '*/*',
+        'tenant-id': userStore.tenantId,
+        'Authorization': token ? `Bearer ${token}` : '',
+      },
       success: (res) => {
         try {
           if (res.statusCode < 200 || res.statusCode >= 300) {

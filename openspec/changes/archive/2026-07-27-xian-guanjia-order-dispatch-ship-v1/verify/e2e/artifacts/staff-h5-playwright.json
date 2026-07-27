@@ -1,0 +1,101 @@
+{
+  "ok": true,
+  "executablePath": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "results": [
+    {
+      "url": "http://127.0.0.1:5183/pages-rental/xianyu-ship/index",
+      "title": "Error response",
+      "text": "Error response\n\nError code: 404\n\nMessage: File not found.\n\nError code explanation: 404 - Nothing matches the given URI.",
+      "screenshot": "/Volumes/zwl/camera-rental-github/openspec/changes/xian-guanjia-order-dispatch-ship-v1/verify/e2e/artifacts/staff-1.png"
+    },
+    {
+      "url": "http://127.0.0.1:5183/#/pages-rental/xianyu-ship/index",
+      "title": "芋道管理系统",
+      "text": "请输入用户名\n请输入密码\n验证码登录\n忘记密码？\n登录\n其他登录方式\n钉钉\n企业微信\n还没有账号？\n创建账号",
+      "screenshot": "/Volumes/zwl/camera-rental-github/openspec/changes/xian-guanjia-order-dispatch-ship-v1/verify/e2e/artifacts/staff-2.png"
+    },
+    {
+      "url": "http://127.0.0.1:5183/?tenantId=1#/pages-rental/xianyu-ship/index",
+      "title": "芋道管理系统",
+      "text": "请输入用户名\n请输入密码\n验证码登录\n忘记密码？\n登录\n其他登录方式\n钉钉\n企业微信\n还没有账号？\n创建账号",
+      "screenshot": "/Volumes/zwl/camera-rental-github/openspec/changes/xian-guanjia-order-dispatch-ship-v1/verify/e2e/artifacts/staff-3.png"
+    }
+  ],
+  "failures": [
+    {
+      "type": "pageerror",
+      "text": "SyntaxError: \"undefined\" is not valid JSON"
+    },
+    {
+      "type": "requestfailed",
+      "url": "https://cdn.dcloud.net.cn/img/shadow-grey.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "type": "pageerror",
+      "text": "SyntaxError: \"undefined\" is not valid JSON"
+    }
+  ],
+  "console": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)"
+    },
+    {
+      "type": "log",
+      "text": "App.vue onLaunch {path: pages-rental/xianyu-ship/index, query: Object, scene: 1001, referrerInfo: Object}"
+    },
+    {
+      "type": "log",
+      "text": "App.vue onShow {path: pages-rental/xianyu-ship/index, query: Object, scene: 1001, referrerInfo: Object}"
+    },
+    {
+      "type": "log",
+      "text": "hasValidLogin false false"
+    },
+    {
+      "type": "log",
+      "text": "App.ku.vue onShow {path: /pages-rental/xianyu-ship/index, query: Object}"
+    },
+    {
+      "type": "log",
+      "text": "App.ku.vue onShow {path: /pages-core/auth/login, query: Object}"
+    },
+    {
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o"
+    },
+    {
+      "type": "log",
+      "text": "App Hide"
+    },
+    {
+      "type": "log",
+      "text": "App.vue onLaunch {path: pages-rental/xianyu-ship/index, query: Object, scene: 1001, referrerInfo: Object}"
+    },
+    {
+      "type": "log",
+      "text": "App.vue onShow {path: pages-rental/xianyu-ship/index, query: Object, scene: 1001, referrerInfo: Object}"
+    },
+    {
+      "type": "log",
+      "text": "hasValidLogin false false"
+    },
+    {
+      "type": "log",
+      "text": "App.ku.vue onShow {path: /pages-rental/xianyu-ship/index, query: Object}"
+    },
+    {
+      "type": "log",
+      "text": "App.ku.vue onShow {path: /pages-core/auth/login, query: Object}"
+    },
+    {
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o"
+    }
+  ]
+}

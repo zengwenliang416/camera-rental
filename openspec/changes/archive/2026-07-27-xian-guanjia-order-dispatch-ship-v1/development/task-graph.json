@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "planning_status": "active",
+  "tasks": [
+    {
+      "id": "001-backend-ship-core",
+      "status": "planned",
+      "goal": "Operator can search pending orders, bind a device, and ship through a safe backend workflow.",
+      "depends_on": []
+    },
+    {
+      "id": "002-admin-ship-panel",
+      "status": "planned",
+      "goal": "Admin user can complete code capture, pending-order search, association confirmation, and ship from Web.",
+      "depends_on": ["001-backend-ship-core"]
+    },
+    {
+      "id": "003-staff-ship-screen",
+      "status": "planned",
+      "goal": "Staff user can complete the same shipment flow from mobile scan-first UI.",
+      "depends_on": ["001-backend-ship-core"]
+    },
+    {
+      "id": "004-verification",
+      "status": "planned",
+      "goal": "Maintainer can verify backend, admin, staff, migration, and security behavior.",
+      "depends_on": ["001-backend-ship-core", "002-admin-ship-panel", "003-staff-ship-screen"]
+    }
+  ]
+}

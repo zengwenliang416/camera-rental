@@ -113,9 +113,19 @@
                   clearable
                   no-border
                   placeholder="请输入或扫码设备 SN/设备编号"
-                  @blur="deviceNo = normalizeCode(deviceNo)"
+                  @blur="handleDeviceInputBlur"
                 />
               </wd-cell>
+              <wd-cell
+                v-if="resolvedDevice"
+                title="设备状态"
+                :value="`${resolvedDevice.deviceNo} / ${resolvedDevice.status}`"
+              />
+              <wd-cell
+                v-if="resolvedDevice?.serialNumber"
+                title="设备 SN"
+                :value="resolvedDevice.serialNumber"
+              />
             </wd-cell-group>
           </view>
         </view>
@@ -165,7 +175,7 @@
                 <view
                   class="min-w-0 flex-1 truncate text-28rpx text-[#222] font-semibold"
                 >
-                  {{ item.externalOrderId }}
+                  {{ maskOrderId(item.externalOrderId) }}
                 </view>
                 <view
                   class="rounded-full bg-[#eef2ff] px-14rpx py-6rpx text-22rpx text-[#3854d5]"
@@ -197,7 +207,7 @@
           <wd-cell-group border>
             <wd-cell
               title="订单"
-              :value="selectedOrder?.externalOrderId || '-'"
+              :value="maskOrderId(selectedOrder?.externalOrderId) || '-'"
             />
             <wd-cell title="设备" :value="deviceNo || '-'" />
             <wd-cell
@@ -235,9 +245,11 @@ import type {
   XianyuExpressCompany,
   XianyuPendingShipOrder,
 } from '@/api/rental/xianyu'
+import type { RentalDevice } from '@/api/rental/device'
 import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { computed, onMounted, ref } from 'vue'
+import { resolveRentalDeviceQr } from '@/api/rental/device'
 import {
   getXianyuExpressCompanyList,
   getXianyuPendingShipOrderPage,
@@ -262,6 +274,7 @@ const waybillNo = ref('')
 const expressCode = ref('')
 const expressName = ref('')
 const deviceNo = ref('')
+const resolvedDevice = ref<RentalDevice>()
 const keyword = ref('')
 const orderList = ref<XianyuPendingShipOrder[]>([])
 const selectedOrder = ref<XianyuPendingShipOrder>()
@@ -307,6 +320,14 @@ function maskText(value?: string) {
   return `${text.slice(0, 1)}***${text.slice(-1)}`
 }
 
+function maskOrderId(value?: string) {
+  const text = String(value || '').trim()
+  if (!text) {
+    return ''
+  }
+  return text.length <= 10 ? '***' : `${text.slice(0, 6)}***${text.slice(-4)}`
+}
+
 function extractQueryValue(raw: string, keys: string[]) {
   for (const key of keys) {
     const matched = raw.match(new RegExp(`[?&]${key}=([^&#]+)`, 'i'))
@@ -348,6 +369,27 @@ function extractDeviceNo(raw: string) {
     'sn',
   ])
   return normalizeCode(queryValue || jsonValue || raw)
+}
+
+async function resolveScannedDevice(raw: string) {
+  const payload = String(raw || '').trim()
+  if (!payload) {
+    return
+  }
+  if (payload.startsWith('CRD1|')) {
+    const device = await resolveRentalDeviceQr(payload)
+    resolvedDevice.value = device
+    deviceNo.value = device.deviceNo
+    return
+  }
+  resolvedDevice.value = undefined
+  deviceNo.value = extractDeviceNo(payload)
+}
+
+async function handleDeviceInputBlur() {
+  const value = deviceNo.value
+  resolvedDevice.value = undefined
+  deviceNo.value = normalizeCode(value)
 }
 
 function extractWaybillNo(raw: string) {
@@ -404,9 +446,10 @@ async function scanWaybill() {
 async function scanDevice() {
   try {
     const res = await uni.scanCode({ scanType: ['qrCode', 'barCode'] })
-    deviceNo.value = extractDeviceNo(res.result)
-  } catch {
-    toast.warning('未获取到设备码')
+    await resolveScannedDevice(res.result)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : '未获取到设备码'
+    toast.warning(message)
   }
 }
 
@@ -475,7 +518,7 @@ async function confirmShip() {
   try {
     await dialog.confirm({
       title: '确认发货',
-      msg: `订单 ${selectedOrder.value.externalOrderId}\n设备 ${normalizeCode(deviceNo.value)}\n运单 ${normalizeCode(waybillNo.value)}`,
+      msg: `订单 ${maskOrderId(selectedOrder.value.externalOrderId)}\n设备 ${normalizeCode(deviceNo.value)}\n运单 ${normalizeCode(waybillNo.value)}`,
     })
   } catch {
     return
@@ -501,6 +544,7 @@ async function confirmShip() {
     selectedOrder.value = undefined
     waybillNo.value = ''
     deviceNo.value = ''
+    resolvedDevice.value = undefined
     ocrSummary.value = ''
     ocrConfirmed.value = false
   } finally {

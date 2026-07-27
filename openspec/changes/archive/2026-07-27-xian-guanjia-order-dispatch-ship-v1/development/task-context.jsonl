@@ -1,0 +1,4 @@
+{"task_id":"001-backend-ship-core","status":"planned","source":"development-entry","note":"Backend owns pending-order search, device shippability, write gate, XianGuanJia order ship, idempotency, and local commit ordering."}
+{"task_id":"002-admin-ship-panel","status":"planned","source":"development-entry","note":"Admin Web implements code capture, pending-order search, association confirmation, and typed ship submission against backend APIs."}
+{"task_id":"003-staff-ship-screen","status":"planned","source":"development-entry","note":"Staff app implements mobile scan/search/bind/ship using uni.scanCode and staff http conventions."}
+{"task_id":"004-verification","status":"planned","source":"development-entry","note":"Verification covers unit, static, build, mock E2E, migration, and security probes."}

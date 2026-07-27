@@ -1,0 +1,107 @@
+{
+  "href": "http://127.0.0.1:5173/?tenantId=1#/pages-rental/xianyu-ship/index",
+  "text": "扫码发货\n闲鱼待发货绑定\n扫运单、扫设备码，搜索待发货订单后确认。出库校验、设备绑定和闲管家发货由后端完成。\n1. 运单信息\n小标签扫不出来时，可以上传快递二维码截图识别，识别后仍需人工确认。\n扫运单码\n上传图片识别\n运单号\n请输入或扫码运单号\n快递编码\n快递公司\n2. 设备二维码\n扫机器序列号\n设备码\n请输入或扫码设备 SN/设备编号\n3. 搜索待发货订单\n搜索\n暂无待发货候选订单\n4. 发货确认\n订单\n-\n设备\n-\n快递\n顺丰速运（SF）\n运单\n-\n绑定设备并发货",
+  "buttons": [
+    {
+      "i": 0,
+      "text": "扫运单码",
+      "disabled": false
+    },
+    {
+      "i": 1,
+      "text": "上传图片识别",
+      "disabled": false
+    },
+    {
+      "i": 2,
+      "text": "扫机器序列号",
+      "disabled": false
+    },
+    {
+      "i": 3,
+      "text": "搜索",
+      "disabled": false
+    },
+    {
+      "i": 4,
+      "text": "绑定设备并发货",
+      "disabled": true
+    },
+    {
+      "i": 5,
+      "text": "取消",
+      "disabled": false
+    },
+    {
+      "i": 6,
+      "text": "确定",
+      "disabled": false
+    }
+  ],
+  "dialogTextBeforeConfirm": "扫码发货\n闲鱼待发货绑定\n扫运单、扫设备码，搜索待发货订单后确认。出库校验、设备绑定和闲管家发货由后端完成。\n1. 运单信息\n小标签扫不出来时，可以上传快递二维码截图识别，识别后仍需人工确认。\n扫运单码\n上传图片识别\n运单号\n快递编码\n快递公司\n2. 设备二维码\n扫机器序列号\n设备码\n3. 搜索待发货订单\n搜索\nSPECNA***5410\nWAIT_SHIP\nSPECNAV STAFF UI 发货测试\n数量：1\n金额：￥88.00\n买家：S***I\n时间：2026-07-27 18:54:10\n4. 发货确认\n订单\nSPECNA***5410\n设备\nSPECNAV-E2E-STAFFUI-P4-185410\n快递\n顺丰速运（SF）\n运单\nSF1122334455\n绑定设备并发货\n确认发货\n订单 SPECNA***5410\n设备 SPECNAV-E2E-STAFFUI-P4-185410\n运单 SF1122334455\n取消\n确定",
+  "requests": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:5173/src/api/rental/device.ts",
+      "postData": null
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:5173/src/api/rental/xianyu.ts",
+      "postData": null
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:48080/admin-api/rental/xianyu/express-company/list",
+      "postData": null
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:48080/admin-api/rental/xianyu/order/pending-ship/page?pageNo=1&pageSize=20",
+      "postData": null
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:48080/admin-api/rental/xianyu/order/pending-ship/page?pageNo=1&pageSize=20&keyword=SPECNAV-XGJ-STAFFUI-20260727185410",
+      "postData": null
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:48080/admin-api/rental/xianyu/order/ship",
+      "postData": "{\"channelOrderId\":2511,\"deviceNo\":\"SPECNAV-E2E-STAFFUI-P4-185410\",\"idempotencyKey\":\"staff-ship-1785149862435-blgbby4d\",\"expressCode\":\"SF\",\"expressName\":\"顺丰速运\",\"waybillNo\":\"SF1122334455\",\"source\":\"STAFF\",\"ocrConfirmed\":false}"
+    }
+  ],
+  "responses": [
+    {
+      "status": 200,
+      "url": "http://127.0.0.1:5173/src/api/rental/device.ts",
+      "text": "/* vite-plugin-uni-components disabled */import { http } from \"/src/http/http.ts\";\nexport function resolveRentalDeviceQr(payload) {\n  return http.post(\"/rental/device/resolve-qr\", { payload });\n}\n\n//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6InlDQUFBO0FBWU87QUFDTDtBQUNGIiwibmFtZXMiOltdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyIvVm9sdW1lcy96d2wvY2FtZXJhLXJlbnRhbC1naXRodWIvY2FtZXJhLXJlbnRhbC1zdGFmZi9zcmMvYXBpL3JlbnRhbC9kZXZpY2UudHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgaHR0cCB9IGZyb20gJ0AvaHR0cC9odHRwJ1xuXG5leHBvcnQgaW50ZXJmYWNlIFJlbnRhbERldmljZSB7XG4gIGlkOiBudW1iZXJcbiAgZGV2aWNlTm86IHN0cmluZ1xuICBzZXJpYWxOdW1iZXI/OiBzdHJpbmdcbiAgZXF1aXBtZW50TW9kZWxDb2RlOiBzdHJpbmdcbiAgc3RhdHVzOiBzdHJpbmdcbiAgd2FyZWhvdXNlQ29kZT86IHN0cmluZ1xuICBlbmFibGVkOiBib29sZWFuXG59XG5cbmV4cG9ydCBmdW5jdGlvbiByZXNvbHZlUmVudGFsRGV2aWNlUXIocGF5bG9hZDogc3RyaW5nKSB7XG4gIHJldHVybiBodHRwLnBvc3Q8UmVudGFsRGV2aWNlPignL3JlbnRhbC9kZXZpY2UvcmVzb2x2ZS1xcicsIHsgcGF5bG9hZCB9KVxufVxuIl0sImZpbGUiOiIvV"
+    },
+    {
+      "status": 200,
+      "url": "http://127.0.0.1:5173/src/api/rental/xianyu.ts",
+      "text": "/* vite-plugin-uni-components disabled */import { http } from \"/src/http/http.ts\";\nimport { useTokenStore } from \"/src/store/token.ts\";\nimport { useUserStore } from \"/src/store/user.ts\";\nimport { getEnvBaseUrl } from \"/src/utils/index.ts\";\nexport function getXianyuPendingShipOrderPage(params) {\n  return http.get(\n    \"/rental/xianyu/order/pending-ship/page\",\n    params\n  );\n}\nexport function getXianyuExpressCompanyList() {\n  return http.get(\n    \"/rental/xianyu/express-company/list\"\n  );\n}\nexport function shipXianyuOrder(data) {\n  return http.post(\"/rental/xianyu/order/ship\", data);\n}\nexport async function recognizeXianyuShipmentImage(filePath) {\n  const token = await useTokenStore().tryGetValidToken();\n  const userStore = useUserStore();\n  return new Promise((resolve, reject) => {\n    uni.uploadFile({\n      url: `${getEnvBaseUrl()}/rental/xianyu/order/ship/ocr`,\n      filePath,\n      name: \"file\",\n      header: {\n        \"Accept\": \"*/*\",\n        \"tenant-id\": userStore.tenantId,\n      "
+    },
+    {
+      "status": 200,
+      "url": "http://127.0.0.1:48080/admin-api/rental/xianyu/express-company/list",
+      "text": "{\"code\":500,\"msg\":\"系统异常\",\"data\":null}"
+    },
+    {
+      "status": 200,
+      "url": "http://127.0.0.1:48080/admin-api/rental/xianyu/order/pending-ship/page?pageNo=1&pageSize=20",
+      "text": "{\"code\":0,\"msg\":\"\",\"data\":{\"total\":1,\"list\":[{\"id\":2511,\"shopId\":5,\"externalOrderId\":\"SPECNAV-XGJ-STAFFUI-20260727185410\",\"orderStatus\":\"WAIT_SHIP\",\"goodsTitle\":\"SPECNAV STAFF UI 发货测试\",\"goodsQuantity\":1,\"payAmount\":8800,\"buyerNick\":\"Specnav员工UI\",\"rentalOrderId\":3,\"conversionStatus\":\"SUCCESS\",\"orderTime\":1785149650000,\"sourceUpdatedAt\":1785149650000}]}}"
+    },
+    {
+      "status": 200,
+      "url": "http://127.0.0.1:48080/admin-api/rental/xianyu/order/pending-ship/page?pageNo=1&pageSize=20&keyword=SPECNAV-XGJ-STAFFUI-20260727185410",
+      "text": "{\"code\":0,\"msg\":\"\",\"data\":{\"total\":1,\"list\":[{\"id\":2511,\"shopId\":5,\"externalOrderId\":\"SPECNAV-XGJ-STAFFUI-20260727185410\",\"orderStatus\":\"WAIT_SHIP\",\"goodsTitle\":\"SPECNAV STAFF UI 发货测试\",\"goodsQuantity\":1,\"payAmount\":8800,\"buyerNick\":\"Specnav员工UI\",\"rentalOrderId\":3,\"conversionStatus\":\"SUCCESS\",\"orderTime\":1785149650000,\"sourceUpdatedAt\":1785149650000}]}}"
+    },
+    {
+      "status": 200,
+      "url": "http://127.0.0.1:48080/admin-api/rental/xianyu/order/ship",
+      "text": "{\"code\":0,\"msg\":\"\",\"data\":{\"shipmentId\":3,\"channelOrderId\":2511,\"assignmentId\":3,\"deviceId\":62,\"deviceNo\":\"SPECNAV-E2E-STAFFUI-P4-185410\",\"maskedWaybillNo\":\"SF****4455\",\"expressCode\":\"SF\",\"expressName\":\"顺丰速运\",\"remoteCode\":0,\"remoteMsg\":\"SPECNAV_MOCK_SHIP_OK\",\"assignmentStatus\":\"DISPATCHED\",\"source\":\"STAFF\"}}"
+    }
+  ],
+  "consoleErrors": []
+}

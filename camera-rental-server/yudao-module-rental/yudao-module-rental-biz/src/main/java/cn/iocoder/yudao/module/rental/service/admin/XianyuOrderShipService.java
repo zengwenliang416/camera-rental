@@ -107,7 +107,7 @@ public class XianyuOrderShipService {
     public XianyuOrderShipRespVO ship(XianyuOrderShipReqVO reqVO) {
         RentalDeviceShipmentDO replay = shipmentMapper.selectByIdempotencyKeyForUpdate(reqVO.getIdempotencyKey());
         if (replay != null) {
-            return toShipResp(replay, null, "DISPATCHED");
+            return toShipResp(replay, deviceMapper.selectById(replay.getDeviceId()), "DISPATCHED");
         }
         if (!properties.isWriteEnabled()) {
             throw exception(XIANYU_WRITE_DISABLED);

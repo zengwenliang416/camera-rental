@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "domain": "facticity",
+  "required": true,
+  "verdict": "green",
+  "blocker_class": null,
+  "evidence": [
+    "/tmp/xgj-llms-20260727.txt contains the current online order ship API entry api-93586386.md.",
+    "/tmp/xgj-order-ship-api-20260727.md documents POST /api/open/order/ship with required fields order_no, waybill_no, express_code, express_name and response code/msg/data.",
+    "XianyuOrderShipService.buildShipBody emits exactly order_no, waybill_no, express_code, express_name; XianyuOrderShipServiceTest captures and asserts these four fields."
+  ],
+  "commands": [
+    "curl -fsSL https://s.apifox.cn/3ac13d69-5a38-4536-ae9b-a54001854ef8/llms.txt -o /tmp/xgj-llms-20260727.txt",
+    "curl -fsSL https://s.apifox.cn/3ac13d69-5a38-4536-ae9b-a54001854ef8/api-93586386.md -o /tmp/xgj-order-ship-api-20260727.md",
+    "mvn -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=XianyuOrderShipServiceTest,ShipmentOcrServiceTest,OpenAiCompatibleShipmentOcrClientTest,RentalDeviceQrCodecTest -Dsurefire.failIfNoSpecifiedTests=false test"
+  ],
+  "findings": [
+    "Implemented request body matches the documented required shipping fields; optional ship address/contact fields are not required by the fetched contract."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "The external API may still reject real writes for shop/account/business-state reasons; real writes remain disabled in local verification."
+  ]
+}

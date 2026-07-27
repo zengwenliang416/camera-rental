@@ -1,0 +1,136 @@
+{
+  "generatedAt": "2026-07-27T18:58:09+0800",
+  "channelOrderIds": [
+    2509,
+    2510,
+    2511
+  ],
+  "xianyuOrders": [
+    {
+      "id": 2509,
+      "tenant_id": 1,
+      "external_order_id": "SPECNAV-XGJ-ADMIN-20260727185310",
+      "order_status": "WAIT_SHIP",
+      "waybill_no": "SF1234567890",
+      "express_code": "SF",
+      "express_name": "顺丰速运",
+      "consign_time": "2026-07-27 18:53:30",
+      "rental_order_id": 1
+    },
+    {
+      "id": 2510,
+      "tenant_id": 1,
+      "external_order_id": "SPECNAV-XGJ-STAFF-20260727185310",
+      "order_status": "WAIT_SHIP",
+      "waybill_no": "SF0987654321",
+      "express_code": "SF",
+      "express_name": "顺丰速运",
+      "consign_time": "2026-07-27 18:53:31",
+      "rental_order_id": 2
+    },
+    {
+      "id": 2511,
+      "tenant_id": 1,
+      "external_order_id": "SPECNAV-XGJ-STAFFUI-20260727185410",
+      "order_status": "WAIT_SHIP",
+      "waybill_no": "SF1122334455",
+      "express_code": "SF",
+      "express_name": "顺丰速运",
+      "consign_time": "2026-07-27 18:57:43",
+      "rental_order_id": 3
+    }
+  ],
+  "shipments": [
+    {
+      "shipment_id": 1,
+      "tenant_id": 1,
+      "channel_order_id": 2509,
+      "assignment_id": 1,
+      "device_id": 60,
+      "device_no": "SPECNAV-E2E-ADMIN-P4-185310",
+      "idempotency_key": "specnav-e2e-admin-20260727185310",
+      "waybill_no": "SF1234567890",
+      "express_code": "SF",
+      "express_name": "顺丰速运",
+      "ship_response_code": 0,
+      "ship_response_msg": "SPECNAV_MOCK_SHIP_OK",
+      "ocr_confirmed": "1",
+      "source": "ADMIN",
+      "assignment_status": "DISPATCHED",
+      "device_status": "RENTED"
+    },
+    {
+      "shipment_id": 2,
+      "tenant_id": 1,
+      "channel_order_id": 2510,
+      "assignment_id": 2,
+      "device_id": 61,
+      "device_no": "SPECNAV-E2E-STAFF-P4-185310",
+      "idempotency_key": "specnav-e2e-staff-20260727185310",
+      "waybill_no": "SF0987654321",
+      "express_code": "SF",
+      "express_name": "顺丰速运",
+      "ship_response_code": 0,
+      "ship_response_msg": "SPECNAV_MOCK_SHIP_OK",
+      "ocr_confirmed": "0",
+      "source": "STAFF",
+      "assignment_status": "DISPATCHED",
+      "device_status": "RENTED"
+    },
+    {
+      "shipment_id": 3,
+      "tenant_id": 1,
+      "channel_order_id": 2511,
+      "assignment_id": 3,
+      "device_id": 62,
+      "device_no": "SPECNAV-E2E-STAFFUI-P4-185410",
+      "idempotency_key": "staff-ship-1785149862435-blgbby4d",
+      "waybill_no": "SF1122334455",
+      "express_code": "SF",
+      "express_name": "顺丰速运",
+      "ship_response_code": 0,
+      "ship_response_msg": "SPECNAV_MOCK_SHIP_OK",
+      "ocr_confirmed": "0",
+      "source": "STAFF",
+      "assignment_status": "DISPATCHED",
+      "device_status": "RENTED"
+    }
+  ],
+  "mockRequests": [
+    {
+      "path": "/api/open/order/ship?appid=specnav-app-key&timestamp=1785149610&sign=fb97fb0f7ab20522499e3234647a8b6d",
+      "body": {
+        "express_code": "SF",
+        "express_name": "顺丰速运",
+        "order_no": "SPECNAV-XGJ-ADMIN-20260727185310",
+        "waybill_no": "SF1234567890"
+      }
+    },
+    {
+      "path": "/api/open/order/ship?appid=specnav-app-key&timestamp=1785149610&sign=c47c51511e90aa5870812b005f795447",
+      "body": {
+        "express_code": "SF",
+        "express_name": "顺丰速运",
+        "order_no": "SPECNAV-XGJ-STAFF-20260727185310",
+        "waybill_no": "SF0987654321"
+      }
+    },
+    {
+      "path": "/api/open/express/companies?appid=specnav-app-key&timestamp=1785149817&sign=d2873c8cca53368224d68f14a2774f52",
+      "body": {}
+    },
+    {
+      "path": "/api/open/express/companies?appid=specnav-app-key&timestamp=1785149858&sign=81f6c940f36603ab5c6fbdef27215b67",
+      "body": {}
+    },
+    {
+      "path": "/api/open/order/ship?appid=specnav-app-key&timestamp=1785149862&sign=fd2abe9a96d16172be0047d2c8d2922c",
+      "body": {
+        "express_code": "SF",
+        "express_name": "顺丰速运",
+        "order_no": "SPECNAV-XGJ-STAFFUI-20260727185410",
+        "waybill_no": "SF1122334455"
+      }
+    }
+  ]
+}

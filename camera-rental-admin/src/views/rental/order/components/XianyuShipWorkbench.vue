@@ -256,7 +256,7 @@
               </el-table-column>
               <el-table-column :label="t('rental.order.externalOrderId')" min-width="180">
                 <template #default="{ row }">
-                  {{ row.externalOrderId }}
+                  {{ maskOrderId(row.externalOrderId) }}
                 </template>
               </el-table-column>
               <el-table-column
@@ -301,7 +301,7 @@
           <div v-else>
             <el-descriptions :column="2" border>
               <el-descriptions-item :label="t('rental.xianyu.shipConfirmOrder')">
-                {{ selectedPendingShipOrder?.externalOrderId || '-' }}
+                {{ maskOrderId(selectedPendingShipOrder?.externalOrderId) || '-' }}
               </el-descriptions-item>
               <el-descriptions-item :label="t('rental.order.goodsTitle')">
                 {{ selectedPendingShipOrder?.goodsTitle || '-' }}
@@ -658,6 +658,12 @@ const parseDeviceNoFromLabelFileName = (fileName: string) => {
   return matched?.[1]?.toUpperCase()
 }
 
+const maskOrderId = (orderId?: string) => {
+  const value = orderId?.trim()
+  if (!value) return ''
+  return value.length <= 10 ? '***' : `${value.slice(0, 6)}***${value.slice(-4)}`
+}
+
 const applyShipmentExpress = (expressCode?: string, expressName?: string) => {
   const normalizedCode = expressCode?.trim()
   const normalizedName = expressName?.trim()
@@ -772,7 +778,7 @@ const handleShipXianyuOrder = async () => {
   try {
     await message.confirm(
       t('rental.xianyu.shipConfirmMessage', {
-        orderNo: selectedOrder.externalOrderId,
+        orderNo: maskOrderId(selectedOrder.externalOrderId),
         deviceNo,
         expressName,
         waybillNo

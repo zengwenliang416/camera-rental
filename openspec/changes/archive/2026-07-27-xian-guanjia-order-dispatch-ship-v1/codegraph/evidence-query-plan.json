@@ -1,0 +1,67 @@
+{
+  "schema": "specnav.codegraph.evidence_query_plan.v1",
+  "generated_at": "2026-07-27T02:44:36.894Z",
+  "active_change": "xian-guanjia-order-dispatch-ship-v1",
+  "queries": [
+    {
+      "id": "verification:task-001-backend-ship-core:evidence",
+      "claim_id": "verification:task-001-backend-ship-core",
+      "stage": "verification",
+      "task_id": "001-backend-ship-core",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Operator captures courier/device codes, searches pending orders, confirms one\" in change \"xian-guanjia-order-dispatch-ship-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-001-backend-ship-core --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-002-admin-ship-panel:evidence",
+      "claim_id": "verification:task-002-admin-ship-panel",
+      "stage": "verification",
+      "task_id": "002-admin-ship-panel",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Admin opens the shipment panel, uploads the courier waybill code image, scans or\" in change \"xian-guanjia-order-dispatch-ship-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-002-admin-ship-panel --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-003-staff-ship-screen:evidence",
+      "claim_id": "verification:task-003-staff-ship-screen",
+      "stage": "verification",
+      "task_id": "003-staff-ship-screen",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Staff opens the shipment screen, captures the courier waybill code image, scans\" in change \"xian-guanjia-order-dispatch-ship-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-003-staff-ship-screen --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-004-verification:evidence",
+      "claim_id": "verification:task-004-verification",
+      "stage": "verification",
+      "task_id": "004-verification",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Maintainer runs the required checks and sees evidence that pending-order search,\" in change \"xian-guanjia-order-dispatch-ship-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-004-verification --query \"<query>\" --write --json"
+    }
+  ]
+}

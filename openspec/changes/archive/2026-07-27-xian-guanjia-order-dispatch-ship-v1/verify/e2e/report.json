@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "domain": "e2e",
+  "required": true,
+  "verdict": "green",
+  "blocker_class": null,
+  "evidence": [
+    "verify/e2e/artifacts/live-browser-runtime-after-qr-fix.json",
+    "verify/e2e/artifacts/staff-ui-search-candidate.png",
+    "verify/e2e/artifacts/staff-ui-ready-to-submit.png",
+    "verify/e2e/artifacts/staff-ui-submit-success.json",
+    "verify/e2e/artifacts/staff-ui-after-submit.png",
+    "verify/e2e/artifacts/mock-ship-success-db-proof-20260727.json"
+  ],
+  "commands": [
+    "Started local XianGuanJia mock server on http://127.0.0.1:18089 for /api/open/order/ship.",
+    "Restarted local backend with XGJ_WRITE_ENABLED=true and XGJ_BASE_URL=http://127.0.0.1:18089, jobs disabled.",
+    "Inserted isolated SPECNAV_E2E rental devices, rental orders, rental order items, and pending XianGuanJia orders.",
+    "POST /admin-api/rental/xianyu/order/ship for ADMIN and STAFF sources returned code 0 with remoteMsg SPECNAV_MOCK_SHIP_OK.",
+    "Playwright H5 staff flow searched the pending order, enabled submit, confirmed the dialog, and POSTed source STAFF through the browser.",
+    "pymysql database proof selected xianyu_order, rental_device_shipment, rental_device_assignment, and rental_device rows after submit."
+  ],
+  "findings": [
+    "Admin source submit persisted shipmentId 1, masked waybill SF****7890, source ADMIN, and DISPATCHED assignment.",
+    "Staff API submit persisted shipmentId 2, masked waybill SF****4321, source STAFF, and DISPATCHED assignment.",
+    "Staff H5 browser submit persisted shipmentId 3, masked waybill SF****4455, source STAFF, remoteMsg SPECNAV_MOCK_SHIP_OK, DISPATCHED assignment, and RENTED device.",
+    "Mock requests show the implemented write body fields order_no, waybill_no, express_code, and express_name against /api/open/order/ship.",
+    "No real XianGuanJia write was executed; the successful write path was isolated to the local mock server."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "The run proves browser/backend/local persistence semantics against a compatible mock, not a real controlled XianGuanJia test shop."
+  ]
+}

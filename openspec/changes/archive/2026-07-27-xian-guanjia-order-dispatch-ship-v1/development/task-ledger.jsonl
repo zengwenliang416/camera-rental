@@ -1,0 +1,12 @@
+{"task":"001-backend-ship-core","status":"spec_review_passed","at":"2026-07-27T10:32:00+08:00","evidence":"development/tasks/001-backend-ship-core/spec-review.md"}
+{"task":"001-backend-ship-core","status":"quality_review_passed","at":"2026-07-27T10:32:00+08:00","evidence":"development/tasks/001-backend-ship-core/quality-review.md"}
+{"task":"001-backend-ship-core","status":"complete","at":"2026-07-27T10:32:00+08:00","evidence":"development/tasks/001-backend-ship-core/report.md"}
+{"task":"002-admin-ship-panel","status":"spec_review_passed","at":"2026-07-27T10:32:00+08:00","evidence":"development/tasks/002-admin-ship-panel/spec-review.md"}
+{"task":"002-admin-ship-panel","status":"quality_review_passed","at":"2026-07-27T10:32:00+08:00","evidence":"development/tasks/002-admin-ship-panel/quality-review.md"}
+{"task":"002-admin-ship-panel","status":"complete","at":"2026-07-27T10:32:00+08:00","evidence":"development/tasks/002-admin-ship-panel/report.md"}
+{"task":"003-staff-ship-screen","status":"spec_review_passed","at":"2026-07-27T10:32:00+08:00","evidence":"development/tasks/003-staff-ship-screen/spec-review.md"}
+{"task":"003-staff-ship-screen","status":"quality_review_passed","at":"2026-07-27T10:32:00+08:00","evidence":"development/tasks/003-staff-ship-screen/quality-review.md"}
+{"task":"003-staff-ship-screen","status":"complete","at":"2026-07-27T10:32:00+08:00","evidence":"development/tasks/003-staff-ship-screen/report.md"}
+{"task":"004-verification","status":"spec_review_passed","at":"2026-07-27T10:32:00+08:00","evidence":"development/tasks/004-verification/spec-review.md"}
+{"task":"004-verification","status":"quality_review_passed","at":"2026-07-27T10:32:00+08:00","evidence":"development/tasks/004-verification/quality-review.md"}
+{"task":"004-verification","status":"complete","at":"2026-07-27T10:32:00+08:00","evidence":"development/tasks/004-verification/report.md","caveat":"Development handoff is complete; six-domain verification remains before release/archive."}

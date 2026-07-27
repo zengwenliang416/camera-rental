@@ -1,0 +1,94 @@
+{
+  "checkedAt": "2026-07-27T03:41:22.464Z",
+  "url": "http://127.0.0.1:5183/?tenantId=1#/pages-rental/xianyu-ship/index",
+  "finalUrl": "http://127.0.0.1:5183/?tenantId=1#/pages-core/auth/login?redirect=%252Fpages-rental%252Fxianyu-ship%252Findex",
+  "containsShipmentTitle": false,
+  "containsWaybillImageUpload": false,
+  "containsDeviceScan": false,
+  "containsShipConfirm": false,
+  "bodyText": "请输入用户名\n请输入密码\n验证码登录\n忘记密码？\n登录\n其他登录方式\n钉钉\n企业微信\n还没有账号？\n创建账号",
+  "buttons": [
+    {
+      "text": "登录",
+      "disabled": false
+    }
+  ],
+  "storage": {
+    "token": "{\"tokenInfo\":{\"accessToken\":\"playwright-access-token\",\"refreshToken\":\"playwright-refresh-token\",\"expiresTime\":1785210078586},\"nowTime\":1785123678586}",
+    "user": "{\"userInfo\":{\"userId\":1,\"id\":1,\"username\":\"playwright\",\"nickname\":\"Playwright Tester\",\"avatar\":\"/static/images/default-avatar.png\"},\"tenantId\":1,\"visitTenantId\":1,\"roles\":[\"admin\"],\"permissions\":[\"*:*:*\",\"rental:xianyu:ship\",\"rental:xianyu:query\"],\"favoriteMenus\":[],\"recentMenus\":[]}",
+    "accessTokenExpireTime": "1785210078586",
+    "href": "http://127.0.0.1:5183/?tenantId=1#/pages-core/auth/login?redirect=%252Fpages-rental%252Fxianyu-ship%252Findex"
+  },
+  "responses": [],
+  "logs": [
+    {
+      "type": "log",
+      "text": "App.vue onLaunch {path: pages/index/index, query: Object, scene: 1001, referrerInfo: Object}"
+    },
+    {
+      "type": "log",
+      "text": "App.vue onShow {path: pages/index/index, query: Object, scene: 1001, referrerInfo: Object}"
+    },
+    {
+      "type": "log",
+      "text": "hasValidLogin false false"
+    },
+    {
+      "type": "log",
+      "text": "App.ku.vue onShow {path: /pages/index/index, query: Object}"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)"
+    },
+    {
+      "type": "log",
+      "text": "App.ku.vue onShow {path: /pages-core/auth/login, query: Object}"
+    },
+    {
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o"
+    },
+    {
+      "type": "log",
+      "text": "App Hide"
+    },
+    {
+      "type": "log",
+      "text": "App.vue onLaunch {path: pages-rental/xianyu-ship/index, query: Object, scene: 1001, referrerInfo: Object}"
+    },
+    {
+      "type": "log",
+      "text": "App.vue onShow {path: pages-rental/xianyu-ship/index, query: Object, scene: 1001, referrerInfo: Object}"
+    },
+    {
+      "type": "log",
+      "text": "hasValidLogin false true"
+    },
+    {
+      "type": "log",
+      "text": "App.ku.vue onShow {path: /pages-rental/xianyu-ship/index, query: Object}"
+    },
+    {
+      "type": "pageerror",
+      "text": "\"undefined\" is not valid JSON"
+    },
+    {
+      "type": "log",
+      "text": "App.ku.vue onShow {path: /pages-core/auth/login, query: Object}"
+    },
+    {
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o"
+    }
+  ],
+  "screenshot": "/Volumes/zwl/camera-rental-github/openspec/changes/xian-guanjia-order-dispatch-ship-v1/verify/e2e/artifacts/staff-ship-page-authenticated.png"
+}

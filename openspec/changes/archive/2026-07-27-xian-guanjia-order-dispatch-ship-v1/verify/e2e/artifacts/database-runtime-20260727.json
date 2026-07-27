@@ -1,0 +1,33 @@
+{
+  "generatedAt": "2026-07-27T17:49:00+08:00",
+  "command": "python3 pymysql read-only checks against local ruoyi-vue-pro database",
+  "connected": true,
+  "checks": {
+    "shipmentTableExists": true,
+    "shipmentUniqueIndexes": [
+      {
+        "indexName": "uk_rental_shipment_idempotency",
+        "nonUnique": 0,
+        "columns": "tenant_id,idempotency_key"
+      },
+      {
+        "indexName": "uk_rental_shipment_waybill",
+        "nonUnique": 0,
+        "columns": "tenant_id,channel_order_id,waybill_no,express_code"
+      }
+    ],
+    "menuPermissions": [
+      "rental:xianyu:ship",
+      "rental:xianyu:ship:ocr"
+    ],
+    "targetDevice": [
+      {
+        "deviceNo": "P4-65-ANGVP5E00209KU",
+        "serialNumber": "ANGVP5E00209KU",
+        "equipmentModelCode": "P4",
+        "status": "AVAILABLE",
+        "enabled": true
+      }
+    ]
+  }
+}

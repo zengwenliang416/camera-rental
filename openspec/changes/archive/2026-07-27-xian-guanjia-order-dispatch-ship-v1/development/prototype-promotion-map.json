@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "promotion_policy": "reimplement_under_development_gate",
+  "allowed_to_copy": [
+    "Approved zh-CN shipment copy for code capture, pending-order search, association confirmation, and typed failure labels"
+  ],
+  "must_reimplement": [
+    "Production UI state, API calls, validation, persistence, idempotency, OCR calls, and XianGuanJia write side effects"
+  ],
+  "blocked_direct_copies": [
+    "Prototype-only fixtures, mock order/device data, fake OCR responses, fake ship success states, and review-only layout glue"
+  ]
+}

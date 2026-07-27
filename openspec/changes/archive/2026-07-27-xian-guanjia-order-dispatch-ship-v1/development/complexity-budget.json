@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "XianGuanJia write surface",
+      "limit": "only /api/open/order/ship is reachable from the write client"
+    },
+    {
+      "area": "shipment service",
+      "limit": "one orchestration service owns write gate, pending-status recheck, device shippability recheck, idempotency, remote call, and local commit ordering"
+    },
+    {
+      "area": "frontend components",
+      "limit": "code capture, pending-order search, and association confirmation remain separate UI sections with no duplicated raw HTTP logic"
+    },
+    {
+      "area": "OCR",
+      "limit": "extract waybill number and express company only; no recipient or address fields"
+    }
+  ]
+}

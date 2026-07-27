@@ -37,6 +37,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -79,6 +81,9 @@ public class GlobalExceptionHandler {
         if (ex instanceof MissingServletRequestParameterException) {
             return missingServletRequestParameterExceptionHandler((MissingServletRequestParameterException) ex);
         }
+        if (ex instanceof MissingServletRequestPartException) {
+            return missingServletRequestPartExceptionHandler((MissingServletRequestPartException) ex);
+        }
         if (ex instanceof MethodArgumentTypeMismatchException) {
             return methodArgumentTypeMismatchExceptionHandler((MethodArgumentTypeMismatchException) ex);
         }
@@ -96,6 +101,9 @@ public class GlobalExceptionHandler {
         }
         if (ex instanceof MaxUploadSizeExceededException) {
             return maxUploadSizeExceededExceptionHandler((MaxUploadSizeExceededException) ex);
+        }
+        if (ex instanceof MultipartException) {
+            return multipartExceptionHandler((MultipartException) ex);
         }
         if (ex instanceof NoHandlerFoundException) {
             return noHandlerFoundExceptionHandler((NoHandlerFoundException) ex);
@@ -221,6 +229,24 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public CommonResult<?> maxUploadSizeExceededExceptionHandler(MaxUploadSizeExceededException ex) {
         return CommonResult.error(BAD_REQUEST.getCode(), "上传文件过大，请调整后重试");
+    }
+
+    /**
+     * 处理 Multipart 请求格式不正确，例如上传接口缺少 file 表单域。
+     */
+    @ExceptionHandler(MultipartException.class)
+    public CommonResult<?> multipartExceptionHandler(MultipartException ex) {
+        log.warn("[multipartExceptionHandler]", ex);
+        return CommonResult.error(BAD_REQUEST.getCode(), "上传请求不正确，请选择文件后重试");
+    }
+
+    /**
+     * 处理缺少 Multipart 表单域，例如上传接口未提交 file 字段。
+     */
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public CommonResult<?> missingServletRequestPartExceptionHandler(MissingServletRequestPartException ex) {
+        log.warn("[missingServletRequestPartExceptionHandler]", ex);
+        return CommonResult.error(BAD_REQUEST.getCode(), "上传请求不正确，请选择文件后重试");
     }
 
     /**

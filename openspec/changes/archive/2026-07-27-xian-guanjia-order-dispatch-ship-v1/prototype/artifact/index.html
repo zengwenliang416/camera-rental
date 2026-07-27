@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>闲管家发货 — 原型 · xian-guanjia-order-dispatch-ship-v1</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body data-theme="light" data-screen="admin" data-modal-open="false" data-staff-state="populated">
+
+    <!-- =================== ADMIN APP SHELL =================== -->
+    <div class="app" data-specnav-project-shell="camera-rental-admin" data-specnav-screen="admin-shell" data-specnav-variant="light">
+      <aside class="sidebar" aria-label="侧边导航">
+        <div class="brand">📷 相机租赁</div>
+        <nav>
+          <a class="dot"><span class="dot"></span> 工作台</a>
+          <a class="dot"><span class="dot"></span> 采购入库</a>
+          <a class="dot"><span class="dot"></span> 租赁设备</a>
+          <a class="active"><span class="dot"></span> 渠道订单</a>
+          <a class="dot"><span class="dot"></span> 排期日历</a>
+          <a class="dot"><span class="dot"></span> 闲管家集成</a>
+          <a class="dot"><span class="dot"></span> 经营报表</a>
+        </nav>
+      </aside>
+
+      <div class="main">
+        <header class="topbar">
+          <div class="crumbs">租赁运营 / <strong>渠道订单</strong></div>
+          <div class="tools">
+            <button class="icon-btn" id="themeToggle" data-specnav-theme-control aria-label="切换主题">🌓</button>
+            <button class="icon-btn" aria-label="通知">🔔</button>
+            <span class="chip">租户 · 默认</span>
+            <span class="chip">张运营</span>
+          </div>
+        </header>
+
+        <section class="content" data-specnav-component="channel-order-list">
+          <h1>渠道订单</h1>
+
+          <!-- typed-failure banner slot (admin) -->
+          <div id="adminBanner" class="alerter info" data-specnav-state="populated">
+            共 16,237 条 · 已转换 5,210 · 待复核 86
+          </div>
+
+          <table class="kanban" data-specnav-component="order-table">
+            <thead>
+              <tr>
+                <th style="width:70px">ID</th>
+                <th>店铺</th>
+                <th>订单号</th>
+                <th>商品</th>
+                <th style="width:90px">状态</th>
+                <th style="width:100px">实付(¥)</th>
+                <th>收货人</th>
+                <th style="width:90px">快递</th>
+                <th style="width:110px">转换</th>
+                <th>卖家备注</th>
+                <th style="width:110px">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="muted">8721</td>
+                <td>xy3510…782</td>
+                <td>3313…3783 <span class="muted">(掩码)</span></td>
+                <td>免押vivox300ultra租赁+400镜头</td>
+                <td><span class="tag amber dot">已退款</span></td>
+                <td>79.60</td>
+                <td>王*颓</td>
+                <td class="muted">—</td>
+                <td><span class="tag green dot">已转换</span></td>
+                <td class="muted">发货7.26/收货7.28/发回7.30 +小桌板</td>
+                <td><button class="btn text" disabled>发货</button></td>
+              </tr>
+              <tr data-specnav-variant="ship-target">
+                <td class="muted">8722</td>
+                <td>xy3510…782</td>
+                <td>3313…0941 <span class="muted">(掩码)</span></td>
+                <td>A7M4 套机 3 日租</td>
+                <td><span class="tag amber dot">待发货</span></td>
+                <td>270.00</td>
+                <td>李*明</td>
+                <td class="muted">—</td>
+                <td><span class="tag green dot">已转换</span></td>
+                <td>发货7.25/收货7.26/发回8.10</td>
+                <td><button class="btn text" id="openShip" data-specnav-component="ship-trigger">发货</button></td>
+              </tr>
+              <tr>
+                <td class="muted">8723</td>
+                <td>xy6620…685</td>
+                <td>5124…1937 <span class="muted">(掩码)</span></td>
+                <td>大疆 RS4 稳定器</td>
+                <td><span class="tag dot">已发货</span></td>
+                <td>99.00</td>
+                <td>陈*宇</td>
+                <td>顺丰</td>
+                <td><span class="tag green dot">已转换</span></td>
+                <td class="muted">—</td>
+                <td><button class="btn text" disabled>已发货</button></td>
+              </tr>
+              <tr>
+                <td class="muted">8724</td>
+                <td>xy3552…360</td>
+                <td>3313…4736 <span class="muted">(掩码)</span></td>
+                <td>P4P + G12 2 天</td>
+                <td><span class="tag amber dot">待发货</span></td>
+                <td>160.00</td>
+                <td>赵*芳</td>
+                <td class="muted">—</td>
+                <td><span class="tag amber dot">待复核</span></td>
+                <td>发货7.28/收货7.29/发回8.01 P4P+G12 2天</td>
+                <td><button class="btn text" disabled>需复核</button></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- state toolbar: switches the dialog's state -->
+          <div class="state-toolbar" data-specnav-component="state-toolbar" aria-label="原型状态切换">
+            <button data-state="populated" class="on">已填充</button>
+            <button data-state="loading">加载中</button>
+            <button data-state="empty">无可分配设备</button>
+            <button data-state="permission">无权限</button>
+            <button data-state="write-disabled">写关闭</button>
+            <button data-state="shop-na">店铺未授权</button>
+            <button data-state="ocr-failed">OCR 失败</button>
+            <button data-state="ship-failed">发货失败</button>
+            <button data-state="ship-success">发货成功</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- =================== ADMIN SHIP DIALOG =================== -->
+    <div class="mask"></div>
+    <div class="dialog" data-state="populated" data-specnav-screen="admin-ship-panel" data-specnav-project-shell="camera-rental-admin" data-specnav-component="rental-xianyu-order-ship-panel">
+
+      <header>
+        <h2>发货 — 调闲管家 /api/open/order/ship</h2>
+        <button class="icon-btn" id="closeDialog" aria-label="关闭">✕</button>
+      </header>
+
+      <div class="body">
+
+        <!-- LOADING -->
+        <div class="state state-loading" data-specnav-state="loading">
+          <div class="alerter info"><span class="spinner"></span> 正在加载该订单的可分配设备与店铺授权状态…</div>
+        </div>
+
+        <!-- EMPTY -->
+        <div class="state state-empty" data-specnav-state="empty">
+          <div class="alerter amber">⚠ 该订单尚无可分配设备（无 ASSIGNED 分配记录）。请先在租赁设备页分配设备后再发货。</div>
+          <div class="fields">
+            <div class="field"><label>订单号</label><div class="val">3313…0941</div></div>
+            <div class="field"><label>商品</label><div class="val">A7M4 套机 3 日租</div></div>
+          </div>
+        </div>
+
+        <!-- PERMISSION -->
+        <div class="state state-permission" data-specnav-state="permission-denied">
+          <div class="alerter danger">⛔ 无 <code>rental:xianyu:ship</code> 权限。请联系管理员在角色管理中授予该权限码。</div>
+        </div>
+
+        <!-- WRITE-DISABLED -->
+        <div class="state state-write-disabled" data-specnav-state="write-disabled">
+          <div class="alerter danger">⛔ 闲管家写操作未启用（<code>rental.xianyu.write-enabled=false</code>）。打开 <code>XGJ_WRITE_ENABLED</code> 并确认店铺授权后再发货。</div>
+          <div class="fields">
+            <div class="field"><label>订单号</label><div class="val">3313…0941</div></div>
+            <div class="field"><label>店铺</label><div class="val muted">xy3510…782</div></div>
+          </div>
+        </div>
+
+        <!-- SHOP-NOT-AUTHORIZED -->
+        <div class="state state-shop-na" data-specnav-state="shop-not-authorized">
+          <div class="alerter danger">⛔ 店铺授权无效或已过期（复用 <code>XIANYU_SHOP_AUTHORIZATION_INVALID</code>）。请先在闲管家集成页同步授权店铺。</div>
+          <div class="fields">
+            <div class="field"><label>店铺</label><div class="val">xy3510…782</div></div>
+            <div class="field"><label>授权到期</label><div class="val muted">2026-07-20（已过期）</div></div>
+          </div>
+        </div>
+
+        <!-- OCR-FAILED -->
+        <div class="state state-ocr-failed" data-specnav-state="ocr-failed">
+          <div class="alerter amber">⚠ OCR 识别失败（已降级为空草稿）。可手动填写运单号与快递公司后继续提交。</div>
+          <div class="upload"><div class="upload-icon">🖼️</div>快递单照片 OCR 失败 · <a>重新上传</a></div>
+          <div class="fields">
+            <div class="field"><label>快递公司</label>
+              <select class="select"><option>请选择…</option><option>顺丰速运 shunfeng</option><option>中通 zhongtong</option><option>圆通 yuantong</option></select>
+            </div>
+            <div class="field"><label>运单号（手填）</label><input class="input" placeholder="如 SF5159187994432"></div>
+          </div>
+        </div>
+
+        <!-- SHIP-FAILED -->
+        <div class="state state-ship-failed" data-specnav-state="ship-failed">
+          <div class="alerter danger">⛔ 闲管家发货被拒：<code>XIANYU_SHIP_REMOTE_ERROR</code> — "express_name is not set"。本地状态未变，可用同一幂等键重试。</div>
+          <div class="fields">
+            <div class="field"><label>运单号</label><div class="val">SF5159187994432</div></div>
+            <div class="field"><label>快递</label><div class="val">顺丰 shunfeng</div></div>
+            <div class="field"><label>幂等键</label><div class="val"><code>ship-8722-7f3a</code> <a>复制</a></div></div>
+            <div class="field"><label>设备</label><div class="val">A7M4-0007</div></div>
+          </div>
+        </div>
+
+        <!-- SHIP-SUCCESS -->
+        <div class="state state-ship-success" data-specnav-state="ship-success">
+          <div class="alerter green">✅ 发货成功 · 闲管家已受理。设备 A7M4-0007 → DISPATCHED。</div>
+          <div class="fields">
+            <div class="field"><label>订单号</label><div class="val">3313…0941</div></div>
+            <div class="field"><label>运单号</label><div class="val">SF****4432 <span class="muted">(看板脱敏)</span></div></div>
+            <div class="field"><label>快递</label><div class="val">顺丰 shunfeng</div></div>
+            <div class="field"><label>闲管家返回</label><div class="val"><code>code=0 msg=ok</code></div></div>
+            <div class="field"><label>来源</label><div class="val">ADMIN</div></div>
+            <div class="field"><label>分配状态</label><div class="val"><span class="tag green dot">DISPATCHED</span></div></div>
+          </div>
+        </div>
+
+        <!-- POPULATED (default review state) -->
+        <div class="state state-populated" data-specnav-state="populated" data-specnav-variant="balanced">
+          <div class="fields" data-specnav-component="order-device-pickers">
+            <div class="field"><label>订单号（全量·内部）</label><div class="val">3313011255890094097</div></div>
+            <div class="field"><label>商品</label><div class="val">A7M4 套机 3 日租</div></div>
+            <div class="field"><label>设备编号</label>
+              <select class="select">
+                <option>A7M4-0007 · AVAILABLE · 已分配本单</option>
+                <option>A7M4-0009 · AVAILABLE</option>
+              </select>
+            </div>
+            <div class="field"><label>设备型号</label><div class="val">ILCE-7M4</div></div>
+            <div class="field"><label>店铺</label><div class="val">xy351011350782 <span class="tag green dot">已授权</span></div></div>
+            <div class="field"><label>幂等键（自动·可复制）</label><div class="val"><code>ship-8722-7f3a</code> <a>复制</a></div></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="upload" data-specnav-component="label-upload"><div class="upload-icon">🖼️</div>上传快递单照片 / 小程序条码截图 · 优先识别一维条码 + 明文运单号</div>
+
+          <div class="ocr-card" data-specnav-component="ocr-preview">
+            <div class="row"><span class="pill"><span class="spinner"></span> 条码/OCR 识别中…</span><span class="muted">mimo-v2.5-free · 例 SF5113560342626</span></div>
+          </div>
+
+          <div class="fields">
+            <div class="field"><label>快递公司（识别已填·可改）</label>
+              <select class="select"><option>顺丰速运 shunfeng</option><option>中通 zhongtong</option><option>圆通 yuantong</option><option>其他…</option></select>
+            </div>
+            <div class="field"><label>运单号（一维条码/明文识别·可改）</label><input class="input" value="SF5159187994432"></div>
+          </div>
+
+          <label class="checkbox"><input type="checkbox" id="confirmChk"> 我已核对运单号与快递公司，确认提交调闲管家发货</label>
+        </div>
+
+      </div>
+
+      <footer>
+        <span class="muted">提交前须勾选确认 · 失败可用同一幂等键重试</span>
+        <span>
+          <button class="btn" id="cancelDialog">取消</button>
+          <button class="btn primary" id="submitShip" disabled>提交发货</button>
+        </span>
+      </footer>
+    </div>
+
+    <!-- =================== STAFF PHONE (scan-first) =================== -->
+    <div class="phone-frame" data-state="populated" data-specnav-screen="staff-ship-screen" data-specnav-project-shell="camera-rental-staff" data-specnav-component="rental-staff-ship">
+
+      <header class="staff-bar">
+        <span class="back">‹ 返回</span>
+        <span class="title">扫码发货</span>
+        <button class="icon-btn" id="themeToggle2" data-specnav-theme-control aria-label="主题">🌓</button>
+      </header>
+
+      <!-- staff state toolbar (mimics real review) -->
+      <div class="state-toolbar" style="padding:8px 12px" data-specnav-component="staff-state-toolbar">
+        <button data-staff-state="populated" class="on">已扫码</button>
+        <button data-staff-state="scan-rejected">扫码被拒</button>
+        <button data-staff-state="write-disabled">写关闭</button>
+        <button data-staff-state="shop-na">店铺未授权</button>
+        <button data-staff-state="ocr-failed">OCR 失败</button>
+        <button data-staff-state="ship-failed">发货失败</button>
+        <button data-staff-state="ship-success">发货成功</button>
+      </div>
+
+      <div class="staff-body">
+
+        <!-- SCAN-REJECTED -->
+        <div class="scan-rejected state" data-specnav-state="scan-rejected">
+          <div class="alerter danger">⛔ 二维码无法解析：<code>RENTAL_DEVICE_QR_INVALID</code>。请核对设备贴的签发二维码，或联系管理员补打。</div>
+          <div class="scan-area"><div><div class="scan-frame-icon">⊘</div>扫码失败</div></div>
+        </div>
+
+        <!-- POPULATED (resolved device+assignment+order) -->
+        <div class="staff-populated state" data-specnav-state="populated">
+          <div class="scan-area"><div><div class="scan-frame-icon">📷</div>已扫码 · CRD1|A7M4-0007|ILCE-7M4|a3f9</div></div>
+
+          <div class="staff-card" data-specnav-component="resolved-assignment">
+            <div class="k">设备 / 分配</div>
+            <div class="v">A7M4-0007 · ILCE-7M4</div>
+            <div class="row" style="margin-top:6px"><span class="tag green dot">ASSIGNED</span><span class="muted">分配 #912</span></div>
+          </div>
+
+          <div class="staff-card">
+            <div class="k">渠道订单（唯一）</div>
+            <div class="v">3313…0941</div>
+            <div class="muted" style="margin-top:4px">A7M4 套机 3 日租 · ¥270 · 待发货</div>
+          </div>
+
+          <div class="staff-upload"><div class="upload-icon">🖼️</div>上传快递单照片 / 条码截图 · 识别运单</div>
+
+          <div class="ocr-card" data-specnav-component="ocr-preview-staff">
+            <div class="row"><span class="pill">✅ 条码/OCR 完成</span><span class="muted">顺丰 · SF5159187994432</span></div>
+          </div>
+
+          <div class="fields">
+            <div class="field"><label>快递公司</label>
+              <select class="select"><option>顺丰 shunfeng</option><option>中通 zhongtong</option></select>
+            </div>
+            <div class="field"><label>运单号</label><input class="input" value="SF5159187994432"></div>
+          </div>
+
+          <label class="checkbox"><input type="checkbox" id="staffConfirm"> 已核对，提交发货</label>
+        </div>
+
+        <!-- WRITE-DISABLED -->
+        <div class="staff-write-disabled state" data-specnav-state="write-disabled">
+          <div class="alerter danger">⛔ 写操作未启用。请联系管理员打开 XGJ_WRITE_ENABLED。</div>
+        </div>
+        <!-- SHOP-NA -->
+        <div class="staff-shop-na state" data-specnav-state="shop-not-authorized">
+          <div class="alerter danger">⛔ 店铺授权失效，请先同步授权店铺。</div>
+        </div>
+        <!-- OCR-FAILED -->
+        <div class="staff-ocr-failed state" data-specnav-state="ocr-failed">
+          <div class="alerter amber">⚠ OCR 失败，可手动填写运单号。</div>
+          <div class="fields">
+            <div class="field"><label>快递公司</label><select class="select"><option>请选择…</option></select></div>
+            <div class="field"><label>运单号</label><input class="input" placeholder="手填"></div>
+          </div>
+        </div>
+        <!-- SHIP-FAILED -->
+        <div class="staff-ship-failed state" data-specnav-state="ship-failed">
+          <div class="alerter danger">⛔ 闲管家发货失败：waybill_no 格式不符。本地未变，可重试。</div>
+        </div>
+        <!-- SHIP-SUCCESS -->
+        <div class="staff-ship-success state" data-specnav-state="ship-success">
+          <div class="alerter green">✅ 发货成功 · A7M4-0007 → DISPATCHED · 来源 STAFF</div>
+          <div class="staff-card"><div class="k">运单</div><div class="v">SF****4432 <span class="muted">(看板脱敏)</span></div></div>
+        </div>
+        <!-- LOADING -->
+        <div class="staff-loading state" data-specnav-state="loading">
+          <div class="alerter info"><span class="spinner"></span> 正在解析二维码与分配…</div>
+        </div>
+        <!-- EMPTY -->
+        <div class="staff-empty state" data-specnav-state="empty">
+          <div class="alerter amber">⚠ 该设备当前没有 ASSIGNED 分配记录，无法发货。</div>
+        </div>
+      </div>
+
+      <div class="staff-bottom">
+        <button class="btn">取消</button>
+        <button class="btn primary" id="staffSubmit" disabled>提交发货</button>
+      </div>
+    </div>
+
+    <!-- =================== SCREEN SWITCH (admin / staff) =================== -->
+    <div class="screen-switch" data-specnav-component="screen-switch">
+      <button data-screen="admin" class="active">Admin 发货面板</button>
+      <button data-screen="staff">Staff 扫码发货</button>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

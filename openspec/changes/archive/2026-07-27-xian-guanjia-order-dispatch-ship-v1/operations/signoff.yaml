@@ -1,0 +1,16 @@
+change: xian-guanjia-order-dispatch-ship-v1
+scope: archive-only
+signed_by: codex-local-agent
+signed_at: 2026-07-27T19:13:00+08:00
+basis:
+  - user requested OpenSpec archive and later asked to continue
+  - verification aggregate is green
+  - residual risks are retained in readiness and release notes
+acknowledged_residual_risks:
+  - neighboring xian-guanjia-data-integration-v1 artifacts remain separate
+  - production XianGuanJia writes require explicit future approval
+not_authorized:
+  - real production XianGuanJia shipment write
+  - commit
+  - push
+  - production deploy

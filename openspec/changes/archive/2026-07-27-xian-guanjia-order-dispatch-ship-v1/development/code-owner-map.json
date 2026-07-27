@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "camera-rental-server/yudao-module-rental",
+      "owner": "backend-rental"
+    },
+    {
+      "path": "camera-rental-admin/src",
+      "owner": "admin-web"
+    },
+    {
+      "path": "camera-rental-staff/src",
+      "owner": "staff-mobile"
+    },
+    {
+      "path": "openspec/changes/xian-guanjia-order-dispatch-ship-v1",
+      "owner": "specnav"
+    }
+  ]
+}

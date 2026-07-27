@@ -1,0 +1,39 @@
+{
+  "task_id": "003-staff-ship-screen",
+  "goal": "Staff user can capture courier/device codes, search pending orders, confirm association, and ship from mobile.",
+  "stop_condition": "Staff H5 and WeChat builds pass or are blocked only by documented environment constraints.",
+  "must_read": [
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/development/tasks/003-staff-ship-screen/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/requirements.md",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/acceptance.md",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/spec-map.json",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/component-impact-map.json",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/prototype/artifact/index.html",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/prototype/handoff.md",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1/prototype/decision.json"
+  ],
+  "allowed_files": [
+    "camera-rental-staff/src",
+    "camera-rental-staff/package.json",
+    "camera-rental-staff/pnpm-lock.yaml",
+    "openspec/changes/xian-guanjia-order-dispatch-ship-v1"
+  ],
+  "non_goals": [
+    "Do not implement customer app behavior.",
+    "Do not add browser-only DOM APIs.",
+    "Do not store third-party credentials in the staff app."
+  ],
+  "expected_evidence": [
+    "Staff H5 build output.",
+    "Staff WeChat Mini Program build output.",
+    "Spec-review and quality-review notes for staff touched files."
+  ],
+  "unsafe_assumptions": [
+    "Assuming every staff scan has one obvious matching order.",
+    "Assuming mobile upload and scan APIs behave identically on H5 and WeChat."
+  ]
+}

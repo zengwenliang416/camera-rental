@@ -1,0 +1,57 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "artifact/index.html",
+  "project_fidelity": {
+    "status": "green",
+    "inventory": "visual-inventory.json",
+    "shell_checked": true,
+    "generic_shell_detected": false,
+    "notes": [
+      "Admin shell mirrors camera-rental-admin: sidebar navigation, topbar controls, tenant/user chips, ContentWrap-style channel order table, masked order number, status tags, and Element Plus-like dialog/form/upload layout.",
+      "Staff shell mirrors camera-rental-staff uni-app: mobile phone frame, scan-first flow, resolved device and assignment cards, compact upload/OCR confirmation form, and sticky submit action.",
+      "Prototype uses project-specific business copy and states for XianGuanJia shipment: upload courier label photo or one-dimensional barcode screenshot, OCR/barcode draft, confirm-before-submit, write-disabled, shop-not-authorized, scan-rejected, ship-failed, and ship-success with masked waybill."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [
+      "desktop admin shipment panel",
+      "mobile staff shipment screen"
+    ],
+    "theme_modes": [
+      "light",
+      "dark"
+    ],
+    "locales": [
+      "zh-CN"
+    ],
+    "states": [
+      "populated",
+      "loading",
+      "empty",
+      "permission-denied",
+      "write-disabled",
+      "shop-not-authorized",
+      "ocr-failed",
+      "scan-rejected",
+      "ship-failed",
+      "ship-success"
+    ]
+  },
+  "checks": [
+    "Verified artifact/index.html exists and is a static ui-html prototype with linked styles.css and app.js.",
+    "Verified data-specnav-screen anchors exist for admin-shell, admin-ship-panel, and staff-ship-screen.",
+    "Verified data-specnav-project-shell anchors exist for camera-rental-admin and camera-rental-staff.",
+    "Verified data-specnav-theme-control is present on both admin and staff theme buttons.",
+    "Verified admin Web panel includes upload of courier label photo or courier-app barcode screenshot, barcode/OCR preview, editable express company and waybill fields, idempotency key, and confirm-before-submit gate.",
+    "Verified staff screen includes device scan resolution, upload of courier label photo or barcode screenshot, barcode/OCR preview, editable express and waybill fields, and confirm-before-submit gate.",
+    "Verified typed failure states are represented: empty assignment, permission denied, write disabled, shop not authorized, OCR failed, scan rejected, ship failed, and ship success.",
+    "Verified ship success displays masked waybill and source discriminator for ADMIN or STAFF."
+  ],
+  "evidence": [
+    "artifact/index.html lines include upload text for courier label photo / mini-program barcode screenshot and OCR/barcode draft wording.",
+    "screen-map.json maps admin-ship-panel and staff-ship-screen to FLOW-XIANYU-ORDER-SHIP, FLOW-SHIPMENT-OCR, and FLOW-STAFF-SCAN-RESOLVE-FOR-SHIP.",
+    "visual-inventory.json cites existing admin and staff visual/component sources."
+  ],
+  "blockers": []
+}

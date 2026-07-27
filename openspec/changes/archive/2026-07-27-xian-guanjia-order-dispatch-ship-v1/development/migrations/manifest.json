@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "required": true,
+  "status": "ready",
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "migrations": [
+    {
+      "id": "20260726_023_xianyu_ship_workflow",
+      "kind": "ddl",
+      "order": 1,
+      "path": "development/migrations/20260726_023_xianyu_ship_workflow.sql",
+      "source_path": "camera-rental-server/sql/mysql/migrations/20260726_023_xianyu_ship_workflow.sql",
+      "sha256": "c7bf4b14a36f2f089adf498ef1277bbb8bb8933f8bb62c3ccd4a171c64b43f3a"
+    }
+  ],
+  "verification": {
+    "commands": [
+      "shasum -a 256 camera-rental-server/sql/mysql/migrations/20260726_023_xianyu_ship_workflow.sql",
+      "git diff --check"
+    ],
+    "evidence": [
+      "observed sha256 c7bf4b14a36f2f089adf498ef1277bbb8bb8933f8bb62c3ccd4a171c64b43f3a",
+      "git diff --check exited 0"
+    ]
+  },
+  "rollback": [
+    "DELETE FROM system_role_menu WHERE menu_id IN (7070, 7071);",
+    "DELETE FROM system_menu WHERE id IN (7070, 7071);",
+    "DROP TABLE IF EXISTS rental_device_shipment;"
+  ],
+  "rollback_strategy": "Drop rental_device_shipment only after confirming no shipment rows are needed; delete system_role_menu rows for menu ids 7070 and 7071, then delete system_menu ids 7070 and 7071. Do not run rollback in production while any shipped XianGuanJia order depends on the audit rows."
+}

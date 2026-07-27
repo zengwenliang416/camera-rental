@@ -1,0 +1,76 @@
+{
+  "startedAt": "2026-07-27T06:38:20.707Z",
+  "admin": {
+    "url": "http://127.0.0.1:5174/login?redirect=/rental/order",
+    "title": "相机租赁管理后台 - 登录",
+    "hasShipmentWorkbench": false,
+    "hasOcrUpload": false,
+    "hasDeviceField": false,
+    "hasWriteDisabled": false,
+    "bodySample": "相机租赁管理后台\n欢迎使用本系统\n开箱即用的中后台管理系统\n登录\n记住我\n忘记密码?\n登录\n手机登录\n二维码登录\n注册\n其他登录方式\n萌新必读\n📚开发指南\n🔥视频教程\n⚡面试手册\n🤝外包咨询"
+  },
+  "staff": {
+    "url": "http://127.0.0.1:5173/pages-rental/xianyu-ship/index?tenantId=1#/",
+    "title": "芋道管理系统",
+    "hasShipTitle": false,
+    "hasOcrUpload": false,
+    "hasDeviceScan": false,
+    "hasOrderSearch": false,
+    "bodySample": "工作台\n下午好，\n继续努力，收获满满！\n我的常用\n系统管理\n基础设施\n支付管理\n商城系统\nCRM 系统\nMES 系统\nAI 大模型\nIoT 物联网\nIM 即时通讯\n系统管理\n字典与地区\n地区管理\n工作台\n审批\n通讯录\n消息\n我的"
+  },
+  "console": [
+    {
+      "page": "http://127.0.0.1:5174/",
+      "type": "warning",
+      "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`."
+    },
+    {
+      "page": "http://127.0.0.1:5174/",
+      "type": "warning",
+      "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`."
+    },
+    {
+      "page": "http://127.0.0.1:5174/rental/order",
+      "type": "warning",
+      "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`."
+    },
+    {
+      "page": "http://127.0.0.1:5174/rental/order",
+      "type": "warning",
+      "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`."
+    }
+  ],
+  "failedRequests": [
+    {
+      "url": "http://127.0.0.1:5174/src/views/Login/Login.vue?vue&type=style&index=1&lang.scss",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5174/src/layout/components/LocaleDropdown/index.ts",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5174/src/views/Login/components/index.ts",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5174/src/assets/svgs/login-box-bg.svg?import",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5174/src/views/Login/Login.vue?vue&type=style&index=0&scoped=5652d04b&lang.scss",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5174/src/layout/components/ThemeSwitch/index.ts",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    }
+  ],
+  "finishedAt": "2026-07-27T06:39:20.155Z"
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "result": "green",
+  "covered_scope": [
+    "Focused backend shipment/OCR/QR tests passed: 16 tests, 0 failures.",
+    "Backend runtime, admin browser, staff H5 browser, OCR missing-file error, device QR resolve, and database schema/menu/device read-only checks passed.",
+    "Facticity check re-fetched current XianGuanJia order ship docs and verified implemented request body fields.",
+    "Redteam negative-path coverage includes write-disabled, unauthorized shop, remote failure, idempotency conflict, and cross-tenant ADMIN/STAFF rejection with no remote write.",
+    "Mock-server successful ship E2E proves ADMIN and STAFF source submits persist shipment rows, masked waybills, remote message, xianyu order waybill fields, DISPATCHED assignments, and RENTED devices.",
+    "Staff H5 Playwright flow proves candidate search, enabled submit, confirmation dialog, browser POST source STAFF, and success response through the real backend.",
+    "Sensory review covers visible admin/staff surfaces, empty/disabled/confirmation/success states, and typed negative states.",
+    "Real XianGuanJia write against a controlled test shop is intentionally out of scope for this verification; mock-server E2E covers the successful integration seam without real external mutation.",
+    "Physical handset execution is intentionally out of scope for this verification; staff client was checked in H5 mobile viewport.",
+    "OpenSpec config naming was aligned to yudao.ai.shipment-ocr instead of obsolete yudao.ai.mimo in requirements and acceptance markdown."
+  ],
+  "uncovered_scope": [],
+  "residual_risk": [
+    "Neighboring xian-guanjia-data-integration-v1 generated/status artifacts remain dirty and should be handled separately before multi-change archive.",
+    "Production write enablement still requires explicit operator approval and controlled shop/credential configuration."
+  ],
+  "confidence": "B"
+}

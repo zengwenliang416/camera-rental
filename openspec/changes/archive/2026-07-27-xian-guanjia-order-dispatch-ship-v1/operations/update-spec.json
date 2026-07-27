@@ -1,0 +1,12 @@
+{
+  "schema": "specnav.ops.updateSpec.v1",
+  "change": "xian-guanjia-order-dispatch-ship-v1",
+  "status": "no_writeback_needed",
+  "learning_items": [
+    "Shipment OCR config naming is yudao.ai.shipment-ocr; acceptance text retains an older statement label but evidence maps to the implemented config.",
+    "Successful shipment verification should use a mock XianGuanJia server unless a controlled real shop write is explicitly approved.",
+    "Production write enablement remains an operational decision, not an archive precondition."
+  ],
+  "unresolved_items": [],
+  "promoted_checks": []
+}

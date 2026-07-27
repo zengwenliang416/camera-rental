@@ -1,0 +1,11 @@
+{
+  "schema": "specnav.codegraph.evidence_index.v1",
+  "generated_at": "2026-07-27T11:20:55.893Z",
+  "active_change": "xian-guanjia-order-dispatch-ship-v1",
+  "source_raw": "openspec/changes/xian-guanjia-order-dispatch-ship-v1/codegraph/evidence.jsonl",
+  "by_claim": {},
+  "by_stage": {},
+  "blockers": [],
+  "raw_exists": false,
+  "record_count": 0
+}

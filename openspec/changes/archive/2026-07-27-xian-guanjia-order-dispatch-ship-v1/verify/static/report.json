@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "domain": "static",
+  "required": true,
+  "verdict": "green",
+  "blocker_class": null,
+  "evidence": [
+    "pnpm ts:check passed in camera-rental-admin in prior verification evidence.",
+    "pnpm type-check passed in camera-rental-staff in prior verification evidence.",
+    "Static review confirmed XianyuWriteClient/XianyuWriteEndpoint separation, shipment table DO/mapper, permission annotations, menu migration, OCR config prefix, and staff/admin resolve-qr reuse.",
+    "OpenSpec requirement text was corrected from obsolete yudao.ai.mimo to yudao.ai.shipment-ocr to match user instruction and implementation.",
+    "git status shows neighboring xian-guanjia-data-integration-v1 files are dirty, but this change did not edit its acceptance assertions; current A25 evidence is scoped to assertion non-mutation rather than whole-worktree cleanliness."
+  ],
+  "commands": [
+    "rg static checks over XianyuWriteClient, XianyuWriteEndpoint, XianyuReadEndpoint, XianyuOrderController, RentalDeviceShipmentDO, migration SQL, admin/staff shipment screens",
+    "mvn focused tests after static contract assertions were added",
+    "git status --short to isolate unrelated neighboring OpenSpec dirty files"
+  ],
+  "findings": [
+    "Static contract assertions are covered by implementation files, migrations, and tests.",
+    "A25 is satisfied for the assertion scope: xian-guanjia-data-integration-v1 acceptance assertions were not modified by this change.",
+    "Neighboring xian-guanjia-data-integration-v1 generated/status artifacts remain dirty and should not be archived with this change."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "Dirty neighboring OpenSpec artifacts can confuse later archive operations if mixed with this change, but they are outside this change's acceptance assertion scope."
+  ]
+}

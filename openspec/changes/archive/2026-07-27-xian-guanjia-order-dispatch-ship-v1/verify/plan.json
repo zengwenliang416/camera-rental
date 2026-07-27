@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-order-dispatch-ship-v1",
+  "risk_tier": "standard",
+  "required_domains": [
+    "facticity",
+    "static",
+    "unit",
+    "redteam",
+    "e2e",
+    "sensory"
+  ],
+  "inputs": [
+    "requirements.md",
+    "acceptance.md",
+    "prototype/handoff.md",
+    "development/handoff-to-verify.md"
+  ],
+  "user_test_case_gate": {
+    "required": true,
+    "cases": "verify/user-test-cases.json",
+    "signoff": "verify/user-test-case-signoff.json",
+    "domain_matrix": "verify/domain-case-matrix.json"
+  },
+  "runtime_evidence_gate": {
+    "required": true,
+    "evidence": "verify/runtime-evidence.json",
+    "required_surfaces": [
+      "runtime",
+      "browser"
+    ],
+    "database_surface_required_when": "development/migrations/manifest.json required=true"
+  },
+  "changed_files": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java",
+    "camera-rental-staff/src/api/rental/xianyu.ts",
+    "camera-rental-staff/src/pages-rental/xianyu-ship/index.vue",
+    "camera-rental-staff/src/pages.json",
+    "camera-rental-staff/src/pages/index/menu.json"
+  ],
+  "commands": [
+    "mvn -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=XianyuOrderShipServiceTest,ShipmentOcrServiceTest,OpenAiCompatibleShipmentOcrClientTest -Dsurefire.failIfNoSpecifiedTests=false test",
+    "pnpm type-check",
+    "pnpm ts:check",
+    "pnpm build:mp-weixin",
+    "pnpm build:h5",
+    "NODE_PATH=/Users/wenliang_zeng/.agents/skills/gstack/node_modules node Playwright staff H5 route check",
+    "git diff --check",
+    "node /Users/wenliang_zeng/.codex/plugins/cache/specnav-marketplace/specnav-verification/0.3.0/scripts/verify-domains.js validate --json"
+  ],
+  "manual_reviews": [
+    "sensory"
+  ]
+}

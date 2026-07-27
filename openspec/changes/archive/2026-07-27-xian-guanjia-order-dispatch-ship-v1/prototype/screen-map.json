@@ -1,0 +1,47 @@
+{
+  "screens": [
+    {
+      "id": "admin-ship-panel",
+      "label": "Admin 渠道订单发货面板",
+      "requirements": ["requirements.md"],
+      "acceptance": ["acceptance.md"],
+      "components": ["component-impact-map.json"],
+      "visual_evidence": ["visual-inventory.json#project_shell"],
+      "data_flows": ["FLOW-XIANYU-ORDER-SHIP", "FLOW-SHIPMENT-OCR"],
+      "theme_modes": ["light", "dark"],
+      "locales": ["zh-CN", "en"],
+      "implementation_files": [
+        "camera-rental-admin/src/views/rental/xianyu/ship (NEW dialog/panel)"
+      ],
+      "states": ["loading", "empty", "permission-denied", "write-disabled", "shop-not-authorized", "ocr-failed", "ship-failed", "ship-success", "populated"]
+    },
+    {
+      "id": "staff-ship-screen",
+      "label": "Staff 扫码发货屏 (camera-rental-staff)",
+      "requirements": ["requirements.md"],
+      "acceptance": ["acceptance.md"],
+      "components": ["component-impact-map.json"],
+      "visual_evidence": ["visual-inventory.json#project_shell"],
+      "data_flows": ["FLOW-XIANYU-ORDER-SHIP", "FLOW-SHIPMENT-OCR", "FLOW-STAFF-SCAN-RESOLVE-FOR-SHIP"],
+      "theme_modes": ["light", "dark"],
+      "locales": ["zh-CN"],
+      "implementation_files": [
+        "camera-rental-staff/src/pages-rental/ship/index.vue (NEW)",
+        "camera-rental-staff/src/api/rental (NEW module)"
+      ],
+      "states": ["loading", "empty", "permission-denied", "write-disabled", "shop-not-authorized", "ocr-failed", "scan-rejected", "ship-failed", "ship-success", "populated"]
+    }
+  ],
+  "variants": [
+    "default-populated",
+    "loading",
+    "empty",
+    "permission-denied",
+    "write-disabled",
+    "shop-not-authorized",
+    "ocr-failed",
+    "scan-rejected",
+    "ship-failed",
+    "ship-success"
+  ]
+}

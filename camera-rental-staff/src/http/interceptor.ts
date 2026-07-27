@@ -7,6 +7,7 @@ import { stringifyQuery } from './tools/queryString'
 
 // 请求基准地址
 const baseUrl = getEnvBaseUrl()
+const proxyEnable = import.meta.env.VITE_APP_PROXY_ENABLE === 'true'
 const tenantEnable = import.meta.env.VITE_APP_TENANT_ENABLE
 
 const whiteList: string[] = [
@@ -32,17 +33,17 @@ const httpInterceptor = {
     // 非 http 开头需拼接地址
     if (!options.url.startsWith('http')) {
       // #ifdef H5
-      if (JSON.parse(import.meta.env.VITE_APP_PROXY_ENABLE)) {
+      if (proxyEnable) {
         // 自动拼接代理前缀
         options.url = import.meta.env.VITE_APP_PROXY_PREFIX + options.url
       }
       else {
-        options.url = baseUrl + options.url
+        options.url = (baseUrl || '') + options.url
       }
       // #endif
       // 非H5正常拼接
       // #ifndef H5
-      options.url = baseUrl + options.url
+      options.url = (baseUrl || '') + options.url
       // #endif
       // TIPS: 如果需要对接多个后端服务，也可以在这里处理，拼接成所需要的地址
     }

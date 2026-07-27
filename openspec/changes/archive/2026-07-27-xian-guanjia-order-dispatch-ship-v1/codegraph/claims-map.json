@@ -1,0 +1,117 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-07-27T02:44:36.894Z",
+  "active_change": "xian-guanjia-order-dispatch-ship-v1",
+  "claims": [
+    {
+      "id": "verification:task-001-backend-ship-core",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "001-backend-ship-core",
+      "text": "Operator captures courier/device codes, searches pending orders, confirms one",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-order-dispatch-ship-v1/development/tasks/001-backend-ship-core/brief.md",
+        "openspec/changes/xian-guanjia-order-dispatch-ship-v1/development/tasks/001-backend-ship-core/context.json"
+      ],
+      "expected_evidence": [
+        "Backend test output.",
+        "Migration copy or checksum evidence.",
+        "Spec-review and quality-review notes for backend touched files."
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental",
+        "camera-rental-server/yudao-server",
+        "camera-rental-server/sql/mysql/migrations",
+        "openspec/changes/xian-guanjia-order-dispatch-ship-v1"
+      ],
+      "query_ids": [
+        "verification:task-001-backend-ship-core:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-002-admin-ship-panel",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "002-admin-ship-panel",
+      "text": "Admin opens the shipment panel, uploads the courier waybill code image, scans or",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-order-dispatch-ship-v1/development/tasks/002-admin-ship-panel/brief.md",
+        "openspec/changes/xian-guanjia-order-dispatch-ship-v1/development/tasks/002-admin-ship-panel/context.json"
+      ],
+      "expected_evidence": [
+        "Admin type-check output.",
+        "Screenshot or sensory note for core states.",
+        "Spec-review and quality-review notes for admin touched files."
+      ],
+      "allowed_files": [
+        "camera-rental-admin/src",
+        "camera-rental-admin/package.json",
+        "camera-rental-admin/pnpm-lock.yaml",
+        "openspec/changes/xian-guanjia-order-dispatch-ship-v1"
+      ],
+      "query_ids": [
+        "verification:task-002-admin-ship-panel:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-003-staff-ship-screen",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "003-staff-ship-screen",
+      "text": "Staff opens the shipment screen, captures the courier waybill code image, scans",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-order-dispatch-ship-v1/development/tasks/003-staff-ship-screen/brief.md",
+        "openspec/changes/xian-guanjia-order-dispatch-ship-v1/development/tasks/003-staff-ship-screen/context.json"
+      ],
+      "expected_evidence": [
+        "Staff H5 build output.",
+        "Staff WeChat Mini Program build output.",
+        "Spec-review and quality-review notes for staff touched files."
+      ],
+      "allowed_files": [
+        "camera-rental-staff/src",
+        "camera-rental-staff/package.json",
+        "camera-rental-staff/pnpm-lock.yaml",
+        "openspec/changes/xian-guanjia-order-dispatch-ship-v1"
+      ],
+      "query_ids": [
+        "verification:task-003-staff-ship-screen:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-004-verification",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "004-verification",
+      "text": "Maintainer runs the required checks and sees evidence that pending-order search,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/xian-guanjia-order-dispatch-ship-v1/development/tasks/004-verification/brief.md",
+        "openspec/changes/xian-guanjia-order-dispatch-ship-v1/development/tasks/004-verification/context.json"
+      ],
+      "expected_evidence": [
+        "Backend test log.",
+        "Admin type-check log.",
+        "Staff H5 and WeChat build logs.",
+        "Migration evidence.",
+        "Mock E2E and red-team evidence."
+      ],
+      "allowed_files": [
+        "openspec/changes/xian-guanjia-order-dispatch-ship-v1",
+        "camera-rental-server",
+        "camera-rental-admin",
+        "camera-rental-staff"
+      ],
+      "query_ids": [
+        "verification:task-004-verification:evidence"
+      ]
+    }
+  ]
+}

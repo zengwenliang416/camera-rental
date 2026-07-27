@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "covers_success_path": true,
+    "covers_write_disabled_rejection": true,
+    "covers_shop_authorization_rejection": true,
+    "covers_remote_failure_no_local_mutation": true,
+    "covers_idempotent_replay": true,
+    "covers_ocr_adapter_prompt_shape": true
+  },
+  "findings": []
+}

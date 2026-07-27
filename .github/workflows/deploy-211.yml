@@ -116,7 +116,7 @@ jobs:
         run: |
           bun install --frozen-lockfile
           bun run lint
-          VITE_BASE_PATH=/admin/schedule-center/ VITE_BASE_URL=https://rental.motion-cover.com VITE_API_URL=/admin-api bun run build
+          VITE_BASE_PATH=/admin/schedule-center/ VITE_BASE_URL=https://rental.motion-cover.com VITE_API_URL=/admin-api VITE_APP_TENANT_ENABLE=true VITE_APP_DEFAULT_LOGIN_TENANT=芋道源码 bun run build
 
       - name: Prepare schedule center artifact
         run: |

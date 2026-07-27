@@ -34,6 +34,8 @@ export interface PageResult<T> {
 }
 
 const apiBase = `${import.meta.env.VITE_BASE_URL || window.location.origin}${import.meta.env.VITE_API_URL || '/admin-api'}`;
+const tenantEnabled = import.meta.env.VITE_APP_TENANT_ENABLE !== 'false';
+const defaultTenantName = import.meta.env.VITE_APP_DEFAULT_LOGIN_TENANT || '芋道源码';
 let refreshing: Promise<void> | null = null;
 
 interface AdminPasswordLoginParams {
@@ -133,11 +135,20 @@ export function redirectToAdminLogin() {
 }
 
 export async function loginWithAdminPassword(params: AdminPasswordLoginParams) {
-  const tenantName = params.tenantName?.trim();
-  if (tenantName) {
-    const tenantId = await publicRequest<number>(
-      `/system/tenant/get-id-by-name?name=${encodeURIComponent(tenantName)}`
-    );
+  let tenantName = params.tenantName?.trim();
+  let tenantId = getTenantId();
+  if (tenantEnabled) {
+    if (!tenantName && !tenantId) {
+      tenantName = defaultTenantName;
+    }
+    if (tenantName) {
+      tenantId = await publicRequest<number>(
+        `/system/tenant/get-id-by-name?name=${encodeURIComponent(tenantName)}`
+      );
+    }
+    if (!tenantId) {
+      throw new ApiError('请输入租户名称或先在管理后台登录');
+    }
     setTenantId(tenantId);
   }
 

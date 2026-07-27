@@ -25,8 +25,10 @@ interface LoginPageProps {
 
 export const LoginPage: React.FC<LoginPageProps> = ({ isModal = false }) => {
   const { login, setIsLoginPageVisible, isLoading } = useApp();
+  const tenantEnabled = import.meta.env.VITE_APP_TENANT_ENABLE !== 'false';
+  const defaultTenantName = import.meta.env.VITE_APP_DEFAULT_LOGIN_TENANT || '芋道源码';
   const [activeTab, setActiveTab] = useState<'password' | 'sms' | 'qr'>('password');
-  const [tenantName, setTenantName] = useState(import.meta.env.VITE_APP_DEFAULT_LOGIN_TENANT || '');
+  const [tenantName, setTenantName] = useState(tenantEnabled ? defaultTenantName : '');
   const [username, setUsername] = useState(import.meta.env.VITE_APP_DEFAULT_LOGIN_USERNAME || '');
   const [password, setPassword] = useState(import.meta.env.VITE_APP_DEFAULT_LOGIN_PASSWORD || '');
   const [showPassword, setShowPassword] = useState(false);
@@ -201,7 +203,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ isModal = false }) => {
 
             {activeTab === 'password' && (
               <form onSubmit={handleLoginSubmit} className="space-y-4">
-                {import.meta.env.VITE_APP_TENANT_ENABLE === 'true' && (
+                {tenantEnabled && (
                   <div>
                     <label className="block text-xs font-bold text-zinc-700 mb-1.5">租户名称</label>
                     <div className="relative">

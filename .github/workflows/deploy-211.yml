@@ -91,19 +91,10 @@ jobs:
           ! grep -R "%VITE_APP_TITLE%" dist/index.html
           grep -q 'src="/admin/assets/' dist/index.html
 
-      - name: Build schedule center
-        working-directory: camera-rental-schedule-center
-        run: |
-          bun install --frozen-lockfile
-          bun run lint
-          VITE_BASE_PATH=/admin/schedule-center/ VITE_BASE_URL=https://rental.motion-cover.com VITE_API_URL=/admin-api bun run build
-
       - name: Prepare admin artifact
         run: |
           mkdir -p .deploy-artifacts/admin
           cp -R camera-rental-admin/dist/. .deploy-artifacts/admin/
-          mkdir -p .deploy-artifacts/admin/schedule-center
-          cp -R camera-rental-schedule-center/dist/. .deploy-artifacts/admin/schedule-center/
 
       - uses: actions/upload-artifact@v4
         with:
@@ -111,11 +102,39 @@ jobs:
           path: .deploy-artifacts/admin
           if-no-files-found: error
 
+  build-schedule-center:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Build schedule center
+        working-directory: camera-rental-schedule-center
+        run: |
+          bun install --frozen-lockfile
+          bun run lint
+          VITE_BASE_PATH=/admin/schedule-center/ VITE_BASE_URL=https://rental.motion-cover.com VITE_API_URL=/admin-api bun run build
+
+      - name: Prepare schedule center artifact
+        run: |
+          mkdir -p .deploy-artifacts/schedule-center
+          cp -R camera-rental-schedule-center/dist/. .deploy-artifacts/schedule-center/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: schedule-center
+          path: .deploy-artifacts/schedule-center
+          if-no-files-found: error
+
   deploy:
     runs-on: ubuntu-24.04
     needs:
       - build-server
       - build-admin
+      - build-schedule-center
     environment: production-211
     steps:
       - uses: actions/checkout@v4
@@ -130,11 +149,16 @@ jobs:
           name: admin
           path: .deploy-artifacts/release/admin
 
+      - uses: actions/download-artifact@v4
+        with:
+          name: schedule-center
+          path: .deploy-artifacts/release/schedule-center
+
       - name: Pack release artifact
         run: |
           test -f .deploy-artifacts/release/server/yudao-server.jar
           test -f .deploy-artifacts/release/admin/index.html
-          test -f .deploy-artifacts/release/admin/schedule-center/index.html
+          test -f .deploy-artifacts/release/schedule-center/index.html
           tar -czf camera-rental-release.tgz -C .deploy-artifacts/release .
 
       - name: Configure SSH

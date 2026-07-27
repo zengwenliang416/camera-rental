@@ -68,7 +68,7 @@ git -C "${SOURCE_DIR}" clean -fd \
   -e camera-rental-staff/node_modules/ \
   -e camera-rental-web/node_modules/
 
-mkdir -p "${release_dir}/server" "${release_dir}/admin" "${release_dir}/staff" "${release_dir}/web"
+mkdir -p "${release_dir}/server" "${release_dir}/admin" "${release_dir}/schedule-center" "${release_dir}/staff" "${release_dir}/web"
 
 echo "[build-deploy] build backend"
 (
@@ -84,6 +84,14 @@ echo "[build-deploy] build admin"
   pnpm build:prod
 )
 cp -R "${SOURCE_DIR}/camera-rental-admin/dist/." "${release_dir}/admin/"
+
+echo "[build-deploy] build schedule center"
+(
+  cd "${SOURCE_DIR}/camera-rental-schedule-center"
+  bun install --frozen-lockfile
+  VITE_BASE_PATH=/admin/schedule-center/ VITE_BASE_URL=https://rental.motion-cover.com VITE_API_URL=/admin-api bun run build
+)
+cp -R "${SOURCE_DIR}/camera-rental-schedule-center/dist/." "${release_dir}/schedule-center/"
 
 echo "[build-deploy] build staff h5"
 (

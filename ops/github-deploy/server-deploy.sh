@@ -21,7 +21,7 @@ tar -xzf "${RELEASE_ARCHIVE}" -C "${release_dir}"
 
 test -f "${release_dir}/server/yudao-server.jar"
 test -f "${release_dir}/admin/index.html"
-test -f "${release_dir}/admin/schedule-center/index.html"
+test -f "${release_dir}/schedule-center/index.html"
 
 has_web_artifact=false
 if [ -f "${release_dir}/web/server/index.mjs" ]; then
@@ -34,6 +34,10 @@ for preserved_dir in staff web; do
     cp -a "${DEPLOY_ROOT}/current/${preserved_dir}" "${release_dir}/${preserved_dir}"
   fi
 done
+
+echo "[deploy] link schedule center under admin route"
+rm -rf "${release_dir}/admin/schedule-center"
+ln -sfn ../schedule-center "${release_dir}/admin/schedule-center"
 
 ln -sfn "${release_dir}" "${DEPLOY_ROOT}/current"
 

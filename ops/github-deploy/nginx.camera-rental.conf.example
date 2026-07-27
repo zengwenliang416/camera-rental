@@ -20,6 +20,11 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
+    location /admin/schedule-center/ {
+        alias /opt/camera-rental/current/schedule-center/;
+        try_files $uri $uri/ /admin/schedule-center/index.html;
+    }
+
     location /admin/ {
         alias /opt/camera-rental/current/admin/;
         try_files $uri $uri/ /admin/index.html;

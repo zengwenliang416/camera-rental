@@ -265,8 +265,10 @@ const handleLogin = async (params: any) => {
     if (!redirect.value) {
       redirect.value = '/'
     }
-    // 判断是否为SSO登录
-    if (redirect.value.indexOf('sso') !== -1) {
+    // 判断是否为同源独立子应用回跳
+    if (redirect.value.startsWith('/admin/schedule-center')) {
+      window.location.href = redirect.value
+    } else if (redirect.value.indexOf('sso') !== -1) {
       window.location.href = window.location.href.replace('/login?redirect=', '')
     } else {
       await push({ path: redirect.value || permissionStore.addRouters[0].path })

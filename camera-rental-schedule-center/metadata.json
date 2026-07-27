@@ -1,0 +1,6 @@
+{
+  "name": "设备排期中心",
+  "description": "基于管理端数据的设备排期与租赁运营工作台，提供智能自动排机、甘特排期矩阵、设备状态追踪及订单分配调度。",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

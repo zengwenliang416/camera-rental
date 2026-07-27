@@ -10,6 +10,7 @@ on:
       - 'ops/github-deploy/**'
       - 'camera-rental-server/**'
       - 'camera-rental-admin/**'
+      - 'camera-rental-schedule-center/**'
       - 'camera-rental-staff/**'
       - 'camera-rental-web/**'
 
@@ -57,6 +58,10 @@ jobs:
         with:
           node-version: '22'
 
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - name: Install pnpm
         run: npm i -g pnpm@10
 
@@ -64,13 +69,43 @@ jobs:
         working-directory: camera-rental-admin
         run: |
           pnpm install --frozen-lockfile
+          {
+            echo 'VITE_APP_TITLE=相机租赁管理后台'
+            echo 'VITE_BASE_PATH=/admin/'
+            echo 'VITE_BASE_URL=https://rental.motion-cover.com'
+            echo 'VITE_API_URL=/admin-api'
+            echo 'VITE_APP_TENANT_ENABLE=true'
+            echo 'VITE_APP_CAPTCHA_ENABLE=false'
+            echo 'VITE_APP_DOCALERT_ENABLE=false'
+            echo 'VITE_DROP_DEBUGGER=true'
+            echo 'VITE_DROP_CONSOLE=true'
+            echo 'VITE_SOURCEMAP=false'
+            echo 'VITE_OUT_DIR=dist'
+            echo 'VITE_UPLOAD_TYPE=server'
+            echo 'VITE_APP_API_ENCRYPT_ENABLE=false'
+            echo 'VITE_APP_API_ENCRYPT_HEADER=X-Api-Encrypt'
+            echo 'VITE_APP_API_ENCRYPT_ALGORITHM=AES'
+            echo 'VITE_APP_API_ENCRYPT_REQUEST_KEY='
+            echo 'VITE_APP_API_ENCRYPT_RESPONSE_KEY='
+          } > .env.prod
           pnpm ts:check
           pnpm build:prod
+          ! grep -R "%VITE_APP_TITLE%" dist/index.html
+          grep -q 'src="/admin/assets/' dist/index.html
+
+      - name: Build schedule center
+        working-directory: camera-rental-schedule-center
+        run: |
+          bun install --frozen-lockfile
+          bun run lint
+          VITE_BASE_PATH=/admin/schedule-center/ VITE_BASE_URL=https://rental.motion-cover.com VITE_API_URL=/admin-api bun run build
 
       - name: Prepare admin artifact
         run: |
           mkdir -p .deploy-artifacts/admin
           cp -R camera-rental-admin/dist/. .deploy-artifacts/admin/
+          mkdir -p .deploy-artifacts/admin/schedule-center
+          cp -R camera-rental-schedule-center/dist/. .deploy-artifacts/admin/schedule-center/
 
       - uses: actions/upload-artifact@v4
         with:
@@ -169,6 +204,7 @@ jobs:
         run: |
           test -f .deploy-artifacts/release/server/yudao-server.jar
           test -f .deploy-artifacts/release/admin/index.html
+          test -f .deploy-artifacts/release/admin/schedule-center/index.html
           test -f .deploy-artifacts/release/staff/index.html
           test -f .deploy-artifacts/release/web/server/index.mjs
           tar -czf camera-rental-release.tgz -C .deploy-artifacts/release .

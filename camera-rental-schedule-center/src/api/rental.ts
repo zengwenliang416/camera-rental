@@ -5,6 +5,23 @@ export interface PermissionInfoVO extends AdminUserCache {
   menus?: unknown[];
 }
 
+export interface XianyuConfigVO {
+  enabled: boolean;
+  status: 'DISABLED' | 'MISSING_CREDENTIALS' | 'READY' | string;
+  baseUrl?: string;
+  appKeyMasked?: string;
+  appSecretConfigured: boolean;
+  webhookBaseUrlConfigured: boolean;
+  writeEnabled: boolean;
+}
+
+export interface XianyuExpressCompanyVO {
+  code: string;
+  expressName: string;
+  expressAlias?: string;
+  hot?: boolean;
+}
+
 export interface RentalDeviceVO {
   id: number;
   deviceNo: string;
@@ -14,6 +31,15 @@ export interface RentalDeviceVO {
   warehouseCode?: string;
   purchaseAmount?: number;
   enabled: boolean;
+}
+
+export interface RentalDeviceQrVO {
+  deviceId: number;
+  deviceNo: string;
+  equipmentModelCode: string;
+  payload: string;
+  payloadVersion: string;
+  signed: boolean;
 }
 
 export interface RentalScheduleVO {
@@ -31,6 +57,22 @@ export interface RentalScheduleVO {
   occupyEndDateExclusive: string;
 }
 
+export type RentalDateValue =
+  | string
+  | number
+  | number[]
+  | {
+      year?: number;
+      month?: number;
+      monthValue?: number;
+      day?: number;
+      dayOfMonth?: number;
+      hour?: number;
+      minute?: number;
+      second?: number;
+      nano?: number;
+    };
+
 export interface XianyuPendingShipOrderVO {
   id: number;
   shopId: number;
@@ -42,8 +84,8 @@ export interface XianyuPendingShipOrderVO {
   buyerNick?: string;
   rentalOrderId?: number;
   conversionStatus: string;
-  orderTime?: string;
-  sourceUpdatedAt?: string;
+  orderTime?: RentalDateValue;
+  sourceUpdatedAt?: RentalDateValue;
 }
 
 export interface XianyuOrderVO {
@@ -60,28 +102,39 @@ export interface XianyuOrderVO {
   receiverMobile?: string;
   receiverAddress?: string;
   remarkParseStatus?: string;
+  billableStartDate?: RentalDateValue;
+  billableEndDate?: RentalDateValue;
+  rentalPeriodStatus?: string;
+  rentalPeriodReasonCode?: string;
   conversionStatus: string;
   rentalOrderId?: number;
-  sourceCreatedAt?: string;
-  sourceUpdatedAt?: string;
+  sourceCreatedAt?: RentalDateValue;
+  sourceUpdatedAt?: RentalDateValue;
   orderType?: number;
-  orderTime?: string;
+  orderTime?: RentalDateValue;
   totalAmount?: number;
-  payTime?: string;
+  payTime?: RentalDateValue;
   refundStatus?: number;
   refundAmount?: number;
-  refundTime?: string;
+  refundTime?: RentalDateValue;
   expressCode?: string;
   expressName?: string;
+  waybillNo?: string;
   consignType?: number;
-  consignTime?: string;
-  confirmTime?: string;
+  consignTime?: RentalDateValue;
+  confirmTime?: RentalDateValue;
   cancelReason?: string;
-  cancelTime?: string;
+  cancelTime?: RentalDateValue;
   sellerName?: string;
   goodsTitle?: string;
   goodsQuantity?: number;
   goodsPrice?: number;
+  rentalOrderItemId?: number;
+  equipmentModelCode?: string;
+  rentalQuantity?: number;
+  occupyStartDate?: RentalDateValue;
+  occupyEndDateExclusive?: RentalDateValue;
+  assignedDeviceIds?: number[];
 }
 
 export interface RentalManualReviewVO {
@@ -92,7 +145,7 @@ export interface RentalManualReviewVO {
   status: string;
   reasonCode?: string;
   reasonMessage?: string;
-  resolvedAt?: string;
+  resolvedAt?: RentalDateValue;
 }
 
 export interface XianyuShipmentOcrRespVO {
@@ -173,6 +226,14 @@ export async function fetchPermissionInfo() {
   return info;
 }
 
+export function fetchXianyuConfig() {
+  return apiClient.get<XianyuConfigVO>('/rental/xianyu/config/get');
+}
+
+export function fetchXianyuExpressCompanies() {
+  return apiClient.get<XianyuExpressCompanyVO[]>('/rental/xianyu/express-company/list');
+}
+
 export async function fetchScheduleCenterSnapshot() {
   const [devicePage, schedulePage, orderPage, pendingShipPage, reviewPage] = await Promise.all([
     fetchAllPages<RentalDeviceVO>('/rental/device/page'),
@@ -204,6 +265,10 @@ export async function fetchScheduleCenterSnapshot() {
 
 export function resolveRentalDeviceQr(payload: string) {
   return apiClient.post<RentalDeviceVO>('/rental/device/resolve-qr', { payload });
+}
+
+export function fetchRentalDeviceQr(id: number) {
+  return apiClient.get<RentalDeviceQrVO>('/rental/device/get-qr', { id });
 }
 
 export function recognizeXianyuShipmentImage(file: File) {

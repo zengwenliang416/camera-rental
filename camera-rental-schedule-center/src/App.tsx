@@ -36,13 +36,13 @@ function AppContent() {
   }
 
   const unassignedOrdersCount = orders.filter((o) => o.status === 'UNASSIGNED').length;
-  const todayDispatchCount = orders.filter((o) => o.status === 'PENDING_DISPATCH').length;
-  const todayReturnCount = orders.filter((o) => o.status === 'PENDING_RETURN' || o.status === 'RENTING').length;
-  const repairDevicesCount = devices.filter((d) => d.status === 'REPAIR').length;
+  const pendingDispatchCount = orders.filter((o) => o.status === 'PENDING_DISPATCH').length;
+  const activeRentalCount = orders.filter((o) => o.status === 'PENDING_RETURN' || o.status === 'RENTING').length;
+  const repairDevicesCount = devices.filter((d) => d.status === 'REPAIR' || d.status === 'LOCKED').length;
   const totalDeviceCount = devices.length;
-  const activeDeviceCount = Math.max(totalDeviceCount - repairDevicesCount, 0);
+  const rentingDeviceCount = devices.filter((d) => d.status === 'RENTING').length;
   const utilizationPercent =
-    totalDeviceCount > 0 ? Math.round((devices.filter((d) => d.status === 'RENTING').length / totalDeviceCount) * 100) : 0;
+    totalDeviceCount > 0 ? Math.round((rentingDeviceCount / totalDeviceCount) * 100) : 0;
 
   return (
     <div className="min-h-screen w-full bg-zinc-50/70 text-zinc-900 font-sans flex flex-col antialiased">
@@ -112,11 +112,11 @@ function AppContent() {
             className="p-4 bg-white rounded-2xl border border-zinc-200/80 shadow-2xs hover:border-zinc-300 transition-all cursor-pointer group"
           >
             <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-semibold text-zinc-500">今日待出库</span>
+              <span className="text-xs font-semibold text-zinc-500">待发货订单</span>
               <span className="w-2 h-2 rounded-full bg-blue-500"></span>
             </div>
             <div className="text-2xl font-extrabold text-blue-600 tracking-tight">
-              {todayDispatchCount} <span className="text-xs font-normal text-zinc-400">单</span>
+              {pendingDispatchCount} <span className="text-xs font-normal text-zinc-400">单</span>
             </div>
           </div>
 
@@ -125,11 +125,11 @@ function AppContent() {
             className="p-4 bg-white rounded-2xl border border-zinc-200/80 shadow-2xs hover:border-zinc-300 transition-all cursor-pointer group"
           >
             <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-semibold text-zinc-500">今日预计回仓</span>
+              <span className="text-xs font-semibold text-zinc-500">履约中订单</span>
               <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
             </div>
             <div className="text-2xl font-extrabold text-emerald-600 tracking-tight">
-              {todayReturnCount} <span className="text-xs font-normal text-zinc-400">台</span>
+              {activeRentalCount} <span className="text-xs font-normal text-zinc-400">单</span>
             </div>
           </div>
 
@@ -142,7 +142,7 @@ function AppContent() {
               <span className="w-2 h-2 rounded-full bg-purple-500"></span>
             </div>
             <div className="text-2xl font-extrabold text-zinc-900 tracking-tight">
-              {utilizationPercent}% <span className="text-xs font-normal text-zinc-400">({activeDeviceCount}/{totalDeviceCount}台在效)</span>
+              {utilizationPercent}% <span className="text-xs font-normal text-zinc-400">({rentingDeviceCount}/{totalDeviceCount}台出租)</span>
             </div>
           </div>
 

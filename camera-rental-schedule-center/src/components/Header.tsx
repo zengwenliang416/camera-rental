@@ -8,7 +8,7 @@ import {
   AlertTriangle,
   RefreshCw,
   Layers,
-  QrCode,
+  Send,
   ChevronDown,
   LogOut,
   User,
@@ -65,9 +65,8 @@ export const Header: React.FC = () => {
     },
     {
       id: 'binding',
-      label: '扫码运单绑定',
-      icon: QrCode,
-      permission: ['rental:xianyu:ship', 'rental:device:query'],
+      label: '设备发货',
+      icon: Send,
     },
     {
       id: 'exceptions',
@@ -132,19 +131,17 @@ export const Header: React.FC = () => {
 
         {/* Right Action & Sync Status */}
         <div className="flex items-center gap-3">
-          {hasPermission(['rental:xianyu:ship', 'rental:device:query']) && (
-            <button
-              onClick={() => setActiveTab('binding')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-extrabold rounded-lg shadow-2xs transition-all active:scale-95 shrink-0 ${
-                activeTab === 'binding'
-                  ? 'bg-blue-700 text-white ring-2 ring-blue-400/50'
-                  : 'bg-blue-600 hover:bg-blue-500 text-white'
-              }`}
-            >
-              <QrCode className="w-3.5 h-3.5" />
-              <span>扫码/运单绑定</span>
-            </button>
-          )}
+          <button
+            onClick={() => setActiveTab('binding')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-extrabold rounded-lg shadow-2xs transition-all active:scale-95 shrink-0 ${
+              activeTab === 'binding'
+                ? 'bg-blue-700 text-white ring-2 ring-blue-400/50'
+                : 'bg-blue-600 hover:bg-blue-500 text-white'
+            }`}
+          >
+            <Send className="w-3.5 h-3.5" />
+            <span>设备发货</span>
+          </button>
 
           <div className="hidden lg:flex items-center gap-2 text-xs text-zinc-500 bg-zinc-50 px-3 py-1.5 rounded-lg border border-zinc-200/60">
             <span className="relative flex h-2 w-2">

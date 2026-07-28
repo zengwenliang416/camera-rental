@@ -24,16 +24,15 @@ export const DashboardView: React.FC = () => {
     exceptions,
     setActiveTab,
     openAllocationModal,
-    dispatchOrder,
     returnOrder,
-    updateDeviceStatus,
+    setPreselectedOrderForBinding,
     setSelectedModelId,
     hasPermission,
   } = useApp();
 
   const unassignedOrders = orders.filter((o) => o.status === 'UNASSIGNED');
   const pendingDispatchOrders = orders.filter((o) => o.status === 'PENDING_DISPATCH');
-  const pendingReturnOrders = orders.filter((o) => o.status === 'PENDING_RETURN' || o.status === 'RENTING');
+  const activeRentalOrders = orders.filter((o) => o.status === 'PENDING_RETURN' || o.status === 'RENTING');
   const overdueOrders = orders.filter((o) => o.status === 'EXCEPTION');
   const repairDevices = devices.filter((d) => d.status === 'REPAIR' || d.status === 'LOCKED');
   const firstModel = models[0];
@@ -124,17 +123,17 @@ export const DashboardView: React.FC = () => {
                         ))}
                       </div>
                       <div className="text-xs text-zinc-500 mt-1">
-                        租期范围: <span className="font-mono font-medium text-zinc-700">{order.startDate} 至 {order.endDate}</span>
+                        备注解析租期: <span className="font-mono font-medium text-zinc-700">{order.rentalPeriodLabel}</span>
                       </div>
                     </div>
 
                     <button
                       onClick={() => openAllocationModal(order.id)}
-                      disabled={!hasPermission('rental:device:assign')}
+                      disabled={!hasPermission('rental:device:assign') || !order.rentalPeriodReady}
                       className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs rounded-xl shadow-xs flex items-center justify-center gap-1.5 whitespace-nowrap active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <Zap className="w-3.5 h-3.5 text-amber-400 fill-current" />
-                      <span>智能计算一键排期</span>
+                      <span>{order.rentalPeriodReady ? '智能计算一键排期' : '租期待复核'}</span>
                     </button>
                   </div>
                 ))}
@@ -187,13 +186,9 @@ export const DashboardView: React.FC = () => {
                       </p>
                     </div>
 
-                    <button
-                      onClick={() => updateDeviceStatus(dev.id, 'IDLE')}
-                      disabled={!hasPermission('rental:device:assign')}
-                      className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-2xs transition-colors whitespace-nowrap active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      检修完成恢复入库
-                    </button>
+                    <span className="px-3 py-1.5 bg-zinc-100 text-zinc-500 font-bold text-xs rounded-xl whitespace-nowrap">
+                      状态变更需走设备作业流程
+                    </span>
                   </div>
                 ))}
               </div>
@@ -205,10 +200,10 @@ export const DashboardView: React.FC = () => {
             <div className="bg-white rounded-2xl p-5 border border-zinc-200/80 shadow-2xs">
               <h4 className="font-bold text-zinc-900 text-sm flex items-center gap-2 mb-3">
                 <Send className="w-4 h-4 text-blue-600" />
-                <span>今日待出库单 ({pendingDispatchOrders.length})</span>
+                <span>待发货订单 ({pendingDispatchOrders.length})</span>
               </h4>
               {pendingDispatchOrders.length === 0 ? (
-                <p className="text-xs text-zinc-400 py-4 text-center">今日暂无待出库订单</p>
+                <p className="text-xs text-zinc-400 py-4 text-center">暂无待发货订单</p>
               ) : (
                 <div className="space-y-2">
                   {pendingDispatchOrders.map((ord) => (
@@ -218,11 +213,14 @@ export const DashboardView: React.FC = () => {
                         <div className="text-zinc-500">{ord.items.map(i => `${i.modelName} x${i.quantity}`).join(', ')}</div>
                       </div>
                       <button
-                        onClick={() => void dispatchOrder(ord.id)}
-                        disabled={!hasPermission('rental:device:assign')}
+                        onClick={() => {
+                          setPreselectedOrderForBinding(ord.id);
+                          setActiveTab('binding');
+                        }}
+                        disabled={!ord.canShip}
                         className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-lg font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        确认出发
+                        {ord.canShip ? '选择设备发货' : '待转换完善'}
                       </button>
                     </div>
                   ))}
@@ -233,13 +231,13 @@ export const DashboardView: React.FC = () => {
             <div className="bg-white rounded-2xl p-5 border border-zinc-200/80 shadow-2xs">
               <h4 className="font-bold text-zinc-900 text-sm flex items-center gap-2 mb-3">
                 <RotateCcw className="w-4 h-4 text-emerald-600" />
-                <span>今日到期归还 ({pendingReturnOrders.length})</span>
+                <span>履约中订单 ({activeRentalOrders.length})</span>
               </h4>
-              {pendingReturnOrders.length === 0 ? (
-                <p className="text-xs text-zinc-400 py-4 text-center">今日暂无到期归还设备</p>
+              {activeRentalOrders.length === 0 ? (
+                <p className="text-xs text-zinc-400 py-4 text-center">暂无履约中的租赁订单</p>
               ) : (
                 <div className="space-y-2">
-                  {pendingReturnOrders.slice(0, 3).map((ord) => (
+                  {activeRentalOrders.slice(0, 3).map((ord) => (
                     <div key={ord.id} className="p-3 bg-zinc-50/80 rounded-xl border border-zinc-200/60 text-xs flex items-center justify-between">
                       <div>
                         <div className="font-mono font-bold text-zinc-800">{ord.orderNumber}</div>
@@ -247,10 +245,10 @@ export const DashboardView: React.FC = () => {
                       </div>
                       <button
                         onClick={() => void returnOrder(ord.id, false)}
-                        disabled={!hasPermission('rental:device:assign')}
+                        disabled={!hasPermission('rental:device:assign') || !ord.canReturn}
                         className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs rounded-lg font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        验机归位
+                        {ord.canReturn ? '验机归位' : '等待设备关联'}
                       </button>
                     </div>
                   ))}

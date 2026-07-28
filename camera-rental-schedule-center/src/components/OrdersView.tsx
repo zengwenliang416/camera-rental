@@ -9,7 +9,7 @@ import {
   Phone,
   Calendar,
   Truck,
-  QrCode,
+  Send,
 } from 'lucide-react';
 
 export const OrdersView: React.FC = () => {
@@ -17,7 +17,6 @@ export const OrdersView: React.FC = () => {
     orders,
     devices,
     openAllocationModal,
-    dispatchOrder,
     returnOrder,
     setActiveTab,
     setPreselectedOrderForBinding,
@@ -49,7 +48,7 @@ export const OrdersView: React.FC = () => {
       case 'ASSIGNED':
         return <span className="px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">已排期</span>;
       case 'PENDING_DISPATCH':
-        return <span className="px-2 py-0.5 rounded text-xs font-bold bg-indigo-100 text-indigo-800">待出库</span>;
+        return <span className="px-2 py-0.5 rounded text-xs font-bold bg-indigo-100 text-indigo-800">待发货</span>;
       case 'RENTING':
         return <span className="px-2 py-0.5 rounded text-xs font-bold bg-emerald-100 text-emerald-800">租赁中</span>;
       case 'PENDING_RETURN':
@@ -57,7 +56,7 @@ export const OrdersView: React.FC = () => {
       case 'COMPLETED':
         return <span className="px-2 py-0.5 rounded text-xs font-bold bg-zinc-100 text-zinc-700">已完成</span>;
       case 'EXCEPTION':
-        return <span className="px-2 py-0.5 rounded text-xs font-bold bg-rose-100 text-rose-800">异常 (逾期)</span>;
+        return <span className="px-2 py-0.5 rounded text-xs font-bold bg-rose-100 text-rose-800">待人工复核</span>;
     }
   };
 
@@ -89,7 +88,18 @@ export const OrdersView: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <button
+              onClick={() => {
+                setPreselectedOrderForBinding(null);
+                setActiveTab('binding');
+              }}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5 active:scale-95 transition-all"
+            >
+              <Send className="w-3.5 h-3.5" />
+              <span>设备发货</span>
+            </button>
+
             <select
               value={activeChannel}
               onChange={(e) => setActiveChannel(e.target.value)}
@@ -121,7 +131,7 @@ export const OrdersView: React.FC = () => {
             { id: 'ALL', label: '全部订单' },
             { id: 'UNASSIGNED', label: '待排期', badge: orders.filter((o) => o.status === 'UNASSIGNED').length },
             { id: 'ASSIGNED', label: '已排期' },
-            { id: 'PENDING_DISPATCH', label: '待出库', badge: orders.filter((o) => o.status === 'PENDING_DISPATCH').length },
+            { id: 'PENDING_DISPATCH', label: '待发货', badge: orders.filter((o) => o.status === 'PENDING_DISPATCH').length },
             { id: 'RENTING', label: '租赁中' },
             { id: 'PENDING_RETURN', label: '待归还' },
             { id: 'COMPLETED', label: '已完成' },
@@ -188,7 +198,7 @@ export const OrdersView: React.FC = () => {
                     </span>
                     <span className="flex items-center gap-1 font-mono text-zinc-700">
                       <Calendar className="w-3.5 h-3.5 text-blue-500" />
-                      <span>{order.startDate} 至 {order.endDate}</span>
+                      <span>{order.rentalPeriodLabel}</span>
                     </span>
                   </div>
 
@@ -237,58 +247,52 @@ export const OrdersView: React.FC = () => {
                     <div className="flex flex-col gap-2 w-full">
                       <button
                         onClick={() => openAllocationModal(order.id)}
-                        disabled={!hasPermission('rental:device:assign')}
+                        disabled={!hasPermission('rental:device:assign') || !order.canAssign}
                         className="w-full sm:w-auto px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-xs rounded-xl shadow-2xs flex items-center justify-center gap-1.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Zap className="w-3.5 h-3.5 text-amber-400 fill-current" />
-                        <span>自动计算并匹配设备</span>
+                        <span>{order.canAssign ? '自动计算并匹配设备' : '内部租赁明细待完善'}</span>
                       </button>
 
-                      <button
-                        onClick={() => {
-                          setPreselectedOrderForBinding(order.id);
-                          setActiveTab('binding');
-                        }}
-                        disabled={!hasPermission('rental:xianyu:ship')}
-                        className="w-full sm:w-auto px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/80 font-extrabold text-xs rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <QrCode className="w-3.5 h-3.5" />
-                        <span>扫码/运单快速绑定</span>
-                      </button>
+                      {order.canShip && (
+                        <button
+                          onClick={() => {
+                            setPreselectedOrderForBinding(order.id);
+                            setActiveTab('binding');
+                          }}
+                          className="w-full sm:w-auto px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/80 font-extrabold text-xs rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-all"
+                        >
+                          <Send className="w-3.5 h-3.5" />
+                          <span>选择设备并发货</span>
+                        </button>
+                      )}
                     </div>
                   ) : (
                     <div className="flex flex-wrap gap-2 justify-end">
-                      <button
-                        onClick={() => {
-                          setPreselectedOrderForBinding(order.id);
-                          setActiveTab('binding');
-                        }}
-                        disabled={!hasPermission('rental:xianyu:ship')}
-                        className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/80 text-xs font-bold rounded-lg transition-all flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <QrCode className="w-3.5 h-3.5" />
-                        <span>运单与SN绑定</span>
-                      </button>
-
-                      <button
-                        onClick={() => openAllocationModal(order.id)}
-                        disabled={!hasPermission('rental:device:assign')}
-                        className="px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-bold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        调整锁定 SN
-                      </button>
-
-                      {order.status === 'PENDING_DISPATCH' && (
+                      {order.canShip && (
                         <button
-                          onClick={() => void dispatchOrder(order.id)}
-                          disabled={!hasPermission('rental:device:assign')}
-                          className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                          onClick={() => {
+                            setPreselectedOrderForBinding(order.id);
+                            setActiveTab('binding');
+                          }}
+                          className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1"
                         >
-                          确认出仓
+                          <Send className="w-3.5 h-3.5" />
+                          <span>选择设备并发货</span>
                         </button>
                       )}
 
-                      {(order.status === 'RENTING' || order.status === 'PENDING_RETURN' || order.status === 'EXCEPTION') && (
+                      {order.canAssign && (
+                        <button
+                          onClick={() => openAllocationModal(order.id)}
+                          disabled={!hasPermission('rental:device:assign')}
+                          className="px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-bold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          安排或调整 SN
+                        </button>
+                      )}
+
+                      {order.canReturn && (
                         <button
                           onClick={() => void returnOrder(order.id, false)}
                           disabled={!hasPermission('rental:device:assign')}
@@ -296,6 +300,12 @@ export const OrdersView: React.FC = () => {
                         >
                           验机无误归位
                         </button>
+                      )}
+
+                      {!order.canShip && !order.canAssign && !order.canReturn && (
+                        <span className="px-3 py-1.5 bg-zinc-100 text-zinc-500 text-xs font-bold rounded-lg">
+                          当前状态无可执行操作
+                        </span>
                       )}
                     </div>
                   )}

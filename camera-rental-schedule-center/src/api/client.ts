@@ -33,9 +33,27 @@ export interface PageResult<T> {
   total: number;
 }
 
-const apiBase = `${import.meta.env.VITE_BASE_URL || window.location.origin}${import.meta.env.VITE_API_URL || '/admin-api'}`;
+function resolveApiOrigin(configuredBaseUrl?: string) {
+  const fallback = window.location.origin;
+  const configured = configuredBaseUrl?.trim();
+  if (!configured) return fallback;
+
+  if (import.meta.env.PROD) {
+    try {
+      const hostname = new URL(configured).hostname;
+      if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1') {
+        return fallback;
+      }
+    } catch {
+      return fallback;
+    }
+  }
+  return configured.replace(/\/+$/, '');
+}
+
+const apiBase = `${resolveApiOrigin(import.meta.env.VITE_BASE_URL)}${import.meta.env.VITE_API_URL || '/admin-api'}`;
 const tenantEnabled = import.meta.env.VITE_APP_TENANT_ENABLE !== 'false';
-const defaultTenantName = import.meta.env.VITE_APP_DEFAULT_LOGIN_TENANT || '芋道源码';
+const defaultTenantName = import.meta.env.VITE_APP_DEFAULT_LOGIN_TENANT || '捷租达';
 let refreshing: Promise<void> | null = null;
 
 interface AdminPasswordLoginParams {

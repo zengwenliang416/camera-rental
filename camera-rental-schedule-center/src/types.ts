@@ -72,8 +72,14 @@ export interface RentalOrder {
   channel: OrderChannel;
   customerName: string;
   customerPhone: string;
-  startDate: string; // YYYY-MM-DD
-  endDate: string;   // YYYY-MM-DD
+  startDate: string; // YYYY-MM-DD, only populated from backend parsed rental period
+  endDate: string;   // YYYY-MM-DD, only populated from backend parsed rental period
+  occupyStartDate: string;
+  occupyEndDateExclusive: string;
+  rentalPeriodLabel: string;
+  rentalPeriodReady: boolean;
+  rentalPeriodStatus?: string;
+  rentalPeriodReasonCode?: string;
   status: OrderStatus;
   items: OrderItemNeed[];
   totalPrice: number;
@@ -82,6 +88,9 @@ export interface RentalOrder {
   logisticsNumber?: string; // 物流运单号 e.g. "SF1893029104"
   expressCode?: string;
   expressName?: string;
+  canAssign: boolean;
+  canShip: boolean;
+  canReturn: boolean;
   boundTime?: string;       // 绑单完成时间
   note?: string;
 }

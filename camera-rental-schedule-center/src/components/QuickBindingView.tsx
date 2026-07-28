@@ -1,51 +1,37 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useApp } from '../context/AppContext';
 import { QRCodeSVG } from 'qrcode.react';
 import jsQR from 'jsqr';
-import { recognizeXianyuShipmentImage, resolveRentalDeviceQr } from '../api/rental';
+import {
+  fetchXianyuExpressCompanies,
+  recognizeXianyuShipmentImage,
+  resolveRentalDeviceQr,
+} from '../api/rental';
+import {
+  DEFAULT_EXPRESS_COMPANIES,
+  type ExpressCompany,
+  expressCodeFromName,
+} from '../lib/expressCompanies';
 import {
   QrCode,
   Truck,
-  FileText,
-  Calendar,
   CheckCircle2,
   Search,
   Zap,
-  ArrowRight,
   ShieldCheck,
   Camera,
-  Upload,
   Sparkles,
   ScanLine,
   PackageCheck,
-  Copy,
   Clock,
-  Cpu,
-  RefreshCw,
   ShoppingBag,
-  ExternalLink,
 } from 'lucide-react';
-
-function toLocalDateString(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
-function addDays(date: Date, days: number) {
-  const next = new Date(date);
-  next.setDate(next.getDate() + days);
-  return next;
-}
-
-const today = toLocalDateString(new Date());
-const defaultEndDate = toLocalDateString(addDays(new Date(), 6));
 
 export const QuickBindingView: React.FC = () => {
   const {
     devices,
     orders,
+    xianyuConfig,
     preselectedOrderForBinding,
     setPreselectedOrderForBinding,
     bindDeviceWithOrderAndLogistics,
@@ -56,10 +42,10 @@ export const QuickBindingView: React.FC = () => {
   const [selectedDeviceId, setSelectedDeviceId] = useState<string>('');
   const [selectedOrderId, setSelectedOrderId] = useState<string>('');
   const [logisticsNumber, setLogisticsNumber] = useState<string>('');
-  const [carrier, setCarrier] = useState<string>('顺丰速运');
-  const [startDate, setStartDate] = useState<string>(today);
-  const [endDate, setEndDate] = useState<string>(defaultEndDate);
-  const [notes, setNotes] = useState<string>('');
+  const [expressCompanies, setExpressCompanies] = useState<ExpressCompany[]>(
+    DEFAULT_EXPRESS_COMPANIES
+  );
+  const [expressCode, setExpressCode] = useState<string>('shunfeng');
 
   const [deviceSearch, setDeviceSearch] = useState<string>('');
   const [orderSearch, setOrderSearch] = useState<string>('');
@@ -78,50 +64,106 @@ export const QuickBindingView: React.FC = () => {
   const deviceFileInputRef = useRef<HTMLInputElement>(null);
   const logisticsFileInputRef = useRef<HTMLInputElement>(null);
 
-  // Auto initialize or select order
+  const shippableOrders = useMemo(() => orders.filter((order) => order.canShip), [orders]);
+  const targetOrder = shippableOrders.find((order) => order.id === selectedOrderId);
+  const targetModelId = targetOrder?.items[0]?.modelId || undefined;
+  const availableDevices = useMemo(
+    () => devices.filter(
+      (device) => device.status === 'IDLE' && (!targetModelId || device.modelId === targetModelId)
+    ),
+    [devices, targetModelId]
+  );
+  const targetDevice = availableDevices.find((device) => device.id === selectedDeviceId);
+  const selectedExpressCompany = expressCompanies.find((company) => company.code === expressCode)
+    || DEFAULT_EXPRESS_COMPANIES.find((company) => company.code === expressCode)
+    || { code: expressCode || 'other', expressName: '其他' };
+  const carrier = selectedExpressCompany.expressName;
+
   useEffect(() => {
-    if (preselectedOrderForBinding) {
+    if (!hasPermission('rental:xianyu:query')) return;
+    void fetchXianyuExpressCompanies()
+      .then((companies) => {
+        const validCompanies = companies.filter(
+          (company) => company.code?.trim() && company.expressName?.trim()
+        );
+        if (validCompanies.length === 0) return;
+        setExpressCompanies(validCompanies);
+        setExpressCode((current) => (
+          validCompanies.some((company) => company.code === current)
+            ? current
+            : validCompanies.find((company) => company.hot)?.code || validCompanies[0].code
+        ));
+      })
+      .catch(() => {
+        setExpressCompanies(DEFAULT_EXPRESS_COMPANIES);
+      });
+  }, [hasPermission]);
+
+  // Only honor an explicit order handoff. Direct entry must require manual selection.
+  useEffect(() => {
+    if (preselectedOrderForBinding && shippableOrders.some((order) => order.id === preselectedOrderForBinding)) {
       setSelectedOrderId(preselectedOrderForBinding);
-      const matchedOrder = orders.find((o) => o.id === preselectedOrderForBinding);
-      if (matchedOrder) {
-        setStartDate(matchedOrder.startDate);
-        setEndDate(matchedOrder.endDate);
-        if (matchedOrder.logisticsNumber) {
-          setLogisticsNumber(matchedOrder.logisticsNumber);
-        }
-      }
-    } else if (orders.length > 0 && !selectedOrderId) {
-      setSelectedOrderId(orders[0].id);
-      setStartDate(orders[0].startDate);
-      setEndDate(orders[0].endDate);
+      setPreselectedOrderForBinding(null);
+    } else if (selectedOrderId && !shippableOrders.some((order) => order.id === selectedOrderId)) {
+      setSelectedOrderId('');
     }
-  }, [preselectedOrderForBinding, orders]);
+  }, [
+    preselectedOrderForBinding,
+    selectedOrderId,
+    setPreselectedOrderForBinding,
+    shippableOrders,
+  ]);
+
+  useEffect(() => {
+    if (selectedDeviceId && !availableDevices.some((device) => device.id === selectedDeviceId)) {
+      setSelectedDeviceId('');
+      setDeviceSearch('');
+      setDeviceScanResult(null);
+      setDeviceImagePreview(null);
+    }
+  }, [availableDevices, selectedDeviceId]);
 
   // Handle Order Select change
   const handleOrderChange = (oId: string) => {
     setSelectedOrderId(oId);
-    const matched = orders.find((o) => o.id === oId);
-    if (matched) {
-      setStartDate(matched.startDate);
-      setEndDate(matched.endDate);
-      if (matched.logisticsNumber) {
-        setLogisticsNumber(matched.logisticsNumber);
+    const nextOrder = shippableOrders.find((order) => order.id === oId);
+    const nextModelId = nextOrder?.items[0]?.modelId;
+    if (selectedDeviceId && nextModelId) {
+      const selectedDevice = devices.find((device) => device.id === selectedDeviceId);
+      if (!selectedDevice || selectedDevice.status !== 'IDLE' || selectedDevice.modelId !== nextModelId) {
+        setSelectedDeviceId('');
+        setDeviceSearch('');
       }
     }
   };
 
-  const targetDevice = devices.find((d) => d.id === selectedDeviceId);
-  const targetOrder = orders.find((o) => o.id === selectedOrderId);
+  const shipBlockReason = !hasPermission('rental:xianyu:ship')
+    ? '当前账号缺少 rental:xianyu:ship 权限'
+    : !xianyuConfig
+      ? '未能读取闲管家写配置'
+      : xianyuConfig.enabled === false || xianyuConfig.status === 'DISABLED'
+      ? '服务器未启用闲管家集成'
+      : xianyuConfig.status === 'MISSING_CREDENTIALS'
+        ? '服务器缺少闲管家应用凭据'
+        : xianyuConfig.writeEnabled === false
+          ? '服务器已关闭闲管家写操作'
+          : null;
+  const submitBlockReason = shipBlockReason
+    || (!targetDevice ? '请先选择当前订单可用的设备 SN' : null)
+    || (!targetOrder ? '请先选择待发货订单' : null)
+    || (!targetOrder.canShip ? '当前订单状态不允许发货' : null)
+    || (!carrier.trim() ? '请先选择快递公司' : null)
+    || (!logisticsNumber.trim() ? '请先录入运单号' : null);
 
   // Filtered Lists
-  const filteredDevices = devices.filter(
+  const filteredDevices = availableDevices.filter(
     (d) =>
       d.unitCode.toLowerCase().includes(deviceSearch.toLowerCase()) ||
       d.sn.toLowerCase().includes(deviceSearch.toLowerCase()) ||
       d.modelName.toLowerCase().includes(deviceSearch.toLowerCase())
   );
 
-  const filteredOrders = orders.filter(
+  const filteredOrders = shippableOrders.filter(
     (o) =>
       o.orderNumber.toLowerCase().includes(orderSearch.toLowerCase()) ||
       o.customerName.toLowerCase().includes(orderSearch.toLowerCase())
@@ -171,7 +213,7 @@ export const QuickBindingView: React.FC = () => {
 
         if (!foundSN && !foundUnitCode) {
           const fileName = file.name;
-          const matchedDev = devices.find(
+          const matchedDev = availableDevices.find(
             (d) =>
               fileName.includes(d.unitCode) ||
               fileName.toUpperCase().includes(d.sn.toUpperCase().slice(0, 8))
@@ -184,7 +226,7 @@ export const QuickBindingView: React.FC = () => {
 
         setTimeout(() => {
           setIsScanningDevice(false);
-          const matched = devices.find(
+          const matched = availableDevices.find(
             (d) =>
               (foundSN && d.sn.toLowerCase() === foundSN.toLowerCase()) ||
               (foundUnitCode && d.unitCode === foundUnitCode) ||
@@ -229,7 +271,21 @@ export const QuickBindingView: React.FC = () => {
 
     try {
       const result = await recognizeXianyuShipmentImage(file);
-      setCarrier(result.expressName || result.expressCode || '其他');
+      const recognizedCode = result.expressCode
+        || expressCodeFromName(result.expressName || '其他');
+      if (
+        result.expressName
+        && !expressCompanies.some((company) => company.code === recognizedCode)
+      ) {
+        setExpressCompanies((current) => [
+          ...current,
+          {
+            code: recognizedCode,
+            expressName: result.expressName || '其他',
+          },
+        ]);
+      }
+      setExpressCode(recognizedCode);
       setLogisticsNumber(result.waybillNo || '');
       setLogisticsScanResult(
         result.waybillNo
@@ -250,33 +306,36 @@ export const QuickBindingView: React.FC = () => {
 
   // Confirm Binding submit
   const handleConfirmBinding = async () => {
-    if (!selectedDeviceId || !selectedOrderId) return;
-    if (!hasPermission('rental:xianyu:ship')) {
-      setToastMessage('当前账号缺少 rental:xianyu:ship，不能执行真实发货绑定。');
+    if (submitBlockReason || !targetDevice || !targetOrder) {
+      setToastMessage(submitBlockReason || '发货信息不完整，不能提交。');
       setTimeout(() => setToastMessage(null), 4000);
       return;
     }
 
-    if (!logisticsNumber.trim()) {
-      setToastMessage('请先识别或手工录入真实运单号，再提交后端发货。');
-      setTimeout(() => setToastMessage(null), 4000);
-      return;
-    }
-
-    const fullLogistics = `${carrier}: ${logisticsNumber.trim()}`;
+    const shippedOrderNumber = targetOrder.orderNumber;
+    const shippedDeviceCode = targetDevice.unitCode;
 
     setIsSubmitting(true);
     try {
       await bindDeviceWithOrderAndLogistics({
-        deviceId: selectedDeviceId,
-        orderId: selectedOrderId,
-        logisticsNumber: fullLogistics,
-        startDate,
-        endDate,
-        note: notes,
+        deviceId: targetDevice.id,
+        orderId: targetOrder.id,
+        expressCode: selectedExpressCompany.code,
+        expressName: selectedExpressCompany.expressName,
+        waybillNo: logisticsNumber.trim(),
       });
-      setToastMessage(`设备 ${targetDevice?.unitCode} 与订单 ${targetOrder?.orderNumber} 已提交后端处理。`);
+      setSelectedDeviceId('');
+      setDeviceSearch('');
+      setDeviceScanResult(null);
+      setDeviceImagePreview(null);
+      setLogisticsNumber('');
+      setLogisticsScanResult(null);
+      setLogisticsImagePreview(null);
+      setToastMessage(`订单 ${shippedOrderNumber} 已调用闲管家发货，设备 ${shippedDeviceCode} 已出库。`);
       setTimeout(() => setToastMessage(null), 4000);
+    } catch (error) {
+      setToastMessage(error instanceof Error ? error.message : '真实发货失败');
+      setTimeout(() => setToastMessage(null), 5000);
     } finally {
       setIsSubmitting(false);
     }
@@ -304,7 +363,7 @@ export const QuickBindingView: React.FC = () => {
                 <QrCode className="w-5 h-5" />
               </div>
               <h1 className="text-2xl font-black text-white tracking-tight">
-                扫码运单三合一绑定中心
+                设备发货中心
               </h1>
               <span className="px-3 py-1 rounded-full text-[11px] font-extrabold bg-blue-600 text-white flex items-center gap-1 shadow-sm">
                 <Sparkles className="w-3.5 h-3.5 text-amber-300" />
@@ -312,7 +371,7 @@ export const QuickBindingView: React.FC = () => {
               </span>
             </div>
             <p className="text-zinc-400 text-xs sm:text-sm max-w-2xl leading-relaxed">
-              上传或拍摄设备二维码/SN铭牌、快递出库面单图片，系统自动识别条码解析物流单号并绑定租赁订单，同步写入甘特图排期锁机。
+              选择设备 SN、待发货订单、快递公司和运单号，确认后调用闲管家真实发货接口，并同步完成设备出库与发货记录。
             </p>
           </div>
 
@@ -320,19 +379,36 @@ export const QuickBindingView: React.FC = () => {
             <div className="px-4 py-3 bg-zinc-800/80 rounded-2xl border border-zinc-700/60 text-center">
               <span className="text-zinc-400 text-[10px] block">在库空闲设备</span>
               <strong className="text-emerald-400 font-extrabold text-lg">
-                {devices.filter((d) => d.status === 'IDLE').length} 台
+                {availableDevices.length} 台
               </strong>
             </div>
             <div className="px-4 py-3 bg-zinc-800/80 rounded-2xl border border-zinc-700/60 text-center">
               <span className="text-zinc-400 text-[10px] block">待匹配订单</span>
               <strong className="text-amber-400 font-extrabold text-lg">
-                {orders.filter((o) => o.status === 'UNASSIGNED').length} 单
+                {shippableOrders.length} 单
               </strong>
             </div>
           </div>
         </div>
 
         <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+      </div>
+
+      <div
+        className={`rounded-2xl border px-4 py-3 text-xs font-bold flex items-center justify-between gap-3 ${
+          shipBlockReason
+            ? 'bg-amber-50 border-amber-200 text-amber-900'
+            : 'bg-emerald-50 border-emerald-200 text-emerald-800'
+        }`}
+      >
+        <span>
+          {shipBlockReason
+            ? `真实发货暂不可用：${shipBlockReason}`
+            : '真实发货已开启：确认后会调用闲管家发货接口，并将所选设备执行出库。'}
+        </span>
+        <span className="shrink-0 font-mono">
+          {xianyuConfig ? `集成状态 ${xianyuConfig.status}` : '正在读取配置'}
+        </span>
       </div>
 
       {/* Main Grid Workspace */}
@@ -407,6 +483,11 @@ export const QuickBindingView: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
+                {filteredDevices.length === 0 && (
+                  <div className="sm:col-span-2 p-5 rounded-2xl bg-zinc-50 border border-zinc-200 text-center text-xs text-zinc-500">
+                    当前订单没有型号匹配且空闲在库的设备。
+                  </div>
+                )}
                 {filteredDevices.slice(0, 20).map((dev) => {
                   const isSelected = dev.id === selectedDeviceId;
                   return (
@@ -505,15 +586,16 @@ export const QuickBindingView: React.FC = () => {
               <div className="sm:col-span-1">
                 <label className="text-[10px] font-bold text-zinc-500 block mb-1">快递承运商</label>
                 <select
-                  value={carrier}
-                  onChange={(e) => setCarrier(e.target.value)}
+                  value={expressCode}
+                  onChange={(e) => setExpressCode(e.target.value)}
                   className="w-full px-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl font-bold text-xs focus:outline-none"
                 >
-                  <option value="顺丰速运">顺丰速运 (SF)</option>
-                  <option value="京东快递">京东快递 (JD)</option>
-                  <option value="德邦物流">德邦物流</option>
-                  <option value="极兔速递">极兔速递</option>
-                  <option value="同城闪送/自提">同城闪送/自提</option>
+                  {expressCompanies.map((company) => (
+                    <option key={company.code} value={company.code}>
+                      {company.expressName}
+                      {company.expressAlias ? ` (${company.expressAlias})` : ''}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -531,7 +613,7 @@ export const QuickBindingView: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Column: Order Selection, Period & Live Digital Preview Card (5 cols) */}
+        {/* Right Column: Order Selection & Live Digital Preview Card (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
           {/* Step 3: Order Selection */}
           <div className="bg-white p-5 rounded-3xl border border-zinc-200/80 shadow-2xs space-y-4">
@@ -562,6 +644,11 @@ export const QuickBindingView: React.FC = () => {
             </div>
 
             <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+              {filteredOrders.length === 0 && (
+                <div className="p-5 rounded-2xl bg-zinc-50 border border-zinc-200 text-center text-xs text-zinc-500">
+                  当前没有租期与占用期完整的待发货订单。
+                </div>
+              )}
               {filteredOrders.map((ord) => {
                 const isSelected = ord.id === selectedOrderId;
                 return (
@@ -582,7 +669,7 @@ export const QuickBindingView: React.FC = () => {
                         </span>
                       </div>
                       <div className={`text-[10px] mt-0.5 ${isSelected ? 'text-zinc-400' : 'text-zinc-500'}`}>
-                        租期: {ord.startDate} 至 {ord.endDate}
+                        备注解析租期: {ord.rentalPeriodLabel}
                       </div>
                     </div>
 
@@ -600,42 +687,44 @@ export const QuickBindingView: React.FC = () => {
               })}
             </div>
 
-            {/* Rental Period Inputs */}
-            <div className="grid grid-cols-2 gap-3 pt-2 border-t border-zinc-100">
-              <div>
-                <label className="text-[10px] font-bold text-zinc-500 block mb-1">起租日期</label>
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl font-mono text-xs font-bold focus:outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="text-[10px] font-bold text-zinc-500 block mb-1">截至归还</label>
-                <input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl font-mono text-xs font-bold focus:outline-none"
-                />
+            <div className="pt-2 border-t border-zinc-100">
+              <div
+                className={`p-3 rounded-2xl border text-xs font-bold ${
+                  targetOrder?.rentalPeriodReady
+                    ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                    : 'bg-amber-50 border-amber-200 text-amber-900'
+                }`}
+              >
+                <span className="block text-[10px] mb-1 text-zinc-500">备注解析租期</span>
+                <span className="font-mono">
+                  {targetOrder ? targetOrder.rentalPeriodLabel : '请选择订单'}
+                </span>
+                {!targetOrder?.rentalPeriodReady && (
+                  <span className="block text-[10px] mt-1 font-medium">
+                    租期必须来自卖家备注解析；未解析成功时不能自动排机。
+                  </span>
+                )}
+                {targetOrder?.rentalPeriodReady && !targetOrder.items[0]?.modelId && (
+                  <span className="block text-[10px] mt-1 font-medium">
+                    该订单尚未映射设备型号；选择具体设备后，后端会按设备型号完成映射、排期和发货。
+                  </span>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Step 4: Digital Badge Live Preview & Submit */}
-          {targetDevice && targetOrder ? (
-            <div className="bg-zinc-900 text-white p-6 rounded-3xl border border-zinc-800 shadow-xl space-y-5">
+          {/* Step 4: Shipment Preview & Submit */}
+          <div className="bg-zinc-900 text-white p-6 rounded-3xl border border-zinc-800 shadow-xl space-y-5">
               <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
                 <span className="text-xs font-extrabold text-blue-400 flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4" />
-                  三合一关联实时预览
+                  发货确认
                 </span>
-                <span className="text-[10px] text-zinc-400">扫码码牌实时同步</span>
+                <span className="text-[10px] text-zinc-400">真实调用闲管家写接口</span>
               </div>
 
-              <div className="flex items-center gap-4 bg-zinc-800/80 p-4 rounded-2xl border border-zinc-700/60">
+              {targetDevice && targetOrder ? (
+                <div className="flex items-center gap-4 bg-zinc-800/80 p-4 rounded-2xl border border-zinc-700/60">
                 <div className="bg-white p-2.5 rounded-xl shrink-0 shadow-2xs">
                   <QRCodeSVG
                     value={`DJI-${targetDevice.sn}|ORD:${targetOrder.orderNumber}|LOGI:${logisticsNumber || 'NONE'}`}
@@ -657,29 +746,33 @@ export const QuickBindingView: React.FC = () => {
                     </span>
                   </div>
                   <div className="text-[10px] text-emerald-400 font-mono pt-0.5">
-                    锁定租期: {startDate} ~ {endDate}
+                    备注解析租期: {targetOrder.rentalPeriodLabel}
                   </div>
                 </div>
-              </div>
+                </div>
+              ) : (
+                <div className="p-6 text-center bg-zinc-800/70 border border-zinc-700/60 rounded-2xl space-y-2">
+                  <PackageCheck className="w-8 h-8 text-zinc-500 mx-auto" />
+                  <div className="text-xs font-bold text-zinc-200">先选择设备 SN 和待发货订单</div>
+                  <p className="text-[11px] text-zinc-400">
+                    发货按钮会一直显示，满足设备、订单、快递和运单号条件后即可提交。
+                  </p>
+                </div>
+              )}
 
               <button
                 onClick={() => void handleConfirmBinding()}
-                disabled={isSubmitting || !hasPermission('rental:xianyu:ship')}
+                disabled={isSubmitting || Boolean(submitBlockReason)}
+                title={submitBlockReason || '调用闲管家真实发货接口'}
                 className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs rounded-2xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Zap className="w-4 h-4 fill-current text-amber-300" />
-                <span>{isSubmitting ? '正在提交后端发货绑定...' : '确认三合一关联绑定 (真实调用后端)'}</span>
+                <span>{isSubmitting ? '正在提交闲管家发货...' : '确认发货'}</span>
               </button>
-            </div>
-          ) : (
-            <div className="p-8 text-center bg-zinc-50 border border-zinc-200/80 rounded-3xl space-y-2">
-              <PackageCheck className="w-8 h-8 text-zinc-300 mx-auto" />
-              <div className="text-xs font-bold text-zinc-700">请选择左侧设备与订单</div>
-              <p className="text-[11px] text-zinc-400 max-w-xs mx-auto">
-                完成后即可开启一键三合一关联绑定，生成专属可打印二维码并写入履历。
-              </p>
-            </div>
-          )}
+              {submitBlockReason && (
+                <p className="text-center text-[11px] text-amber-300">{submitBlockReason}</p>
+              )}
+          </div>
         </div>
       </div>
 
@@ -709,6 +802,13 @@ export const QuickBindingView: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 font-medium">
+              {boundDevices.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="py-8 px-3 text-center text-zinc-400">
+                    暂无已绑定设备与真实运单记录
+                  </td>
+                </tr>
+              )}
               {boundDevices.map((dev) => (
                 <tr key={dev.id} className="hover:bg-zinc-50/80 transition-colors">
                   <td className="py-3 px-3">

@@ -49,6 +49,10 @@ export const OrderAllocationModal: React.FC = () => {
 
   // Run auto recommendation
   const handleAutoAllocate = () => {
+    if (!targetOrder.rentalPeriodReady) {
+      setAllocationMap({});
+      return;
+    }
     const recommended = recommendDevicesForOrder(targetOrder, devices, blocks);
     const newMap: Record<string, string[]> = {};
     Object.entries(recommended).forEach(([mId, devList]) => {
@@ -69,9 +73,11 @@ export const OrderAllocationModal: React.FC = () => {
   // Confirm allocation
   const canSubmitRealSchedule =
     hasPermission('rental:device:assign') &&
+    targetOrder.rentalPeriodReady &&
     targetOrder.items.some((item) => item.rentalOrderItemId);
 
   const handleConfirm = async () => {
+    if (!canSubmitRealSchedule || !isFullyAssigned) return;
     setIsSubmitting(true);
     try {
       await assignDevicesToOrder(targetOrder.id, allocationMap);
@@ -96,7 +102,7 @@ export const OrderAllocationModal: React.FC = () => {
               <h3 className="font-bold text-lg font-mono tracking-wide">{targetOrder.orderNumber}</h3>
             </div>
             <p className="text-slate-400 text-xs mt-1">
-              租期: <span className="text-white font-medium">{targetOrder.startDate} 至 {targetOrder.endDate}</span> · 客户: {targetOrder.customerName}
+              备注解析租期: <span className="text-white font-medium">{targetOrder.rentalPeriodLabel}</span> · 客户: {targetOrder.customerName}
             </p>
           </div>
 
@@ -118,13 +124,19 @@ export const OrderAllocationModal: React.FC = () => {
                 <span>智能自动排机引擎</span>
               </div>
               <p className="text-xs text-blue-700 mt-1">
-                根据【全租期无冲突 + 当前在库 + 无维保记录】推荐设备；最终排期由后端事务校验。
+                根据【备注解析租期无冲突 + 当前在库 + 无维保记录】推荐设备；最终排期由后端事务校验。
               </p>
+              {!targetOrder.rentalPeriodReady && (
+                <p className="text-xs text-amber-700 mt-1 font-bold">
+                  当前订单租期待复核，不能自动推荐或创建排期。
+                </p>
+              )}
             </div>
 
             <button
               onClick={handleAutoAllocate}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-sm shadow-blue-500/30 flex items-center justify-center space-x-1.5 whitespace-nowrap active:scale-95"
+              disabled={!targetOrder.rentalPeriodReady}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-sm shadow-blue-500/30 flex items-center justify-center space-x-1.5 whitespace-nowrap active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Zap className="w-3.5 h-3.5 fill-current" />
               <span>一键推荐并填充</span>
@@ -248,8 +260,8 @@ export const OrderAllocationModal: React.FC = () => {
                     const check = checkDeviceAvailability(
                       dev,
                       blocks,
-                      targetOrder.startDate,
-                      targetOrder.endDate,
+                      targetOrder.startDate || '9999-12-30',
+                      targetOrder.endDate || '9999-12-31',
                       targetOrder.id
                     );
                     const isSelected = (allocationMap[manualSwapModelId] || []).includes(dev.id);
@@ -309,7 +321,7 @@ export const OrderAllocationModal: React.FC = () => {
 
           <button
             onClick={() => void handleConfirm()}
-            disabled={isSubmitting || !hasPermission('rental:device:assign')}
+            disabled={isSubmitting || !canSubmitRealSchedule || !isFullyAssigned}
             className={`px-6 py-2.5 rounded-xl font-bold text-xs text-white shadow-md transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
               isFullyAssigned && canSubmitRealSchedule
                 ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/30'

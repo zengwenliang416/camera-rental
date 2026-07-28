@@ -11,12 +11,6 @@ import {
   List,
   Grid,
   Wrench,
-  Lock,
-  RotateCcw,
-  Plus,
-  CheckCircle2,
-  AlertCircle,
-  Clock,
 } from 'lucide-react';
 
 function toLocalDateString(date: Date) {
@@ -37,8 +31,6 @@ export const GanttScheduleView: React.FC = () => {
     setSelectedModelId,
     openAllocationModal,
     openDeviceDetail,
-    updateDeviceStatus,
-    hasPermission,
   } = useApp();
 
   const [viewMode, setViewMode] = useState<'gantt' | 'table'>('gantt');
@@ -380,30 +372,6 @@ export const GanttScheduleView: React.FC = () => {
                                 </div>
                               </button>
 
-                              {/* Quick Maintenance Toggle Action */}
-                              <div className="flex items-center gap-1">
-                                {dev.status === 'REPAIR' ? (
-                                  <button
-                                    onClick={() => updateDeviceStatus(dev.id, 'IDLE')}
-                                    disabled={!hasPermission('rental:device:assign')}
-                                    title="维保完毕，重置为空闲"
-                                    className="p-1 hover:bg-emerald-50 text-emerald-600 rounded transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                                  >
-                                    <RotateCcw className="w-3.5 h-3.5" />
-                                  </button>
-                                ) : (
-                                  <button
-                                    onClick={() =>
-                                      updateDeviceStatus(dev.id, 'REPAIR', '日常定期检测保养')
-                                    }
-                                    disabled={!hasPermission('rental:device:assign')}
-                                    title="设为维保/检修状态"
-                                    className="p-1 hover:bg-rose-50 text-rose-500 rounded transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                                  >
-                                    <Wrench className="w-3.5 h-3.5" />
-                                  </button>
-                                )}
-                              </div>
                             </div>
                           </td>
 
@@ -491,7 +459,7 @@ export const GanttScheduleView: React.FC = () => {
                   <th className="p-3">客户</th>
                   <th className="p-3">租期/维保期限</th>
                   <th className="p-3">预计可用时间</th>
-                  <th className="p-3 text-right">维保管理</th>
+                  <th className="p-3 text-right">设备详情</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-100">
@@ -535,26 +503,7 @@ export const GanttScheduleView: React.FC = () => {
                     <td className="p-3 font-semibold text-zinc-800">
                       {dev.expectedAvailableDate || '立即可用'}
                     </td>
-                    <td className="p-3 text-right space-x-2">
-                      {dev.status === 'REPAIR' ? (
-                        <button
-                          onClick={() => updateDeviceStatus(dev.id, 'IDLE')}
-                          disabled={!hasPermission('rental:device:assign')}
-                          className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md font-bold text-[11px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          检修完成入库
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() =>
-                            updateDeviceStatus(dev.id, 'REPAIR', '转入常规检修保养')
-                          }
-                          disabled={!hasPermission('rental:device:assign')}
-                          className="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200/80 rounded-md font-bold text-[11px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          标记报修
-                        </button>
-                      )}
+                    <td className="p-3 text-right">
                       <button
                         onClick={() => openDeviceDetail(dev.id)}
                         className="px-2.5 py-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-md font-bold text-[11px] transition-colors"

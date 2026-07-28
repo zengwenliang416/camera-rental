@@ -70,6 +70,9 @@ export function recommendDevicesForOrder(
   blocks: ScheduleBlock[]
 ): Record<string, DeviceInstance[]> {
   const result: Record<string, DeviceInstance[]> = {};
+  if (!order.rentalPeriodReady || !order.startDate || !order.endDate) {
+    return result;
+  }
 
   for (const item of order.items) {
     const candidates = allDevices.filter((d) => d.modelId === item.modelId);

@@ -26,7 +26,7 @@ interface LoginPageProps {
 export const LoginPage: React.FC<LoginPageProps> = ({ isModal = false }) => {
   const { login, setIsLoginPageVisible, isLoading } = useApp();
   const tenantEnabled = import.meta.env.VITE_APP_TENANT_ENABLE !== 'false';
-  const defaultTenantName = import.meta.env.VITE_APP_DEFAULT_LOGIN_TENANT || '芋道源码';
+  const defaultTenantName = import.meta.env.VITE_APP_DEFAULT_LOGIN_TENANT || '捷租达';
   const [activeTab, setActiveTab] = useState<'password' | 'sms' | 'qr'>('password');
   const [tenantName, setTenantName] = useState(tenantEnabled ? defaultTenantName : '');
   const [username, setUsername] = useState(import.meta.env.VITE_APP_DEFAULT_LOGIN_USERNAME || '');

@@ -7,39 +7,16 @@ import {
   X,
   QrCode,
   Truck,
-  FileText,
   Calendar,
   CheckCircle2,
   Search,
   Zap,
-  ArrowRight,
   ShieldCheck,
-  Check,
   PackageCheck,
   Camera,
-  Upload,
-  Image as ImageIcon,
   Sparkles,
-  RefreshCw,
-  AlertCircle,
   ScanLine,
 } from 'lucide-react';
-
-function toLocalDateString(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
-function addDays(date: Date, days: number) {
-  const next = new Date(date);
-  next.setDate(next.getDate() + days);
-  return next;
-}
-
-const today = toLocalDateString(new Date());
-const defaultEndDate = toLocalDateString(addDays(new Date(), 6));
 
 export const QuickBindingModal: React.FC = () => {
   const {
@@ -57,8 +34,6 @@ export const QuickBindingModal: React.FC = () => {
   const [selectedOrderId, setSelectedOrderId] = useState<string>('');
   const [logisticsNumber, setLogisticsNumber] = useState<string>('');
   const [carrier, setCarrier] = useState<string>('顺丰速运');
-  const [startDate, setStartDate] = useState<string>(today);
-  const [endDate, setEndDate] = useState<string>(defaultEndDate);
   const [notes, setNotes] = useState<string>('');
 
   const [deviceSearch, setDeviceSearch] = useState<string>('');
@@ -81,32 +56,14 @@ export const QuickBindingModal: React.FC = () => {
   useEffect(() => {
     if (preselectedOrderForBinding) {
       setSelectedOrderId(preselectedOrderForBinding);
-      const matchedOrder = orders.find((o) => o.id === preselectedOrderForBinding);
-      if (matchedOrder) {
-        setStartDate(matchedOrder.startDate);
-        setEndDate(matchedOrder.endDate);
-        if (matchedOrder.logisticsNumber) {
-          setLogisticsNumber(matchedOrder.logisticsNumber);
-        }
-      }
     } else if (orders.length > 0 && !selectedOrderId) {
       setSelectedOrderId(orders[0].id);
-      setStartDate(orders[0].startDate);
-      setEndDate(orders[0].endDate);
     }
   }, [preselectedOrderForBinding, orders]);
 
-  // When order selection changes, auto-sync start/end dates
+  // Keep order selection independent from manually entered or OCR-recognized logistics data.
   const handleOrderChange = (oId: string) => {
     setSelectedOrderId(oId);
-    const matched = orders.find((o) => o.id === oId);
-    if (matched) {
-      setStartDate(matched.startDate);
-      setEndDate(matched.endDate);
-      if (matched.logisticsNumber) {
-        setLogisticsNumber(matched.logisticsNumber);
-      }
-    }
   };
 
   if (!isQuickBindingOpen) return null;
@@ -272,8 +229,6 @@ export const QuickBindingModal: React.FC = () => {
       deviceId: selectedDeviceId,
       orderId: selectedOrderId,
       logisticsNumber: fullLogistics,
-      startDate,
-      endDate,
       note: notes,
     });
 
@@ -304,7 +259,7 @@ export const QuickBindingModal: React.FC = () => {
                 </span>
               </div>
               <p className="text-zinc-400 text-xs mt-0.5">
-                支持上传设备二维码/SN铭牌照片、快递面单图片AI识别，并联动租期同步至甘特图
+                支持上传设备二维码/SN铭牌照片、快递面单图片AI识别；租期只读取后端备注解析结果。
               </p>
             </div>
           </div>
@@ -503,7 +458,7 @@ export const QuickBindingModal: React.FC = () => {
                             </span>
                           </div>
                           <div className={`text-[10px] ${isSelected ? 'text-zinc-400' : 'text-zinc-500'}`}>
-                            租期: {ord.startDate} 至 {ord.endDate}
+                            备注解析租期: {ord.rentalPeriodLabel}
                           </div>
                         </div>
 
@@ -596,36 +551,31 @@ export const QuickBindingModal: React.FC = () => {
 
               </div>
 
-              {/* Step 4: Record Rental Period */}
+              {/* Step 4: Parsed Rental Period */}
               <div className="p-4 rounded-2xl border border-zinc-200/80 bg-white space-y-3">
                 <div className="font-extrabold text-zinc-900 text-sm flex items-center justify-between border-b border-zinc-100 pb-2">
                   <span className="flex items-center gap-1.5">
                     <Calendar className="w-4 h-4 text-emerald-600" />
-                    记录该设备起止租期
+                    备注解析租期
                   </span>
-                  <span className="text-[10px] text-zinc-400 font-normal">自动同步甘特图锁机</span>
+                  <span className="text-[10px] text-zinc-400 font-normal">后端备注解析结果</span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[10px] font-bold text-zinc-500 block mb-1">起租日期 (起)</label>
-                    <input
-                      type="date"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                      className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl font-mono text-xs font-bold focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-[10px] font-bold text-zinc-500 block mb-1">截至归还 (止)</label>
-                    <input
-                      type="date"
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                      className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl font-mono text-xs font-bold focus:outline-none"
-                    />
-                  </div>
+                <div
+                  className={`p-3 rounded-xl border text-xs font-bold ${
+                    targetOrder?.rentalPeriodReady
+                      ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                      : 'bg-amber-50 border-amber-200 text-amber-900'
+                  }`}
+                >
+                  <span className="font-mono">
+                    {targetOrder ? targetOrder.rentalPeriodLabel : '请选择订单'}
+                  </span>
+                  {!targetOrder?.rentalPeriodReady && (
+                    <span className="block text-[10px] mt-1 font-medium">
+                      租期必须来自卖家备注解析；未解析成功时不能自动排机。
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -656,7 +606,7 @@ export const QuickBindingModal: React.FC = () => {
                   </div>
                   <div>
                     <span className="text-zinc-400 text-[10px] block">租期记录</span>
-                    <strong className="text-emerald-400 font-mono">{startDate} ~ {endDate}</strong>
+                    <strong className="text-emerald-400 font-mono">{targetOrder.rentalPeriodLabel}</strong>
                   </div>
                 </div>
               </div>
@@ -684,7 +634,7 @@ export const QuickBindingModal: React.FC = () => {
               }`}
             >
               <Zap className="w-4 h-4 fill-current" />
-              <span>确认三合一关联绑定并保存租期</span>
+              <span>确认三合一关联绑定</span>
             </button>
           </div>
         )}

@@ -15,10 +15,13 @@ import {
   dispatchRentalDevice,
   fetchPermissionInfo,
   fetchScheduleCenterSnapshot,
+  fetchXianyuConfig,
   resolveManualReview,
   returnRentalDevice,
   shipXianyuOrder,
+  XianyuConfigVO,
 } from '../api/rental';
+import { expressCodeFromName } from '../lib/expressCompanies';
 import {
   deriveCategories,
   deriveModels,
@@ -41,6 +44,7 @@ interface AppContextType {
   accessDenied: boolean;
   permissions: string[];
   hasPermission: (permission: string | string[]) => boolean;
+  xianyuConfig: XianyuConfigVO | null;
   currentUser?: {
     id?: number;
     username?: string;
@@ -74,9 +78,10 @@ interface AppContextType {
   bindDeviceWithOrderAndLogistics: (params: {
     deviceId: string;
     orderId: string;
-    logisticsNumber: string;
-    startDate?: string;
-    endDate?: string;
+    logisticsNumber?: string;
+    expressCode?: string;
+    expressName?: string;
+    waybillNo?: string;
     note?: string;
   }) => Promise<void>;
   dispatchOrder: (orderId: string) => Promise<void>;
@@ -103,6 +108,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(Boolean(getAccessToken()));
   const [isLoginPageVisible, setIsLoginPageVisible] = useState<boolean>(false);
   const [permissions, setPermissions] = useState<string[]>(getCachedPermissionInfo()?.permissions || []);
+  const [xianyuConfig, setXianyuConfig] = useState<XianyuConfigVO | null>(null);
   const [currentUser, setCurrentUser] = useState(getAdminUser());
 
   const [selectedModelId, setSelectedModelId] = useState<string>('');
@@ -122,14 +128,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     [permissions]
   );
 
-  const expressCodeFromName = (name: string) => {
-    if (name.includes('顺丰')) return 'shunfeng';
-    if (name.includes('京东')) return 'jingdong';
-    if (name.includes('德邦')) return 'debangkuaidi';
-    if (name.includes('极兔')) return 'jtexpress';
-    return 'OTHER';
-  };
-
   const idempotencyKey = (prefix: string, parts: Array<string | number | undefined>) =>
     `${prefix}:${parts.filter(Boolean).join(':')}:${Date.now()}`;
 
@@ -141,6 +139,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setOrders([]);
       setBlocks([]);
       setExceptions([]);
+      setXianyuConfig(null);
       setAuthRequired(true);
       setIsLoggedIn(false);
       setLoadError('需要先登录管理后台');
@@ -179,16 +178,44 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return;
       }
 
-      const snapshot = await fetchScheduleCenterSnapshot();
+      const [snapshot, config] = await Promise.all([
+        fetchScheduleCenterSnapshot(),
+        fetchXianyuConfig().catch(() => null),
+      ]);
       const mappedDevices = mapDevices(snapshot.devices);
       const mappedModels = deriveModels(snapshot.devices);
+      const mappedOrders = mapChannelOrders(snapshot.channelOrders, snapshot.pendingShipOrders);
+      const deviceUsage = new Map<string, {
+        currentOrderId: string;
+        currentCustomer: string;
+        logisticsNumber?: string;
+        currentPeriod?: { startDate: string; endDate: string };
+      }>();
+      mappedOrders.forEach((order) => {
+        order.items.forEach((item) => {
+          item.assignedDeviceIds.forEach((deviceId) => {
+            deviceUsage.set(deviceId, {
+              currentOrderId: order.orderNumber,
+              currentCustomer: order.customerName,
+              logisticsNumber: order.logisticsNumber,
+              currentPeriod: order.rentalPeriodReady
+                ? { startDate: order.startDate, endDate: order.endDate }
+                : undefined,
+            });
+          });
+        });
+      });
       setCategories(mappedModels.length > 0 ? deriveCategories() : []);
       setModels(mappedModels);
       setSelectedModelId(mappedModels[0]?.id || '');
-      setDevices(mappedDevices);
+      setDevices(mappedDevices.map((device) => ({
+        ...device,
+        ...deviceUsage.get(device.id),
+      })));
       setBlocks(mapSchedules(snapshot.schedules));
-      setOrders(mapChannelOrders(snapshot.channelOrders, snapshot.pendingShipOrders));
+      setOrders(mappedOrders);
       setExceptions(mapReviews(snapshot.reviews));
+      setXianyuConfig(config);
       const nowStr = new Date().toLocaleTimeString('zh-CN', {
         hour: '2-digit',
         minute: '2-digit',
@@ -205,6 +232,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setOrders([]);
       setBlocks([]);
       setExceptions([]);
+      setXianyuConfig(null);
       setSelectedModelId('');
       setLastSyncTime('管理端数据同步失败');
       if (message === 'AUTH_REQUIRED' || message === 'NO_REFRESH_TOKEN') {
@@ -277,12 +305,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     deviceId,
     orderId,
     logisticsNumber,
+    expressCode,
+    expressName,
+    waybillNo,
   }: {
     deviceId: string;
     orderId: string;
-    logisticsNumber: string;
-    startDate?: string;
-    endDate?: string;
+    logisticsNumber?: string;
+    expressCode?: string;
+    expressName?: string;
+    waybillNo?: string;
     note?: string;
   }) => {
     const targetOrder = orders.find((o) => o.id === orderId);
@@ -290,19 +322,41 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     if (!targetOrder || !targetDevice) return;
     if (!hasPermission('rental:xianyu:ship')) {
-      setLoadError('当前账号缺少 rental:xianyu:ship，不能执行闲管家发货绑定。');
-      return;
+      const message = '当前账号缺少 rental:xianyu:ship，不能执行闲管家真实发货。';
+      setLoadError(message);
+      throw new Error(message);
     }
-    if (!logisticsNumber.trim()) {
-      setLoadError('请先录入并人工确认运单号。');
-      return;
+    if (xianyuConfig?.enabled === false || xianyuConfig?.status === 'DISABLED') {
+      const message = '服务器未启用闲管家集成，不能执行真实发货。';
+      setLoadError(message);
+      throw new Error(message);
     }
+    if (xianyuConfig?.status === 'MISSING_CREDENTIALS') {
+      const message = '服务器缺少闲管家应用凭据，不能执行真实发货。';
+      setLoadError(message);
+      throw new Error(message);
+    }
+    if (xianyuConfig?.writeEnabled === false) {
+      const message = '服务器已关闭闲管家写操作，请先开启 XGJ_WRITE_ENABLED。';
+      setLoadError(message);
+      throw new Error(message);
+    }
+    const legacyLogistics = logisticsNumber?.trim() || '';
+    const [legacyExpressName, legacyWaybillNo] = legacyLogistics.includes(':')
+      ? legacyLogistics.split(':', 2).map((item) => item.trim())
+      : ['', legacyLogistics];
+    const resolvedExpressName = expressName?.trim()
+      || legacyExpressName
+      || targetOrder.expressName
+      || '其他';
+    const resolvedExpressCode = expressCode?.trim() || expressCodeFromName(resolvedExpressName);
+    const resolvedWaybillNo = waybillNo?.trim() || legacyWaybillNo;
 
-    const [maybeExpressName, maybeWaybill] = logisticsNumber.includes(':')
-      ? logisticsNumber.split(':').map((item) => item.trim())
-      : ['', logisticsNumber.trim()];
-    const expressName = maybeExpressName || targetOrder.expressName || '其他';
-    const waybillNo = maybeWaybill || logisticsNumber.trim();
+    if (!resolvedWaybillNo) {
+      const message = '请先录入并人工确认运单号。';
+      setLoadError(message);
+      throw new Error(message);
+    }
 
     setIsLoading(true);
     setLoadError(null);
@@ -310,16 +364,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       await shipXianyuOrder({
         channelOrderId: Number(targetOrder.id),
         deviceId: Number(targetDevice.id),
-        idempotencyKey: idempotencyKey('schedule-center-ship', [targetOrder.id, targetDevice.id, waybillNo]),
-        expressCode: targetOrder.expressCode || expressCodeFromName(expressName),
-        expressName,
-        waybillNo,
+        idempotencyKey: idempotencyKey(
+          'schedule-center-ship',
+          [targetOrder.id, targetDevice.id, resolvedWaybillNo]
+        ),
+        expressCode: resolvedExpressCode,
+        expressName: resolvedExpressName,
+        waybillNo: resolvedWaybillNo,
         source: 'ADMIN',
         ocrConfirmed: true,
       });
       await loadManagementData();
     } catch (error) {
-      setLoadError(error instanceof Error ? error.message : '闲管家发货绑定失败');
+      const message = error instanceof Error ? error.message : '闲管家发货失败';
+      setLoadError(message);
+      throw error instanceof Error ? error : new Error(message);
     } finally {
       setIsLoading(false);
     }
@@ -333,6 +392,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setLoadError('当前账号缺少 rental:device:assign，不能创建设备占用排期。');
       return;
     }
+    if (!targetOrder.canAssign || !targetOrder.occupyStartDate || !targetOrder.occupyEndDateExclusive) {
+      setLoadError(`订单 ${targetOrder.orderNumber} 尚未具备完整的内部租赁明细与设备占用周期，不能自动排机。`);
+      return;
+    }
 
     const commands = targetOrder.items.flatMap((item) => {
       const deviceIds = allocationMap[item.modelId] || [];
@@ -340,13 +403,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return deviceIds.map((deviceId) => ({
         rentalOrderItemId: item.rentalOrderItemId!,
         deviceId: Number(deviceId),
-        occupyStartDate: targetOrder.startDate,
-        occupyEndDateExclusive: targetOrder.endDate,
+        occupyStartDate: targetOrder.occupyStartDate,
+        occupyEndDateExclusive: targetOrder.occupyEndDateExclusive,
         idempotencyKey: idempotencyKey('schedule-center-assign', [
           item.rentalOrderItemId,
           deviceId,
-          targetOrder.startDate,
-          targetOrder.endDate,
+          targetOrder.occupyStartDate,
+          targetOrder.occupyEndDateExclusive,
         ]),
       }));
     });
@@ -477,6 +540,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         accessDenied,
         permissions,
         hasPermission,
+        xianyuConfig,
         currentUser,
         isLoggedIn,
         isLoginPageVisible,

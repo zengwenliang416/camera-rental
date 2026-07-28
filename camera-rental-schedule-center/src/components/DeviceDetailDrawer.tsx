@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { QRCodeSVG } from 'qrcode.react';
+import { fetchRentalDeviceQr } from '../api/rental';
 import {
   X,
   Cpu,
@@ -32,6 +33,28 @@ export const DeviceDetailDrawer: React.FC = () => {
 
   const device = devices.find((d) => d.id === selectedDeviceIdForDetail);
   const [noteInput, setNoteInput] = useState('');
+  const [qrPayload, setQrPayload] = useState<string>();
+  const [qrError, setQrError] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    setQrPayload(undefined);
+    setQrError('');
+    if (!device || !hasPermission('rental:device:query')) return () => {
+      active = false;
+    };
+
+    fetchRentalDeviceQr(Number(device.id))
+      .then((result) => {
+        if (active) setQrPayload(result.payload);
+      })
+      .catch((error) => {
+        if (active) setQrError(error instanceof Error ? error.message : '二维码加载失败');
+      });
+    return () => {
+      active = false;
+    };
+  }, [device?.id, hasPermission]);
 
   if (!device || !selectedDeviceIdForDetail) return null;
 
@@ -51,8 +74,6 @@ export const DeviceDetailDrawer: React.FC = () => {
   const handleSetIdle = () => {
     updateDeviceStatus(device.id, 'IDLE');
   };
-
-  const qrString = device.qrCode || `DJI-${device.modelId.toUpperCase()}|UNIT:${device.unitCode}|SN:${device.sn}`;
 
   return (
     <div className="fixed inset-0 z-50 bg-zinc-950/70 backdrop-blur-xs flex justify-end p-0 sm:p-4 select-none">
@@ -108,7 +129,13 @@ export const DeviceDetailDrawer: React.FC = () => {
             </div>
 
             <div className="bg-white p-2.5 rounded-xl border border-zinc-200/90 shadow-2xs shrink-0">
-              <QRCodeSVG value={qrString} size={84} level="M" />
+              {qrPayload ? (
+                <QRCodeSVG value={qrPayload} size={84} level="M" />
+              ) : (
+                <div className="w-[84px] h-[84px] flex items-center justify-center text-center text-[10px] text-zinc-400">
+                  {qrError || '二维码加载中'}
+                </div>
+              )}
             </div>
           </div>
 

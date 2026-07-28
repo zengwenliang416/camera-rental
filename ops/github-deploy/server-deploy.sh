@@ -74,9 +74,14 @@ else
 fi
 
 echo "[deploy] cleanup old releases, keep=${KEEP_RELEASES}"
+# Always retain the active release, then keep the newest remaining releases by
+# modification time. Release names may be timestamps or Git SHAs, so lexical
+# sorting can delete the release that was just activated.
 find "${DEPLOY_ROOT}/releases" -mindepth 1 -maxdepth 1 -type d \
-  | sort -r \
-  | tail -n +"$((KEEP_RELEASES + 1))" \
+  ! -path "${release_dir}" -printf '%T@ %p\n' \
+  | sort -nr \
+  | tail -n +"${KEEP_RELEASES}" \
+  | cut -d' ' -f2- \
   | xargs -r rm -rf
 
 rm -f "${RELEASE_ARCHIVE}"

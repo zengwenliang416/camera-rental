@@ -2,15 +2,6 @@ name: Deploy camera rental to 211
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/deploy-211.yml'
-      - 'ops/github-deploy/**'
-      - 'camera-rental-server/**'
-      - 'camera-rental-admin/**'
-      - 'camera-rental-schedule-center/**'
 
 permissions:
   contents: read

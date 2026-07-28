@@ -3,9 +3,9 @@ set -euo pipefail
 
 DEPLOY_ROOT="${DEPLOY_ROOT:-/opt/camera-rental}"
 RELEASE_SHA="${RELEASE_SHA:?RELEASE_SHA is required}"
-REPO_URL="${REPO_URL:-git@github.com:zengwenliang416/camera-rental.git}"
+REPO_URL="${REPO_URL:-git@gitee.com:wenliang_zeng/camera-rental.git}"
 SOURCE_DIR="${SOURCE_DIR:-${DEPLOY_ROOT}/source}"
-GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh -i ~/.ssh/camera_rental_github_pull -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20 -C}"
+GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh -i ~/.ssh/camera_rental_gitee_pull -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20 -C}"
 export GIT_SSH_COMMAND
 NODE_VERSION="${NODE_VERSION:-22.14.0}"
 NODE_ARCHIVE_ARCH=""
@@ -113,4 +113,5 @@ echo "[build-deploy] pack release"
 rm -f "${release_archive}"
 tar -czf "${release_archive}" -C "${release_dir}" .
 
+install -m 0755 "${SOURCE_DIR}/ops/github-deploy/server-deploy.sh" /tmp/camera-rental-server-deploy.sh
 exec bash /tmp/camera-rental-server-deploy.sh "${release_archive}"

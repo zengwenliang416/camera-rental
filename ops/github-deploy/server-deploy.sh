@@ -23,6 +23,15 @@ test -f "${release_dir}/server/yudao-server.jar"
 test -f "${release_dir}/admin/index.html"
 test -f "${release_dir}/schedule-center/index.html"
 
+# Archives built on macOS may preserve owner-only modes. Nginx must be able to
+# traverse release directories and read static frontend assets.
+chmod 755 "${release_dir}" "${release_dir}/server"
+chmod 644 "${release_dir}/server/yudao-server.jar"
+for static_dir in admin schedule-center; do
+  find "${release_dir}/${static_dir}" -type d -exec chmod 755 {} +
+  find "${release_dir}/${static_dir}" -type f -exec chmod 644 {} +
+done
+
 has_web_artifact=false
 if [ -f "${release_dir}/web/server/index.mjs" ]; then
   has_web_artifact=true

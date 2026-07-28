@@ -2,32 +2,44 @@
 
 ## Verdict
 
-approved
+needs-fix
 
 ## Separation Of Concerns
 
-- Parsing, hashing, raw evidence persistence, normalized order persistence, and cursor comparison are separate collaborators. The persistence service owns only the local transaction and performs no HTTP or logging.
+- Parsing, hashing, and mapper boundaries remain separate, but the persistence
+  service now also owns rental-period parsing, historical backfill, receiver
+  snapshot policy, and automatic conversion dispatch.
 
 ## Component Cohesion / Coupling
 
-- The service coordinates one documented order-detail transaction. Mapper-specific `FOR UPDATE` methods keep identity locking close to the database boundary and avoid leaking lock concerns into callers.
+- The service has become coupled to both channel evidence and rental
+  conversion. That broadens a transaction originally scoped to raw plus
+  normalized order persistence.
 
 ## Test Quality
 
-- Tests assert normalized outcomes, raw evidence linkage, parse-state preservation, write ordering, and stable cursor semantics. They do not assert private helper implementation details.
+- Tests cover receiver preservation, period parsing, later remark completion,
+  and bounded backfill. They do not prove a restricted access boundary for the
+  newly normalized full recipient fields.
 
 ## Error Handling
 
-- Malformed or non-success payloads fail before persistence. Required identifiers are validated, and transaction rollback protects raw/order/cursor consistency.
+- Older source snapshots are rejected and blank receiver updates do not erase
+  known values. Privacy failure modes are not represented as a separate
+  boundary.
 
 ## Reuse / Duplication
 
-- SHA-256 hashing and stable cursor comparison are standalone components. Existing tenant DOs, MyBatis Plus mappers, Jackson, and Spring transactions are reused.
+- The shared rental-period parser is reused correctly. Full recipient values
+  are duplicated from immutable raw evidence into another persistence surface.
 
 ## Complexity Delta
 
-- The slice adds a narrow durable boundary. Paging, retry, replay, conversion, and review workflows remain excluded to prevent a mixed-responsibility service.
+- The persistence service now coordinates several lifecycle concerns beyond
+  its original durable-ingestion responsibility.
 
 ## Required Fixes
 
-No required fixes remain for this review.
+- Extract or explicitly define the receiver-snapshot and rental-period
+  backfill boundaries, and add permission/masking tests for every API or export
+  that can read the normalized private fields.

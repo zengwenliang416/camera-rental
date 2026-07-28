@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "change_id": "xian-guanjia-data-integration-v1",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "<decision-required>",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "e2e:verify/e2e/artifacts/local-schedule-center-regression-20260728.json; unit:camera-rental-schedule-center npm test 8/8; backend:mvn rental reactor 236/236"
+    }
+  ]
+}

@@ -1,11 +1,19 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-27T11:21:00.389Z",
-  "current_focus": "camera-rental-full-platform-v1",
+  "generated_at": "2026-07-28T09:27:55.121Z",
+  "current_focus": "xian-guanjia-data-integration-v1",
   "changes": [
     {
       "id": "camera-rental-full-platform-v1",
       "stage": "requirements",
+      "status": "active",
+      "branch": null,
+      "created_at": null,
+      "last_active_at": null
+    },
+    {
+      "id": "schedule-center-local-stability-v1",
+      "stage": "created",
       "status": "active",
       "branch": null,
       "created_at": null,
@@ -26,8 +34,8 @@
       "branch": "main",
       "created_at": "2026-07-25T00:00:00.000Z",
       "last_active_at": "2026-07-27",
-      "archived_at": "2026-07-27T11:21:00.342Z",
-      "archive_path": "openspec/changes/archive/2026-07-27-xian-guanjia-order-dispatch-ship-v1"
+      "archive_path": "openspec/changes/archive/2026-07-27-xian-guanjia-order-dispatch-ship-v1",
+      "archived_at": "2026-07-27T11:21:00.342Z"
     }
   ]
 }

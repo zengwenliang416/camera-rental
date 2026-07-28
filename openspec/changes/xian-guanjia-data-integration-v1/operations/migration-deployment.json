@@ -1,0 +1,25 @@
+{
+  "schema": "specnav.ops.migrationDeployment.v1",
+  "change": "xian-guanjia-data-integration-v1",
+  "status": "pass",
+  "source_manifest": "development/migrations/manifest.json",
+  "applied_migrations": [
+    "20260728_026_xianyu_order_receiver_snapshot",
+    "20260728_027_xianyu_order_logistics_dates"
+  ],
+  "evidence_refs": [
+    "/opt/camera-rental/backups/ruoyi-vue-pro-predeploy-20260728071412.sql.gz",
+    "production information_schema verification: 10 expected xianyu_order rental, receiver, and logistics columns",
+    "production device verification: one P3-05-5WTCN7F002B088 row for tenant 1"
+  ],
+  "rollback_refs": [
+    "operations/rollback-plan.md",
+    "/opt/camera-rental/backups/ruoyi-vue-pro-predeploy-20260728071412.sql.gz"
+  ],
+  "rollback_strategy": "Roll back the application release symlink first. Restore the pre-deploy database dump only for a confirmed migration data-corruption incident; do not routinely drop additive columns or rental history.",
+  "notes": [
+    "Migrations 025 and 028 were already present in production before this deployment.",
+    "Migrations 026 and 027 were applied after a validated full logical backup.",
+    "The older development manifest covers migrations 001 through 021 and does not yet enumerate this July 28 incremental deployment."
+  ]
+}

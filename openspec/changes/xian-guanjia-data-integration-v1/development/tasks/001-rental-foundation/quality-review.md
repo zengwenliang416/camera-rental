@@ -2,43 +2,41 @@
 
 ## Verdict
 
-approved
+needs-fix
 
 ## Separation Of Concerns
 
-- The configuration class owns runtime state only. It does not construct an
-  HTTP client, compose a signature, expose an endpoint, or permit a third-party
-  write operation.
+- Module composition and runtime credential binding remain separated, but the
+  foundation configuration now carries a later write-operation gate.
 
 ## Component Cohesion / Coupling
 
-- The API/Biz module boundary follows the existing RuoYi layout. The server
-  depends only on the Biz module, while later client and persistence behavior
-  remains outside this foundation slice.
+- `XianyuProperties` is the correct shared configuration boundary. That makes
+  its unsafe `writeEnabled=true` default more consequential because every
+  write service depends on the same object.
 
 ## Test Quality
 
-- The focused tests assert both safe configuration branches. The completed
-  Maven reactor test confirms the module compiles with the actual parent and
-  server dependency graph.
+- Existing tests cover disabled read integration and missing credentials, but
+  the write-default test asserts the unsafe behavior instead of protecting the
+  fail-closed requirement.
 
 ## Error Handling
 
-- Incomplete enabled configuration returns `MISSING_CREDENTIALS`; no secret is
-  rendered in the status or test assertions.
+- Missing credentials fail safely. A missing write-gate binding does not fail
+  safely because the Java fallback is enabled.
 
 ## Reuse / Duplication
 
-- The module reuses Spring configuration binding and the existing Maven
-  reactor. The audit SQL copy is hash-locked to the sole production SQL source
-  to prevent handoff drift.
+- Spring configuration binding and the Maven module structure are reused
+  appropriately. No duplication issue blocks this task.
 
 ## Complexity Delta
 
-- The slice adds one small configuration seam and an additive schema only.
-  Transport, persistence services, and operator APIs are intentionally deferred
-  to their dedicated vertical slices.
+- The additional write-gate state is small, but its default changes the
+  security posture of every caller.
 
 ## Required Fixes
 
-- None blocking for the foundation slice.
+- Make the write gate default false in `XianyuProperties` and assert that
+  behavior in the focused test.

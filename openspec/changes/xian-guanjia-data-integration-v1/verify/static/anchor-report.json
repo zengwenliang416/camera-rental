@@ -1,0 +1,183 @@
+{
+  "schema": "specnav.verify.anchorReport.v1",
+  "change": "xian-guanjia-data-integration-v1",
+  "policy_present": false,
+  "enforcement": null,
+  "anchor_pattern": "@ai-anchor",
+  "diff_ok": true,
+  "scanned": [
+    {
+      "file": "camera-rental-admin/src/components/DiyEditor/components/mobile/UserCard/index.vue",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-admin/src/views/Login/SocialLogin.vue",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-admin/src/views/Login/components/MobileForm.vue",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderRespVO.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuOrderDO.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceAssignmentMapper.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalOrderItemMapper.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuOrderMapper.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderPayloadParser.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderPersistenceService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderPersistenceServiceImpl.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderSnapshot.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/RentalConversionResult.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/SellerRemarkRentalPeriod.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/SellerRemarkRentalPeriodParser.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/XianyuRentalConversionService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/XianyuRentalConversionServiceImpl.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuAfterSaleAdminService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderAdminService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/xianyu/XianyuChannelSyncService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    }
+  ],
+  "coverage_ratio": 0,
+  "uncovered": [
+    "camera-rental-admin/src/components/DiyEditor/components/mobile/UserCard/index.vue",
+    "camera-rental-admin/src/views/Login/SocialLogin.vue",
+    "camera-rental-admin/src/views/Login/components/MobileForm.vue",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderRespVO.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuOrderDO.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceAssignmentMapper.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalOrderItemMapper.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuOrderMapper.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderPayloadParser.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderPersistenceService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderPersistenceServiceImpl.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderSnapshot.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/RentalConversionResult.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/SellerRemarkRentalPeriod.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/SellerRemarkRentalPeriodParser.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/XianyuRentalConversionService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/XianyuRentalConversionServiceImpl.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuAfterSaleAdminService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderAdminService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/xianyu/XianyuChannelSyncService.java"
+  ],
+  "blockers": [],
+  "ok": true
+}

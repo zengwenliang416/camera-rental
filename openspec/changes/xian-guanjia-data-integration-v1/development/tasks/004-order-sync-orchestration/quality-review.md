@@ -6,28 +6,38 @@ approved
 
 ## Separation Of Concerns
 
-- Window validation, response parsing, run-state persistence, detail persistence, and cursor advancement remain separate collaborators. The orchestration service neither creates HTTP signatures nor writes raw/order rows directly.
+- Page parsing and detail refresh remain in `XianyuOrderSyncService`; fixed
+  window pagination, count stability, distributed locking, and final cursor
+  advancement are owned by `XianyuChannelSyncService`.
 
 ## Component Cohesion / Coupling
 
-- `XianyuOrderSyncService` coordinates exactly one bounded page with injected seams. The parser and fixed-window value can be reused by future recursive splitting and replay logic without coupling to transport details.
+- Moving cursor advancement to the complete-window coordinator prevents a
+  successfully processed early page from advancing past a later failed page.
 
 ## Test Quality
 
-- Tests assert observable persistence and cursor behavior for success, empty, detail-failure, and row-cap cases. The fixed-window test asserts documented epoch-second request data and boundary rejection.
+- Page tests cover malformed metadata, row caps, empty pages, detail failures,
+  deduplication, and no page-level cursor movement. Channel-sync tests cover one
+  final cursor advance only after every page succeeds and no advance when the
+  fixed-window count changes.
 
 ## Error Handling
 
-- A run record is created before the outbound read. Malformed data, metadata mismatch, oversized windows, or a detail failure produce a redacted failed run and leave the cursor unchanged for that page.
+- Failed runs receive safe error codes/messages, alert recording, and no cursor
+  movement.
 
 ## Reuse / Duplication
 
-- Existing closed read-client, order persistence, stable cursor, tenant DO, mapper, Jackson, and clock seams are reused. No duplicate signing, raw payload, or order-upsert implementation was added.
+- The existing read client, parser, persistence service, cursor advancer, and
+  run mapper are reused without duplicate transport or upsert logic.
 
 ## Complexity Delta
 
-- The slice adds one intentionally narrow coordinator. Window splitting, retry, replay, scheduling, controller exposure, and conversion remain deferred to avoid mixing operational policy with data durability.
+- The two-level orchestration is more complex than the historical one-page
+  design, but the additional level enforces a stronger no-omission invariant.
 
 ## Required Fixes
 
-No required fixes remain for this review.
+- None in code quality. The spec/report mismatch is recorded in the separate
+  spec review.

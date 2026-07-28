@@ -1,41 +1,24 @@
 {
-  "schema_version": 1,
-  "generated_at": "2026-07-25T03:22:15.701Z",
-  "change_id": "xian-guanjia-data-integration-v1",
+  "schema": "specnav.ops.archiveGate.v1",
+  "generated_at": "2026-07-27T02:02:53.863Z",
   "active_change": "xian-guanjia-data-integration-v1",
-  "verdict": "green",
-  "domains": {
-    "facticity": "green",
-    "static": "green",
-    "unit": "green",
-    "redteam": "green",
-    "e2e": "green",
-    "sensory": "green"
-  },
-  "blocking_findings": [],
-  "residual_risk": [],
-  "evidence_receipt": "verify/receipt.json",
-  "behavior_eval_report": "verify/behavior-evals/report.json",
-  "html_report": "verify/aggregate-report.html",
-  "review_style": "claude-warm-editorial",
-  "stale": false,
-  "blockers": [],
+  "release_target": null,
+  "lane": "standard",
+  "verdict": "red",
+  "blockers": [
+    "fresh-verify",
+    "receipt-residual-risk-signoff",
+    "migration-required-release-target",
+    "missing-operations-artifact:migration-deployment.json",
+    "deploy-plan-missing-migration-manifest",
+    "rollback-plan-missing-migration-rollback",
+    "missing-operations-artifact:readiness.md",
+    "missing-operations-artifact:readiness.json",
+    "missing-operations-artifact:release-plan.md",
+    "missing-operations-artifact:branch-finish.md",
+    "missing-operations-artifact:update-spec.json"
+  ],
   "warnings": [
-    "development:codegraph:not-indexed",
-    "development:codegraph:claim-unverified:development:task-001-rental-foundation",
-    "development:codegraph:claim-unverified:development:task-002-channel-sync",
-    "development:codegraph:claim-unverified:development:task-003-channel-persistence",
-    "development:codegraph:claim-unverified:development:task-004-order-sync-orchestration",
-    "development:codegraph:claim-unverified:development:task-005-rental-conversion",
-    "development:codegraph:claim-unverified:development:task-006-device-allocation",
-    "development:codegraph:claim-unverified:verification:task-001-rental-foundation",
-    "development:codegraph:claim-unverified:verification:task-002-channel-sync",
-    "development:codegraph:claim-unverified:verification:task-003-channel-persistence",
-    "development:codegraph:claim-unverified:verification:task-004-order-sync-orchestration",
-    "development:codegraph:claim-unverified:verification:task-005-rental-conversion",
-    "development:codegraph:claim-unverified:verification:task-006-device-allocation",
-    "development:codegraph:claim-unverified:verification:task-007-admin-operations",
-    "development:codegraph:claim-unverified:verification:task-008-verification",
     "codegraph:not-indexed",
     "codegraph:claim-unverified:development:task-001-rental-foundation",
     "codegraph:claim-unverified:development:task-002-channel-sync",
@@ -57,22 +40,22 @@
     "status": {
       "schema": "specnav.codegraph.status.v1",
       "ok": true,
-      "generated_at": "2026-07-25T03:22:15.688Z",
+      "generated_at": "2026-07-27T02:02:53.852Z",
       "project_root": "/Volumes/zwl/camera-rental-github",
       "active_change": "xian-guanjia-data-integration-v1",
       "policy": {
         "enabled": true,
         "profile": "bootstrap",
         "mode": "observe",
-        "stage": "verification",
+        "stage": "operations",
         "required_for_stage": false,
         "disabled_reason": null
       },
       "execution_surface": "cli",
       "decision": {
-        "stage": "verification",
+        "stage": "operations",
         "result": "warn",
-        "reason": "CodeGraph policy has advisory warnings for verification."
+        "reason": "CodeGraph policy has advisory warnings for operations."
       },
       "cli": {
         "available": true,
@@ -120,7 +103,7 @@
     },
     "evidence_index": {
       "schema": "specnav.codegraph.evidence_index.v1",
-      "generated_at": "2026-07-25T03:22:15.688Z",
+      "generated_at": "2026-07-27T02:02:53.854Z",
       "active_change": "xian-guanjia-data-integration-v1",
       "source_raw": "openspec/changes/xian-guanjia-data-integration-v1/codegraph/evidence.jsonl",
       "by_claim": {},
@@ -131,7 +114,7 @@
     },
     "claims_report": {
       "schema": "specnav.codegraph.claims_report.v1",
-      "generated_at": "2026-07-25T03:22:15.690Z",
+      "generated_at": "2026-07-27T02:02:53.857Z",
       "active_change": "xian-guanjia-data-integration-v1",
       "claims_file": "openspec/changes/xian-guanjia-data-integration-v1/codegraph/claims-map.json",
       "evidence_index": "openspec/changes/xian-guanjia-data-integration-v1/codegraph/evidence-index.json",
@@ -179,7 +162,7 @@
     },
     "decision": {
       "schema": "specnav.codegraph.decision.v1",
-      "stage": "verification",
+      "stage": "operations",
       "profile": "bootstrap",
       "effective_mode": "observe",
       "required_for_stage": false,
@@ -189,20 +172,20 @@
       "warnings": [
         "codegraph:not-indexed"
       ],
-      "explanation": "CodeGraph policy has advisory warnings for verification."
+      "explanation": "CodeGraph policy has advisory warnings for operations."
     },
     "guard_report": {
       "schema": "specnav.codegraph.guard_report.v1",
-      "generated_at": "2026-07-25T03:22:15.690Z",
+      "generated_at": "2026-07-27T02:02:53.857Z",
       "active_change": "xian-guanjia-data-integration-v1",
-      "stage": "verification",
+      "stage": "operations",
       "ok": true,
       "status": {
         "policy": {
           "enabled": true,
           "profile": "bootstrap",
           "mode": "observe",
-          "stage": "verification",
+          "stage": "operations",
           "required_for_stage": false,
           "disabled_reason": null
         },
@@ -242,7 +225,7 @@
       },
       "decision": {
         "schema": "specnav.codegraph.decision.v1",
-        "stage": "verification",
+        "stage": "operations",
         "profile": "bootstrap",
         "effective_mode": "observe",
         "required_for_stage": false,
@@ -252,11 +235,11 @@
         "warnings": [
           "codegraph:not-indexed"
         ],
-        "explanation": "CodeGraph policy has advisory warnings for verification."
+        "explanation": "CodeGraph policy has advisory warnings for operations."
       },
       "evidence_index": {
         "schema": "specnav.codegraph.evidence_index.v1",
-        "generated_at": "2026-07-25T03:22:15.688Z",
+        "generated_at": "2026-07-27T02:02:53.854Z",
         "active_change": "xian-guanjia-data-integration-v1",
         "source_raw": "openspec/changes/xian-guanjia-data-integration-v1/codegraph/evidence.jsonl",
         "by_claim": {},
@@ -267,7 +250,7 @@
       },
       "claims_report": {
         "schema": "specnav.codegraph.claims_report.v1",
-        "generated_at": "2026-07-25T03:22:15.690Z",
+        "generated_at": "2026-07-27T02:02:53.857Z",
         "active_change": "xian-guanjia-data-integration-v1",
         "claims_file": "openspec/changes/xian-guanjia-data-integration-v1/codegraph/claims-map.json",
         "evidence_index": "openspec/changes/xian-guanjia-data-integration-v1/codegraph/evidence-index.json",
@@ -362,207 +345,5 @@
       "codegraph:claim-unverified:verification:task-008-verification"
     ]
   },
-  "lane": "standard",
-  "required_domains": [
-    "facticity",
-    "static",
-    "unit",
-    "redteam",
-    "e2e",
-    "sensory"
-  ],
-  "artifacts": [
-    {
-      "name": "plan.md",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/plan.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "plan.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/plan.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "evidence-index.jsonl",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/evidence-index.jsonl",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "traceability-matrix.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/traceability-matrix.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "diff-traceability",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/diff-traceability",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "user-test-cases.md",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/user-test-cases.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "user-test-cases.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/user-test-cases.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "user-test-case-signoff.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/user-test-case-signoff.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "domain-case-matrix.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/domain-case-matrix.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "runtime-evidence.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/runtime-evidence.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "blocker-classification.jsonl",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/blocker-classification.jsonl",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "receipt.md",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/receipt.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "receipt.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/receipt.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "behavior-evals/scenarios.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/behavior-evals/scenarios.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "behavior-evals/report.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/behavior-evals/report.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "behavior-evals/transcripts",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/behavior-evals/transcripts",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "behavior-evals/report.md",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/behavior-evals/report.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "facticity/report.md",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/facticity/report.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "facticity/report.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/facticity/report.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "static/report.md",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/static/report.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "static/report.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/static/report.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "unit/report.md",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/unit/report.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "unit/report.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/unit/report.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "redteam/report.md",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/redteam/report.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "redteam/report.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/redteam/report.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "e2e/report.md",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/e2e/report.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "e2e/report.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/e2e/report.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "sensory/report.md",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/sensory/report.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "sensory/report.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/sensory/report.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "unit/test-quality-rubric.json",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/unit/test-quality-rubric.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "sensory/reviewer-independence.md",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/sensory/reviewer-independence.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "root-cause-checks.jsonl",
-      "path": "openspec/changes/xian-guanjia-data-integration-v1/verify/root-cause-checks.jsonl",
-      "ok": true,
-      "blockers": []
-    }
-  ]
+  "operations_ready": false
 }

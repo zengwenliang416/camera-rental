@@ -2,32 +2,42 @@
 
 ## Verdict
 
-approved
+needs-fix
 
 ## Separation Of Concerns
 
-- Verification packaging records evidence; it does not re-implement domain rules.
+- Verification artifacts are kept outside production code, but the current
+  evidence mixes the active read-only V1 change with later schedule-center and
+  shipment work.
 
 ## Component Cohesion / Coupling
 
-- Evidence files reference system-executed commands and existing tests only.
+- A1 is a single placeholder assertion linked to unrelated backend, frontend,
+  and browser evidence. It is not cohesive enough to trace task outcomes.
 
 ## Test Quality
 
-- Relies on shipped Surefire tests rather than re-stated assertions.
+- Historical system-executed receipts are valid for their recorded worktrees.
+  They do not attest the current July 28 diff. The local regression JSON does
+  not identify an executing harness or command receipt.
 
 ## Error Handling
 
-- Failed scans or tests would block handoff/validation logs rather than being ignored.
+- Stale evidence is currently represented as green aggregate data rather than
+  forcing re-execution after production changes.
 
 ## Reuse / Duplication
 
-- Reuses SpecNav contracts and existing module tests.
+- Existing SpecNav domain reports and test suites are reusable, but they must
+  be rerun instead of being carried forward as current proof.
 
 ## Complexity Delta
 
-- Documentation/evidence only for this slice.
+- Collapsing the current change into one placeholder A1 reduces traceability
+  and makes scope drift harder to detect.
 
 ## Required Fixes
 
-- No required fixes remain for this review.
+- Replace the placeholder assertion with scoped assertions, attach fresh
+  system-executed receipts, and regenerate the affected verification domains
+  after the underlying task findings are resolved.

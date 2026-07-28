@@ -2,28 +2,41 @@
 
 ## Verdict
 
-approved
+needs-fix
 
 ## Missing Requirements
 
-No missing requirements were identified within this slice.
+- The task and parent acceptance require missing rental dates to create an
+  actionable manual-review record. Current conversion instead leaves missing
+  remarks/dates in `PENDING` and explicitly does not create a review.
+- The task requires an existing explicit `MAPPED` product/SKU mapping before
+  conversion. `convertForShipment` can create or overwrite that mapping from a
+  selected device model.
 
 ## Extra Behavior
 
-- The task also widens local converted-rental amount columns to `BIGINT`. This is required to prevent truncating the documented `int64` source cents during conversion.
+- Shipment-specific mapping creation and shipment-review resolution are now
+  implemented inside the conversion service even though device shipment is an
+  explicit non-goal for this task.
 
 ## Misunderstood Requirements
 
-- None found. The parser only derives dates from the approved explicit or receipt/return rules and returns a review reason otherwise; it never creates a schedule.
+- The newer business decision to keep missing remarks pending until a later
+  sync may be valid, but the active change requirements, acceptance text,
+  brief, and report were not updated to authorize that behavior.
 
 ## Cannot Verify From Diff
 
-- Unit tests cannot prove production MySQL lock behavior or real source order line-item shape. The service uses source-row and source-identity mapper lock seams; multi-item conversion remains explicitly deferred.
-
-## Acceptance Assertions Verified
-
-- not applicable: this change has no `acceptance.json`; the prose channel-derived rental-order assertion was reviewed against the transaction service, explicit mapping condition, parsed-date result, unique source schema, migration, and focused test receipts.
+- The report still describes every incomplete conversion as a reusable manual
+  review, which is false for the current `PENDING` path.
+- A1 does not state the expected pending-versus-review behavior and therefore
+  cannot adjudicate the conflict.
 
 ## Required Fixes
 
-No required fixes remain for this review.
+- Update the approved requirements, acceptance, brief, and report to define
+  the new pending-until-refresh behavior, or restore manual review for missing
+  date prerequisites.
+- Move shipment-selected mapping creation and review resolution into the
+  separately scoped shipment change/service, leaving this conversion slice
+  dependent on an explicit pre-existing mapping.

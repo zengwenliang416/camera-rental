@@ -6,28 +6,35 @@ approved
 
 ## Separation Of Concerns
 
-- The assignment service coordinates one domain transaction. Mappers own query shape and row locks; data objects own persistence representation; command/result/exception types form the future API seam.
+- The assignment service owns one transaction; mappers own row locks and query
+  shape; command/result/exception types form a clean future API seam.
 
 ## Component Cohesion / Coupling
 
-- The service has one responsibility: atomically assign one device and create one occupied schedule. It does not own controller authorization, device lifecycle transitions, schedule mutation, or third-party integration.
+- The service has one responsibility: validate and atomically create one
+  occupied schedule plus one device assignment.
 
 ## Test Quality
 
-- Tests assert persisted IDs, lock call order, replay behavior, conflict boundaries, no-partial-write behavior, and typed failures. Adjacent and overlapping ranges are independently asserted rather than inferred from UI behavior.
+- Tests cover lock order, accepted assignment, exact replay, key-reuse
+  rejection, overlap, adjacency, model mismatch, item capacity, and no
+  assignment write after schedule persistence failure.
 
 ## Error Handling
 
-- Input, device, item, order, capacity, overlap, and idempotency mismatches are rejected before writes. The method rolls back on `Exception`; if schedule persistence fails, assignment persistence is not invoked.
+- Invalid commands and every eligibility/conflict condition produce typed
+  domain failures before writes. The transaction rolls back on exceptions.
 
 ## Reuse / Duplication
 
-- Reuses tenant/audit base DOs, MyBatis Plus mapper helpers, existing rental order/item boundaries, the foundation schema, and Spring transaction support. No signing, HTTP client, controller, or duplicate scheduling utility is introduced.
+- Existing tenant/audit DOs, MyBatis lock helpers, rental order/item
+  boundaries, and Spring transactions are reused.
 
 ## Complexity Delta
 
-- The slice adds only three persistence entities, three mappers, and one local transactional service. Device CRUD, API/UI, lifecycle transitions, full allocation state, reporting, and MySQL integration harness remain deferred.
+- The domain transaction is bounded and the half-open overlap expression is
+  explicit and independently tested.
 
 ## Required Fixes
 
-No required fixes remain for this review.
+- No blocking fixes were identified.

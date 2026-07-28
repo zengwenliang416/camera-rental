@@ -2,32 +2,42 @@
 
 ## Verdict
 
-approved
+needs-fix
 
 ## Separation Of Concerns
 
-- Controllers map HTTP and permissions; admin services coordinate existing domain services; the read client remains the only third-party transport.
+- Query, synchronization, conversion, OCR, and remote shipment operations are
+  now combined under `XianyuOrderController`.
 
 ## Component Cohesion / Coupling
 
-- Shop/order/device/review/report admin services stay narrow and call existing domain modules rather than re-implementing sync or assignment rules.
+- The ordinary order response is coupled to schedule-center fulfillment needs,
+  causing a low-privilege query endpoint to expose full recipient data.
 
 ## Test Quality
 
-- Tests drive shipped mask and parser functions and assert observable outputs without re-implementing production logic.
+- Current tests cover rental periods, receiver snapshots, assignment data, and
+  waybills, but they assert full PII in the ordinary page instead of protecting
+  the parent privacy requirement.
 
 ## Error Handling
 
-- Missing shop/authorize credentials and assignment domain failures map to typed ErrorCodeConstants without exposing secrets.
+- Shipment permissions and the server write gate exist. The response boundary
+  lacks a safe default for recipient privacy.
 
 ## Reuse / Duplication
 
-- Reuses order sync, conversion, assignment services, Element Plus patterns, vue-i18n, and dark mode cache.
+- Existing domain services and UI infrastructure are reused. The shipment
+  workflow is duplicated into a change whose admin task was designed to remain
+  read-only.
 
 ## Complexity Delta
 
-- Adds admin boundary layers and pages only; does not rewrite 001–006 domain engines.
+- The admin order surface now spans channel queries, local conversion,
+  fulfillment contact, OCR, device assignment, and third-party shipment.
 
 ## Required Fixes
 
-- No required fixes remain for this review.
+- Split privileged fulfillment contact/shipment operations from ordinary order
+  querying and add backend masking, audit, and permission tests for the
+  separate boundary.

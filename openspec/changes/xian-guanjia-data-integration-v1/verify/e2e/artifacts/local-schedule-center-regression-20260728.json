@@ -1,0 +1,67 @@
+{
+  "schema": "specnav.localScheduleCenterRegression.v1",
+  "recorded_at": "2026-07-28T14:17:30+08:00",
+  "base_url": "http://localhost:5175/",
+  "result": "pass",
+  "safety": {
+    "xian_guanjia_write_enabled": false,
+    "real_ship_called": false,
+    "quartz_auto_startup": false,
+    "github_push_performed": false,
+    "deployment_performed": false
+  },
+  "runtime": {
+    "devices": 62,
+    "channel_orders": 1010,
+    "tenant_display_name": "捷租达",
+    "integration_status": "READY",
+    "write_gate_message": "服务器已关闭闲管家写操作"
+  },
+  "checks": [
+    {
+      "id": "navigation",
+      "status": "pass",
+      "evidence": "工作台、甘特图排期、租赁订单、设备台账与维保、设备发货、异常与告警入口均可加载。"
+    },
+    {
+      "id": "shipping-entry-safe-default",
+      "status": "pass",
+      "evidence": "直接进入设备发货页时订单状态为未选择，确认发货按钮存在但禁用。"
+    },
+    {
+      "id": "waybill-preserved-after-order-selection",
+      "status": "pass",
+      "evidence": "先输入 LOCALTEST20260728，再选择订单 5126403888047003436，运单号保持不变。"
+    },
+    {
+      "id": "waybill-preserved-after-carrier-change",
+      "status": "pass",
+      "evidence": "快递公司由顺丰切换为京东后，运单号仍为 LOCALTEST20260728。"
+    },
+    {
+      "id": "server-write-gate",
+      "status": "pass",
+      "evidence": "页面明确显示服务器已关闭闲管家写操作，未进行真实发货。"
+    },
+    {
+      "id": "order-status-and-period",
+      "status": "pass",
+      "evidence": "订单 5126359104930006425 显示在履约中订单，客户信息脱敏，不进入异常中心；租期由后端备注解析字段提供。"
+    },
+    {
+      "id": "order-api-default-privacy",
+      "status": "pass",
+      "evidence": "普通订单分页默认返回脱敏姓名、手机号和地址；排期中心未展示完整收货隐私信息。"
+    },
+    {
+      "id": "local-scheduler-standby",
+      "status": "pass",
+      "evidence": "本地后端以 SPRING_QUARTZ_AUTO_STARTUP=false 启动，Quartz 显示 NOT STARTED / standby，测试期间未继续自动同步。"
+    },
+    {
+      "id": "tenant-branding",
+      "status": "pass",
+      "evidence": "排期中心当前显示租户和账号昵称为捷租达；公共租户接口返回 tenant id 1。"
+    }
+  ]
+}

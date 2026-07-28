@@ -6,24 +6,28 @@ approved
 
 ## Missing Requirements
 
-No missing requirements were identified within this slice.
+- No missing requirement was found in this slice.
 
 ## Extra Behavior
 
-- None. Webhook support verifies only the raw signature and deliberately does not acknowledge or persist an event.
+- None in the reviewed read-client boundary. `XianyuReadEndpoint` remains a
+  closed read-only allowlist and does not accept caller-provided paths.
 
 ## Misunderstood Requirements
 
-- None found. The client signs the exact canonical body bytes it transmits and does not accept arbitrary outbound paths.
+- None. `XianyuReadClientTest` proves that the canonical UTF-8 bytes used for
+  signing are the same bytes transmitted by OkHttp.
 
 ## Cannot Verify From Diff
 
-- No real remote request or runtime shop authorization was attempted by design. MockWebServer evidence proves local transport behavior only.
+- No real remote request or production authorization was attempted, which is
+  consistent with this task's explicit non-goal. The evidence proves local
+  transport, signing, redaction, and gating behavior only.
 
 ## Acceptance Assertions Verified
 
-- not applicable: this change has no `acceptance.json`; the prose integration assertions were reviewed against the closed endpoint enum, client, and focused test receipt.
+- A1
 
 ## Required Fixes
 
-No required fixes remain for this review.
+- No blocking fixes were identified.

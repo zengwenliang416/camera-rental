@@ -6,24 +6,29 @@ approved
 
 ## Missing Requirements
 
-No missing requirements were identified within this slice.
+- No missing requirement was found in the assignment slice.
 
 ## Extra Behavior
 
-- The service rejects idempotency-key reuse with different command values. This is required to avoid returning an accepted identifier with altered caller dates or device data.
+- Rejecting reuse of an idempotency key with different device, item, or dates
+  is a necessary strengthening of the idempotency contract.
 
 ## Misunderstood Requirements
 
-- None. The service stores only `occupy_start_date` and `occupy_end_date_exclusive`; it does not reinterpret them as billable dates or a closed range.
+- None. The service stores and compares occupied half-open ranges and does not
+  reinterpret them as billable dates.
 
 ## Cannot Verify From Diff
 
-- Unit tests cannot prove MySQL `FOR UPDATE` behavior, query-plan index selection, or competing transactions in a production-like schema. The mapper locks the device row first and then locks effective overlap rows; the existing device-range index supports the query, but this needs real-MySQL concurrency verification before rollout.
+- Unit tests alone cannot prove InnoDB lock scheduling. The existing real-MySQL
+  concurrency report independently shows one overlapping assignment succeeds,
+  the competing transaction waits on the device lock, and then receives a
+  schedule conflict.
 
 ## Acceptance Assertions Verified
 
-- not applicable: this change has no `acceptance.json`. The Rental Operations prose acceptance was reviewed against the service transaction, device/item/order locks, overlap query, idempotency uniqueness constraints in the foundation schema, tests, and documented interval invariant.
+- A1
 
 ## Required Fixes
 
-No required fixes remain for this review.
+- No blocking fixes were identified.

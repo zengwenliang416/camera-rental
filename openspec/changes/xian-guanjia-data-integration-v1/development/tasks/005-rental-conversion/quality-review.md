@@ -2,32 +2,43 @@
 
 ## Verdict
 
-approved
+needs-fix
 
 ## Separation Of Concerns
 
-- Remark parsing is a pure versioned component. Conversion coordinates locks and local writes only; mapper boundaries own persistence queries and no transport or controller behavior is introduced.
+- Pure seller-remark parsing remains separated, but the conversion service now
+  also creates shipment-derived mappings and resolves shipment reviews.
 
 ## Component Cohesion / Coupling
 
-- The conversion service owns one channel-order conversion transaction. Reusable date parsing, mapping lookup, review idempotency, and rental persistence remain separated from one another.
+- `XianyuRentalConversionServiceImpl` is coupled to both the durable conversion
+  lifecycle and a later shipment workflow, increasing the number of reasons
+  the transaction changes.
 
 ## Test Quality
 
-- Tests assert resulting order/review states and captured persisted amounts instead of private helpers. A source amount above 32-bit range proves the conversion path uses `Long` and the migration widens the target columns.
+- Tests cover stored periods, high-value integer cents, replay, pending
+  remarks, explicit review, and shipment-selected mapping. The latter tests
+  confirm the scope coupling rather than isolating it.
 
 ## Error Handling
 
-- Missing source identifiers reject without creating records. Missing mapping, amount, or parsable dates produce a stable review result, preserve source data, and never fabricate a schedule. Transaction rollback protects partial local writes.
+- Conversion failures in `autoConvertAfterPersist` are swallowed to preserve
+  ingestion, but logging `exception.toString()` can expose implementation or
+  database detail instead of a safe classified code.
 
 ## Reuse / Duplication
 
-- Existing tenant DOs, MyBatis Plus, transaction support, normalized Xianyu order, and source cursor/persistence boundaries are reused. No signing, raw-payload, or remote client code is duplicated.
+- Shared parsers and mapper locks are reused. Shipment mapping policy is
+  duplicated into the core conversion transaction instead of remaining in the
+  shipment boundary.
 
 ## Complexity Delta
 
-- The slice adds the minimum local conversion boundary. Controllers, jobs, line-item normalization, correction UI, schedules, allocation, and reporting remain deferred.
+- The service now handles conversion, pending/review state, item occupancy
+  repair, shipment mapping, and review resolution.
 
 ## Required Fixes
 
-No required fixes remain for this review.
+- Separate shipment-specific mapping/review behavior from core conversion and
+  log only safe classified failure codes from automatic conversion.

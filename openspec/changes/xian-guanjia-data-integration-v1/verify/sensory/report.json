@@ -5,19 +5,34 @@
   "required": true,
   "evidence": [
     "verify/sensory/report.md",
-    "development/handoff-to-verify.md",
-    "verify/command-results.md",
-    "verify/sensory/reviewer-independence.md"
+    "verify/sensory/review.md",
+    "verify/sensory/findings.jsonl",
+    "verify/sensory/reviewer-independence.md",
+    "verify/e2e/artifacts/local-schedule-center-regression-20260728.json",
+    "camera-rental-schedule-center/src/components/QuickBindingView.tsx",
+    "camera-rental-schedule-center/src/components/OrdersView.tsx",
+    "camera-rental-schedule-center/src/context/AppContext.tsx",
+    "camera-rental-schedule-center/src/api/mappers.ts",
+    "camera-rental-schedule-center/src/api/mappers.test.ts"
   ],
   "commands": [
-    "pnpm ts:check",
-    "Chrome DevTools Protocol browser sensory/transition flow against admin 5176/backend 48086"
+    "npm test",
+    "npm run lint",
+    "Independent read-only browser inspection against http://localhost:5175/ with no confirm-ship action"
   ],
   "findings": [
-    "Current browser sensory flow covered six rental pages across zh-CN/en and light/dark states with route, loading, error, permission, API-status, privacy-pattern, and screenshot evidence."
+    "Direct entry leaves the order unselected and confirmation disabled.",
+    "Waybill input is preserved after order selection and carrier changes.",
+    "The closed server write gate is visible and enforced in both UI and submit context.",
+    "Order 5126359104930006425 shows renting precedence, backend rental period, and masked recipient contact.",
+    "Clickable div selection rows need keyboard semantics in a follow-up.",
+    "The active shipping component and unused modal duplicate create maintainability drift risk."
   ],
   "required_fixes": [],
   "residual_risk": [
-    "Only desktop 1440x1000 viewport was captured in this pass; mobile/responsive sensory evidence remains a follow-up, not a blocker for the current admin desktop V1 smoke."
+    "Real XianGuanJia shipment was intentionally not executed because write operations were disabled.",
+    "Mobile, screen-reader, and keyboard-only certification was not performed.",
+    "Fallback seller or buyer nicknames are not normalized by the recipient masking helper when receiver snapshots are absent.",
+    "No formal performance budget was measured for the large unpaginated orders view."
   ]
 }

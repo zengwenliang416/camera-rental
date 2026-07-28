@@ -5,152 +5,18 @@ on:
 
 permissions:
   contents: read
-  actions: read
 
 concurrency:
   group: camera-rental-211-deploy
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  build-server:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
-          cache: maven
-
-      - name: Build backend jar
-        working-directory: camera-rental-server
-        run: mvn -pl yudao-server -am -DskipTests package
-
-      - name: Prepare backend artifact
-        run: |
-          mkdir -p .deploy-artifacts/server
-          cp camera-rental-server/yudao-server/target/yudao-server.jar .deploy-artifacts/server/yudao-server.jar
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: server
-          path: .deploy-artifacts/server
-          if-no-files-found: error
-
-  build-admin:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install pnpm
-        run: npm i -g pnpm@10
-
-      - name: Build admin
-        working-directory: camera-rental-admin
-        run: |
-          pnpm install --frozen-lockfile
-          {
-            echo 'VITE_APP_TITLE=相机租赁管理后台'
-            echo 'VITE_BASE_PATH=/admin/'
-            echo 'VITE_BASE_URL=https://rental.motion-cover.com'
-            echo 'VITE_API_URL=/admin-api'
-            echo 'VITE_APP_TENANT_ENABLE=true'
-            echo 'VITE_APP_CAPTCHA_ENABLE=false'
-            echo 'VITE_APP_DOCALERT_ENABLE=false'
-            echo 'VITE_DROP_DEBUGGER=true'
-            echo 'VITE_DROP_CONSOLE=true'
-            echo 'VITE_SOURCEMAP=false'
-            echo 'VITE_OUT_DIR=dist'
-            echo 'VITE_UPLOAD_TYPE=server'
-            echo 'VITE_APP_API_ENCRYPT_ENABLE=false'
-            echo 'VITE_APP_API_ENCRYPT_HEADER=X-Api-Encrypt'
-            echo 'VITE_APP_API_ENCRYPT_ALGORITHM=AES'
-            echo 'VITE_APP_API_ENCRYPT_REQUEST_KEY='
-            echo 'VITE_APP_API_ENCRYPT_RESPONSE_KEY='
-          } > .env.prod
-          pnpm ts:check
-          pnpm build:prod
-          ! grep -R "%VITE_APP_TITLE%" dist/index.html
-          grep -q 'src="/admin/assets/' dist/index.html
-
-      - name: Prepare admin artifact
-        run: |
-          mkdir -p .deploy-artifacts/admin
-          cp -R camera-rental-admin/dist/. .deploy-artifacts/admin/
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: admin
-          path: .deploy-artifacts/admin
-          if-no-files-found: error
-
-  build-schedule-center:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Build schedule center
-        working-directory: camera-rental-schedule-center
-        run: |
-          bun install --frozen-lockfile
-          bun run lint
-          VITE_BASE_PATH=/admin/schedule-center/ VITE_BASE_URL=https://rental.motion-cover.com VITE_API_URL=/admin-api VITE_APP_TENANT_ENABLE=true VITE_APP_DEFAULT_LOGIN_TENANT=芋道源码 bun run build
-
-      - name: Prepare schedule center artifact
-        run: |
-          mkdir -p .deploy-artifacts/schedule-center
-          cp -R camera-rental-schedule-center/dist/. .deploy-artifacts/schedule-center/
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: schedule-center
-          path: .deploy-artifacts/schedule-center
-          if-no-files-found: error
-
   deploy:
     runs-on: ubuntu-24.04
-    needs:
-      - build-server
-      - build-admin
-      - build-schedule-center
+    timeout-minutes: 90
     environment: production-211
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: server
-          path: .deploy-artifacts/release/server
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: admin
-          path: .deploy-artifacts/release/admin
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: schedule-center
-          path: .deploy-artifacts/release/schedule-center
-
-      - name: Pack release artifact
-        run: |
-          test -f .deploy-artifacts/release/server/yudao-server.jar
-          test -f .deploy-artifacts/release/admin/index.html
-          test -f .deploy-artifacts/release/schedule-center/index.html
-          tar -czf camera-rental-release.tgz -C .deploy-artifacts/release .
 
       - name: Configure SSH
         env:
@@ -159,6 +25,7 @@ jobs:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
         run: |
+          set -euo pipefail
           test -n "$SSH_PRIVATE_KEY"
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
@@ -172,14 +39,15 @@ jobs:
             ssh-keyscan -p "$PORT" "$HOST" > ~/.ssh/known_hosts
           fi
 
-      - name: Upload and deploy
+      - name: Build and deploy on production host
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_ROOT: ${{ secrets.DEPLOY_ROOT }}
-          GH_SHA: ${{ github.sha }}
+          RELEASE_SHA: ${{ github.sha }}
         run: |
+          set -euo pipefail
           HOST="${DEPLOY_HOST:-211.101.246.160}"
           PORT="${DEPLOY_PORT:-22}"
           USER="${DEPLOY_USER:-root}"
@@ -187,12 +55,51 @@ jobs:
           SSH_OPTS=(-i ~/.ssh/deploy_key -p "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20)
           SCP_OPTS=(-i ~/.ssh/deploy_key -P "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20)
 
-          scp "${SCP_OPTS[@]}" ops/github-deploy/server-deploy.sh "${USER}@${HOST}:/tmp/camera-rental-server-deploy.sh"
-          scp "${SCP_OPTS[@]}" camera-rental-release.tgz "${USER}@${HOST}:/tmp/camera-rental-${GH_SHA}.tgz"
+          scp "${SCP_OPTS[@]}" \
+            ops/github-deploy/server-build-deploy.sh \
+            ops/github-deploy/incremental-build-lib.sh \
+            "${USER}@${HOST}:/tmp/"
 
           printf -v root_q '%q' "${ROOT}"
-          printf -v sha_q '%q' "${GH_SHA}"
-          printf -v archive_q '%q' "/tmp/camera-rental-${GH_SHA}.tgz"
+          printf -v sha_q '%q' "${RELEASE_SHA}"
 
           ssh "${SSH_OPTS[@]}" "${USER}@${HOST}" \
-            "DEPLOY_ROOT=${root_q} RELEASE_SHA=${sha_q} bash /tmp/camera-rental-server-deploy.sh ${archive_q}"
+            "bash -s -- ${root_q} ${sha_q}" <<'REMOTE'
+          set -euo pipefail
+
+          DEPLOY_ROOT="$1"
+          RELEASE_SHA="$2"
+          readonly github_repo="zengwenliang416/camera-rental"
+          readonly gitee_repo="wenliang_zeng/camera-rental"
+          candidates=(
+            "https://gh-proxy.com/https://github.com/${github_repo}.git"
+            "https://ghfast.top/https://github.com/${github_repo}.git"
+            "git@gitee.com:${gitee_repo}.git"
+          )
+
+          REPO_URL=""
+          for candidate in "${candidates[@]}"; do
+            echo "[github-deploy] probe ${candidate}"
+            remote_sha="$(
+              timeout 30 git ls-remote "${candidate}" refs/heads/main 2>/dev/null \
+                | awk 'NR == 1 { print $1 }'
+            )" || true
+            if [ "${remote_sha}" = "${RELEASE_SHA}" ]; then
+              REPO_URL="${candidate}"
+              break
+            fi
+            echo "[github-deploy] skip mirror: expected ${RELEASE_SHA}, got ${remote_sha:-unavailable}"
+          done
+
+          if [ -z "${REPO_URL}" ]; then
+            echo "[github-deploy][error] no source mirror exposes GitHub SHA ${RELEASE_SHA}" >&2
+            exit 1
+          fi
+
+          echo "[github-deploy] source mirror selected: ${REPO_URL}"
+          export DEPLOY_ROOT RELEASE_SHA REPO_URL
+          export SOURCE_DIR="${DEPLOY_ROOT}/source"
+          export GIT_SSH_COMMAND="ssh -i /root/.ssh/camera_rental_gitee_pull -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20 -C"
+
+          bash /tmp/server-build-deploy.sh
+          REMOTE

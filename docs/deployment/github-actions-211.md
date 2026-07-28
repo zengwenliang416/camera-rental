@@ -1,17 +1,35 @@
 # GitHub Actions 部署到 211.101.246.160
 
-本部署方案把 GitHub `main` 作为发布源，Actions 构建产物后通过 SSH 上传到
-`211.101.246.160`，公网域名使用 `rental.motion-cover.com`。生产密钥和数据库配置不进入 Git。
+本部署方案把 GitHub `main` 作为发布源。Actions 仅通过 SSH 下发小型部署脚本，
+由 `211.101.246.160` 拉取指定 Git SHA，并复用服务器上的 Maven、pnpm、Bun
+依赖和上一版构建产物完成增量发布。公网域名使用 `rental.motion-cover.com`，
+生产密钥和数据库配置不进入 Git。
 
-## 自动部署范围
+## 发布范围
 
-- `camera-rental-server`：构建 `yudao-server.jar`。
-- `camera-rental-admin`：构建管理后台静态文件。
-- `camera-rental-staff`：构建员工端 H5 静态文件。
-- `camera-rental-web`：构建 Nuxt PC Web `.output`。
+- `camera-rental-server`：后端 JAR。
+- `camera-rental-admin`：管理后台。
+- `camera-rental-schedule-center`：设备排期中心。
+- `camera-rental-staff`：员工端 H5。
+- `camera-rental-web`：Nuxt PC Web。
 
 `camera-rental-uniapp` 当前没有可靠的 H5/小程序构建脚本纳入流水线；微信小程序
 和 App 发布还需要单独接入平台上传、审核和证书流程。
+
+服务器会对比当前生产 SHA 与目标 SHA，只重建源代码发生变化的组件。依赖清单
+未变化时复用现有 `node_modules`，Maven 复用 `/root/.m2/repository`。未变化
+组件直接复制当前生产产物，不重新构建。
+
+## 国内 GitHub 加速
+
+211 服务器位于国内，直连 GitHub 可能超时。流水线按顺序探测：
+
+1. `gh-proxy.com` Git 镜像。
+2. `ghfast.top` Git 镜像。
+3. Gitee 仓库镜像。
+
+候选源的 `main` 必须精确等于本次 `${{ github.sha }}` 才会使用，避免镜像延迟
+导致发布旧代码。所有候选源均没有目标 SHA 时，发布直接失败。
 
 ## GitHub Secrets
 
@@ -85,7 +103,12 @@ nginx -t && systemctl reload nginx
 ## 发布方式
 
 - 手动：GitHub Actions 页面运行 `Deploy camera rental to 211`。
-- 自动：推送 `main` 且改动命中后端、admin、staff、web 或部署脚本时触发。
+- 首次验证期间仅保留手动触发，避免与 Gitee Go 自动流水线并发发布。
+- 验证稳定后，再选择 GitHub 或 Gitee 其中一套作为 `main` 推送的唯一自动发布源。
+
+旧版 Actions 在 GitHub Runner 构建后上传完整发布包。历史运行中，约 166 MB
+产物从 GitHub 美国 Runner 上传到 211 曾耗时约 10 分钟，最慢超过 1 小时 46
+分钟，而服务器解包、切换和重启约 3 秒。当前方案不再上传完整构建产物。
 
 ## 生产注意事项
 

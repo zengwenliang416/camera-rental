@@ -1,42 +1,58 @@
-version: '1.0'
+version: "1.0"
 name: deploy-production-211
 displayName: 相机租赁生产发布
+stages:
+- name: 构建并发布到 211
+  displayName: 构建并发布到 211
+  strategy: naturally
+  trigger: auto
+  steps:
+  - step: shell@agent
+    name: d9ae95ef
+    displayName: Shell 脚本执行
+    schedulerType: DISTRIBUTED
+    scriptType: SH
+    script: |-
+      set -euo pipefail
+
+      export DEPLOY_ROOT=/opt/camera-rental
+      export REPO_URL=git@gitee.com:wenliang_zeng/camera-rental.git
+      export SOURCE_DIR="${DEPLOY_ROOT}/source"
+      export GIT_SSH_COMMAND="ssh -i /root/.ssh/camera_rental_gitee_pull -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20 -C"
+
+      mkdir -p "${DEPLOY_ROOT}"
+
+      if [ -d "${SOURCE_DIR}/.git" ]; then
+        git -C "${SOURCE_DIR}" remote set-url origin "${REPO_URL}"
+      else
+        rm -rf "${SOURCE_DIR}"
+        git clone --no-tags --depth 1 --branch main "${REPO_URL}" "${SOURCE_DIR}"
+      fi
+
+      TARGET_REF="${GITEE_COMMIT:-main}"
+      git -C "${SOURCE_DIR}" fetch --progress --no-tags --depth 1 origin "${TARGET_REF}"
+
+      export RELEASE_SHA
+      RELEASE_SHA="$(git -C "${SOURCE_DIR}" rev-parse FETCH_HEAD)"
+
+      echo "[gitee-deploy] deploying commit ${RELEASE_SHA}"
+      git -C "${SOURCE_DIR}" checkout --force "${RELEASE_SHA}"
+
+      bash "${SOURCE_DIR}/ops/github-deploy/server-build-deploy.sh"
+    gitClone: "false"
+    hostGroupID:
+      ID: camera-rental-production-211
+      hostID:
+      - e9cc865d-825c-45b0-b79b-56e20773721c
+    strategy:
+      retry: "0"
+      timeout: 90
 triggers:
+  trigger: auto
   push:
     branches:
+      prefix: []
       precise:
-        - main
-stages:
-  - name: deploy-production
-    displayName: 构建并发布到 211
-    strategy: naturally
-    trigger: auto
-    steps:
-      - step: shell@agent
-        name: deploy
-        displayName: Gitee 主机部署
-        hostGroupID: camera-rental-production-211
-        script: |
-          set -euo pipefail
-
-          export DEPLOY_ROOT=/opt/camera-rental
-          export REPO_URL=git@gitee.com:wenliang_zeng/camera-rental.git
-          export RELEASE_SHA="${GITEE_COMMIT:?missing GITEE_COMMIT}"
-          export GIT_SSH_COMMAND="ssh -i /root/.ssh/camera_rental_gitee_pull -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20 -C"
-
-          SOURCE_DIR="${DEPLOY_ROOT}/source"
-          mkdir -p "${DEPLOY_ROOT}"
-          if [ -d "${SOURCE_DIR}/.git" ]; then
-            git -C "${SOURCE_DIR}" remote set-url origin "${REPO_URL}"
-            git -C "${SOURCE_DIR}" fetch --progress --no-tags --depth 1 origin "${RELEASE_SHA}"
-          else
-            rm -rf "${SOURCE_DIR}"
-            git clone --progress --no-tags --depth 1 "${REPO_URL}" "${SOURCE_DIR}"
-            git -C "${SOURCE_DIR}" fetch --progress --no-tags --depth 1 origin "${RELEASE_SHA}"
-          fi
-
-          git -C "${SOURCE_DIR}" checkout --force "${RELEASE_SHA}"
-          bash "${SOURCE_DIR}/ops/github-deploy/server-build-deploy.sh"
-        notify: []
-        strategy:
-          retry: '0'
+      - main
+      include: []
+notify: []

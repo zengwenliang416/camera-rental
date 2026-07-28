@@ -1,12 +1,16 @@
 version: '1.0'
 name: deploy-production-211
 displayName: 相机租赁生产发布
-triggers: {}
+triggers:
+  push:
+    branches:
+      precise:
+        - main
 stages:
   - name: deploy-production
     displayName: 构建并发布到 211
     strategy: naturally
-    trigger: manual
+    trigger: auto
     steps:
       - step: shell@agent
         name: deploy

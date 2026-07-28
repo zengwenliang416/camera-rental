@@ -13,7 +13,7 @@ stages:
     schedulerType: DISTRIBUTED
     scriptType: SH
     script: |-
-      set -euo pipefail
+      set -eu
 
       export DEPLOY_ROOT=/opt/camera-rental
       export REPO_URL=git@gitee.com:wenliang_zeng/camera-rental.git

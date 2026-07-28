@@ -103,8 +103,11 @@ nginx -t && systemctl reload nginx
 ## 发布方式
 
 - 手动：GitHub Actions 页面运行 `Deploy camera rental to 211`。
-- 首次验证期间仅保留手动触发，避免与 Gitee Go 自动流水线并发发布。
-- 验证稳定后，再选择 GitHub 或 Gitee 其中一套作为 `main` 推送的唯一自动发布源。
+- 自动：向 GitHub `main` 推送后端、管理后台、排期中心、员工端、PC Web 或
+  部署脚本变更时，自动运行 `Deploy camera rental to 211`。
+- 纯文档、SpecNav 状态等非发布文件变化不会重启生产服务。
+- 启用 GitHub 自动发布后，应在 Gitee 页面关闭自动触发，避免两套流水线并发
+  操作同一生产环境。
 
 旧版 Actions 在 GitHub Runner 构建后上传完整发布包。历史运行中，约 166 MB
 产物从 GitHub 美国 Runner 上传到 211 曾耗时约 10 分钟，最慢超过 1 小时 46

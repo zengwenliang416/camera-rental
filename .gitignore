@@ -26,6 +26,8 @@ private.*
 
 # Local tooling
 .DS_Store
+._*
+/tmp/
 .idea/
 .vscode/*
 !.vscode/extensions.json

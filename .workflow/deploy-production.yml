@@ -37,3 +37,6 @@ stages:
 
           git -C "${SOURCE_DIR}" checkout --force "${RELEASE_SHA}"
           bash "${SOURCE_DIR}/ops/github-deploy/server-build-deploy.sh"
+        notify: []
+        strategy:
+          retry: '0'

@@ -161,14 +161,17 @@ public class XianyuChannelSyncService {
     }
 
     private String doSyncOrdersIncremental() {
+        XianyuProperties.Job job = properties.getJob();
+        int rentalPeriodBackfilled = orderPersistenceService.backfillMissingRentalPeriods(
+                job.getPageSize() * Math.max(1, job.getMaxPagesPerShop()));
         List<XianyuShopDO> shops = shopMapper.selectList(new LambdaQueryWrapperX<XianyuShopDO>()
                 .eq(XianyuShopDO::getAuthorizationStatus, "VALID")
                 .isNotNull(XianyuShopDO::getAuthorizeId));
         if (shops.isEmpty()) {
-            return "skip order sync: no VALID shops (run shop sync first)";
+            return "skip order sync: no VALID shops (run shop sync first), rentalPeriodBackfill="
+                    + rentalPeriodBackfilled;
         }
 
-        XianyuProperties.Job job = properties.getJob();
         int totalReceived = 0;
         int totalSucceeded = 0;
         int shopsOk = 0;
@@ -211,7 +214,8 @@ public class XianyuChannelSyncService {
                 .append(" shopsSkipped=").append(shopsSkipped)
                 .append(" received=").append(totalReceived)
                 .append(" succeeded=").append(totalSucceeded)
-                .append(" detailBackfill=").append(backfilled);
+                .append(" detailBackfill=").append(backfilled)
+                .append(" rentalPeriodBackfill=").append(rentalPeriodBackfilled);
         if (!errors.isEmpty()) {
             sb.append(" errors=").append(String.join("; ", errors.subList(0, Math.min(3, errors.size()))));
         }

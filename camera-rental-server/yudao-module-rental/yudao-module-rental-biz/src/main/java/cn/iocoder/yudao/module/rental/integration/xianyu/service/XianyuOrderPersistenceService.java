@@ -11,6 +11,8 @@ public interface XianyuOrderPersistenceService {
 
     XianyuOrderDO persistOrderDetail(Long shopId, String rawPayload);
 
+    int backfillMissingRentalPeriods(int limit);
+
     boolean advanceOrderCursor(Long shopId, LocalDateTime sourceUpdatedAt, String externalOrderId,
                                LocalDateTime safeUpperBound);
 

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Parses order-detail response into normalized columns + full {@code data} JSON.
@@ -59,6 +61,9 @@ public class XianyuOrderPayloadParser {
                 epochSecondToShanghaiTime(optionalLong(detail, "create_time")),
                 epochSecondToShanghaiTime(optionalLong(detail, "update_time")),
                 detailJson,
+                optionalText(detail, "receiver_name"),
+                optionalText(detail, "receiver_mobile"),
+                composeAddress(detail),
                 optionalInt(detail, "order_type"),
                 epochSecondToShanghaiTime(optionalLong(detail, "order_time")),
                 optionalLong(detail, "total_amount"),
@@ -89,6 +94,17 @@ public class XianyuOrderPayloadParser {
         );
     }
 
+    private String composeAddress(JsonNode detail) {
+        List<String> parts = new ArrayList<>(5);
+        for (String field : List.of("prov_name", "city_name", "area_name", "town_name", "address")) {
+            String part = optionalText(detail, field);
+            if (part != null && !part.isBlank()) {
+                parts.add(part.trim());
+            }
+        }
+        return parts.isEmpty() ? null : String.join("", parts);
+    }
+
     private String requiredText(JsonNode node, String fieldName) {
         String value = optionalText(node, fieldName);
         if (value == null || value.isBlank()) {
@@ -116,7 +132,11 @@ public class XianyuOrderPayloadParser {
             return fallback;
         }
         JsonNode value = node.path(fieldName);
-        return value.isValueNode() && !value.isNull() ? value.asText() : fallback;
+        if (!value.isValueNode() || value.isNull()) {
+            return fallback;
+        }
+        String text = value.asText().trim();
+        return text.isEmpty() ? fallback : text;
     }
 
     private Long optionalLong(JsonNode node, String fieldName) {

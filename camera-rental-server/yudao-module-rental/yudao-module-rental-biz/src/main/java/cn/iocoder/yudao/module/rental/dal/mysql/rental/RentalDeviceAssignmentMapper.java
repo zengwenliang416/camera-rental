@@ -5,6 +5,9 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceAssignme
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Collection;
+import java.util.List;
+
 @Mapper
 public interface RentalDeviceAssignmentMapper extends BaseMapperX<RentalDeviceAssignmentDO> {
 
@@ -28,9 +31,29 @@ public interface RentalDeviceAssignmentMapper extends BaseMapperX<RentalDeviceAs
                 .last("LIMIT 1"));
     }
 
+    default RentalDeviceAssignmentDO selectActiveByOrderItemAndDeviceForUpdate(Long rentalOrderItemId, Long deviceId) {
+        return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
+                .eq(RentalDeviceAssignmentDO::getRentalOrderItemId, rentalOrderItemId)
+                .eq(RentalDeviceAssignmentDO::getDeviceId, deviceId)
+                .in(RentalDeviceAssignmentDO::getStatus, "ASSIGNED", "DISPATCHED")
+                .orderByDesc(RentalDeviceAssignmentDO::getId)
+                .last("LIMIT 1"));
+    }
+
     default RentalDeviceAssignmentDO selectByIdForUpdate(Long id) {
         return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
                 .eq(RentalDeviceAssignmentDO::getId, id));
+    }
+
+    default List<RentalDeviceAssignmentDO> selectActiveListByRentalOrderIds(Collection<Long> rentalOrderIds) {
+        if (rentalOrderIds == null || rentalOrderIds.isEmpty()) {
+            return List.of();
+        }
+        return selectList(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
+                .in(RentalDeviceAssignmentDO::getRentalOrderId, rentalOrderIds)
+                .in(RentalDeviceAssignmentDO::getStatus, "ASSIGNED", "DISPATCHED")
+                .orderByAsc(RentalDeviceAssignmentDO::getRentalOrderId)
+                .orderByAsc(RentalDeviceAssignmentDO::getId));
     }
 
 }

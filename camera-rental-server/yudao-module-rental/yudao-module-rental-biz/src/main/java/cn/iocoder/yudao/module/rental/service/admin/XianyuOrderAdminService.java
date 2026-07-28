@@ -6,8 +6,14 @@ import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderPage
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderSyncReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderSyncRespVO;
+import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceAssignmentDO;
+import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderDO;
+import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderItemDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuShopDO;
+import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
+import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
+import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuShopMapper;
 import cn.iocoder.yudao.module.rental.integration.xianyu.service.XianyuOrderPageSyncResult;
@@ -24,7 +30,11 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -40,16 +50,25 @@ public class XianyuOrderAdminService {
 
     private final XianyuOrderMapper orderMapper;
     private final XianyuShopMapper shopMapper;
+    private final RentalOrderMapper rentalOrderMapper;
+    private final RentalOrderItemMapper rentalOrderItemMapper;
+    private final RentalDeviceAssignmentMapper assignmentMapper;
     private final XianyuOrderSyncService orderSyncService;
     private final XianyuRentalConversionService conversionService;
     private final ObjectMapper objectMapper;
 
     public XianyuOrderAdminService(XianyuOrderMapper orderMapper, XianyuShopMapper shopMapper,
+                                   RentalOrderMapper rentalOrderMapper,
+                                   RentalOrderItemMapper rentalOrderItemMapper,
+                                   RentalDeviceAssignmentMapper assignmentMapper,
                                    XianyuOrderSyncService orderSyncService,
                                    XianyuRentalConversionService conversionService,
                                    ObjectMapper objectMapper) {
         this.orderMapper = orderMapper;
         this.shopMapper = shopMapper;
+        this.rentalOrderMapper = rentalOrderMapper;
+        this.rentalOrderItemMapper = rentalOrderItemMapper;
+        this.assignmentMapper = assignmentMapper;
         this.orderSyncService = orderSyncService;
         this.conversionService = conversionService;
         this.objectMapper = objectMapper;
@@ -57,7 +76,35 @@ public class XianyuOrderAdminService {
 
     public PageResult<XianyuOrderRespVO> getOrderPage(XianyuOrderPageReqVO pageReqVO) {
         PageResult<XianyuOrderDO> page = orderMapper.selectAdminPage(pageReqVO);
-        List<XianyuOrderRespVO> list = page.getList().stream().map(this::toVo).collect(Collectors.toList());
+        List<Long> rentalOrderIds = page.getList().stream()
+                .map(XianyuOrderDO::getRentalOrderId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
+        List<RentalOrderItemDO> items = rentalOrderIds.isEmpty()
+                ? List.of()
+                : nullSafe(rentalOrderItemMapper.selectListByRentalOrderIds(rentalOrderIds));
+        Map<Long, RentalOrderItemDO> firstItemByOrderId = items.stream().collect(Collectors.toMap(
+                RentalOrderItemDO::getRentalOrderId,
+                item -> item,
+                (first, ignored) -> first,
+                LinkedHashMap::new));
+        Map<Long, List<Long>> deviceIdsByOrderItemId = new LinkedHashMap<>();
+        if (!rentalOrderIds.isEmpty()) {
+            nullSafe(assignmentMapper.selectActiveListByRentalOrderIds(rentalOrderIds)).forEach(assignment ->
+                    deviceIdsByOrderItemId.computeIfAbsent(
+                            assignment.getRentalOrderItemId(), ignored -> new ArrayList<>())
+                            .add(assignment.getDeviceId()));
+        }
+        List<XianyuOrderRespVO> list = page.getList().stream()
+                .map(order -> {
+                    RentalOrderItemDO item = firstItemByOrderId.get(order.getRentalOrderId());
+                    List<Long> assignedDeviceIds = item == null
+                            ? List.of()
+                            : deviceIdsByOrderItemId.getOrDefault(item.getId(), List.of());
+                    return toVo(order, item, assignedDeviceIds);
+                })
+                .collect(Collectors.toList());
         return new PageResult<>(list, page.getTotal());
     }
 
@@ -98,7 +145,8 @@ public class XianyuOrderAdminService {
         return conversionService.convert(channelOrderId);
     }
 
-    private XianyuOrderRespVO toVo(XianyuOrderDO order) {
+    private XianyuOrderRespVO toVo(XianyuOrderDO order, RentalOrderItemDO item,
+                                   List<Long> assignedDeviceIds) {
         XianyuOrderRespVO vo = new XianyuOrderRespVO();
         vo.setId(order.getId());
         vo.setShopId(order.getShopId());
@@ -109,10 +157,11 @@ public class XianyuOrderAdminService {
         vo.setOrderStatus(order.getOrderStatus());
         vo.setPayAmount(order.getPayAmount());
         vo.setCurrency(order.getCurrency());
-        // Seller remark may contain ship dates; keep full text for ops (no phone/address strip).
-        vo.setSellerRemark(order.getSellerRemark());
-        fillReceiverFromDetail(order.getDetailJson(), vo);
+        vo.setSellerRemark(XianyuAdminPrivacyMasker.maskFreeText(order.getSellerRemark()));
+        fillReceiver(order, vo);
+        maskReceiver(vo);
         vo.setRemarkParseStatus(order.getRemarkParseStatus());
+        fillRentalPeriod(order, vo);
         vo.setConversionStatus(order.getConversionStatus());
         vo.setRentalOrderId(order.getRentalOrderId());
         vo.setSourceCreatedAt(order.getSourceCreatedAt());
@@ -124,6 +173,7 @@ public class XianyuOrderAdminService {
         vo.setRefundStatus(order.getRefundStatus());
         vo.setRefundAmount(order.getRefundAmount());
         vo.setRefundTime(order.getRefundTime());
+        vo.setWaybillNo(order.getWaybillNo());
         vo.setExpressCode(order.getExpressCode());
         vo.setExpressName(order.getExpressName());
         vo.setExpressFee(order.getExpressFee());
@@ -140,11 +190,61 @@ public class XianyuOrderAdminService {
         vo.setTaxIncluded(order.getTaxIncluded());
         vo.setIdleBizType(order.getIdleBizType());
         vo.setPinGroupStatus(order.getPinGroupStatus());
+        if (item != null) {
+            vo.setRentalOrderItemId(item.getId());
+            vo.setEquipmentModelCode(item.getEquipmentModelCode());
+            vo.setRentalQuantity(item.getQuantity());
+            vo.setOccupyStartDate(item.getOccupyStartDate());
+            vo.setOccupyEndDateExclusive(item.getOccupyEndDateExclusive());
+        } else if (order.getShipDate() != null && order.getReturnDate() != null) {
+            vo.setOccupyStartDate(order.getShipDate());
+            vo.setOccupyEndDateExclusive(order.getReturnDate().plusDays(1));
+        }
+        vo.setAssignedDeviceIds(List.copyOf(assignedDeviceIds));
         return vo;
     }
 
+    private static <T> List<T> nullSafe(List<T> values) {
+        return values == null ? Collections.emptyList() : values;
+    }
+
+    private void fillRentalPeriod(XianyuOrderDO order, XianyuOrderRespVO vo) {
+        if (order.getRentalOrderId() != null) {
+            RentalOrderDO rentalOrder = rentalOrderMapper.selectById(order.getRentalOrderId());
+            if (rentalOrder != null && rentalOrder.getBillableStartDate() != null
+                    && rentalOrder.getBillableEndDate() != null) {
+                vo.setBillableStartDate(rentalOrder.getBillableStartDate());
+                vo.setBillableEndDate(rentalOrder.getBillableEndDate());
+                vo.setRentalPeriodStatus("SUCCESS");
+                return;
+            }
+        }
+
+        vo.setBillableStartDate(order.getBillableStartDate());
+        vo.setBillableEndDate(order.getBillableEndDate());
+        vo.setRentalPeriodStatus(order.getRentalPeriodStatus());
+        vo.setRentalPeriodReasonCode(order.getRentalPeriodReasonCode());
+    }
+
+    private void fillReceiver(XianyuOrderDO order, XianyuOrderRespVO vo) {
+        vo.setReceiverName(order.getReceiverName());
+        vo.setReceiverMobile(order.getReceiverMobile());
+        vo.setReceiverAddress(order.getReceiverAddress());
+        if (StringUtils.hasText(vo.getReceiverName()) && StringUtils.hasText(vo.getReceiverMobile())
+                && StringUtils.hasText(vo.getReceiverAddress())) {
+            return;
+        }
+        fillReceiverFromDetail(order.getDetailJson(), vo);
+    }
+
+    private static void maskReceiver(XianyuOrderRespVO vo) {
+        vo.setReceiverName(XianyuAdminPrivacyMasker.maskName(vo.getReceiverName()));
+        vo.setReceiverMobile(XianyuAdminPrivacyMasker.maskMobile(vo.getReceiverMobile()));
+        vo.setReceiverAddress(XianyuAdminPrivacyMasker.maskAddress(vo.getReceiverAddress()));
+    }
+
     /**
-     * Surface shipping contact from stored detail JSON. Never attach raw detailJson to the VO.
+     * Backward-compatible fallback for rows created before receiver snapshot columns existed.
      */
     private void fillReceiverFromDetail(String detailJson, XianyuOrderRespVO vo) {
         if (!StringUtils.hasText(detailJson)) {
@@ -152,9 +252,15 @@ public class XianyuOrderAdminService {
         }
         try {
             JsonNode detail = objectMapper.readTree(detailJson);
-            vo.setReceiverName(textOrNull(detail, "receiver_name"));
-            vo.setReceiverMobile(textOrNull(detail, "receiver_mobile"));
-            vo.setReceiverAddress(composeAddress(detail));
+            if (!StringUtils.hasText(vo.getReceiverName())) {
+                vo.setReceiverName(textOrNull(detail, "receiver_name"));
+            }
+            if (!StringUtils.hasText(vo.getReceiverMobile())) {
+                vo.setReceiverMobile(textOrNull(detail, "receiver_mobile"));
+            }
+            if (!StringUtils.hasText(vo.getReceiverAddress())) {
+                vo.setReceiverAddress(composeAddress(detail));
+            }
         } catch (Exception ignored) {
             // Malformed historical payload: leave receiver fields empty.
         }

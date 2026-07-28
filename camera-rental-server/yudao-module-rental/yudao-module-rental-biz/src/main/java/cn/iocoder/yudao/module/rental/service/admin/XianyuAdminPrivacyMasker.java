@@ -43,6 +43,41 @@ final class XianyuAdminPrivacyMasker {
                 + text.substring(text.length() - IDENTIFIER_EDGE_LENGTH);
     }
 
+    static String maskName(String value) {
+        if (!StringUtils.hasText(value)) {
+            return value;
+        }
+        String text = value.trim();
+        int firstCodePointEnd = text.offsetByCodePoints(0, 1);
+        return text.substring(0, firstCodePointEnd) + "*";
+    }
+
+    static String maskMobile(String value) {
+        if (!StringUtils.hasText(value)) {
+            return value;
+        }
+        String text = value.trim();
+        String masked = replaceMobile(text);
+        if (!masked.equals(text) || text.contains("*")) {
+            return masked;
+        }
+        return maskIdentifier(text);
+    }
+
+    static String maskAddress(String value) {
+        if (!StringUtils.hasText(value)) {
+            return value;
+        }
+        String text = value.trim();
+        if (text.contains("***")) {
+            return text;
+        }
+        int codePointCount = text.codePointCount(0, text.length());
+        int keptCodePoints = Math.min(6, codePointCount);
+        int prefixEnd = text.offsetByCodePoints(0, keptCodePoints);
+        return text.substring(0, prefixEnd) + "***";
+    }
+
     private static String replaceSensitiveValue(String value, Pattern pattern) {
         Matcher matcher = pattern.matcher(value);
         StringBuilder result = new StringBuilder();

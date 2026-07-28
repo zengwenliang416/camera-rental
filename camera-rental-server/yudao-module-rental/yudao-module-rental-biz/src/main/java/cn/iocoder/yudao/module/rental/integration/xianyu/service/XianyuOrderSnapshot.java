@@ -17,6 +17,9 @@ public record XianyuOrderSnapshot(
         LocalDateTime sourceUpdatedAt,
         /** Full order-detail {@code data} object JSON (all API fields). */
         String detailJson,
+        String receiverName,
+        String receiverMobile,
+        String receiverAddress,
         Integer orderType,
         LocalDateTime orderTime,
         Long totalAmount,

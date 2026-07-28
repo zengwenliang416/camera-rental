@@ -15,12 +15,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Objects;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_ORDER_NOT_EXISTS;
 import static cn.iocoder.yudao.module.rental.enums.rental.RentalManualReviewStatusEnum.OPEN;
+import static cn.iocoder.yudao.module.rental.enums.rental.RentalManualReviewStatusEnum.RESOLVED;
 
 /**
  * Converts one durable channel order after all local conversion prerequisites are explicitly satisfied.
@@ -34,31 +36,30 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
     static final String REVIEW_SOURCE_TYPE = "XIANYU_ORDER";
     static final String REVIEW_TYPE = "ORDER_CONVERSION";
     static final String MAPPING_STATUS_MAPPED = "MAPPED";
+    static final String CONVERSION_STATUS_PENDING = "PENDING";
     static final String CONVERSION_STATUS_CONVERTED = "CONVERTED";
     static final String CONVERSION_STATUS_REVIEW_REQUIRED = "REVIEW_REQUIRED";
     static final String CONVERSION_STATUS_CLOSED = "CLOSED";
     static final String RENTAL_STATUS_PENDING_ALLOCATION = "PENDING_ALLOCATION";
     static final String SYSTEM_OPERATOR = "system";
+    static final String SHIPMENT_MAPPING_NOTE = "Confirmed from shipment device selection";
+    private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
 
     private final XianyuOrderMapper xianyuOrderMapper;
     private final XianyuProductMappingMapper productMappingMapper;
     private final RentalOrderMapper rentalOrderMapper;
     private final RentalOrderItemMapper rentalOrderItemMapper;
     private final RentalManualReviewMapper manualReviewMapper;
-    private final SellerRemarkRentalPeriodParser periodParser;
-
     public XianyuRentalConversionServiceImpl(XianyuOrderMapper xianyuOrderMapper,
                                              XianyuProductMappingMapper productMappingMapper,
                                              RentalOrderMapper rentalOrderMapper,
                                              RentalOrderItemMapper rentalOrderItemMapper,
-                                             RentalManualReviewMapper manualReviewMapper,
-                                             SellerRemarkRentalPeriodParser periodParser) {
+                                             RentalManualReviewMapper manualReviewMapper) {
         this.xianyuOrderMapper = xianyuOrderMapper;
         this.productMappingMapper = productMappingMapper;
         this.rentalOrderMapper = rentalOrderMapper;
         this.rentalOrderItemMapper = rentalOrderItemMapper;
         this.manualReviewMapper = manualReviewMapper;
-        this.periodParser = periodParser;
     }
 
     @Override
@@ -80,6 +81,20 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RentalConversionResult convert(Long channelOrderId) {
+        return convertInternal(channelOrderId, null);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public RentalConversionResult convertForShipment(Long channelOrderId, String equipmentModelCode) {
+        RentalConversionResult result = convertInternal(channelOrderId, equipmentModelCode);
+        if (CONVERSION_STATUS_CONVERTED.equals(result.status())) {
+            resolveShipmentReview(channelOrderId);
+        }
+        return result;
+    }
+
+    private RentalConversionResult convertInternal(Long channelOrderId, String selectedEquipmentModelCode) {
         Objects.requireNonNull(channelOrderId, "channelOrderId");
         XianyuOrderDO source = xianyuOrderMapper.selectByIdForUpdate(channelOrderId);
         if (source == null) {
@@ -88,17 +103,10 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
         }
         if (CONVERSION_STATUS_CLOSED.equals(source.getConversionStatus())) {
             // Closed channel rows stay closed; Hermes does not re-open them automatically.
-            SellerRemarkRentalPeriod closedPeriod = periodParser.parse(source.getSellerRemark(), sourceDate(source));
-            source.setRemarkParseVersion(closedPeriod.version());
-            source.setRemarkParseStatus(closedPeriod.status());
-            xianyuOrderMapper.updateById(source);
             return RentalConversionResult.reviewRequired(null, "CLOSED");
         }
         if (source.getRentalOrderId() != null) {
-            // Already linked: still refresh remark parse metadata (Hermes re-reads remarks on updates).
-            SellerRemarkRentalPeriod linkedPeriod = periodParser.parse(source.getSellerRemark(), sourceDate(source));
-            source.setRemarkParseVersion(linkedPeriod.version());
-            source.setRemarkParseStatus(linkedPeriod.status());
+            refreshConvertedItemOccupancy(source);
             if (!CONVERSION_STATUS_CONVERTED.equals(source.getConversionStatus())) {
                 source.setConversionStatus(CONVERSION_STATUS_CONVERTED);
             }
@@ -106,17 +114,24 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
             return RentalConversionResult.converted(source.getRentalOrderId());
         }
 
-        SellerRemarkRentalPeriod period = periodParser.parse(source.getSellerRemark(), sourceDate(source));
-        source.setRemarkParseVersion(period.version());
-        source.setRemarkParseStatus(period.status());
+        SellerRemarkRentalPeriod period = storedRentalPeriod(source);
         if (source.getPayAmount() == null || source.getPayAmount() < 0) {
             return requireReview(source, "INVALID_PAY_AMOUNT");
+        }
+        if (period.isPending()) {
+            source.setConversionStatus(CONVERSION_STATUS_PENDING);
+            xianyuOrderMapper.updateById(source);
+            return RentalConversionResult.pending(period.reasonCode());
         }
         if (!period.isSuccess()) {
             return requireReview(source, period.reasonCode());
         }
-        XianyuProductMappingDO mapping = productMappingMapper.selectByShopProductSkuForUpdate(source.getShopId(),
-                source.getExternalProductId(), externalSkuId(source));
+        if (period.occupyStartDate() == null || period.occupyEndDateExclusive() == null) {
+            source.setConversionStatus(CONVERSION_STATUS_PENDING);
+            xianyuOrderMapper.updateById(source);
+            return RentalConversionResult.pending("OCCUPIED_PERIOD_NOT_READY");
+        }
+        XianyuProductMappingDO mapping = resolveProductMapping(source, selectedEquipmentModelCode);
         if (mapping == null || !MAPPING_STATUS_MAPPED.equals(mapping.getMappingStatus())
                 || !StringUtils.hasText(mapping.getEquipmentModelCode())) {
             return requireReview(source, "PRODUCT_MAPPING_REQUIRED");
@@ -125,6 +140,7 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
         RentalOrderDO existing = rentalOrderMapper.selectBySourceForUpdate(CHANNEL_SOURCE_TYPE, sourceIdentity(source));
         if (existing != null) {
             source.setRentalOrderId(existing.getId());
+            refreshConvertedItemOccupancy(source);
             source.setConversionStatus(CONVERSION_STATUS_CONVERTED);
             xianyuOrderMapper.updateById(source);
             return RentalConversionResult.converted(existing.getId());
@@ -152,11 +168,68 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
                 .rentAmount(source.getPayAmount())
                 .billableStartDate(period.billableStartDate())
                 .billableEndDate(period.billableEndDate())
+                .occupyStartDate(period.occupyStartDate())
+                .occupyEndDateExclusive(period.occupyEndDateExclusive())
                 .build());
         source.setRentalOrderId(rentalOrder.getId());
         source.setConversionStatus(CONVERSION_STATUS_CONVERTED);
         xianyuOrderMapper.updateById(source);
         return RentalConversionResult.converted(rentalOrder.getId());
+    }
+
+    private XianyuProductMappingDO resolveProductMapping(XianyuOrderDO source, String selectedEquipmentModelCode) {
+        XianyuProductMappingDO mapping = productMappingMapper.selectByShopProductSkuForUpdate(source.getShopId(),
+                source.getExternalProductId(), externalSkuId(source));
+        if (mapping != null && MAPPING_STATUS_MAPPED.equals(mapping.getMappingStatus())
+                && StringUtils.hasText(mapping.getEquipmentModelCode())) {
+            return mapping;
+        }
+        if (!StringUtils.hasText(selectedEquipmentModelCode)) {
+            return mapping;
+        }
+
+        String modelCode = selectedEquipmentModelCode.trim();
+        if (!StringUtils.hasText(source.getExternalProductId())) {
+            return XianyuProductMappingDO.builder()
+                    .equipmentModelCode(modelCode)
+                    .mappingStatus(MAPPING_STATUS_MAPPED)
+                    .mappingNote(SHIPMENT_MAPPING_NOTE)
+                    .build();
+        }
+        if (mapping == null) {
+            mapping = XianyuProductMappingDO.builder()
+                    .shopId(source.getShopId())
+                    .externalProductId(source.getExternalProductId())
+                    .externalSkuId(externalSkuId(source))
+                    .equipmentModelCode(modelCode)
+                    .mappingStatus(MAPPING_STATUS_MAPPED)
+                    .mappingNote(SHIPMENT_MAPPING_NOTE)
+                    .build();
+            mapping.setCreator(SYSTEM_OPERATOR);
+            mapping.setUpdater(SYSTEM_OPERATOR);
+            productMappingMapper.insert(mapping);
+            return mapping;
+        }
+
+        mapping.setEquipmentModelCode(modelCode);
+        mapping.setMappingStatus(MAPPING_STATUS_MAPPED);
+        mapping.setMappingNote(SHIPMENT_MAPPING_NOTE);
+        mapping.setUpdater(SYSTEM_OPERATOR);
+        productMappingMapper.updateById(mapping);
+        return mapping;
+    }
+
+    private void resolveShipmentReview(Long channelOrderId) {
+        RentalManualReviewDO review = manualReviewMapper.selectBySourceAndReviewTypeForUpdate(
+                REVIEW_SOURCE_TYPE, channelOrderId.toString(), REVIEW_TYPE);
+        if (review == null || !OPEN.getStatus().equals(review.getStatus())) {
+            return;
+        }
+        review.setStatus(RESOLVED.getStatus());
+        review.setResolutionNote(SHIPMENT_MAPPING_NOTE);
+        review.setResolvedAt(LocalDateTime.now(BUSINESS_ZONE));
+        review.setUpdater(SYSTEM_OPERATOR);
+        manualReviewMapper.updateById(review);
     }
 
     private RentalConversionResult requireReview(XianyuOrderDO source, String reasonCode) {
@@ -190,8 +263,36 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
         return RentalConversionResult.reviewRequired(review.getId(), reasonCode);
     }
 
-    private LocalDate sourceDate(XianyuOrderDO source) {
-        return source.getSourceCreatedAt() == null ? null : source.getSourceCreatedAt().toLocalDate();
+    private SellerRemarkRentalPeriod storedRentalPeriod(XianyuOrderDO source) {
+        String version = StringUtils.hasText(source.getRemarkParseVersion())
+                ? source.getRemarkParseVersion() : SellerRemarkRentalPeriodParser.VERSION;
+        if ("SUCCESS".equals(source.getRentalPeriodStatus())
+                && source.getBillableStartDate() != null
+                && source.getBillableEndDate() != null) {
+            return SellerRemarkRentalPeriod.success(
+                    version, source.getBillableStartDate(), source.getBillableEndDate(),
+                    source.getShipDate(), source.getReceiveDate(), source.getReturnDate());
+        }
+        String reasonCode = StringUtils.hasText(source.getRentalPeriodReasonCode())
+                ? source.getRentalPeriodReasonCode() : "RENTAL_PERIOD_NOT_READY";
+        if ("PENDING".equals(source.getRentalPeriodStatus())
+                || !StringUtils.hasText(source.getRentalPeriodStatus())) {
+            return SellerRemarkRentalPeriod.pending(version, reasonCode);
+        }
+        return SellerRemarkRentalPeriod.failure(version, reasonCode);
+    }
+
+    private void refreshConvertedItemOccupancy(XianyuOrderDO source) {
+        if (source.getRentalOrderId() == null || source.getShipDate() == null || source.getReturnDate() == null) {
+            return;
+        }
+        RentalOrderItemDO item = rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(source.getRentalOrderId());
+        if (item == null || item.getOccupyStartDate() != null && item.getOccupyEndDateExclusive() != null) {
+            return;
+        }
+        item.setOccupyStartDate(source.getShipDate());
+        item.setOccupyEndDateExclusive(source.getReturnDate().plusDays(1));
+        rentalOrderItemMapper.updateById(item);
     }
 
     private String externalSkuId(XianyuOrderDO source) {

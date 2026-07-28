@@ -18,6 +18,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_ORDER_NOT_EXISTS;
@@ -48,7 +49,7 @@ class XianyuRentalConversionServiceImplTest {
     @BeforeEach
     void setUp() {
         service = new XianyuRentalConversionServiceImpl(xianyuOrderMapper, productMappingMapper, rentalOrderMapper,
-                rentalOrderItemMapper, manualReviewMapper, new SellerRemarkRentalPeriodParser());
+                rentalOrderItemMapper, manualReviewMapper);
     }
 
     @Test
@@ -76,6 +77,8 @@ class XianyuRentalConversionServiceImplTest {
         ArgumentCaptor<RentalOrderItemDO> itemCaptor = ArgumentCaptor.forClass(RentalOrderItemDO.class);
         verify(rentalOrderItemMapper).insert(itemCaptor.capture());
         assertEquals(4_294_967_296L, itemCaptor.getValue().getRentAmount());
+        assertEquals(LocalDate.of(2026, 7, 22), itemCaptor.getValue().getOccupyStartDate());
+        assertEquals(LocalDate.of(2026, 7, 28), itemCaptor.getValue().getOccupyEndDateExclusive());
         assertEquals("CONVERTED", source.getConversionStatus());
     }
 
@@ -92,7 +95,6 @@ class XianyuRentalConversionServiceImplTest {
         verify(productMappingMapper, never()).selectByShopProductSkuForUpdate(any(), any(), any());
         verify(rentalOrderMapper, never()).insert(any(RentalOrderDO.class));
         verify(rentalOrderItemMapper, never()).insert(any(RentalOrderItemDO.class));
-        // Hermes re-reads remarks even for already-linked channel rows.
         verify(xianyuOrderMapper).updateById(source);
         assertEquals("SUCCESS", source.getRemarkParseStatus());
     }
@@ -115,6 +117,51 @@ class XianyuRentalConversionServiceImplTest {
         verify(rentalOrderMapper, never()).insert(any(RentalOrderDO.class));
         verify(rentalOrderItemMapper, never()).insert(any(RentalOrderItemDO.class));
         assertEquals("REVIEW_REQUIRED", source.getConversionStatus());
+    }
+
+    @Test
+    void shouldCreateMappingFromSelectedDeviceModelAndConvertForShipment() {
+        XianyuOrderDO source = sourceOrder();
+        when(xianyuOrderMapper.selectByIdForUpdate(10L)).thenReturn(source);
+        when(productMappingMapper.selectByShopProductSkuForUpdate(7L, "product-1", "sku-1")).thenReturn(null);
+        doAnswer(invocation -> {
+            invocation.getArgument(0, RentalOrderDO.class).setId(31L);
+            return 1;
+        }).when(rentalOrderMapper).insert(any(RentalOrderDO.class));
+
+        RentalConversionResult result = service.convertForShipment(10L, "DJI-P4P");
+
+        assertEquals("CONVERTED", result.status());
+        assertEquals(31L, result.rentalOrderId());
+        ArgumentCaptor<XianyuProductMappingDO> mappingCaptor =
+                ArgumentCaptor.forClass(XianyuProductMappingDO.class);
+        verify(productMappingMapper).insert(mappingCaptor.capture());
+        assertEquals("DJI-P4P", mappingCaptor.getValue().getEquipmentModelCode());
+        assertEquals("MAPPED", mappingCaptor.getValue().getMappingStatus());
+        ArgumentCaptor<RentalOrderItemDO> itemCaptor = ArgumentCaptor.forClass(RentalOrderItemDO.class);
+        verify(rentalOrderItemMapper).insert(itemCaptor.capture());
+        assertEquals("DJI-P4P", itemCaptor.getValue().getEquipmentModelCode());
+    }
+
+    @Test
+    void shouldKeepIncompleteRentalPeriodPendingWithoutCreatingReview() {
+        XianyuOrderDO source = sourceOrder();
+        source.setBillableStartDate(null);
+        source.setBillableEndDate(null);
+        source.setRemarkParseStatus("PENDING");
+        source.setRentalPeriodStatus("PENDING");
+        source.setRentalPeriodReasonCode("MISSING_REMARK");
+        when(xianyuOrderMapper.selectByIdForUpdate(10L)).thenReturn(source);
+
+        RentalConversionResult result = service.convert(10L);
+
+        assertEquals("PENDING", result.status());
+        assertEquals("MISSING_REMARK", result.reasonCode());
+        assertEquals("PENDING", source.getConversionStatus());
+        verify(xianyuOrderMapper).updateById(source);
+        verify(manualReviewMapper, never()).insert(any(RentalManualReviewDO.class));
+        verify(productMappingMapper, never()).selectByShopProductSkuForUpdate(any(), any(), any());
+        verify(rentalOrderMapper, never()).insert(any(RentalOrderDO.class));
     }
 
     @Test
@@ -151,7 +198,7 @@ class XianyuRentalConversionServiceImplTest {
     }
 
     @Test
-    void shouldRefreshRemarkParseWhenAlreadyConverted() {
+    void shouldReusePersistedPeriodWhenAlreadyConverted() {
         XianyuOrderDO source = sourceOrder();
         source.setRentalOrderId(31L);
         source.setConversionStatus("CONVERTED");
@@ -184,7 +231,14 @@ class XianyuRentalConversionServiceImplTest {
                 .externalSkuId("sku-1")
                 .payAmount(4_294_967_296L)
                 .sellerRemark("#租期7.25-7.27#")
-                .sourceCreatedAt(LocalDateTime.of(2026, 7, 20, 10, 0))
+                .remarkParseVersion(SellerRemarkRentalPeriodParser.VERSION)
+                .remarkParseStatus("SUCCESS")
+                .billableStartDate(LocalDate.of(2026, 7, 25))
+                .billableEndDate(LocalDate.of(2026, 7, 27))
+                .shipDate(LocalDate.of(2026, 7, 22))
+                .receiveDate(LocalDate.of(2026, 7, 24))
+                .returnDate(LocalDate.of(2026, 7, 27))
+                .rentalPeriodStatus("SUCCESS")
                 .build();
     }
 

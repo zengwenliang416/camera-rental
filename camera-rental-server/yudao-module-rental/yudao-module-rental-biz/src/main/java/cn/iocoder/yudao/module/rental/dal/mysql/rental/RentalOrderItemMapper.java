@@ -5,6 +5,9 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderItemDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Collection;
+import java.util.List;
+
 @Mapper
 public interface RentalOrderItemMapper extends BaseMapperX<RentalOrderItemDO> {
 
@@ -18,6 +21,16 @@ public interface RentalOrderItemMapper extends BaseMapperX<RentalOrderItemDO> {
                 .eq(RentalOrderItemDO::getRentalOrderId, rentalOrderId)
                 .orderByAsc(RentalOrderItemDO::getId)
                 .last("LIMIT 1"));
+    }
+
+    default List<RentalOrderItemDO> selectListByRentalOrderIds(Collection<Long> rentalOrderIds) {
+        if (rentalOrderIds == null || rentalOrderIds.isEmpty()) {
+            return List.of();
+        }
+        return selectList(new LambdaQueryWrapper<RentalOrderItemDO>()
+                .in(RentalOrderItemDO::getRentalOrderId, rentalOrderIds)
+                .orderByAsc(RentalOrderItemDO::getRentalOrderId)
+                .orderByAsc(RentalOrderItemDO::getId));
     }
 
 }

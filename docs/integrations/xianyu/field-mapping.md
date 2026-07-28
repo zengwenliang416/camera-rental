@@ -12,6 +12,7 @@
 | `order_no` | `external_order_no` | 外部订单幂等键，始终按字符串处理 |
 | `authorize_id` | 渠道店铺授权 | 同步前校验有效性 |
 | `seller_remark` | `rental_remark_raw` | 仅用于日期解析 |
+| `receiver_name` / `receiver_mobile` / 地址字段 | 渠道订单收货快照 | 仅待发货详情返回；首次取得后独立保存，后续状态同步不得用空值清除 |
 | `total_amount` | `external_total_amount` | 官方订单接口明确为分 |
 | `pay_amount` | `rental_income_amount` | 官方订单接口明确为分，作为总租金收入 |
 | `refund_amount` | `refund_amount` | 订单接口明确为分；售后接口单位仍需确认 |
@@ -43,8 +44,13 @@
 | 计租开始 | 明确租期优先，否则收货次日 |
 | 计租结束 | 明确租期优先，否则发回当天 |
 | 发回日期 | 用于业务流程和占用周期 |
-| 解析状态 | 成功、待复核或失败 |
-| 解析错误 | 保存可解释的错误原因 |
+| 解析状态 | `SUCCESS`、`PENDING` 或 `FAILED` |
+| 状态原因 | 保存待定或失败的可解释原因 |
+
+`PENDING` 表示备注或参考日期暂不足，计租开始和结束日期必须保持为空。后续订单
+状态变化触发详情补拉时重新解析；只有明确格式错误或日期冲突才进入 `FAILED`。
+`SELLER_REMARK_V3` 使用 `LOGISTICS_DATE_BEFORE_ORDER` 标识物流日期早于订单日期，
+使用 `INVALID_LOGISTICS_RANGE` 标识收货、发回等日期顺序冲突。
 
 ## 金额规则
 

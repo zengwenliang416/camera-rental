@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.rental.dal.dataobject.xianyu;
 
 import cn.iocoder.yudao.framework.tenant.core.db.TenantBaseDO;
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -10,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -35,6 +37,19 @@ public class XianyuOrderDO extends TenantBaseDO {
     private String sellerRemark;
     private String remarkParseVersion;
     private String remarkParseStatus;
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
+    private LocalDate billableStartDate;
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
+    private LocalDate billableEndDate;
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
+    private LocalDate shipDate;
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
+    private LocalDate receiveDate;
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
+    private LocalDate returnDate;
+    private String rentalPeriodStatus;
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
+    private String rentalPeriodReasonCode;
     private LocalDateTime sourceCreatedAt;
     private LocalDateTime sourceUpdatedAt;
     private Long rawPayloadId;
@@ -43,6 +58,9 @@ public class XianyuOrderDO extends TenantBaseDO {
 
     /** Full order-detail {@code data} JSON from XianGuanJia. */
     private String detailJson;
+    private String receiverName;
+    private String receiverMobile;
+    private String receiverAddress;
     private Integer orderType;
     private LocalDateTime orderTime;
     private Long totalAmount;

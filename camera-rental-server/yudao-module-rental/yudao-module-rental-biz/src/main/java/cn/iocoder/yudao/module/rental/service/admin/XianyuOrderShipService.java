@@ -9,12 +9,14 @@ import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderShip
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuPendingShipOrderPageReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuPendingShipOrderRespVO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
+import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceAssignmentDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceShipmentDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderItemDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuShopDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
+import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceShipmentMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
@@ -25,10 +27,12 @@ import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadRespon
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuWriteClient;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuWriteEndpoint;
 import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
+import cn.iocoder.yudao.module.rental.service.RentalConversionResult;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentCommand;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentException;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentResult;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentService;
+import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.stereotype.Service;
@@ -59,14 +63,16 @@ import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_WRI
 public class XianyuOrderShipService {
 
     private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
-    private static final Set<String> PENDING_STATUSES = Set.of("22", "WAIT_SHIP", "WAIT_SEND", "WAIT_SELLER_SEND_GOODS");
+    private static final Set<String> PENDING_STATUSES = Set.of("12", "WAIT_SHIP", "WAIT_SEND", "WAIT_SELLER_SEND_GOODS");
 
     private final XianyuOrderMapper orderMapper;
     private final XianyuShopMapper shopMapper;
     private final RentalDeviceMapper deviceMapper;
+    private final RentalDeviceAssignmentMapper assignmentMapper;
     private final RentalOrderMapper rentalOrderMapper;
     private final RentalOrderItemMapper rentalOrderItemMapper;
     private final RentalDeviceShipmentMapper shipmentMapper;
+    private final XianyuRentalConversionService conversionService;
     private final RentalDeviceAssignmentService assignmentService;
     private final RentalDeviceOpsService deviceOpsService;
     private final XianyuWriteClient writeClient;
@@ -74,9 +80,11 @@ public class XianyuOrderShipService {
     private final ObjectMapper objectMapper;
 
     public XianyuOrderShipService(XianyuOrderMapper orderMapper, XianyuShopMapper shopMapper,
-                                  RentalDeviceMapper deviceMapper, RentalOrderMapper rentalOrderMapper,
+                                  RentalDeviceMapper deviceMapper, RentalDeviceAssignmentMapper assignmentMapper,
+                                  RentalOrderMapper rentalOrderMapper,
                                   RentalOrderItemMapper rentalOrderItemMapper,
                                   RentalDeviceShipmentMapper shipmentMapper,
+                                  XianyuRentalConversionService conversionService,
                                   RentalDeviceAssignmentService assignmentService,
                                   RentalDeviceOpsService deviceOpsService,
                                   XianyuWriteClient writeClient, XianyuProperties properties,
@@ -84,9 +92,11 @@ public class XianyuOrderShipService {
         this.orderMapper = orderMapper;
         this.shopMapper = shopMapper;
         this.deviceMapper = deviceMapper;
+        this.assignmentMapper = assignmentMapper;
         this.rentalOrderMapper = rentalOrderMapper;
         this.rentalOrderItemMapper = rentalOrderItemMapper;
         this.shipmentMapper = shipmentMapper;
+        this.conversionService = conversionService;
         this.assignmentService = assignmentService;
         this.deviceOpsService = deviceOpsService;
         this.writeClient = writeClient;
@@ -121,7 +131,7 @@ public class XianyuOrderShipService {
         XianyuShopDO shop = requireAuthorizedShop(order.getShopId());
         RentalDeviceDO device = resolveDevice(reqVO);
         requireDeviceShippable(device);
-        RentalOrderItemDO item = requireConvertedFirstItem(order);
+        RentalOrderItemDO item = requireConvertedFirstItem(order, device);
 
         RentalDeviceAssignmentResult assignment = assignDevice(reqVO, device, item);
         ObjectNode shipBody = buildShipBody(order, reqVO);
@@ -211,11 +221,19 @@ public class XianyuOrderShipService {
         }
     }
 
-    private RentalOrderItemDO requireConvertedFirstItem(XianyuOrderDO order) {
-        if (order.getRentalOrderId() == null) {
-            throw exception(XIANYU_SHIP_ORDER_NOT_CONVERTED);
+    private RentalOrderItemDO requireConvertedFirstItem(XianyuOrderDO order, RentalDeviceDO device) {
+        Long rentalOrderId = order.getRentalOrderId();
+        if (rentalOrderId == null) {
+            RentalConversionResult conversion =
+                    conversionService.convertForShipment(order.getId(), device.getEquipmentModelCode());
+            if (!"CONVERTED".equals(conversion.status()) || conversion.rentalOrderId() == null) {
+                throw exception(XIANYU_SHIP_ORDER_NOT_CONVERTED);
+            }
+            rentalOrderId = conversion.rentalOrderId();
+            order.setRentalOrderId(rentalOrderId);
+            order.setConversionStatus("CONVERTED");
         }
-        RentalOrderDO rentalOrder = rentalOrderMapper.selectByIdForUpdate(order.getRentalOrderId());
+        RentalOrderDO rentalOrder = rentalOrderMapper.selectByIdForUpdate(rentalOrderId);
         if (rentalOrder == null) {
             throw exception(XIANYU_SHIP_ORDER_NOT_CONVERTED);
         }
@@ -228,6 +246,12 @@ public class XianyuOrderShipService {
 
     private RentalDeviceAssignmentResult assignDevice(XianyuOrderShipReqVO reqVO, RentalDeviceDO device,
                                                        RentalOrderItemDO item) {
+        RentalDeviceAssignmentDO existing =
+                assignmentMapper.selectActiveByOrderItemAndDeviceForUpdate(item.getId(), device.getId());
+        if (existing != null) {
+            return new RentalDeviceAssignmentResult(existing.getId(), existing.getScheduleId(), device.getId(),
+                    item.getOccupyStartDate(), item.getOccupyEndDateExclusive());
+        }
         try {
             return assignmentService.assign(new RentalDeviceAssignmentCommand(
                     item.getId(), device.getId(), item.getOccupyStartDate(), item.getOccupyEndDateExclusive(),

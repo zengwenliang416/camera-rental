@@ -75,6 +75,21 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
         return selectList(missingDetailRefsQuery(limit));
     }
 
+    default List<XianyuOrderDO> selectMissingRentalPeriodRefs(String currentParseVersion, int limit) {
+        int boundedLimit = Math.max(1, Math.min(500, limit));
+        LambdaQueryWrapperX<XianyuOrderDO> query = new LambdaQueryWrapperX<>();
+        query.select(XianyuOrderDO::getId, XianyuOrderDO::getSellerRemark,
+                XianyuOrderDO::getOrderTime, XianyuOrderDO::getSourceCreatedAt);
+        query.and(wrapper -> wrapper
+                .isNull(XianyuOrderDO::getRentalPeriodStatus)
+                .or().isNull(XianyuOrderDO::getRemarkParseVersion)
+                .or().ne(XianyuOrderDO::getRemarkParseVersion, currentParseVersion));
+        query.orderByDesc(XianyuOrderDO::getSourceUpdatedAt);
+        query.orderByDesc(XianyuOrderDO::getId);
+        query.last("LIMIT " + boundedLimit);
+        return selectList(query);
+    }
+
     static LambdaQueryWrapperX<XianyuOrderDO> missingDetailRefsQuery(int limit) {
         int boundedLimit = Math.max(1, Math.min(500, limit));
         LambdaQueryWrapperX<XianyuOrderDO> query = new LambdaQueryWrapperX<>();
@@ -102,10 +117,19 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
 
     default PageResult<XianyuOrderDO> selectPendingShipPage(Long shopId, String keyword, Collection<String> statuses,
                                                             cn.iocoder.yudao.framework.common.pojo.PageParam pageParam) {
+        LambdaQueryWrapperX<XianyuOrderDO> query = pendingShipQuery(shopId, keyword, statuses);
+        query.select(XianyuOrderDO.class, field -> !"detailJson".equals(field.getProperty())
+                && !"goodsJson".equals(field.getProperty()));
+        return selectPage(pageParam, query);
+    }
+
+    static LambdaQueryWrapperX<XianyuOrderDO> pendingShipQuery(Long shopId, String keyword,
+                                                               Collection<String> statuses) {
         LambdaQueryWrapperX<XianyuOrderDO> query = new LambdaQueryWrapperX<>();
         query.eqIfPresent(XianyuOrderDO::getShopId, shopId);
         query.in(statuses != null && !statuses.isEmpty(), XianyuOrderDO::getOrderStatus, statuses);
-        query.isNull(XianyuOrderDO::getWaybillNo);
+        // Official order data uses both null and empty strings for an unassigned waybill.
+        query.apply("(waybill_no IS NULL OR TRIM(waybill_no) = '')");
         query.isNull(XianyuOrderDO::getConsignTime);
         query.isNull(XianyuOrderDO::getCancelTime);
         query.orderByDesc(XianyuOrderDO::getOrderTime);
@@ -116,9 +140,7 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
                     .or().like(XianyuOrderDO::getGoodsTitle, keyword)
                     .or().like(XianyuOrderDO::getBuyerNick, keyword));
         }
-        query.select(XianyuOrderDO.class, field -> !"detailJson".equals(field.getProperty())
-                && !"goodsJson".equals(field.getProperty()));
-        return selectPage(pageParam, query);
+        return query;
     }
 
     default XianyuOrderDO selectNewestCursorCandidate(Long shopId, LocalDateTime windowStart,

@@ -3,7 +3,9 @@ package cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Schema(description = "管理后台 - 闲鱼渠道订单摘要")
 @Data
@@ -25,6 +27,10 @@ public class XianyuOrderRespVO {
     private String receiverMobile;
     private String receiverAddress;
     private String remarkParseStatus;
+    private LocalDate billableStartDate;
+    private LocalDate billableEndDate;
+    private String rentalPeriodStatus;
+    private String rentalPeriodReasonCode;
     private String conversionStatus;
     private Long rentalOrderId;
     private LocalDateTime sourceCreatedAt;
@@ -39,6 +45,7 @@ public class XianyuOrderRespVO {
     private LocalDateTime refundTime;
     private String expressCode;
     private String expressName;
+    private String waybillNo;
     private Long expressFee;
     private Integer consignType;
     private LocalDateTime consignTime;
@@ -53,5 +60,12 @@ public class XianyuOrderRespVO {
     private Boolean taxIncluded;
     private Integer idleBizType;
     private Integer pinGroupStatus;
+
+    private Long rentalOrderItemId;
+    private String equipmentModelCode;
+    private Integer rentalQuantity;
+    private LocalDate occupyStartDate;
+    private LocalDate occupyEndDateExclusive;
+    private List<Long> assignedDeviceIds;
 
 }

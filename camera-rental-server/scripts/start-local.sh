@@ -40,6 +40,7 @@ MODE="${START_MODE:-auto}" # auto | jar | mvn
 
 echo "[start-local] profile=${SPRING_PROFILES_ACTIVE}  port=${SERVER_PORT:-48080}"
 echo "[start-local] XGJ_ENABLED=${XGJ_ENABLED:-false}"
+echo "[start-local] XGJ_WRITE_ENABLED=${XGJ_WRITE_ENABLED:-false}"
 echo "[start-local] MySQL=ruoyi-vue-pro  Redis password set=${REDIS_PASSWORD:+yes}"
 
 use_jar() {

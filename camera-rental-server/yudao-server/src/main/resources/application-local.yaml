@@ -294,7 +294,7 @@ rental:
     app-secret: ${XGJ_APP_SECRET:}
     webhook-base-url: ${XGJ_WEBHOOK_BASE_URL:}
     tenant-id: ${XGJ_TENANT_ID:}
-    write-enabled: ${XGJ_WRITE_ENABLED:true}
+    write-enabled: ${XGJ_WRITE_ENABLED:false}
     # 定时同步默认复用 infra Job + Quartz；Spring @Scheduled 仅作显式兜底。
     # 关闭：export XGJ_JOB_ENABLED=false
     job:

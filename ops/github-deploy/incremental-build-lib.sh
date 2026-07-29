@@ -30,11 +30,28 @@ component_changed() {
 
   prefix="$(component_source_prefix "${component}")"
   while IFS= read -r path; do
+    case "${path}" in
+      .github/workflows/deploy-211.yml|\
+      .workflow/deploy-production.yml|\
+      ops/github-deploy/server-build-deploy.sh|\
+      ops/github-deploy/incremental-build-lib.sh)
+        return 0
+        ;;
+    esac
     if [ "${path}" = "${prefix}" ] || [[ "${path}" == "${prefix}/"* ]]; then
       return 0
     fi
   done < "${changed_files}"
   return 1
+}
+
+validate_admin_artifact() {
+  local index_file="$1"
+
+  [ -f "${index_file}" ] || return 1
+  ! grep -q '%VITE_' "${index_file}" \
+    && grep -Eq 'src="/admin/assets/[^"]+\.js"' "${index_file}" \
+    && grep -q 'src="/admin/logo.gif"' "${index_file}"
 }
 
 component_artifact_available() {

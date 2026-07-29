@@ -234,8 +234,32 @@ else
   rm -rf "${SOURCE_DIR}/camera-rental-admin/dist"
   (
     cd "${SOURCE_DIR}/camera-rental-admin"
+    VITE_APP_TITLE="相机租赁管理后台" \
+    VITE_BASE_PATH="/admin/" \
+    VITE_BASE_URL="https://rental.motion-cover.com" \
+    VITE_API_URL="/admin-api" \
+    VITE_APP_TENANT_ENABLE="true" \
+    VITE_APP_DEFAULT_LOGIN_TENANT="捷租达" \
+    VITE_APP_DEFAULT_LOGIN_USERNAME="" \
+    VITE_APP_DEFAULT_LOGIN_PASSWORD="" \
+    VITE_APP_CAPTCHA_ENABLE="false" \
+    VITE_APP_DOCALERT_ENABLE="false" \
+    VITE_DROP_DEBUGGER="true" \
+    VITE_DROP_CONSOLE="true" \
+    VITE_SOURCEMAP="false" \
+    VITE_OUT_DIR="dist" \
+    VITE_UPLOAD_TYPE="server" \
+    VITE_APP_API_ENCRYPT_ENABLE="false" \
+    VITE_APP_API_ENCRYPT_HEADER="X-Api-Encrypt" \
+    VITE_APP_API_ENCRYPT_ALGORITHM="AES" \
+    VITE_APP_API_ENCRYPT_REQUEST_KEY="" \
+    VITE_APP_API_ENCRYPT_RESPONSE_KEY="" \
     pnpm build:prod
   )
+  if ! validate_admin_artifact "${SOURCE_DIR}/camera-rental-admin/dist/index.html"; then
+    echo "[build-deploy][error] admin artifact is not scoped to /admin/ or still contains Vite placeholders" >&2
+    exit 1
+  fi
   cp -R "${SOURCE_DIR}/camera-rental-admin/dist/." "${release_dir}/admin/"
   built_components+=("admin")
 fi

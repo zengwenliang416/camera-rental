@@ -39,6 +39,17 @@ assert_failure "server should remain reusable for admin-only changes" \
 assert_failure "source-only changes should not invalidate dependencies" \
   dependency_inputs_changed admin "${changed_files}"
 
+global_changed_files="${test_dir}/global-changed-files.txt"
+cat > "${global_changed_files}" <<'EOF'
+ops/github-deploy/server-build-deploy.sh
+EOF
+assert_success "build script changes should invalidate admin artifacts" \
+  component_changed admin "${global_changed_files}"
+assert_success "build script changes should invalidate schedule center artifacts" \
+  component_changed schedule-center "${global_changed_files}"
+assert_success "build script changes should invalidate server artifacts" \
+  component_changed server "${global_changed_files}"
+
 cat >> "${changed_files}" <<'EOF'
 camera-rental-admin/pnpm-lock.yaml
 EOF
@@ -66,5 +77,23 @@ assert_success "matching dependency fingerprints should be reusable" \
 printf '{"name":"admin","version":"2"}\n' > "${project_dir}/package.json"
 assert_failure "manifest changes should invalidate dependency reuse" \
   dependencies_are_current "${project_dir}" admin
+
+artifact_dir="${test_dir}/admin-artifact"
+mkdir -p "${artifact_dir}"
+cat > "${artifact_dir}/index.html" <<'EOF'
+<title>相机租赁管理后台</title>
+<script type="module" src="/admin/assets/index-good.js"></script>
+<img src="/admin/logo.gif" alt="Logo" />
+EOF
+assert_success "scoped admin artifact should pass validation" \
+  validate_admin_artifact "${artifact_dir}/index.html"
+
+cat > "${artifact_dir}/index.html" <<'EOF'
+<title>%VITE_APP_TITLE%</title>
+<script type="module" src="/assets/index-bad.js"></script>
+<img src="/logo.gif" alt="Logo" />
+EOF
+assert_failure "root-scoped admin artifact should fail validation" \
+  validate_admin_artifact "${artifact_dir}/index.html"
 
 echo "incremental build helper tests passed"

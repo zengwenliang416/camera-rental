@@ -1,0 +1,80 @@
+{
+  "task_id": "007-state-decomposition-final",
+  "goal": "Decompose global application state and complete final cross-route verification.",
+  "must_read": [
+    "openspec/changes/schedule-center-local-stability-v1/development/tasks/007-state-decomposition-final/brief.md",
+    "openspec/changes/schedule-center-local-stability-v1/requirements.md",
+    "openspec/changes/schedule-center-local-stability-v1/acceptance.md",
+    "openspec/changes/schedule-center-local-stability-v1/spec-map.json",
+    "openspec/changes/schedule-center-local-stability-v1/component-impact-map.json",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/handoff.md",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/decision.json",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/index.html",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/state.js",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/app.js"
+  ],
+  "allowed_files": [
+    "camera-rental-schedule-center/package.json",
+    "camera-rental-schedule-center/pnpm-lock.yaml",
+    "camera-rental-schedule-center/src/App.tsx",
+    "camera-rental-schedule-center/src/context/AppContext.tsx",
+    "camera-rental-schedule-center/src/features/session/**",
+    "camera-rental-schedule-center/src/features/permissions/**",
+    "camera-rental-schedule-center/src/features/data/**",
+    "camera-rental-schedule-center/src/features/commands/**",
+    "camera-rental-schedule-center/src/features/workspace/**",
+    "camera-rental-schedule-center/src/api/auth.ts",
+    "camera-rental-schedule-center/src/api/auth.test.ts",
+    "camera-rental-schedule-center/src/api/client.ts",
+    "camera-rental-schedule-center/src/api/client.test.ts",
+    "camera-rental-schedule-center/src/api/rental.ts",
+    "camera-rental-schedule-center/src/api/snapshotLoader.ts",
+    "camera-rental-schedule-center/src/api/snapshot.test.ts",
+    "camera-rental-schedule-center/src/app/accessModel.ts",
+    "camera-rental-schedule-center/src/app/accessModel.test.ts",
+    "camera-rental-schedule-center/src/features/dashboard/DashboardPage.tsx",
+    "camera-rental-schedule-center/src/features/dashboard/dashboardModel.ts",
+    "camera-rental-schedule-center/src/features/dashboard/dashboardModel.test.ts",
+    "camera-rental-schedule-center/src/features/preferences/messages.ts",
+    "camera-rental-schedule-center/src/features/providers/**",
+    "camera-rental-schedule-center/src/shared/hooks/**",
+    "camera-rental-schedule-center/src/shared/lib/safeError.ts",
+    "camera-rental-schedule-center/src/index.css"
+  ],
+  "test_paths": [
+    "camera-rental-schedule-center/src/features/session/**/*.test.ts",
+    "camera-rental-schedule-center/src/features/permissions/**/*.test.ts",
+    "camera-rental-schedule-center/src/features/data/**/*.test.ts",
+    "camera-rental-schedule-center/src/features/commands/**/*.test.ts",
+    "camera-rental-schedule-center/src/features/workspace/**/*.test.ts",
+    "camera-rental-schedule-center/src/features/providers/**/*.test.tsx",
+    "camera-rental-schedule-center/src/api/auth.test.ts",
+    "camera-rental-schedule-center/src/api/client.test.ts",
+    "camera-rental-schedule-center/src/api/snapshot.test.ts",
+    "camera-rental-schedule-center/src/app/accessModel.test.ts",
+    "camera-rental-schedule-center/src/features/dashboard/dashboardModel.test.ts"
+  ],
+  "non_goals": [
+    "Do not add a global state dependency, API, permission, storage key, business command, or optimistic mutation.",
+    "Do not rewrite approved feature presentation unless final verification exposes a contained regression.",
+    "Do not move private feature drafts or server collections into browser storage."
+  ],
+  "expected_evidence": [
+    "Focused provider and state-model tests",
+    "Type check, production build, and import-boundary scans",
+    "Cross-route responsive, theme, locale, keyboard, dialog, drawer, and QR browser matrix",
+    "Task report, spec review, quality review, and development handoff contract"
+  ],
+  "unsafe_assumptions": [
+    "One loading flag correctly represents every async boundary.",
+    "Cached permissions are always current.",
+    "A client command result is authoritative before refresh.",
+    "The compatibility facade may own mutable state.",
+    "Browser storage is always available."
+  ],
+  "stop_condition": "Stop if focused providers cannot preserve the existing session, permission, typed API, command, and server-authoritative contracts."
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "domain": "e2e",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/e2e/flows.json",
+    "verify/e2e/run-log.jsonl",
+    "verify/runtime-evidence.json",
+    "runs/schedule-center-verification-20260730",
+    "runs/schedule-center-verification-20260730/orders-pagination-verification.json"
+  ],
+  "commands": [
+    "local backend, admin, and schedule-center runtime verification",
+    "six-route browser matrix at four widths",
+    "shipping search, write-gate, and privacy-state verification",
+    "authorized rental-order pagination, delivery-field, and search verification",
+    "theme, locale, focus, and console verification",
+    "27 read-only database integrity queries",
+    "2026-07-30 live browser route check for select inset and schedule status badge"
+  ],
+  "findings": [
+    "E2E flows covering all six approved cases passed.",
+    "Twenty-four responsive route checks passed.",
+    "The rental-orders page renders 10 cards by default, paginates forward and back, exposes complete receiver fields to authorized users, and searches by receiver name, phone, and address.",
+    "Shipment review search and server write gates behaved as specified.",
+    "All seven native selects across schedule, orders, devices, and exceptions render 40px right padding with a 14px arrow inset.",
+    "The schedule status badge renders on one 24px-high line inside a 224px sticky device column."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "Real third-party shipment mutation and production network behavior were not exercised."
+  ],
+  "blocker_class": null
+}

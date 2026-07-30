@@ -1,0 +1,22 @@
+Create a high-fidelity 1536x864 desktop screenshot of a Chinese B2B camera rental operations application called "设备排期中心". This must be an entirely new information architecture, not a recolor of an old dashboard.
+
+Direction A: equipment timeline first, inspired by the operational density of mature equipment-rental software but not copying any logo or brand.
+
+Layout:
+- compact 64px dark petrol left navigation with simple line icons and Chinese sections: 运营总览, 设备排期, 租赁订单, 发货交接, 设备台账, 异常中心
+- slim top scope bar: 上海仓, 未来14天, 全部设备组, 搜索SN/订单, 同步于2分钟前, 闲管家写操作已开启, tenant 捷租达
+- primary canvas is a large resource timeline occupying about 75% of the viewport
+- frozen left columns show device model groups and exact serial-number rows such as DJI Pocket 3 / SN P3-5WTCN7F002B088, Sony A7M4 / SN A7M4-021, DJI Air 3S / SN AIR3S-014
+- top date axis spans Jul 29 to Aug 11, with today highlighted
+- each SN row has layered occupancy phases with a clear legend: 发货准备 amber, 设备占用 blue, 计租区间 darker inset line, 回仓运输 cyan, 检测 buffer teal, 维修锁定 charcoal
+- show one red conflict cell and one shortage row with an explicit "缺1台" badge
+- compact right action rail titled "需要处理 7" with cards for 今日必须发货, 预计晚归, 排期冲突, 可替代设备; each card has a clear action button
+- selecting one bar opens a restrained bottom-right inspector with fictional order number, rental period, occupancy period, warehouse location, assignee, carrier, and a "查看订单" action
+
+Visual system:
+- warm light gray canvas, crisp white work surfaces, ink-black text, deep petrol blue navigation, restrained green/amber/cyan/red semantic colors
+- Chinese typography similar to Source Han Sans SC; SN/date values in a monospaced style
+- thin dividers, 4-8px radius, almost no shadow, dense 12-14px type
+- professional, precise, high information density, no decorative charts, no gradients, no glassmorphism, no purple
+- all visible text should be legible Simplified Chinese
+- fictional data only, no real customer names, phone numbers, addresses, or actual order data

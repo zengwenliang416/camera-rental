@@ -1,0 +1,100 @@
+:root {
+  color-scheme: light;
+  --font-sans: "Avenir Next", "PingFang SC", "Noto Sans SC", sans-serif;
+  --font-display: "Avenir Next", "PingFang SC", "Noto Sans SC", sans-serif;
+  --font-data: "SFMono-Regular", "IBM Plex Mono", "Roboto Mono", monospace;
+  --ink: #171b1a;
+  --ink-soft: #46504d;
+  --ink-muted: #77817d;
+  --canvas: #f3f5f4;
+  --surface: #ffffff;
+  --surface-soft: #f7f8f7;
+  --surface-hover: #f1f5f8;
+  --border: #e2e7e4;
+  --border-strong: #cbd3cf;
+  --navy: #12364b;
+  --navy-soft: #eaf1f5;
+  --blue: #146deb;
+  --blue-soft: #e8f1ff;
+  --green: #158052;
+  --green-soft: #e4f5ec;
+  --amber: #c66b08;
+  --amber-soft: #fff2df;
+  --cyan: #1693a5;
+  --cyan-soft: #e2f5f7;
+  --red: #d43b43;
+  --red-soft: #ffe9eb;
+  --graphite: #4a5251;
+  --graphite-soft: #e9eceb;
+  --shadow: 0 22px 55px rgb(25 42 37 / 14%);
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --header-height: 60px;
+  --nav-height: 50px;
+  --ease: 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #eef4f1;
+  --ink-soft: #c1ccc7;
+  --ink-muted: #8d9a94;
+  --canvas: #0e1211;
+  --surface: #151a18;
+  --surface-soft: #1b211e;
+  --surface-hover: #202824;
+  --border: #2a332f;
+  --border-strong: #414c47;
+  --navy: #9dc8e2;
+  --navy-soft: #183240;
+  --blue: #72a8ff;
+  --blue-soft: #18335c;
+  --green: #62cf96;
+  --green-soft: #183a2b;
+  --amber: #ffc166;
+  --amber-soft: #463116;
+  --cyan: #69c7d2;
+  --cyan-soft: #16383d;
+  --red: #ff7a83;
+  --red-soft: #4a2025;
+  --graphite: #b9c1bd;
+  --graphite-soft: #303735;
+  --shadow: 0 24px 60px rgb(0 0 0 / 34%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--canvas);
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--canvas);
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+
+button,
+input,
+select {
+  color: inherit;
+  font: inherit;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--blue) 26%, transparent);
+  outline-offset: 2px;
+}

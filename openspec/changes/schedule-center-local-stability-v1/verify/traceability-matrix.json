@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "change_id": "schedule-center-local-stability-v1",
+  "entries": [
+    {
+      "changed_file": "camera-rental-admin/src/api/rental/xianyu.ts",
+      "requirement_refs": ["requirements.md#frontend-backend-data-flow-impact"],
+      "task_refs": ["002-admin-xianyu-config"],
+      "prototype_refs": ["prototype/handoff.md"],
+      "foundation_spec_refs": ["frontend-backend-data-flow", "component-architecture"],
+      "verification_domains": ["facticity", "static", "unit", "redteam", "e2e", "sensory"],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "camera-rental-admin/src/locales/en.ts",
+      "requirement_refs": ["requirements.md"],
+      "task_refs": ["002-admin-xianyu-config"],
+      "prototype_refs": ["prototype/handoff.md"],
+      "foundation_spec_refs": ["ui-design"],
+      "verification_domains": ["static", "e2e", "sensory"],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "camera-rental-admin/src/locales/zh-CN.ts",
+      "requirement_refs": ["requirements.md"],
+      "task_refs": ["002-admin-xianyu-config"],
+      "prototype_refs": ["prototype/handoff.md"],
+      "foundation_spec_refs": ["ui-design"],
+      "verification_domains": ["static", "e2e", "sensory"],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "camera-rental-admin/src/views/rental/xianyu",
+      "requirement_refs": ["requirements.md"],
+      "task_refs": ["002-admin-xianyu-config"],
+      "prototype_refs": ["prototype/handoff.md"],
+      "foundation_spec_refs": ["ui-design", "frontend-backend-data-flow", "component-architecture"],
+      "verification_domains": ["facticity", "static", "unit", "redteam", "e2e", "sensory"],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "camera-rental-schedule-center/package.json",
+      "requirement_refs": ["requirements.md"],
+      "task_refs": ["003-app-shell-dashboard", "004-schedule-allocation", "005-orders-devices", "006-auth-exceptions-overlays", "007-state-decomposition-final"],
+      "prototype_refs": ["prototype/handoff.md"],
+      "foundation_spec_refs": ["system-architecture"],
+      "verification_domains": ["facticity", "static", "unit"],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "camera-rental-schedule-center/pnpm-lock.yaml",
+      "requirement_refs": ["requirements.md"],
+      "task_refs": ["007-state-decomposition-final"],
+      "prototype_refs": ["prototype/handoff.md"],
+      "foundation_spec_refs": ["system-architecture"],
+      "verification_domains": ["facticity", "static"],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "camera-rental-schedule-center/src",
+      "requirement_refs": ["requirements.md", "acceptance.md"],
+      "task_refs": ["001-shipping-workbench", "003-app-shell-dashboard", "004-schedule-allocation", "005-orders-devices", "006-auth-exceptions-overlays", "007-state-decomposition-final"],
+      "prototype_refs": ["prototype/handoff.md"],
+      "foundation_spec_refs": ["ui-design", "frontend-backend-data-flow", "component-architecture"],
+      "verification_domains": ["facticity", "static", "unit", "redteam", "e2e", "sensory"],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "camera-rental-server/scripts",
+      "requirement_refs": ["requirements.md#frontend-backend-data-flow-impact"],
+      "task_refs": ["002-admin-xianyu-config"],
+      "prototype_refs": ["prototype/handoff.md"],
+      "foundation_spec_refs": ["system-architecture"],
+      "verification_domains": ["facticity", "static", "redteam"],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "camera-rental-server/sql/mysql/migrations",
+      "requirement_refs": ["acceptance.md#data-criteria"],
+      "task_refs": ["002-admin-xianyu-config"],
+      "prototype_refs": ["prototype/handoff.md"],
+      "foundation_spec_refs": ["system-architecture"],
+      "verification_domains": ["facticity", "static", "unit", "redteam", "e2e"],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "camera-rental-server/yudao-module-rental",
+      "requirement_refs": ["requirements.md", "acceptance.md"],
+      "task_refs": ["001-shipping-workbench", "002-admin-xianyu-config"],
+      "prototype_refs": ["prototype/handoff.md"],
+      "foundation_spec_refs": ["system-architecture", "frontend-backend-data-flow", "component-architecture"],
+      "verification_domains": ["facticity", "static", "unit", "redteam", "e2e"],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "camera-rental-server/yudao-server/src/main/resources",
+      "requirement_refs": ["requirements.md#frontend-backend-data-flow-impact"],
+      "task_refs": ["002-admin-xianyu-config"],
+      "prototype_refs": ["prototype/handoff.md"],
+      "foundation_spec_refs": ["system-architecture"],
+      "verification_domains": ["facticity", "static", "redteam"],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "docs/domain/xianyu-integration.md",
+      "requirement_refs": ["requirements.md"],
+      "task_refs": ["002-admin-xianyu-config"],
+      "prototype_refs": ["prototype/handoff.md"],
+      "foundation_spec_refs": ["system-architecture", "frontend-backend-data-flow"],
+      "verification_domains": ["facticity", "static"],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "docs/integrations/xianyu",
+      "requirement_refs": ["requirements.md"],
+      "task_refs": ["001-shipping-workbench", "002-admin-xianyu-config"],
+      "prototype_refs": ["prototype/handoff.md"],
+      "foundation_spec_refs": ["system-architecture", "frontend-backend-data-flow"],
+      "verification_domains": ["facticity", "static", "redteam"],
+      "anchor_refs": []
+    },
+    {
+      "changed_file": "openspec/changes/schedule-center-local-stability-v1",
+      "requirement_refs": ["requirements.md", "acceptance.md"],
+      "task_refs": ["001-shipping-workbench", "002-admin-xianyu-config", "003-app-shell-dashboard", "004-schedule-allocation", "005-orders-devices", "006-auth-exceptions-overlays", "007-state-decomposition-final"],
+      "prototype_refs": ["prototype/handoff.md"],
+      "foundation_spec_refs": ["ui-design", "system-architecture", "frontend-backend-data-flow", "component-architecture"],
+      "verification_domains": ["facticity", "static", "unit", "redteam", "e2e", "sensory"],
+      "anchor_refs": []
+    }
+  ],
+  "unmapped_changes": []
+}

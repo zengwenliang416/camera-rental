@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "change_id": "schedule-center-local-stability-v1",
+  "status": "green",
+  "surfaces": [
+    {
+      "surface": "runtime",
+      "required": true,
+      "status": "pass",
+      "command": "Local Java backend on 127.0.0.1:48080, admin Vite server on 127.0.0.1:5173, schedule-center Vite server on 127.0.0.1:5175",
+      "evidence_refs": [
+        "development/validation-log.jsonl",
+        "runs/schedule-center-verification-20260730/dashboard-dom-latest.txt",
+        "runs/schedule-center-verification-20260730/shipping-dom-latest.txt"
+      ],
+      "notes": [
+        "The backend served authenticated config, shop, order, device, schedule, review, and permission requests.",
+        "The configured actuator path is not exposed; browser-backed API responses and the running Java process are the runtime evidence.",
+        "Scheduled jobs are active. Some historical runs contain third-party partial failures, while current successful shop runs continue to persist data."
+      ]
+    },
+    {
+      "surface": "browser",
+      "required": true,
+      "status": "pass",
+      "command": "In-app browser route matrix at 360, 390, 768, and 1440 CSS pixels plus shipping, preference, focus, and console checks",
+      "evidence_refs": [
+        "runs/schedule-center-verification-20260730/responsive-360.json",
+        "runs/schedule-center-verification-20260730/responsive-390.json",
+        "runs/schedule-center-verification-20260730/responsive-768.json",
+        "runs/schedule-center-verification-20260730/responsive-1440.json",
+        "runs/schedule-center-verification-20260730/shipping-search-verification.json",
+        "runs/schedule-center-verification-20260730/shipping-gate-verification.json",
+        "runs/schedule-center-verification-20260730/preference-focus-verification.json",
+        "runs/schedule-center-verification-20260730/orders-pagination-verification.json",
+        "runs/schedule-center-verification-20260730/admin-xianyu-config-dom.txt",
+        "runs/schedule-center-verification-20260730/browser-console-latest.json"
+      ],
+      "artifact_refs": [
+        "runs/schedule-center-verification-20260730/dashboard-1440-latest.png",
+        "runs/schedule-center-verification-20260730/dashboard-390-latest.png",
+        "runs/schedule-center-verification-20260730/shipping-1440-latest.png",
+        "runs/schedule-center-verification-20260730/shipping-390-latest.png",
+        "runs/schedule-center-verification-20260730/admin-xianyu-config.png"
+      ],
+      "notes": [
+        "All six routes passed at all four widths, for 24 checks with no page-level horizontal overflow and no unnamed buttons.",
+        "Authorized shipping search matched device SN, receiver name, full phone, and order number while keeping search values out of the URL and clearing them from the DOM.",
+        "Theme and locale persistence, Escape dismissal, focus restoration, and zero warning/error console output were verified.",
+        "The authorized rental-orders page rendered 10 cards per page, displayed complete receiver fields, searched by receiver name, phone, and address, and retained only privacy-safe counts and booleans.",
+        "The admin page displayed a masked AppKey and an empty AppSecret replacement input."
+      ]
+    },
+    {
+      "surface": "database",
+      "required": true,
+      "status": "pass",
+      "command": "PyMySQL schema, tenant-count, switch-state, and orphan-relation verification",
+      "evidence_refs": [
+        "development/migrations/manifest.json",
+        "development/migrations/README.md",
+        "runs/schedule-center-verification-20260730/database-verification.json"
+      ],
+      "query_refs": [
+        "runs/schedule-center-verification-20260730/database-verification.json"
+      ],
+      "artifact_refs": [
+        "/tmp/camera-rental-local-before-config-migration-20260730-095744.sql.gz"
+      ],
+      "notes": [
+        "All 27 read-only schema, configuration, tenant, and relation queries returned zero anomalies.",
+        "The credential_reference column is absent and no enabled, write-enabled, or job-enabled application lacks persisted credentials.",
+        "All checked application, shop, order, product, SKU, after-sale, cursor, raw-payload, rental, schedule, assignment, and shipment orphan counts are zero.",
+        "No XianGuanJia application row has real writes enabled."
+      ]
+    }
+  ]
+}

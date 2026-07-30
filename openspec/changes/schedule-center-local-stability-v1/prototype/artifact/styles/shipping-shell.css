@@ -1,0 +1,297 @@
+.dispatch-screen {
+  min-height: calc(100vh - 108px);
+  padding-bottom: 36px;
+  background:
+    radial-gradient(circle at 94% 0%, color-mix(in srgb, var(--blue-soft) 70%, transparent), transparent 28%),
+    linear-gradient(180deg, transparent, color-mix(in srgb, var(--surface-raised) 48%, transparent));
+}
+
+.dispatch-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 18px;
+}
+
+.dispatch-kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--blue);
+  font: 700 10px var(--font-data);
+  letter-spacing: 0.14em;
+}
+
+.dispatch-kicker span {
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--green-soft);
+}
+
+.dispatch-heading h1 {
+  margin: 8px 0 6px;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 32px;
+  letter-spacing: -0.03em;
+}
+
+.dispatch-heading > p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.dispatch-hero-actions,
+.dispatch-snapshot {
+  display: flex;
+  align-items: center;
+}
+
+.dispatch-hero-actions {
+  gap: 10px;
+}
+
+.dispatch-snapshot {
+  min-height: 46px;
+  gap: 9px;
+  padding: 8px 12px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.dispatch-snapshot > span {
+  color: var(--green);
+}
+
+.dispatch-snapshot div {
+  display: grid;
+  gap: 2px;
+}
+
+.dispatch-snapshot strong,
+.dispatch-snapshot small {
+  font-size: 10px;
+}
+
+.dispatch-snapshot small {
+  color: var(--ink-muted);
+  font-family: var(--font-data);
+}
+
+.dispatch-hero-actions .secondary-button b {
+  display: inline-grid;
+  min-width: 20px;
+  min-height: 20px;
+  place-items: center;
+  margin-left: 6px;
+  color: var(--blue);
+  background: var(--blue-soft);
+  border-radius: 999px;
+  font: 700 9px var(--font-data);
+}
+
+.dispatch-overview {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.dispatch-overview article {
+  position: relative;
+  display: grid;
+  min-height: 86px;
+  align-content: center;
+  gap: 3px;
+  overflow: hidden;
+  padding: 12px 15px 12px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.dispatch-overview article::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--metric-color, var(--graphite));
+  content: "";
+}
+
+.dispatch-overview article[data-tone="blue"] { --metric-color: var(--blue); }
+.dispatch-overview article[data-tone="green"] { --metric-color: var(--green); }
+.dispatch-overview article[data-tone="amber"] { --metric-color: var(--amber); }
+.dispatch-overview article[data-tone="red"] { --metric-color: var(--red); }
+
+.dispatch-overview span,
+.dispatch-overview small {
+  color: var(--ink-muted);
+  font-size: 10px;
+}
+
+.dispatch-overview strong {
+  color: var(--ink);
+  font: 700 25px var(--font-data);
+}
+
+.dispatch-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 12px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.dispatch-flow > div {
+  position: relative;
+  display: flex;
+  min-height: 64px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  border-right: 1px solid var(--border);
+}
+
+.dispatch-flow > div:last-child { border-right: 0; }
+
+.dispatch-flow b {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: var(--ink-muted);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  font: 700 10px var(--font-data);
+}
+
+.dispatch-flow span {
+  display: grid;
+  gap: 3px;
+}
+
+.dispatch-flow strong {
+  color: var(--ink);
+  font-size: 11px;
+}
+
+.dispatch-flow small {
+  color: var(--ink-muted);
+  font-size: 9px;
+}
+
+.dispatch-flow [data-state="ready"] b {
+  color: var(--green);
+  background: var(--green-soft);
+  border-color: var(--green);
+}
+
+.dispatch-flow [data-state="blocked"] {
+  background: var(--red-soft);
+}
+
+.dispatch-flow [data-state="blocked"] b {
+  color: white;
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.dispatch-layout {
+  display: grid;
+  grid-template-columns: minmax(330px, 0.9fr) minmax(390px, 1.12fr) minmax(290px, 0.72fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.dispatch-primary,
+.dispatch-review {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.dispatch-panel,
+.dispatch-docket,
+.dispatch-history {
+  min-width: 0;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--navy) 5%, transparent);
+}
+
+.dispatch-panel > header,
+.dispatch-docket > header,
+.dispatch-history > header {
+  display: flex;
+  min-height: 66px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 14px;
+  background: linear-gradient(180deg, var(--surface-raised), var(--surface));
+  border-bottom: 1px solid var(--border);
+}
+
+.dispatch-panel > header > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dispatch-panel > header > div > span {
+  display: grid;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  color: var(--blue);
+  background: var(--blue-soft);
+  border-radius: 9px;
+  font: 700 10px var(--font-data);
+}
+
+.dispatch-panel header p,
+.dispatch-docket header p,
+.dispatch-history header p {
+  margin: 0 0 3px;
+  color: var(--blue);
+  font: 700 8px var(--font-data);
+  letter-spacing: 0.13em;
+}
+
+.dispatch-panel h2,
+.dispatch-docket h2,
+.dispatch-history h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.dispatch-panel > header em,
+.dispatch-docket > header > span {
+  padding: 6px 8px;
+  color: var(--ink-muted);
+  background: var(--surface-soft);
+  border-radius: 999px;
+  font-size: 9px;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.dispatch-panel > header em[data-tone="blocked"],
+.dispatch-docket > header > span {
+  color: var(--red);
+  background: var(--red-soft);
+}

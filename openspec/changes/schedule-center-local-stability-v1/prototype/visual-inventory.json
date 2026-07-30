@@ -1,0 +1,150 @@
+{
+  "schema": "specnav.prototype.visualInventory.v1",
+  "version": "1",
+  "discovery_status": "complete",
+  "source_project": "camera-rental-schedule-center",
+  "selected_variant": "integrated-rental-operations-v6-outbound-command-center",
+  "evidence": {
+    "screenshots": [
+      "concepts/imagegen-v2-global/concept-a-light-navigation.png",
+      "concepts/imagegen-v2-global/concept-b-top-navigation.png",
+      "concepts/imagegen-v2-global/concept-c-availability-matrix-final.png",
+      "evidence/current-login-viewport.png",
+      "evidence/integrated-v5-login-1440.png",
+      "evidence/integrated-v5-login-390.png",
+      "evidence/integrated-v5-workbench-1440.png",
+      "evidence/integrated-v5-devices-1440.png",
+      "evidence/integrated-v4-workbench-1440.png",
+      "evidence/integrated-v4-schedule-1440.png",
+      "evidence/integrated-v4-availability-1440.png",
+      "evidence/integrated-v4-shipping-390.png",
+      "evidence/integrated-v6-shipping-1440.png",
+      "evidence/integrated-v6-shipping-1087.png",
+      "evidence/integrated-v6-shipping-390.png"
+    ],
+    "routes": [
+      "camera-rental-schedule-center/src/App.tsx",
+      "camera-rental-schedule-center/src/components/Header.tsx"
+    ],
+    "design_specs": [
+      "openspec/specs/ui-design/design.md",
+      "openspec/changes/schedule-center-local-stability-v1/requirements.md",
+      "openspec/changes/schedule-center-local-stability-v1/acceptance.md",
+      "openspec/changes/schedule-center-local-stability-v1/prototype/production-snapshot.md",
+      "openspec/changes/schedule-center-local-stability-v1/prototype/device-import-field-model.md",
+      "runs/ui-design/schedule-center-global-product-research-v1/"
+    ],
+    "component_sources": [
+      "openspec/changes/schedule-center-local-stability-v1/component-impact-map.json",
+      "camera-rental-schedule-center/src/components/DashboardView.tsx",
+      "camera-rental-schedule-center/src/components/GanttScheduleView.tsx",
+      "camera-rental-schedule-center/src/components/OrdersView.tsx",
+      "camera-rental-schedule-center/src/components/DevicesView.tsx",
+      "camera-rental-schedule-center/src/components/QuickBindingView.tsx",
+      "camera-rental-schedule-center/src/components/ExceptionsView.tsx"
+    ],
+    "codegraph_claims": []
+  },
+  "project_shell": {
+    "source": "camera-rental schedule center shell combined with the three approved prototype concepts",
+    "required_elements": [
+      "设备排期中心 product identity",
+      "warehouse date category and shift scope controls",
+      "global order SN customer and waybill search",
+      "sync health tenant and write state",
+      "seven operational modules",
+      "theme and locale controls",
+      "desktop top navigation and mobile bottom task navigation",
+      "reviewable loading empty error disabled permission and populated states"
+      ,
+      "pre-authentication unified admin login"
+    ],
+    "omitted_elements": [
+      "default dark sidebar",
+      "generic prototype context sidebar",
+      "marketing hero artwork",
+      "unrelated management-admin navigation"
+    ],
+    "theme_policy": "light default with complete dark variant",
+    "i18n_policy": "zh-CN default with complete en variant"
+  },
+  "business_surface": {
+    "screens": [
+      "login",
+      "workbench",
+      "gantt-schedule",
+      "availability",
+      "rental-orders",
+      "device-ledger",
+      "shipping-workbench",
+      "exceptions"
+    ],
+    "fields": [
+      "tenant admin username and password login",
+      "registered-device versus actual-inventory boundary",
+      "device import field validation",
+      "sync health",
+      "warehouse date category and shift scope",
+      "pending shipment assignment return and inspection counts",
+      "authorized pending-order search by receiver name full phone or order number",
+      "complete unmasked order result schema without private prototype fixtures",
+      "billable period and occupied period",
+      "device unit code and serial number",
+      "physical bookable and locked inventory",
+      "carrier and waybill number",
+      "manual review reason"
+    ],
+    "actions": [
+      "switch operational module",
+      "filter and search records",
+      "open order or device detail",
+      "review schedule conflict",
+      "select shortage replacement",
+      "review OCR draft",
+      "search available device by ID SN model or location",
+      "select physical device",
+      "search pending order by receiver name phone or order number",
+      "confirm shipment intent",
+      "switch theme locale and prototype state"
+    ],
+    "states": [
+      "loading",
+      "empty",
+      "error",
+      "disabled",
+      "permission",
+      "populated"
+    ]
+  },
+  "verification_matrix": {
+    "viewports": [
+      "1440x900 desktop",
+      "1087x900 compact desktop",
+      "768x1024 tablet",
+      "390x844 mobile",
+      "360x800 compact mobile"
+    ],
+    "theme_modes": [
+      "light",
+      "dark"
+    ],
+    "locales": [
+      "zh-CN",
+      "en"
+    ],
+    "states": [
+      "populated",
+      "loading",
+      "empty",
+      "error",
+      "permission",
+      "disabled"
+    ]
+  },
+  "unsupported_capabilities": [
+    "real API requests",
+    "real QR or OCR decoding",
+    "real assignment or shipment mutation",
+    "persistent authentication"
+  ]
+}

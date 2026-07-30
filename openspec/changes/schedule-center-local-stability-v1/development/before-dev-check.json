@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "active_change": "schedule-center-local-stability-v1",
+  "status": "passed",
+  "ok": true,
+  "checked_at": "2026-07-29T20:20:00+08:00",
+  "blockers": [],
+  "evidence": [
+    "Prototype contract returned ok:true after explicit user approval.",
+    "Approved prototype entry is openspec/changes/schedule-center-local-stability-v1/prototype/artifact/index.html.",
+    "User explicitly approved expanding this slice to the rental backend on 2026-07-29.",
+    "Production edits are limited by scope.json to the schedule-center shipping feature, the admin Xianyu configuration surface, existing Xianyu management-order/configuration/shipment code, one additive migration, focused tests, and Xianyu integration documentation.",
+    "The existing shipment workflow, tenant propagation, and state transitions remain unchanged; all XianGuanJia business configuration moves from process properties to tenant-scoped encrypted persistence and dynamic server-side resolution."
+  ]
+}

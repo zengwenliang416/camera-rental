@@ -1,0 +1,12 @@
+Edit this exact application screenshot. Preserve the matrix, shortage resolver,
+serialized-device timeline, navigation, colors, typography, and all non-date
+content as closely as possible.
+
+Correct the visible date columns to:
+07-29 周三, 07-30 周四, 07-31 周五, 08-01 周六, 08-02 周日,
+08-03 周一, 08-04 周二, 08-05 周三, 08-06 周四, 08-07 周五.
+
+Treat 2026-07-29 as the current date. Remove the duplicated 08-06 column. Keep
+the selected shortage on 08-01 and preserve every matrix value and action.
+Do not redesign the interface, move panels, add logos, or change the visual
+hierarchy. Keep Simplified Chinese text crisp and legible.

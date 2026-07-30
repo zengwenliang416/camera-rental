@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "change_id": "schedule-center-local-stability-v1",
+  "repositories": [
+    {
+      "path": "camera-rental-server",
+      "role": "authoritative rental domain, persisted XianGuanJia configuration, jobs, permissions, shipping mutation, and migrations",
+      "evidence": [
+        "yudao-module-rental",
+        "sql/mysql/migrations/20260729_029_xianyu_admin_managed_config.sql",
+        "sql/mysql/migrations/20260730_030_xianyu_remove_legacy_credential_reference.sql",
+        "sql/mysql/migrations/20260730_031_xianyu_disable_unconfigured_applications.sql"
+      ]
+    },
+    {
+      "path": "camera-rental-admin",
+      "role": "tenant administration for XianGuanJia credentials, switches, endpoints, and synchronization parameters",
+      "evidence": [
+        "src/api/rental/xianyu.ts",
+        "src/views/rental/xianyu",
+        "src/locales/en.ts",
+        "src/locales/zh-CN.ts"
+      ]
+    },
+    {
+      "path": "camera-rental-schedule-center",
+      "role": "responsive operations shell, schedule, orders, devices, shipping, exceptions, authentication, and server-authoritative command UI",
+      "evidence": [
+        "src/app",
+        "src/features",
+        "src/shared",
+        "src/api",
+        "src/index.css"
+      ]
+    },
+    {
+      "path": "docs",
+      "role": "current XianGuanJia integration and domain contract",
+      "evidence": [
+        "domain/xianyu-integration.md",
+        "integrations/xianyu"
+      ]
+    }
+  ],
+  "runtime_evidence": [
+    "runs/schedule-center-verification-20260730",
+    "openspec/changes/schedule-center-local-stability-v1/development/validation-log.jsonl"
+  ],
+  "unmapped_changes": []
+}

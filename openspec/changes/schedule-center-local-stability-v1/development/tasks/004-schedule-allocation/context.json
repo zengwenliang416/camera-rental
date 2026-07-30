@@ -1,0 +1,51 @@
+{
+  "task_id": "004-schedule-allocation",
+  "goal": "Implement responsive SN scheduling and server-authoritative device assignment.",
+  "must_read": [
+    "openspec/changes/schedule-center-local-stability-v1/development/tasks/004-schedule-allocation/brief.md",
+    "openspec/changes/schedule-center-local-stability-v1/requirements.md",
+    "openspec/changes/schedule-center-local-stability-v1/acceptance.md",
+    "openspec/changes/schedule-center-local-stability-v1/spec-map.json",
+    "openspec/changes/schedule-center-local-stability-v1/component-impact-map.json",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/handoff.md",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/decision.json",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/index.html",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/screens/schedule.js"
+  ],
+  "allowed_files": [
+    "camera-rental-schedule-center/package.json",
+    "camera-rental-schedule-center/src/components/GanttScheduleView.tsx",
+    "camera-rental-schedule-center/src/components/OrderAllocationModal.tsx",
+    "camera-rental-schedule-center/src/features/schedule/**",
+    "camera-rental-schedule-center/src/shared/ui/DateRangeDisplay.tsx",
+    "camera-rental-schedule-center/src/shared/ui/BillableOccupiedRangeLegend.tsx",
+    "camera-rental-schedule-center/src/shared/ui/ConfirmDialogShell.tsx",
+    "camera-rental-schedule-center/src/features/preferences/messages.ts",
+    "camera-rental-schedule-center/src/index.css",
+    "camera-rental-schedule-center/src/lib/scheduleEngine.ts"
+  ],
+  "test_paths": [
+    "camera-rental-schedule-center/src/features/schedule/**/*.test.ts"
+  ],
+  "non_goals": [
+    "Do not create a scheduling algorithm or new backend contract.",
+    "Do not optimistically accept an assignment.",
+    "Do not refactor unrelated routes or global state in this slice."
+  ],
+  "expected_evidence": [
+    "Focused schedule model tests",
+    "Type check and production build",
+    "Responsive schedule and allocation browser checks",
+    "Task report, spec review, and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Client recommendations are authoritative.",
+    "Billable and occupied ranges are equivalent.",
+    "Display end dates can be sent as end-exclusive command dates."
+  ],
+  "stop_condition": "Stop if the current API cannot represent ranges or assignment requires behavior outside the approved contracts."
+}

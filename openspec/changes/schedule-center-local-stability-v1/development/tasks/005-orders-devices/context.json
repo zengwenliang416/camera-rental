@@ -1,0 +1,56 @@
+{
+  "task_id": "005-orders-devices",
+  "goal": "Implement consistent responsive order and registered-device workspaces.",
+  "must_read": [
+    "openspec/changes/schedule-center-local-stability-v1/development/tasks/005-orders-devices/brief.md",
+    "openspec/changes/schedule-center-local-stability-v1/requirements.md",
+    "openspec/changes/schedule-center-local-stability-v1/acceptance.md",
+    "openspec/changes/schedule-center-local-stability-v1/spec-map.json",
+    "openspec/changes/schedule-center-local-stability-v1/component-impact-map.json",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/handoff.md",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/decision.json",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/index.html",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/screens/records.js",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/screens/availability.js"
+  ],
+  "allowed_files": [
+    "camera-rental-schedule-center/package.json",
+    "camera-rental-schedule-center/src/components/OrdersView.tsx",
+    "camera-rental-schedule-center/src/components/DevicesView.tsx",
+    "camera-rental-schedule-center/src/features/orders/**",
+    "camera-rental-schedule-center/src/features/devices/DevicesPage.tsx",
+    "camera-rental-schedule-center/src/features/devices/deviceModel.ts",
+    "camera-rental-schedule-center/src/features/devices/deviceModel.test.ts",
+    "camera-rental-schedule-center/src/features/devices/components/DeviceCard.tsx",
+    "camera-rental-schedule-center/src/shared/ui/FilterToolbar.tsx",
+    "camera-rental-schedule-center/src/shared/ui/IdentifierText.tsx",
+    "camera-rental-schedule-center/src/shared/ui/ResponsiveDataList.tsx",
+    "camera-rental-schedule-center/src/features/preferences/messages.ts",
+    "camera-rental-schedule-center/src/index.css"
+  ],
+  "test_paths": [
+    "camera-rental-schedule-center/src/features/orders/**/*.test.ts",
+    "camera-rental-schedule-center/src/features/devices/deviceModel.test.ts"
+  ],
+  "non_goals": [
+    "Do not add server fields, inventory import, or business commands.",
+    "Do not expose customer-private values outside existing authorized surfaces.",
+    "Do not implement QR or drawer internals in this slice."
+  ],
+  "expected_evidence": [
+    "Focused order and device model tests",
+    "Type check and production build",
+    "Responsive order and device browser checks",
+    "Task report, spec review, and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Registered devices equal physical inventory.",
+    "Unit numbering is continuous.",
+    "Visible status alone authorizes a command."
+  ],
+  "stop_condition": "Stop if current read models cannot support the approved list behavior without inventing data or adding an API."
+}

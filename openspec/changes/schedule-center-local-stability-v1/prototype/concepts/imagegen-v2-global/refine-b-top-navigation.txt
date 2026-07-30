@@ -1,0 +1,21 @@
+Edit this exact Chinese daily equipment fulfillment workbench screenshot.
+Preserve the four operational lanes, selected shipment, verification drawer,
+equipment lifecycle strip, status colors, dates, typography, and all business
+content.
+
+Redesign only the navigation shell:
+
+- completely remove the dark left sidebar
+- expand the main workbench into the recovered horizontal space
+- add a clean white top module navigation row below the scope header with:
+  今日工作台, 排期日历, 订单, 设备, 调拨, 检测维修, 报表
+- selected "今日工作台" uses dark navy text and a thin cobalt underline
+- unselected modules use medium-gray text
+- use thin borders and a subtle warm-gray page background, with no dark
+  navigation block
+- keep tenant, synchronization status, search, warehouse, date, and write-state
+  controls in the existing top header
+
+The result should resemble a bright mature operations product, not a dark admin
+template. Do not redesign the work lanes or right drawer, change dates, add
+logos, use purple, or add decorative gradients.

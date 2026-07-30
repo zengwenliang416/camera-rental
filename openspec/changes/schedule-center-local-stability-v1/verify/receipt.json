@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "change_id": "schedule-center-local-stability-v1",
+  "result": "green",
+  "covered_scope": [
+    "Admin-managed tenant XianGuanJia credentials, switches, endpoints, and synchronization parameters with no business configuration fallback.",
+    "Database migrations 029 through 031 and read-only schema, tenant, and relation integrity verification.",
+    "Schedule-center architecture, typed adapters, server-authoritative command handling, and the 600-line production source ceiling.",
+    "All six schedule-center routes at 360, 390, 768, and 1440 CSS pixel widths.",
+    "Authorized shipment review search, write-disabled gate behavior, theme and locale persistence, keyboard focus, and clean browser console."
+  ],
+  "uncovered_scope": [],
+  "residual_risk": [
+    "A real XianGuanJia shipment mutation was intentionally not executed; the production write switch remains disabled.",
+    "CodeGraph verification is advisory and the repository is not indexed in the current session."
+  ],
+  "confidence": "B"
+}

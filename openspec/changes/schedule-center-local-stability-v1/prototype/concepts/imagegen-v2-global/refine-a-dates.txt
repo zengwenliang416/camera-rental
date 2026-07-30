@@ -1,0 +1,12 @@
+Edit this exact application screenshot. Preserve the full layout, components,
+colors, typography, equipment rows, timeline bars, inspector, and all non-date
+content as closely as possible.
+
+Correct only the visible date header labels to a real 2026 sequence:
+07-29 周三, 07-30 周四, 07-31 周五, 08-01 周六, 08-02 周日,
+08-03 周一, 08-04 周二, 08-05 周三, 08-06 周四, 08-07 周五,
+08-08 周六, 08-09 周日, 08-10 周一, 08-11 周二.
+
+Treat 2026-07-29 as the current date. Do not redesign the interface, do not
+move any panel, and do not add logos or decorative elements. Keep Simplified
+Chinese text crisp and legible.

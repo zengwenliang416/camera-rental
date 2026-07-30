@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "mode": "edit",
+  "endpoint": "https://api.pftrader.us/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x864",
+  "quality": "high",
+  "n": 1,
+  "background": null,
+  "output_format": "png",
+  "output_compression": null,
+  "moderation": null,
+  "response_format": null,
+  "response_kind": "b64_json",
+  "bytes": 1259556,
+  "image": {
+    "format": "png",
+    "width": 1672,
+    "height": 941
+  },
+  "out": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-c-availability-matrix-final.png",
+  "elapsed_ms": 177234,
+  "created": 1785311161,
+  "usage": {
+    "input_tokens": 1694,
+    "input_tokens_details": {
+      "image_tokens": 1508,
+      "text_tokens": 186
+    },
+    "output_tokens": 4632,
+    "output_tokens_details": {
+      "image_tokens": 4632,
+      "text_tokens": 0
+    },
+    "total_tokens": 6326
+  },
+  "input_images": [
+    {
+      "path": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-c-availability-matrix.png",
+      "bytes": 1265106,
+      "sha256": "4087e6edaa18279c5a65e2845c0bbc356866f5b1d404d75f800561584be03aa4",
+      "image": {
+        "format": "png",
+        "width": 1672,
+        "height": 941
+      }
+    }
+  ],
+  "mask": null,
+  "prompt_sha256": "3faa452037e1bfdf570fbb72281b259ad190f68b3d02534c04d5282ef1c10963",
+  "prompt_preview": "Edit this exact application screenshot. Preserve the matrix, shortage resolver,\nserialized-device timeline, navigation, colors, typography, and all non-date\ncontent as closely as possible.\n\nCorrect the visible date columns to:\n07-29 周三, 07-..."
+}

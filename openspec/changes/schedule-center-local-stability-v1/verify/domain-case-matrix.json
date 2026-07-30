@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "change_id": "schedule-center-local-stability-v1",
+  "cases": [
+    {
+      "case_id": "utc-admin-config-zero-compat",
+      "domains": {
+        "facticity": ["Trace persisted configuration, removed schema field, and current admin contract to repository and database evidence."],
+        "static": ["Scan for XGJ environment reads, rental.xianyu process properties, credentialReference, and secret-return paths."],
+        "unit": ["Run configuration validation, tenant ownership, secret persistence, dynamic client, webhook, job, and write-guard tests."],
+        "redteam": ["Probe missing credentials, invalid URL, cross-tenant access, secret disclosure, and write enablement without integration."],
+        "e2e": ["Open the local admin configuration page and verify masked credentials and persisted switches."],
+        "sensory": ["Review configuration hierarchy, risk copy, secret affordances, and disabled-state clarity."]
+      }
+    },
+    {
+      "case_id": "utc-scheduled-read-sync-integrity",
+      "domains": {
+        "facticity": ["Compare job claims with current sync-run rows, logs, table counts, and migration SQL."],
+        "static": ["Inspect tenant job registration, database-backed guard, transaction boundaries, and idempotency keys."],
+        "unit": ["Run channel synchronization and scheduled-job tenant-isolation tests."],
+        "redteam": ["Probe expired authorization, partial remote failure, duplicate pages, and disabled tenant rows."],
+        "e2e": ["Observe local scheduled read sync and verify successful shops continue while failures are recorded."],
+        "sensory": ["Review whether the UI distinguishes ready, read-only, partial failure, and disabled states."]
+      }
+    },
+    {
+      "case_id": "utc-responsive-live-dashboard",
+      "domains": {
+        "facticity": ["Compare visible counts with current tenant database/API snapshot evidence."],
+        "static": ["Run TypeScript, source-boundary, lazy-loading, and 600-line ceiling checks."],
+        "unit": ["Run dashboard, data-state, provider, permission, and stale-request tests."],
+        "redteam": ["Probe one-query failure, stale response, repeated 401, empty data, and permission denial."],
+        "e2e": ["Load the dashboard at 1440 and 390 CSS pixels and record overflow and DOM evidence."],
+        "sensory": ["Review visual hierarchy, density, readability, responsive behavior, and task prioritization."]
+      }
+    },
+    {
+      "case_id": "utc-shipping-write-guard",
+      "domains": {
+        "facticity": ["Trace visible device/order counts, search fields, and write state to API and database evidence."],
+        "static": ["Inspect typed adapters, permission gates, waybill preservation, and server-authoritative command flow."],
+        "unit": ["Run shipping model, mapper, duplicate-command, service guard, and order-query tests."],
+        "redteam": ["Probe missing gates, malformed waybill, unauthorized query, duplicate submit, and write-disabled submission."],
+        "e2e": ["Open the shipping workbench at desktop and mobile widths without invoking the real write API."],
+        "sensory": ["Review the four-step hierarchy, sensitive-data exposure, disabled reasons, and mobile usability."]
+      }
+    },
+    {
+      "case_id": "utc-permission-tenant-secret-isolation",
+      "domains": {
+        "facticity": ["Audit tenant relations, permission constants, response VOs, masked values, and log behavior."],
+        "static": ["Scan for raw secret values, cross-tenant mapper access, unbounded response objects, and unsafe logging."],
+        "unit": ["Run tenant ownership, unauthorized query, webhook tenant resolution, and safe-error tests."],
+        "redteam": ["Probe tenant ID injection, missing permission, raw-payload access, secret echo, and frontend-only bypass."],
+        "e2e": ["Verify the local admin and schedule-center surfaces expose only authorized values."],
+        "sensory": ["Review denial messaging and ensure sensitive fields are not visually overexposed."]
+      }
+    },
+    {
+      "case_id": "utc-theme-locale-keyboard",
+      "domains": {
+        "facticity": ["Trace theme, locale, overlay, and route claims to implementation and browser evidence."],
+        "static": ["Inspect preference storage allowlist, focus helpers, semantic labels, and reduced-motion CSS."],
+        "unit": ["Run preference, overlay, login, route, and provider interaction tests."],
+        "redteam": ["Probe invalid stored preferences, rapid route changes, stale overlays, and keyboard escape paths."],
+        "e2e": ["Exercise representative theme, locale, navigation, and overlay states in the local browser."],
+        "sensory": ["Review contrast, focus visibility, touch targets, language completeness, and motion behavior."]
+      }
+    }
+  ]
+}

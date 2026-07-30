@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "component_rules": [
+    "Extract duplicated UI behavior into shared components.",
+    "Extract repeated state machines into hooks.",
+    "Extract repeated formatting or validation into utilities or services."
+  ],
+  "shipping_workbench": {
+    "source": "camera-rental-schedule-center/src/components/QuickBindingView.tsx",
+    "targets": [
+      "features/shipping/ShippingWorkbench.tsx",
+      "features/shipping/useShippingWorkbench.ts",
+      "features/shipping/shippingModel.ts",
+      "features/shipping/components/WaybillPanel.tsx",
+      "features/shipping/components/DeviceSelectionPanel.tsx",
+      "features/shipping/components/OrderSelectionPanel.tsx",
+      "features/shipping/components/ShipmentDocket.tsx",
+      "features/shipping/components/ShipmentHistory.tsx"
+    ],
+    "rules": [
+      "React components render read models and emit intents.",
+      "Search, readiness, and safe error behavior are pure and testable.",
+      "Existing API clients and AppContext commands remain the only transport and mutation seams.",
+      "No prototype fixture or static production count is copied."
+    ]
+  },
+  "app_shell_dashboard": {
+    "sources": [
+      "camera-rental-schedule-center/src/App.tsx",
+      "camera-rental-schedule-center/src/components/Header.tsx",
+      "camera-rental-schedule-center/src/components/DashboardView.tsx"
+    ],
+    "targets": [
+      "app/ScheduleCenterAppShell.tsx",
+      "app/ResponsiveWorkspaceNavigation.tsx",
+      "app/AccountAndPreferenceMenu.tsx",
+      "features/preferences/PreferenceContext.tsx",
+      "features/dashboard/dashboardModel.ts",
+      "features/dashboard/DashboardPage.tsx",
+      "shared/ui/SyncHealthBanner.tsx",
+      "shared/ui/OperationalMetricGrid.tsx",
+      "shared/ui/FeaturePageHeader.tsx",
+      "shared/ui/StatusBadge.tsx",
+      "shared/ui/EmptyState.tsx",
+      "shared/lib/safeError.ts"
+    ],
+    "rules": [
+      "Preferences persist only theme and locale.",
+      "Dashboard metrics derive only from mapped server records.",
+      "Shared UI imports no transport or feature page.",
+      "Mobile navigation uses a compact menu instead of a horizontally overflowing desktop row.",
+      "No prototype fixture or static production total is copied."
+    ]
+  },
+  "schedule_allocation": {
+    "sources": [
+      "camera-rental-schedule-center/src/components/GanttScheduleView.tsx",
+      "camera-rental-schedule-center/src/components/OrderAllocationModal.tsx",
+      "camera-rental-schedule-center/src/lib/scheduleEngine.ts"
+    ],
+    "targets": [
+      "features/schedule/SchedulePage.tsx",
+      "features/schedule/scheduleModel.ts",
+      "features/schedule/components/ScheduleFilters.tsx",
+      "features/schedule/components/ScheduleTimeline.tsx",
+      "features/schedule/components/ScheduleDeviceTable.tsx",
+      "features/schedule/components/AllocationDialog.tsx",
+      "shared/ui/DateRangeDisplay.tsx",
+      "shared/ui/BillableOccupiedRangeLegend.tsx",
+      "shared/ui/ConfirmDialogShell.tsx"
+    ],
+    "rules": [
+      "Date grids, filters, lanes, and assignment drafts are separate responsibilities.",
+      "Client recommendations are provisional and backend assignment remains authoritative.",
+      "Billable and occupied ranges are labeled with text and not color alone."
+    ]
+  },
+  "orders_devices": {
+    "sources": [
+      "camera-rental-schedule-center/src/components/OrdersView.tsx",
+      "camera-rental-schedule-center/src/components/DevicesView.tsx"
+    ],
+    "targets": [
+      "features/orders/OrdersPage.tsx",
+      "features/orders/orderModel.ts",
+      "features/orders/components/OrderCard.tsx",
+      "features/devices/DevicesPage.tsx",
+      "features/devices/deviceModel.ts",
+      "features/devices/components/DeviceCard.tsx",
+      "shared/ui/FilterToolbar.tsx",
+      "shared/ui/IdentifierText.tsx",
+      "shared/ui/ResponsiveDataList.tsx"
+    ],
+    "rules": [
+      "Filtering and status presentation are pure and testable.",
+      "Registered-device counts are not presented as physical inventory totals.",
+      "Pages emit workflow intent and do not call raw transport clients."
+    ]
+  },
+  "auth_exceptions_overlays": {
+    "sources": [
+      "camera-rental-schedule-center/src/components/LoginPage.tsx",
+      "camera-rental-schedule-center/src/components/ExceptionsView.tsx",
+      "camera-rental-schedule-center/src/components/DeviceDetailDrawer.tsx",
+      "camera-rental-schedule-center/src/components/QuickBindingModal.tsx"
+    ],
+    "targets": [
+      "features/auth/LoginPage.tsx",
+      "features/exceptions/ExceptionsPage.tsx",
+      "features/exceptions/exceptionModel.ts",
+      "features/devices/components/DeviceDetailDrawer.tsx",
+      "features/devices/components/DeviceQrPanel.tsx",
+      "shared/ui/DetailDrawerShell.tsx",
+      "shared/ui/PermissionAwareAction.tsx",
+      "shared/ui/OperationResultPanel.tsx"
+    ],
+    "rules": [
+      "Overlay shells own focus and dismissal behavior, not domain transport.",
+      "QR failures use safe localized categories.",
+      "Manual review mutations remain explicit and permission guarded."
+    ]
+  },
+  "state_decomposition": {
+    "source": "camera-rental-schedule-center/src/context/AppContext.tsx",
+    "targets": [
+      "features/session/SessionContext.tsx",
+      "features/permissions/PermissionContext.tsx",
+      "features/workspace/WorkspaceContext.tsx",
+      "features/data/ScheduleCenterDataContext.tsx",
+      "features/commands/ScheduleCenterCommandsContext.tsx",
+      "context/AppContext.tsx"
+    ],
+    "rules": [
+      "No provider owns session, permissions, server collections, navigation, overlays, and mutations together.",
+      "The compatibility useApp facade composes focused hooks without owning state.",
+      "Server query refresh and business commands remain separate."
+    ]
+  }
+}

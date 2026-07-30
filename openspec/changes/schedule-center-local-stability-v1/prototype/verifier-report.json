@@ -1,0 +1,138 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "artifact/index.html",
+  "checked_variant": "integrated-rental-operations-v6-outbound-command-center",
+  "approval_status": "awaiting-explicit-user-review",
+  "project_fidelity": {
+    "status": "green",
+    "inventory": "visual-inventory.json",
+    "shell_checked": true,
+    "generic_shell_detected": false,
+    "notes": [
+      "The prototype now includes a pre-authentication unified-admin login screen with tenant, username, password, unsupported SMS/QR states, theme, locale, privacy, and server-authority boundaries.",
+      "The workbench, schedule, availability, orders, devices, shipping, and exceptions use a masked production snapshot captured at 2026-07-29 17:12 Asia/Shanghai.",
+      "All inventory wording separates the four registered device instances from the user's larger physical inventory that has not yet been imported.",
+      "The device ledger includes the current backend field model and bulk-import validation rules without pretending that unsupported model-master fields already exist.",
+      "The shipping screen shows 151 channel orders in pending-shipment status but zero safely confirmable prototype candidates because conversion, mapping, rental-period, and internal-status conditions are not currently satisfied.",
+      "The outbound workbench supports device search by ID, SN, model, or location and keeps exactly one visible matching device selected.",
+      "The pending-order search contract accepts receiver name, full phone, or order number and exposes a complete unmasked result-field schema for authorized staff without copying production customer values into the prototype."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [
+      "1440x900 desktop",
+      "1087x900 compact desktop",
+      "768x1024 tablet",
+      "390x844 mobile",
+      "360x800 compact mobile"
+    ],
+    "theme_modes": [
+      "light",
+      "dark"
+    ],
+    "locales": [
+      "zh-CN",
+      "en"
+    ],
+    "states": [
+      "populated",
+      "loading",
+      "empty",
+      "error",
+      "permission",
+      "disabled"
+    ]
+  },
+  "checks": [
+    "Verified all eight screen anchors: login, workbench, schedule, availability, orders, devices, shipping, and exceptions.",
+    "Verified no page-level horizontal overflow at 1440, 1087, 768, 390, or 360 pixels.",
+    "Verified zh-CN and en on all eight screens with no visible CJK remnants in en.",
+    "Verified the login screen switches light/dark theme and returns to the workbench prototype.",
+    "Verified the workbench detail drawer opens with aria-hidden=false.",
+    "Verified schedule, availability, order, review, alert, shop, shipment, and registered-device counts against production-snapshot.md.",
+    "Verified customer names, phone numbers, addresses, complete external order identifiers, complete waybills, and payment identifiers are absent from fixtures and screenshots.",
+    "Verified device search filtering, no-result state, automatic visible selection, and shipment-docket synchronization.",
+    "Verified pending-order search accepts receiver name, full phone, and order number input while retaining zero eligible results from the masked production snapshot.",
+    "Verified JavaScript syntax, JSON parsing, whitespace integrity, HTTP resources, and the under-600-line file constraint."
+  ],
+  "evidence": [
+    {
+      "type": "screenshot",
+      "path": "evidence/integrated-v5-login-1440.png",
+      "result": "green",
+      "notes": [
+        "Desktop unified-admin login with a light product story and server-authoritative credential form."
+      ]
+    },
+    {
+      "type": "screenshot",
+      "path": "evidence/integrated-v5-login-390.png",
+      "result": "green",
+      "notes": [
+        "Mobile login keeps brand context, credential fields, unsupported method labels, and security boundary without horizontal overflow."
+      ]
+    },
+    {
+      "type": "screenshot",
+      "path": "evidence/integrated-v5-workbench-1440.png",
+      "result": "green",
+      "notes": [
+        "Production-calibrated workbench separates registered devices from actual inventory pending import."
+      ]
+    },
+    {
+      "type": "screenshot",
+      "path": "evidence/integrated-v5-devices-1440.png",
+      "result": "green",
+      "notes": [
+        "Device ledger exposes the import field model and the four currently registered production devices."
+      ]
+    },
+    {
+      "type": "screenshot",
+      "path": "evidence/integrated-v6-shipping-1440.png",
+      "result": "green",
+      "notes": [
+        "Desktop outbound command center keeps the waybill, device, order eligibility, confirmation, and recent shipment areas visible as one operational surface."
+      ]
+    },
+    {
+      "type": "screenshot",
+      "path": "evidence/integrated-v6-shipping-1087.png",
+      "result": "green",
+      "notes": [
+        "Compact desktop switches to a two-column workspace and full-width confirmation row without horizontal overflow."
+      ]
+    },
+    {
+      "type": "screenshot",
+      "path": "evidence/integrated-v6-shipping-390.png",
+      "result": "green",
+      "notes": [
+        "Mobile stacks the complete shipment workflow while preserving device and order search controls."
+      ]
+    },
+    {
+      "command": "node --check for artifact and screen JavaScript modules",
+      "result": "passed"
+    },
+    {
+      "command": "JSON.parse for all prototype JSON contracts",
+      "result": "passed"
+    },
+    {
+      "command": "git diff --check -- openspec/changes/schedule-center-local-stability-v1/prototype",
+      "result": "passed"
+    },
+    {
+      "command": "HTTP GET for the prototype entry and login route from http://127.0.0.1:4180/",
+      "result": "passed"
+    },
+    {
+      "command": "Playwright screen, viewport, locale, theme, overflow, and interaction checks using installed Google Chrome",
+      "result": "passed"
+    }
+  ],
+  "blockers": []
+}

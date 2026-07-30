@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "change_id": "schedule-center-local-stability-v1",
+  "cases": [
+    {
+      "case_id": "utc-admin-config-zero-compat",
+      "tests": [
+        "XianyuConfigAdminServiceTest",
+        "XianyuPropertiesTest",
+        "XianyuReadClientTest",
+        "XianyuWriteClientTest",
+        "XianyuWebhookSignatureVerifier tests",
+        "camera-rental-schedule-center/src/app/integrationModel.test.ts"
+      ],
+      "coverage": "credential validation, tenant ownership, secret replacement semantics, database-backed runtime config, and write gating"
+    },
+    {
+      "case_id": "utc-scheduled-read-sync-integrity",
+      "tests": [
+        "XianyuChannelSyncServiceTest",
+        "XianyuScheduledJobTenantIsolationTest",
+        "XianyuPushRetryServiceTest",
+        "XianyuOrderSyncServiceTest",
+        "XianyuSyncCursorAdvancerTest"
+      ],
+      "coverage": "tenant guards, idempotent synchronization, retry behavior, partial failure, and cursor progression"
+    },
+    {
+      "case_id": "utc-responsive-live-dashboard",
+      "tests": [
+        "camera-rental-schedule-center/src/features/dashboard/dashboardModel.test.ts",
+        "camera-rental-schedule-center/src/features/data/dataModel.test.ts",
+        "camera-rental-schedule-center/src/features/providers/providerBehavior.test.tsx",
+        "camera-rental-schedule-center/src/api/snapshot.test.ts",
+        "camera-rental-schedule-center/src/features/orders/orderModel.test.ts"
+      ],
+      "coverage": "ready, empty, partial, stale response, authentication reset, permission, snapshot mapping, complete receiver-field search, and bounded order pagination"
+    },
+    {
+      "case_id": "utc-shipping-write-guard",
+      "tests": [
+        "XianyuOrderAdminServiceTest",
+        "XianyuOrderMapperTest",
+        "XianyuOrderShipServiceTest",
+        "camera-rental-schedule-center/src/features/shipping/shippingModel.test.ts",
+        "camera-rental-schedule-center/src/features/commands/commandModel.test.ts",
+        "camera-rental-schedule-center/src/api/mappers.test.ts",
+        "camera-rental-schedule-center/src/features/orders/orderModel.test.ts"
+      ],
+      "coverage": "name, full-phone, address, and order search, masked/shared mapping separation, rental-period gates, duplicate command protection, waybill preservation, and server-confirmed mutation"
+    },
+    {
+      "case_id": "utc-permission-tenant-secret-isolation",
+      "tests": [
+        "XianyuConfigAdminServiceTest",
+        "XianyuOrderAdminServiceTest",
+        "XianyuShopAdminServiceTest",
+        "XianyuOrderWebhookServiceTest",
+        "XianyuSafeErrorCodeTest",
+        "camera-rental-schedule-center/src/features/permissions/permissionModel.test.ts",
+        "camera-rental-schedule-center/src/shared/lib/safeError.test.ts"
+      ],
+      "coverage": "tenant resolution, permission denial, secret omission, safe errors, and frontend inability to bypass server gates"
+    },
+    {
+      "case_id": "utc-theme-locale-keyboard",
+      "tests": [
+        "camera-rental-schedule-center/src/features/preferences/preferenceModel.test.ts",
+        "camera-rental-schedule-center/src/features/auth/loginModel.test.ts",
+        "camera-rental-schedule-center/src/shared/ui/overlayFocus.test.ts",
+        "camera-rental-schedule-center/src/shared/ui/overlayBehavior.test.tsx",
+        "camera-rental-schedule-center/src/features/workspace/workspaceModel.test.ts"
+      ],
+      "coverage": "preference allowlists, locale switching, focus trap, Escape dismissal, focus restoration, and overlay cleanup"
+    }
+  ],
+  "execution": {
+    "backend": "257 tests passed",
+    "schedule_center": "77 tests passed"
+  }
+}

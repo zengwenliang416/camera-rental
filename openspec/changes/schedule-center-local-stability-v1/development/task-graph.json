@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "planning_status": "ready",
+  "tasks": [
+    {
+      "task_id": "001-shipping-workbench",
+      "status": "planned",
+      "depends_on": [],
+      "covers": [
+        "authorized management customer fields",
+        "outbound workflow",
+        "device identity search",
+        "authorized pending-order search",
+        "receiver-name full-phone and order-number backend query",
+        "OCR draft review",
+        "server-authoritative confirmation gating"
+      ]
+    },
+    {
+      "task_id": "002-admin-xianyu-config",
+      "status": "planned",
+      "depends_on": [
+        "001-shipping-workbench"
+      ],
+      "covers": [
+        "tenant-managed XianGuanJia credentials",
+        "encrypted AppSecret persistence",
+        "dynamic read and write client configuration",
+        "webhook tenant resolution",
+        "database-backed tenant job guard",
+        "persisted shipment write gate",
+        "removal of environment-variable compatibility"
+      ]
+    },
+    {
+      "task_id": "003-app-shell-dashboard",
+      "status": "planned",
+      "depends_on": [
+        "001-shipping-workbench",
+        "002-admin-xianyu-config"
+      ],
+      "covers": [
+        "responsive application shell",
+        "non-overflowing tablet and mobile navigation",
+        "persisted light dark preference",
+        "persisted zh-CN en preference",
+        "safe synchronization feedback",
+        "server-derived operational metrics",
+        "task-oriented dashboard queues",
+        "registered asset data boundary",
+        "feature lazy loading"
+      ]
+    },
+    {
+      "task_id": "004-schedule-allocation",
+      "status": "planned",
+      "depends_on": [
+        "003-app-shell-dashboard"
+      ],
+      "covers": [
+        "billable and occupied range distinction",
+        "responsive SN schedule lanes",
+        "schedule filters and empty states",
+        "server-authoritative allocation confirmation",
+        "assignment conflict and disabled states"
+      ]
+    },
+    {
+      "task_id": "005-orders-devices",
+      "status": "planned",
+      "depends_on": [
+        "004-schedule-allocation"
+      ],
+      "covers": [
+        "consistent order filters and results",
+        "registered device ledger",
+        "device identity and lifecycle detail",
+        "permission-aware existing workflow entry",
+        "responsive list and detail behavior"
+      ]
+    },
+    {
+      "task_id": "006-auth-exceptions-overlays",
+      "status": "planned",
+      "depends_on": [
+        "005-orders-devices"
+      ],
+      "covers": [
+        "management account login",
+        "manual review queue and resolution",
+        "dialog and drawer focus management",
+        "device QR loading and safe failure",
+        "compact theme and locale coverage"
+      ]
+    },
+    {
+      "task_id": "007-state-decomposition-final",
+      "status": "planned",
+      "depends_on": [
+        "006-auth-exceptions-overlays"
+      ],
+      "covers": [
+        "focused session and permission providers",
+        "focused server query provider",
+        "focused command provider",
+        "focused navigation and overlay provider",
+        "compatibility facade without one global state owner",
+        "cross-route static responsive and browser verification"
+      ]
+    }
+  ]
+}

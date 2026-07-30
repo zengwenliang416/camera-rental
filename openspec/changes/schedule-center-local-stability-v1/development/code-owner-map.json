@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "openspec/changes/schedule-center-local-stability-v1",
+      "owner": "specnav"
+    },
+    {
+      "path": "camera-rental-schedule-center/src/features/shipping",
+      "owner": "schedule-center shipping feature"
+    },
+    {
+      "path": "camera-rental-schedule-center/src/components/QuickBindingView.tsx",
+      "owner": "schedule-center compatibility entry"
+    },
+    {
+      "path": "camera-rental-schedule-center/src/api",
+      "owner": "schedule-center typed API boundary"
+    },
+    {
+      "path": "camera-rental-schedule-center/src/features/schedule",
+      "owner": "schedule and allocation feature"
+    },
+    {
+      "path": "camera-rental-schedule-center/src/features/orders",
+      "owner": "rental order feature"
+    },
+    {
+      "path": "camera-rental-schedule-center/src/features/devices",
+      "owner": "registered device and QR feature"
+    },
+    {
+      "path": "camera-rental-schedule-center/src/features/exceptions",
+      "owner": "manual review feature"
+    },
+    {
+      "path": "camera-rental-schedule-center/src/features/auth",
+      "owner": "management authentication feature"
+    },
+    {
+      "path": "camera-rental-schedule-center/src/features/session",
+      "owner": "session state"
+    },
+    {
+      "path": "camera-rental-schedule-center/src/features/permissions",
+      "owner": "permission state"
+    },
+    {
+      "path": "camera-rental-schedule-center/src/features/data",
+      "owner": "server query state"
+    },
+    {
+      "path": "camera-rental-schedule-center/src/features/commands",
+      "owner": "business command state"
+    },
+    {
+      "path": "camera-rental-schedule-center/src/features/workspace",
+      "owner": "navigation and overlay state"
+    },
+    {
+      "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu",
+      "owner": "rental Xianyu management API contract"
+    },
+    {
+      "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin",
+      "owner": "rental Xianyu management services"
+    },
+    {
+      "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu",
+      "owner": "rental Xianyu query persistence"
+    }
+  ]
+}

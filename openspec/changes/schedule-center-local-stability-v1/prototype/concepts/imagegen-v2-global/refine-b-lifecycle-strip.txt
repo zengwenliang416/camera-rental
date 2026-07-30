@@ -1,0 +1,21 @@
+Edit this exact application screenshot and preserve the top header, four
+operational lanes, selected row, right verification drawer, navigation, colors,
+and typography.
+
+Replace only the lower dated calendar grid beside the selected camera with a
+clean horizontal component titled "设备履约阶段". Do not show individual daily
+column headers. Instead show five consecutive phase segments:
+
+1. 备货完成
+2. 发货出库
+3. 租用中
+4. 回仓运输
+5. 检测完成
+
+Under the segments, keep a compact key-milestone row with correct dates:
+07-29 09:00 备货完成, 07-29 09:30 发货出库, 07-30 09:00 客户签收,
+08-02 18:00 租期结束, 08-02 21:00 预计回仓,
+08-03 12:00 检测完成, 08-03 12:00 起下次可用.
+
+Do not add any duplicate date labels. Keep the rest of the image unchanged,
+crisp, and in legible Simplified Chinese.

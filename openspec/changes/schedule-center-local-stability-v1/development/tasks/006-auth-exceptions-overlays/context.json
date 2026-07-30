@@ -1,0 +1,64 @@
+{
+  "task_id": "006-auth-exceptions-overlays",
+  "goal": "Implement responsive management login, exception review, device QR/detail, and accessible overlays.",
+  "must_read": [
+    "openspec/changes/schedule-center-local-stability-v1/development/tasks/006-auth-exceptions-overlays/brief.md",
+    "openspec/changes/schedule-center-local-stability-v1/requirements.md",
+    "openspec/changes/schedule-center-local-stability-v1/acceptance.md",
+    "openspec/changes/schedule-center-local-stability-v1/spec-map.json",
+    "openspec/changes/schedule-center-local-stability-v1/component-impact-map.json",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/handoff.md",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/decision.json",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/index.html",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/screens/login.js",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/screens/records.js"
+  ],
+  "allowed_files": [
+    "camera-rental-schedule-center/package.json",
+    "camera-rental-schedule-center/src/App.tsx",
+    "camera-rental-schedule-center/src/components/LoginPage.tsx",
+    "camera-rental-schedule-center/src/components/ExceptionsView.tsx",
+    "camera-rental-schedule-center/src/components/DeviceDetailDrawer.tsx",
+    "camera-rental-schedule-center/src/components/QuickBindingModal.tsx",
+    "camera-rental-schedule-center/src/features/auth/**",
+    "camera-rental-schedule-center/src/features/exceptions/**",
+    "camera-rental-schedule-center/src/features/devices/components/DeviceDetailDrawer.tsx",
+    "camera-rental-schedule-center/src/features/devices/components/DeviceQrPanel.tsx",
+    "camera-rental-schedule-center/src/features/devices/deviceQrModel.ts",
+    "camera-rental-schedule-center/src/features/devices/deviceQrModel.test.ts",
+    "camera-rental-schedule-center/src/features/devices/useDeviceQr.ts",
+    "camera-rental-schedule-center/src/shared/ui/DetailDrawerShell.tsx",
+    "camera-rental-schedule-center/src/shared/ui/PermissionAwareAction.tsx",
+    "camera-rental-schedule-center/src/shared/ui/OperationResultPanel.tsx",
+    "camera-rental-schedule-center/src/features/preferences/messages.ts",
+    "camera-rental-schedule-center/src/shared/lib/safeError.ts",
+    "camera-rental-schedule-center/src/index.css"
+  ],
+  "test_paths": [
+    "camera-rental-schedule-center/src/features/auth/**/*.test.ts",
+    "camera-rental-schedule-center/src/features/exceptions/**/*.test.ts",
+    "camera-rental-schedule-center/src/features/devices/deviceQrModel.test.ts"
+  ],
+  "non_goals": [
+    "Do not add an authentication method, permission, API, QR format, review mutation, or device transition.",
+    "Do not change shipping-workbench internals or global state ownership.",
+    "Do not persist credentials, QR payloads, private customer data, or overlay drafts."
+  ],
+  "expected_evidence": [
+    "Focused auth, exception, permission-action, and QR model tests",
+    "Type check and production build",
+    "Responsive keyboard and focus browser checks for login, exceptions, drawer, QR, and modal",
+    "Task report, spec review, and quality review"
+  ],
+  "unsafe_assumptions": [
+    "A visible login method is implemented.",
+    "Frontend permission replaces backend authorization.",
+    "QR success proves device availability.",
+    "Overlay dismissal without focus restoration is acceptable."
+  ],
+  "stop_condition": "Stop if approved behavior cannot be implemented through existing session, review, QR, device, and shipping contracts."
+}

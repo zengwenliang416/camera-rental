@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "component cohesion",
+      "limit": "one user-facing responsibility per shared component"
+    },
+    {
+      "area": "coupling",
+      "limit": "no page-specific imports inside shared components"
+    },
+    {
+      "area": "production source lines",
+      "limit": "no TS, TSX, or CSS file above 600 lines; new files target below 300"
+    },
+    {
+      "area": "shipping feature",
+      "limit": "page controller below 300 lines; panels below 220 lines; pure search and readiness logic outside React"
+    },
+    {
+      "area": "schedule feature",
+      "limit": "page coordinator below 220 lines; timeline and allocation components below 300 lines"
+    },
+    {
+      "area": "orders and devices",
+      "limit": "page coordinators below 220 lines; cards and detail sections below 220 lines"
+    },
+    {
+      "area": "application state",
+      "limit": "each focused provider below 300 lines; compatibility facade owns no mutable state"
+    },
+    {
+      "area": "dependencies",
+      "limit": "no new production dependency for this slice"
+    }
+  ]
+}

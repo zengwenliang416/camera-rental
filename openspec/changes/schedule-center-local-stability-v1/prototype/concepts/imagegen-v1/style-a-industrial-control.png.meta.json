@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "mode": "edit",
+  "endpoint": "https://api.pftrader.us/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x864",
+  "quality": "high",
+  "n": 1,
+  "background": null,
+  "output_format": "png",
+  "output_compression": null,
+  "moderation": null,
+  "response_format": null,
+  "response_kind": "b64_json",
+  "bytes": 1472330,
+  "image": {
+    "format": "png",
+    "width": 1672,
+    "height": 941
+  },
+  "out": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v1/style-a-industrial-control.png",
+  "elapsed_ms": 92163,
+  "created": 1785309430,
+  "usage": {
+    "input_tokens": 1461,
+    "input_tokens_details": {
+      "image_tokens": 1305,
+      "text_tokens": 156
+    },
+    "output_tokens": 1158,
+    "output_tokens_details": {
+      "image_tokens": 1158,
+      "text_tokens": 0
+    },
+    "total_tokens": 2619
+  },
+  "input_images": [
+    {
+      "path": "openspec/changes/schedule-center-local-stability-v1/prototype/evidence/prototype-v3-dashboard-1440-final.png",
+      "bytes": 105962,
+      "sha256": "c1eeefe0befb20df78341e7c224a20ee8b3e140278d6b816fbc75bee2ce9823b",
+      "image": {
+        "format": "jpeg",
+        "width": 1440,
+        "height": 900
+      }
+    }
+  ],
+  "mask": null,
+  "prompt_sha256": "546a37e3116141f59f2ef818b68de90f3157ea91571cedc72ed7cfcdde510b39",
+  "prompt_preview": "Redesign this exact Chinese camera-rental scheduling dashboard as STYLE A: premium industrial operations control tower. Preserve the same application shell and core business modules, but make the layout feel more integrated and deliberate. ..."
+}

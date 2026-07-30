@@ -1,0 +1,18 @@
+Edit this exact Chinese equipment scheduling application screenshot. Preserve
+the full resource timeline, all equipment and SN rows, date headers, right
+action rail, bottom-right order inspector, status colors, typography, and
+content.
+
+Redesign only the left navigation:
+
+- replace the dark petrol sidebar with a warm light-gray navigation rail
+  (#F3F4F2) separated from the canvas by a thin neutral border
+- use dark graphite line icons and labels
+- selected "设备排期" item uses a very pale blue-gray background, dark navy text,
+  and a narrow 3px blue indicator on the left
+- remove all dark gradient or near-black background from the menu
+- keep the rail compact and professional, with no heavy card styling
+
+The result should feel like a mature European equipment-planning product:
+precise, bright, calm, dense, and operational. Do not redesign any other area,
+change dates, add logos, or introduce purple.

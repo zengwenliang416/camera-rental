@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "domain": "sensory",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/sensory/reviewer-independence.md",
+    "verify/sensory/review.md",
+    "verify/sensory/findings.jsonl",
+    "runs/schedule-center-verification-20260730/orders-pagination-verification.json",
+    "runs/schedule-center-verification-20260730/dashboard-1440-latest.png",
+    "runs/schedule-center-verification-20260730/dashboard-390-latest.png",
+    "runs/schedule-center-verification-20260730/shipping-1440-latest.png",
+    "runs/schedule-center-verification-20260730/shipping-390-latest.png"
+  ],
+    "commands": [
+    "independent screenshot and DOM review",
+    "responsive, focus, preference, privacy, pagination, source-size, and console evidence inspection",
+    "2026-07-30 live schedule screenshot and computed-layout review"
+  ],
+  "findings": [
+    "Evidence-linked sensory findings passed.",
+    "Order cards remain readable with complete delivery details and bounded 10-card pages on desktop and mobile.",
+    "The translation split reduces the largest production source file to 524 lines.",
+    "No unresolved UX, accessibility, privacy, cohesion, or maintainability blocker remains.",
+    "The schedule status remains visually intact on one line and every native select has a consistent, readable right inset."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "No dedicated automated contrast analyzer was run.",
+    "No production network performance trace was captured."
+  ],
+  "blocker_class": null
+}

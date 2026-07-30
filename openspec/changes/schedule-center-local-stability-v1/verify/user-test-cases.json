@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "change_id": "schedule-center-local-stability-v1",
+  "status": "approved",
+  "source": "requirements-acceptance-prototype-development-handoff",
+  "cases": [
+    {
+      "id": "utc-admin-config-zero-compat",
+      "title": "Tenant administrator uses only persisted XianGuanJia configuration",
+      "actor": "Tenant administrator",
+      "user_goal": "Manage every XianGuanJia business setting from the admin page without environment-variable or credential-reference compatibility.",
+      "preconditions": [
+        "Migrations 029 through 031 are applied.",
+        "The generic database encryption key is available."
+      ],
+      "steps": [
+        "Open the tenant XianGuanJia configuration page.",
+        "Inspect enabled state, endpoint, masked AppKey, blank AppSecret replacement input, write switch, job switch, and sync parameters.",
+        "Restart or use the backend without any XGJ environment variables."
+      ],
+      "expected_results": [
+        "Configuration is resolved only from the current tenant application row.",
+        "AppSecret is never returned.",
+        "Missing credentials cannot remain enabled.",
+        "Write operations remain disabled until explicitly enabled."
+      ],
+      "boundary_cases": [
+        "Invalid base URL cannot be enabled.",
+        "Cross-tenant configuration reads and updates are denied.",
+        "The removed credential_reference column is absent."
+      ],
+      "acceptance_refs": [
+        "A3"
+      ],
+      "source_refs": [
+        "requirements.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ]
+    },
+    {
+      "id": "utc-scheduled-read-sync-integrity",
+      "title": "Scheduled read synchronization preserves business data integrity",
+      "actor": "Integration operator",
+      "user_goal": "Synchronize authorized shop resources without losing existing data.",
+      "preconditions": [
+        "Tenant 1 integration and job switches are enabled.",
+        "The real write switch is disabled."
+      ],
+      "steps": [
+        "Observe scheduled read synchronization.",
+        "Inspect recent sync runs and current table counts.",
+        "Run schema, tenant, and orphan-relation checks."
+      ],
+      "expected_results": [
+        "Successful shops continue syncing idempotently.",
+        "Business row counts do not decrease.",
+        "No missing-parent or cross-tenant relation is introduced."
+      ],
+      "boundary_cases": [
+        "Expired authorization is skipped.",
+        "Third-party partial failures are recorded without deleting successful or historical data."
+      ],
+      "acceptance_refs": [
+        "A3"
+      ],
+      "source_refs": [
+        "requirements.md",
+        "acceptance.md",
+        "development/handoff-to-verify.md"
+      ]
+    },
+    {
+      "id": "utc-responsive-live-dashboard",
+      "title": "Operations manager sees a responsive server-backed dashboard",
+      "actor": "Rental operations manager",
+      "user_goal": "Use the current server snapshot on desktop and mobile without prototype data.",
+      "preconditions": [
+        "Local backend, admin frontend, and schedule center are running.",
+        "The browser has an authenticated tenant-1 session."
+      ],
+      "steps": [
+        "Load the dashboard at 1440 CSS pixels.",
+        "Load the dashboard at 390 CSS pixels.",
+        "Wait for the server snapshot and inspect operational counts."
+      ],
+      "expected_results": [
+        "Counts are derived from the backend snapshot.",
+        "No page-level horizontal overflow occurs.",
+        "Loading, ready, empty, and partial states remain distinct."
+      ],
+      "boundary_cases": [
+        "Permission denial does not erase unrelated data.",
+        "One failed query does not replace the whole dashboard with zeros."
+      ],
+      "acceptance_refs": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "source_refs": [
+        "requirements.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ]
+    },
+    {
+      "id": "utc-shipping-write-guard",
+      "title": "Warehouse operator can review shipment inputs but cannot bypass server gates",
+      "actor": "Authorized warehouse operator",
+      "user_goal": "Review waybill, device, and pending order before a server-authoritative shipment.",
+      "preconditions": [
+        "Registered available devices and synchronized pending orders exist.",
+        "Shipment query permission is present.",
+        "The persisted real-write switch is disabled."
+      ],
+      "steps": [
+        "Open the shipping workbench.",
+        "Inspect device search and pending-order search.",
+        "Verify search support for receiver name, full phone, and order number.",
+        "Inspect the final confirmation state without submitting."
+      ],
+      "expected_results": [
+        "OCR remains an editable draft.",
+        "Device and order are selected independently.",
+        "Complete customer verification fields appear only in authorized search results.",
+        "The real shipment button remains disabled while the write switch is off.",
+        "No optimistic shipment state is created."
+      ],
+      "boundary_cases": [
+        "Missing waybill, device, order, rental period, permission, or write switch blocks submission.",
+        "Selecting an order does not overwrite the entered waybill."
+      ],
+      "acceptance_refs": [
+        "A1",
+        "A3",
+        "A5"
+      ],
+      "source_refs": [
+        "requirements.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ]
+    },
+    {
+      "id": "utc-permission-tenant-secret-isolation",
+      "title": "Tenant, permission, customer-data, and secret boundaries remain enforced",
+      "actor": "Administrator and restricted operator",
+      "user_goal": "Prevent cross-tenant access and secret disclosure.",
+      "preconditions": [
+        "Multiple tenant application rows exist.",
+        "Only tenant 1 has a fully configured enabled application."
+      ],
+      "steps": [
+        "Inspect tenant-scoped application, shop, order, and raw-payload relations.",
+        "Inspect permission-gated management UI and API behavior.",
+        "Scan responses, logs, and frontend code for secret exposure."
+      ],
+      "expected_results": [
+        "No cross-tenant or missing-parent relation exists.",
+        "Private customer data requires existing management permissions.",
+        "AppSecret and raw payload content are not returned in ordinary responses or logs."
+      ],
+      "boundary_cases": [
+        "Missing permission returns a safe denial.",
+        "Frontend state cannot bypass backend permission or tenant checks."
+      ],
+      "acceptance_refs": [
+        "A3",
+        "A5"
+      ],
+      "source_refs": [
+        "requirements.md",
+        "acceptance.md",
+        "development/handoff-to-verify.md"
+      ]
+    },
+    {
+      "id": "utc-theme-locale-keyboard",
+      "title": "Schedule center remains accessible across theme, locale, keyboard, and touch states",
+      "actor": "Keyboard or touch user",
+      "user_goal": "Operate every route without losing focus or context.",
+      "preconditions": [
+        "An authenticated schedule-center session exists."
+      ],
+      "steps": [
+        "Switch light and dark theme.",
+        "Switch zh-CN and en locale.",
+        "Open mobile navigation, dialogs, drawers, account menu, and login overlay.",
+        "Exercise Escape and Tab or Shift+Tab."
+      ],
+      "expected_results": [
+        "Preferences persist and labels update.",
+        "Overlays trap and restore focus.",
+        "Touch targets and reduced-motion behavior remain usable."
+      ],
+      "boundary_cases": [
+        "Inaccessible actions are absent or disabled with a clear reason.",
+        "Route changes do not leave stale overlays or focus."
+      ],
+      "acceptance_refs": [
+        "A1",
+        "A2",
+        "A4"
+      ],
+      "source_refs": [
+        "requirements.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ]
+    }
+  ]
+}

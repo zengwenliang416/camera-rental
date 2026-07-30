@@ -1,0 +1,10 @@
+Edit this exact application screenshot and preserve every layout and visual
+detail. Change only the date labels in the lower seven-day device timeline.
+
+Use exactly these consecutive labels:
+07-27 周一, 07-28 周二, 07-29 周三（今天）, 07-30 周四,
+07-31 周五, 08-01 周六, 08-02 周日, 08-03 周一.
+
+Remove the duplicated 08-01 label. Keep 07-29 highlighted as today. Do not
+change the operational lanes, verification drawer, statuses, colors, spacing,
+or any other text.

@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "mode": "edit",
+  "endpoint": "https://api.pftrader.us/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x864",
+  "quality": "high",
+  "n": 1,
+  "background": null,
+  "output_format": "png",
+  "output_compression": null,
+  "moderation": null,
+  "response_format": null,
+  "response_kind": "b64_json",
+  "bytes": 1236025,
+  "image": {
+    "format": "png",
+    "width": 1672,
+    "height": 941
+  },
+  "out": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-a-light-navigation.png",
+  "elapsed_ms": 94933,
+  "created": 1785312590,
+  "usage": {
+    "input_tokens": 1710,
+    "input_tokens_details": {
+      "image_tokens": 1508,
+      "text_tokens": 202
+    },
+    "output_tokens": 1158,
+    "output_tokens_details": {
+      "image_tokens": 1158,
+      "text_tokens": 0
+    },
+    "total_tokens": 2868
+  },
+  "input_images": [
+    {
+      "path": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-a-equipment-timeline-approved-candidate.png",
+      "bytes": 1322361,
+      "sha256": "740608a55addf3bfc884de8b532b5a6a89d7325944daa8d407f9f4899cd04be1",
+      "image": {
+        "format": "png",
+        "width": 1672,
+        "height": 941
+      }
+    }
+  ],
+  "mask": null,
+  "prompt_sha256": "53276d7c91a36807c6bcb01c15db6b8d11afa0b204fc2fd25d97e0937dd06bb7",
+  "prompt_preview": "Edit this exact Chinese equipment scheduling application screenshot. Preserve\nthe full resource timeline, all equipment and SN rows, date headers, right\naction rail, bottom-right order inspector, status colors, typography, and\ncontent.\n\nRed..."
+}

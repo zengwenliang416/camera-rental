@@ -1,0 +1,540 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-07-30T02:55:38.971Z",
+  "active_change": "schedule-center-local-stability-v1",
+  "claims": [
+    {
+      "id": "development:task-shipping-workbench",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "shipping-workbench",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/shipping-workbench/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/shipping-workbench/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-shipping-workbench:evidence"
+      ]
+    },
+    {
+      "id": "development:task-001-shipping-workbench",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-shipping-workbench",
+      "text": "Open the shipping module, review or edit a waybill draft, search and select an",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/001-shipping-workbench/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/001-shipping-workbench/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-schedule-center/src/components/QuickBindingView.tsx",
+        "camera-rental-schedule-center/src/components/QuickBindingModal.tsx",
+        "camera-rental-schedule-center/src/components/Header.tsx",
+        "camera-rental-schedule-center/src/App.tsx",
+        "camera-rental-schedule-center/src/features/shipping/**",
+        "camera-rental-schedule-center/src/api/mappers.ts",
+        "camera-rental-schedule-center/src/api/mappers.test.ts",
+        "camera-rental-schedule-center/src/types.ts",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderController.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderRespVO.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuPendingShipOrderPageReqVO.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuPendingShipOrderRespVO.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuOrderMapper.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderAdminService.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuOrderMapperTest.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderAdminServiceTest.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java",
+        "docs/integrations/xianyu/order-sync.md",
+        "docs/integrations/xianyu/field-mapping.md"
+      ],
+      "query_ids": [
+        "development:task-001-shipping-workbench:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-admin-xianyu-config",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-admin-xianyu-config",
+      "text": "An authorized tenant administrator configures the integration endpoint,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/002-admin-xianyu-config/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/002-admin-xianyu-config/context.json"
+      ],
+      "expected_evidence": [
+        "Backend focused and full Reactor test output",
+        "Admin type check and production build",
+        "Migration checksum parity",
+        "Legacy runtime-entry scan",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "camera-rental-admin/src/api/rental/xianyu.ts",
+        "camera-rental-admin/src/locales/en.ts",
+        "camera-rental-admin/src/locales/zh-CN.ts",
+        "camera-rental-admin/src/views/rental/xianyu/**",
+        "camera-rental-server/.env.xianyu.example",
+        "camera-rental-server/scripts/setup-local.sh",
+        "camera-rental-server/scripts/start-local.sh",
+        "camera-rental-server/sql/mysql/migrations/20260729_029_xianyu_admin_managed_config.sql",
+        "camera-rental-server/yudao-server/src/main/resources/application-local.yaml",
+        "camera-rental-server/yudao-server/src/main/resources/application.yaml",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/**",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/**",
+        "docs/domain/xianyu-integration.md",
+        "docs/integrations/xianyu/**",
+        "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/app.js"
+      ],
+      "query_ids": [
+        "development:task-002-admin-xianyu-config:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-app-shell-dashboard",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-app-shell-dashboard",
+      "text": "Bootstrap the existing session and server snapshot, render the responsive",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/003-app-shell-dashboard/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/003-app-shell-dashboard/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-schedule-center/package.json",
+        "camera-rental-schedule-center/src/App.tsx",
+        "camera-rental-schedule-center/src/index.css",
+        "camera-rental-schedule-center/src/components/Header.tsx",
+        "camera-rental-schedule-center/src/components/DashboardView.tsx",
+        "camera-rental-schedule-center/src/app/**",
+        "camera-rental-schedule-center/src/features/dashboard/**",
+        "camera-rental-schedule-center/src/features/preferences/**",
+        "camera-rental-schedule-center/src/shared/**"
+      ],
+      "query_ids": [
+        "development:task-003-app-shell-dashboard:evidence"
+      ]
+    },
+    {
+      "id": "development:task-004-schedule-allocation",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "004-schedule-allocation",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/004-schedule-allocation/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/004-schedule-allocation/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-004-schedule-allocation:evidence"
+      ]
+    },
+    {
+      "id": "development:task-005-orders-devices",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "005-orders-devices",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/005-orders-devices/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/005-orders-devices/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-005-orders-devices:evidence"
+      ]
+    },
+    {
+      "id": "development:task-006-auth-exceptions-overlays",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "006-auth-exceptions-overlays",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/006-auth-exceptions-overlays/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/006-auth-exceptions-overlays/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-006-auth-exceptions-overlays:evidence"
+      ]
+    },
+    {
+      "id": "development:task-007-state-decomposition-final",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "007-state-decomposition-final",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/007-state-decomposition-final/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/007-state-decomposition-final/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-007-state-decomposition-final:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-001-shipping-workbench",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "001-shipping-workbench",
+      "text": "Open the shipping module, review or edit a waybill draft, search and select an",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/001-shipping-workbench/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/001-shipping-workbench/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-schedule-center/src/components/QuickBindingView.tsx",
+        "camera-rental-schedule-center/src/components/QuickBindingModal.tsx",
+        "camera-rental-schedule-center/src/components/Header.tsx",
+        "camera-rental-schedule-center/src/App.tsx",
+        "camera-rental-schedule-center/src/features/shipping/**",
+        "camera-rental-schedule-center/src/api/mappers.ts",
+        "camera-rental-schedule-center/src/api/mappers.test.ts",
+        "camera-rental-schedule-center/src/types.ts",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderController.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderRespVO.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuPendingShipOrderPageReqVO.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuPendingShipOrderRespVO.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuOrderMapper.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderAdminService.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuOrderMapperTest.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderAdminServiceTest.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java",
+        "docs/integrations/xianyu/order-sync.md",
+        "docs/integrations/xianyu/field-mapping.md"
+      ],
+      "query_ids": [
+        "verification:task-001-shipping-workbench:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-002-admin-xianyu-config",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "002-admin-xianyu-config",
+      "text": "An authorized tenant administrator configures the integration endpoint,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/002-admin-xianyu-config/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/002-admin-xianyu-config/context.json"
+      ],
+      "expected_evidence": [
+        "Backend focused and full Reactor test output",
+        "Admin type check and production build",
+        "Migration checksum parity",
+        "Legacy runtime-entry scan",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "camera-rental-admin/src/api/rental/xianyu.ts",
+        "camera-rental-admin/src/locales/en.ts",
+        "camera-rental-admin/src/locales/zh-CN.ts",
+        "camera-rental-admin/src/views/rental/xianyu/**",
+        "camera-rental-server/.env.xianyu.example",
+        "camera-rental-server/scripts/setup-local.sh",
+        "camera-rental-server/scripts/start-local.sh",
+        "camera-rental-server/sql/mysql/migrations/20260729_029_xianyu_admin_managed_config.sql",
+        "camera-rental-server/yudao-server/src/main/resources/application-local.yaml",
+        "camera-rental-server/yudao-server/src/main/resources/application.yaml",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/**",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/**",
+        "docs/domain/xianyu-integration.md",
+        "docs/integrations/xianyu/**",
+        "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/app.js"
+      ],
+      "query_ids": [
+        "verification:task-002-admin-xianyu-config:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-003-app-shell-dashboard",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "003-app-shell-dashboard",
+      "text": "Bootstrap the existing session and server snapshot, render the responsive",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/003-app-shell-dashboard/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/003-app-shell-dashboard/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-schedule-center/package.json",
+        "camera-rental-schedule-center/src/App.tsx",
+        "camera-rental-schedule-center/src/index.css",
+        "camera-rental-schedule-center/src/components/Header.tsx",
+        "camera-rental-schedule-center/src/components/DashboardView.tsx",
+        "camera-rental-schedule-center/src/context/AppContext.tsx",
+        "camera-rental-schedule-center/src/api/rental.ts",
+        "camera-rental-schedule-center/src/api/snapshotLoader.ts",
+        "camera-rental-schedule-center/src/api/snapshot.test.ts",
+        "camera-rental-schedule-center/src/app/**",
+        "camera-rental-schedule-center/src/features/dashboard/**",
+        "camera-rental-schedule-center/src/features/preferences/**",
+        "camera-rental-schedule-center/src/shared/**"
+      ],
+      "query_ids": [
+        "verification:task-003-app-shell-dashboard:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-004-schedule-allocation",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "004-schedule-allocation",
+      "text": "Open the schedule route, select a registered model, filter schedule lanes,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/004-schedule-allocation/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/004-schedule-allocation/context.json"
+      ],
+      "expected_evidence": [
+        "Focused schedule model tests",
+        "Type check and production build",
+        "Responsive schedule and allocation browser checks",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-schedule-center/package.json",
+        "camera-rental-schedule-center/src/components/GanttScheduleView.tsx",
+        "camera-rental-schedule-center/src/components/OrderAllocationModal.tsx",
+        "camera-rental-schedule-center/src/features/schedule/**",
+        "camera-rental-schedule-center/src/shared/ui/DateRangeDisplay.tsx",
+        "camera-rental-schedule-center/src/shared/ui/BillableOccupiedRangeLegend.tsx",
+        "camera-rental-schedule-center/src/shared/ui/ConfirmDialogShell.tsx",
+        "camera-rental-schedule-center/src/features/preferences/messages.ts",
+        "camera-rental-schedule-center/src/index.css",
+        "camera-rental-schedule-center/src/lib/scheduleEngine.ts"
+      ],
+      "query_ids": [
+        "verification:task-004-schedule-allocation:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-005-orders-devices",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "005-orders-devices",
+      "text": "Open the order or device route, apply safe local filters, inspect stable",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/005-orders-devices/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/005-orders-devices/context.json"
+      ],
+      "expected_evidence": [
+        "Focused order and device model tests",
+        "Type check and production build",
+        "Responsive order and device browser checks",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-schedule-center/package.json",
+        "camera-rental-schedule-center/src/components/OrdersView.tsx",
+        "camera-rental-schedule-center/src/components/DevicesView.tsx",
+        "camera-rental-schedule-center/src/features/orders/**",
+        "camera-rental-schedule-center/src/features/devices/DevicesPage.tsx",
+        "camera-rental-schedule-center/src/features/devices/deviceModel.ts",
+        "camera-rental-schedule-center/src/features/devices/deviceModel.test.ts",
+        "camera-rental-schedule-center/src/features/devices/components/DeviceCard.tsx",
+        "camera-rental-schedule-center/src/shared/ui/FilterToolbar.tsx",
+        "camera-rental-schedule-center/src/shared/ui/IdentifierText.tsx",
+        "camera-rental-schedule-center/src/shared/ui/ResponsiveDataList.tsx",
+        "camera-rental-schedule-center/src/features/preferences/messages.ts",
+        "camera-rental-schedule-center/src/index.css"
+      ],
+      "query_ids": [
+        "verification:task-005-orders-devices:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-006-auth-exceptions-overlays",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "006-auth-exceptions-overlays",
+      "text": "Enter through the management login page or an expired-session overlay, retain",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/006-auth-exceptions-overlays/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/006-auth-exceptions-overlays/context.json"
+      ],
+      "expected_evidence": [
+        "Focused auth, exception, permission-action, and QR model tests",
+        "Type check and production build",
+        "Responsive keyboard and focus browser checks for login, exceptions, drawer, QR, and modal",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-schedule-center/package.json",
+        "camera-rental-schedule-center/src/App.tsx",
+        "camera-rental-schedule-center/src/components/LoginPage.tsx",
+        "camera-rental-schedule-center/src/components/ExceptionsView.tsx",
+        "camera-rental-schedule-center/src/components/DeviceDetailDrawer.tsx",
+        "camera-rental-schedule-center/src/components/QuickBindingModal.tsx",
+        "camera-rental-schedule-center/src/features/auth/**",
+        "camera-rental-schedule-center/src/features/exceptions/**",
+        "camera-rental-schedule-center/src/features/devices/components/DeviceDetailDrawer.tsx",
+        "camera-rental-schedule-center/src/features/devices/components/DeviceQrPanel.tsx",
+        "camera-rental-schedule-center/src/features/devices/deviceQrModel.ts",
+        "camera-rental-schedule-center/src/features/devices/deviceQrModel.test.ts",
+        "camera-rental-schedule-center/src/features/devices/useDeviceQr.ts",
+        "camera-rental-schedule-center/src/shared/ui/DetailDrawerShell.tsx",
+        "camera-rental-schedule-center/src/shared/ui/PermissionAwareAction.tsx",
+        "camera-rental-schedule-center/src/shared/ui/OperationResultPanel.tsx",
+        "camera-rental-schedule-center/src/features/preferences/messages.ts",
+        "camera-rental-schedule-center/src/shared/lib/safeError.ts",
+        "camera-rental-schedule-center/src/index.css"
+      ],
+      "query_ids": [
+        "verification:task-006-auth-exceptions-overlays:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-007-state-decomposition-final",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "007-state-decomposition-final",
+      "text": "Bootstrap the existing management session and permissions, load independently",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/007-state-decomposition-final/brief.md",
+        "openspec/changes/schedule-center-local-stability-v1/development/tasks/007-state-decomposition-final/context.json"
+      ],
+      "expected_evidence": [
+        "Focused provider and state-model tests",
+        "Type check, production build, and import-boundary scans",
+        "Cross-route responsive, theme, locale, keyboard, dialog, drawer, and QR browser matrix",
+        "Task report, spec review, quality review, and development handoff contract"
+      ],
+      "allowed_files": [
+        "camera-rental-schedule-center/package.json",
+        "camera-rental-schedule-center/pnpm-lock.yaml",
+        "camera-rental-schedule-center/src/App.tsx",
+        "camera-rental-schedule-center/src/context/AppContext.tsx",
+        "camera-rental-schedule-center/src/features/session/**",
+        "camera-rental-schedule-center/src/features/permissions/**",
+        "camera-rental-schedule-center/src/features/data/**",
+        "camera-rental-schedule-center/src/features/commands/**",
+        "camera-rental-schedule-center/src/features/workspace/**",
+        "camera-rental-schedule-center/src/api/auth.ts",
+        "camera-rental-schedule-center/src/api/auth.test.ts",
+        "camera-rental-schedule-center/src/api/client.ts",
+        "camera-rental-schedule-center/src/api/client.test.ts",
+        "camera-rental-schedule-center/src/api/rental.ts",
+        "camera-rental-schedule-center/src/api/snapshotLoader.ts",
+        "camera-rental-schedule-center/src/api/snapshot.test.ts",
+        "camera-rental-schedule-center/src/app/accessModel.ts",
+        "camera-rental-schedule-center/src/app/accessModel.test.ts",
+        "camera-rental-schedule-center/src/features/dashboard/DashboardPage.tsx",
+        "camera-rental-schedule-center/src/features/dashboard/dashboardModel.ts",
+        "camera-rental-schedule-center/src/features/dashboard/dashboardModel.test.ts",
+        "camera-rental-schedule-center/src/features/preferences/messages.ts",
+        "camera-rental-schedule-center/src/features/providers/**",
+        "camera-rental-schedule-center/src/shared/hooks/**",
+        "camera-rental-schedule-center/src/shared/lib/safeError.ts",
+        "camera-rental-schedule-center/src/index.css"
+      ],
+      "query_ids": [
+        "verification:task-007-state-decomposition-final:evidence"
+      ]
+    }
+  ]
+}

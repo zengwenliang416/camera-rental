@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "public_behavior_covered": true,
+    "critical_paths_covered": true,
+    "edge_cases_covered": true,
+    "empty_and_error_states_covered": true,
+    "boundary_inputs_covered": true,
+    "assertions_are_behavior_focused": true,
+    "private_methods_not_targeted": true,
+    "mocks_do_not_replace_behavior": true,
+    "all_required_tests_executed": true,
+    "approved_cases_mapped": true
+  },
+  "findings": []
+}

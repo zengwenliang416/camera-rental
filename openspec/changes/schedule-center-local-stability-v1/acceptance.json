@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "change_id": "schedule-center-local-stability-v1",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "All schedule-center routes and overlays use the approved responsive design system without page-level horizontal overflow at 360, 390, 768, and 1440 CSS pixel widths.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "verify/e2e/report.json"
+    },
+    {
+      "id": "A2",
+      "statement": "The frontend is decomposed into application, feature, shared UI, hook, adapter, and typed service boundaries, and no production TypeScript, TSX, or CSS file exceeds 600 physical lines.",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "verify/static/report.json"
+    },
+    {
+      "id": "A3",
+      "statement": "All maintained clients use the current persisted XianGuanJia configuration contract; permissions, tenant behavior, authentication storage, and rental workflows remain server-authoritative, with no legacy configuration fallback.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "verify/facticity/report.json"
+    },
+    {
+      "id": "A4",
+      "statement": "Every route and required state supports persisted light/dark themes and zh-CN/en locales with accessible keyboard, focus, touch-target, contrast, and reduced-motion behavior.",
+      "verify_via": "sensory",
+      "status": "passing",
+      "evidence_ref": "verify/sensory/report.json"
+    },
+    {
+      "id": "A5",
+      "statement": "Shipping preserves the waybill-device-pending-order-confirm-ship sequence, treats OCR as a review draft, and never accepts a business mutation before the backend response.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "verify/e2e/report.json"
+    }
+  ]
+}

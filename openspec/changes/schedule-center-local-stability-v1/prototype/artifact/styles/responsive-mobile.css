@@ -1,0 +1,387 @@
+@media (max-width: 680px) {
+  :root {
+    --header-height: 58px;
+  }
+
+  .utility-header {
+    display: flex;
+    min-height: var(--header-height);
+    gap: 8px;
+    padding: 7px 10px;
+  }
+
+  .brand-button {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .brand-button strong {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .brand-mark {
+    width: 30px;
+    height: 30px;
+  }
+
+  .scope-controls,
+  .global-search,
+  .utility-actions .icon-button:first-of-type {
+    display: none;
+  }
+
+  .utility-actions {
+    display: flex;
+    align-self: center;
+  }
+
+  .icon-button,
+  .locale-button {
+    width: 44px;
+    min-height: 44px;
+  }
+
+  .screen-stage {
+    padding: 12px 10px 84px;
+  }
+
+  .state-banner {
+    min-height: 62px;
+    align-items: flex-start;
+    padding: 10px 12px;
+  }
+
+  .state-banner code {
+    display: none;
+  }
+
+  .global-state {
+    min-height: calc(100vh - 150px);
+  }
+
+  .page-title {
+    min-height: 0;
+    flex-direction: column;
+    gap: 11px;
+    margin-bottom: 12px;
+  }
+
+  .page-title h1 {
+    font-size: 25px;
+  }
+
+  .page-title-meta {
+    width: 100%;
+    max-width: none;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .page-title-meta::-webkit-scrollbar {
+    display: none;
+  }
+
+  .compact-stat {
+    min-width: 106px;
+    flex: 0 0 auto;
+  }
+
+  .primary-button,
+  .secondary-button,
+  .filter-search,
+  .filter-chip,
+  .panel-search,
+  .form-grid input,
+  .form-grid select {
+    min-height: 44px;
+  }
+
+  .filter-bar {
+    min-height: 0;
+    gap: 6px;
+    margin-bottom: 10px;
+    padding: 5px;
+  }
+
+  .filter-search {
+    min-width: 230px;
+  }
+
+  .filter-chip {
+    flex: 0 0 auto;
+  }
+
+  .operation-board {
+    grid-template-columns: 1fr;
+  }
+
+  .lane-scroll {
+    max-height: 240px;
+  }
+
+  .lane-row {
+    min-height: 56px;
+  }
+
+  .verification-pane {
+    display: block;
+  }
+
+  .verification-pane .order-summary,
+  .verification-pane .range-check {
+    border-right: 0;
+  }
+
+  .lifecycle-panel {
+    grid-template-columns: 1fr;
+    overflow-x: auto;
+  }
+
+  .current-device {
+    padding: 0 0 13px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .lifecycle-track {
+    min-width: 600px;
+  }
+
+  .action-rail,
+  .shortage-resolver {
+    grid-template-columns: 1fr;
+  }
+
+  .action-rail > header,
+  .shortage-resolver > header {
+    grid-column: 1;
+  }
+
+  .shortage-causes {
+    border-right: 0;
+  }
+
+  .timeline-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .timeline-row {
+    min-height: 58px;
+  }
+
+  .timeline-segment,
+  .availability-cell,
+  .serial-track button,
+  .replacement-list button,
+  .device-card > footer button,
+  .action-rail section button {
+    min-height: 44px;
+  }
+
+  .matrix-row {
+    min-height: 64px;
+  }
+
+  .serial-row {
+    min-height: 50px;
+  }
+
+  .action-rail section button {
+    display: flex;
+    min-width: 44px;
+    align-items: center;
+  }
+
+  .timeline-panel,
+  .matrix-panel,
+  .serial-panel {
+    max-width: calc(100vw - 20px);
+  }
+
+  .device-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .device-card {
+    min-height: 300px;
+  }
+
+  .records-panel {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .record-columns {
+    display: none;
+  }
+
+  .record-row {
+    min-height: 0;
+    margin-bottom: 8px;
+    padding: 13px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  .order-row {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "order status"
+      "customer customer"
+      "billable occupied"
+      "arrow arrow";
+  }
+
+  .order-row > span:nth-child(1) {
+    grid-area: order;
+  }
+
+  .order-row > span:nth-child(2) {
+    grid-area: customer;
+  }
+
+  .order-row > span:nth-child(3) {
+    grid-area: billable;
+  }
+
+  .order-row > span:nth-child(4) {
+    grid-area: occupied;
+  }
+
+  .order-row > .status-badge {
+    grid-area: status;
+  }
+
+  .order-row > em {
+    grid-area: arrow;
+  }
+
+  .exception-row {
+    grid-template-columns: 5px 1fr auto;
+    grid-template-areas:
+      "level type status"
+      "level message message"
+      "level age arrow";
+  }
+
+  .exception-row > .exception-level {
+    grid-area: level;
+    height: 100%;
+  }
+
+  .exception-row > span:nth-child(2) {
+    grid-area: type;
+  }
+
+  .exception-row > span:nth-child(3) {
+    grid-area: message;
+  }
+
+  .exception-row > .status-badge {
+    grid-area: status;
+  }
+
+  .exception-row > span:nth-child(5) {
+    grid-area: age;
+  }
+
+  .exception-row > em {
+    grid-area: arrow;
+  }
+
+  .pagination {
+    background: transparent;
+  }
+
+  .shipping-steps {
+    grid-template-columns: repeat(4, minmax(145px, 1fr));
+    overflow-x: auto;
+  }
+
+  .shipping-steps > div {
+    min-height: 72px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .choice-row {
+    min-height: 64px;
+  }
+
+  .safe-policy {
+    grid-template-columns: 1fr;
+  }
+
+  .safe-policy p {
+    grid-column: 1;
+  }
+
+  .detail-drawer {
+    width: 100vw;
+    padding: 18px;
+  }
+
+  .review-panel {
+    right: 8px;
+    bottom: 80px;
+  }
+
+  .prototype-toast {
+    bottom: 82px;
+  }
+}
+
+@media (max-width: 420px) {
+  .mobile-nav {
+    right: 6px;
+    bottom: 6px;
+    left: 6px;
+    min-height: 60px;
+    padding: 4px;
+  }
+
+  .mobile-nav button {
+    min-height: 50px;
+  }
+
+  .mobile-nav span {
+    font-size: 11px;
+  }
+
+  .mobile-nav small {
+    font-size: 8px;
+  }
+
+  .page-title h1 {
+    font-size: 23px;
+  }
+
+  .lane-row {
+    grid-template-columns: 42px minmax(70px, 0.8fr) minmax(90px, 1.2fr);
+  }
+
+  .record-row {
+    gap: 9px;
+  }
+
+  .order-row > span:nth-child(3),
+  .order-row > span:nth-child(4) {
+    overflow: visible;
+  }
+
+  .order-row > span:nth-child(3) strong,
+  .order-row > span:nth-child(4) strong {
+    font-size: 9px;
+  }
+}

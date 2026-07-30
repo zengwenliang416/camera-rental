@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "domain": "static",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/static/commands.jsonl",
+    "development/validation-log.jsonl",
+    "development/migrations/manifest.json"
+  ],
+  "commands": [
+    "backend rental-module tests and server package",
+    "admin type check and production build",
+    "schedule-center tests, type check, and build",
+    "legacy configuration banned-pattern scans",
+    "production source line-ceiling scan",
+    "migration cmp and SHA-256",
+    "git diff --check",
+    "cd camera-rental-schedule-center && pnpm lint",
+    "cd camera-rental-schedule-center && pnpm build"
+  ],
+  "findings": [
+    "All required static commands passed.",
+    "No maintained legacy XianGuanJia business configuration fallback remains.",
+    "The production source ceiling is satisfied with a maximum of 524 lines.",
+    "Order pagination, complete delivery-field mapping, and split order translations pass TypeScript and production build checks.",
+    "The schedule select and status-badge layout fix passes TypeScript, Vite production build, whitespace checks, and the 600-line ceiling."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "Anchor coverage is advisory under the current policy."
+  ],
+  "blocker_class": null
+}

@@ -1,0 +1,232 @@
+{
+  "schema": "specnav.codegraph.evidence_query_plan.v1",
+  "generated_at": "2026-07-30T02:55:38.971Z",
+  "active_change": "schedule-center-local-stability-v1",
+  "queries": [
+    {
+      "id": "development:task-shipping-workbench:evidence",
+      "claim_id": "development:task-shipping-workbench",
+      "stage": "development",
+      "task_id": "shipping-workbench",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-shipping-workbench --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-001-shipping-workbench:evidence",
+      "claim_id": "development:task-001-shipping-workbench",
+      "stage": "development",
+      "task_id": "001-shipping-workbench",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Open the shipping module, review or edit a waybill draft, search and select an\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-001-shipping-workbench --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-002-admin-xianyu-config:evidence",
+      "claim_id": "development:task-002-admin-xianyu-config",
+      "stage": "development",
+      "task_id": "002-admin-xianyu-config",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"An authorized tenant administrator configures the integration endpoint,\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-002-admin-xianyu-config --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-003-app-shell-dashboard:evidence",
+      "claim_id": "development:task-003-app-shell-dashboard",
+      "stage": "development",
+      "task_id": "003-app-shell-dashboard",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Bootstrap the existing session and server snapshot, render the responsive\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-003-app-shell-dashboard --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-004-schedule-allocation:evidence",
+      "claim_id": "development:task-004-schedule-allocation",
+      "stage": "development",
+      "task_id": "004-schedule-allocation",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-004-schedule-allocation --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-005-orders-devices:evidence",
+      "claim_id": "development:task-005-orders-devices",
+      "stage": "development",
+      "task_id": "005-orders-devices",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-005-orders-devices --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-006-auth-exceptions-overlays:evidence",
+      "claim_id": "development:task-006-auth-exceptions-overlays",
+      "stage": "development",
+      "task_id": "006-auth-exceptions-overlays",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-006-auth-exceptions-overlays --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-007-state-decomposition-final:evidence",
+      "claim_id": "development:task-007-state-decomposition-final",
+      "stage": "development",
+      "task_id": "007-state-decomposition-final",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-007-state-decomposition-final --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-001-shipping-workbench:evidence",
+      "claim_id": "verification:task-001-shipping-workbench",
+      "stage": "verification",
+      "task_id": "001-shipping-workbench",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Open the shipping module, review or edit a waybill draft, search and select an\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-001-shipping-workbench --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-002-admin-xianyu-config:evidence",
+      "claim_id": "verification:task-002-admin-xianyu-config",
+      "stage": "verification",
+      "task_id": "002-admin-xianyu-config",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"An authorized tenant administrator configures the integration endpoint,\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-002-admin-xianyu-config --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-003-app-shell-dashboard:evidence",
+      "claim_id": "verification:task-003-app-shell-dashboard",
+      "stage": "verification",
+      "task_id": "003-app-shell-dashboard",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Bootstrap the existing session and server snapshot, render the responsive\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-003-app-shell-dashboard --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-004-schedule-allocation:evidence",
+      "claim_id": "verification:task-004-schedule-allocation",
+      "stage": "verification",
+      "task_id": "004-schedule-allocation",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Open the schedule route, select a registered model, filter schedule lanes,\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-004-schedule-allocation --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-005-orders-devices:evidence",
+      "claim_id": "verification:task-005-orders-devices",
+      "stage": "verification",
+      "task_id": "005-orders-devices",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Open the order or device route, apply safe local filters, inspect stable\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-005-orders-devices --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-006-auth-exceptions-overlays:evidence",
+      "claim_id": "verification:task-006-auth-exceptions-overlays",
+      "stage": "verification",
+      "task_id": "006-auth-exceptions-overlays",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Enter through the management login page or an expired-session overlay, retain\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-006-auth-exceptions-overlays --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-007-state-decomposition-final:evidence",
+      "claim_id": "verification:task-007-state-decomposition-final",
+      "stage": "verification",
+      "task_id": "007-state-decomposition-final",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Bootstrap the existing management session and permissions, load independently\" in change \"schedule-center-local-stability-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-007-state-decomposition-final --query \"<query>\" --write --json"
+    }
+  ]
+}

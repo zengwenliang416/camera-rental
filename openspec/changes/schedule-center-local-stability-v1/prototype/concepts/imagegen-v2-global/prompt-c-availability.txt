@@ -1,0 +1,21 @@
+Create a high-fidelity 1536x864 desktop screenshot of a Chinese B2B camera rental operations application called "设备排期中心". Do not create a standard sidebar plus KPI cards dashboard.
+
+Direction C: availability and shortage matrix first, inspired by mature rental inventory and resource planning products but not copying their branding.
+
+Layout:
+- compact navigation and a narrow top scope bar with 上海仓, 未来10天, device group, search, sync status, tenant, and safe write-state
+- the dominant screen is a model-by-day availability matrix
+- frozen rows show DJI Pocket 3, Sony A7M4, Canon R5, DJI Air 3S, DJI Mic 2, RS 4 Pro, with columns for physical stock, bookable stock, maintenance lock, and dates Jul 29 to Aug 7
+- each day cell shows a compact availability expression such as "6 / 8", "0 / 4", or "缺1"; use restrained green for safe, amber for tight, red for shortage, gray hatch for maintenance
+- selecting the red "Pocket 3 缺1" cell opens a wide right-side shortage resolver
+- resolver shows the cause: two late returns, one inspection buffer, six confirmed rentals; below that show three replacement candidates with exact fictional SN, location, expected release time, condition, and explicit manual actions "替换设备", "调整订单", "标记外租"
+- bottom strip shows the selected model's serialized devices and miniature occupancy timelines, making physical stock distinct from bookable stock
+- a small top-right action counter shows 冲突4, 晚归3, 待确认5, but it must not dominate the screen
+
+Visual system:
+- neutral warm-gray background, white matrix, ink-black typography, deep navy-teal accents
+- high-density professional planning software, sharp alignment, thin grid lines, minimal elevation
+- 12-14px Chinese text and monospaced numeric cells, 4-8px radius
+- all visible text should be legible Simplified Chinese
+- no purple-led palette, no gradients, no glassmorphism, no radar charts, no decorative analytics
+- fictional data only and no personal information

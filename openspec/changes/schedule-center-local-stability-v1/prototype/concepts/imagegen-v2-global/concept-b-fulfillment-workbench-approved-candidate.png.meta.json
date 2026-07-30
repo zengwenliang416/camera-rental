@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "mode": "edit",
+  "endpoint": "https://api.pftrader.us/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x864",
+  "quality": "high",
+  "n": 1,
+  "background": null,
+  "output_format": "png",
+  "output_compression": null,
+  "moderation": null,
+  "response_format": null,
+  "response_kind": "b64_json",
+  "bytes": 1322346,
+  "image": {
+    "format": "png",
+    "width": 1672,
+    "height": 941
+  },
+  "out": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-b-fulfillment-workbench-approved-candidate.png",
+  "elapsed_ms": 99610,
+  "created": 1785311794,
+  "usage": {
+    "input_tokens": 1752,
+    "input_tokens_details": {
+      "image_tokens": 1508,
+      "text_tokens": 244
+    },
+    "output_tokens": 1158,
+    "output_tokens_details": {
+      "image_tokens": 1158,
+      "text_tokens": 0
+    },
+    "total_tokens": 2910
+  },
+  "input_images": [
+    {
+      "path": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-b-fulfillment-queue-final.png",
+      "bytes": 1395652,
+      "sha256": "208dd7da293b9cde754999ddb0c08855b3bf52962e19709225b963c65316a9f2",
+      "image": {
+        "format": "png",
+        "width": 1672,
+        "height": 941
+      }
+    }
+  ],
+  "mask": null,
+  "prompt_sha256": "67b46513b4c6b183e98464313b85cc5be0c59cf766e1dc30c7139a008bebd120",
+  "prompt_preview": "Edit this exact application screenshot and preserve the top header, four\noperational lanes, selected row, right verification drawer, navigation, colors,\nand typography.\n\nReplace only the lower dated calendar grid beside the selected camera ..."
+}

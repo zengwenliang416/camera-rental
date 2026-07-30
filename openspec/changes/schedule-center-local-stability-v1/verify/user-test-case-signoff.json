@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "change_id": "schedule-center-local-stability-v1",
+  "status": "approved",
+  "user_decision": "User explicitly approved all six generated verification cases on 2026-07-30.",
+  "approved_case_ids": [
+    "utc-admin-config-zero-compat",
+    "utc-scheduled-read-sync-integrity",
+    "utc-responsive-live-dashboard",
+    "utc-shipping-write-guard",
+    "utc-permission-tenant-secret-isolation",
+    "utc-theme-locale-keyboard"
+  ],
+  "rejected_case_ids": [],
+  "notes": [
+    "Approval was provided explicitly in the Codex task after the six cases were listed.",
+    "Real XianGuanJia write operations remain outside verification scope."
+  ]
+}

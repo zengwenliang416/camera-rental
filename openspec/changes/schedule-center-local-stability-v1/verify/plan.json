@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "change_id": "schedule-center-local-stability-v1",
+  "risk_tier": "standard",
+  "required_domains": [
+    "facticity",
+    "static",
+    "unit",
+    "redteam",
+    "e2e",
+    "sensory"
+  ],
+  "inputs": [
+    "requirements.md",
+    "acceptance.md",
+    "prototype/handoff.md",
+    "development/handoff-to-verify.md"
+  ],
+  "user_test_case_gate": {
+    "required": true,
+    "cases": "verify/user-test-cases.json",
+    "signoff": "verify/user-test-case-signoff.json",
+    "domain_matrix": "verify/domain-case-matrix.json"
+  },
+  "runtime_evidence_gate": {
+    "required": true,
+    "evidence": "verify/runtime-evidence.json",
+    "required_surfaces": [
+      "runtime",
+      "browser"
+    ],
+    "database_surface_required_when": "development/migrations/manifest.json required=true"
+  },
+  "changed_files": [
+    "camera-rental-admin/src/api/rental/xianyu.ts",
+    "camera-rental-admin/src/locales/en.ts",
+    "camera-rental-admin/src/locales/zh-CN.ts",
+    "camera-rental-admin/src/views/rental/xianyu",
+    "camera-rental-schedule-center/package.json",
+    "camera-rental-schedule-center/pnpm-lock.yaml",
+    "camera-rental-schedule-center/src",
+    "camera-rental-server/scripts",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-server/yudao-module-rental",
+    "camera-rental-server/yudao-server/src/main/resources",
+    "docs/domain/xianyu-integration.md",
+    "docs/integrations/xianyu",
+    "openspec/changes/schedule-center-local-stability-v1"
+  ],
+  "commands": [
+    "cd camera-rental-server && mvn -pl yudao-module-rental/yudao-module-rental-biz -am test",
+    "cd camera-rental-server && mvn -pl yudao-server -am package -DskipTests",
+    "cd camera-rental-admin && pnpm ts:check",
+    "cd camera-rental-admin && pnpm build:prod",
+    "cd camera-rental-schedule-center && pnpm test",
+    "cd camera-rental-schedule-center && pnpm lint",
+    "cd camera-rental-schedule-center && pnpm build",
+    "migration cmp and shasum -a 256",
+    "legacy configuration banned-pattern scan",
+    "local database schema and orphan-relation verification",
+    "responsive browser verification at 1440 and 390 CSS pixels",
+    "git diff --check"
+  ],
+  "manual_reviews": [
+    "sensory"
+  ]
+}

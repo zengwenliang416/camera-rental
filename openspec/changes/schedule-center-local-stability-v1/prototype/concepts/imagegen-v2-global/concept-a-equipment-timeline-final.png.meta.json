@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "mode": "edit",
+  "endpoint": "https://api.pftrader.us/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x864",
+  "quality": "high",
+  "n": 1,
+  "background": null,
+  "output_format": "png",
+  "output_compression": null,
+  "moderation": null,
+  "response_format": null,
+  "response_kind": "b64_json",
+  "bytes": 1299264,
+  "image": {
+    "format": "png",
+    "width": 1672,
+    "height": 941
+  },
+  "out": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-a-equipment-timeline-final.png",
+  "elapsed_ms": 186445,
+  "created": 1785311172,
+  "usage": {
+    "input_tokens": 1707,
+    "input_tokens_details": {
+      "image_tokens": 1508,
+      "text_tokens": 199
+    },
+    "output_tokens": 4632,
+    "output_tokens_details": {
+      "image_tokens": 4632,
+      "text_tokens": 0
+    },
+    "total_tokens": 6339
+  },
+  "input_images": [
+    {
+      "path": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-a-equipment-timeline.png",
+      "bytes": 1253584,
+      "sha256": "e5d015b061d9d54f906bfe31617b146dcef7c48213efd00516cfe198170e7d95",
+      "image": {
+        "format": "png",
+        "width": 1672,
+        "height": 941
+      }
+    }
+  ],
+  "mask": null,
+  "prompt_sha256": "23da03bb8b460c0d6df7416d8db4476489dfee82bfc8fe70cade06c1f619cadd",
+  "prompt_preview": "Edit this exact application screenshot. Preserve the full layout, components,\ncolors, typography, equipment rows, timeline bars, inspector, and all non-date\ncontent as closely as possible.\n\nCorrect only the visible date header labels to a r..."
+}

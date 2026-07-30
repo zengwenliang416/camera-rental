@@ -1,0 +1,1151 @@
+{
+  "schema": "specnav.verify.anchorReport.v1",
+  "change": "schedule-center-local-stability-v1",
+  "policy_present": false,
+  "enforcement": null,
+  "anchor_pattern": "@ai-anchor",
+  "diff_ok": true,
+  "scanned": [
+    {
+      "file": "camera-rental-admin/src/views/rental/xianyu/index.vue",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/App.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/api/auth.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/api/client.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/api/mappers.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/api/rental.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/components/DashboardView.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/components/DeviceDetailDrawer.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/components/DevicesView.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/components/ExceptionsView.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/components/GanttScheduleView.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/components/Header.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/components/LoginPage.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/components/OrderAllocationModal.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/components/OrdersView.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/components/QuickBindingModal.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/components/QuickBindingView.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/context/AppContext.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/lib/scheduleEngine.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/types.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuConfigController.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderController.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuConfigRespVO.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderRespVO.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuPendingShipOrderPageReqVO.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuPendingShipOrderRespVO.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuApplicationDO.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuApplicationMapper.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuOrderMapper.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuClientException.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuReadClient.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuWriteClient.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/config/XianyuConfiguration.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/config/XianyuProperties.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/security/XianyuWebhookSignatureVerifier.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderPersistenceServiceImpl.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuOrderWebhookService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuProductWebhookService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuPushRetryService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuAfterSaleSyncJob.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuChannelSyncScheduler.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuChannelSyncStartupRunner.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuInfraJobRegistrar.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuOrderSyncJob.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuProductSyncJob.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuPushRetryJob.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuShopSyncJob.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuConfigAdminService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderAdminService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuShopAdminService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/xianyu/XianyuChannelSyncService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-admin/src/views/rental/xianyu/components/XianyuConfigPanel.vue",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/api/snapshotLoader.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/app/AccountAndPreferenceMenu.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/app/IntegrationReadinessBadge.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/app/LocaleToggle.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/app/PreferenceChoice.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/app/ResponsiveWorkspaceNavigation.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/app/ScheduleCenterAppShell.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/app/ThemeToggle.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/app/accessModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/app/integrationModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/app/navigation.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/auth/UnifiedAdminLogin.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/auth/loginModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/commands/ScheduleCenterCommandsContext.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/commands/commandModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/dashboard/DashboardPage.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/dashboard/DashboardQueueCard.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/dashboard/dashboardModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/data/ScheduleCenterDataContext.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/data/dataModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/devices/DevicesPage.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/devices/components/DeviceCard.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/devices/components/DeviceDetailDrawer.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/devices/components/DeviceQrPanel.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/devices/deviceModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/devices/deviceQrModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/devices/useDeviceQr.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/exceptions/ExceptionsPage.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/exceptions/exceptionModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/orders/OrdersPage.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/orders/components/OrderCard.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/orders/orderModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/permissions/PermissionContext.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/permissions/permissionModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/preferences/PreferenceContext.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/preferences/messages.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/preferences/orderMessages.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/preferences/preferenceModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/schedule/SchedulePage.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/schedule/components/AllocationCandidatePicker.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/schedule/components/AllocationDialog.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/schedule/components/AllocationItemCard.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/schedule/components/ScheduleDeviceTable.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/schedule/components/ScheduleFilters.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/schedule/components/ScheduleStatusLegend.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/schedule/components/ScheduleTimeline.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/schedule/scheduleModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/session/SessionContext.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/session/sessionModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/shipping/components/DeviceSelectionPanel.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/shipping/components/OrderSelectionPanel.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/shipping/components/PanelHeader.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/shipping/components/ShipmentDocket.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/shipping/components/ShipmentHistory.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/shipping/components/ShippingOverview.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/shipping/components/ShippingWorkbench.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/shipping/components/WaybillPanel.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/shipping/shippingApi.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/shipping/shippingErrors.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/shipping/shippingMessages.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/shipping/shippingModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/shipping/useShippingWorkbench.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/workspace/ScheduleCenterProviders.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/workspace/WorkspaceContext.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/workspace/useQuickBindingWorkspace.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/features/workspace/workspaceModel.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/hooks/useLatestRequest.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/lib/safeError.ts",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/BillableOccupiedRangeLegend.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/ConfirmDialogShell.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/DateRangeDisplay.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/DetailDrawerShell.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/EmptyState.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/FeaturePageHeader.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/FilterToolbar.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/IdentifierText.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/OperationResultPanel.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/OperationalMetricCard.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/OperationalMetricGrid.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/PermissionAwareAction.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/ResponsiveDataList.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/RouteLoadingState.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/StatusBadge.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-schedule-center/src/shared/ui/SyncHealthBanner.tsx",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuConfigUpdateReqVO.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/config/XianyuRuntimeConfigService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuTenantJobGuard.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderRemarkReparseService.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    },
+    {
+      "file": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/xianyu/XianyuSyncLockKey.java",
+      "key_seam": false,
+      "anchors_found": 0,
+      "seam_refs": [],
+      "covered": false
+    }
+  ],
+  "coverage_ratio": 0,
+  "uncovered": [
+    "camera-rental-admin/src/views/rental/xianyu/index.vue",
+    "camera-rental-schedule-center/src/App.tsx",
+    "camera-rental-schedule-center/src/api/auth.ts",
+    "camera-rental-schedule-center/src/api/client.ts",
+    "camera-rental-schedule-center/src/api/mappers.ts",
+    "camera-rental-schedule-center/src/api/rental.ts",
+    "camera-rental-schedule-center/src/components/DashboardView.tsx",
+    "camera-rental-schedule-center/src/components/DeviceDetailDrawer.tsx",
+    "camera-rental-schedule-center/src/components/DevicesView.tsx",
+    "camera-rental-schedule-center/src/components/ExceptionsView.tsx",
+    "camera-rental-schedule-center/src/components/GanttScheduleView.tsx",
+    "camera-rental-schedule-center/src/components/Header.tsx",
+    "camera-rental-schedule-center/src/components/LoginPage.tsx",
+    "camera-rental-schedule-center/src/components/OrderAllocationModal.tsx",
+    "camera-rental-schedule-center/src/components/OrdersView.tsx",
+    "camera-rental-schedule-center/src/components/QuickBindingModal.tsx",
+    "camera-rental-schedule-center/src/components/QuickBindingView.tsx",
+    "camera-rental-schedule-center/src/context/AppContext.tsx",
+    "camera-rental-schedule-center/src/lib/scheduleEngine.ts",
+    "camera-rental-schedule-center/src/types.ts",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuConfigController.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderController.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuConfigRespVO.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderRespVO.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuPendingShipOrderPageReqVO.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuPendingShipOrderRespVO.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuApplicationDO.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuApplicationMapper.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuOrderMapper.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuClientException.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuReadClient.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuWriteClient.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/config/XianyuConfiguration.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/config/XianyuProperties.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/security/XianyuWebhookSignatureVerifier.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderPersistenceServiceImpl.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuOrderWebhookService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuProductWebhookService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuPushRetryService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuAfterSaleSyncJob.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuChannelSyncScheduler.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuChannelSyncStartupRunner.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuInfraJobRegistrar.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuOrderSyncJob.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuProductSyncJob.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuPushRetryJob.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuShopSyncJob.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuConfigAdminService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderAdminService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuShopAdminService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/xianyu/XianyuChannelSyncService.java",
+    "camera-rental-admin/src/views/rental/xianyu/components/XianyuConfigPanel.vue",
+    "camera-rental-schedule-center/src/api/snapshotLoader.ts",
+    "camera-rental-schedule-center/src/app/AccountAndPreferenceMenu.tsx",
+    "camera-rental-schedule-center/src/app/IntegrationReadinessBadge.tsx",
+    "camera-rental-schedule-center/src/app/LocaleToggle.tsx",
+    "camera-rental-schedule-center/src/app/PreferenceChoice.tsx",
+    "camera-rental-schedule-center/src/app/ResponsiveWorkspaceNavigation.tsx",
+    "camera-rental-schedule-center/src/app/ScheduleCenterAppShell.tsx",
+    "camera-rental-schedule-center/src/app/ThemeToggle.tsx",
+    "camera-rental-schedule-center/src/app/accessModel.ts",
+    "camera-rental-schedule-center/src/app/integrationModel.ts",
+    "camera-rental-schedule-center/src/app/navigation.ts",
+    "camera-rental-schedule-center/src/features/auth/UnifiedAdminLogin.tsx",
+    "camera-rental-schedule-center/src/features/auth/loginModel.ts",
+    "camera-rental-schedule-center/src/features/commands/ScheduleCenterCommandsContext.tsx",
+    "camera-rental-schedule-center/src/features/commands/commandModel.ts",
+    "camera-rental-schedule-center/src/features/dashboard/DashboardPage.tsx",
+    "camera-rental-schedule-center/src/features/dashboard/DashboardQueueCard.tsx",
+    "camera-rental-schedule-center/src/features/dashboard/dashboardModel.ts",
+    "camera-rental-schedule-center/src/features/data/ScheduleCenterDataContext.tsx",
+    "camera-rental-schedule-center/src/features/data/dataModel.ts",
+    "camera-rental-schedule-center/src/features/devices/DevicesPage.tsx",
+    "camera-rental-schedule-center/src/features/devices/components/DeviceCard.tsx",
+    "camera-rental-schedule-center/src/features/devices/components/DeviceDetailDrawer.tsx",
+    "camera-rental-schedule-center/src/features/devices/components/DeviceQrPanel.tsx",
+    "camera-rental-schedule-center/src/features/devices/deviceModel.ts",
+    "camera-rental-schedule-center/src/features/devices/deviceQrModel.ts",
+    "camera-rental-schedule-center/src/features/devices/useDeviceQr.ts",
+    "camera-rental-schedule-center/src/features/exceptions/ExceptionsPage.tsx",
+    "camera-rental-schedule-center/src/features/exceptions/exceptionModel.ts",
+    "camera-rental-schedule-center/src/features/orders/OrdersPage.tsx",
+    "camera-rental-schedule-center/src/features/orders/components/OrderCard.tsx",
+    "camera-rental-schedule-center/src/features/orders/orderModel.ts",
+    "camera-rental-schedule-center/src/features/permissions/PermissionContext.tsx",
+    "camera-rental-schedule-center/src/features/permissions/permissionModel.ts",
+    "camera-rental-schedule-center/src/features/preferences/PreferenceContext.tsx",
+    "camera-rental-schedule-center/src/features/preferences/messages.ts",
+    "camera-rental-schedule-center/src/features/preferences/orderMessages.ts",
+    "camera-rental-schedule-center/src/features/preferences/preferenceModel.ts",
+    "camera-rental-schedule-center/src/features/schedule/SchedulePage.tsx",
+    "camera-rental-schedule-center/src/features/schedule/components/AllocationCandidatePicker.tsx",
+    "camera-rental-schedule-center/src/features/schedule/components/AllocationDialog.tsx",
+    "camera-rental-schedule-center/src/features/schedule/components/AllocationItemCard.tsx",
+    "camera-rental-schedule-center/src/features/schedule/components/ScheduleDeviceTable.tsx",
+    "camera-rental-schedule-center/src/features/schedule/components/ScheduleFilters.tsx",
+    "camera-rental-schedule-center/src/features/schedule/components/ScheduleStatusLegend.tsx",
+    "camera-rental-schedule-center/src/features/schedule/components/ScheduleTimeline.tsx",
+    "camera-rental-schedule-center/src/features/schedule/scheduleModel.ts",
+    "camera-rental-schedule-center/src/features/session/SessionContext.tsx",
+    "camera-rental-schedule-center/src/features/session/sessionModel.ts",
+    "camera-rental-schedule-center/src/features/shipping/components/DeviceSelectionPanel.tsx",
+    "camera-rental-schedule-center/src/features/shipping/components/OrderSelectionPanel.tsx",
+    "camera-rental-schedule-center/src/features/shipping/components/PanelHeader.tsx",
+    "camera-rental-schedule-center/src/features/shipping/components/ShipmentDocket.tsx",
+    "camera-rental-schedule-center/src/features/shipping/components/ShipmentHistory.tsx",
+    "camera-rental-schedule-center/src/features/shipping/components/ShippingOverview.tsx",
+    "camera-rental-schedule-center/src/features/shipping/components/ShippingWorkbench.tsx",
+    "camera-rental-schedule-center/src/features/shipping/components/WaybillPanel.tsx",
+    "camera-rental-schedule-center/src/features/shipping/shippingApi.ts",
+    "camera-rental-schedule-center/src/features/shipping/shippingErrors.ts",
+    "camera-rental-schedule-center/src/features/shipping/shippingMessages.ts",
+    "camera-rental-schedule-center/src/features/shipping/shippingModel.ts",
+    "camera-rental-schedule-center/src/features/shipping/useShippingWorkbench.ts",
+    "camera-rental-schedule-center/src/features/workspace/ScheduleCenterProviders.tsx",
+    "camera-rental-schedule-center/src/features/workspace/WorkspaceContext.tsx",
+    "camera-rental-schedule-center/src/features/workspace/useQuickBindingWorkspace.ts",
+    "camera-rental-schedule-center/src/features/workspace/workspaceModel.ts",
+    "camera-rental-schedule-center/src/shared/hooks/useLatestRequest.ts",
+    "camera-rental-schedule-center/src/shared/lib/safeError.ts",
+    "camera-rental-schedule-center/src/shared/ui/BillableOccupiedRangeLegend.tsx",
+    "camera-rental-schedule-center/src/shared/ui/ConfirmDialogShell.tsx",
+    "camera-rental-schedule-center/src/shared/ui/DateRangeDisplay.tsx",
+    "camera-rental-schedule-center/src/shared/ui/DetailDrawerShell.tsx",
+    "camera-rental-schedule-center/src/shared/ui/EmptyState.tsx",
+    "camera-rental-schedule-center/src/shared/ui/FeaturePageHeader.tsx",
+    "camera-rental-schedule-center/src/shared/ui/FilterToolbar.tsx",
+    "camera-rental-schedule-center/src/shared/ui/IdentifierText.tsx",
+    "camera-rental-schedule-center/src/shared/ui/OperationResultPanel.tsx",
+    "camera-rental-schedule-center/src/shared/ui/OperationalMetricCard.tsx",
+    "camera-rental-schedule-center/src/shared/ui/OperationalMetricGrid.tsx",
+    "camera-rental-schedule-center/src/shared/ui/PermissionAwareAction.tsx",
+    "camera-rental-schedule-center/src/shared/ui/ResponsiveDataList.tsx",
+    "camera-rental-schedule-center/src/shared/ui/RouteLoadingState.tsx",
+    "camera-rental-schedule-center/src/shared/ui/StatusBadge.tsx",
+    "camera-rental-schedule-center/src/shared/ui/SyncHealthBanner.tsx",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuConfigUpdateReqVO.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/config/XianyuRuntimeConfigService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuTenantJobGuard.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderRemarkReparseService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/xianyu/XianyuSyncLockKey.java"
+  ],
+  "blockers": [],
+  "ok": true
+}

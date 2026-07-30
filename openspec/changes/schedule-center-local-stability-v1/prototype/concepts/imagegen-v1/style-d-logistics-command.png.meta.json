@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "mode": "edit",
+  "endpoint": "https://api.pftrader.us/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x864",
+  "quality": "high",
+  "n": 1,
+  "background": null,
+  "output_format": "png",
+  "output_compression": null,
+  "moderation": null,
+  "response_format": null,
+  "response_kind": "b64_json",
+  "bytes": 1441755,
+  "image": {
+    "format": "png",
+    "width": 1672,
+    "height": 941
+  },
+  "out": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v1/style-d-logistics-command.png",
+  "elapsed_ms": 191727,
+  "created": 1785309530,
+  "usage": {
+    "input_tokens": 1465,
+    "input_tokens_details": {
+      "image_tokens": 1305,
+      "text_tokens": 160
+    },
+    "output_tokens": 4632,
+    "output_tokens_details": {
+      "image_tokens": 4632,
+      "text_tokens": 0
+    },
+    "total_tokens": 6097
+  },
+  "input_images": [
+    {
+      "path": "openspec/changes/schedule-center-local-stability-v1/prototype/evidence/prototype-v3-dashboard-1440-final.png",
+      "bytes": 105962,
+      "sha256": "c1eeefe0befb20df78341e7c224a20ee8b3e140278d6b816fbc75bee2ce9823b",
+      "image": {
+        "format": "jpeg",
+        "width": 1440,
+        "height": 900
+      }
+    }
+  ],
+  "mask": null,
+  "prompt_sha256": "f45582b3968f0f5675d1649cddbea121d68866807a76c224c5c9ccac597e9935",
+  "prompt_preview": "Redesign this exact Chinese camera-rental scheduling dashboard as STYLE D: modern logistics command deck. Preserve the same business modules and desktop app shell but reorganize them into an operational flow from incoming orders to device a..."
+}

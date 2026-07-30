@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "mode": "edit",
+  "endpoint": "https://api.pftrader.us/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x864",
+  "quality": "high",
+  "n": 1,
+  "background": null,
+  "output_format": "png",
+  "output_compression": null,
+  "moderation": null,
+  "response_format": null,
+  "response_kind": "b64_json",
+  "bytes": 1191771,
+  "image": {
+    "format": "png",
+    "width": 1672,
+    "height": 941
+  },
+  "out": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v1/style-c-japanese-precision.png",
+  "elapsed_ms": 161627,
+  "created": 1785309499,
+  "usage": {
+    "input_tokens": 1464,
+    "input_tokens_details": {
+      "image_tokens": 1305,
+      "text_tokens": 159
+    },
+    "output_tokens": 4632,
+    "output_tokens_details": {
+      "image_tokens": 4632,
+      "text_tokens": 0
+    },
+    "total_tokens": 6096
+  },
+  "input_images": [
+    {
+      "path": "openspec/changes/schedule-center-local-stability-v1/prototype/evidence/prototype-v3-dashboard-1440-final.png",
+      "bytes": 105962,
+      "sha256": "c1eeefe0befb20df78341e7c224a20ee8b3e140278d6b816fbc75bee2ce9823b",
+      "image": {
+        "format": "jpeg",
+        "width": 1440,
+        "height": 900
+      }
+    }
+  ],
+  "mask": null,
+  "prompt_sha256": "9ccc68b70bfb5e94b82f7131336623002650caf304db0d3df5ac00b7e95417e1",
+  "prompt_preview": "Redesign this exact Chinese camera-rental scheduling dashboard as STYLE C: Japanese precision operations workspace. Preserve the same application shell and core data modules. Use clean off-white paper-like canvas, black ink typography, mute..."
+}

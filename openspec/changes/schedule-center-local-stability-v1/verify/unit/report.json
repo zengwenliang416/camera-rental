@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "domain": "unit",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/unit/test-map.json",
+    "verify/unit/test-quality-rubric.json",
+    "verify/unit/coverage-notes.md",
+    "development/validation-log.jsonl"
+  ],
+  "commands": [
+    "cd camera-rental-server && mvn -pl yudao-module-rental/yudao-module-rental-biz -am test",
+    "cd camera-rental-schedule-center && pnpm test",
+    "2026-07-30 rerun: cd camera-rental-schedule-center && pnpm test"
+  ],
+  "findings": [
+    "257 backend rental-module tests passed.",
+    "77 schedule-center tests passed.",
+    "Order tests cover complete receiver-field search, masked/shared mapping separation, page clamping, and bounded rendering.",
+    "All approved cases have behavior-facing regression coverage.",
+    "The post-layout-fix schedule-center rerun passed all 77 tests with no regressions."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "No production third-party shipment mutation was executed."
+  ],
+  "blocker_class": null
+}

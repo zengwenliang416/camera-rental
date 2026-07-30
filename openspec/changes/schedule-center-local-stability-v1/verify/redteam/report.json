@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "domain": "redteam",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/redteam/threat-model.md",
+    "verify/redteam/probes.jsonl",
+    "verify/root-cause-checks.jsonl",
+    "runs/schedule-center-verification-20260730/database-verification.json",
+    "runs/schedule-center-verification-20260730/orders-pagination-verification.json"
+  ],
+  "commands": [
+    "focused permission, tenant, secret, duplicate, and stale-state tests",
+    "legacy configuration and secret-path scans",
+    "authorized browser privacy-state and page-bounded order review",
+    "read-only database relation probes",
+    "2026-07-30 browser console, accessible-name, and privacy-safe visual rerun"
+  ],
+  "findings": [
+    "Non-destructive adversarial probes passed.",
+    "No unresolved security or resilience blocker remains.",
+    "Complete delivery data is limited to the authorized order surface while shared snapshot fields remain masked.",
+    "Verification retained only counts and booleans; no customer values or sensitive screenshots were persisted.",
+    "Real write operations stayed disabled.",
+    "The layout rerun found zero unnamed visible buttons and retained no screenshot containing customer details."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "Remote production shipment mutation behavior requires separately authorized operations verification."
+  ],
+  "blocker_class": null
+}

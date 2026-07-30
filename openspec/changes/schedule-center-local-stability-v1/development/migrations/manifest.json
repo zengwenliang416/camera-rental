@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "change_id": "schedule-center-local-stability-v1",
+  "required": true,
+  "status": "ready",
+  "migrations": [
+    {
+      "id": "20260729_029_xianyu_admin_managed_config",
+      "kind": "ddl",
+      "order": 29,
+      "path": "development/migrations/20260729_029_xianyu_admin_managed_config.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260729_029_xianyu_admin_managed_config.sql",
+      "sha256": "a2e246aa60d2affd5cfb846a13fbe8d6692b906d9525a1152fe3cc9a9476099a"
+    },
+    {
+      "id": "20260730_030_xianyu_remove_legacy_credential_reference",
+      "kind": "ddl",
+      "order": 30,
+      "path": "development/migrations/20260730_030_xianyu_remove_legacy_credential_reference.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260730_030_xianyu_remove_legacy_credential_reference.sql",
+      "sha256": "e614353a738e11ca9bdfd665658a28445c742b1351fc72b56289ec6d17fccdac"
+    },
+    {
+      "id": "20260730_031_xianyu_disable_unconfigured_applications",
+      "kind": "data",
+      "order": 31,
+      "path": "development/migrations/20260730_031_xianyu_disable_unconfigured_applications.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260730_031_xianyu_disable_unconfigured_applications.sql",
+      "sha256": "44d1d5826e6bfbf5b22bdbbaff55df7ae8f5f2e9c6c0f88ab830f5bb5b03a1b5"
+    }
+  ],
+  "rollback": [],
+  "rollback_strategy": "Application rollback is not supported after migration 030 because the legacy credential_reference contract is intentionally removed. Restore the pre-migration database backup and the matching old application together if a full rollback is required.",
+  "verification": {
+    "commands": [
+      "cmp camera-rental-server/sql/mysql/migrations/20260729_029_xianyu_admin_managed_config.sql openspec/changes/schedule-center-local-stability-v1/development/migrations/20260729_029_xianyu_admin_managed_config.sql",
+      "cmp camera-rental-server/sql/mysql/migrations/20260730_030_xianyu_remove_legacy_credential_reference.sql openspec/changes/schedule-center-local-stability-v1/development/migrations/20260730_030_xianyu_remove_legacy_credential_reference.sql",
+      "cmp camera-rental-server/sql/mysql/migrations/20260730_031_xianyu_disable_unconfigured_applications.sql openspec/changes/schedule-center-local-stability-v1/development/migrations/20260730_031_xianyu_disable_unconfigured_applications.sql",
+      "shasum -a 256 camera-rental-server/sql/mysql/migrations/20260729_029_xianyu_admin_managed_config.sql",
+      "shasum -a 256 camera-rental-server/sql/mysql/migrations/20260730_030_xianyu_remove_legacy_credential_reference.sql",
+      "shasum -a 256 camera-rental-server/sql/mysql/migrations/20260730_031_xianyu_disable_unconfigured_applications.sql",
+      "cd camera-rental-server && mvn -pl yudao-module-rental/yudao-module-rental-biz -am test",
+      "cd camera-rental-admin && pnpm ts:check",
+      "git diff --check"
+    ],
+    "evidence": [
+      "Migration 029 adds tenant-managed integration fields, a unique AppKey index, and the configuration-update permission.",
+      "Migration 030 physically removes the legacy credential_reference column; there is no database or runtime compatibility path.",
+      "Migration 031 disables integration, writes, and jobs for every application row without both persisted credentials.",
+      "No environment value or secret is copied into the database by the migration."
+    ]
+  },
+  "notes": [
+    "Production-path SQL files are the executable deployment source; development copies are exact audit copies.",
+    "Apply migrations in order 029, 030, 031 after taking a database backup.",
+    "AppSecret values are encrypted by the existing MyBatis EncryptTypeHandler and generic infrastructure encryption key."
+  ]
+}

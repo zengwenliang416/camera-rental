@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "change_id": "schedule-center-local-stability-v1",
+  "flows": [
+    {
+      "id": "e2e-admin-config",
+      "case_ids": ["utc-admin-config-zero-compat"],
+      "status": "pass",
+      "steps": [
+        "Open the local tenant administration XianGuanJia configuration page.",
+        "Inspect enabled, endpoint, masked AppKey, blank AppSecret replacement input, write switch, job switch, and synchronization settings.",
+        "Confirm the backend runtime remains functional without XGJ business environment variables."
+      ],
+      "evidence_refs": [
+        "runs/schedule-center-verification-20260730/admin-xianyu-config.png",
+        "runs/schedule-center-verification-20260730/admin-xianyu-config-dom.txt",
+        "runs/schedule-center-verification-20260730/database-verification.json"
+      ]
+    },
+    {
+      "id": "e2e-scheduled-read-integrity",
+      "case_ids": ["utc-scheduled-read-sync-integrity"],
+      "status": "pass",
+      "steps": [
+        "Use the running local backend with database-backed tenant configuration.",
+        "Inspect synchronized table counts and application switch state.",
+        "Run 27 read-only schema, tenant, and relation queries."
+      ],
+      "evidence_refs": [
+        "runs/schedule-center-verification-20260730/database-verification.json",
+        "development/validation-log.jsonl"
+      ]
+    },
+    {
+      "id": "e2e-responsive-routes",
+      "case_ids": ["utc-responsive-live-dashboard", "utc-theme-locale-keyboard"],
+      "status": "pass",
+      "steps": [
+        "Load Today, Schedule, Rental orders, Device ledger, Shipping, and Exceptions.",
+        "Repeat at 360, 390, 768, and 1440 CSS pixel widths.",
+        "Check document overflow and unnamed interactive controls."
+      ],
+      "evidence_refs": [
+        "runs/schedule-center-verification-20260730/responsive-360.json",
+        "runs/schedule-center-verification-20260730/responsive-390.json",
+        "runs/schedule-center-verification-20260730/responsive-768.json",
+        "runs/schedule-center-verification-20260730/responsive-1440.json"
+      ]
+    },
+    {
+      "id": "e2e-shipping-review",
+      "case_ids": ["utc-shipping-write-guard", "utc-permission-tenant-secret-isolation"],
+      "status": "pass",
+      "steps": [
+        "Search an available device by SN.",
+        "Search pending orders independently by receiver name, full phone, and order number.",
+        "Verify authorized results include full verification fields.",
+        "Clear all searches and inspect URL, DOM, final screenshots, write-disabled reason, and no-optimistic-update copy."
+      ],
+      "evidence_refs": [
+        "runs/schedule-center-verification-20260730/shipping-search-verification.json",
+        "runs/schedule-center-verification-20260730/shipping-gate-verification.json",
+        "runs/schedule-center-verification-20260730/shipping-1440-latest.png",
+        "runs/schedule-center-verification-20260730/shipping-390-latest.png"
+      ]
+    },
+    {
+      "id": "e2e-preferences-focus-console",
+      "case_ids": ["utc-theme-locale-keyboard"],
+      "status": "pass",
+      "steps": [
+        "Switch to light theme and zh-CN locale.",
+        "Reload and verify both preferences persist.",
+        "Restore dark theme and English.",
+        "Open the account menu, dismiss with Escape, and verify trigger focus restoration.",
+        "Inspect the latest browser console."
+      ],
+      "evidence_refs": [
+        "runs/schedule-center-verification-20260730/preference-focus-verification.json",
+        "runs/schedule-center-verification-20260730/browser-console-latest.json"
+      ]
+    },
+    {
+      "id": "e2e-authorized-order-pagination",
+      "case_ids": [
+        "utc-responsive-live-dashboard",
+        "utc-permission-tenant-secret-isolation"
+      ],
+      "status": "pass",
+      "steps": [
+        "Open the authenticated local rental-orders page after the management snapshot loads.",
+        "Verify the first and second pages render 10 cards and expose previous/next state correctly.",
+        "Verify complete receiver name, phone, and address labels are present without masked card text.",
+        "Search independently by receiver name, phone, and address and verify each match resets to page one.",
+        "Repeat the bounded list and overflow checks at desktop and 390 CSS pixel widths without retaining customer values."
+      ],
+      "evidence_refs": [
+        "runs/schedule-center-verification-20260730/orders-pagination-verification.json",
+        "camera-rental-schedule-center/src/features/orders/orderModel.test.ts",
+        "camera-rental-schedule-center/src/api/mappers.test.ts"
+      ]
+    }
+  ],
+  "excluded_operations": [
+    "Real XianGuanJia shipment mutation",
+    "Production write-switch enablement",
+    "Deployment, commit, and push"
+  ]
+}

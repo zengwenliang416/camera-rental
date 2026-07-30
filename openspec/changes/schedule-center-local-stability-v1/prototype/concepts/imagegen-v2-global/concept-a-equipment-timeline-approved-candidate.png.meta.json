@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "mode": "edit",
+  "endpoint": "https://api.pftrader.us/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x864",
+  "quality": "high",
+  "n": 1,
+  "background": null,
+  "output_format": "png",
+  "output_compression": null,
+  "moderation": null,
+  "response_format": null,
+  "response_kind": "b64_json",
+  "bytes": 1322361,
+  "image": {
+    "format": "png",
+    "width": 1672,
+    "height": 941
+  },
+  "out": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-a-equipment-timeline-approved-candidate.png",
+  "elapsed_ms": 192465,
+  "created": 1785311510,
+  "usage": {
+    "input_tokens": 1679,
+    "input_tokens_details": {
+      "image_tokens": 1508,
+      "text_tokens": 171
+    },
+    "output_tokens": 4632,
+    "output_tokens_details": {
+      "image_tokens": 4632,
+      "text_tokens": 0
+    },
+    "total_tokens": 6311
+  },
+  "input_images": [
+    {
+      "path": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-a-equipment-timeline-final.png",
+      "bytes": 1299264,
+      "sha256": "3729c9896f59a503b032f7edd56916e08e63f0b103b0d0ef7d9a30b2d9597d59",
+      "image": {
+        "format": "png",
+        "width": 1672,
+        "height": 941
+      }
+    }
+  ],
+  "mask": null,
+  "prompt_sha256": "32876ebe983605b1898ad678c1406de99a86e5a30ab361258c5507c73881c0f0",
+  "prompt_preview": "Edit this exact application screenshot and preserve every layout and visual\ndetail. Change only the dates inside the bottom-right order inspector and its\nsmall event timeline.\n\nReplace every 2025 date with the corresponding 2026 date:\n- ren..."
+}

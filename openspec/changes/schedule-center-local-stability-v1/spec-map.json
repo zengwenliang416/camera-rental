@@ -1,0 +1,144 @@
+{
+  "touched_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "schedule-center-all-existing-routes-and-overlays",
+    "semantic-design-tokens-only",
+    "desktop-compact-header",
+    "tablet-mobile-responsive-navigation",
+    "no-page-horizontal-overflow-from-360px",
+    "internal-scroller-or-responsive-alternative-for-dense-data",
+    "one-primary-action-per-task-region",
+    "billable-and-occupied-ranges-distinguished",
+    "status-never-color-only",
+    "complete-customer-fields-only-on-authorized-management-surfaces",
+    "safe-localized-errors-no-raw-transport-message",
+    "loading-empty-partial-error-permission-conflict-disabled-success-states",
+    "minimum-44px-compact-touch-targets",
+    "visible-keyboard-focus-and-overlay-focus-management",
+    "reduced-motion-supported",
+    "desktop-tablet-mobile-sensory-matrix"
+  ],
+  "architecture_modules": [
+    "camera-rental-schedule-center/src/app",
+    "camera-rental-schedule-center/src/features/dashboard",
+    "camera-rental-schedule-center/src/features/schedule",
+    "camera-rental-schedule-center/src/features/orders",
+    "camera-rental-schedule-center/src/features/devices",
+    "camera-rental-schedule-center/src/features/shipping",
+    "camera-rental-schedule-center/src/features/exceptions",
+    "camera-rental-schedule-center/src/features/auth",
+    "camera-rental-schedule-center/src/features/preferences",
+    "camera-rental-schedule-center/src/shared/ui",
+    "camera-rental-schedule-center/src/shared/hooks",
+    "camera-rental-schedule-center/src/shared/lib",
+    "camera-rental-schedule-center/src/domain",
+    "camera-rental-schedule-center/src/api",
+    "camera-rental-admin/src/views/rental/xianyu",
+    "camera-rental-admin/src/api/rental/xianyu.ts",
+    "rental/xianyu/runtime-config",
+    "rental/xianyu/read-write-clients",
+    "rental/xianyu/webhook-verification",
+    "rental/xianyu/tenant-jobs"
+  ],
+  "api_contracts": [
+    "POST /admin-api/system/auth/login",
+    "POST /admin-api/system/auth/logout",
+    "GET /admin-api/system/auth/get-permission-info",
+    "GET /admin-api/rental/xianyu/config/get",
+    "PUT /admin-api/rental/xianyu/config/update",
+    "GET /admin-api/rental/xianyu/express-company/list",
+    "GET /admin-api/rental/device/page",
+    "GET /admin-api/rental/schedule/page",
+    "GET /admin-api/rental/xianyu/order/page",
+    "GET /admin-api/rental/xianyu/order/pending-ship/page",
+    "GET /admin-api/rental/manual-review/page",
+    "POST /admin-api/rental/device/resolve-qr",
+    "GET /admin-api/rental/device/get-qr",
+    "POST /admin-api/rental/xianyu/order/ship/ocr",
+    "POST /admin-api/rental/xianyu/order/ship",
+    "POST /admin-api/rental/device/assign",
+    "POST /admin-api/rental/device/dispatch",
+    "POST /admin-api/rental/device/return",
+    "PUT /admin-api/rental/manual-review/resolve",
+    "PUT /admin-api/rental/manual-review/close"
+  ],
+  "database_entities": [
+    "xianyu_application:tenant-managed-encrypted-integration-config",
+    "xianyu_order:existing-receiver-snapshot-columns",
+    "read-only:rental_device",
+    "read-only:rental_schedule",
+    "read-only:rental_channel_order",
+    "read-only:rental_manual_review"
+  ],
+  "permissions": [
+    "preserve:rental:schedule-center:access",
+    "preserve:rental:device:*",
+    "preserve:rental:schedule:*",
+    "preserve:rental:xianyu:*",
+    "add:rental:xianyu:config:update",
+    "preserve:rental:review:*",
+    "backend-permission-remains-authoritative",
+    "permission-aware-action-presentation"
+  ],
+  "operational_constraints": [
+    "additive-xianyu-application-config-migration",
+    "app-secret-encrypted-at-rest-and-never-returned",
+    "xianyu-business-config-admin-managed",
+    "database-encryption-master-key-remains-infrastructure-only",
+    "preserve-admin-schedule-center-base-path",
+    "preserve-existing-auth-tenant-storage",
+    "server-state-authoritative",
+    "no-optimistic-business-mutations",
+    "read-cancellation-or-stale-result-suppression",
+    "safe-localized-error-mapping",
+    "waybill-device-order-confirm-ship-sequence",
+    "ocr-is-review-draft-not-automatic-dispatch",
+    "no-production-ts-tsx-css-file-over-600-lines",
+    "new-or-refactored-file-target-under-300-lines",
+    "responsibility-review-at-450-lines",
+    "feature-and-heavy-capability-lazy-loading",
+    "current-dependencies-and-bun-lock-preserved",
+    "no-private-data-or-raw-errors-in-ui-logs-fixtures",
+    "no-second-browser-source-of-truth",
+    "bun-lint-test-build-required"
+  ],
+  "data_flows": [
+    "FLOW-SCHEDULE-CENTER-SESSION-BOOTSTRAP",
+    "FLOW-SCHEDULE-CENTER-PERMISSION-BOOTSTRAP",
+    "FLOW-SCHEDULE-CENTER-DASHBOARD-QUERY",
+    "FLOW-DEVICE-ASSIGNMENT",
+    "FLOW-SCHEDULE-CENTER-GANTT-QUERY",
+    "FLOW-SCHEDULE-CENTER-ORDER-QUERY",
+    "FLOW-SCHEDULE-CENTER-DEVICE-QUERY",
+    "FLOW-SCHEDULE-CENTER-SHIPMENT-REVIEW",
+    "FLOW-DEVICE-HANDOVER",
+    "FLOW-SCHEDULE-CENTER-MANUAL-REVIEW",
+    "FLOW-SCHEDULE-CENTER-SYNC-RETRY",
+    "FLOW-SCHEDULE-CENTER-PREFERENCE-PERSISTENCE"
+    ,"FLOW-XIANYU-ADMIN-CONFIG-UPDATE"
+    ,"FLOW-XIANYU-DYNAMIC-CLIENT-CONFIG"
+    ,"FLOW-XIANYU-WEBHOOK-TENANT-RESOLUTION"
+    ,"FLOW-XIANYU-TENANT-JOB-EXECUTION"
+  ],
+  "theme_modes": [
+    "light-dark",
+    "system-as-initial-preference-only",
+    "theme-toggle:user",
+    "theme-preference:persisted"
+  ],
+  "locale_policy": [
+    "i18n:enabled",
+    "locales:zh-CN,en",
+    "default-locale:zh-CN",
+    "fallback-locale:zh-CN",
+    "locale-toggle:user",
+    "locale-preference:persisted"
+  ],
+  "unresolved_gaps": [
+  ]
+}

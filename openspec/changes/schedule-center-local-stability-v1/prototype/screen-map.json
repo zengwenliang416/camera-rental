@@ -1,0 +1,325 @@
+{
+  "variant": "integrated-rental-operations-v6-outbound-command-center",
+  "screens": [
+    {
+      "id": "login",
+      "label": "统一管理端登录",
+      "requirements": [
+        "requirements.md#In Scope",
+        "requirements.md#System Criteria"
+      ],
+      "acceptance": [
+        "acceptance.md#User-Visible Criteria",
+        "acceptance.md#System Criteria"
+      ],
+      "components": [
+        "UnifiedAdminLogin",
+        "LoginMethodSelector",
+        "TenantCredentialForm",
+        "AuthenticationSafetyNotice"
+      ],
+      "data_flows": [
+        "FLOW-SCHEDULE-CENTER-SESSION-BOOTSTRAP"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#project_shell"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-schedule-center/src/components/LoginPage.tsx",
+        "camera-rental-schedule-center/src/api/client.ts"
+      ]
+    },
+    {
+      "id": "workbench",
+      "label": "今日交接工作台",
+      "concept_source": "concept-b-top-navigation.png",
+      "requirements": [
+        "requirements.md#In Scope",
+        "requirements.md#UI Design Impact"
+      ],
+      "acceptance": [
+        "acceptance.md#User-Visible Criteria",
+        "acceptance.md#System Criteria"
+      ],
+      "components": [
+        "ScheduleCenterAppShell",
+        "OperationalScopeBar",
+        "ResponsiveWorkspaceNavigation",
+        "OperationLaneBoard",
+        "ShipmentConfirmationPanel",
+        "DeviceLifecycleStrip"
+      ],
+      "data_flows": [
+        "FLOW-SCHEDULE-CENTER-SESSION-BOOTSTRAP",
+        "FLOW-SCHEDULE-CENTER-DASHBOARD-QUERY",
+        "FLOW-SCHEDULE-CENTER-SHIPMENT-REVIEW"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#project_shell",
+        "concepts/imagegen-v2-global/concept-b-top-navigation.png"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-schedule-center/src/app/ScheduleCenterAppShell.tsx",
+        "camera-rental-schedule-center/src/features/dashboard/DashboardPage.tsx"
+      ]
+    },
+    {
+      "id": "gantt-schedule",
+      "label": "独立设备排期",
+      "concept_source": "concept-a-light-navigation.png",
+      "requirements": [
+        "requirements.md#In Scope",
+        "requirements.md#Frontend-Backend Data Flow Impact"
+      ],
+      "acceptance": [
+        "acceptance.md#User-Visible Criteria",
+        "acceptance.md#Component Criteria"
+      ],
+      "components": [
+        "FilterToolbar",
+        "PhysicalDeviceTimeline",
+        "BillableOccupiedRangeLegend",
+        "ScheduleActionRail"
+      ],
+      "data_flows": [
+        "FLOW-SCHEDULE-CENTER-GANTT-QUERY",
+        "FLOW-DEVICE-ASSIGNMENT"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#business_surface",
+        "concepts/imagegen-v2-global/concept-a-light-navigation.png"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-schedule-center/src/features/schedule/SchedulePage.tsx"
+      ]
+    },
+    {
+      "id": "availability",
+      "label": "库存可用性与短缺处理",
+      "concept_source": "concept-c-availability-matrix-final.png",
+      "requirements": [
+        "requirements.md#In Scope",
+        "requirements.md#Frontend-Backend Data Flow Impact"
+      ],
+      "acceptance": [
+        "acceptance.md#User-Visible Criteria",
+        "acceptance.md#Data Criteria"
+      ],
+      "components": [
+        "ModelAvailabilityMatrix",
+        "ShortageResolutionPanel",
+        "PhysicalSerialTimeline"
+      ],
+      "data_flows": [
+        "FLOW-SCHEDULE-CENTER-DEVICE-QUERY",
+        "FLOW-DEVICE-ASSIGNMENT"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#business_surface",
+        "concepts/imagegen-v2-global/concept-c-availability-matrix-final.png"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-schedule-center/src/features/availability/AvailabilityPage.tsx"
+      ]
+    },
+    {
+      "id": "rental-orders",
+      "label": "租赁订单",
+      "requirements": [
+        "requirements.md#In Scope"
+      ],
+      "acceptance": [
+        "acceptance.md#User-Visible Criteria",
+        "acceptance.md#Data Criteria"
+      ],
+      "components": [
+        "FilterToolbar",
+        "ResponsiveDataList",
+        "StatusBadge",
+        "DetailDrawerShell"
+      ],
+      "data_flows": [
+        "FLOW-SCHEDULE-CENTER-ORDER-QUERY"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#business_surface"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-schedule-center/src/features/orders/OrdersPage.tsx"
+      ]
+    },
+    {
+      "id": "device-ledger",
+      "label": "设备台账与维保",
+      "requirements": [
+        "requirements.md#In Scope"
+      ],
+      "acceptance": [
+        "acceptance.md#User-Visible Criteria",
+        "acceptance.md#Component Criteria"
+      ],
+      "components": [
+        "PhysicalDeviceCardGrid",
+        "DeviceImportFieldModel",
+        "RegisteredInventoryBoundary",
+        "IdentifierText",
+        "DeviceQrPanel",
+        "DetailDrawerShell"
+      ],
+      "data_flows": [
+        "FLOW-SCHEDULE-CENTER-DEVICE-QUERY",
+        "FLOW-DEVICE-HANDOVER"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#business_surface"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-schedule-center/src/features/devices/DevicesPage.tsx"
+      ]
+    },
+    {
+      "id": "shipping-workbench",
+      "label": "设备发货与交接",
+      "requirements": [
+        "requirements.md#In Scope",
+        "requirements.md#Frontend-Backend Data Flow Impact"
+      ],
+      "acceptance": [
+        "acceptance.md#User-Visible Criteria",
+        "acceptance.md#System Criteria"
+      ],
+      "components": [
+        "ShippingWorkflowStepper",
+        "WaybillReviewPanel",
+        "DeviceSelectionPanel",
+        "DeviceIdentitySearch",
+        "PendingOrderSelectionPanel",
+        "AuthorizedOrderIdentitySearch",
+        "CompleteOrderResultSchema",
+        "ShipmentConfirmationPanel"
+      ],
+      "data_flows": [
+        "FLOW-SCHEDULE-CENTER-SHIPMENT-REVIEW",
+        "FLOW-DEVICE-HANDOVER"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#business_surface"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-schedule-center/src/features/shipping/ShippingPage.tsx"
+      ]
+    },
+    {
+      "id": "exceptions",
+      "label": "异常与告警",
+      "requirements": [
+        "requirements.md#In Scope"
+      ],
+      "acceptance": [
+        "acceptance.md#User-Visible Criteria",
+        "acceptance.md#Data Criteria"
+      ],
+      "components": [
+        "ResponsiveDataList",
+        "StatusBadge",
+        "PermissionAwareAction",
+        "DetailDrawerShell"
+      ],
+      "data_flows": [
+        "FLOW-SCHEDULE-CENTER-MANUAL-REVIEW"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#business_surface"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-schedule-center/src/features/exceptions/ExceptionsPage.tsx"
+      ]
+    }
+  ],
+  "shared_variants": [
+    "populated",
+    "loading",
+    "empty",
+    "error",
+    "disabled",
+    "permission",
+    "light",
+    "dark",
+    "zh-CN",
+    "en",
+    "desktop",
+    "tablet",
+    "mobile"
+  ],
+  "shared_requirements": [
+    "requirements.md#In Scope",
+    "requirements.md#UI Design Impact",
+    "requirements.md#Frontend-Backend Data Flow Impact",
+    "acceptance.md#User-Visible Criteria",
+    "acceptance.md#System Criteria"
+  ]
+}

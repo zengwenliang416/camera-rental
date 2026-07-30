@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2312364b'/%3E%3Cpath d='M7 7h7v7H7zm11 0h7v7h-7zM7 18h7v7H7zm11 0h7v7h-7z' fill='white'/%3E%3C/svg%3E" />
+    <title>设备排期中心 · 租赁运营工作台</title>
+    <link rel="stylesheet" href="./styles/tokens.css" />
+    <link rel="stylesheet" href="./styles/shell.css" />
+    <link rel="stylesheet" href="./styles/components.css" />
+    <link rel="stylesheet" href="./styles/workbench.css" />
+    <link rel="stylesheet" href="./styles/schedule.css" />
+    <link rel="stylesheet" href="./styles/availability.css" />
+    <link rel="stylesheet" href="./styles/records.css" />
+    <link rel="stylesheet" href="./styles/production-data.css" />
+    <link rel="stylesheet" href="./styles/shipping-shell.css" />
+    <link rel="stylesheet" href="./styles/shipping-operations.css" />
+    <link rel="stylesheet" href="./styles/shipping-review.css" />
+    <link rel="stylesheet" href="./styles/shipping-responsive.css" />
+    <link rel="stylesheet" href="./styles/login.css" />
+    <link rel="stylesheet" href="./styles/responsive.css" />
+    <link rel="stylesheet" href="./styles/responsive-mobile.css" />
+  </head>
+  <body>
+    <div
+      class="app-shell"
+      data-specnav-project-shell="camera-rental-schedule-center"
+      data-specnav-variant="integrated-rental-operations-v6-outbound-command-center"
+      data-specnav-state="populated"
+    >
+      <header class="utility-header" data-specnav-component="ScheduleCenterAppShell">
+        <button class="brand-button" data-screen-target="workbench" aria-label="返回今日工作台">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span><strong data-i18n="brand">设备排期中心</strong><small>RENTAL OPS</small></span>
+        </button>
+        <div class="scope-controls" data-specnav-component="OperationalScopeBar">
+          <button class="scope-chip"><span>⌂</span><b data-i18n="warehouse">全部已建档设备</b><i>⌄</i></button>
+          <button class="scope-chip"><span>▣</span><b data-i18n="today">今天 2026-07-29 周三</b><i>⌄</i></button>
+          <button class="scope-chip hide-compact"><b data-i18n="category">相机设备</b><i>⌄</i></button>
+          <button class="scope-chip hide-tablet"><b data-i18n="shift">早班 08:00-16:00</b><i>⌄</i></button>
+        </div>
+        <button class="global-search" data-prototype-action="search">
+          <span>⌕</span><span data-i18n="search">搜索订单、SN、客户或运单号</span><kbd>⌘ K</kbd>
+        </button>
+        <div class="utility-actions">
+          <span class="sync-state"><i></i><span data-i18n="synced">脱敏快照：17:12</span></span>
+          <button class="icon-button" data-prototype-action="sync" aria-label="重新同步">↻</button>
+          <button class="tenant-button hide-compact"><span>捷</span><b data-i18n="tenant">捷租达</b><i>⌄</i></button>
+          <button class="write-state"><i></i><span data-i18n="writeEnabled">写入由服务端控制</span></button>
+          <button class="icon-button" data-specnav-theme-control data-theme-toggle aria-label="切换主题">◐</button>
+          <button class="locale-button" data-specnav-locale-control data-locale-toggle>EN</button>
+        </div>
+      </header>
+
+      <nav class="module-nav" aria-label="主要业务模块" data-specnav-component="ResponsiveWorkspaceNavigation">
+        <button class="is-active" data-screen-target="workbench"><span data-i18n="navWorkbench">今日工作台</span><em>21</em></button>
+        <button data-screen-target="schedule"><span data-i18n="navSchedule">设备排期</span></button>
+        <button data-screen-target="availability"><span data-i18n="navAvailability">库存可用性</span><em>4</em></button>
+        <button data-screen-target="orders"><span data-i18n="navOrders">租赁订单</span></button>
+        <button data-screen-target="devices"><span data-i18n="navDevices">设备台账</span></button>
+        <button data-screen-target="shipping"><span data-i18n="navShipping">发货交接</span></button>
+        <button data-screen-target="exceptions"><span data-i18n="navExceptions">异常中心</span><em class="danger">826</em></button>
+      </nav>
+
+      <div class="state-banner" data-specnav-state="disabled">
+        <span>!</span>
+        <div><strong data-i18n="writesOff">闲管家写操作已关闭</strong><small data-i18n="writesOffBody">读取和排期不受影响，真实发货保持禁用。</small></div>
+        <code>管理端：真实写操作 = 关闭</code>
+      </div>
+
+      <main class="screen-stage">
+        <section class="global-state state-loading" data-specnav-state="loading"><span class="loader"></span><strong data-i18n="loadingTitle">正在读取运营数据</strong><p data-i18n="loadingBody">当前页面和筛选会保留，不会清空已录入草稿。</p></section>
+        <section class="global-state state-empty" data-specnav-state="empty"><span class="state-glyph">Ø</span><strong data-i18n="emptyTitle">当前筛选没有记录</strong><p data-i18n="emptyBody">调整仓库、日期或设备组。空结果不等于同步失败。</p></section>
+        <section class="global-state state-error" data-specnav-state="error"><span class="state-glyph danger">!</span><strong data-i18n="errorTitle">管理端数据暂时不可用</strong><p data-i18n="errorBody">已保留页面状态，请检查网络后重试。</p><button class="primary-button" data-prototype-action="retry" data-i18n="retry">重试</button></section>
+        <section class="global-state state-permission" data-specnav-state="permission"><span class="state-glyph">⌁</span><strong data-i18n="permissionTitle">当前账号无权访问</strong><p data-i18n="permissionBody">权限由管理端角色控制，请联系管理员。</p></section>
+        <div id="screen-root" data-specnav-screen="workbench" data-specnav-state="populated"></div>
+      </main>
+
+      <nav class="mobile-nav" aria-label="移动端主要业务模块">
+        <button class="is-active" data-screen-target="workbench"><span>⌂</span><small data-i18n="mobileToday">今日</small></button>
+        <button data-screen-target="schedule"><span>▦</span><small data-i18n="mobileSchedule">排期</small></button>
+        <button data-screen-target="availability"><span>▤</span><small data-i18n="mobileStock">库存</small></button>
+        <button data-screen-target="orders"><span>▱</span><small data-i18n="mobileOrders">订单</small></button>
+        <button data-screen-target="shipping"><span>⇥</span><small data-i18n="mobileShip">发货</small></button>
+        <button data-screen-target="exceptions"><span>△</span><small data-i18n="mobileAlerts">异常</small></button>
+      </nav>
+
+      <aside class="review-panel is-collapsed" data-specnav-component="PrototypeReviewControls">
+        <button class="review-toggle" data-review-toggle><span data-i18n="reviewMode">原型状态</span><b>×</b></button>
+        <div class="review-content">
+          <button class="is-active" data-specnav-set-state="populated" data-i18n="statePopulated">有数据</button>
+          <button data-specnav-set-state="loading" data-i18n="stateLoading">加载</button>
+          <button data-specnav-set-state="empty" data-i18n="stateEmpty">空数据</button>
+          <button data-specnav-set-state="error" data-i18n="stateError">错误</button>
+          <button data-specnav-set-state="permission" data-i18n="statePermission">无权限</button>
+          <button data-specnav-set-state="disabled" data-i18n="stateDisabled">写禁用</button>
+          <button data-screen-target="login" data-i18n="stateLogin">登录页</button>
+        </div>
+      </aside>
+
+      <div class="drawer-backdrop" data-drawer-backdrop></div>
+      <aside class="detail-drawer" data-detail-drawer aria-hidden="true"></aside>
+      <div class="prototype-toast" role="status"></div>
+    </div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

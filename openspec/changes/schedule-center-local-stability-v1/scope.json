@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "change_id": "schedule-center-local-stability-v1",
+  "stage": "development",
+  "allowed_roots": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "camera-rental-schedule-center/src",
+    "camera-rental-admin/src/api/rental/xianyu.ts",
+    "camera-rental-admin/src/locales/en.ts",
+    "camera-rental-admin/src/locales/zh-CN.ts",
+    "camera-rental-admin/src/views/rental/xianyu",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-server/.env.xianyu.example",
+    "camera-rental-server/scripts/setup-local.sh",
+    "camera-rental-server/scripts/start-local.sh",
+    "camera-rental-server/yudao-server/src/main/resources/application-local.yaml",
+    "camera-rental-server/yudao-server/src/main/resources/application.yaml",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/webhook/xianyu",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/xianyu",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/job/xianyu",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/xianyu",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+    "docs/domain/xianyu-integration.md",
+    "docs/integrations/xianyu",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/app.js"
+  ],
+  "denied_roots": [
+    ".git",
+    "node_modules",
+    "dist",
+    "coverage"
+  ],
+  "requires_review_on": [
+    "camera-rental-schedule-center/package.json",
+    "camera-rental-schedule-center/bun.lock",
+    "camera-rental-schedule-center/vite.config.ts",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/pom.xml"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": true,
+    "rename": false
+  },
+  "prototype_sources": [
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/index.html"
+  ],
+  "expires_when": "verification_started"
+}

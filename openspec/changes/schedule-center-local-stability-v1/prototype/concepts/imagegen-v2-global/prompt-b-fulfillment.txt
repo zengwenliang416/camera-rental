@@ -1,0 +1,25 @@
+Create a high-fidelity 1536x864 desktop screenshot of a Chinese B2B camera rental operations application called "设备排期中心". This must use a radically different information architecture from a generic KPI dashboard.
+
+Direction B: today's fulfillment action queue first, inspired by mature reservation and equipment-checkout products but not copying any logo or brand.
+
+Layout:
+- compact left navigation and a slim operational scope header
+- main heading "今日交接工作台" with a small summary strip only: 待发货12, 待归还8, 逾期3, 待检测6
+- dominant center area is a four-lane operational board with dense list rows, not large cards:
+  1. 今日必须发货
+  2. 待分配设备
+  3. 今日归还与晚归
+  4. 待检测/维修
+- every row shows time deadline, fictional masked order number, equipment kit, exact assigned SN or "未分配", location, operator, and status
+- show a selected shipment row. On the right, a fixed context drawer titled "发货核对" shows three verified steps: 运单已识别, 设备已扫码, 订单已确认; include carrier and masked waybill, occupancy period versus billing period, and a strong but safe "确认发货" button with a server-authoritative note
+- below the board, show a compact 7-day timeline for the selected device, including preparation, rental, return transit, inspection, and the next available date
+- top scope controls include Shanghai warehouse, today, equipment category, operator shift, search, sync freshness, tenant, and write-enabled state
+- one overdue return row is vermilion, one maintenance row graphite, one completed verification row green
+
+Visual system:
+- calm off-white canvas, dark graphite text, deep teal navigation, restrained cobalt action color
+- semantic amber, green, cyan, and vermilion only where status needs attention
+- precise table-like rhythm, 32px controls, 4-6px radius, thin separators, minimal shadows
+- all visible text should be legible Simplified Chinese
+- no marketing hero, no decorative charts, no glass effects, no purple, no oversized KPI cards
+- fictional privacy-safe data only

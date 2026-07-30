@@ -1,0 +1,67 @@
+{
+  "task_id": "001-shipping-workbench",
+  "goal": "Implement the approved server-authoritative shipping workbench as the first production frontend vertical slice.",
+  "must_read": [
+    "openspec/changes/schedule-center-local-stability-v1/development/tasks/001-shipping-workbench/brief.md",
+    "openspec/changes/schedule-center-local-stability-v1/requirements.md",
+    "openspec/changes/schedule-center-local-stability-v1/acceptance.md",
+    "openspec/changes/schedule-center-local-stability-v1/spec-map.json",
+    "openspec/changes/schedule-center-local-stability-v1/component-impact-map.json",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/handoff.md",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/decision.json",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-schedule-center/src/components/QuickBindingView.tsx",
+    "camera-rental-schedule-center/src/components/QuickBindingModal.tsx",
+    "camera-rental-schedule-center/src/components/Header.tsx",
+    "camera-rental-schedule-center/src/App.tsx",
+    "camera-rental-schedule-center/src/features/shipping/**",
+    "camera-rental-schedule-center/src/api/mappers.ts",
+    "camera-rental-schedule-center/src/api/mappers.test.ts",
+    "camera-rental-schedule-center/src/types.ts",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderController.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderRespVO.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuPendingShipOrderPageReqVO.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuPendingShipOrderRespVO.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuOrderMapper.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderAdminService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuOrderMapperTest.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderAdminServiceTest.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java",
+    "docs/integrations/xianyu/order-sync.md",
+    "docs/integrations/xianyu/field-mapping.md"
+  ],
+  "test_paths": [
+    "camera-rental-schedule-center/src/features/shipping/**/*.test.ts",
+    "camera-rental-schedule-center/src/api/mappers.test.ts",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuOrderMapperTest.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderAdminServiceTest.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java"
+  ],
+  "non_goals": [
+    "Do not expand scope beyond the active change.",
+    "Do not bypass component extraction rules.",
+    "Do not add routes, permissions, persistence, tenant behavior, or another frontend.",
+    "Do not expose raw third-party payloads, goods blobs, payment numbers, credentials, or signatures.",
+    "Do not submit a real shipment during tests."
+  ],
+  "expected_evidence": [
+    "Focused tests or command output",
+    "Task report",
+    "Spec review",
+    "Quality review"
+  ],
+  "unsafe_assumptions": [
+    "Pending status alone makes an order safe to ship.",
+    "Frontend visibility is a security boundary.",
+    "Prototype totals are current production truth.",
+    "Missing receiver fields can be inferred from aliases or remarks."
+  ],
+  "stop_condition": "Stop if persisted receiver snapshots are unavailable without migration, the existing command cannot preserve the approved flow, or implementation would edit outside the allowed files."
+}

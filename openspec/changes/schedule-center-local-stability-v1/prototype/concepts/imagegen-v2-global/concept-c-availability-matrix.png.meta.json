@@ -1,0 +1,62 @@
+{
+  "ok": true,
+  "mode": "edit",
+  "endpoint": "https://api.pftrader.us/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x864",
+  "quality": "high",
+  "n": 1,
+  "background": null,
+  "output_format": "png",
+  "output_compression": null,
+  "moderation": null,
+  "response_format": null,
+  "response_kind": "b64_json",
+  "bytes": 1265106,
+  "image": {
+    "format": "png",
+    "width": 1672,
+    "height": 941
+  },
+  "out": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-c-availability-matrix.png",
+  "elapsed_ms": 209221,
+  "created": 1785310837,
+  "usage": {
+    "input_tokens": 3468,
+    "input_tokens_details": {
+      "image_tokens": 3009,
+      "text_tokens": 459
+    },
+    "output_tokens": 4632,
+    "output_tokens_details": {
+      "image_tokens": 4632,
+      "text_tokens": 0
+    },
+    "total_tokens": 8100
+  },
+  "input_images": [
+    {
+      "path": "runs/ui-design/schedule-center-global-product-research-v1/references/booqable-availability.png",
+      "bytes": 708624,
+      "sha256": "fc508d7614c953de54e45961ffa49e3a6cd8f74bc0fdc684ddbbf2cde466eb28",
+      "image": {
+        "format": "png",
+        "width": 2400,
+        "height": 2400
+      }
+    },
+    {
+      "path": "runs/ui-design/schedule-center-global-product-research-v1/references/rentman-inventory.png",
+      "bytes": 466147,
+      "sha256": "632b39197fd094efac45a5732d7368e8170fafba2a8b3cdbfb42f7b22a12c208",
+      "image": {
+        "format": "png",
+        "width": 1961,
+        "height": 1269
+      }
+    }
+  ],
+  "mask": null,
+  "prompt_sha256": "6a8c6a5429535b9d8407114503c813b53e3d39ddc5f390af043a0f8ea4348e57",
+  "prompt_preview": "Create a high-fidelity 1536x864 desktop screenshot of a Chinese B2B camera rental operations application called \"设备排期中心\". Do not create a standard sidebar plus KPI cards dashboard.\n\nDirection C: availability and shortage matrix first, inspi..."
+}

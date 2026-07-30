@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "mode": "edit",
+  "endpoint": "https://api.pftrader.us/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x864",
+  "quality": "high",
+  "n": 1,
+  "background": null,
+  "output_format": "png",
+  "output_compression": null,
+  "moderation": null,
+  "response_format": null,
+  "response_kind": "b64_json",
+  "bytes": 1482054,
+  "image": {
+    "format": "png",
+    "width": 1672,
+    "height": 941
+  },
+  "out": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-b-fulfillment-queue-approved-candidate.png",
+  "elapsed_ms": 189049,
+  "created": 1785311507,
+  "usage": {
+    "input_tokens": 1644,
+    "input_tokens_details": {
+      "image_tokens": 1508,
+      "text_tokens": 136
+    },
+    "output_tokens": 4632,
+    "output_tokens_details": {
+      "image_tokens": 4632,
+      "text_tokens": 0
+    },
+    "total_tokens": 6276
+  },
+  "input_images": [
+    {
+      "path": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-b-fulfillment-queue-final.png",
+      "bytes": 1395652,
+      "sha256": "208dd7da293b9cde754999ddb0c08855b3bf52962e19709225b963c65316a9f2",
+      "image": {
+        "format": "png",
+        "width": 1672,
+        "height": 941
+      }
+    }
+  ],
+  "mask": null,
+  "prompt_sha256": "497809cef8a836a0bd32e7bed88bebec52c3d8192ac68ab369430266e2ca2220",
+  "prompt_preview": "Edit this exact application screenshot and preserve every layout and visual\ndetail. Change only the date labels in the lower seven-day device timeline.\n\nUse exactly these consecutive labels:\n07-27 周一, 07-28 周二, 07-29 周三（今天）, 07-30 周四,\n07-31..."
+}

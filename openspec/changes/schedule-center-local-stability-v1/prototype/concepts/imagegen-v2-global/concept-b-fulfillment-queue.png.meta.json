@@ -1,0 +1,62 @@
+{
+  "ok": true,
+  "mode": "edit",
+  "endpoint": "https://api.pftrader.us/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x864",
+  "quality": "high",
+  "n": 1,
+  "background": null,
+  "output_format": "png",
+  "output_compression": null,
+  "moderation": null,
+  "response_format": null,
+  "response_kind": "b64_json",
+  "bytes": 1317885,
+  "image": {
+    "format": "png",
+    "width": 1672,
+    "height": 941
+  },
+  "out": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-b-fulfillment-queue.png",
+  "elapsed_ms": 218028,
+  "created": 1785310843,
+  "usage": {
+    "input_tokens": 3505,
+    "input_tokens_details": {
+      "image_tokens": 3025,
+      "text_tokens": 480
+    },
+    "output_tokens": 4632,
+    "output_tokens_details": {
+      "image_tokens": 4632,
+      "text_tokens": 0
+    },
+    "total_tokens": 8137
+  },
+  "input_images": [
+    {
+      "path": "runs/ui-design/schedule-center-global-product-research-v1/references/cheqroom-reservations.png",
+      "bytes": 953074,
+      "sha256": "631abd9f77d75545cd46023c71345c4b907f2d1a0b28532f565d6d5e9513c8be",
+      "image": {
+        "format": "png",
+        "width": 1840,
+        "height": 1260
+      }
+    },
+    {
+      "path": "runs/ui-design/schedule-center-global-product-research-v1/references/booqable-tracking.png",
+      "bytes": 913003,
+      "sha256": "50edfc97746218c50cb8b9a4a2989737c89545c8f4ae83d844e3162b164fc6a1",
+      "image": {
+        "format": "png",
+        "width": 2400,
+        "height": 2400
+      }
+    }
+  ],
+  "mask": null,
+  "prompt_sha256": "bf5a9f42074cd1ba71bfbdeba8681d98a39ffda753ffccc72cfba2b479d4e0af",
+  "prompt_preview": "Create a high-fidelity 1536x864 desktop screenshot of a Chinese B2B camera rental operations application called \"设备排期中心\". This must use a radically different information architecture from a generic KPI dashboard.\n\nDirection B: today's fulfi..."
+}

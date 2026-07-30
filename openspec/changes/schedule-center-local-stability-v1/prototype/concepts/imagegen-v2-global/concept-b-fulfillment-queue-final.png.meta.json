@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "mode": "edit",
+  "endpoint": "https://api.pftrader.us/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x864",
+  "quality": "high",
+  "n": 1,
+  "background": null,
+  "output_format": "png",
+  "output_compression": null,
+  "moderation": null,
+  "response_format": null,
+  "response_kind": "b64_json",
+  "bytes": 1395652,
+  "image": {
+    "format": "png",
+    "width": 1672,
+    "height": 941
+  },
+  "out": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-b-fulfillment-queue-final.png",
+  "elapsed_ms": 185576,
+  "created": 1785311171,
+  "usage": {
+    "input_tokens": 1703,
+    "input_tokens_details": {
+      "image_tokens": 1508,
+      "text_tokens": 195
+    },
+    "output_tokens": 4632,
+    "output_tokens_details": {
+      "image_tokens": 4632,
+      "text_tokens": 0
+    },
+    "total_tokens": 6335
+  },
+  "input_images": [
+    {
+      "path": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-b-fulfillment-queue.png",
+      "bytes": 1317885,
+      "sha256": "72bfcdcac46f0e771e5b27a4824ef3057b9ce610304e732dec0c9492abaa83d0",
+      "image": {
+        "format": "png",
+        "width": 1672,
+        "height": 941
+      }
+    }
+  ],
+  "mask": null,
+  "prompt_sha256": "c9990678c5aa67b3d9f3c62dd1b6b28592c803de49e5ecedc0b3559b906439be",
+  "prompt_preview": "Edit this exact application screenshot. Preserve the full layout, four\noperational lanes, right verification drawer, lower device timeline, colors,\ntypography, and all non-date content as closely as possible.\n\nReplace the obsolete current d..."
+}

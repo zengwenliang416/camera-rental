@@ -1,0 +1,67 @@
+{
+  "task_id": "002-admin-xianyu-config",
+  "goal": "Use tenant-managed encrypted database configuration as the only XianGuanJia runtime source and remove all environment-variable compatibility.",
+  "must_read": [
+    "openspec/changes/schedule-center-local-stability-v1/development/tasks/002-admin-xianyu-config/brief.md",
+    "openspec/changes/schedule-center-local-stability-v1/requirements.md",
+    "openspec/changes/schedule-center-local-stability-v1/acceptance.md",
+    "openspec/changes/schedule-center-local-stability-v1/spec-map.json",
+    "openspec/changes/schedule-center-local-stability-v1/component-impact-map.json",
+    "openspec/changes/schedule-center-local-stability-v1/development/basis.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/handoff.md",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/decision.json",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/index.html",
+    "docs/integrations/xianyu/authentication.md",
+    "docs/integrations/xianyu/webhook.md",
+    "docs/domain/xianyu-integration.md"
+  ],
+  "allowed_files": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "camera-rental-admin/src/api/rental/xianyu.ts",
+    "camera-rental-admin/src/locales/en.ts",
+    "camera-rental-admin/src/locales/zh-CN.ts",
+    "camera-rental-admin/src/views/rental/xianyu/**",
+    "camera-rental-server/.env.xianyu.example",
+    "camera-rental-server/scripts/setup-local.sh",
+    "camera-rental-server/scripts/start-local.sh",
+    "camera-rental-server/sql/mysql/migrations/20260729_029_xianyu_admin_managed_config.sql",
+    "camera-rental-server/yudao-server/src/main/resources/application-local.yaml",
+    "camera-rental-server/yudao-server/src/main/resources/application.yaml",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/**",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/**",
+    "docs/domain/xianyu-integration.md",
+    "docs/integrations/xianyu/**",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/app.js"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/**",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/job/xianyu/**",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/**"
+  ],
+  "non_goals": [
+    "Do not apply production migrations.",
+    "Do not import old environment values.",
+    "Do not keep a compatibility fallback.",
+    "Do not call a real third-party write API."
+  ],
+  "expected_evidence": [
+    "Backend focused and full Reactor test output",
+    "Admin type check and production build",
+    "Migration checksum parity",
+    "Legacy runtime-entry scan",
+    "Task report, spec review, and quality review"
+  ],
+  "unsafe_assumptions": [
+    "An environment variable that is no longer documented is harmless if code still reads it.",
+    "A frontend write switch is sufficient authorization.",
+    "A webhook can use the request tenant before verifying which application owns its AppKey.",
+    "Blank replacement credentials should erase persisted credentials."
+  ],
+  "stop_condition": "Stop if encrypted persistence, tenant resolution, or pre-side-effect write denial cannot be proven."
+}

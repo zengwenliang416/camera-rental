@@ -1,0 +1,15 @@
+Edit this exact application screenshot. Preserve the full layout, four
+operational lanes, right verification drawer, lower device timeline, colors,
+typography, and all non-date content as closely as possible.
+
+Replace the obsolete current date with:
+今天 2026-07-29 周三.
+
+Update all visible workflow dates consistently into late July and early August
+2026. The selected shipment should require delivery on 2026-07-30, use an
+occupancy period from 2026-07-29 to 2026-08-02, and show the next available
+date as 2026-08-03. The seven-day lower timeline should run from 07-27 周一
+through 08-02 周日, with 07-29 highlighted as 今天.
+
+Do not redesign the interface, move panels, change status semantics, or add
+logos. Keep Simplified Chinese text crisp and legible.

@@ -1,0 +1,163 @@
+{
+  "new_components": [
+    "ScheduleCenterAppShell",
+    "ResponsiveWorkspaceNavigation",
+    "AccountAndPreferenceMenu",
+    "ThemeToggle",
+    "LocaleToggle",
+    "SyncHealthBanner",
+    "OperationalMetricGrid",
+    "OperationalMetricCard",
+    "FeaturePageHeader",
+    "FilterToolbar",
+    "DataStateBoundary",
+    "LoadingState",
+    "EmptyState",
+    "PermissionState",
+    "ErrorRetryState",
+    "ConflictState",
+    "StatusBadge",
+    "IdentifierText",
+    "DateRangeDisplay",
+    "BillableOccupiedRangeLegend",
+    "ResponsiveDataList",
+    "DetailDrawerShell",
+    "ConfirmDialogShell",
+    "PermissionAwareAction",
+    "ShippingWorkflowStepper",
+    "WaybillReviewPanel",
+    "DeviceSelectionPanel",
+    "PendingOrderSelectionPanel",
+    "ShipmentConfirmationPanel",
+    "DeviceQrPanel",
+    "OperationResultPanel"
+    ,"XianyuIntegrationConfigForm"
+  ],
+  "reused_components": [
+    "existing React 19 composition and provider primitives",
+    "existing Vite route and asset behavior",
+    "existing Tailwind 4 build integration",
+    "existing lucide-react icons",
+    "existing motion library with reduced-motion guard",
+    "existing qrcode.react rendering",
+    "existing jsqr image decoding",
+    "existing API client token refresh tenant headers and common result handling",
+    "existing typed rental API contracts and mapper tests",
+    "existing authentication and permission endpoints"
+    ,"existing Element Plus form password switch input-number and confirmation components"
+    ,"existing MyBatis EncryptTypeHandler"
+    ,"existing TenantJob multi-tenant job aspect"
+  ],
+  "extraction_triggers": [
+    "QuickBindingView exceeds 600 lines and mixes workflow state data queries image decoding selection and submission",
+    "QuickBindingModal exceeds 600 lines and duplicates outbound workflow behavior",
+    "AppContext approaches 600 lines and mixes session permissions queries mappings navigation overlays and mutations",
+    "GanttScheduleView approaches 600 lines and mixes filtering layout calculation status rendering and interaction",
+    "dashboard orders devices and shipping repeat order-device filtering and operational metric derivation",
+    "status date money identifier sync and error rendering repeat across features",
+    "navigation header account sync theme and locale controls must adapt across desktop tablet and mobile",
+    "loading empty permission partial-error conflict disabled and retry behavior repeat across routes",
+    "query and mutation lifecycle logic repeats across feature pages",
+    "one component or hook exceeds a single user-visible reason to change",
+    "any production source file reaches 450 physical lines"
+  ],
+  "forbidden_dependencies": [
+    "shared-ui-to-api-client",
+    "shared-ui-to-feature-page",
+    "presentational-component-to-transport",
+    "feature-to-another-feature-page-internals",
+    "api-service-to-view-component",
+    "adapter-to-react-component",
+    "global-context-owning-server-record-collections",
+    "component-computing-authoritative-availability-amount-status-or-transition",
+    "hidden-business-mutation-in-mount-effect",
+    "frontend-to-XianGuanJia-direct-call",
+    "raw-backend-error-to-visible-copy",
+    "page-specific-tailwind-token-system",
+    "desktop-navigation-row-as-mobile-navigation",
+    "production-ts-tsx-css-file-over-600-lines",
+    "active-source-macos-dot-underscore-metadata-files"
+  ],
+  "hooks": [
+    "useSessionBootstrap",
+    "usePermissionInfo",
+    "useThemePreference",
+    "useLocalePreference",
+    "useResponsiveNavigation",
+    "useDashboardQuery",
+    "useScheduleQuery",
+    "useOrderQuery",
+    "useDeviceQuery",
+    "usePendingShipmentQuery",
+    "useManualReviewQuery",
+    "useAssignmentCommand",
+    "useShipmentCommand",
+    "useDeviceDispatchCommand",
+    "useDeviceReturnCommand",
+    "useManualReviewCommand",
+    "useSyncRetryCommand",
+    "useSubmitGuard",
+    "useStaleRequestGuard",
+    "usePermissionAction"
+    ,"useXianyuIntegrationConfig"
+  ],
+  "utilities": [
+    "design token and semantic class mapping",
+    "integer-cent display formatting",
+    "Asia-Shanghai date and explicit range formatting",
+    "status code to localized semantic presentation mapping",
+    "authorized customer-contact presentation and non-UI privacy guards",
+    "device order waybill and sync identifier formatting",
+    "safe API error classification",
+    "responsive breakpoint helpers",
+    "query filter and pagination normalization",
+    "assert production source file line ceiling"
+  ],
+  "services": [
+    "session service",
+    "permission service",
+    "rental query service",
+    "rental command service",
+    "shipment OCR draft service",
+    "API VO to dashboard read-model adapter",
+    "API VO to schedule read-model adapter",
+    "API VO to order read-model adapter",
+    "API VO to device read-model adapter",
+    "API VO to shipping read-model adapter",
+    "management order complete-contact response mapping",
+    "pending-shipment receiver keyword query",
+    "API VO to exception read-model adapter",
+    "preference storage adapter",
+    "localized error presentation service"
+    ,"tenant XianGuanJia runtime configuration service"
+    ,"encrypted XianGuanJia credential persistence"
+    ,"dynamic XianGuanJia client configuration resolver"
+    ,"XianGuanJia webhook AppKey tenant resolver"
+  ],
+  "required_component_tests": [
+    "app shell desktop tablet and mobile navigation tests",
+    "theme and locale toggle persistence tests",
+    "sync health banner safe error and retry tests",
+    "operational metric read-model and card tests",
+    "data state boundary loading empty partial-error permission conflict disabled and retry tests",
+    "status badge text icon color and locale tests",
+    "billable occupied range display and legend tests",
+    "responsive data list and detail drawer tests",
+    "permission-aware action hidden disabled forbidden and backend rejection tests",
+    "shipping workflow step gating OCR draft review and duplicate-submit tests",
+    "device QR resolve display invalid input and permission tests",
+    "query cancellation stale-result and partial-failure tests",
+    "command pending success error idempotent replay and cache refresh tests",
+    "API VO adapter mapping and malformed optional field tests",
+    "keyboard focus dialog drawer touch target contrast and reduced-motion tests",
+    "light dark zh-CN en visual regression matrix",
+    "360 390 768 1440 width overflow regression tests",
+    "production source file 600-line ceiling and forbidden-import checks",
+    "private-data raw-error translation-key and invented-sample-data scans"
+    ,"XianGuanJia config form secret replacement and clearing tests"
+    ,"XianGuanJia tenant isolation and encrypted credential tests"
+    ,"XianGuanJia dynamic read write webhook and tenant job tests"
+  ],
+  "unresolved_gaps": [
+  ]
+}

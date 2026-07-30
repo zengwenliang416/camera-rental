@@ -1,0 +1,62 @@
+{
+  "ok": true,
+  "mode": "edit",
+  "endpoint": "https://api.pftrader.us/v1/images/edits",
+  "model": "gpt-image-2",
+  "size": "1536x864",
+  "quality": "high",
+  "n": 1,
+  "background": null,
+  "output_format": "png",
+  "output_compression": null,
+  "moderation": null,
+  "response_format": null,
+  "response_kind": "b64_json",
+  "bytes": 1253584,
+  "image": {
+    "format": "png",
+    "width": 1672,
+    "height": 941
+  },
+  "out": "openspec/changes/schedule-center-local-stability-v1/prototype/concepts/imagegen-v2-global/concept-a-equipment-timeline.png",
+  "elapsed_ms": 190463,
+  "created": 1785310823,
+  "usage": {
+    "input_tokens": 3562,
+    "input_tokens_details": {
+      "image_tokens": 3009,
+      "text_tokens": 553
+    },
+    "output_tokens": 4632,
+    "output_tokens_details": {
+      "image_tokens": 4632,
+      "text_tokens": 0
+    },
+    "total_tokens": 8194
+  },
+  "input_images": [
+    {
+      "path": "runs/ui-design/schedule-center-global-product-research-v1/references/rentman-inventory.png",
+      "bytes": 466147,
+      "sha256": "632b39197fd094efac45a5732d7368e8170fafba2a8b3cdbfb42f7b22a12c208",
+      "image": {
+        "format": "png",
+        "width": 1961,
+        "height": 1269
+      }
+    },
+    {
+      "path": "runs/ui-design/schedule-center-global-product-research-v1/references/booqable-availability.png",
+      "bytes": 708624,
+      "sha256": "fc508d7614c953de54e45961ffa49e3a6cd8f74bc0fdc684ddbbf2cde466eb28",
+      "image": {
+        "format": "png",
+        "width": 2400,
+        "height": 2400
+      }
+    }
+  ],
+  "mask": null,
+  "prompt_sha256": "0d7b1ae29cf166b711161f82820c97416319f1c33cd7a94b16750e27ec2ef8f3",
+  "prompt_preview": "Create a high-fidelity 1536x864 desktop screenshot of a Chinese B2B camera rental operations application called \"设备排期中心\". This must be an entirely new information architecture, not a recolor of an old dashboard.\n\nDirection A: equipment time..."
+}

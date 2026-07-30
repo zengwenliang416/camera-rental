@@ -1,0 +1,61 @@
+{
+  "task_id": "003-app-shell-dashboard",
+  "goal": "Implement the responsive application shell, safe preferences, synchronization feedback, and server-derived operations dashboard.",
+  "must_read": [
+    "openspec/changes/schedule-center-local-stability-v1/development/tasks/003-app-shell-dashboard/brief.md",
+    "openspec/changes/schedule-center-local-stability-v1/requirements.md",
+    "openspec/changes/schedule-center-local-stability-v1/acceptance.md",
+    "openspec/changes/schedule-center-local-stability-v1/spec-map.json",
+    "openspec/changes/schedule-center-local-stability-v1/component-impact-map.json",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/handoff.md",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/decision.json",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/index.html",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/styles/tokens.css",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/styles/shell.css",
+    "openspec/changes/schedule-center-local-stability-v1/prototype/artifact/screens/workbench.js"
+  ],
+  "allowed_files": [
+    "camera-rental-schedule-center/package.json",
+    "camera-rental-schedule-center/src/App.tsx",
+    "camera-rental-schedule-center/src/index.css",
+    "camera-rental-schedule-center/src/components/Header.tsx",
+    "camera-rental-schedule-center/src/components/DashboardView.tsx",
+    "camera-rental-schedule-center/src/context/AppContext.tsx",
+    "camera-rental-schedule-center/src/api/rental.ts",
+    "camera-rental-schedule-center/src/api/snapshotLoader.ts",
+    "camera-rental-schedule-center/src/api/snapshot.test.ts",
+    "camera-rental-schedule-center/src/app/**",
+    "camera-rental-schedule-center/src/features/dashboard/**",
+    "camera-rental-schedule-center/src/features/preferences/**",
+    "camera-rental-schedule-center/src/shared/**"
+  ],
+  "test_paths": [
+    "camera-rental-schedule-center/src/features/dashboard/**/*.test.ts",
+    "camera-rental-schedule-center/src/features/preferences/**/*.test.ts",
+    "camera-rental-schedule-center/src/shared/**/*.test.ts"
+  ],
+  "non_goals": [
+    "Do not expand scope beyond the active change.",
+    "Do not bypass component extraction rules.",
+    "Do not modify backend APIs, permissions, tenant behavior, commands, or business state machines.",
+    "Frontend query orchestration may be split only to tolerate permission-scoped partial failures required by independent review.",
+    "Do not redesign legacy feature internals or claim complete route localization in this slice."
+  ],
+  "expected_evidence": [
+    "Focused tests or command output",
+    "Task report",
+    "Spec review",
+    "Quality review"
+  ],
+  "unsafe_assumptions": [
+    "Registered assets equal total physical inventory.",
+    "Non-empty client arrays prove synchronization health.",
+    "Prototype counts or dates are production truth.",
+    "A theme or locale toggle on the shell means every legacy feature is complete."
+  ],
+  "stop_condition": "Stop if implementation requires a new API, server-derived metric, permission, persistence schema, or edit outside the allowed files."
+}

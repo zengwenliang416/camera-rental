@@ -1,0 +1,590 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-30T09:42:52.734Z",
+  "active_change": "schedule-center-local-stability-v1",
+  "status": "green",
+  "aggregate": {
+    "schema_version": 1,
+    "generated_at": "2026-07-30T09:42:52.734Z",
+    "change_id": "schedule-center-local-stability-v1",
+    "active_change": "schedule-center-local-stability-v1",
+    "verdict": "green",
+    "domains": {
+      "facticity": "green",
+      "static": "green",
+      "unit": "green",
+      "redteam": "green",
+      "e2e": "green",
+      "sensory": "green"
+    },
+    "blocking_findings": [],
+    "residual_risk": [],
+    "evidence_receipt": "verify/receipt.json",
+    "behavior_eval_report": "verify/behavior-evals/report.json",
+    "html_report": "verify/aggregate-report.html",
+    "review_style": "claude-warm-editorial",
+    "stale": false,
+    "blockers": [],
+    "warnings": [
+      "development:codegraph:not-indexed",
+      "development:codegraph:claim-unverified:development:task-shipping-workbench",
+      "development:codegraph:claim-unverified:development:task-001-shipping-workbench",
+      "development:codegraph:claim-unverified:development:task-002-admin-xianyu-config",
+      "development:codegraph:claim-unverified:development:task-003-app-shell-dashboard",
+      "development:codegraph:claim-unverified:development:task-004-schedule-allocation",
+      "development:codegraph:claim-unverified:development:task-005-orders-devices",
+      "development:codegraph:claim-unverified:development:task-006-auth-exceptions-overlays",
+      "development:codegraph:claim-unverified:development:task-007-state-decomposition-final",
+      "development:codegraph:claim-unverified:verification:task-001-shipping-workbench",
+      "development:codegraph:claim-unverified:verification:task-002-admin-xianyu-config",
+      "development:codegraph:claim-unverified:verification:task-003-app-shell-dashboard",
+      "development:codegraph:claim-unverified:verification:task-004-schedule-allocation",
+      "development:codegraph:claim-unverified:verification:task-005-orders-devices",
+      "development:codegraph:claim-unverified:verification:task-006-auth-exceptions-overlays",
+      "development:codegraph:claim-unverified:verification:task-007-state-decomposition-final",
+      "codegraph:not-indexed",
+      "codegraph:claim-unverified:development:task-shipping-workbench",
+      "codegraph:claim-unverified:development:task-001-shipping-workbench",
+      "codegraph:claim-unverified:development:task-002-admin-xianyu-config",
+      "codegraph:claim-unverified:development:task-003-app-shell-dashboard",
+      "codegraph:claim-unverified:development:task-004-schedule-allocation",
+      "codegraph:claim-unverified:development:task-005-orders-devices",
+      "codegraph:claim-unverified:development:task-006-auth-exceptions-overlays",
+      "codegraph:claim-unverified:development:task-007-state-decomposition-final",
+      "codegraph:claim-unverified:verification:task-001-shipping-workbench",
+      "codegraph:claim-unverified:verification:task-002-admin-xianyu-config",
+      "codegraph:claim-unverified:verification:task-003-app-shell-dashboard",
+      "codegraph:claim-unverified:verification:task-004-schedule-allocation",
+      "codegraph:claim-unverified:verification:task-005-orders-devices",
+      "codegraph:claim-unverified:verification:task-006-auth-exceptions-overlays",
+      "codegraph:claim-unverified:verification:task-007-state-decomposition-final"
+    ],
+    "codegraph": {
+      "ok": true,
+      "status": {
+        "schema": "specnav.codegraph.status.v1",
+        "ok": true,
+        "generated_at": "2026-07-30T09:42:52.714Z",
+        "project_root": "/Volumes/zwl/camera-rental-github",
+        "active_change": "schedule-center-local-stability-v1",
+        "policy": {
+          "enabled": true,
+          "profile": "bootstrap",
+          "mode": "observe",
+          "stage": "verification",
+          "required_for_stage": false,
+          "disabled_reason": null
+        },
+        "execution_surface": "cli",
+        "decision": {
+          "stage": "verification",
+          "result": "warn",
+          "reason": "CodeGraph policy has advisory warnings for verification."
+        },
+        "cli": {
+          "available": true,
+          "version": "1.3.1",
+          "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+          "unsupported": false,
+          "error": null
+        },
+        "mcp": {
+          "configured": true,
+          "visible_in_current_session": false,
+          "restart_required": true,
+          "config_files": [
+            "/Users/wenliang_zeng/.claude.json",
+            "/Users/wenliang_zeng/.codex/config.toml"
+          ]
+        },
+        "index": {
+          "initialized": false,
+          "projectPath": "/Volumes/zwl/camera-rental-github",
+          "indexPath": null,
+          "lastIndexed": null,
+          "fileCount": 0,
+          "nodeCount": 0,
+          "edgeCount": 0,
+          "pendingChanges": {
+            "added": 0,
+            "modified": 0,
+            "removed": 0
+          },
+          "reindexRecommended": false,
+          "worktreeMismatch": null
+        },
+        "blockers": [],
+        "warnings": [
+          "codegraph:not-indexed"
+        ],
+        "raw_codegraph_status": {
+          "initialized": false,
+          "version": "1.3.1",
+          "projectPath": "/Volumes/zwl/camera-rental-github",
+          "indexPath": "/Volumes/zwl/camera-rental-github/.codegraph",
+          "lastIndexed": null
+        }
+      },
+      "evidence_index": {
+        "schema": "specnav.codegraph.evidence_index.v1",
+        "generated_at": "2026-07-30T09:42:52.714Z",
+        "active_change": "schedule-center-local-stability-v1",
+        "source_raw": "openspec/changes/schedule-center-local-stability-v1/codegraph/evidence.jsonl",
+        "by_claim": {},
+        "by_stage": {},
+        "blockers": [],
+        "raw_exists": false,
+        "record_count": 0
+      },
+      "claims_report": {
+        "schema": "specnav.codegraph.claims_report.v1",
+        "generated_at": "2026-07-30T09:42:52.717Z",
+        "active_change": "schedule-center-local-stability-v1",
+        "claims_file": "openspec/changes/schedule-center-local-stability-v1/codegraph/claims-map.json",
+        "evidence_index": "openspec/changes/schedule-center-local-stability-v1/codegraph/evidence-index.json",
+        "claims_count": 15,
+        "verified_claims": [],
+        "unverified_claims": [
+          "development:task-shipping-workbench",
+          "development:task-001-shipping-workbench",
+          "development:task-002-admin-xianyu-config",
+          "development:task-003-app-shell-dashboard",
+          "development:task-004-schedule-allocation",
+          "development:task-005-orders-devices",
+          "development:task-006-auth-exceptions-overlays",
+          "development:task-007-state-decomposition-final",
+          "verification:task-001-shipping-workbench",
+          "verification:task-002-admin-xianyu-config",
+          "verification:task-003-app-shell-dashboard",
+          "verification:task-004-schedule-allocation",
+          "verification:task-005-orders-devices",
+          "verification:task-006-auth-exceptions-overlays",
+          "verification:task-007-state-decomposition-final"
+        ],
+        "blockers": [],
+        "warnings": [
+          "codegraph:claim-unverified:development:task-shipping-workbench",
+          "codegraph:claim-unverified:development:task-001-shipping-workbench",
+          "codegraph:claim-unverified:development:task-002-admin-xianyu-config",
+          "codegraph:claim-unverified:development:task-003-app-shell-dashboard",
+          "codegraph:claim-unverified:development:task-004-schedule-allocation",
+          "codegraph:claim-unverified:development:task-005-orders-devices",
+          "codegraph:claim-unverified:development:task-006-auth-exceptions-overlays",
+          "codegraph:claim-unverified:development:task-007-state-decomposition-final",
+          "codegraph:claim-unverified:verification:task-001-shipping-workbench",
+          "codegraph:claim-unverified:verification:task-002-admin-xianyu-config",
+          "codegraph:claim-unverified:verification:task-003-app-shell-dashboard",
+          "codegraph:claim-unverified:verification:task-004-schedule-allocation",
+          "codegraph:claim-unverified:verification:task-005-orders-devices",
+          "codegraph:claim-unverified:verification:task-006-auth-exceptions-overlays",
+          "codegraph:claim-unverified:verification:task-007-state-decomposition-final"
+        ]
+      },
+      "drift": {
+        "schema": "specnav.codegraph.drift.v1",
+        "active_change": "schedule-center-local-stability-v1",
+        "drift": [],
+        "blockers": []
+      },
+      "decision": {
+        "schema": "specnav.codegraph.decision.v1",
+        "stage": "verification",
+        "profile": "bootstrap",
+        "effective_mode": "observe",
+        "required_for_stage": false,
+        "execution_surface": "cli",
+        "result": "warn",
+        "blockers": [],
+        "warnings": [
+          "codegraph:not-indexed"
+        ],
+        "explanation": "CodeGraph policy has advisory warnings for verification."
+      },
+      "guard_report": {
+        "schema": "specnav.codegraph.guard_report.v1",
+        "generated_at": "2026-07-30T09:42:52.717Z",
+        "active_change": "schedule-center-local-stability-v1",
+        "stage": "verification",
+        "ok": true,
+        "status": {
+          "policy": {
+            "enabled": true,
+            "profile": "bootstrap",
+            "mode": "observe",
+            "stage": "verification",
+            "required_for_stage": false,
+            "disabled_reason": null
+          },
+          "execution_surface": "cli",
+          "cli": {
+            "available": true,
+            "version": "1.3.1",
+            "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+            "unsupported": false,
+            "error": null
+          },
+          "mcp": {
+            "configured": true,
+            "visible_in_current_session": false,
+            "restart_required": true,
+            "config_files": [
+              "/Users/wenliang_zeng/.claude.json",
+              "/Users/wenliang_zeng/.codex/config.toml"
+            ]
+          },
+          "index": {
+            "initialized": false,
+            "projectPath": "/Volumes/zwl/camera-rental-github",
+            "indexPath": null,
+            "lastIndexed": null,
+            "fileCount": 0,
+            "nodeCount": 0,
+            "edgeCount": 0,
+            "pendingChanges": {
+              "added": 0,
+              "modified": 0,
+              "removed": 0
+            },
+            "reindexRecommended": false,
+            "worktreeMismatch": null
+          }
+        },
+        "decision": {
+          "schema": "specnav.codegraph.decision.v1",
+          "stage": "verification",
+          "profile": "bootstrap",
+          "effective_mode": "observe",
+          "required_for_stage": false,
+          "execution_surface": "cli",
+          "result": "warn",
+          "blockers": [],
+          "warnings": [
+            "codegraph:not-indexed"
+          ],
+          "explanation": "CodeGraph policy has advisory warnings for verification."
+        },
+        "evidence_index": {
+          "schema": "specnav.codegraph.evidence_index.v1",
+          "generated_at": "2026-07-30T09:42:52.714Z",
+          "active_change": "schedule-center-local-stability-v1",
+          "source_raw": "openspec/changes/schedule-center-local-stability-v1/codegraph/evidence.jsonl",
+          "by_claim": {},
+          "by_stage": {},
+          "blockers": [],
+          "raw_exists": false,
+          "record_count": 0
+        },
+        "claims_report": {
+          "schema": "specnav.codegraph.claims_report.v1",
+          "generated_at": "2026-07-30T09:42:52.717Z",
+          "active_change": "schedule-center-local-stability-v1",
+          "claims_file": "openspec/changes/schedule-center-local-stability-v1/codegraph/claims-map.json",
+          "evidence_index": "openspec/changes/schedule-center-local-stability-v1/codegraph/evidence-index.json",
+          "claims_count": 15,
+          "verified_claims": [],
+          "unverified_claims": [
+            "development:task-shipping-workbench",
+            "development:task-001-shipping-workbench",
+            "development:task-002-admin-xianyu-config",
+            "development:task-003-app-shell-dashboard",
+            "development:task-004-schedule-allocation",
+            "development:task-005-orders-devices",
+            "development:task-006-auth-exceptions-overlays",
+            "development:task-007-state-decomposition-final",
+            "verification:task-001-shipping-workbench",
+            "verification:task-002-admin-xianyu-config",
+            "verification:task-003-app-shell-dashboard",
+            "verification:task-004-schedule-allocation",
+            "verification:task-005-orders-devices",
+            "verification:task-006-auth-exceptions-overlays",
+            "verification:task-007-state-decomposition-final"
+          ],
+          "blockers": [],
+          "warnings": [
+            "codegraph:claim-unverified:development:task-shipping-workbench",
+            "codegraph:claim-unverified:development:task-001-shipping-workbench",
+            "codegraph:claim-unverified:development:task-002-admin-xianyu-config",
+            "codegraph:claim-unverified:development:task-003-app-shell-dashboard",
+            "codegraph:claim-unverified:development:task-004-schedule-allocation",
+            "codegraph:claim-unverified:development:task-005-orders-devices",
+            "codegraph:claim-unverified:development:task-006-auth-exceptions-overlays",
+            "codegraph:claim-unverified:development:task-007-state-decomposition-final",
+            "codegraph:claim-unverified:verification:task-001-shipping-workbench",
+            "codegraph:claim-unverified:verification:task-002-admin-xianyu-config",
+            "codegraph:claim-unverified:verification:task-003-app-shell-dashboard",
+            "codegraph:claim-unverified:verification:task-004-schedule-allocation",
+            "codegraph:claim-unverified:verification:task-005-orders-devices",
+            "codegraph:claim-unverified:verification:task-006-auth-exceptions-overlays",
+            "codegraph:claim-unverified:verification:task-007-state-decomposition-final"
+          ]
+        },
+        "drift": {
+          "schema": "specnav.codegraph.drift.v1",
+          "active_change": "schedule-center-local-stability-v1",
+          "drift": [],
+          "blockers": []
+        },
+        "blockers": [],
+        "warnings": [
+          "codegraph:not-indexed",
+          "codegraph:claim-unverified:development:task-shipping-workbench",
+          "codegraph:claim-unverified:development:task-001-shipping-workbench",
+          "codegraph:claim-unverified:development:task-002-admin-xianyu-config",
+          "codegraph:claim-unverified:development:task-003-app-shell-dashboard",
+          "codegraph:claim-unverified:development:task-004-schedule-allocation",
+          "codegraph:claim-unverified:development:task-005-orders-devices",
+          "codegraph:claim-unverified:development:task-006-auth-exceptions-overlays",
+          "codegraph:claim-unverified:development:task-007-state-decomposition-final",
+          "codegraph:claim-unverified:verification:task-001-shipping-workbench",
+          "codegraph:claim-unverified:verification:task-002-admin-xianyu-config",
+          "codegraph:claim-unverified:verification:task-003-app-shell-dashboard",
+          "codegraph:claim-unverified:verification:task-004-schedule-allocation",
+          "codegraph:claim-unverified:verification:task-005-orders-devices",
+          "codegraph:claim-unverified:verification:task-006-auth-exceptions-overlays",
+          "codegraph:claim-unverified:verification:task-007-state-decomposition-final"
+        ]
+      },
+      "artifacts": {
+        "status": "openspec/changes/schedule-center-local-stability-v1/codegraph/status.json",
+        "decision": "openspec/changes/schedule-center-local-stability-v1/codegraph/decision.json",
+        "guard_report": "openspec/changes/schedule-center-local-stability-v1/codegraph/guard-report.json",
+        "evidence_raw": "openspec/changes/schedule-center-local-stability-v1/codegraph/evidence.jsonl",
+        "evidence_index": "openspec/changes/schedule-center-local-stability-v1/codegraph/evidence-index.json",
+        "claims_map": "openspec/changes/schedule-center-local-stability-v1/codegraph/claims-map.json",
+        "claims_report": "openspec/changes/schedule-center-local-stability-v1/codegraph/claims-report.json",
+        "drift_report": "openspec/changes/schedule-center-local-stability-v1/codegraph/drift-report.json",
+        "impact_report": "openspec/changes/schedule-center-local-stability-v1/codegraph/impact-report.json"
+      },
+      "blockers": [],
+      "warnings": [
+        "codegraph:not-indexed",
+        "codegraph:claim-unverified:development:task-shipping-workbench",
+        "codegraph:claim-unverified:development:task-001-shipping-workbench",
+        "codegraph:claim-unverified:development:task-002-admin-xianyu-config",
+        "codegraph:claim-unverified:development:task-003-app-shell-dashboard",
+        "codegraph:claim-unverified:development:task-004-schedule-allocation",
+        "codegraph:claim-unverified:development:task-005-orders-devices",
+        "codegraph:claim-unverified:development:task-006-auth-exceptions-overlays",
+        "codegraph:claim-unverified:development:task-007-state-decomposition-final",
+        "codegraph:claim-unverified:verification:task-001-shipping-workbench",
+        "codegraph:claim-unverified:verification:task-002-admin-xianyu-config",
+        "codegraph:claim-unverified:verification:task-003-app-shell-dashboard",
+        "codegraph:claim-unverified:verification:task-004-schedule-allocation",
+        "codegraph:claim-unverified:verification:task-005-orders-devices",
+        "codegraph:claim-unverified:verification:task-006-auth-exceptions-overlays",
+        "codegraph:claim-unverified:verification:task-007-state-decomposition-final"
+      ]
+    },
+    "lane": "standard",
+    "required_domains": [
+      "facticity",
+      "static",
+      "unit",
+      "redteam",
+      "e2e",
+      "sensory"
+    ],
+    "artifacts": [
+      {
+        "name": "acceptance.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/acceptance.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "plan.md",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/plan.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "plan.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/plan.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "evidence-index.jsonl",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/evidence-index.jsonl",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "traceability-matrix.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/traceability-matrix.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "diff-traceability",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/diff-traceability",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "user-test-cases.md",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/user-test-cases.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "user-test-cases.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/user-test-cases.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "user-test-case-signoff.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/user-test-case-signoff.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "domain-case-matrix.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/domain-case-matrix.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "runtime-evidence.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/runtime-evidence.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "blocker-classification.jsonl",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/blocker-classification.jsonl",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "receipt.md",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/receipt.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "receipt.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/receipt.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "behavior-evals/scenarios.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/behavior-evals/scenarios.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "behavior-evals/report.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/behavior-evals/report.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "behavior-evals/transcripts",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/behavior-evals/transcripts",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "behavior-evals/report.md",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/behavior-evals/report.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "facticity/report.md",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/facticity/report.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "facticity/report.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/facticity/report.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "static/report.md",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/static/report.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "static/report.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/static/report.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "unit/report.md",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/unit/report.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "unit/report.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/unit/report.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "redteam/report.md",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/redteam/report.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "redteam/report.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/redteam/report.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "e2e/report.md",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/e2e/report.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "e2e/report.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/e2e/report.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "sensory/report.md",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/sensory/report.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "sensory/report.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/sensory/report.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "unit/test-quality-rubric.json",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/unit/test-quality-rubric.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "sensory/reviewer-independence.md",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/sensory/reviewer-independence.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "root-cause-checks.jsonl",
+        "path": "openspec/changes/schedule-center-local-stability-v1/verify/root-cause-checks.jsonl",
+        "ok": true,
+        "blockers": []
+      }
+    ]
+  },
+  "html_report": "verify-report.html",
+  "review_style": "claude-warm-editorial"
+}

@@ -1,0 +1,11 @@
+Edit this exact application screenshot and preserve every layout and visual
+detail. Change only the dates inside the bottom-right order inspector and its
+small event timeline.
+
+Replace every 2025 date with the corresponding 2026 date:
+- rental period: 2026-07-31 09:00 to 2026-08-05 18:00
+- billing period: 2026-07-31 09:00 to 2026-08-05 18:00
+- event dates should be 07-30, 07-31, 08-06, and 08-06 to 08-07
+
+Do not change the date header, equipment rows, navigation, timeline bars,
+Chinese labels, colors, spacing, or any other text. Keep the result crisp.

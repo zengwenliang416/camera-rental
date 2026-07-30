@@ -1,0 +1,6 @@
+{
+  "schema": "specnav.codegraph.drift.v1",
+  "active_change": "schedule-center-local-stability-v1",
+  "drift": [],
+  "blockers": []
+}

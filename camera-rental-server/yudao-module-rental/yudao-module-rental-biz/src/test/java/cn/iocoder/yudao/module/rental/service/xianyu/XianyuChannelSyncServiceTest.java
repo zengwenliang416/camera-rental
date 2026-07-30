@@ -16,6 +16,7 @@ import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadClient
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadEndpoint;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadResponse;
 import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
+import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuRuntimeConfigService;
 import cn.iocoder.yudao.module.rental.integration.xianyu.service.XianyuOrderListPageParser;
 import cn.iocoder.yudao.module.rental.integration.xianyu.service.XianyuOrderPageSyncResult;
 import cn.iocoder.yudao.module.rental.integration.xianyu.service.XianyuOrderPersistenceService;
@@ -69,6 +70,7 @@ class XianyuChannelSyncServiceTest {
     private RLock syncLock;
     private XianyuChannelSyncService service;
     private XianyuProperties properties;
+    private XianyuRuntimeConfigService runtimeConfigService;
     private XianyuProperties.Job job;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -79,6 +81,8 @@ class XianyuChannelSyncServiceTest {
         properties.setAppKey("test-app");
         properties.setAppSecret("test-secret");
         properties.setTenantId(9L);
+        runtimeConfigService = mock(XianyuRuntimeConfigService.class);
+        when(runtimeConfigService.getCurrent()).thenReturn(properties);
         job = properties.getJob();
         job.setLookbackDays(7);
         job.setOverlapMinutes(10);
@@ -99,7 +103,7 @@ class XianyuChannelSyncServiceTest {
         when(syncLock.isHeldByCurrentThread()).thenReturn(true);
         Clock clock = Clock.fixed(Instant.parse("2026-07-24T06:00:00Z"), ZoneOffset.UTC);
         service = new XianyuChannelSyncService(
-                properties,
+                runtimeConfigService,
                 mock(XianyuShopAdminService.class),
                 afterSaleAdminService,
                 shopMapper,

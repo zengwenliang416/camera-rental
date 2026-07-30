@@ -1,10 +1,12 @@
 package cn.iocoder.yudao.module.rental.integration.xianyu.webhook;
 
+import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuPushEventDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuRawPayloadDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuPushEventMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuRawPayloadMapper;
 import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
+import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuRuntimeConfigService;
 import cn.iocoder.yudao.module.rental.integration.xianyu.security.XianyuSafeErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,7 +21,7 @@ import java.util.List;
 @Slf4j
 public class XianyuPushRetryService {
 
-    private final XianyuProperties properties;
+    private final XianyuRuntimeConfigService runtimeConfigService;
     private final XianyuPushEventMapper eventMapper;
     private final XianyuRawPayloadMapper rawPayloadMapper;
     private final XianyuOrderPushPayloadParser orderPayloadParser;
@@ -30,7 +32,7 @@ public class XianyuPushRetryService {
     private final XianyuPushEventPublisher eventPublisher;
     private final Clock clock;
 
-    public XianyuPushRetryService(XianyuProperties properties,
+    public XianyuPushRetryService(XianyuRuntimeConfigService runtimeConfigService,
                                   XianyuPushEventMapper eventMapper,
                                   XianyuRawPayloadMapper rawPayloadMapper,
                                   XianyuOrderPushPayloadParser orderPayloadParser,
@@ -40,7 +42,7 @@ public class XianyuPushRetryService {
                                   XianyuPushEventStateService stateService,
                                   XianyuPushEventPublisher eventPublisher,
                                   @Qualifier("xianyuClock") Clock clock) {
-        this.properties = properties;
+        this.runtimeConfigService = runtimeConfigService;
         this.eventMapper = eventMapper;
         this.rawPayloadMapper = rawPayloadMapper;
         this.orderPayloadParser = orderPayloadParser;
@@ -53,7 +55,8 @@ public class XianyuPushRetryService {
     }
 
     public String retryStaleEvents() {
-        XianyuProperties.Job job = properties.getJob();
+        XianyuProperties.Job job = runtimeConfigService.getCurrent().getJob();
+        Long tenantId = TenantContextHolder.getRequiredTenantId();
         LocalDateTime staleBefore = LocalDateTime.now(clock)
                 .minusSeconds(Math.max(30, job.getPushRetryStaleSeconds()));
         List<XianyuPushEventDO> candidates = eventMapper.selectRetryCandidates(
@@ -66,7 +69,7 @@ public class XianyuPushRetryService {
             }
             try {
                 XianyuRawPayloadDO rawPayload = rawPayloadMapper.selectByTenantIdAndId(
-                        properties.requireTenantId(), event.getRawPayloadId());
+                        tenantId, event.getRawPayloadId());
                 if (rawPayload == null) {
                     throw new IllegalStateException("XianGuanJia push raw payload is missing");
                 }
@@ -84,7 +87,8 @@ public class XianyuPushRetryService {
     }
 
     public XianyuPushReplayOutcome replayPushEvent(Long eventId, Long operatorId) {
-        XianyuPushEventDO event = eventMapper.selectByTenantIdAndId(properties.requireTenantId(), eventId);
+        Long tenantId = TenantContextHolder.getRequiredTenantId();
+        XianyuPushEventDO event = eventMapper.selectByTenantIdAndId(tenantId, eventId);
         if (event == null) {
             return XianyuPushReplayOutcome.failed(eventId, "EVENT_NOT_FOUND");
         }
@@ -93,7 +97,7 @@ public class XianyuPushRetryService {
         }
         try {
             XianyuRawPayloadDO rawPayload = rawPayloadMapper.selectByTenantIdAndId(
-                    properties.requireTenantId(), event.getRawPayloadId());
+                    tenantId, event.getRawPayloadId());
             if (rawPayload == null) {
                 throw new IllegalStateException("XianGuanJia push raw payload is missing");
             }
@@ -109,6 +113,7 @@ public class XianyuPushRetryService {
     }
 
     private void publishReplayEvent(XianyuPushEventDO event, XianyuRawPayloadDO rawPayload) {
+        Long tenantId = TenantContextHolder.getRequiredTenantId();
         if (XianyuProductWebhookPersistenceService.EVENT_TYPE.equals(event.getEventType())) {
             ProductReplayTarget target = resolveProductReplayTarget(event, rawPayload);
             Long shopId = productShopResolver.resolveShopId(target.sellerId(), target.externalProductId());
@@ -116,7 +121,7 @@ public class XianyuPushRetryService {
                 throw new IllegalStateException("XianGuanJia product push seller mapping is missing or ambiguous");
             }
             eventPublisher.publishAfterCommitOrNow(new XianyuProductPushReceivedEvent(
-                    properties.requireTenantId(), event.getId(), shopId, target.externalProductId()));
+                    tenantId, event.getId(), shopId, target.externalProductId()));
             return;
         }
         if (event.getEventType() == null || "ORDER_PUSH".equals(event.getEventType())) {
@@ -126,7 +131,7 @@ public class XianyuPushRetryService {
                 throw new IllegalStateException("XianGuanJia order push seller mapping is missing or ambiguous");
             }
             eventPublisher.publishAfterCommitOrNow(new XianyuOrderPushReceivedEvent(
-                    properties.requireTenantId(), event.getId(), shopId, payload.externalOrderId()));
+                    tenantId, event.getId(), shopId, payload.externalOrderId()));
             return;
         }
         throw new IllegalStateException("Unsupported XianGuanJia push event type");

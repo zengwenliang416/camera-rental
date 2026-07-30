@@ -22,10 +22,12 @@ public class XianyuOrderRespVO {
     private Long payAmount;
     private String currency;
     private String sellerRemark;
-    /** Receiver fields from order detail (ops shipping); not redacted. */
+    /** Complete persisted receiver snapshot for authorized management users. */
     private String receiverName;
     private String receiverMobile;
     private String receiverAddress;
+    private String buyerNick;
+    private String remarkParseVersion;
     private String remarkParseStatus;
     private LocalDate billableStartDate;
     private LocalDate billableEndDate;

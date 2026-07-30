@@ -454,17 +454,9 @@ yudao-module-rental-biz/src/main/java/.../module/rental/integration/xianyu/
 
 ### 21.4 凭据与日志
 
-凭据只能通过环境变量、配置中心或密钥管理系统注入：
-
-```yaml
-rental:
-  xianyu:
-    enabled: false
-    base-url: https://open.goofish.pro
-    app-key: ${XGJ_APP_KEY:}
-    app-secret: ${XGJ_APP_SECRET:}
-    webhook-base-url: ${XGJ_WEBHOOK_BASE_URL:}
-```
+闲管家商家凭据、接口地址、Webhook、写开关和同步参数统一由管理端按租户维护，
+加密保存到 `xianyu_application`。服务端不得再从 `XGJ_*` 环境变量读取或兼容
+商家业务配置。数据库字段加密主密钥仍由基础设施配置注入，不属于管理端业务配置。
 
 不得把真实 AppKey、AppSecret、签名、完整请求头、客户手机号、地址或身份证
 写入 Git、前端、普通日志、测试 Fixture 或文档。日志和导出必须脱敏。

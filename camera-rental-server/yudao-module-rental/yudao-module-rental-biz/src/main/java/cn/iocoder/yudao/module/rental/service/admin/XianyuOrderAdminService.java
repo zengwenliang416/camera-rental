@@ -22,8 +22,6 @@ import cn.iocoder.yudao.module.rental.integration.xianyu.service.XianyuOrderSync
 import cn.iocoder.yudao.framework.common.exception.ServiceException;
 import cn.iocoder.yudao.module.rental.service.RentalConversionResult;
 import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -55,15 +53,13 @@ public class XianyuOrderAdminService {
     private final RentalDeviceAssignmentMapper assignmentMapper;
     private final XianyuOrderSyncService orderSyncService;
     private final XianyuRentalConversionService conversionService;
-    private final ObjectMapper objectMapper;
 
     public XianyuOrderAdminService(XianyuOrderMapper orderMapper, XianyuShopMapper shopMapper,
                                    RentalOrderMapper rentalOrderMapper,
                                    RentalOrderItemMapper rentalOrderItemMapper,
                                    RentalDeviceAssignmentMapper assignmentMapper,
                                    XianyuOrderSyncService orderSyncService,
-                                   XianyuRentalConversionService conversionService,
-                                   ObjectMapper objectMapper) {
+                                   XianyuRentalConversionService conversionService) {
         this.orderMapper = orderMapper;
         this.shopMapper = shopMapper;
         this.rentalOrderMapper = rentalOrderMapper;
@@ -71,7 +67,6 @@ public class XianyuOrderAdminService {
         this.assignmentMapper = assignmentMapper;
         this.orderSyncService = orderSyncService;
         this.conversionService = conversionService;
-        this.objectMapper = objectMapper;
     }
 
     public PageResult<XianyuOrderRespVO> getOrderPage(XianyuOrderPageReqVO pageReqVO) {
@@ -157,9 +152,10 @@ public class XianyuOrderAdminService {
         vo.setOrderStatus(order.getOrderStatus());
         vo.setPayAmount(order.getPayAmount());
         vo.setCurrency(order.getCurrency());
-        vo.setSellerRemark(XianyuAdminPrivacyMasker.maskFreeText(order.getSellerRemark()));
+        vo.setSellerRemark(order.getSellerRemark());
         fillReceiver(order, vo);
-        maskReceiver(vo);
+        vo.setBuyerNick(order.getBuyerNick());
+        vo.setRemarkParseVersion(order.getRemarkParseVersion());
         vo.setRemarkParseStatus(order.getRemarkParseStatus());
         fillRentalPeriod(order, vo);
         vo.setConversionStatus(order.getConversionStatus());
@@ -230,59 +226,6 @@ public class XianyuOrderAdminService {
         vo.setReceiverName(order.getReceiverName());
         vo.setReceiverMobile(order.getReceiverMobile());
         vo.setReceiverAddress(order.getReceiverAddress());
-        if (StringUtils.hasText(vo.getReceiverName()) && StringUtils.hasText(vo.getReceiverMobile())
-                && StringUtils.hasText(vo.getReceiverAddress())) {
-            return;
-        }
-        fillReceiverFromDetail(order.getDetailJson(), vo);
-    }
-
-    private static void maskReceiver(XianyuOrderRespVO vo) {
-        vo.setReceiverName(XianyuAdminPrivacyMasker.maskName(vo.getReceiverName()));
-        vo.setReceiverMobile(XianyuAdminPrivacyMasker.maskMobile(vo.getReceiverMobile()));
-        vo.setReceiverAddress(XianyuAdminPrivacyMasker.maskAddress(vo.getReceiverAddress()));
-    }
-
-    /**
-     * Backward-compatible fallback for rows created before receiver snapshot columns existed.
-     */
-    private void fillReceiverFromDetail(String detailJson, XianyuOrderRespVO vo) {
-        if (!StringUtils.hasText(detailJson)) {
-            return;
-        }
-        try {
-            JsonNode detail = objectMapper.readTree(detailJson);
-            if (!StringUtils.hasText(vo.getReceiverName())) {
-                vo.setReceiverName(textOrNull(detail, "receiver_name"));
-            }
-            if (!StringUtils.hasText(vo.getReceiverMobile())) {
-                vo.setReceiverMobile(textOrNull(detail, "receiver_mobile"));
-            }
-            if (!StringUtils.hasText(vo.getReceiverAddress())) {
-                vo.setReceiverAddress(composeAddress(detail));
-            }
-        } catch (Exception ignored) {
-            // Malformed historical payload: leave receiver fields empty.
-        }
-    }
-
-    private static String textOrNull(JsonNode node, String field) {
-        if (node == null || !node.has(field) || node.get(field).isNull()) {
-            return null;
-        }
-        String value = node.get(field).asText();
-        return StringUtils.hasText(value) ? value.trim() : null;
-    }
-
-    private static String composeAddress(JsonNode detail) {
-        List<String> parts = new ArrayList<>(5);
-        for (String field : List.of("prov_name", "city_name", "area_name", "town_name", "address")) {
-            String part = textOrNull(detail, field);
-            if (part != null) {
-                parts.add(part);
-            }
-        }
-        return parts.isEmpty() ? null : String.join("", parts);
     }
 
 }

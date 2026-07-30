@@ -35,8 +35,9 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
         query.apply(pageReqVO.getEndDate() != null,
                 "COALESCE(order_time, source_created_at, create_time) < {0}",
                 pageReqVO.getEndDate() != null ? pageReqVO.getEndDate().plusDays(1).atStartOfDay() : null);
-        // Keep detail_json so admin can surface receiver phone/address; goods_json stays out of list.
-        query.select(XianyuOrderDO.class, field -> !"goodsJson".equals(field.getProperty()));
+        // Keep detail_json for historical receiver fallback; exclude blobs/payment credentials from list reads.
+        query.select(XianyuOrderDO.class, field -> !"goodsJson".equals(field.getProperty())
+                && !"payNo".equals(field.getProperty()));
         return selectPage(pageReqVO, query);
     }
 
@@ -119,7 +120,8 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
                                                             cn.iocoder.yudao.framework.common.pojo.PageParam pageParam) {
         LambdaQueryWrapperX<XianyuOrderDO> query = pendingShipQuery(shopId, keyword, statuses);
         query.select(XianyuOrderDO.class, field -> !"detailJson".equals(field.getProperty())
-                && !"goodsJson".equals(field.getProperty()));
+                && !"goodsJson".equals(field.getProperty())
+                && !"payNo".equals(field.getProperty()));
         return selectPage(pageParam, query);
     }
 
@@ -137,8 +139,10 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
         if (org.springframework.util.StringUtils.hasText(keyword)) {
             query.and(wrapper -> wrapper
                     .like(XianyuOrderDO::getExternalOrderId, keyword)
-                    .or().like(XianyuOrderDO::getGoodsTitle, keyword)
-                    .or().like(XianyuOrderDO::getBuyerNick, keyword));
+                    .or().like(XianyuOrderDO::getReceiverName, keyword)
+                    .or().like(XianyuOrderDO::getReceiverMobile, keyword)
+                    .or().like(XianyuOrderDO::getBuyerNick, keyword)
+                    .or().like(XianyuOrderDO::getGoodsTitle, keyword));
         }
         return query;
     }

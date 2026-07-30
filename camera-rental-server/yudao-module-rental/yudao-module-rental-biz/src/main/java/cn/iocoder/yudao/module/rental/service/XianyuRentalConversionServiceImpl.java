@@ -43,6 +43,7 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
     static final String RENTAL_STATUS_PENDING_ALLOCATION = "PENDING_ALLOCATION";
     static final String SYSTEM_OPERATOR = "system";
     static final String SHIPMENT_MAPPING_NOTE = "Confirmed from shipment device selection";
+    static final String AUTO_CONVERSION_NOTE = "Conversion prerequisites satisfied";
     private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
 
     private final XianyuOrderMapper xianyuOrderMapper;
@@ -81,7 +82,11 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RentalConversionResult convert(Long channelOrderId) {
-        return convertInternal(channelOrderId, null);
+        RentalConversionResult result = convertInternal(channelOrderId, null);
+        if (CONVERSION_STATUS_CONVERTED.equals(result.status())) {
+            resolveConversionReview(channelOrderId, AUTO_CONVERSION_NOTE);
+        }
+        return result;
     }
 
     @Override
@@ -89,7 +94,7 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
     public RentalConversionResult convertForShipment(Long channelOrderId, String equipmentModelCode) {
         RentalConversionResult result = convertInternal(channelOrderId, equipmentModelCode);
         if (CONVERSION_STATUS_CONVERTED.equals(result.status())) {
-            resolveShipmentReview(channelOrderId);
+            resolveConversionReview(channelOrderId, SHIPMENT_MAPPING_NOTE);
         }
         return result;
     }
@@ -219,14 +224,14 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
         return mapping;
     }
 
-    private void resolveShipmentReview(Long channelOrderId) {
+    private void resolveConversionReview(Long channelOrderId, String resolutionNote) {
         RentalManualReviewDO review = manualReviewMapper.selectBySourceAndReviewTypeForUpdate(
                 REVIEW_SOURCE_TYPE, channelOrderId.toString(), REVIEW_TYPE);
         if (review == null || !OPEN.getStatus().equals(review.getStatus())) {
             return;
         }
         review.setStatus(RESOLVED.getStatus());
-        review.setResolutionNote(SHIPMENT_MAPPING_NOTE);
+        review.setResolutionNote(resolutionNote);
         review.setResolvedAt(LocalDateTime.now(BUSINESS_ZONE));
         review.setUpdater(SYSTEM_OPERATOR);
         manualReviewMapper.updateById(review);

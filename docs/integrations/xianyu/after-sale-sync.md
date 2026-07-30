@@ -48,14 +48,15 @@
   `AFTER_SALE_LIST_ITEM`，随后按 `order_no` 补拉 `AFTER_SALE_DETAIL`。
 - 标准化 `xianyu_after_sale.raw_payload_id` 指向详情原始载荷；列表页和列表
   item 仍保留在受限原始载荷表中，用于审计和重放分析。
-- `xianyuAfterSaleSyncJob`、可选 Spring fallback 和 startup sync 均调用
+- `xianyuAfterSaleSyncJob` 由芋道 `infra_job + Quartz` 调用
   `syncAfterSalesIncremental()`，遍历 `VALID` 且未过期的店铺授权。
 - 增量窗口同时按 `apply_time` 和 `refund_time` 查询，降低只看申请时间漏掉
   后续退款状态变化的风险；两类窗口全部成功后才推进 `AFTER_SALE` 游标。
 - 售后列表接口没有 `count` 字段；当 `has_next_page=true` 超过配置的
   `max-pages-per-shop` 时，本次窗口失败并不推进游标，避免把未拉全的数据标记
   为已同步。
-- 运行时 cron 使用 `XGJ_JOB_AFTER_SALE_CRON` 配置，默认每 10 分钟执行一次。
+- cron 在管理端“基础设施 -> 定时任务”维护；当前租户必须同时在闲管家配置中
+  开启同步任务，否则 Job 安全跳过。
 
 ## 当前契约歧义
 

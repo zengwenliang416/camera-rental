@@ -6,20 +6,19 @@ import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuShopRespVO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuApplicationDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuShopDO;
-import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuApplicationMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuShopMapper;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuClientException;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadClient;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadEndpoint;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadResponse;
 import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
+import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuRuntimeConfigService;
 import cn.iocoder.yudao.module.rental.integration.xianyu.service.XianyuAuthorizedShop;
 import cn.iocoder.yudao.module.rental.integration.xianyu.service.XianyuAuthorizedShopListParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -40,20 +39,18 @@ public class XianyuShopAdminService {
 
     private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
 
-    private final XianyuProperties properties;
+    private final XianyuRuntimeConfigService runtimeConfigService;
     private final XianyuReadClient readClient;
-    private final XianyuApplicationMapper applicationMapper;
     private final XianyuShopMapper shopMapper;
     private final XianyuAlertAdminService alertAdminService;
     private final XianyuAuthorizedShopListParser listParser = new XianyuAuthorizedShopListParser();
     private final ObjectMapper objectMapper;
 
-    public XianyuShopAdminService(XianyuProperties properties, XianyuReadClient readClient,
-                                  XianyuApplicationMapper applicationMapper, XianyuShopMapper shopMapper,
+    public XianyuShopAdminService(XianyuRuntimeConfigService runtimeConfigService, XianyuReadClient readClient,
+                                  XianyuShopMapper shopMapper,
                                   XianyuAlertAdminService alertAdminService, ObjectMapper objectMapper) {
-        this.properties = properties;
+        this.runtimeConfigService = runtimeConfigService;
         this.readClient = readClient;
-        this.applicationMapper = applicationMapper;
         this.shopMapper = shopMapper;
         this.alertAdminService = alertAdminService;
         this.objectMapper = objectMapper;
@@ -68,8 +65,12 @@ public class XianyuShopAdminService {
 
     @Transactional(rollbackFor = Exception.class)
     public int syncAuthorizedShops() {
-        assertReady();
-        XianyuApplicationDO application = ensureApplication();
+        XianyuProperties properties = runtimeConfigService.getCurrent();
+        assertReady(properties);
+        XianyuApplicationDO application = runtimeConfigService.getCurrentApplication();
+        if (application == null) {
+            throw exception(XIANYU_CREDENTIALS_MISSING);
+        }
         ObjectNode body = objectMapper.createObjectNode();
         final XianyuReadResponse response;
         try {
@@ -133,26 +134,7 @@ public class XianyuShopAdminService {
         return upserted;
     }
 
-    private XianyuApplicationDO ensureApplication() {
-        String code = StringUtils.hasText(properties.getAppKey()) ? properties.getAppKey() : "default";
-        XianyuApplicationDO existing = applicationMapper.selectByApplicationCode(code);
-        if (existing != null) {
-            return existing;
-        }
-        XianyuApplicationDO created = XianyuApplicationDO.builder()
-                .applicationCode(code)
-                .displayName("XianGuanJia")
-                .enabled(properties.isEnabled())
-                .credentialReference("env:XGJ_APP_KEY")
-                .authorizationStatus("UNKNOWN")
-                .build();
-        created.setCreator("system");
-        created.setUpdater("system");
-        applicationMapper.insert(created);
-        return created;
-    }
-
-    private void assertReady() {
+    private void assertReady(XianyuProperties properties) {
         switch (properties.getIntegrationStatus()) {
             case DISABLED -> throw exception(XIANYU_INTEGRATION_DISABLED);
             case MISSING_CREDENTIALS -> throw exception(XIANYU_CREDENTIALS_MISSING);

@@ -44,6 +44,7 @@ public class XianyuClientException extends RuntimeException {
     public enum Kind {
         INTEGRATION_DISABLED,
         MISSING_CREDENTIALS,
+        WRITE_DISABLED,
         MALFORMED_REQUEST,
         TRANSPORT,
         HTTP_STATUS,

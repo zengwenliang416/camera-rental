@@ -35,6 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class XianyuOrderAdminServiceTest {
@@ -52,7 +54,7 @@ class XianyuOrderAdminServiceTest {
     }
 
     @Test
-    void orderPageExposesOrderNoWithMaskedReceiverButNotRawPayloads() throws Exception {
+    void orderPageExposesCompleteCustomerFieldsButNotRawPayloads() throws Exception {
         XianyuOrderMapper orderMapper = mock(XianyuOrderMapper.class);
         RentalOrderMapper rentalOrderMapper = mock(RentalOrderMapper.class);
         XianyuOrderDO order = XianyuOrderDO.builder()
@@ -63,19 +65,22 @@ class XianyuOrderAdminServiceTest {
                 .payAmount(100L)
                 .currency("CNY")
                 .conversionStatus("PENDING")
-                .sellerRemark("发货7.25/收货7.26/发回8.02")
+                .sellerRemark("测试备注：发货7.25/收货7.26/发回8.02")
                 .billableStartDate(LocalDate.of(2026, 7, 27))
                 .billableEndDate(LocalDate.of(2026, 8, 2))
                 .rentalPeriodStatus("SUCCESS")
                 .orderTime(LocalDateTime.of(2026, 7, 25, 12, 0))
+                .receiverName("测试收货人")
+                .receiverMobile("19900000000")
+                .receiverAddress("测试省测试市测试区测试路1号")
                 .detailJson("{"
-                        + "\"receiver_mobile\":\"13800138000\","
-                        + "\"receiver_name\":\"张三\","
-                        + "\"prov_name\":\"浙江省\","
-                        + "\"city_name\":\"杭州市\","
-                        + "\"area_name\":\"西湖区\","
+                        + "\"receiver_mobile\":\"19900000000\","
+                        + "\"receiver_name\":\"测试收货人\","
+                        + "\"prov_name\":\"测试省\","
+                        + "\"city_name\":\"测试市\","
+                        + "\"area_name\":\"测试区\","
                         + "\"town_name\":\"\","
-                        + "\"address\":\"secret 路1号\","
+                        + "\"address\":\"测试路1号\","
                         + "\"pay_no\":\"202600000000000000\","
                         + "\"waybill_no\":\"SF1234567890\","
                         + "\"buyer_nick\":\"private-buyer\""
@@ -95,30 +100,32 @@ class XianyuOrderAdminServiceTest {
                 mock(RentalOrderItemMapper.class),
                 mock(RentalDeviceAssignmentMapper.class),
                 mock(XianyuOrderSyncService.class),
-                mock(XianyuRentalConversionService.class),
-                objectMapper);
+                mock(XianyuRentalConversionService.class));
 
         PageResult<XianyuOrderRespVO> page = service.getOrderPage(pageParam);
         XianyuOrderRespVO vo = page.getList().get(0);
         String json = objectMapper.writeValueAsString(vo);
 
-        // Order lookup stays available while recipient PII is masked at the API boundary.
+        // Authorized management order queries return the persisted customer snapshot.
         assertEquals("3364202298717566229", vo.getExternalOrderId());
-        assertEquals("张*", vo.getReceiverName());
-        assertEquals("138****8000", vo.getReceiverMobile());
-        assertEquals("浙江省杭州市***", vo.getReceiverAddress());
+        assertEquals("测试收货人", vo.getReceiverName());
+        assertEquals("19900000000", vo.getReceiverMobile());
+        assertEquals("测试省测试市测试区测试路1号", vo.getReceiverAddress());
+        assertEquals("测试备注：发货7.25/收货7.26/发回8.02", vo.getSellerRemark());
         assertEquals(LocalDate.of(2026, 7, 27), vo.getBillableStartDate());
         assertEquals(LocalDate.of(2026, 8, 2), vo.getBillableEndDate());
         assertEquals("SUCCESS", vo.getRentalPeriodStatus());
         assertTrue(json.contains("3364202298717566229"));
-        assertFalse(json.contains("13800138000"));
-        assertFalse(json.contains("secret 路1号"));
+        assertTrue(json.contains("19900000000"));
+        assertTrue(json.contains("测试路1号"));
+        assertTrue(json.contains("测试备注"));
+        assertEquals("private-buyer", vo.getBuyerNick());
+        assertTrue(json.contains("private-buyer"));
 
         // Raw blobs and non-shipping secrets stay out of list VO.
         assertFalse(json.contains("detailJson"));
         assertFalse(json.contains("goodsJson"));
         assertFalse(json.contains("202600000000000000"));
-        assertFalse(json.contains("private-buyer"));
         assertEquals("SF1234567890", vo.getWaybillNo());
     }
 
@@ -140,8 +147,7 @@ class XianyuOrderAdminServiceTest {
                 mock(RentalOrderItemMapper.class),
                 mock(RentalDeviceAssignmentMapper.class),
                 syncService,
-                mock(XianyuRentalConversionService.class),
-                objectMapper);
+                mock(XianyuRentalConversionService.class));
         XianyuOrderSyncReqVO reqVO = new XianyuOrderSyncReqVO();
         reqVO.setShopId(2L);
 
@@ -180,8 +186,7 @@ class XianyuOrderAdminServiceTest {
                 mock(RentalOrderItemMapper.class),
                 mock(RentalDeviceAssignmentMapper.class),
                 mock(XianyuOrderSyncService.class),
-                mock(XianyuRentalConversionService.class),
-                objectMapper);
+                mock(XianyuRentalConversionService.class));
 
         XianyuOrderRespVO vo = service.getOrderPage(pageParam).getList().get(0);
 
@@ -201,9 +206,9 @@ class XianyuOrderAdminServiceTest {
                 .payAmount(14000L)
                 .currency("CNY")
                 .conversionStatus("REVIEW_REQUIRED")
-                .receiverName("张三")
-                .receiverMobile("13800138000")
-                .receiverAddress("湖南省长沙市测试地址")
+                .receiverName("测试收货人")
+                .receiverMobile("19900000000")
+                .receiverAddress("测试省测试市测试地址")
                 .detailJson("{\"order_no\":\"test-order-6425\",\"order_status\":21}")
                 .build();
         XianyuOrderPageReqVO pageParam = new XianyuOrderPageReqVO();
@@ -215,14 +220,13 @@ class XianyuOrderAdminServiceTest {
                 mock(RentalOrderItemMapper.class),
                 mock(RentalDeviceAssignmentMapper.class),
                 mock(XianyuOrderSyncService.class),
-                mock(XianyuRentalConversionService.class),
-                objectMapper);
+                mock(XianyuRentalConversionService.class));
 
         XianyuOrderRespVO vo = service.getOrderPage(pageParam).getList().get(0);
 
-        assertEquals("张*", vo.getReceiverName());
-        assertEquals("138****8000", vo.getReceiverMobile());
-        assertEquals("湖南省长沙市***", vo.getReceiverAddress());
+        assertEquals("测试收货人", vo.getReceiverName());
+        assertEquals("19900000000", vo.getReceiverMobile());
+        assertEquals("测试省测试市测试地址", vo.getReceiverAddress());
     }
 
     @Test
@@ -267,8 +271,7 @@ class XianyuOrderAdminServiceTest {
                 itemMapper,
                 assignmentMapper,
                 mock(XianyuOrderSyncService.class),
-                mock(XianyuRentalConversionService.class),
-                objectMapper);
+                mock(XianyuRentalConversionService.class));
 
         XianyuOrderRespVO vo = service.getOrderPage(pageParam).getList().get(0);
 
@@ -307,8 +310,7 @@ class XianyuOrderAdminServiceTest {
                 mock(RentalOrderItemMapper.class),
                 mock(RentalDeviceAssignmentMapper.class),
                 mock(XianyuOrderSyncService.class),
-                mock(XianyuRentalConversionService.class),
-                objectMapper);
+                mock(XianyuRentalConversionService.class));
 
         XianyuOrderRespVO vo = service.getOrderPage(pageParam).getList().get(0);
 

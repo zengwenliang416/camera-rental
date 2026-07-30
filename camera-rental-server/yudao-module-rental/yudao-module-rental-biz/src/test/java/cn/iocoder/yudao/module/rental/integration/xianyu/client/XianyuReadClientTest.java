@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.rental.integration.xianyu.client;
 
 import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
+import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuRuntimeConfigService;
 import cn.iocoder.yudao.module.rental.integration.xianyu.security.XianyuLogRedactor;
 import cn.iocoder.yudao.module.rental.integration.xianyu.security.XianyuWebhookSignatureVerifier;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,8 +21,12 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class XianyuReadClientTest {
 
@@ -31,6 +36,7 @@ class XianyuReadClientTest {
     private final XianyuRequestSigner requestSigner = new XianyuRequestSigner();
     private MockWebServer mockWebServer;
     private XianyuProperties properties;
+    private XianyuRuntimeConfigService runtimeConfigService;
     private XianyuReadClient client;
 
     @BeforeEach
@@ -39,7 +45,10 @@ class XianyuReadClientTest {
         mockWebServer.start();
         properties = readyProperties();
         properties.setBaseUrl(mockWebServer.url("/").toString());
-        client = new XianyuReadClient(properties, new XianyuCanonicalJson(objectMapper), requestSigner,
+        runtimeConfigService = mock(XianyuRuntimeConfigService.class);
+        when(runtimeConfigService.getCurrent()).thenReturn(properties);
+        when(runtimeConfigService.findByAppKey("demo-app")).thenReturn(properties);
+        client = new XianyuReadClient(runtimeConfigService, new XianyuCanonicalJson(objectMapper), requestSigner,
                 new OkHttpClient(), objectMapper, Clock.fixed(Instant.ofEpochSecond(FIXED_TIMESTAMP), ZoneOffset.UTC));
     }
 
@@ -133,15 +142,35 @@ class XianyuReadClientTest {
 
     @Test
     void shouldVerifyRawWebhookBodyWithinTimestampWindow() {
+        properties.setTenantId(42L);
         String rawBody = "{\"order_no\":\"123\",\"order_status\":12}";
         String signature = requestSigner.sign("demo-app", "demo-secret", FIXED_TIMESTAMP, rawBody);
-        XianyuWebhookSignatureVerifier verifier = new XianyuWebhookSignatureVerifier(properties, requestSigner,
+        XianyuWebhookSignatureVerifier verifier = new XianyuWebhookSignatureVerifier(runtimeConfigService, requestSigner,
                 Clock.fixed(Instant.ofEpochSecond(FIXED_TIMESTAMP), ZoneOffset.UTC));
 
         assertTrue(verifier.verify("demo-app", FIXED_TIMESTAMP, rawBody, signature));
+        XianyuProperties verified = verifier.resolveVerifiedConfig(
+                "demo-app", FIXED_TIMESTAMP, rawBody, signature);
+        assertNotNull(verified);
+        assertEquals(42L, verified.requireTenantId());
+        verify(runtimeConfigService, org.mockito.Mockito.atLeastOnce()).findByAppKey("demo-app");
         assertFalse(verifier.verify("demo-app", FIXED_TIMESTAMP, rawBody + " ", signature));
         assertFalse(verifier.verify("demo-app", FIXED_TIMESTAMP - 301, rawBody, signature));
         assertFalse(verifier.verify("demo-app", FIXED_TIMESTAMP, null, signature));
+    }
+
+    @Test
+    void shouldResolvePersistedConfigForEveryRequest() {
+        XianyuProperties disabled = new XianyuProperties();
+        when(runtimeConfigService.getCurrent()).thenReturn(disabled, properties);
+
+        XianyuClientException first = assertThrows(XianyuClientException.class,
+                () -> client.execute(XianyuReadEndpoint.AUTHORIZED_SHOPS, null));
+        assertEquals(XianyuClientException.Kind.INTEGRATION_DISABLED, first.getKind());
+
+        mockWebServer.enqueue(new MockResponse().setBody("{\"code\":0,\"msg\":\"OK\",\"data\":{\"list\":[]}}"));
+        client.execute(XianyuReadEndpoint.AUTHORIZED_SHOPS, null);
+        assertEquals(1, mockWebServer.getRequestCount());
     }
 
     @Test

@@ -278,43 +278,10 @@ justauth:
     prefix: 'social_auth_state:' # 缓存前缀，目前只对 Redis 缓存生效，默认 JUSTAUTH::STATE::
     timeout: 24h # 超时时长，目前只对 Redis 缓存生效，默认 3 分钟
 
---- #################### 相机租赁 / 闲管家（本地） ####################
-# 凭据只允许环境变量注入，例如：
-#   export XGJ_ENABLED=true
-#   export XGJ_APP_KEY=your-app-key
-#   export XGJ_APP_SECRET=your-app-secret
-# 不要在本文件写入真实 AppKey / AppSecret。
+--- #################### 相机租赁（本地） ####################
 rental:
   device:
     qr-secret: ${RENTAL_DEVICE_QR_SECRET:}
-  xianyu:
-    enabled: ${XGJ_ENABLED:false}
-    base-url: ${XGJ_BASE_URL:https://open.goofish.pro}
-    app-key: ${XGJ_APP_KEY:}
-    app-secret: ${XGJ_APP_SECRET:}
-    webhook-base-url: ${XGJ_WEBHOOK_BASE_URL:}
-    tenant-id: ${XGJ_TENANT_ID:}
-    write-enabled: ${XGJ_WRITE_ENABLED:false}
-    # 定时同步默认复用 infra Job + Quartz；Spring @Scheduled 仅作显式兜底。
-    # 关闭：export XGJ_JOB_ENABLED=false
-    job:
-      enabled: ${XGJ_JOB_ENABLED:true}
-      shop-cron: ${XGJ_JOB_SHOP_CRON:0 0/30 * * * ?}   # 每 30 分钟同步授权店铺
-      order-cron: ${XGJ_JOB_ORDER_CRON:0 * * * * ?}    # 每 1 分钟增量同步订单详情并入库
-      product-cron: ${XGJ_JOB_PRODUCT_CRON:0 0/10 * * * ?} # 每 10 分钟同步商品详情和多规格 SKU
-      after-sale-cron: ${XGJ_JOB_AFTER_SALE_CRON:0 0/10 * * * ?} # 每 10 分钟同步售后列表和详情
-      push-retry-cron: ${XGJ_JOB_PUSH_RETRY_CRON:0 0/5 * * * ?}
-      lookback-days: 7
-      overlap-minutes: 10
-      max-pages-per-shop: 20
-      page-size: 50
-      push-retry-stale-seconds: 120
-      push-retry-batch-size: 100
-      # 优先 infra Job（基础设施 → 定时任务）；仅当 Quartz 不可用时再开 spring-schedule
-      spring-schedule-enabled: ${XGJ_JOB_SPRING_SCHEDULE:false}
-      # 启动阶段同步会阻塞应用就绪，默认关闭；仅排障或一次性补数时显式开启
-      startup-sync-enabled: ${XGJ_JOB_STARTUP_SYNC:false}
-      register-infra-jobs: ${XGJ_JOB_REGISTER_INFRA_JOBS:${XGJ_JOB_REGISTER_INFRA:true}}
 
 --- #################### 发货图片 OCR / New API 中转站（本地） ####################
 # OpenAI-compatible / New API 中转站配置。不要在本文件写真实 Key：

@@ -1,11 +1,15 @@
 package cn.iocoder.yudao.module.rental.integration.xianyu.webhook;
 
+import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuPushEventDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuRawPayloadDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuPushEventMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuRawPayloadMapper;
 import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
+import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuRuntimeConfigService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -41,6 +45,16 @@ class XianyuPushRetryServiceTest {
     @Mock
     private XianyuProductPushShopResolver productShopResolver;
 
+    @BeforeEach
+    void setTenantContext() {
+        TenantContextHolder.setTenantId(9L);
+    }
+
+    @AfterEach
+    void clearTenantContext() {
+        TenantContextHolder.clear();
+    }
+
     @Test
     void shouldQueueOnlyDurableStaleCandidate() {
         XianyuProperties properties = new XianyuProperties();
@@ -57,7 +71,7 @@ class XianyuPushRetryServiceTest {
                 .build());
         when(shopResolver.resolveShopId("123456", "order-1")).thenReturn(77L);
         XianyuPushRetryService service = new XianyuPushRetryService(
-                properties, eventMapper, rawPayloadMapper,
+                runtimeConfig(properties), eventMapper, rawPayloadMapper,
                 new XianyuOrderPushPayloadParser(new ObjectMapper()),
                 new XianyuProductPushPayloadParser(new ObjectMapper()),
                 shopResolver, productShopResolver, stateService, eventPublisher,
@@ -70,8 +84,6 @@ class XianyuPushRetryServiceTest {
 
     @Test
     void shouldManuallyReplayFailedPushEventOnce() {
-        XianyuProperties properties = new XianyuProperties();
-        properties.setTenantId(9L);
         XianyuPushEventDO event = XianyuPushEventDO.builder()
                 .id(42L)
                 .rawPayloadId(32L)
@@ -83,7 +95,7 @@ class XianyuPushRetryServiceTest {
                 .payload(validStoredPayload())
                 .build());
         when(shopResolver.resolveShopId("123456", "order-1")).thenReturn(77L);
-        XianyuPushRetryService service = service(properties);
+        XianyuPushRetryService service = service();
 
         XianyuPushReplayOutcome outcome = service.replayPushEvent(42L, 7L);
 
@@ -94,8 +106,6 @@ class XianyuPushRetryServiceTest {
 
     @Test
     void shouldManuallyReplayProductPushEventOnce() {
-        XianyuProperties properties = new XianyuProperties();
-        properties.setTenantId(9L);
         XianyuPushEventDO event = XianyuPushEventDO.builder()
                 .id(45L)
                 .eventType(XianyuProductWebhookPersistenceService.EVENT_TYPE)
@@ -108,7 +118,7 @@ class XianyuPushRetryServiceTest {
                 .payload(validStoredProductPayload())
                 .build());
         when(productShopResolver.resolveShopId("123456", "441160510721413")).thenReturn(88L);
-        XianyuPushRetryService service = service(properties);
+        XianyuPushRetryService service = service();
 
         XianyuPushReplayOutcome outcome = service.replayPushEvent(45L, 7L);
 
@@ -119,8 +129,6 @@ class XianyuPushRetryServiceTest {
 
     @Test
     void shouldReplayProductPushFromExternalIdentifierWhenStoredPayloadIsRedacted() {
-        XianyuProperties properties = new XianyuProperties();
-        properties.setTenantId(9L);
         XianyuPushEventDO event = XianyuPushEventDO.builder()
                 .id(46L)
                 .eventType(XianyuProductWebhookPersistenceService.EVENT_TYPE)
@@ -134,7 +142,7 @@ class XianyuPushRetryServiceTest {
                 .payload("{\"seller_id\":\"***\",\"product_id\":\"***\"}")
                 .build());
         when(productShopResolver.resolveShopId(null, "441160510721413")).thenReturn(88L);
-        XianyuPushRetryService service = service(properties);
+        XianyuPushRetryService service = service();
 
         XianyuPushReplayOutcome outcome = service.replayPushEvent(46L, 7L);
 
@@ -145,15 +153,13 @@ class XianyuPushRetryServiceTest {
 
     @Test
     void shouldSkipManualReplayWhenEventCannotBePrepared() {
-        XianyuProperties properties = new XianyuProperties();
-        properties.setTenantId(9L);
         XianyuPushEventDO event = XianyuPushEventDO.builder()
                 .id(43L)
                 .processingStatus("SUCCEEDED")
                 .build();
         when(eventMapper.selectByTenantIdAndId(9L, 43L)).thenReturn(event);
         when(stateService.prepareManualReplay(43L, "7")).thenReturn(false);
-        XianyuPushRetryService service = service(properties);
+        XianyuPushRetryService service = service();
 
         XianyuPushReplayOutcome outcome = service.replayPushEvent(43L, 7L);
 
@@ -163,8 +169,6 @@ class XianyuPushRetryServiceTest {
 
     @Test
     void shouldMarkManualReplayPreparationFailureWithSafeErrorCode() {
-        XianyuProperties properties = new XianyuProperties();
-        properties.setTenantId(9L);
         XianyuPushEventDO event = XianyuPushEventDO.builder()
                 .id(44L)
                 .rawPayloadId(34L)
@@ -173,7 +177,7 @@ class XianyuPushRetryServiceTest {
         when(eventMapper.selectByTenantIdAndId(9L, 44L)).thenReturn(event);
         when(stateService.prepareManualReplay(44L, "7")).thenReturn(true);
         when(rawPayloadMapper.selectByTenantIdAndId(9L, 34L)).thenReturn(null);
-        XianyuPushRetryService service = service(properties);
+        XianyuPushRetryService service = service();
 
         XianyuPushReplayOutcome outcome = service.replayPushEvent(44L, 7L);
 
@@ -182,13 +186,19 @@ class XianyuPushRetryServiceTest {
         verify(eventPublisher, never()).publishAfterCommitOrNow(any());
     }
 
-    private XianyuPushRetryService service(XianyuProperties properties) {
+    private XianyuPushRetryService service() {
         return new XianyuPushRetryService(
-                properties, eventMapper, rawPayloadMapper,
+                org.mockito.Mockito.mock(XianyuRuntimeConfigService.class), eventMapper, rawPayloadMapper,
                 new XianyuOrderPushPayloadParser(new ObjectMapper()),
                 new XianyuProductPushPayloadParser(new ObjectMapper()),
                 shopResolver, productShopResolver, stateService, eventPublisher,
                 Clock.fixed(Instant.parse("2026-07-24T12:00:00Z"), ZoneOffset.UTC));
+    }
+
+    private XianyuRuntimeConfigService runtimeConfig(XianyuProperties properties) {
+        XianyuRuntimeConfigService service = org.mockito.Mockito.mock(XianyuRuntimeConfigService.class);
+        when(service.getCurrent()).thenReturn(properties);
+        return service;
     }
 
     private String validStoredPayload() {

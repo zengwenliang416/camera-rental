@@ -12,7 +12,7 @@ public class XianyuPendingShipOrderPageReqVO extends PageParam {
 
     private Long shopId;
 
-    @Schema(description = "订单号、商品标题、买家昵称等关键词")
+    @Schema(description = "订单号、收货人姓名或完整收货手机号")
     private String keyword;
 
 }

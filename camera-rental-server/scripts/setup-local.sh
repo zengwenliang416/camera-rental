@@ -10,6 +10,7 @@ MYSQL_PORT="${MYSQL_PORT:-3306}"
 MYSQL_USER="${MYSQL_USER:-root}"
 MYSQL_PASSWORD="${MYSQL_PASSWORD:-root}"
 MYSQL_DATABASE="${MYSQL_DATABASE:-ruoyi-vue-pro}"
+MYSQL_CLI="${MYSQL_CLI:-$(command -v mysql 2>/dev/null || true)}"
 
 if [[ -f "$ROOT/.env.local" ]]; then
   set -a
@@ -18,12 +19,20 @@ if [[ -f "$ROOT/.env.local" ]]; then
   set +a
 fi
 
+if [[ -z "$MYSQL_CLI" && -x /usr/local/mysql/bin/mysql ]]; then
+  MYSQL_CLI=/usr/local/mysql/bin/mysql
+fi
+if [[ -z "$MYSQL_CLI" ]]; then
+  echo "[setup-local] ERROR: mysql client not found. Set MYSQL_CLI to its absolute path." >&2
+  exit 1
+fi
+
 mysql_cmd() {
   if [[ -n "${MYSQL_PASSWORD:-}" ]]; then
-    mysql --default-character-set=utf8mb4 \
-      -h"$MYSQL_HOST" -P"$MYSQL_PORT" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$@"
+    MYSQL_PWD="$MYSQL_PASSWORD" "$MYSQL_CLI" --default-character-set=utf8mb4 \
+      -h"$MYSQL_HOST" -P"$MYSQL_PORT" -u"$MYSQL_USER" "$@"
   else
-    mysql --default-character-set=utf8mb4 \
+    "$MYSQL_CLI" --default-character-set=utf8mb4 \
       -h"$MYSQL_HOST" -P"$MYSQL_PORT" -u"$MYSQL_USER" "$@"
   fi
 }
@@ -96,11 +105,6 @@ if [[ ! -f "$ROOT/.env.local" ]]; then
   cp "$ROOT/.env.local.example" "$ROOT/.env.local"
   echo "[setup-local] created .env.local from example — edit passwords if needed"
 fi
-if [[ ! -f "$ROOT/.env.xianyu" ]]; then
-  cp "$ROOT/.env.xianyu.example" "$ROOT/.env.xianyu"
-  echo "[setup-local] created .env.xianyu — fill XGJ_APP_KEY / XGJ_APP_SECRET for live probe"
-fi
-
 echo "[setup-local] ensuring database \`${MYSQL_DATABASE}\` ..."
 mysql_cmd -e "CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 

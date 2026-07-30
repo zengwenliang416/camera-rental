@@ -16,18 +16,15 @@ public class XianyuOrderWebhookService {
 
     private static final int MAX_RAW_BODY_BYTES = 65_536;
 
-    private final XianyuProperties properties;
     private final XianyuWebhookSignatureVerifier signatureVerifier;
     private final XianyuOrderPushPayloadParser payloadParser;
     private final XianyuOrderPushShopResolver shopResolver;
     private final XianyuOrderWebhookPersistenceService persistenceService;
 
-    public XianyuOrderWebhookService(XianyuProperties properties,
-                                     XianyuWebhookSignatureVerifier signatureVerifier,
+    public XianyuOrderWebhookService(XianyuWebhookSignatureVerifier signatureVerifier,
                                      XianyuOrderPushPayloadParser payloadParser,
                                      XianyuOrderPushShopResolver shopResolver,
                                      XianyuOrderWebhookPersistenceService persistenceService) {
-        this.properties = properties;
         this.signatureVerifier = signatureVerifier;
         this.payloadParser = payloadParser;
         this.shopResolver = shopResolver;
@@ -37,23 +34,27 @@ public class XianyuOrderWebhookService {
     public XianyuWebhookReceipt receive(String appId, Long timestamp, String signature, String rawBody) {
         if (!StringUtils.hasText(appId) || timestamp == null || !StringUtils.hasText(signature)
                 || !StringUtils.hasText(rawBody)
-                || rawBody.getBytes(StandardCharsets.UTF_8).length > MAX_RAW_BODY_BYTES
-                || !signatureVerifier.verify(appId, timestamp, rawBody, signature)) {
+                || rawBody.getBytes(StandardCharsets.UTF_8).length > MAX_RAW_BODY_BYTES) {
+            return XianyuWebhookReceipt.fail("签名失败");
+        }
+        XianyuProperties properties = signatureVerifier.resolveVerifiedConfig(appId, timestamp, rawBody, signature);
+        if (properties == null) {
             return XianyuWebhookReceipt.fail("签名失败");
         }
         try {
-            return TenantUtils.execute(properties.requireTenantId(), () -> receiveWithinTenant(rawBody));
+            return TenantUtils.execute(properties.requireTenantId(),
+                    () -> receiveWithinTenant(properties.requireTenantId(), rawBody));
         } catch (RuntimeException exception) {
             log.warn("[xianyu][webhook] order push rejected code={}", XianyuSafeErrorCode.from(exception));
             return XianyuWebhookReceipt.fail("接收失败");
         }
     }
 
-    private XianyuWebhookReceipt receiveWithinTenant(String rawBody) {
+    private XianyuWebhookReceipt receiveWithinTenant(Long tenantId, String rawBody) {
         XianyuOrderPushPayload payload = payloadParser.parse(rawBody);
         Long shopId = shopResolver.resolveShopId(payload.sellerId(), payload.externalOrderId());
         String dedupeKey = persistenceService.dedupeKey(payload);
-        persistenceService.accept(properties.requireTenantId(), shopId, payload, rawBody, dedupeKey);
+        persistenceService.accept(tenantId, shopId, payload, rawBody, dedupeKey);
         return XianyuWebhookReceipt.success();
     }
 

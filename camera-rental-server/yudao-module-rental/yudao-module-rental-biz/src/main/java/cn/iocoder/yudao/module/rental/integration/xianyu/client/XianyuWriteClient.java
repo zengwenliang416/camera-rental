@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.rental.integration.xianyu.client;
 
 import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
+import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuRuntimeConfigService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,17 +24,17 @@ public class XianyuWriteClient {
 
     private static final MediaType JSON_MEDIA_TYPE = MediaType.get("application/json; charset=utf-8");
 
-    private final XianyuProperties properties;
+    private final XianyuRuntimeConfigService runtimeConfigService;
     private final XianyuCanonicalJson canonicalJson;
     private final XianyuRequestSigner requestSigner;
     private final OkHttpClient httpClient;
     private final ObjectMapper objectMapper;
     private final Clock clock;
 
-    public XianyuWriteClient(XianyuProperties properties, XianyuCanonicalJson canonicalJson,
+    public XianyuWriteClient(XianyuRuntimeConfigService runtimeConfigService, XianyuCanonicalJson canonicalJson,
                              XianyuRequestSigner requestSigner, OkHttpClient httpClient,
                              ObjectMapper objectMapper, Clock clock) {
-        this.properties = properties;
+        this.runtimeConfigService = runtimeConfigService;
         this.canonicalJson = canonicalJson;
         this.requestSigner = requestSigner;
         this.httpClient = httpClient;
@@ -42,11 +43,12 @@ public class XianyuWriteClient {
     }
 
     public XianyuReadResponse execute(XianyuWriteEndpoint endpoint, JsonNode body) {
-        assertReady();
+        XianyuProperties properties = runtimeConfigService.getCurrent();
+        assertReady(properties);
         String bodyString = canonicalJson.serialize(body);
         long timestamp = clock.instant().getEpochSecond();
         String signature = requestSigner.sign(properties.getAppKey(), properties.getAppSecret(), timestamp, bodyString);
-        HttpUrl url = buildUrl(endpoint, timestamp, signature);
+        HttpUrl url = buildUrl(properties, endpoint, timestamp, signature);
         Request request = new Request.Builder()
                 .url(url)
                 .post(RequestBody.create(bodyString.getBytes(StandardCharsets.UTF_8), JSON_MEDIA_TYPE))
@@ -75,19 +77,23 @@ public class XianyuWriteClient {
         }
     }
 
-    private void assertReady() {
+    private void assertReady(XianyuProperties properties) {
         switch (properties.getIntegrationStatus()) {
             case DISABLED -> throw new XianyuClientException(XianyuClientException.Kind.INTEGRATION_DISABLED,
                     "XianGuanJia integration is disabled");
             case MISSING_CREDENTIALS -> throw new XianyuClientException(XianyuClientException.Kind.MISSING_CREDENTIALS,
                     "XianGuanJia runtime credentials are missing");
             case READY -> {
-                // Continue.
+                if (!properties.isWriteEnabled()) {
+                    throw new XianyuClientException(XianyuClientException.Kind.WRITE_DISABLED,
+                            "XianGuanJia write operations are disabled");
+                }
             }
         }
     }
 
-    private HttpUrl buildUrl(XianyuWriteEndpoint endpoint, long timestamp, String signature) {
+    private HttpUrl buildUrl(XianyuProperties properties, XianyuWriteEndpoint endpoint,
+                             long timestamp, String signature) {
         String baseUrl = properties.getBaseUrl().replaceAll("/+$", "");
         try {
             return HttpUrl.get(baseUrl + endpoint.getPath())

@@ -23,6 +23,8 @@ public interface ErrorCodeConstants {
             "闲管家原始载荷类型不支持重放：{}");
     ErrorCode XIANYU_PRODUCT_SYNC_FAILED = new ErrorCode(1_040_001_012, "闲鱼商品同步失败：{}");
     ErrorCode XIANYU_ORDER_NOT_EXISTS = new ErrorCode(1_040_001_013, "闲鱼渠道订单不存在");
+    ErrorCode XIANYU_CONFIG_INVALID = new ErrorCode(1_040_001_014, "闲管家配置无效：{}");
+    ErrorCode XIANYU_ORDER_REPARSE_BUSY = new ErrorCode(1_040_001_015, "订单同步正在运行，请稍后重试备注解析");
     ErrorCode XIANYU_WRITE_DISABLED = new ErrorCode(1_040_001_020, "闲管家写操作未启用");
     ErrorCode XIANYU_SHIP_IDEMPOTENT_KEY_REUSED = new ErrorCode(1_040_001_021, "发货幂等键已绑定其它请求");
     ErrorCode XIANYU_SHIP_REMOTE_ERROR = new ErrorCode(1_040_001_022, "闲管家发货失败：{}");

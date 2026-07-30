@@ -1,7 +1,5 @@
 package cn.iocoder.yudao.module.rental.integration.xianyu.config;
 
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
@@ -15,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class XianyuPropertiesTest {
 
     @Test
-    void shouldKeepReadIntegrationDisabledAndWriteSwitchEnabledByDefault() {
+    void shouldKeepIntegrationWritesAndJobsDisabledByDefault() {
         XianyuProperties properties = new XianyuProperties();
 
         assertEquals(XianyuProperties.IntegrationStatus.DISABLED, properties.getIntegrationStatus());
-        assertTrue(properties.isWriteEnabled());
+        assertFalse(properties.isWriteEnabled());
+        assertFalse(properties.getJob().isEnabled());
         assertTrue(properties.isTenantConfigurationValid());
-        assertFalse(properties.getJob().isStartupSyncEnabled());
     }
 
     @Test
@@ -45,27 +43,16 @@ class XianyuPropertiesTest {
     }
 
     @Test
-    void shouldRejectMissingTenantThroughBeanValidationWhenEnabled() {
-        XianyuProperties properties = new XianyuProperties();
-        properties.setEnabled(true);
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-
-        assertFalse(validator.validate(properties).isEmpty());
-
-        properties.setTenantId(42L);
-
-        assertTrue(validator.validate(properties).isEmpty());
-    }
-
-    @Test
-    void localConfigMustSupportInfraJobRegistrationEnvAlias() throws Exception {
+    void serverConfigMustNotContainXianyuEnvironmentCompatibility() throws Exception {
         String yaml = Files.readString(findServerRoot()
                 .resolve("yudao-server/src/main/resources/application-local.yaml"));
+        String sharedYaml = Files.readString(findServerRoot()
+                .resolve("yudao-server/src/main/resources/application.yaml"));
 
-        assertTrue(yaml.contains("XGJ_JOB_REGISTER_INFRA_JOBS"));
-        assertTrue(yaml.contains("XGJ_JOB_REGISTER_INFRA"));
-        assertTrue(yaml.contains("XGJ_JOB_PRODUCT_CRON"));
-        assertTrue(yaml.contains("XGJ_JOB_AFTER_SALE_CRON"));
+        assertFalse(yaml.contains("XGJ_"));
+        assertFalse(yaml.contains("xianyu:"));
+        assertFalse(sharedYaml.contains("XGJ_"));
+        assertFalse(sharedYaml.contains("xianyu:"));
     }
 
     private Path findServerRoot() {

@@ -1,8 +1,7 @@
 package cn.iocoder.yudao.module.rental.job.xianyu;
 
 import cn.iocoder.yudao.framework.quartz.core.handler.JobHandler;
-import cn.iocoder.yudao.framework.tenant.core.util.TenantUtils;
-import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
+import cn.iocoder.yudao.framework.tenant.core.job.TenantJob;
 import cn.iocoder.yudao.module.rental.service.xianyu.XianyuChannelSyncService;
 import org.springframework.stereotype.Component;
 
@@ -14,16 +13,17 @@ import org.springframework.stereotype.Component;
 public class XianyuShopSyncJob implements JobHandler {
 
     private final XianyuChannelSyncService channelSyncService;
-    private final XianyuProperties properties;
+    private final XianyuTenantJobGuard jobGuard;
 
-    public XianyuShopSyncJob(XianyuChannelSyncService channelSyncService, XianyuProperties properties) {
+    public XianyuShopSyncJob(XianyuChannelSyncService channelSyncService, XianyuTenantJobGuard jobGuard) {
         this.channelSyncService = channelSyncService;
-        this.properties = properties;
+        this.jobGuard = jobGuard;
     }
 
     @Override
+    @TenantJob
     public String execute(String param) {
-        return TenantUtils.execute(properties.requireTenantId(), channelSyncService::syncAuthorizedShops);
+        return jobGuard.execute(channelSyncService::syncAuthorizedShops);
     }
 
 }

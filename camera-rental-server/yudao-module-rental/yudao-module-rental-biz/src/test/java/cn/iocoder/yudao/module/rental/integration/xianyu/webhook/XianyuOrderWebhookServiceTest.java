@@ -29,21 +29,22 @@ class XianyuOrderWebhookServiceTest {
     private final XianyuOrderPushPayloadParser payloadParser =
             new XianyuOrderPushPayloadParser(new com.fasterxml.jackson.databind.ObjectMapper());
     private XianyuOrderWebhookService service;
+    private XianyuProperties properties;
 
     @BeforeEach
     void setUp() {
-        XianyuProperties properties = new XianyuProperties();
+        properties = new XianyuProperties();
         properties.setEnabled(true);
         properties.setAppKey("test-app");
         properties.setAppSecret("test-secret");
         properties.setTenantId(9L);
-        service = new XianyuOrderWebhookService(properties, signatureVerifier, payloadParser,
+        service = new XianyuOrderWebhookService(signatureVerifier, payloadParser,
                 shopResolver, persistenceService);
     }
 
     @Test
     void shouldRejectInvalidSignatureBeforeParsingOrPersistence() {
-        when(signatureVerifier.verify(any(), anyLong(), any(), any())).thenReturn(false);
+        when(signatureVerifier.resolveVerifiedConfig(any(), anyLong(), any(), any())).thenReturn(null);
 
         XianyuWebhookReceipt receipt = service.receive("test-app", 1784890000L, "bad", validPayload());
 
@@ -54,7 +55,7 @@ class XianyuOrderWebhookServiceTest {
 
     @Test
     void shouldPersistWhenSellerMapsToExactlyOneValidShop() {
-        when(signatureVerifier.verify(any(), anyLong(), any(), any())).thenReturn(true);
+        when(signatureVerifier.resolveVerifiedConfig(any(), anyLong(), any(), any())).thenReturn(properties);
         when(shopResolver.resolveShopId("123456", "order-1")).thenReturn(77L);
         when(persistenceService.dedupeKey(any())).thenReturn("dedupe");
 
@@ -66,7 +67,7 @@ class XianyuOrderWebhookServiceTest {
 
     @Test
     void shouldDurablyAcceptWithoutGuessingAmbiguousSellerMapping() {
-        when(signatureVerifier.verify(any(), anyLong(), any(), any())).thenReturn(true);
+        when(signatureVerifier.resolveVerifiedConfig(any(), anyLong(), any(), any())).thenReturn(properties);
         when(shopResolver.resolveShopId("123456", "order-1")).thenReturn(null);
         when(persistenceService.dedupeKey(any())).thenReturn("dedupe");
 

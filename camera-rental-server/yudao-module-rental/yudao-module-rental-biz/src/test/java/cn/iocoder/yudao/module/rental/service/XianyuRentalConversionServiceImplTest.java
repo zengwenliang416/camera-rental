@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_ORDER_NOT_EXISTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -80,6 +81,34 @@ class XianyuRentalConversionServiceImplTest {
         assertEquals(LocalDate.of(2026, 7, 22), itemCaptor.getValue().getOccupyStartDate());
         assertEquals(LocalDate.of(2026, 7, 28), itemCaptor.getValue().getOccupyEndDateExclusive());
         assertEquals("CONVERTED", source.getConversionStatus());
+    }
+
+    @Test
+    void shouldResolveOpenConversionReviewAfterRegularConversionSucceeds() {
+        XianyuOrderDO source = sourceOrder();
+        RentalManualReviewDO review = RentalManualReviewDO.builder()
+                .id(41L)
+                .status("OPEN")
+                .reasonCode("PRODUCT_MAPPING_REQUIRED")
+                .build();
+        when(xianyuOrderMapper.selectByIdForUpdate(10L)).thenReturn(source);
+        when(productMappingMapper.selectByShopProductSkuForUpdate(7L, "product-1", "sku-1"))
+                .thenReturn(XianyuProductMappingDO.builder().equipmentModelCode("A7M4")
+                        .mappingStatus("MAPPED").build());
+        when(manualReviewMapper.selectBySourceAndReviewTypeForUpdate("XIANYU_ORDER", "10", "ORDER_CONVERSION"))
+                .thenReturn(review);
+        doAnswer(invocation -> {
+            invocation.getArgument(0, RentalOrderDO.class).setId(31L);
+            return 1;
+        }).when(rentalOrderMapper).insert(any(RentalOrderDO.class));
+
+        RentalConversionResult result = service.convert(10L);
+
+        assertEquals("CONVERTED", result.status());
+        assertEquals("RESOLVED", review.getStatus());
+        assertEquals("Conversion prerequisites satisfied", review.getResolutionNote());
+        assertNotNull(review.getResolvedAt());
+        verify(manualReviewMapper).updateById(review);
     }
 
     @Test

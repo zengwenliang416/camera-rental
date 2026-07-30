@@ -114,12 +114,13 @@ class XianyuOrderPersistenceServiceImplTest {
     void shouldUpdateExistingOrderWithoutDuplicatingAnIdenticalRawPayload() {
         String rawPayload = """
                 {"code":0,"data":{"order_no":"order-200","order_status":22,"pay_amount":100,
-                "seller_remark":"收货7.26/发回8.02","order_time":1784952000,
+                "seller_remark":"发货7.25/收货7.26/发回8.02","order_time":1784952000,
                 "goods":{"product_id":"product-1","sku_id":"0"}}}""";
         when(rawPayloadMapper.selectByTenantIdAndSourceAndHashForUpdate(eq(9L), any(), any(), any()))
                 .thenReturn(XianyuRawPayloadDO.builder().id(5L).build());
         when(orderMapper.selectByShopIdAndExternalOrderIdForUpdate(8L, "order-200"))
-                .thenReturn(XianyuOrderDO.builder().id(6L).sellerRemark("收货7.26/发回8.02")
+                .thenReturn(XianyuOrderDO.builder().id(6L)
+                        .sellerRemark("发货7.25/收货7.26/发回8.02")
                         .remarkParseVersion("remark-v1").remarkParseStatus("RESOLVED")
                         .conversionStatus("REVIEW_REQUIRED")
                         .rentalOrderId(7L).build());
@@ -197,7 +198,8 @@ class XianyuOrderPersistenceServiceImplTest {
     void shouldReplacePendingRentalPeriodWhenLaterDetailContainsCompleteRemark() {
         String rawPayload = """
                 {"code":0,"data":{"order_no":"order-later-remark","order_status":12,"pay_amount":100,
-                "seller_remark":"收货7.28/发回8.05","order_time":1785196800,"update_time":1785283200,
+                "seller_remark":"发货7.28/收货7.28/发回8.05","order_time":1785196800,
+                "update_time":1785283200,
                 "goods":{"product_id":"product-1","sku_id":"0"}}}""";
         XianyuOrderDO existing = XianyuOrderDO.builder()
                 .id(1003L)
@@ -227,7 +229,7 @@ class XianyuOrderPersistenceServiceImplTest {
     void shouldBackfillHistoricalOrderRentalPeriodWithoutRemoteAccess() {
         XianyuOrderDO historical = XianyuOrderDO.builder()
                 .id(77L)
-                .sellerRemark("收货7.28/发回8.05")
+                .sellerRemark("发货7.27/收货7.28/发回8.05")
                 .orderTime(LocalDateTime.of(2026, 7, 27, 18, 0))
                 .build();
         when(orderMapper.selectMissingRentalPeriodRefs(SellerRemarkRentalPeriodParser.VERSION, 500))
@@ -240,6 +242,7 @@ class XianyuOrderPersistenceServiceImplTest {
         assertEquals(LocalDate.of(2026, 8, 5), historical.getBillableEndDate());
         assertEquals("SUCCESS", historical.getRentalPeriodStatus());
         verify(orderMapper).updateById(historical);
+        verify(conversionService).autoConvertAfterPersist(77L);
     }
 
     @Test

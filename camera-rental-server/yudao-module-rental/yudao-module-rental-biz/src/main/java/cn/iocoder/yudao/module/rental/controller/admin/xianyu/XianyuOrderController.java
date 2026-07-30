@@ -14,11 +14,14 @@ import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuShipmentO
 import cn.iocoder.yudao.module.rental.service.RentalConversionResult;
 import cn.iocoder.yudao.module.rental.service.admin.ShipmentOcrService;
 import cn.iocoder.yudao.module.rental.service.admin.XianyuOrderAdminService;
+import cn.iocoder.yudao.module.rental.service.admin.XianyuOrderRemarkReparseService;
 import cn.iocoder.yudao.module.rental.service.admin.XianyuOrderShipService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,19 +41,22 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 public class XianyuOrderController {
 
     private final XianyuOrderAdminService orderAdminService;
+    private final XianyuOrderRemarkReparseService orderRemarkReparseService;
     private final XianyuOrderShipService orderShipService;
     private final ShipmentOcrService shipmentOcrService;
 
     public XianyuOrderController(XianyuOrderAdminService orderAdminService,
+                                 XianyuOrderRemarkReparseService orderRemarkReparseService,
                                  XianyuOrderShipService orderShipService,
                                  ShipmentOcrService shipmentOcrService) {
         this.orderAdminService = orderAdminService;
+        this.orderRemarkReparseService = orderRemarkReparseService;
         this.orderShipService = orderShipService;
         this.shipmentOcrService = shipmentOcrService;
     }
 
     @GetMapping("/page")
-    @Operation(summary = "分页查询渠道订单（无敏感地址/手机）")
+    @Operation(summary = "分页查询渠道订单（含完整收货快照）")
     @PreAuthorize("@ss.hasPermission('rental:xianyu:query')")
     public CommonResult<PageResult<XianyuOrderRespVO>> getOrderPage(
             @Valid XianyuOrderPageReqVO pageReqVO) {
@@ -84,6 +90,15 @@ public class XianyuOrderController {
     @PreAuthorize("@ss.hasPermission('rental:xianyu:sync')")
     public CommonResult<XianyuOrderSyncRespVO> syncPage(@Valid @RequestBody XianyuOrderSyncReqVO reqVO) {
         return success(orderAdminService.syncPage(reqVO));
+    }
+
+    @PostMapping("/reparse-remarks")
+    @Operation(summary = "使用当前规则重新解析本租户历史订单备注")
+    @PreAuthorize("@ss.hasPermission('rental:xianyu:sync')")
+    public CommonResult<Integer> reparseRemarks(
+            @RequestParam(value = "maxOrders", defaultValue = "5000")
+            @Min(1) @Max(10_000) Integer maxOrders) {
+        return success(orderRemarkReparseService.reparse(maxOrders));
     }
 
     @PostMapping("/convert")

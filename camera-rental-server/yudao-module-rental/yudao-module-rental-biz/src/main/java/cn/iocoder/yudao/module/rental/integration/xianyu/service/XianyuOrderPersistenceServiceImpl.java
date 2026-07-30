@@ -167,6 +167,7 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
             applyRentalPeriod(order, rentalPeriod);
             order.setUpdater("system");
             orderMapper.updateById(order);
+            conversionService.autoConvertAfterPersist(order.getId());
         }
         return orders.size();
     }

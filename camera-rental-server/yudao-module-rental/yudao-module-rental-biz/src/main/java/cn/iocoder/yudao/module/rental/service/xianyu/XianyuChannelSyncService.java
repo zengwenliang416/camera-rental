@@ -16,6 +16,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuSyncCursorMapper;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadClient;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadEndpoint;
 import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
+import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuRuntimeConfigService;
 import cn.iocoder.yudao.module.rental.integration.xianyu.security.XianyuSafeErrorCode;
 import cn.iocoder.yudao.module.rental.integration.xianyu.service.XianyuOrderPageSyncResult;
 import cn.iocoder.yudao.module.rental.integration.xianyu.service.XianyuOrderListPage;
@@ -57,9 +58,7 @@ public class XianyuChannelSyncService {
     private static final String ORDER_RESOURCE = "ORDER";
     private static final String PRODUCT_RESOURCE = "PRODUCT";
     private static final String AFTER_SALE_RESOURCE = "AFTER_SALE";
-    private static final String SYNC_LOCK_PREFIX = "camera-rental:xianyu:sync:";
-
-    private final XianyuProperties properties;
+    private final XianyuRuntimeConfigService runtimeConfigService;
     private final XianyuShopAdminService shopAdminService;
     private final XianyuAfterSaleAdminService afterSaleAdminService;
     private final XianyuShopMapper shopMapper;
@@ -78,7 +77,7 @@ public class XianyuChannelSyncService {
     private final Clock clock;
     private final RedissonClient redissonClient;
 
-    public XianyuChannelSyncService(XianyuProperties properties,
+    public XianyuChannelSyncService(XianyuRuntimeConfigService runtimeConfigService,
                                     XianyuShopAdminService shopAdminService,
                                     XianyuAfterSaleAdminService afterSaleAdminService,
                                     XianyuShopMapper shopMapper,
@@ -96,7 +95,7 @@ public class XianyuChannelSyncService {
                                     ObjectMapper objectMapper,
                                     @org.springframework.beans.factory.annotation.Qualifier("xianyuClock") Clock clock,
                                     RedissonClient redissonClient) {
-        this.properties = properties;
+        this.runtimeConfigService = runtimeConfigService;
         this.shopAdminService = shopAdminService;
         this.afterSaleAdminService = afterSaleAdminService;
         this.shopMapper = shopMapper;
@@ -120,10 +119,11 @@ public class XianyuChannelSyncService {
      * @return human-readable summary for JobHandler / logs
      */
     public String syncAuthorizedShops() {
+        XianyuProperties properties = runtimeConfigService.getCurrent();
         if (properties.getIntegrationStatus() != XianyuProperties.IntegrationStatus.READY) {
             return "skip shop sync: integration not READY (" + properties.getIntegrationStatus() + ")";
         }
-        return withTenantLock("shop", () -> {
+        return withTenantLock(properties.requireTenantId(), "shop", () -> {
             int count = shopAdminService.syncAuthorizedShops();
             log.info("[xianyu][job] authorized shops upserted={}", count);
             return "shops upserted=" + count;
@@ -134,34 +134,39 @@ public class XianyuChannelSyncService {
      * Incremental order sync for all VALID shops with authorizeId.
      */
     public String syncOrdersIncremental() {
+        XianyuProperties properties = runtimeConfigService.getCurrent();
         if (properties.getIntegrationStatus() != XianyuProperties.IntegrationStatus.READY) {
             return "skip order sync: integration not READY (" + properties.getIntegrationStatus() + ")";
         }
-        return withTenantLock("order", this::doSyncOrdersIncremental);
+        return withTenantLock(properties.requireTenantId(), XianyuSyncLockKey.ORDER_RESOURCE,
+                () -> doSyncOrdersIncremental(properties.getJob()));
     }
 
     /**
      * Incremental product sync for all VALID shops. Uses read-only product list/detail/SKU APIs only.
      */
     public String syncProductsIncremental() {
+        XianyuProperties properties = runtimeConfigService.getCurrent();
         if (properties.getIntegrationStatus() != XianyuProperties.IntegrationStatus.READY) {
             return "skip product sync: integration not READY (" + properties.getIntegrationStatus() + ")";
         }
-        return withTenantLock("product", this::doSyncProductsIncremental);
+        return withTenantLock(properties.requireTenantId(), "product",
+                () -> doSyncProductsIncremental(properties.getJob()));
     }
 
     /**
      * Incremental after-sale sync for all VALID shops with authorizeId. Uses read-only list/detail APIs only.
      */
     public String syncAfterSalesIncremental() {
+        XianyuProperties properties = runtimeConfigService.getCurrent();
         if (properties.getIntegrationStatus() != XianyuProperties.IntegrationStatus.READY) {
             return "skip after-sale sync: integration not READY (" + properties.getIntegrationStatus() + ")";
         }
-        return withTenantLock("after-sale", this::doSyncAfterSalesIncremental);
+        return withTenantLock(properties.requireTenantId(), "after-sale",
+                () -> doSyncAfterSalesIncremental(properties.getJob()));
     }
 
-    private String doSyncOrdersIncremental() {
-        XianyuProperties.Job job = properties.getJob();
+    private String doSyncOrdersIncremental(XianyuProperties.Job job) {
         int rentalPeriodBackfilled = orderPersistenceService.backfillMissingRentalPeriods(
                 job.getPageSize() * Math.max(1, job.getMaxPagesPerShop()));
         List<XianyuShopDO> shops = shopMapper.selectList(new LambdaQueryWrapperX<XianyuShopDO>()
@@ -226,14 +231,13 @@ public class XianyuChannelSyncService {
         return summary;
     }
 
-    private String doSyncProductsIncremental() {
+    private String doSyncProductsIncremental(XianyuProperties.Job job) {
         List<XianyuShopDO> shops = shopMapper.selectList(new LambdaQueryWrapperX<XianyuShopDO>()
                 .eq(XianyuShopDO::getAuthorizationStatus, "VALID"));
         if (shops.isEmpty()) {
             return "skip product sync: no VALID shops (run shop sync first)";
         }
 
-        XianyuProperties.Job job = properties.getJob();
         int totalReceived = 0;
         int totalSucceeded = 0;
         int totalDeduplicated = 0;
@@ -287,7 +291,7 @@ public class XianyuChannelSyncService {
         return summary;
     }
 
-    private String doSyncAfterSalesIncremental() {
+    private String doSyncAfterSalesIncremental(XianyuProperties.Job job) {
         List<XianyuShopDO> shops = shopMapper.selectList(new LambdaQueryWrapperX<XianyuShopDO>()
                 .eq(XianyuShopDO::getAuthorizationStatus, "VALID")
                 .isNotNull(XianyuShopDO::getAuthorizeId));
@@ -295,7 +299,6 @@ public class XianyuChannelSyncService {
             return "skip after-sale sync: no VALID shops (run shop sync first)";
         }
 
-        XianyuProperties.Job job = properties.getJob();
         int totalReceived = 0;
         int totalSucceeded = 0;
         int shopsOk = 0;
@@ -375,8 +378,8 @@ public class XianyuChannelSyncService {
         return ok;
     }
 
-    private String withTenantLock(String summaryResource, Supplier<String> action) {
-        String lockKey = SYNC_LOCK_PREFIX + properties.requireTenantId() + ":" + summaryResource;
+    private String withTenantLock(Long tenantId, String summaryResource, Supplier<String> action) {
+        String lockKey = XianyuSyncLockKey.forResource(tenantId, summaryResource);
         RLock lock = redissonClient.getLock(lockKey);
         if (!lock.tryLock()) {
             log.info("[xianyu][job] skip {} sync because another execution holds lock={}",

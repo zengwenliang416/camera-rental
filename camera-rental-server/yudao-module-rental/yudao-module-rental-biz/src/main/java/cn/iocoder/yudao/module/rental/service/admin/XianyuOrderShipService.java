@@ -27,6 +27,7 @@ import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadRespon
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuWriteClient;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuWriteEndpoint;
 import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
+import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuRuntimeConfigService;
 import cn.iocoder.yudao.module.rental.service.RentalConversionResult;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentCommand;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentException;
@@ -76,7 +77,7 @@ public class XianyuOrderShipService {
     private final RentalDeviceAssignmentService assignmentService;
     private final RentalDeviceOpsService deviceOpsService;
     private final XianyuWriteClient writeClient;
-    private final XianyuProperties properties;
+    private final XianyuRuntimeConfigService runtimeConfigService;
     private final ObjectMapper objectMapper;
 
     public XianyuOrderShipService(XianyuOrderMapper orderMapper, XianyuShopMapper shopMapper,
@@ -87,7 +88,7 @@ public class XianyuOrderShipService {
                                   XianyuRentalConversionService conversionService,
                                   RentalDeviceAssignmentService assignmentService,
                                   RentalDeviceOpsService deviceOpsService,
-                                  XianyuWriteClient writeClient, XianyuProperties properties,
+                                  XianyuWriteClient writeClient, XianyuRuntimeConfigService runtimeConfigService,
                                   ObjectMapper objectMapper) {
         this.orderMapper = orderMapper;
         this.shopMapper = shopMapper;
@@ -100,7 +101,7 @@ public class XianyuOrderShipService {
         this.assignmentService = assignmentService;
         this.deviceOpsService = deviceOpsService;
         this.writeClient = writeClient;
-        this.properties = properties;
+        this.runtimeConfigService = runtimeConfigService;
         this.objectMapper = objectMapper;
     }
 
@@ -119,7 +120,9 @@ public class XianyuOrderShipService {
         if (replay != null) {
             return toShipResp(replay, deviceMapper.selectById(replay.getDeviceId()), "DISPATCHED");
         }
-        if (!properties.isWriteEnabled()) {
+        XianyuProperties properties = runtimeConfigService.getCurrent();
+        if (properties.getIntegrationStatus() != XianyuProperties.IntegrationStatus.READY
+                || !properties.isWriteEnabled()) {
             throw exception(XIANYU_WRITE_DISABLED);
         }
 
@@ -175,6 +178,10 @@ public class XianyuOrderShipService {
         vo.setGoodsQuantity(order.getGoodsQuantity());
         vo.setPayAmount(order.getPayAmount());
         vo.setBuyerNick(order.getBuyerNick());
+        vo.setReceiverName(order.getReceiverName());
+        vo.setReceiverMobile(order.getReceiverMobile());
+        vo.setReceiverAddress(order.getReceiverAddress());
+        vo.setSellerRemark(order.getSellerRemark());
         vo.setRentalOrderId(order.getRentalOrderId());
         vo.setConversionStatus(order.getConversionStatus());
         vo.setOrderTime(order.getOrderTime());

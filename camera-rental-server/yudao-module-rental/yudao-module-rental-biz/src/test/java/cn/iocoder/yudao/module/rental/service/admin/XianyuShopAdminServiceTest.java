@@ -5,12 +5,12 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuShopRespVO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuApplicationDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuShopDO;
-import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuApplicationMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuShopMapper;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadClient;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadEndpoint;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadResponse;
 import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
+import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuRuntimeConfigService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class XianyuShopAdminServiceTest {
                 .authorizationStatus("VALID")
                 .build()), 1L));
         XianyuShopAdminService service = new XianyuShopAdminService(
-                properties, mock(XianyuReadClient.class), mock(XianyuApplicationMapper.class), shopMapper,
+                runtimeConfig(properties, null), mock(XianyuReadClient.class), shopMapper,
                 mock(XianyuAlertAdminService.class), objectMapper);
 
         PageResult<XianyuShopRespVO> page = service.getShopPage(pageParam);
@@ -58,7 +58,6 @@ class XianyuShopAdminServiceTest {
     void shouldInvalidatePreviouslyAuthorizedShopMissingFromSuccessfulSnapshot() throws Exception {
         XianyuProperties properties = readyProperties();
         XianyuReadClient readClient = mock(XianyuReadClient.class);
-        XianyuApplicationMapper applicationMapper = mock(XianyuApplicationMapper.class);
         XianyuShopMapper shopMapper = mock(XianyuShopMapper.class);
         XianyuAlertAdminService alertAdminService = mock(XianyuAlertAdminService.class);
         XianyuApplicationDO application = XianyuApplicationDO.builder().id(3L).build();
@@ -68,13 +67,12 @@ class XianyuShopAdminServiceTest {
                 .authorizeId("88")
                 .authorizationStatus("VALID")
                 .build();
-        when(applicationMapper.selectByApplicationCode(properties.getAppKey())).thenReturn(application);
         when(readClient.execute(eq(XianyuReadEndpoint.AUTHORIZED_SHOPS), any()))
                 .thenReturn(response("{\"code\":0,\"data\":{\"list\":[]}}"));
         when(shopMapper.selectListByApplicationId(3L)).thenReturn(List.of(stale));
 
         XianyuShopAdminService service = new XianyuShopAdminService(
-                properties, readClient, applicationMapper, shopMapper, alertAdminService, objectMapper);
+                runtimeConfig(properties, application), readClient, shopMapper, alertAdminService, objectMapper);
 
         assertEquals(1, service.syncAuthorizedShops());
         ArgumentCaptor<XianyuShopDO> captor = ArgumentCaptor.forClass(XianyuShopDO.class);
@@ -88,7 +86,6 @@ class XianyuShopAdminServiceTest {
     void shouldPersistGuaranteeStatusAndAlertWhenDepositIsInsufficient() throws Exception {
         XianyuProperties properties = readyProperties();
         XianyuReadClient readClient = mock(XianyuReadClient.class);
-        XianyuApplicationMapper applicationMapper = mock(XianyuApplicationMapper.class);
         XianyuShopMapper shopMapper = mock(XianyuShopMapper.class);
         XianyuAlertAdminService alertAdminService = mock(XianyuAlertAdminService.class);
         XianyuApplicationDO application = XianyuApplicationDO.builder().id(3L).build();
@@ -98,7 +95,6 @@ class XianyuShopAdminServiceTest {
                 .authorizeId("922158952480837")
                 .authorizationStatus("VALID")
                 .build();
-        when(applicationMapper.selectByApplicationCode(properties.getAppKey())).thenReturn(application);
         when(readClient.execute(eq(XianyuReadEndpoint.AUTHORIZED_SHOPS), any()))
                 .thenReturn(response("""
                         {"code":0,"data":{"list":[
@@ -111,7 +107,7 @@ class XianyuShopAdminServiceTest {
         when(shopMapper.selectByApplicationAndAuthorizeId(3L, "922158952480837")).thenReturn(existing);
 
         XianyuShopAdminService service = new XianyuShopAdminService(
-                properties, readClient, applicationMapper, shopMapper, alertAdminService, objectMapper);
+                runtimeConfig(properties, application), readClient, shopMapper, alertAdminService, objectMapper);
 
         assertEquals(1, service.syncAuthorizedShops());
         ArgumentCaptor<XianyuShopDO> captor = ArgumentCaptor.forClass(XianyuShopDO.class);
@@ -127,6 +123,14 @@ class XianyuShopAdminServiceTest {
         properties.setAppKey("test-app");
         properties.setAppSecret("test-secret");
         return properties;
+    }
+
+    private XianyuRuntimeConfigService runtimeConfig(XianyuProperties properties,
+                                                     XianyuApplicationDO application) {
+        XianyuRuntimeConfigService service = mock(XianyuRuntimeConfigService.class);
+        when(service.getCurrent()).thenReturn(properties);
+        when(service.getCurrentApplication()).thenReturn(application);
+        return service;
     }
 
     private XianyuReadResponse response(String json) throws Exception {

@@ -31,4 +31,17 @@ class XianyuOrderMapperTest {
         assertTrue(sql.contains("cancel_time is null"));
     }
 
+    @Test
+    void pendingShipQuerySearchesAllOperatorFacingOrderFields() {
+        String sql = XianyuOrderMapper.pendingShipQuery(null, "19900000000", Set.of("12"))
+                .getCustomSqlSegment()
+                .toLowerCase();
+
+        assertTrue(sql.contains("external_order_id like"));
+        assertTrue(sql.contains("receiver_name like"));
+        assertTrue(sql.contains("receiver_mobile like"));
+        assertTrue(sql.contains("buyer_nick like"));
+        assertTrue(sql.contains("goods_title like"));
+    }
+
 }

@@ -78,7 +78,7 @@ mybatis-plus:
     banner: false # 关闭控制台的 Banner 打印
   type-aliases-package: ${yudao.info.base-package}.module.*.dal.dataobject
   encryptor:
-    password: ${REDACTED_SECRET:}
+    password: ${MYBATIS_PLUS_ENCRYPTOR_PASSWORD:}
 
 mybatis-plus-join:
   banner: false # 是否打印 mybatis plus join banner，默认true
@@ -365,12 +365,3 @@ rental:
     # Permanent device QR HMAC secret. Signs deviceNo + equipmentModelCode.
     # Leave empty for local/dev unsigned QR; set in prod via env.
     qr-secret: ${RENTAL_DEVICE_QR_SECRET:}
-  xianyu:
-    # 默认关闭。本地/部署通过环境变量注入，禁止把真实 AppSecret 写入仓库。
-    enabled: ${XGJ_ENABLED:false}
-    base-url: ${XGJ_BASE_URL:https://open.goofish.pro}
-    app-key: ${XGJ_APP_KEY:}
-    app-secret: ${XGJ_APP_SECRET:}
-    webhook-base-url: ${XGJ_WEBHOOK_BASE_URL:}
-    tenant-id: ${XGJ_TENANT_ID:}
-    write-enabled: ${XGJ_WRITE_ENABLED:false}

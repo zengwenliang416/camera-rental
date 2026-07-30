@@ -50,8 +50,8 @@
 
 商品列表和规格增量同步已于 `2026-07-25` 纳入 V1 只读编排：
 
-- `xianyuProductSyncJob` 和可选 Spring fallback 按 `XGJ_JOB_PRODUCT_CRON`
-  触发。
+- `xianyuProductSyncJob` 由芋道 `infra_job + Quartz` 触发；cron 在管理端
+  “基础设施 -> 定时任务”维护，当前租户还必须在闲管家配置中启用同步任务。
 - 每个有效授权店铺使用独立 `PRODUCT` cursor、独立租户锁和固定
   `update_time` 窗口。
 - `PRODUCT_PAGE` 原始列表页先写入受限原始载荷表，再解析分页元数据。

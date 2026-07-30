@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.rental.integration.xianyu.client;
 
 import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
+import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuRuntimeConfigService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,17 +25,17 @@ public class XianyuReadClient {
 
     private static final MediaType JSON_MEDIA_TYPE = MediaType.get("application/json; charset=utf-8");
 
-    private final XianyuProperties properties;
+    private final XianyuRuntimeConfigService runtimeConfigService;
     private final XianyuCanonicalJson canonicalJson;
     private final XianyuRequestSigner requestSigner;
     private final OkHttpClient httpClient;
     private final Clock clock;
     private final ObjectMapper objectMapper;
 
-    public XianyuReadClient(XianyuProperties properties, XianyuCanonicalJson canonicalJson,
+    public XianyuReadClient(XianyuRuntimeConfigService runtimeConfigService, XianyuCanonicalJson canonicalJson,
                             XianyuRequestSigner requestSigner, OkHttpClient httpClient,
                             ObjectMapper objectMapper, Clock clock) {
-        this.properties = properties;
+        this.runtimeConfigService = runtimeConfigService;
         this.canonicalJson = canonicalJson;
         this.requestSigner = requestSigner;
         this.httpClient = httpClient;
@@ -47,11 +48,12 @@ public class XianyuReadClient {
     }
 
     public XianyuReadResponse execute(XianyuReadEndpoint endpoint, JsonNode body, String sellerId) {
-        assertReady();
+        XianyuProperties properties = runtimeConfigService.getCurrent();
+        assertReady(properties);
         String bodyString = canonicalJson.serialize(body);
         long timestamp = clock.instant().getEpochSecond();
         String signature = requestSigner.sign(properties.getAppKey(), properties.getAppSecret(), timestamp, bodyString);
-        HttpUrl url = buildUrl(endpoint, timestamp, signature, sellerId);
+        HttpUrl url = buildUrl(properties, endpoint, timestamp, signature, sellerId);
         Request request = new Request.Builder()
                 .url(url)
                 .post(RequestBody.create(bodyString.getBytes(StandardCharsets.UTF_8), JSON_MEDIA_TYPE))
@@ -80,7 +82,7 @@ public class XianyuReadClient {
         }
     }
 
-    private void assertReady() {
+    private void assertReady(XianyuProperties properties) {
         switch (properties.getIntegrationStatus()) {
             case DISABLED -> throw new XianyuClientException(XianyuClientException.Kind.INTEGRATION_DISABLED,
                     "XianGuanJia integration is disabled");
@@ -92,7 +94,8 @@ public class XianyuReadClient {
         }
     }
 
-    private HttpUrl buildUrl(XianyuReadEndpoint endpoint, long timestamp, String signature, String sellerId) {
+    private HttpUrl buildUrl(XianyuProperties properties, XianyuReadEndpoint endpoint, long timestamp,
+                             String signature, String sellerId) {
         String baseUrl = properties.getBaseUrl().replaceAll("/+$", "");
         try {
             HttpUrl.Builder builder = HttpUrl.get(baseUrl + endpoint.getPath())

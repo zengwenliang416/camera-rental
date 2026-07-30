@@ -21,6 +21,14 @@ public record SellerRemarkRentalPeriod(String version, String status, LocalDate 
         return new SellerRemarkRentalPeriod(version, "PENDING", null, null, null, null, null, reasonCode);
     }
 
+    public static SellerRemarkRentalPeriod pending(String version, LocalDate billableStartDate,
+                                                   LocalDate billableEndDate, LocalDate shipDate,
+                                                   LocalDate receiveDate, LocalDate returnDate,
+                                                   String reasonCode) {
+        return new SellerRemarkRentalPeriod(version, "PENDING", billableStartDate, billableEndDate,
+                shipDate, receiveDate, returnDate, reasonCode);
+    }
+
     public static SellerRemarkRentalPeriod failure(String version, String reasonCode) {
         return new SellerRemarkRentalPeriod(version, "FAILED", null, null, null, null, null, reasonCode);
     }

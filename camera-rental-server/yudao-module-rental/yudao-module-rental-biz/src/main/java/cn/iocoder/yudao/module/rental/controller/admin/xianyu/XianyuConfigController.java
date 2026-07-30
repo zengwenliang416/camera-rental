@@ -1,13 +1,18 @@
 package cn.iocoder.yudao.module.rental.controller.admin.xianyu;
 
+import cn.iocoder.yudao.framework.apilog.core.annotation.ApiAccessLog;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuConfigRespVO;
+import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuConfigUpdateReqVO;
 import cn.iocoder.yudao.module.rental.service.admin.XianyuConfigAdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,6 +35,15 @@ public class XianyuConfigController {
     @PreAuthorize("@ss.hasPermission('rental:xianyu:query')")
     public CommonResult<XianyuConfigRespVO> getConfig() {
         return success(configAdminService.getConfig());
+    }
+
+    @PutMapping("/update")
+    @Operation(summary = "更新当前租户闲管家配置（AppSecret 仅支持覆盖且永不回显）")
+    @ApiAccessLog(requestEnable = false)
+    @PreAuthorize("@ss.hasPermission('rental:xianyu:config:update')")
+    public CommonResult<Boolean> updateConfig(@Valid @RequestBody XianyuConfigUpdateReqVO reqVO) {
+        configAdminService.updateConfig(reqVO);
+        return success(true);
     }
 
 }

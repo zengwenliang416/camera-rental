@@ -4,13 +4,11 @@ import cn.iocoder.yudao.module.infra.dal.dataobject.job.JobDO;
 import cn.iocoder.yudao.module.infra.enums.job.JobStatusEnum;
 import cn.iocoder.yudao.module.infra.service.job.JobService;
 import cn.iocoder.yudao.module.infra.service.job.dto.JobCreateReqDTO;
-import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
 import cn.iocoder.yudao.module.rental.integration.xianyu.security.XianyuSafeErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.SchedulerException;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -22,32 +20,22 @@ import java.util.Objects;
  */
 @Component
 @Order(200)
-@ConditionalOnProperty(prefix = "rental.xianyu.job", name = "register-infra-jobs", havingValue = "true", matchIfMissing = true)
 @Slf4j
 public class XianyuInfraJobRegistrar implements ApplicationRunner {
 
     private final JobService jobService;
-    private final XianyuProperties properties;
 
-    public XianyuInfraJobRegistrar(JobService jobService, XianyuProperties properties) {
+    public XianyuInfraJobRegistrar(JobService jobService) {
         this.jobService = jobService;
-        this.properties = properties;
     }
 
     @Override
     public void run(ApplicationArguments args) {
-        XianyuProperties.Job job = properties.getJob();
-        if (!job.isEnabled() || properties.getIntegrationStatus() != XianyuProperties.IntegrationStatus.READY) {
-            log.info("[xianyu][job-register] skipped status={} jobEnabled={}",
-                    properties.getIntegrationStatus(), job.isEnabled());
-            return;
-        }
-        properties.requireTenantId();
-        ensureJob("闲管家授权店铺同步", "xianyuShopSyncJob", job.getShopCron());
-        ensureJob("闲管家订单增量同步", "xianyuOrderSyncJob", job.getOrderCron());
-        ensureJob("闲管家商品增量同步", "xianyuProductSyncJob", job.getProductCron());
-        ensureJob("闲管家售后增量同步", "xianyuAfterSaleSyncJob", job.getAfterSaleCron());
-        ensureJob("闲管家推送失败重试", "xianyuPushRetryJob", job.getPushRetryCron());
+        ensureJob("闲管家授权店铺同步", "xianyuShopSyncJob", "0 0/30 * * * ?");
+        ensureJob("闲管家订单增量同步", "xianyuOrderSyncJob", "0 * * * * ?");
+        ensureJob("闲管家商品增量同步", "xianyuProductSyncJob", "0 0/10 * * * ?");
+        ensureJob("闲管家售后增量同步", "xianyuAfterSaleSyncJob", "0 0/10 * * * ?");
+        ensureJob("闲管家推送失败重试", "xianyuPushRetryJob", "0 0/5 * * * ?");
     }
 
     private void ensureJob(String name, String handlerName, String cron) {

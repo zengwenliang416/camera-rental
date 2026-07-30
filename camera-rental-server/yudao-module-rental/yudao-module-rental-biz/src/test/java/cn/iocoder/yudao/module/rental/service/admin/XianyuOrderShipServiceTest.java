@@ -1,9 +1,11 @@
 package cn.iocoder.yudao.module.rental.service.admin;
 
 import cn.iocoder.yudao.framework.common.exception.ServiceException;
+import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceOpsRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuPendingShipOrderPageReqVO;
+import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuPendingShipOrderRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderShipReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderShipRespVO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
@@ -25,6 +27,7 @@ import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadRespon
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuWriteClient;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuWriteEndpoint;
 import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
+import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuRuntimeConfigService;
 import cn.iocoder.yudao.module.rental.service.RentalConversionResult;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentException;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentResult;
@@ -75,11 +78,16 @@ class XianyuOrderShipServiceTest {
     private final RentalDeviceOpsService deviceOpsService = mock(RentalDeviceOpsService.class);
     private final XianyuWriteClient writeClient = mock(XianyuWriteClient.class);
     private final XianyuProperties properties = new XianyuProperties();
+    private final XianyuRuntimeConfigService runtimeConfigService = mock(XianyuRuntimeConfigService.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setTenantContext() {
         TenantContextHolder.setTenantId(9L);
+        properties.setEnabled(true);
+        properties.setAppKey("test-app");
+        properties.setAppSecret("test-secret");
+        when(runtimeConfigService.getCurrent()).thenReturn(properties);
     }
 
     @AfterEach
@@ -114,6 +122,37 @@ class XianyuOrderShipServiceTest {
         verify(orderMapper).selectPendingShipPage(any(), any(), statuses.capture(), eq(reqVO));
         assertEquals(true, statuses.getValue().contains("12"));
         assertEquals(false, statuses.getValue().contains("22"));
+    }
+
+    @Test
+    void pendingSearchReturnsCompleteCustomerAndSellerRemarkFields() {
+        XianyuOrderDO order = XianyuOrderDO.builder()
+                .id(10L)
+                .shopId(20L)
+                .externalOrderId("test-order-001")
+                .orderStatus("12")
+                .goodsTitle("测试设备租赁")
+                .goodsQuantity(1)
+                .payAmount(12000L)
+                .buyerNick("测试买家")
+                .receiverName("测试收货人")
+                .receiverMobile("19900000000")
+                .receiverAddress("测试省测试市测试区测试路1号")
+                .sellerRemark("测试卖家备注")
+                .conversionStatus("CONVERTED")
+                .rentalOrderId(30L)
+                .build();
+        when(orderMapper.selectPendingShipPage(any(), any(), any(), any()))
+                .thenReturn(new PageResult<>(List.of(order), 1L));
+        XianyuPendingShipOrderPageReqVO reqVO = new XianyuPendingShipOrderPageReqVO();
+        reqVO.setKeyword("19900000000");
+
+        XianyuPendingShipOrderRespVO result = service().searchPendingOrders(reqVO).getList().get(0);
+
+        assertEquals("测试收货人", result.getReceiverName());
+        assertEquals("19900000000", result.getReceiverMobile());
+        assertEquals("测试省测试市测试区测试路1号", result.getReceiverAddress());
+        assertEquals("测试卖家备注", result.getSellerRemark());
     }
 
     @Test
@@ -395,7 +434,7 @@ class XianyuOrderShipServiceTest {
     private XianyuOrderShipService service() {
         return new XianyuOrderShipService(orderMapper, shopMapper, deviceMapper, assignmentMapper, rentalOrderMapper,
                 rentalOrderItemMapper, shipmentMapper, conversionService, assignmentService, deviceOpsService, writeClient,
-                properties, objectMapper);
+                runtimeConfigService, objectMapper);
     }
 
     private XianyuOrderShipReqVO req() {

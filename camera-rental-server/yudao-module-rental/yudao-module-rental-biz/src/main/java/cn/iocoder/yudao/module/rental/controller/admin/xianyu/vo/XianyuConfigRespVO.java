@@ -28,4 +28,17 @@ public class XianyuConfigRespVO {
     @Schema(description = "是否开启闲管家写操作")
     private Boolean writeEnabled;
 
+    @Schema(description = "Webhook 基址")
+    private String webhookBaseUrl;
+
+    @Schema(description = "是否启用同步任务")
+    private Boolean jobEnabled;
+
+    private Integer lookbackDays;
+    private Integer overlapMinutes;
+    private Integer maxPagesPerShop;
+    private Integer pageSize;
+    private Integer pushRetryStaleSeconds;
+    private Integer pushRetryBatchSize;
+
 }

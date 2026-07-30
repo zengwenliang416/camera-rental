@@ -56,6 +56,13 @@ EOF
 assert_success "lockfile changes should invalidate dependencies" \
   dependency_inputs_changed admin "${changed_files}"
 
+schedule_changed_files="${test_dir}/schedule-changed-files.txt"
+cat > "${schedule_changed_files}" <<'EOF'
+camera-rental-schedule-center/pnpm-lock.yaml
+EOF
+assert_success "schedule center pnpm lockfile changes should invalidate dependencies" \
+  dependency_inputs_changed schedule-center "${schedule_changed_files}"
+
 release_dir="${test_dir}/release"
 mkdir -p "${release_dir}/server"
 touch "${release_dir}/server/yudao-server.jar"

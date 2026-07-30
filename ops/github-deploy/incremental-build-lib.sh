@@ -68,7 +68,10 @@ dependency_input_paths() {
     admin|staff)
       printf '%s\n' package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc patches
       ;;
-    schedule-center|web)
+    schedule-center)
+      printf '%s\n' package.json pnpm-lock.yaml .npmrc
+      ;;
+    web)
       printf '%s\n' package.json bun.lock .npmrc
       ;;
     *)

@@ -268,11 +268,11 @@ if should_reuse_component schedule-center; then
   reuse_component schedule-center schedule-center
 else
   echo "[build-deploy] build schedule center"
-  install_frontend_dependencies schedule-center "${SOURCE_DIR}/camera-rental-schedule-center" bun
+  install_frontend_dependencies schedule-center "${SOURCE_DIR}/camera-rental-schedule-center" pnpm
   rm -rf "${SOURCE_DIR}/camera-rental-schedule-center/dist"
   (
     cd "${SOURCE_DIR}/camera-rental-schedule-center"
-    VITE_BASE_PATH=/admin/schedule-center/ VITE_BASE_URL=https://rental.motion-cover.com VITE_API_URL=/admin-api bun run build
+    VITE_BASE_PATH=/admin/schedule-center/ VITE_BASE_URL=https://rental.motion-cover.com VITE_API_URL=/admin-api pnpm build
   )
   cp -R "${SOURCE_DIR}/camera-rental-schedule-center/dist/." "${release_dir}/schedule-center/"
   built_components+=("schedule-center")

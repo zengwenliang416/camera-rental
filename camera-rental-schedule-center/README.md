@@ -6,11 +6,11 @@
 
 ## Run Locally
 
-**Prerequisites:** Node.js 或 Bun
+**Prerequisites:** Node.js 22 和 pnpm 10
 
-1. 安装依赖：`bun install`
+1. 安装依赖：`pnpm install --frozen-lockfile`
 2. 按需复制 `.env.example` 为 `.env.local`
-3. 启动：`bun run dev`
+3. 启动：`pnpm dev`
 
 未登录时会展示独立登录页，但账号密码会调用管理端 `/admin-api/system/auth/login`，并写入与管理后台一致的 `ACCESS_TOKEN`、`REFRESH_TOKEN`、`tenantId` 和 `user` 缓存。也可以先在 `camera-rental-admin` 登录，再直接打开本应用免登进入。
 

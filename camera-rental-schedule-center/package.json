@@ -2,6 +2,7 @@
   "name": "camera-rental-schedule-center",
   "private": true,
   "version": "0.0.0",
+  "packageManager": "pnpm@10.34.5",
   "type": "module",
   "scripts": {
     "dev": "vite --port=5175 --host=0.0.0.0",

@@ -13,6 +13,17 @@ function addDays(date: Date, days: number) {
   return next;
 }
 
+export function inclusiveDateFromExclusive(exclusiveDate?: string) {
+  if (!exclusiveDate) return undefined;
+  const [year, month, day] = exclusiveDate.split('-').map(Number);
+  if (!year || !month || !day) return undefined;
+  const date = new Date(Date.UTC(year, month - 1, day));
+  date.setUTCDate(date.getUTCDate() - 1);
+  return toLocalDateString(
+    new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+  );
+}
+
 /**
  * Check whether a date range overlaps with another date range
  */
@@ -70,7 +81,8 @@ export function recommendDevicesForOrder(
   blocks: ScheduleBlock[]
 ): Record<string, DeviceInstance[]> {
   const result: Record<string, DeviceInstance[]> = {};
-  if (!order.rentalPeriodReady || !order.startDate || !order.endDate) {
+  const occupiedEndDate = inclusiveDateFromExclusive(order.occupyEndDateExclusive);
+  if (!order.rentalPeriodReady || !order.occupyStartDate || !occupiedEndDate) {
     return result;
   }
 
@@ -79,7 +91,13 @@ export function recommendDevicesForOrder(
 
     // Filter available ones
     const availableCandidates = candidates.filter((d) => {
-      const check = checkDeviceAvailability(d, blocks, order.startDate, order.endDate, order.id);
+      const check = checkDeviceAvailability(
+        d,
+        blocks,
+        order.occupyStartDate,
+        occupiedEndDate,
+        order.id
+      );
       return check.available;
     });
 

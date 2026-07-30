@@ -72,6 +72,9 @@ export interface RentalOrder {
   channel: OrderChannel;
   customerName: string;
   customerPhone: string;
+  receiverName?: string;
+  receiverPhone?: string;
+  receiverAddress?: string;
   startDate: string; // YYYY-MM-DD, only populated from backend parsed rental period
   endDate: string;   // YYYY-MM-DD, only populated from backend parsed rental period
   occupyStartDate: string;

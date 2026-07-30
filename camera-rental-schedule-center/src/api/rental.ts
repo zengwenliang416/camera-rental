@@ -1,5 +1,6 @@
 import { apiClient, PageResult } from './client';
 import { AdminUserCache, setCachedPermissionInfo } from './auth';
+import { loadAuthorizedSnapshot, type SnapshotLoaders } from './snapshotLoader';
 
 export interface PermissionInfoVO extends AdminUserCache {
   menus?: unknown[];
@@ -184,6 +185,15 @@ export interface RentalDeviceOpsResultVO {
   assignmentStatus: string;
 }
 
+export interface SnapshotAccess {
+  devices: boolean;
+  schedules: boolean;
+  orders: boolean;
+  pendingShipOrders: boolean;
+  reviews: boolean;
+  xianyuConfig: boolean;
+}
+
 // 后端 PageParam 限制 pageSize 最大为 200；这里循环分页拉完整列表。
 const PAGE_SIZE = 200;
 
@@ -234,33 +244,17 @@ export function fetchXianyuExpressCompanies() {
   return apiClient.get<XianyuExpressCompanyVO[]>('/rental/xianyu/express-company/list');
 }
 
-export async function fetchScheduleCenterSnapshot() {
-  const [devicePage, schedulePage, orderPage, pendingShipPage, reviewPage] = await Promise.all([
-    fetchAllPages<RentalDeviceVO>('/rental/device/page'),
-    fetchAllPages<RentalScheduleVO>('/rental/schedule/page', {
-      status: 'EFFECTIVE',
-    }),
-    fetchAllPages<XianyuOrderVO>('/rental/xianyu/order/page'),
+const snapshotLoaders: SnapshotLoaders = {
+  devices: () => fetchAllPages<RentalDeviceVO>('/rental/device/page'),
+  schedules: () => fetchAllPages<RentalScheduleVO>('/rental/schedule/page', { status: 'EFFECTIVE' }),
+  orders: () => fetchAllPages<XianyuOrderVO>('/rental/xianyu/order/page'),
+  pendingShipOrders: () =>
     fetchAllPages<XianyuPendingShipOrderVO>('/rental/xianyu/order/pending-ship/page'),
-    fetchAllPages<RentalManualReviewVO>('/rental/manual-review/page', {
-      status: 'PENDING',
-    }),
-  ]);
+  reviews: () => fetchAllPages<RentalManualReviewVO>('/rental/manual-review/page', { status: 'PENDING' }),
+};
 
-  return {
-    devices: devicePage.list || [],
-    schedules: schedulePage.list || [],
-    channelOrders: orderPage.list || [],
-    pendingShipOrders: pendingShipPage.list || [],
-    reviews: reviewPage.list || [],
-    totals: {
-      devices: devicePage.total || 0,
-      schedules: schedulePage.total || 0,
-      channelOrders: orderPage.total || 0,
-      pendingShipOrders: pendingShipPage.total || 0,
-      reviews: reviewPage.total || 0,
-    },
-  };
+export function fetchScheduleCenterSnapshot(access: SnapshotAccess) {
+  return loadAuthorizedSnapshot(access, snapshotLoaders);
 }
 
 export function resolveRentalDeviceQr(payload: string) {

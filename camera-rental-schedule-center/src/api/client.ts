@@ -28,13 +28,19 @@ export class ApiError extends Error {
   }
 }
 
+export function isAuthenticationFailure(error: unknown) {
+  return error instanceof Error
+    && (error.message === 'AUTH_REQUIRED' || error.message === 'NO_REFRESH_TOKEN');
+}
+
 export interface PageResult<T> {
   list: T[];
   total: number;
 }
 
 function resolveApiOrigin(configuredBaseUrl?: string) {
-  const fallback = window.location.origin;
+  const fallback =
+    typeof window === 'undefined' ? 'http://localhost' : window.location.origin;
   const configured = configuredBaseUrl?.trim();
   if (!configured) return fallback;
 
@@ -51,9 +57,10 @@ function resolveApiOrigin(configuredBaseUrl?: string) {
   return configured.replace(/\/+$/, '');
 }
 
-const apiBase = `${resolveApiOrigin(import.meta.env.VITE_BASE_URL)}${import.meta.env.VITE_API_URL || '/admin-api'}`;
-const tenantEnabled = import.meta.env.VITE_APP_TENANT_ENABLE !== 'false';
-const defaultTenantName = import.meta.env.VITE_APP_DEFAULT_LOGIN_TENANT || '捷租达';
+const runtimeEnv = (import.meta.env || {}) as ImportMetaEnv;
+const apiBase = `${resolveApiOrigin(runtimeEnv.VITE_BASE_URL)}${runtimeEnv.VITE_API_URL || '/admin-api'}`;
+const tenantEnabled = runtimeEnv.VITE_APP_TENANT_ENABLE !== 'false';
+const defaultTenantName = runtimeEnv.VITE_APP_DEFAULT_LOGIN_TENANT || '捷租达';
 let refreshing: Promise<void> | null = null;
 
 interface AdminPasswordLoginParams {
@@ -123,6 +130,11 @@ async function request<T>(path: string, init: RequestInit = {}, retry = true): P
       throw new Error('AUTH_REQUIRED');
     }
     return request<T>(path, init, false);
+  }
+  if (json.code === 401 || res.status === 401) {
+    removeTokenPair();
+    clearCachedPermissionInfo();
+    throw new Error('AUTH_REQUIRED');
   }
   if (json.code === 403 || res.status === 403) {
     throw new ApiError(json.msg || '无权限执行该操作', json.code, res.status);

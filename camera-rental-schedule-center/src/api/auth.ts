@@ -26,8 +26,24 @@ export interface TokenPair {
   refreshToken: string;
 }
 
+function browserStorage() {
+  if (typeof window === 'undefined') return null;
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
+
 function readCacheValue<T>(key: string): T | undefined {
-  const raw = window.localStorage.getItem(key);
+  const storage = browserStorage();
+  if (!storage) return undefined;
+  let raw: string | null = null;
+  try {
+    raw = storage.getItem(key);
+  } catch {
+    return undefined;
+  }
   if (!raw) return undefined;
 
   try {
@@ -44,12 +60,28 @@ function readCacheValue<T>(key: string): T | undefined {
 }
 
 function writeCacheValue(key: string, value: unknown) {
+  const storage = browserStorage();
+  if (!storage) return;
   const cacheItem = {
     c: Date.now(),
     e: new Date('9999-12-31T23:59:59.999Z').getTime(),
     v: JSON.stringify(value),
   };
-  window.localStorage.setItem(key, JSON.stringify(cacheItem));
+  try {
+    storage.setItem(key, JSON.stringify(cacheItem));
+  } catch {
+    // Authentication still works for the current page when storage is unavailable.
+  }
+}
+
+function removeCacheValue(key: string) {
+  const storage = browserStorage();
+  if (!storage) return;
+  try {
+    storage.removeItem(key);
+  } catch {
+    // Treat unavailable storage as already cleared.
+  }
 }
 
 export function getAccessToken() {
@@ -66,8 +98,8 @@ export function setTokenPair(token: TokenPair) {
 }
 
 export function removeTokenPair() {
-  window.localStorage.removeItem(ACCESS_TOKEN_KEY);
-  window.localStorage.removeItem(REFRESH_TOKEN_KEY);
+  removeCacheValue(ACCESS_TOKEN_KEY);
+  removeCacheValue(REFRESH_TOKEN_KEY);
 }
 
 export function getTenantId() {
@@ -95,7 +127,7 @@ export function setCachedPermissionInfo(info: AdminUserCache) {
 }
 
 export function clearCachedPermissionInfo() {
-  window.localStorage.removeItem(USER_KEY);
+  removeCacheValue(USER_KEY);
 }
 
 export function buildAdminLoginUrl() {

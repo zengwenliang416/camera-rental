@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
+import '../features/shipping/shippingModel.test';
 import { mapChannelOrders, mapDevices, mapPendingShipOrders, mapSchedules } from './mappers';
 import type { XianyuOrderVO } from './rental';
 import { expressCodeFromName } from '../lib/expressCompanies';
@@ -88,14 +89,24 @@ test('pending non-rental merchandise without a remark stays out of scheduling', 
   assert.deepEqual(mapped, []);
 });
 
-test('receiver contact is mapped with dashboard-safe masking', () => {
+test('order mapping keeps masked shared snapshots and authorized delivery details separately', () => {
   const [mapped] = mapChannelOrders(
-    [order({ receiverName: '张三', receiverMobile: '13800138000' })],
+    [order({
+      receiverName: '张三',
+      receiverMobile: '13800138000',
+      receiverAddress: '测试地址',
+      goodsTitle: '大疆 Pocket 3 租赁',
+      goodsQuantity: 2,
+    })],
     []
   );
 
   assert.equal(mapped.customerName, '张*');
   assert.equal(mapped.customerPhone, '138****8000');
+  assert.equal(mapped.receiverName, '张三');
+  assert.equal(mapped.receiverPhone, '13800138000');
+  assert.equal(mapped.receiverAddress, '测试地址');
+  assert.equal('shipmentDetails' in mapped, false);
 });
 
 test('fallback seller and buyer names remain masked without receiver snapshots', () => {

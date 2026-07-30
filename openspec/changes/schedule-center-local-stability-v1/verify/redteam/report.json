@@ -16,20 +16,23 @@
     "authorized browser privacy-state and page-bounded order review",
     "read-only database relation probes",
     "2026-07-30 browser console, accessible-name, and privacy-safe visual rerun",
-    "2026-07-30T10:44:21Z release secret scan and permission/write-gate regression rerun"
+    "2026-07-30T10:44:21Z release secret scan and permission/write-gate regression rerun",
+    "2026-07-30T11:51:07Z non-destructive production endpoint and release provenance check"
   ],
   "findings": [
     "Non-destructive adversarial probes passed.",
     "No unresolved security or resilience blocker remains.",
     "Complete delivery data is limited to the authorized order surface while shared snapshot fields remain masked.",
     "Verification retained only counts and booleans; no customer values or sensitive screenshots were persisted.",
-    "Real write operations stayed disabled.",
+    "No real write operation was executed during verification.",
     "The layout rerun found zero unnamed visible buttons and retained no screenshot containing customer details.",
-    "The release rerun found no committed credential material and retained the tested permission, tenant, duplicate-command, and disabled-write boundaries."
+    "The release rerun found no committed credential material and retained the tested permission, tenant, duplicate-command, and write-gate boundaries.",
+    "The production recheck used only public GET requests and did not submit customer data or third-party mutations."
   ],
   "required_fixes": [],
   "residual_risk": [
     "Remote production shipment mutation behavior requires separately authorized operations verification."
   ],
-  "blocker_class": null
+  "blocker_class": null,
+  "rerun_at": "2026-07-30T11:51:07Z"
 }

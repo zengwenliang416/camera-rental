@@ -11,7 +11,7 @@
   ],
   "uncovered_scope": [],
   "residual_risk": [
-    "A real XianGuanJia shipment mutation was intentionally not executed; the production write switch remains disabled.",
+    "A real XianGuanJia shipment mutation was intentionally not executed; the production persisted write switch is enabled and requires operator-controlled use.",
     "CodeGraph verification is advisory and the repository is not indexed in the current session."
   ],
   "confidence": "B"

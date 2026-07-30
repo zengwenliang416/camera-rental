@@ -19,20 +19,23 @@
     "browser and database artifact inspection",
     "authorized order-field mapping and pagination evidence inspection",
     "2026-07-30 schedule select and status-badge source plus browser evidence inspection",
-    "2026-07-30T10:44:21Z release-commit traceability and clean-worktree inspection"
+    "2026-07-30T10:44:21Z release-commit traceability and clean-worktree inspection",
+    "2026-07-30T11:51:07Z production release-info, public HTTP, migration evidence, and committed-source reconciliation"
   ],
   "findings": [
     "Current material claims are grounded in repository, unit, browser, or database evidence.",
     "No changed scope is unmapped.",
     "Shared snapshots retain masked customer fields while the authorized rental-orders page maps separate complete delivery fields.",
-    "Real shipment writes remain disabled and were not claimed as executed.",
+    "No real shipment mutation was claimed as executed; production write enablement is recorded separately as an accepted operations risk.",
     "The select inset and single-line schedule status claims match current source and computed browser styles.",
-    "The release commits contain the previously verified source state; only locally excluded runs artifacts remain outside version control."
+    "The release commits contain the previously verified source state; only locally excluded runs artifacts remain outside version control.",
+    "Both public admin release-info endpoints report release b5968cf257b05810033b53f360f636d0535fc5dd."
   ],
   "required_fixes": [],
   "residual_risk": [
     "CodeGraph is advisory and not indexed in the current session.",
     "Real third-party shipment mutation was not executed."
   ],
-  "blocker_class": null
+  "blocker_class": null,
+  "rerun_at": "2026-07-30T11:51:07Z"
 }

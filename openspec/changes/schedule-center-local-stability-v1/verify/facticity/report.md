@@ -30,7 +30,7 @@ green
 - Maintained behavior matches the approved requirements and acceptance statements.
 - No invented route, API, configuration fallback, database effect, or runtime count was used as proof.
 - Shared dashboard/device snapshots retain masked customer fields; complete receiver name, phone, and address are mapped separately for the authorized rental-orders page.
-- The real-write path remains deliberately unexecuted and disabled.
+- The real-write path remains deliberately unexecuted; production write enablement is handled as an accepted operations risk.
 
 ## Required Fixes
 
@@ -51,3 +51,4 @@ green
 - The browser reported `40px` select right padding, a `14px` arrow inset, a `224px` sticky identity column, and `white-space: nowrap` with `flex-shrink: 0` for the “空闲在库” badge.
 - No shipment mutation, customer-data capture, or production write was performed.
 - At `2026-07-30T10:44:21Z`, release-commit traceability and the clean tracked worktree were re-inspected; no production source changed after the verified state.
+- At `2026-07-30T11:51:07Z`, both public release-info endpoints were reconciled with commit `b5968cf2`, the applied migration evidence, and the verified source state.

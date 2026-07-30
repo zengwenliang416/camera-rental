@@ -1,0 +1,27 @@
+{
+  "schema": "specnav.ops.releaseChecklist.v1",
+  "change": "schedule-center-local-stability-v1",
+  "release_target": "project-deploy",
+  "checks": [
+    {
+      "name": "verification green",
+      "status": "pass"
+    },
+    {
+      "name": "migrations 029 through 031 applied and verified",
+      "status": "pass"
+    },
+    {
+      "name": "public admin and schedule-center smoke checks",
+      "status": "pass"
+    },
+    {
+      "name": "rollback and monitoring plans prepared",
+      "status": "pass"
+    },
+    {
+      "name": "release docs prepared",
+      "status": "pass"
+    }
+  ]
+}

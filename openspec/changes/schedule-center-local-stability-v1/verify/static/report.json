@@ -18,7 +18,8 @@
     "git diff --check",
     "cd camera-rental-schedule-center && pnpm lint",
     "cd camera-rental-schedule-center && pnpm build",
-    "2026-07-30 release rerun: backend tests, admin type/build, schedule-center test/lint/build, git diff --check"
+    "2026-07-30 release rerun: backend tests, admin type/build, schedule-center test/lint/build, git diff --check",
+    "2026-07-30T11:51:07Z rerun: backend reactor tests, admin ts:check, schedule-center test/tsc/build, incremental deploy helper test, bash -n, git diff --check"
   ],
   "findings": [
     "All required static commands passed.",
@@ -26,11 +27,13 @@
     "The production source ceiling is satisfied with a maximum of 524 lines.",
     "Order pagination, complete delivery-field mapping, and split order translations pass TypeScript and production build checks.",
     "The schedule select and status-badge layout fix passes TypeScript, Vite production build, whitespace checks, and the 600-line ceiling.",
-    "The release rerun completed successfully against the committed source state."
+    "The release rerun completed successfully against the committed source state.",
+    "The pnpm-based schedule-center deployment path and incremental dependency fingerprint helper passed their focused checks."
   ],
   "required_fixes": [],
   "residual_risk": [
     "Anchor coverage is advisory under the current policy."
   ],
-  "blocker_class": null
+  "blocker_class": null,
+  "rerun_at": "2026-07-30T11:51:07Z"
 }

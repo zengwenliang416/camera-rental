@@ -1,0 +1,27 @@
+{
+  "schema": "specnav.ops.migrationDeployment.v1",
+  "change": "schedule-center-local-stability-v1",
+  "status": "pass",
+  "source_manifest": "development/migrations/manifest.json",
+  "applied_migrations": [
+    "20260729_029_xianyu_admin_managed_config",
+    "20260730_030_xianyu_remove_legacy_credential_reference",
+    "20260730_031_xianyu_disable_unconfigured_applications"
+  ],
+  "evidence_refs": [
+    "development/migrations/manifest.json",
+    "development/migrations/README.md",
+    "operations/production-deployment-evidence.json",
+    "verify/aggregate-report.json"
+  ],
+  "rollback_refs": [
+    "development/migrations/manifest.json",
+    "operations/rollback-plan.md",
+    "/opt/camera-rental/backups/pre-admin-xianyu-20260730T110043"
+  ],
+  "rollback_strategy": "Migration 030 intentionally removes the legacy credential_reference contract. A full rollback must restore the pre-migration database backup and activate the matching previous application release together.",
+  "notes": [
+    "Migrations were applied in order 029, 030, 031 before the production service restart.",
+    "Nineteen rental and XianGuanJia tables were compared before and after migration with no row loss."
+  ]
+}

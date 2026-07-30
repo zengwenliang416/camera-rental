@@ -29,7 +29,7 @@ green
 ## Findings
 
 - No unresolved authorization, tenant, secret, duplicate, stale-state, or write-gate issue was found.
-- Real writes remain disabled and no destructive probe touched business data.
+- No real write was executed and no destructive probe touched business data.
 - Complete delivery fields are limited to the authorized order surface; shared snapshots remain masked.
 - Sensitive search evidence is retained only in structured booleans/counts, not customer values or screenshots.
 
@@ -51,3 +51,4 @@ green
 - The browser found zero unnamed visible buttons on orders, devices, exceptions, and schedule pages.
 - Console output contained only Vite connection messages and the React development notice; no new error or security-relevant warning appeared.
 - At `2026-07-30T10:44:21Z`, the release secret scan and permission/write-gate regression suites were rechecked; no production write was executed.
+- At `2026-07-30T11:51:07Z`, production verification used public GET requests only and confirmed release provenance without customer-data input or a third-party mutation.

@@ -1,22 +1,22 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-07-30T10:45:34.416Z",
+  "generated_at": "2026-07-30T12:00:23.181Z",
   "project_root": "/Volumes/zwl/camera-rental-github",
   "active_change": "schedule-center-local-stability-v1",
   "policy": {
     "enabled": true,
     "profile": "bootstrap",
     "mode": "observe",
-    "stage": "verification",
+    "stage": "operations",
     "required_for_stage": false,
     "disabled_reason": null
   },
   "execution_surface": "cli",
   "decision": {
-    "stage": "verification",
+    "stage": "operations",
     "result": "warn",
-    "reason": "CodeGraph policy has advisory warnings for verification."
+    "reason": "CodeGraph policy has advisory warnings for operations."
   },
   "cli": {
     "available": true,

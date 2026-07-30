@@ -17,7 +17,8 @@
     "independent screenshot and DOM review",
     "responsive, focus, preference, privacy, pagination, source-size, and console evidence inspection",
     "2026-07-30 live schedule screenshot and computed-layout review",
-    "2026-07-30T10:44:21Z committed-source and final-build sensory reconciliation"
+    "2026-07-30T10:44:21Z committed-source and final-build sensory reconciliation",
+    "2026-07-30T11:51:07Z deployed artifact and reviewed-source reconciliation"
   ],
   "findings": [
     "Evidence-linked sensory findings passed.",
@@ -25,12 +26,14 @@
     "The translation split reduces the largest production source file to 524 lines.",
     "No unresolved UX, accessibility, privacy, cohesion, or maintainability blocker remains.",
     "The schedule status remains visually intact on one line and every native select has a consistent, readable right inset.",
-    "The committed source matches the independently reviewed screenshots and DOM evidence, and the final builds introduced no source drift."
+    "The committed source matches the independently reviewed screenshots and DOM evidence, and the final builds introduced no source drift.",
+    "The deployed release SHA matches the reviewed and built source; the evidence-only rerun introduced no UI source change."
   ],
   "required_fixes": [],
   "residual_risk": [
     "No dedicated automated contrast analyzer was run.",
     "No production network performance trace was captured."
   ],
-  "blocker_class": null
+  "blocker_class": null,
+  "rerun_at": "2026-07-30T11:51:07Z"
 }

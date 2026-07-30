@@ -18,7 +18,8 @@
     "theme, locale, focus, and console verification",
     "27 read-only database integrity queries",
     "2026-07-30 live browser route check for select inset and schedule status badge",
-    "2026-07-30T10:44:21Z release-state runtime evidence and build-output revalidation"
+    "2026-07-30T10:44:21Z release-state runtime evidence and build-output revalidation",
+    "2026-07-30T11:51:07Z public production admin and schedule-center HTTP plus release-info verification"
   ],
   "findings": [
     "E2E flows covering all six approved cases passed.",
@@ -27,11 +28,13 @@
     "Shipment review search and server write gates behaved as specified.",
     "All seven native selects across schedule, orders, devices, and exceptions render 40px right padding with a 14px arrow inset.",
     "The schedule status badge renders on one 24px-high line inside a 224px sticky device column.",
-    "No production source changed after the recorded browser/database journeys; final production builds succeeded for both admin and schedule-center."
+    "No production source changed after the recorded browser/database journeys; final production builds succeeded for both admin and schedule-center.",
+    "The public admin and schedule-center routes returned HTTP 200 and both release-info documents reported release b5968cf257b05810033b53f360f636d0535fc5dd."
   ],
   "required_fixes": [],
   "residual_risk": [
     "Real third-party shipment mutation and production network behavior were not exercised."
   ],
-  "blocker_class": null
+  "blocker_class": null,
+  "rerun_at": "2026-07-30T11:51:07Z"
 }

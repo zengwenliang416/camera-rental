@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-07-30T10:45:34.420Z",
+  "generated_at": "2026-07-30T12:00:23.182Z",
   "active_change": "schedule-center-local-stability-v1",
   "claims_file": "openspec/changes/schedule-center-local-stability-v1/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/schedule-center-local-stability-v1/codegraph/evidence-index.json",

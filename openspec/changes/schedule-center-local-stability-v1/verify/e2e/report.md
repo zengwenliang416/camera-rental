@@ -33,7 +33,7 @@ green
 - All six routes passed at four widths, producing 24 successful responsive checks.
 - The authorized rental-orders page renders 10 cards by default, supports forward/back pagination, displays complete receiver name, phone, and address, and searches by all three fields.
 - Authorized shipping review supports device SN, receiver name, full phone, and order number while preserving privacy after clear.
-- The persisted write switch remained off, the button stayed disabled, and no optimistic success was created.
+- The local verification fixture kept writes disabled, the button stayed disabled, and no optimistic success was created.
 
 ## Required Fixes
 
@@ -56,3 +56,4 @@ green
 - At the available 1280px browser viewport, page width did not exceed the viewport; the timeline retained intentional internal horizontal scrolling.
 - The current browser surface could not be resized for a fresh mobile capture, so the rerun relies on existing mobile evidence plus unchanged responsive shell rules and the successful production build.
 - At `2026-07-30T10:44:21Z`, the release-state runtime evidence was reconciled with the committed tree and fresh admin/schedule-center production builds; no journey implementation changed after the recorded browser run.
+- At `2026-07-30T11:51:07Z`, the public admin and schedule-center routes returned HTTP 200 and both release-info endpoints reported commit `b5968cf2`.

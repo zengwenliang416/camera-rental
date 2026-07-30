@@ -13,7 +13,7 @@
 
 ## Residual Risk
 
-- No real XianGuanJia shipment mutation was executed. The persisted write switch remains disabled.
+- No real XianGuanJia shipment mutation was executed. The production persisted write switch is enabled and requires operator-controlled use.
 - CodeGraph is advisory for this stage and the repository is not indexed in the current session.
 
 ## Confidence

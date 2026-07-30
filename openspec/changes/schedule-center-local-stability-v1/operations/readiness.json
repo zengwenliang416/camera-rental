@@ -1,0 +1,34 @@
+{
+  "schema": "specnav.ops.readiness.v1",
+  "change": "schedule-center-local-stability-v1",
+  "release_target": "project-deploy",
+  "ready": true,
+  "verification": {
+    "aggregate_verdict": "green",
+    "receipt_confidence": "B",
+    "uncovered_scope": [],
+    "residual_risk": [
+      "No real XianGuanJia shipment mutation was executed.",
+      "The production persisted write switch is enabled and must remain operator-controlled.",
+      "CodeGraph is advisory and not indexed in the current session."
+    ]
+  },
+  "git": {
+    "branch": "main",
+    "dirty": true,
+    "untracked_reviewed": true,
+    "worktree_mode": "single main worktree; dirty state is limited to reviewed SpecNav verification and operations evidence"
+  },
+  "docs": {
+    "user_facing": true,
+    "changelog": true,
+    "release_notes": true,
+    "readme_updated": true
+  },
+  "ops": {
+    "migrations": "pass",
+    "rollback_plan": "pass",
+    "monitor_plan": "pass",
+    "postmortem_required": false
+  }
+}

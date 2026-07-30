@@ -1,0 +1,22 @@
+{
+  "schema": "specnav.ops.updateSpec.v1",
+  "change": "schedule-center-local-stability-v1",
+  "status": "no_writeback_needed",
+  "learning_items": [
+    "Schedule-center production deployment must use pnpm and pnpm-lock.yaml consistently.",
+    "Migration 030 makes application-only rollback invalid; backup and previous application release must be restored together.",
+    "Production release metadata should be checked on both the admin root and nested schedule-center route."
+  ],
+  "unresolved_items": [],
+  "promoted_checks": [
+    {
+      "id": "schedule-center-pnpm-deploy",
+      "statement": "Schedule-center deployment installs and builds with the package manager declared by its packageManager field and lockfile.",
+      "verify_via": "static",
+      "candidate_artifact": "ops/github-deploy/tests/incremental-build-lib-test.sh",
+      "generalized": true,
+      "status": "candidate",
+      "evidence_ref": "operations/production-deployment-evidence.json"
+    }
+  ]
+}

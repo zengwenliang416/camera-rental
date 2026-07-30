@@ -1,0 +1,49 @@
+{
+  "schema": "specnav.ops.productionEvidence.v1",
+  "change": "schedule-center-local-stability-v1",
+  "environment": "production",
+  "release_sha": "b5968cf257b05810033b53f360f636d0535fc5dd",
+  "previous_release_sha": "5e86ddc231ff26bafe7ff93d2c0bfa7bd1c1cc57",
+  "release_dir": "/opt/camera-rental/releases/b5968cf257b05810033b53f360f636d0535fc5dd",
+  "built_at": "2026-07-30T11:27:12Z",
+  "build_mode": "incremental",
+  "public_checks": [
+    {
+      "url": "https://rental.motion-cover.com/admin/",
+      "status": 200
+    },
+    {
+      "url": "https://rental.motion-cover.com/admin/schedule-center/",
+      "status": 200
+    },
+    {
+      "url": "https://rental.motion-cover.com/admin/release-info.json",
+      "status": 200,
+      "release_sha": "b5968cf257b05810033b53f360f636d0535fc5dd"
+    },
+    {
+      "url": "https://rental.motion-cover.com/admin/schedule-center/release-info.json",
+      "status": 200,
+      "release_sha": "b5968cf257b05810033b53f360f636d0535fc5dd"
+    }
+  ],
+  "database_backup": "/opt/camera-rental/backups/pre-admin-xianyu-20260730T110043",
+  "applied_migrations": [
+    "20260729_029_xianyu_admin_managed_config",
+    "20260730_030_xianyu_remove_legacy_credential_reference",
+    "20260730_031_xianyu_disable_unconfigured_applications"
+  ],
+  "database_result": {
+    "row_loss_detected": false,
+    "credential_reference_removed": true,
+    "application_rows": 1,
+    "enabled_rows": 1,
+    "write_enabled_rows": 1,
+    "job_enabled_rows": 0,
+    "configured_secret_rows": 1
+  },
+  "notes": [
+    "The encryption key remains infrastructure-managed and is not recorded in this artifact.",
+    "No real XianGuanJia shipment mutation was executed during verification."
+  ]
+}

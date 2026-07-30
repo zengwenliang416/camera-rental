@@ -48,3 +48,4 @@ green
 - All 77 tests passed; no application state, scheduling rule, order behavior, or write-gate regression was introduced.
 - The changed CSS presentation itself is verified in E2E and sensory evidence rather than through implementation-coupled unit assertions.
 - At `2026-07-30T10:44:21Z`, the release suite was rerun against committed source: 257 backend rental tests and 77 schedule-center tests passed.
+- At `2026-07-30T11:51:07Z`, the post-deployment rerun again passed 257 backend rental tests and 77 schedule-center tests.

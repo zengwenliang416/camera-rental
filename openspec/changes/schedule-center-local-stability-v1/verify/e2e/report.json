@@ -17,7 +17,8 @@
     "authorized rental-order pagination, delivery-field, and search verification",
     "theme, locale, focus, and console verification",
     "27 read-only database integrity queries",
-    "2026-07-30 live browser route check for select inset and schedule status badge"
+    "2026-07-30 live browser route check for select inset and schedule status badge",
+    "2026-07-30T10:44:21Z release-state runtime evidence and build-output revalidation"
   ],
   "findings": [
     "E2E flows covering all six approved cases passed.",
@@ -25,7 +26,8 @@
     "The rental-orders page renders 10 cards by default, paginates forward and back, exposes complete receiver fields to authorized users, and searches by receiver name, phone, and address.",
     "Shipment review search and server write gates behaved as specified.",
     "All seven native selects across schedule, orders, devices, and exceptions render 40px right padding with a 14px arrow inset.",
-    "The schedule status badge renders on one 24px-high line inside a 224px sticky device column."
+    "The schedule status badge renders on one 24px-high line inside a 224px sticky device column.",
+    "No production source changed after the recorded browser/database journeys; final production builds succeeded for both admin and schedule-center."
   ],
   "required_fixes": [],
   "residual_risk": [

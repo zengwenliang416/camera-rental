@@ -50,3 +50,4 @@ green
 - At `2026-07-30T09:38:30Z`, current source and browser-computed styles were re-inspected after the schedule filter and device-status layout fix.
 - The browser reported `40px` select right padding, a `14px` arrow inset, a `224px` sticky identity column, and `white-space: nowrap` with `flex-shrink: 0` for the “空闲在库” badge.
 - No shipment mutation, customer-data capture, or production write was performed.
+- At `2026-07-30T10:44:21Z`, release-commit traceability and the clean tracked worktree were re-inspected; no production source changed after the verified state.

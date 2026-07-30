@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-07-30T09:42:53.444Z",
+  "generated_at": "2026-07-30T10:45:34.420Z",
   "active_change": "schedule-center-local-stability-v1",
   "stage": "verification",
   "ok": true,
@@ -63,7 +63,7 @@
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-07-30T09:42:53.439Z",
+    "generated_at": "2026-07-30T10:45:34.416Z",
     "active_change": "schedule-center-local-stability-v1",
     "source_raw": "openspec/changes/schedule-center-local-stability-v1/codegraph/evidence.jsonl",
     "by_claim": {},
@@ -74,7 +74,7 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-07-30T09:42:53.444Z",
+    "generated_at": "2026-07-30T10:45:34.420Z",
     "active_change": "schedule-center-local-stability-v1",
     "claims_file": "openspec/changes/schedule-center-local-stability-v1/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/schedule-center-local-stability-v1/codegraph/evidence-index.json",

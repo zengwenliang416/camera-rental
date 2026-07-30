@@ -49,3 +49,4 @@ green
 - At `2026-07-30T09:38:30Z`, `pnpm lint`, `pnpm build`, and focused `git diff --check` passed after the select-arrow and schedule status-badge changes.
 - The touched production files contain 150, 28, and 233 lines respectively, all below the 600-line ceiling.
 - The fix remains centralized: one global native-select rule, one shared badge behavior, and one schedule-table column constraint.
+- At `2026-07-30T10:44:21Z`, the committed release state was revalidated with backend tests, admin type/build, schedule-center test/lint/build, and repository whitespace checks.

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-30T09:42:52.734Z",
+  "generated_at": "2026-07-30T10:45:34.439Z",
   "change_id": "schedule-center-local-stability-v1",
   "active_change": "schedule-center-local-stability-v1",
   "verdict": "green",
@@ -59,7 +59,7 @@
     "status": {
       "schema": "specnav.codegraph.status.v1",
       "ok": true,
-      "generated_at": "2026-07-30T09:42:52.714Z",
+      "generated_at": "2026-07-30T10:45:34.416Z",
       "project_root": "/Volumes/zwl/camera-rental-github",
       "active_change": "schedule-center-local-stability-v1",
       "policy": {
@@ -122,7 +122,7 @@
     },
     "evidence_index": {
       "schema": "specnav.codegraph.evidence_index.v1",
-      "generated_at": "2026-07-30T09:42:52.714Z",
+      "generated_at": "2026-07-30T10:45:34.416Z",
       "active_change": "schedule-center-local-stability-v1",
       "source_raw": "openspec/changes/schedule-center-local-stability-v1/codegraph/evidence.jsonl",
       "by_claim": {},
@@ -133,7 +133,7 @@
     },
     "claims_report": {
       "schema": "specnav.codegraph.claims_report.v1",
-      "generated_at": "2026-07-30T09:42:52.717Z",
+      "generated_at": "2026-07-30T10:45:34.420Z",
       "active_change": "schedule-center-local-stability-v1",
       "claims_file": "openspec/changes/schedule-center-local-stability-v1/codegraph/claims-map.json",
       "evidence_index": "openspec/changes/schedule-center-local-stability-v1/codegraph/evidence-index.json",
@@ -197,7 +197,7 @@
     },
     "guard_report": {
       "schema": "specnav.codegraph.guard_report.v1",
-      "generated_at": "2026-07-30T09:42:52.717Z",
+      "generated_at": "2026-07-30T10:45:34.420Z",
       "active_change": "schedule-center-local-stability-v1",
       "stage": "verification",
       "ok": true,
@@ -260,7 +260,7 @@
       },
       "evidence_index": {
         "schema": "specnav.codegraph.evidence_index.v1",
-        "generated_at": "2026-07-30T09:42:52.714Z",
+        "generated_at": "2026-07-30T10:45:34.416Z",
         "active_change": "schedule-center-local-stability-v1",
         "source_raw": "openspec/changes/schedule-center-local-stability-v1/codegraph/evidence.jsonl",
         "by_claim": {},
@@ -271,7 +271,7 @@
       },
       "claims_report": {
         "schema": "specnav.codegraph.claims_report.v1",
-        "generated_at": "2026-07-30T09:42:52.717Z",
+        "generated_at": "2026-07-30T10:45:34.420Z",
         "active_change": "schedule-center-local-stability-v1",
         "claims_file": "openspec/changes/schedule-center-local-stability-v1/codegraph/claims-map.json",
         "evidence_index": "openspec/changes/schedule-center-local-stability-v1/codegraph/evidence-index.json",

@@ -18,14 +18,16 @@
     "focused legacy configuration scan",
     "browser and database artifact inspection",
     "authorized order-field mapping and pagination evidence inspection",
-    "2026-07-30 schedule select and status-badge source plus browser evidence inspection"
+    "2026-07-30 schedule select and status-badge source plus browser evidence inspection",
+    "2026-07-30T10:44:21Z release-commit traceability and clean-worktree inspection"
   ],
   "findings": [
     "Current material claims are grounded in repository, unit, browser, or database evidence.",
     "No changed scope is unmapped.",
     "Shared snapshots retain masked customer fields while the authorized rental-orders page maps separate complete delivery fields.",
     "Real shipment writes remain disabled and were not claimed as executed.",
-    "The select inset and single-line schedule status claims match current source and computed browser styles."
+    "The select inset and single-line schedule status claims match current source and computed browser styles.",
+    "The release commits contain the previously verified source state; only locally excluded runs artifacts remain outside version control."
   ],
   "required_fixes": [],
   "residual_risk": [

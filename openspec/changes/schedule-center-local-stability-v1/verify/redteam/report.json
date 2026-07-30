@@ -15,7 +15,8 @@
     "legacy configuration and secret-path scans",
     "authorized browser privacy-state and page-bounded order review",
     "read-only database relation probes",
-    "2026-07-30 browser console, accessible-name, and privacy-safe visual rerun"
+    "2026-07-30 browser console, accessible-name, and privacy-safe visual rerun",
+    "2026-07-30T10:44:21Z release secret scan and permission/write-gate regression rerun"
   ],
   "findings": [
     "Non-destructive adversarial probes passed.",
@@ -23,7 +24,8 @@
     "Complete delivery data is limited to the authorized order surface while shared snapshot fields remain masked.",
     "Verification retained only counts and booleans; no customer values or sensitive screenshots were persisted.",
     "Real write operations stayed disabled.",
-    "The layout rerun found zero unnamed visible buttons and retained no screenshot containing customer details."
+    "The layout rerun found zero unnamed visible buttons and retained no screenshot containing customer details.",
+    "The release rerun found no committed credential material and retained the tested permission, tenant, duplicate-command, and disabled-write boundaries."
   ],
   "required_fixes": [],
   "residual_risk": [

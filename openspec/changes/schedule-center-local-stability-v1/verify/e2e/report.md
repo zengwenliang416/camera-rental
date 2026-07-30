@@ -55,3 +55,4 @@ green
 - The “空闲在库” badge reported `62px × 24px`, `white-space: nowrap`, and `flex-shrink: 0` inside a `224px` sticky row header.
 - At the available 1280px browser viewport, page width did not exceed the viewport; the timeline retained intentional internal horizontal scrolling.
 - The current browser surface could not be resized for a fresh mobile capture, so the rerun relies on existing mobile evidence plus unchanged responsive shell rules and the successful production build.
+- At `2026-07-30T10:44:21Z`, the release-state runtime evidence was reconciled with the committed tree and fresh admin/schedule-center production builds; no journey implementation changed after the recorded browser run.

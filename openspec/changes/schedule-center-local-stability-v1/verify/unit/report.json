@@ -12,14 +12,16 @@
   "commands": [
     "cd camera-rental-server && mvn -pl yudao-module-rental/yudao-module-rental-biz -am test",
     "cd camera-rental-schedule-center && pnpm test",
-    "2026-07-30 rerun: cd camera-rental-schedule-center && pnpm test"
+    "2026-07-30 rerun: cd camera-rental-schedule-center && pnpm test",
+    "2026-07-30T10:44:21Z release rerun: 257 backend tests and 77 schedule-center tests"
   ],
   "findings": [
     "257 backend rental-module tests passed.",
     "77 schedule-center tests passed.",
     "Order tests cover complete receiver-field search, masked/shared mapping separation, page clamping, and bounded rendering.",
     "All approved cases have behavior-facing regression coverage.",
-    "The post-layout-fix schedule-center rerun passed all 77 tests with no regressions."
+    "The post-layout-fix schedule-center rerun passed all 77 tests with no regressions.",
+    "The final release rerun passed 257 backend rental tests and 77 schedule-center tests."
   ],
   "required_fixes": [],
   "residual_risk": [

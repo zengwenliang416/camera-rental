@@ -53,3 +53,4 @@ green
 - The schedule model/status selects and the order, device, exception, and page-size selects use one consistent arrow treatment with visible right breathing room.
 - No new visual clutter, unnamed control, page-level overflow, or console error was found at the available desktop viewport.
 - A fresh mobile screenshot was not produced by the current browser surface; existing 360px/390px artifacts and unchanged responsive containers remain the supporting mobile evidence.
+- At `2026-07-30T10:44:21Z`, the final committed source and successful production builds were reconciled with the independent visual/DOM evidence; no post-review UI source drift was found.

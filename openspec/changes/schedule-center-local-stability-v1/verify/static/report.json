@@ -17,14 +17,16 @@
     "migration cmp and SHA-256",
     "git diff --check",
     "cd camera-rental-schedule-center && pnpm lint",
-    "cd camera-rental-schedule-center && pnpm build"
+    "cd camera-rental-schedule-center && pnpm build",
+    "2026-07-30 release rerun: backend tests, admin type/build, schedule-center test/lint/build, git diff --check"
   ],
   "findings": [
     "All required static commands passed.",
     "No maintained legacy XianGuanJia business configuration fallback remains.",
     "The production source ceiling is satisfied with a maximum of 524 lines.",
     "Order pagination, complete delivery-field mapping, and split order translations pass TypeScript and production build checks.",
-    "The schedule select and status-badge layout fix passes TypeScript, Vite production build, whitespace checks, and the 600-line ceiling."
+    "The schedule select and status-badge layout fix passes TypeScript, Vite production build, whitespace checks, and the 600-line ceiling.",
+    "The release rerun completed successfully against the committed source state."
   ],
   "required_fixes": [],
   "residual_risk": [

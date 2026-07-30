@@ -16,14 +16,16 @@
     "commands": [
     "independent screenshot and DOM review",
     "responsive, focus, preference, privacy, pagination, source-size, and console evidence inspection",
-    "2026-07-30 live schedule screenshot and computed-layout review"
+    "2026-07-30 live schedule screenshot and computed-layout review",
+    "2026-07-30T10:44:21Z committed-source and final-build sensory reconciliation"
   ],
   "findings": [
     "Evidence-linked sensory findings passed.",
     "Order cards remain readable with complete delivery details and bounded 10-card pages on desktop and mobile.",
     "The translation split reduces the largest production source file to 524 lines.",
     "No unresolved UX, accessibility, privacy, cohesion, or maintainability blocker remains.",
-    "The schedule status remains visually intact on one line and every native select has a consistent, readable right inset."
+    "The schedule status remains visually intact on one line and every native select has a consistent, readable right inset.",
+    "The committed source matches the independently reviewed screenshots and DOM evidence, and the final builds introduced no source drift."
   ],
   "required_fixes": [],
   "residual_risk": [

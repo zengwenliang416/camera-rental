@@ -47,295 +47,53 @@
             </div>
           </template>
 
-          <div v-if="currentStep === 0">
-            <el-upload
-              v-model:file-list="shipmentUploadFiles"
-              accept="image/*"
-              :auto-upload="false"
-              :limit="1"
-              :on-change="handleShipmentImageChange"
-              :on-exceed="handleImageExceed"
-              :on-remove="handleShipmentImageRemove"
-              drag
-            >
-              <Icon
-                icon="ep:upload-filled"
-                class="mb-8px text-32px text-[var(--el-color-primary)]"
-              />
-              <div class="el-upload__text">{{ t('rental.xianyu.shipUploadHint') }}</div>
-              <template #tip>
-                <div class="el-upload__tip">{{ t('rental.xianyu.shipUploadTip') }}</div>
-              </template>
-            </el-upload>
-            <div class="mt-12px flex flex-wrap gap-8px">
-              <el-button
-                v-hasPermi="['rental:xianyu:ship:ocr']"
-                type="primary"
-                :disabled="!shipmentImageFile"
-                :loading="shipmentOcrLoading"
-                @click="handleShipmentOcr"
-              >
-                {{ t('rental.xianyu.shipOcr') }}
-              </el-button>
-              <el-tag v-if="shipmentOcr?.extractionSource" type="info">
-                {{ shipmentOcr.extractionSource }}
-              </el-tag>
-              <el-tag v-if="shipmentOcr?.confidence" type="success">
-                {{ t('rental.xianyu.shipOcrConfidence', { value: shipmentOcr.confidence }) }}
-              </el-tag>
-            </div>
-            <el-form class="mt-16px" label-position="top" :model="shipmentForm">
-              <el-form-item :label="t('rental.xianyu.waybillNo')">
-                <el-input
-                  v-model.trim="shipmentForm.waybillNo"
-                  clearable
-                  :placeholder="t('rental.xianyu.waybillNoPlaceholder')"
-                />
-              </el-form-item>
-              <el-form-item :label="t('rental.xianyu.expressName')">
-                <el-select
-                  v-model="shipmentForm.expressCode"
-                  class="!w-1/1"
-                  filterable
-                  clearable
-                  :placeholder="t('rental.xianyu.expressPlaceholder')"
-                  @change="handleShipmentExpressChange"
-                >
-                  <el-option
-                    v-for="express in expressList"
-                    :key="express.code"
-                    :label="`${express.expressName} (${express.code})`"
-                    :value="express.code"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item :label="t('rental.xianyu.expressNameManual')">
-                <el-input
-                  v-model.trim="shipmentForm.expressName"
-                  clearable
-                  :placeholder="t('rental.xianyu.expressNameManualPlaceholder')"
-                />
-              </el-form-item>
-            </el-form>
-          </div>
-
-          <div v-else-if="currentStep === 1">
-            <el-alert
-              class="mb-12px"
-              type="info"
-              :closable="false"
-              :title="t('rental.xianyu.deviceQrHint')"
-            />
-            <el-upload
-              v-model:file-list="deviceQrUploadFiles"
-              accept="image/*"
-              :auto-upload="false"
-              :limit="1"
-              :on-change="handleDeviceQrImageChange"
-              :on-exceed="handleImageExceed"
-              :on-remove="handleDeviceQrImageRemove"
-              drag
-            >
-              <Icon
-                icon="ep:upload-filled"
-                class="mb-8px text-32px text-[var(--el-color-primary)]"
-              />
-              <div class="el-upload__text">{{ t('rental.xianyu.deviceQrUploadHint') }}</div>
-              <template #tip>
-                <div class="el-upload__tip">{{ t('rental.xianyu.deviceQrUploadTip') }}</div>
-              </template>
-            </el-upload>
-            <div class="mt-12px flex flex-wrap gap-8px">
-              <el-button
-                type="primary"
-                :disabled="!deviceQrImageFile"
-                :loading="deviceQrLoading"
-                @click="handleDeviceQrImageDecode"
-              >
-                {{ t('rental.xianyu.deviceQrDecode') }}
-              </el-button>
-              <el-button
-                :disabled="!deviceQrPayload.trim()"
-                :loading="deviceQrResolving"
-                @click="handleResolveDeviceQrPayload"
-              >
-                {{ t('rental.xianyu.deviceQrResolve') }}
-              </el-button>
-            </div>
-            <el-form class="mt-16px" label-position="top" :model="shipmentForm">
-              <el-form-item :label="t('rental.xianyu.deviceQrPayloadLabel')">
-                <el-input
-                  v-model.trim="deviceQrPayload"
-                  clearable
-                  :placeholder="t('rental.xianyu.deviceQrPayloadPlaceholder')"
-                  @keyup.enter="handleResolveDeviceQrPayload"
-                />
-              </el-form-item>
-              <el-form-item :label="t('rental.device.deviceNo')">
-                <el-input
-                  v-model.trim="shipmentForm.deviceNo"
-                  clearable
-                  autofocus
-                  :placeholder="t('rental.xianyu.deviceScanPlaceholder')"
-                />
-              </el-form-item>
-            </el-form>
-            <el-descriptions v-if="selectedDevice" class="mt-12px" :column="3" border>
-              <el-descriptions-item :label="t('rental.device.deviceNo')">
-                {{ selectedDevice.deviceNo }}
-              </el-descriptions-item>
-              <el-descriptions-item :label="t('rental.device.serialNumber')">
-                {{ selectedDevice.serialNumber || '-' }}
-              </el-descriptions-item>
-              <el-descriptions-item :label="t('common.status')">
-                {{ selectedDevice.status }}
-              </el-descriptions-item>
-            </el-descriptions>
-          </div>
-
-          <div v-else-if="currentStep === 2">
-            <el-form label-position="top" :model="shipmentForm">
-              <el-row :gutter="16">
-                <el-col :xs="24" :md="10">
-                  <el-form-item :label="t('rental.order.filterShop')">
-                    <el-select
-                      v-model="shipmentForm.shopId"
-                      class="!w-1/1"
-                      filterable
-                      clearable
-                      :placeholder="t('rental.order.shopPlaceholder')"
-                    >
-                      <el-option
-                        v-for="shop in shops"
-                        :key="shop.id"
-                        :label="shop.shopName || String(shop.id)"
-                        :value="shop.id"
-                      />
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :xs="24" :md="10">
-                  <el-form-item :label="t('rental.xianyu.pendingKeyword')">
-                    <el-input
-                      v-model.trim="shipmentForm.keyword"
-                      clearable
-                      :placeholder="t('rental.xianyu.pendingKeywordPlaceholder')"
-                      @keyup.enter="handleSearchPendingShipOrders(true)"
-                    />
-                  </el-form-item>
-                </el-col>
-                <el-col :xs="24" :md="4">
-                  <el-form-item label=" ">
-                    <el-button
-                      v-hasPermi="['rental:xianyu:ship']"
-                      class="!w-1/1"
-                      type="primary"
-                      :loading="pendingShipLoading"
-                      @click="handleSearchPendingShipOrders(true)"
-                    >
-                      {{ t('rental.xianyu.searchPendingShip') }}
-                    </el-button>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </el-form>
-            <el-table
-              v-loading="pendingShipLoading"
-              :data="pendingShipList"
-              highlight-current-row
-              @current-change="handleSelectPendingShipOrder"
-            >
-              <el-table-column width="52">
-                <template #default="{ row }">
-                  <el-radio
-                    :model-value="selectedPendingShipOrder?.id"
-                    :value="row.id"
-                    @change="handleSelectPendingShipOrder(row)"
-                  />
-                </template>
-              </el-table-column>
-              <el-table-column :label="t('rental.order.externalOrderId')" min-width="180">
-                <template #default="{ row }">
-                  {{ maskOrderId(row.externalOrderId) }}
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="goodsTitle"
-                :label="t('rental.order.goodsTitle')"
-                min-width="220"
-              />
-              <el-table-column :label="t('rental.xianyu.buyerNick')" min-width="120">
-                <template #default="{ row }">
-                  {{ maskChannelIdentifier(row.buyerNick) }}
-                </template>
-              </el-table-column>
-              <el-table-column :label="t('rental.order.payAmountFen')" width="120">
-                <template #default="{ row }">
-                  {{ formatFen(row.payAmount) }}
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="conversionStatus"
-                :label="t('rental.order.conversionStatus')"
-                width="140"
-              />
-              <el-table-column :label="t('rental.xianyu.sourceUpdatedAt')" width="180">
-                <template #default="{ row }">
-                  {{ formatNullableDate(row.sourceUpdatedAt) }}
-                </template>
-              </el-table-column>
-              <template #empty>
-                <div class="py-24px text-[var(--el-text-color-secondary)]">
-                  {{ t('rental.xianyu.pendingShipEmptyHint') }}
-                </div>
-              </template>
-            </el-table>
-            <Pagination
-              :total="pendingShipTotal"
-              v-model:page="shipmentForm.pageNo"
-              v-model:limit="shipmentForm.pageSize"
-              @pagination="handleSearchPendingShipOrders(false)"
-            />
-          </div>
-
-          <div v-else>
-            <el-descriptions :column="2" border>
-              <el-descriptions-item :label="t('rental.xianyu.shipConfirmOrder')">
-                {{ maskOrderId(selectedPendingShipOrder?.externalOrderId) || '-' }}
-              </el-descriptions-item>
-              <el-descriptions-item :label="t('rental.order.goodsTitle')">
-                {{ selectedPendingShipOrder?.goodsTitle || '-' }}
-              </el-descriptions-item>
-              <el-descriptions-item :label="t('rental.xianyu.shipConfirmDevice')">
-                {{ shipmentForm.deviceNo || '-' }}
-                <span v-if="selectedDevice?.serialNumber">
-                  / {{ selectedDevice.serialNumber }}
-                </span>
-              </el-descriptions-item>
-              <el-descriptions-item :label="t('rental.xianyu.shipConfirmWaybill')">
-                {{ shipmentForm.expressName || '-' }} {{ shipmentForm.waybillNo || '-' }}
-              </el-descriptions-item>
-            </el-descriptions>
-            <el-alert
-              class="mt-12px"
-              type="warning"
-              :closable="false"
-              :title="t('rental.xianyu.shipSubmitBackendHint')"
-            />
-            <el-alert
-              v-if="shipmentResult"
-              class="mt-12px"
-              type="success"
-              :closable="false"
-              :title="
-                t('rental.xianyu.shipSuccess', {
-                  shipmentId: shipmentResult.shipmentId,
-                  deviceNo: shipmentResult.deviceNo,
-                  waybillNo: shipmentResult.maskedWaybillNo
-                })
-              "
-            />
-          </div>
+          <XianyuWaybillStep
+            v-if="currentStep === 0"
+            v-model:upload-files="shipmentUploadFiles"
+            :form="shipmentForm"
+            :express-list="expressList"
+            :ocr="shipmentOcr"
+            :ocr-loading="shipmentOcrLoading"
+            :has-image="Boolean(shipmentImageFile)"
+            @image-change="handleShipmentImageChange"
+            @image-remove="handleShipmentImageRemove"
+            @image-exceed="handleImageExceed"
+            @ocr="handleShipmentOcr"
+            @express-change="handleShipmentExpressChange"
+          />
+          <XianyuDeviceStep
+            v-else-if="currentStep === 1"
+            v-model:upload-files="deviceQrUploadFiles"
+            v-model:qr-payload="deviceQrPayload"
+            :form="shipmentForm"
+            :selected-device="selectedDevice"
+            :has-image="Boolean(deviceQrImageFile)"
+            :decoding="deviceQrLoading"
+            :resolving="deviceQrResolving"
+            @image-change="handleDeviceQrImageChange"
+            @image-remove="handleDeviceQrImageRemove"
+            @image-exceed="handleImageExceed"
+            @decode="handleDeviceQrImageDecode"
+            @resolve="handleResolveDeviceQrPayload"
+          />
+          <XianyuOrderSelectionStep
+            v-else-if="currentStep === 2"
+            :form="shipmentForm"
+            :shops="shops"
+            :orders="pendingShipList"
+            :total="pendingShipTotal"
+            :selected-id="selectedPendingShipOrder?.id"
+            :loading="pendingShipLoading"
+            @search="handleSearchPendingShipOrders"
+            @select="handleSelectPendingShipOrder"
+          />
+          <XianyuShipConfirmStep
+            v-else
+            :form="shipmentForm"
+            :order="selectedPendingShipOrder"
+            :device="selectedDevice"
+            :result="shipmentResult"
+          />
 
           <div class="mt-16px flex flex-wrap justify-between gap-8px">
             <div class="flex flex-wrap gap-8px">
@@ -394,8 +152,11 @@ import {
   type XianyuShopVO
 } from '@/api/rental/xianyu'
 import { resolveRentalDeviceQr, type RentalDeviceVO } from '@/api/rental/device'
-import { formatNullableDate } from '@/utils/formatTime'
-import { maskChannelIdentifier } from '@/utils/rentalPrivacy'
+import XianyuDeviceStep from './XianyuDeviceStep.vue'
+import XianyuOrderSelectionStep from './XianyuOrderSelectionStep.vue'
+import XianyuShipConfirmStep from './XianyuShipConfirmStep.vue'
+import XianyuWaybillStep from './XianyuWaybillStep.vue'
+import type { XianyuShipmentForm } from './xianyuShipWorkbenchTypes'
 
 defineOptions({ name: 'XianyuShipWorkbench' })
 
@@ -433,16 +194,7 @@ const shipmentResult = ref<XianyuOrderShipRespVO>()
 const canOcrShipment = computed(() => hasPermission(['rental:xianyu:ship:ocr']))
 const canShipXianyuOrder = computed(() => hasPermission(['rental:xianyu:ship']))
 
-const shipmentForm = reactive<{
-  shopId?: number
-  keyword: string
-  waybillNo: string
-  expressCode: string
-  expressName: string
-  deviceNo: string
-  pageNo: number
-  pageSize: number
-}>({
+const shipmentForm = reactive<XianyuShipmentForm>({
   shopId: undefined,
   keyword: '',
   waybillNo: '',
@@ -658,12 +410,6 @@ const parseDeviceNoFromLabelFileName = (fileName: string) => {
   return matched?.[1]?.toUpperCase()
 }
 
-const maskOrderId = (orderId?: string) => {
-  const value = orderId?.trim()
-  if (!value) return ''
-  return value.length <= 10 ? '***' : `${value.slice(0, 6)}***${value.slice(-4)}`
-}
-
 const applyShipmentExpress = (expressCode?: string, expressName?: string) => {
   const normalizedCode = expressCode?.trim()
   const normalizedName = expressName?.trim()
@@ -778,7 +524,7 @@ const handleShipXianyuOrder = async () => {
   try {
     await message.confirm(
       t('rental.xianyu.shipConfirmMessage', {
-        orderNo: maskOrderId(selectedOrder.externalOrderId),
+        orderNo: selectedOrder.externalOrderId,
         deviceNo,
         expressName,
         waybillNo
@@ -841,13 +587,6 @@ const resetShipmentWorkbench = () => {
   shipmentForm.deviceNo = ''
   shipmentForm.pageNo = 1
   shipmentForm.pageSize = 5
-}
-
-const formatFen = (value?: number | null) => {
-  if (value === undefined || value === null) {
-    return '-'
-  }
-  return `¥${(value / 100).toFixed(2)}`
 }
 
 const retryWorkbench = async () => {

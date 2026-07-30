@@ -7,7 +7,33 @@ export interface XianyuConfigVO {
   appKeyMasked: string
   appSecretConfigured: boolean
   webhookBaseUrlConfigured: boolean
-  writeEnabled?: boolean
+  webhookBaseUrl?: string
+  writeEnabled: boolean
+  jobEnabled: boolean
+  lookbackDays: number
+  overlapMinutes: number
+  maxPagesPerShop: number
+  pageSize: number
+  pushRetryStaleSeconds: number
+  pushRetryBatchSize: number
+}
+
+export interface XianyuConfigUpdateReqVO {
+  enabled: boolean
+  baseUrl: string
+  /** Empty means keep the persisted value. */
+  appKey?: string
+  /** Empty means keep the encrypted persisted value. */
+  appSecret?: string
+  webhookBaseUrl?: string
+  writeEnabled: boolean
+  jobEnabled: boolean
+  lookbackDays: number
+  overlapMinutes: number
+  maxPagesPerShop: number
+  pageSize: number
+  pushRetryStaleSeconds: number
+  pushRetryBatchSize: number
 }
 
 export interface XianyuShopVO {
@@ -35,7 +61,13 @@ export interface XianyuOrderVO {
   receiverName?: string
   receiverMobile?: string
   receiverAddress?: string
+  buyerNick?: string
+  remarkParseVersion?: string
   remarkParseStatus?: string
+  billableStartDate?: string
+  billableEndDate?: string
+  rentalPeriodStatus?: string
+  rentalPeriodReasonCode?: string
   conversionStatus: string
   rentalOrderId?: number
   sourceCreatedAt?: string
@@ -49,6 +81,7 @@ export interface XianyuOrderVO {
   refundTime?: string
   expressCode?: string
   expressName?: string
+  waybillNo?: string
   expressFee?: number
   consignType?: number
   consignTime?: string
@@ -63,6 +96,12 @@ export interface XianyuOrderVO {
   taxIncluded?: boolean
   idleBizType?: number
   pinGroupStatus?: number
+  rentalOrderItemId?: number
+  equipmentModelCode?: string
+  rentalQuantity?: number
+  occupyStartDate?: string
+  occupyEndDateExclusive?: string
+  assignedDeviceIds?: number[]
 }
 
 /**
@@ -190,6 +229,10 @@ export interface XianyuPendingShipOrderVO {
   goodsQuantity?: number
   payAmount?: number
   buyerNick?: string
+  receiverName?: string
+  receiverMobile?: string
+  receiverAddress?: string
+  sellerRemark?: string
   rentalOrderId?: number
   conversionStatus: string
   orderTime?: string
@@ -235,6 +278,10 @@ export const getXianyuConfig = () => {
   return request.get<XianyuConfigVO>({ url: '/rental/xianyu/config/get' })
 }
 
+export const updateXianyuConfig = (data: XianyuConfigUpdateReqVO) => {
+  return request.put({ url: '/rental/xianyu/config/update', data })
+}
+
 export const getXianyuShopPage = (params: PageParam) => {
   return request.get<PageResult<XianyuShopVO[]>>({ url: '/rental/xianyu/shop/page', params })
 }
@@ -259,6 +306,13 @@ export const getXianyuOrderPage = (
 
 export const syncXianyuOrderPage = (data: XianyuOrderSyncReqVO) => {
   return request.post<XianyuOrderSyncRespVO>({ url: '/rental/xianyu/order/sync-page', data })
+}
+
+export const reparseXianyuSellerRemarks = (maxOrders = 5000) => {
+  return request.post<number>({
+    url: '/rental/xianyu/order/reparse-remarks',
+    params: { maxOrders }
+  })
 }
 
 export const convertXianyuOrder = (channelOrderId: number) => {

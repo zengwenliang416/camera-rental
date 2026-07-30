@@ -11,51 +11,7 @@
         {{ t('rental.common.retry') }}
       </el-button>
     </el-alert>
-    <el-card class="mb-16px" shadow="never">
-      <template #header>
-        <div class="flex items-center justify-between">
-          <span>{{ t('rental.xianyu.configTitle') }}</span>
-          <el-button @click="loadConfig" :loading="configLoading">
-            <Icon icon="ep:refresh" class="mr-5px" />{{ t('common.refresh') }}
-          </el-button>
-        </div>
-      </template>
-      <el-descriptions :column="2" border v-loading="configLoading">
-        <el-descriptions-item :label="t('rental.xianyu.enabled')">
-          <el-tag :type="config?.enabled ? 'success' : 'info'">
-            {{ config?.enabled ? t('common.yes') : t('common.no') }}
-          </el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item :label="t('rental.xianyu.status')">
-          <el-tag :type="getRentalTagType('integration', config?.status)">
-            {{ rentalLabel('integration', config?.status) }}
-          </el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item :label="t('rental.xianyu.baseUrl')">{{
-          config?.baseUrl
-        }}</el-descriptions-item>
-        <el-descriptions-item :label="t('rental.xianyu.appKey')">{{
-          config?.appKeyMasked || '-'
-        }}</el-descriptions-item>
-        <el-descriptions-item :label="t('rental.xianyu.appSecretConfigured')">
-          {{ config?.appSecretConfigured ? t('common.yes') : t('common.no') }}
-        </el-descriptions-item>
-        <el-descriptions-item :label="t('rental.xianyu.webhookConfigured')">
-          {{ config?.webhookBaseUrlConfigured ? t('common.yes') : t('common.no') }}
-        </el-descriptions-item>
-        <el-descriptions-item :label="t('rental.xianyu.writeEnabled')">
-          <el-tag :type="config?.writeEnabled ? 'warning' : 'info'">
-            {{ config?.writeEnabled ? t('common.yes') : t('common.no') }}
-          </el-tag>
-        </el-descriptions-item>
-      </el-descriptions>
-      <el-alert
-        class="mt-12px"
-        type="info"
-        :closable="false"
-        :title="t('rental.xianyu.secretHint')"
-      />
-    </el-card>
+    <XianyuConfigPanel ref="configPanelRef" @load-error="loadError = true" />
 
     <ContentWrap>
       <div class="mb-12px flex flex-wrap items-center gap-8px">
@@ -556,7 +512,6 @@ import { hasPermission } from '@/directives/permission/hasPermi'
 import {
   getXianyuAfterSalePage,
   getXianyuAlertPage,
-  getXianyuConfig,
   getXianyuExpressCompanyList,
   getXianyuRawPayload,
   getXianyuRawPayloadPage,
@@ -569,7 +524,6 @@ import {
   syncXianyuProductPage,
   type XianyuAlertVO,
   type XianyuAfterSaleVO,
-  type XianyuConfigVO,
   type XianyuExpressCompanyVO,
   type XianyuRawPayloadVO,
   type XianyuShopVO
@@ -578,13 +532,13 @@ import { getRentalLabelKey, getRentalTagType, type RentalLabelGroup } from '@/ut
 import { formatNullableDate } from '@/utils/formatTime'
 import { toEpochMillis } from '@/utils/rentalDate'
 import { maskChannelIdentifier, maskSensitiveText } from '@/utils/rentalPrivacy'
+import XianyuConfigPanel from './components/XianyuConfigPanel.vue'
 
 defineOptions({ name: 'RentalXianyuOps' })
 const { t } = useI18n()
 const message = useMessage()
 
-const config = ref<XianyuConfigVO>()
-const configLoading = ref(false)
+const configPanelRef = ref<{ reload: () => Promise<void> }>()
 const loadError = ref(false)
 const loading = ref(false)
 const syncing = ref(false)
@@ -638,18 +592,6 @@ const replayForm = reactive<{ eventId?: number; rawPayloadId?: number }>({
 
 const rentalLabel = (group: RentalLabelGroup, value?: string | null) => {
   return t(getRentalLabelKey(group, value), { code: value ?? '' })
-}
-
-const loadConfig = async () => {
-  configLoading.value = true
-  try {
-    config.value = await getXianyuConfig()
-  } catch {
-    config.value = undefined
-    loadError.value = true
-  } finally {
-    configLoading.value = false
-  }
 }
 
 const getList = async () => {
@@ -867,7 +809,7 @@ const loadExpressCompanies = async () => {
 
 const retryAll = async () => {
   loadError.value = false
-  await loadConfig()
+  await configPanelRef.value?.reload()
   await getList()
   await getAlertList()
   if (canViewRawPayload.value) {

@@ -90,6 +90,13 @@
         <el-button v-hasPermi="['rental:xianyu:sync']" @click="openSyncDialog">
           <Icon icon="ep:refresh" class="mr-5px" />{{ t('rental.order.syncAction') }}
         </el-button>
+        <el-button
+          v-hasPermi="['rental:xianyu:sync']"
+          :loading="reparsing"
+          @click="handleReparseRemarks"
+        >
+          <Icon icon="ep:magic-stick" class="mr-5px" />{{ t('rental.order.reparseAction') }}
+        </el-button>
       </el-form-item>
     </el-form>
 
@@ -124,13 +131,22 @@
     </p>
 
     <el-table v-loading="loading" :data="list">
+      <el-table-column type="expand" width="46">
+        <template #default="{ row }">
+          <XianyuOrderDetailPanel :order="row" />
+        </template>
+      </el-table-column>
       <el-table-column prop="id" label="ID" width="70" />
       <el-table-column prop="shopId" :label="t('rental.order.shopId')" width="90" />
       <el-table-column :label="t('rental.xianyu.shopName')" min-width="110">
         <template #default="{ row }">{{ shopNameById(row.shopId) }}</template>
       </el-table-column>
-      <el-table-column :label="t('rental.order.externalOrderId')" min-width="180" show-overflow-tooltip>
-        <template #default="{ row }">{{ maskOrderId(row.externalOrderId) }}</template>
+      <el-table-column
+        :label="t('rental.order.externalOrderId')"
+        min-width="180"
+        show-overflow-tooltip
+      >
+        <template #default="{ row }">{{ row.externalOrderId || '-' }}</template>
       </el-table-column>
       <el-table-column
         prop="goodsTitle"
@@ -151,14 +167,24 @@
         </template>
       </el-table-column>
       <el-table-column :label="t('rental.order.receiverName')" width="100" show-overflow-tooltip>
-        <template #default="{ row }">{{ maskName(row.receiverName) }}</template>
+        <template #default="{ row }">{{ row.receiverName || '-' }}</template>
       </el-table-column>
-      <el-table-column :label="t('rental.order.receiverMobile')" width="120">
-        <template #default="{ row }">{{ maskMobile(row.receiverMobile) }}</template>
+      <el-table-column :label="t('rental.order.receiverMobile')" width="140">
+        <template #default="{ row }">{{ row.receiverMobile || '-' }}</template>
       </el-table-column>
-      <el-table-column :label="t('rental.order.receiverAddress')" min-width="180" show-overflow-tooltip>
-        <template #default="{ row }">{{ maskAddress(row.receiverAddress) }}</template>
+      <el-table-column
+        :label="t('rental.order.receiverAddress')"
+        min-width="180"
+        show-overflow-tooltip
+      >
+        <template #default="{ row }">{{ row.receiverAddress || '-' }}</template>
       </el-table-column>
+      <el-table-column
+        prop="buyerNick"
+        :label="t('rental.xianyu.buyerNick')"
+        min-width="110"
+        show-overflow-tooltip
+      />
       <el-table-column prop="expressName" :label="t('rental.order.expressName')" width="100" />
       <el-table-column :label="t('rental.order.conversionStatus')" width="120">
         <template #default="{ row }">
@@ -175,7 +201,11 @@
       />
       <el-table-column :label="t('rental.order.remarkParseStatus')" width="120">
         <template #default="{ row }">
-          {{ remarkParseStatusLabel(row.remarkParseStatus) }}
+          <el-tooltip :content="remarkReasonLabel(row.rentalPeriodReasonCode)" placement="top">
+            <el-tag :type="remarkParseTagType(row.remarkParseStatus)">
+              {{ remarkParseStatusLabel(row.remarkParseStatus) }}
+            </el-tag>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column :label="t('table.action')" width="110" fixed="right">
@@ -277,6 +307,7 @@ import {
   convertXianyuOrder,
   getXianyuOrderPage,
   getXianyuShopPage,
+  reparseXianyuSellerRemarks,
   syncXianyuOrderPage,
   type XianyuOrderVO,
   type XianyuShopVO
@@ -291,6 +322,7 @@ import {
   type RentalLabelGroup
 } from '@/utils/rentalLabels'
 import XianyuShipWorkbench from './components/XianyuShipWorkbench.vue'
+import XianyuOrderDetailPanel from './components/XianyuOrderDetailPanel.vue'
 
 defineOptions({ name: 'RentalChannelOrder' })
 const { t } = useI18n()
@@ -298,6 +330,7 @@ const message = useMessage()
 
 const loading = ref(false)
 const syncing = ref(false)
+const reparsing = ref(false)
 const loadError = ref(false)
 const shopLoadError = ref(false)
 const showAdvanced = ref(false)
@@ -345,30 +378,6 @@ const rentalLabel = (group: RentalLabelGroup, value?: string | number | null) =>
 
 const formatYuan = (amount?: number) => {
   return amount == null ? '-' : t('rental.common.yuanAmount', { amount: fenToYuan(amount) })
-}
-
-const maskName = (name?: string) => {
-  const value = name?.trim()
-  if (!value) return ''
-  return value.length <= 1 ? '*' : `${value.slice(0, 1)}*`
-}
-
-const maskMobile = (mobile?: string) => {
-  const value = mobile?.trim()
-  if (!value) return ''
-  return value.replace(/(\d{3})\d+(\d{4})$/, '$1****$2')
-}
-
-const maskOrderId = (orderId?: string) => {
-  const value = orderId?.trim()
-  if (!value) return ''
-  return value.length <= 10 ? '***' : `${value.slice(0, 6)}***${value.slice(-4)}`
-}
-
-const maskAddress = (address?: string) => {
-  const value = address?.trim()
-  if (!value) return ''
-  return value.length <= 8 ? '***' : `${value.slice(0, 8)}***`
 }
 
 const shopNameById = (id?: number) => {
@@ -419,6 +428,19 @@ const remarkParseStatusLabel = (status?: string) => {
     return t(`rental.order.remarkParse.${status}`)
   }
   return t('rental.order.remarkParse.UNKNOWN')
+}
+
+const remarkParseTagType = (status?: string) => {
+  if (status === 'SUCCESS') return 'success'
+  if (status === 'FAILED') return 'danger'
+  return 'warning'
+}
+
+const remarkReasonLabel = (reason?: string) => {
+  if (!reason) return '-'
+  const key = `rental.order.remarkReason.${reason}`
+  const translated = t(key, { code: reason })
+  return translated === key ? reason : translated
 }
 
 const getList = async () => {
@@ -496,6 +518,22 @@ const handleSync = async () => {
     await getList()
   } finally {
     syncing.value = false
+  }
+}
+
+const handleReparseRemarks = async () => {
+  try {
+    await message.confirm(t('rental.order.reparseConfirm'))
+  } catch {
+    return
+  }
+  reparsing.value = true
+  try {
+    const processed = await reparseXianyuSellerRemarks()
+    message.success(t('rental.order.reparseSuccess', { processed }))
+    await getList()
+  } finally {
+    reparsing.value = false
   }
 }
 

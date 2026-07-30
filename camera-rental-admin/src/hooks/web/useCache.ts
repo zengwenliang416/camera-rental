@@ -37,5 +37,5 @@ export const deleteUserCache = () => {
   wsCache.delete(CACHE_KEY.USER)
   wsCache.delete(CACHE_KEY.ROLE_ROUTERS)
   wsCache.delete(CACHE_KEY.VisitTenantId)
-  // 注意，不要清理 LoginForm 登录表单
+  wsCache.delete(CACHE_KEY.LoginForm)
 }

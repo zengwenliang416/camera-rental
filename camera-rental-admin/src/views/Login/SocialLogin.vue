@@ -107,18 +107,9 @@
                   "
                 >
                   <el-form-item>
-                    <el-row justify="space-between" style="width: 100%">
-                      <el-col :span="6">
-                        <el-checkbox v-model="loginData.loginForm.rememberMe">
-                          {{ t('login.remember') }}
-                        </el-checkbox>
-                      </el-col>
-                      <el-col :offset="6" :span="12">
-                        <el-link style="float: right" type="primary">
-                          {{ t('login.forgetPassword') }}
-                        </el-link>
-                      </el-col>
-                    </el-row>
+                    <el-link style="margin-left: auto" type="primary">
+                      {{ t('login.forgetPassword') }}
+                    </el-link>
                   </el-form-item>
                 </el-col>
                 <el-col :span="24" style="padding-right: 10px; padding-left: 10px">
@@ -200,11 +191,10 @@ const loginData = reactive({
   captchaEnable: import.meta.env.VITE_APP_CAPTCHA_ENABLE !== 'false',
   tenantEnable: import.meta.env.VITE_APP_TENANT_ENABLE !== 'false',
   loginForm: {
-    tenantName: '捷租达',
-    username: 'admin',
-    password: 'admin123',
-    captchaVerification: '',
-    rememberMe: false
+    tenantName: import.meta.env.VITE_APP_DEFAULT_LOGIN_TENANT || '',
+    username: '',
+    password: '',
+    captchaVerification: ''
   }
 })
 
@@ -224,19 +214,6 @@ const getTenantId = async () => {
   if (loginData.tenantEnable) {
     const res = await LoginApi.getTenantIdByName(loginData.loginForm.tenantName)
     authUtil.setTenantId(res)
-  }
-}
-// 记住我
-const getCookie = () => {
-  const loginForm = authUtil.getLoginForm()
-  if (loginForm) {
-    loginData.loginForm = {
-      ...loginData.loginForm,
-      username: loginForm.username ? loginForm.username : loginData.loginForm.username,
-      password: loginForm.password ? loginForm.password : loginData.loginForm.password,
-      rememberMe: loginForm.rememberMe ? true : false,
-      tenantName: loginForm.tenantName ? loginForm.tenantName : loginData.loginForm.tenantName
-    }
   }
 }
 const loading = ref() // ElLoading.service 返回的实例
@@ -297,11 +274,7 @@ const handleLogin = async (params) => {
       text: '正在加载系统中...',
       background: 'rgba(0, 0, 0, 0.7)'
     })
-    if (loginDataLoginForm.rememberMe) {
-      authUtil.setLoginForm(loginDataLoginForm)
-    } else {
-      authUtil.removeLoginForm()
-    }
+    authUtil.removeLoginForm()
     authUtil.setToken(res)
     if (!redirect) {
       redirect = '/'
@@ -319,7 +292,7 @@ const handleLogin = async (params) => {
 }
 
 onMounted(() => {
-  getCookie()
+  authUtil.removeLoginForm()
   tryLogin()
 })
 </script>

@@ -49,22 +49,13 @@
       </el-col>
       <el-col :span="24" class="px-10px mt-[-20px] mb-[-20px]">
         <el-form-item>
-          <el-row justify="space-between" style="width: 100%">
-            <el-col :span="6">
-              <el-checkbox v-model="loginData.loginForm.rememberMe">
-                {{ t('login.remember') }}
-              </el-checkbox>
-            </el-col>
-            <el-col :offset="6" :span="12">
-              <el-link
-                class="float-right"
-                type="primary"
-                @click="setLoginState(LoginStateEnum.RESET_PASSWORD)"
-              >
-                {{ t('login.forgetPassword') }}
-              </el-link>
-            </el-col>
-          </el-row>
+          <el-link
+            class="ml-auto"
+            type="primary"
+            @click="setLoginState(LoginStateEnum.RESET_PASSWORD)"
+          >
+            {{ t('login.forgetPassword') }}
+          </el-link>
         </el-form-item>
       </el-col>
       <el-col :span="24" class="px-10px">
@@ -179,10 +170,9 @@ const loginData = reactive({
   tenantEnable: import.meta.env.VITE_APP_TENANT_ENABLE,
   loginForm: {
     tenantName: import.meta.env.VITE_APP_DEFAULT_LOGIN_TENANT || '',
-    username: import.meta.env.VITE_APP_DEFAULT_LOGIN_USERNAME || '',
-    password: import.meta.env.VITE_APP_DEFAULT_LOGIN_PASSWORD || '',
-    captchaVerification: '',
-    rememberMe: true // 默认记录我。如果不需要，可手动修改
+    username: '',
+    password: '',
+    captchaVerification: ''
   }
 })
 
@@ -209,19 +199,6 @@ const getTenantId = async () => {
   if (loginData.tenantEnable === 'true') {
     const res = await LoginApi.getTenantIdByName(loginData.loginForm.tenantName)
     authUtil.setTenantId(res)
-  }
-}
-// 记住我
-const getLoginFormCache = () => {
-  const loginForm = authUtil.getLoginForm()
-  if (loginForm) {
-    loginData.loginForm = {
-      ...loginData.loginForm,
-      username: loginForm.username ? loginForm.username : loginData.loginForm.username,
-      password: loginForm.password ? loginForm.password : loginData.loginForm.password,
-      rememberMe: loginForm.rememberMe,
-      tenantName: loginForm.tenantName ? loginForm.tenantName : loginData.loginForm.tenantName
-    }
   }
 }
 // 根据域名，获得租户信息
@@ -256,11 +233,7 @@ const handleLogin = async (params: any) => {
       text: '正在加载系统中...',
       background: 'rgba(0, 0, 0, 0.7)'
     })
-    if (loginDataLoginForm.rememberMe) {
-      authUtil.setLoginForm(loginDataLoginForm)
-    } else {
-      authUtil.removeLoginForm()
-    }
+    authUtil.removeLoginForm()
     authUtil.setToken(res)
     if (!redirect.value) {
       redirect.value = '/'
@@ -324,7 +297,7 @@ watch(
   }
 )
 onMounted(() => {
-  getLoginFormCache()
+  authUtil.removeLoginForm()
   getTenantByWebsite()
 })
 </script>

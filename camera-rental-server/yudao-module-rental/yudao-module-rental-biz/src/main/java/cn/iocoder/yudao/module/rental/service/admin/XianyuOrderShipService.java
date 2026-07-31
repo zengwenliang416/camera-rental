@@ -34,6 +34,12 @@ import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentException;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentResult;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentService;
 import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
+import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryCreateCommand;
+import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryDeviceCommand;
+import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryResult;
+import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryService;
+import cn.iocoder.yudao.module.rental.service.logistics.WaybillPrivacy;
+import cn.iocoder.yudao.module.rental.enums.logistics.RentalDeliveryDirectionEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.stereotype.Service;
@@ -76,6 +82,8 @@ public class XianyuOrderShipService {
     private final XianyuRentalConversionService conversionService;
     private final RentalDeviceAssignmentService assignmentService;
     private final RentalDeviceOpsService deviceOpsService;
+    private final RentalDeliveryService deliveryService;
+    private final WaybillPrivacy waybillPrivacy;
     private final XianyuWriteClient writeClient;
     private final XianyuRuntimeConfigService runtimeConfigService;
     private final ObjectMapper objectMapper;
@@ -88,6 +96,8 @@ public class XianyuOrderShipService {
                                   XianyuRentalConversionService conversionService,
                                   RentalDeviceAssignmentService assignmentService,
                                   RentalDeviceOpsService deviceOpsService,
+                                  RentalDeliveryService deliveryService,
+                                  WaybillPrivacy waybillPrivacy,
                                   XianyuWriteClient writeClient, XianyuRuntimeConfigService runtimeConfigService,
                                   ObjectMapper objectMapper) {
         this.orderMapper = orderMapper;
@@ -100,6 +110,8 @@ public class XianyuOrderShipService {
         this.conversionService = conversionService;
         this.assignmentService = assignmentService;
         this.deviceOpsService = deviceOpsService;
+        this.deliveryService = deliveryService;
+        this.waybillPrivacy = waybillPrivacy;
         this.writeClient = writeClient;
         this.runtimeConfigService = runtimeConfigService;
         this.objectMapper = objectMapper;
@@ -118,7 +130,9 @@ public class XianyuOrderShipService {
     public XianyuOrderShipRespVO ship(XianyuOrderShipReqVO reqVO) {
         RentalDeviceShipmentDO replay = shipmentMapper.selectByIdempotencyKeyForUpdate(reqVO.getIdempotencyKey());
         if (replay != null) {
-            return toShipResp(replay, deviceMapper.selectById(replay.getDeviceId()), "DISPATCHED");
+            RentalDeliveryResult tracking = replay.getDeliveryId() == null
+                    ? null : deliveryService.getResult(replay.getDeliveryId());
+            return toShipResp(replay, deviceMapper.selectById(replay.getDeviceId()), "DISPATCHED", tracking);
         }
         XianyuProperties properties = runtimeConfigService.getCurrent();
         if (properties.getIntegrationStatus() != XianyuProperties.IntegrationStatus.READY
@@ -157,13 +171,18 @@ public class XianyuOrderShipService {
                 .build();
         shipmentMapper.insert(shipment);
 
+        RentalDeliveryResult delivery = deliveryService.createOrReuse(buildDeliveryCommand(
+                reqVO, order, item, assignment, device));
+        shipment.setDeliveryId(delivery.deliveryId());
+        shipmentMapper.updateById(shipment);
+
         order.setWaybillNo(reqVO.getWaybillNo());
         order.setExpressCode(reqVO.getExpressCode());
         order.setExpressName(reqVO.getExpressName());
         order.setConsignTime(LocalDateTime.now(BUSINESS_ZONE));
         orderMapper.updateById(order);
 
-        XianyuOrderShipRespVO resp = toShipResp(shipment, device, dispatched.getAssignmentStatus());
+        XianyuOrderShipRespVO resp = toShipResp(shipment, device, dispatched.getAssignmentStatus(), delivery);
         resp.setRemoteMsg(shipment.getShipResponseMsg());
         return resp;
     }
@@ -295,30 +314,46 @@ public class XianyuOrderShipService {
         return deviceOpsService.dispatch(reqVO);
     }
 
+    private RentalDeliveryCreateCommand buildDeliveryCommand(XianyuOrderShipReqVO reqVO, XianyuOrderDO order,
+                                                              RentalOrderItemDO item,
+                                                              RentalDeviceAssignmentResult assignment,
+                                                              RentalDeviceDO device) {
+        String sourceIdentifier = "shipment:"
+                + DigestUtils.md5DigestAsHex(reqVO.getIdempotencyKey().getBytes(StandardCharsets.UTF_8));
+        return new RentalDeliveryCreateCommand(item.getRentalOrderId(), RentalDeliveryDirectionEnum.OUTBOUND,
+                "XIANYU", sourceIdentifier, reqVO.getExpressCode(), reqVO.getExpressName(),
+                reqVO.getWaybillNo(), order.getReceiverMobile(),
+                List.of(new RentalDeliveryDeviceCommand(item.getId(), assignment.assignmentId(), device.getId())));
+    }
+
     private XianyuOrderShipRespVO toShipResp(RentalDeviceShipmentDO shipment, RentalDeviceDO device,
-                                              String assignmentStatus) {
+                                              String assignmentStatus, RentalDeliveryResult tracking) {
         XianyuOrderShipRespVO resp = new XianyuOrderShipRespVO();
         resp.setShipmentId(shipment.getId());
         resp.setChannelOrderId(shipment.getChannelOrderId());
         resp.setAssignmentId(shipment.getAssignmentId());
         resp.setDeviceId(shipment.getDeviceId());
         resp.setDeviceNo(device == null ? null : device.getDeviceNo());
-        resp.setMaskedWaybillNo(maskWaybill(shipment.getWaybillNo()));
+        resp.setMaskedWaybillNo(tracking == null
+                ? waybillPrivacy.mask(shipment.getWaybillNo()) : tracking.maskedWaybillNo());
         resp.setExpressCode(shipment.getExpressCode());
         resp.setExpressName(shipment.getExpressName());
         resp.setRemoteCode(shipment.getShipResponseCode());
         resp.setRemoteMsg(shipment.getShipResponseMsg());
         resp.setAssignmentStatus(assignmentStatus);
         resp.setSource(shipment.getSource());
-        return resp;
-    }
-
-    private static String maskWaybill(String waybillNo) {
-        if (!StringUtils.hasText(waybillNo) || waybillNo.length() <= 6) {
-            return "****";
+        resp.setDeliveryId(shipment.getDeliveryId());
+        if (tracking == null) {
+            resp.setTrackingReason("LEGACY_SHIPMENT_WITHOUT_DELIVERY");
+        } else {
+            resp.setDeliveryId(tracking.deliveryId());
+            resp.setTrackingMappingStatus(tracking.mappingStatus());
+            resp.setTrackingSubscribeStatus(tracking.subscribeStatus());
+            resp.setTrackingQueryStatus(tracking.queryStatus());
+            resp.setTrackingReason(tracking.reasonCode());
+            resp.setTrackingPendingEvents(tracking.pendingEventTypes());
         }
-        return waybillNo.substring(0, Math.min(2, waybillNo.length())) + "****"
-                + waybillNo.substring(waybillNo.length() - 4);
+        return resp;
     }
 
 }

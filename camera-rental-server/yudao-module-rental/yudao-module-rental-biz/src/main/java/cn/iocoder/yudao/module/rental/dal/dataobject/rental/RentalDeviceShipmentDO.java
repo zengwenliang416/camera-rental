@@ -25,6 +25,7 @@ public class RentalDeviceShipmentDO extends TenantBaseDO {
     private Long channelOrderId;
     private Long assignmentId;
     private Long deviceId;
+    private Long deliveryId;
     private String idempotencyKey;
     private String waybillNo;
     private String expressCode;

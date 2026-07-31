@@ -33,6 +33,11 @@ import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentException;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentResult;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentService;
 import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
+import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryCreateCommand;
+import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryResult;
+import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryService;
+import cn.iocoder.yudao.module.rental.service.logistics.RentalLogisticsException;
+import cn.iocoder.yudao.module.rental.service.logistics.WaybillPrivacy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.AfterEach;
@@ -76,6 +81,8 @@ class XianyuOrderShipServiceTest {
     private final XianyuRentalConversionService conversionService = mock(XianyuRentalConversionService.class);
     private final RentalDeviceAssignmentService assignmentService = mock(RentalDeviceAssignmentService.class);
     private final RentalDeviceOpsService deviceOpsService = mock(RentalDeviceOpsService.class);
+    private final RentalDeliveryService deliveryService = mock(RentalDeliveryService.class);
+    private final WaybillPrivacy waybillPrivacy = new WaybillPrivacy();
     private final XianyuWriteClient writeClient = mock(XianyuWriteClient.class);
     private final XianyuProperties properties = new XianyuProperties();
     private final XianyuRuntimeConfigService runtimeConfigService = mock(XianyuRuntimeConfigService.class);
@@ -88,6 +95,9 @@ class XianyuOrderShipServiceTest {
         properties.setAppKey("test-app");
         properties.setAppSecret("test-secret");
         when(runtimeConfigService.getCurrent()).thenReturn(properties);
+        when(deliveryService.createOrReuse(any())).thenReturn(trackingResult(
+                "READY", "PENDING", "PENDING", null,
+                List.of("SUBSCRIBE", "INITIAL_QUERY")));
     }
 
     @AfterEach
@@ -194,14 +204,33 @@ class XianyuOrderShipServiceTest {
         assertEquals(10L, resp.getChannelOrderId());
         assertEquals("P4P-01-2JCW", resp.getDeviceNo());
         assertEquals("DISPATCHED", resp.getAssignmentStatus());
+        assertEquals(99L, resp.getDeliveryId());
+        assertEquals(List.of("SUBSCRIBE", "INITIAL_QUERY"), resp.getTrackingPendingEvents());
         ArgumentCaptor<ObjectNode> shipBodyCaptor = ArgumentCaptor.forClass(ObjectNode.class);
-        InOrder orderVerifier = inOrder(writeClient, deviceOpsService, shipmentMapper, orderMapper);
+        ArgumentCaptor<RentalDeliveryCreateCommand> deliveryCaptor =
+                ArgumentCaptor.forClass(RentalDeliveryCreateCommand.class);
+        InOrder orderVerifier = inOrder(writeClient, deviceOpsService, shipmentMapper, deliveryService, orderMapper);
         orderVerifier.verify(writeClient).execute(eq(XianyuWriteEndpoint.ORDER_SHIP), shipBodyCaptor.capture());
         orderVerifier.verify(deviceOpsService).dispatch(any());
         ArgumentCaptor<RentalDeviceShipmentDO> shipmentCaptor =
                 ArgumentCaptor.forClass(RentalDeviceShipmentDO.class);
         orderVerifier.verify(shipmentMapper).insert(shipmentCaptor.capture());
+        orderVerifier.verify(deliveryService).createOrReuse(deliveryCaptor.capture());
+        orderVerifier.verify(shipmentMapper).updateById(shipmentCaptor.getValue());
         orderVerifier.verify(orderMapper).updateById(order);
+        assertEquals(99L, shipmentCaptor.getValue().getDeliveryId());
+        assertEquals(30L, deliveryCaptor.getValue().rentalOrderId());
+        assertEquals("OUTBOUND", deliveryCaptor.getValue().direction().name());
+        assertEquals("XIANYU", deliveryCaptor.getValue().sourceType());
+        assertEquals("shipment:99b4b469ec7a865972b32631d1da4108",
+                deliveryCaptor.getValue().sourceIdentifier());
+        assertEquals("shunfeng", deliveryCaptor.getValue().sourceCarrierCode());
+        assertEquals("顺丰速运", deliveryCaptor.getValue().sourceCarrierName());
+        assertEquals("SF5113560342626", deliveryCaptor.getValue().waybillNo());
+        assertEquals("13800000000", deliveryCaptor.getValue().trackingPhone());
+        assertEquals(50L, deliveryCaptor.getValue().devices().get(0).rentalOrderItemId());
+        assertEquals(60L, deliveryCaptor.getValue().devices().get(0).assignmentId());
+        assertEquals(40L, deliveryCaptor.getValue().devices().get(0).deviceId());
         assertEquals("SF5113560342626", shipmentCaptor.getValue().getWaybillNo());
         assertEquals("shunfeng", shipmentCaptor.getValue().getExpressCode());
         assertEquals("顺丰速运", shipmentCaptor.getValue().getExpressName());
@@ -357,8 +386,91 @@ class XianyuOrderShipServiceTest {
         XianyuOrderShipRespVO resp = service().ship(req());
 
         assertEquals("P4P-01-2JCW", resp.getDeviceNo());
-        assertEquals("SF****2626", resp.getMaskedWaybillNo());
+        assertEquals("SF5****2626", resp.getMaskedWaybillNo());
+        assertEquals("LEGACY_SHIPMENT_WITHOUT_DELIVERY", resp.getTrackingReason());
         verify(writeClient, never()).execute(any(), any());
+        verify(deliveryService, never()).createOrReuse(any());
+        verify(deliveryService, never()).getResult(any());
+    }
+
+    @Test
+    void idempotentReplayReturnsLinkedDeliveryWithoutDuplicatingTasks() {
+        properties.setWriteEnabled(false);
+        when(shipmentMapper.selectByIdempotencyKeyForUpdate("ship-key")).thenReturn(
+                RentalDeviceShipmentDO.builder()
+                        .id(90L)
+                        .channelOrderId(10L)
+                        .assignmentId(60L)
+                        .deviceId(40L)
+                        .deliveryId(99L)
+                        .waybillNo("SF5113560342626")
+                        .expressCode("shunfeng")
+                        .expressName("顺丰速运")
+                        .source("ADMIN")
+                        .build());
+        when(deviceMapper.selectById(40L)).thenReturn(
+                RentalDeviceDO.builder().id(40L).deviceNo("P4P-01-2JCW").build());
+        when(deliveryService.getResult(99L)).thenReturn(trackingResult(
+                "READY", "SUBSCRIBED", "READY", null, List.of(), "DELIVERY_MASKED"));
+
+        XianyuOrderShipRespVO resp = service().ship(req());
+
+        assertEquals(99L, resp.getDeliveryId());
+        assertEquals("DELIVERY_MASKED", resp.getMaskedWaybillNo());
+        assertEquals("SUBSCRIBED", resp.getTrackingSubscribeStatus());
+        assertEquals(List.of(), resp.getTrackingPendingEvents());
+        verify(deliveryService).getResult(99L);
+        verify(deliveryService, never()).createOrReuse(any());
+        verify(writeClient, never()).execute(any(), any());
+        verify(deviceOpsService, never()).dispatch(any());
+        verify(shipmentMapper, never()).insert(any(RentalDeviceShipmentDO.class));
+    }
+
+    @Test
+    void mappingOrProviderDegradationDoesNotChangeShipmentSuccess() {
+        properties.setWriteEnabled(true);
+        stubSuccessfulShipment();
+        when(deliveryService.createOrReuse(any())).thenReturn(trackingResult(
+                "MAPPING_REQUIRED", "MAPPING_REQUIRED", "MAPPING_REQUIRED", "MAPPING_REQUIRED",
+                List.of("SUBSCRIBE", "INITIAL_QUERY")));
+
+        XianyuOrderShipRespVO mappingRequired = service().ship(req());
+
+        assertEquals(99L, mappingRequired.getDeliveryId());
+        assertEquals("MAPPING_REQUIRED", mappingRequired.getTrackingReason());
+        assertEquals("MAPPING_REQUIRED", mappingRequired.getTrackingMappingStatus());
+    }
+
+    @Test
+    void providerDisabledDoesNotChangeShipmentSuccess() {
+        properties.setWriteEnabled(true);
+        stubSuccessfulShipment();
+        when(deliveryService.createOrReuse(any())).thenReturn(trackingResult(
+                "READY", "PROVIDER_DISABLED", "PROVIDER_DISABLED", "PROVIDER_DISABLED",
+                List.of("SUBSCRIBE", "INITIAL_QUERY")));
+
+        XianyuOrderShipRespVO providerDisabled = service().ship(req());
+
+        assertEquals(99L, providerDisabled.getDeliveryId());
+        assertEquals("PROVIDER_DISABLED", providerDisabled.getTrackingReason());
+        assertEquals("PROVIDER_DISABLED", providerDisabled.getTrackingSubscribeStatus());
+    }
+
+    @Test
+    void deliveryFailureStopsRemainingLocalWritesAfterRemoteSuccess() {
+        properties.setWriteEnabled(true);
+        XianyuOrderDO order = stubSuccessfulShipment();
+        when(deliveryService.createOrReuse(any())).thenThrow(new RentalLogisticsException("DELIVERY_WRITE_FAILED"));
+
+        RentalLogisticsException exception =
+                assertThrows(RentalLogisticsException.class, () -> service().ship(req()));
+
+        assertEquals("DELIVERY_WRITE_FAILED", exception.getCode());
+        verify(writeClient).execute(eq(XianyuWriteEndpoint.ORDER_SHIP), any());
+        verify(deviceOpsService).dispatch(any());
+        verify(shipmentMapper).insert(any(RentalDeviceShipmentDO.class));
+        verify(shipmentMapper, never()).updateById(any(RentalDeviceShipmentDO.class));
+        verify(orderMapper, never()).updateById(order);
     }
 
     @Test
@@ -433,8 +545,38 @@ class XianyuOrderShipServiceTest {
 
     private XianyuOrderShipService service() {
         return new XianyuOrderShipService(orderMapper, shopMapper, deviceMapper, assignmentMapper, rentalOrderMapper,
-                rentalOrderItemMapper, shipmentMapper, conversionService, assignmentService, deviceOpsService, writeClient,
-                runtimeConfigService, objectMapper);
+                rentalOrderItemMapper, shipmentMapper, conversionService, assignmentService, deviceOpsService,
+                deliveryService, waybillPrivacy, writeClient, runtimeConfigService, objectMapper);
+    }
+
+    private XianyuOrderDO stubSuccessfulShipment() {
+        XianyuOrderDO order = pendingOrder();
+        RentalOrderItemDO item = convertedOrderItem();
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(RentalOrderDO.builder().id(30L).build());
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(item);
+        when(assignmentService.assign(any())).thenReturn(new RentalDeviceAssignmentResult(
+                60L, 70L, 40L, item.getOccupyStartDate(), item.getOccupyEndDateExclusive()));
+        when(writeClient.execute(eq(XianyuWriteEndpoint.ORDER_SHIP), any())).thenReturn(remoteSuccess());
+        RentalDeviceOpsRespVO dispatched = new RentalDeviceOpsRespVO();
+        dispatched.setAssignmentStatus("DISPATCHED");
+        when(deviceOpsService.dispatch(any())).thenReturn(dispatched);
+        return order;
+    }
+
+    private RentalDeliveryResult trackingResult(String mappingStatus, String subscribeStatus, String queryStatus,
+                                                String reasonCode, List<String> pendingEventTypes) {
+        return trackingResult(mappingStatus, subscribeStatus, queryStatus, reasonCode, pendingEventTypes,
+                "SF****2626");
+    }
+
+    private RentalDeliveryResult trackingResult(String mappingStatus, String subscribeStatus, String queryStatus,
+                                                String reasonCode, List<String> pendingEventTypes,
+                                                String maskedWaybillNo) {
+        return new RentalDeliveryResult(99L, true, mappingStatus, subscribeStatus, queryStatus,
+                maskedWaybillNo, reasonCode, pendingEventTypes);
     }
 
     private XianyuOrderShipReqVO req() {
@@ -457,6 +599,7 @@ class XianyuOrderShipServiceTest {
                 .externalOrderId("3364202298717566229")
                 .orderStatus("12")
                 .rentalOrderId(30L)
+                .receiverMobile("13800000000")
                 .build();
     }
 

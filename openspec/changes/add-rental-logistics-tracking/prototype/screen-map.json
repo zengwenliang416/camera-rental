@@ -1,0 +1,175 @@
+{
+  "variant": "schedule-tracking-command-center-v1",
+  "screens": [
+    {
+      "id": "schedule-tracking",
+      "label": "设备排期与物流摘要",
+      "requirements": [
+        "requirements.md#Schedule Center User Experience",
+        "requirements.md#Schedule Center APIs and Read Model"
+      ],
+      "acceptance": [
+        "acceptance.json#A7",
+        "acceptance.json#A9",
+        "acceptance.json#A16"
+      ],
+      "components": [
+        "ScheduleCenterAppShell",
+        "ScheduleDeviceTable",
+        "DeliveryTrackingSummary",
+        "DeliveryTrackingDrawer",
+        "DeliveryTrackingTimeline"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#project_shell",
+        "visual-inventory.json#component_patterns",
+        "visual-inventory.json#responsive_behavior"
+      ],
+      "data_flows": [
+        "FLOW-SCHEDULE-TRACKING-SUMMARY",
+        "FLOW-DELIVERY-MANUAL-REFRESH"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-schedule-center/src/features/schedule",
+        "camera-rental-schedule-center/src/features/logistics"
+      ]
+    },
+    {
+      "id": "shipment-result",
+      "label": "闲鱼发货后的物流追踪结果",
+      "requirements": [
+        "requirements.md#End-to-End Business Outcome",
+        "requirements.md#Schedule Center User Experience"
+      ],
+      "acceptance": [
+        "acceptance.json#A1",
+        "acceptance.json#A2"
+      ],
+      "components": [
+        "ShippingWorkbench",
+        "ShipmentDocket",
+        "DeliveryTrackingCreationResult"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#project_shell",
+        "visual-inventory.json#component_patterns"
+      ],
+      "data_flows": [
+        "FLOW-XIANYU-SHIPMENT-DELIVERY",
+        "FLOW-DELIVERY-SUBSCRIBE",
+        "FLOW-DELIVERY-INITIAL-QUERY"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-schedule-center/src/features/shipping",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz"
+      ]
+    },
+    {
+      "id": "logistics-operations",
+      "label": "物流配置与失败任务",
+      "requirements": [
+        "requirements.md#Carrier Mapping and Provider Operations",
+        "requirements.md#Kuaidi100 Provider Integration"
+      ],
+      "acceptance": [
+        "acceptance.json#A11",
+        "acceptance.json#A12",
+        "acceptance.json#A15"
+      ],
+      "components": [
+        "ProviderConfigPanel",
+        "CarrierMappingPanel",
+        "LogisticsTaskQueuePanel"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#project_shell",
+        "visual-inventory.json#component_patterns"
+      ],
+      "data_flows": [
+        "FLOW-LOGISTICS-OPERATIONS",
+        "FLOW-DELIVERY-BACKFILL",
+        "FLOW-DELIVERY-QUERY-COMPENSATION"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-schedule-center/src/features/logistics",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz"
+      ]
+    },
+    {
+      "id": "logistics-risks",
+      "label": "物流风险与异常中心",
+      "requirements": [
+        "requirements.md#Logistics Risk and Device Lifecycle"
+      ],
+      "acceptance": [
+        "acceptance.json#A10"
+      ],
+      "components": [
+        "ExceptionsPage",
+        "DeliveryTrackingRiskBadge",
+        "LogisticsRiskDetail"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#project_shell",
+        "visual-inventory.json#component_patterns"
+      ],
+      "data_flows": [
+        "FLOW-LOGISTICS-RISK"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-schedule-center/src/features/exceptions",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz"
+      ]
+    }
+  ],
+  "variants": [
+    "schedule-tracking-command-center-v1",
+    "light",
+    "dark",
+    "zh-CN",
+    "en",
+    "desktop",
+    "tablet",
+    "mobile",
+    "populated",
+    "loading",
+    "empty",
+    "error",
+    "permission",
+    "provider-disabled",
+    "mapping-required",
+    "query-throttled"
+  ]
+}

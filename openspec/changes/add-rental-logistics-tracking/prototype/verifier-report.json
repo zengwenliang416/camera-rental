@@ -1,0 +1,62 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "artifact/index.html",
+  "project_fidelity": {
+    "status": "green",
+    "inventory": "visual-inventory.json",
+    "shell_checked": true,
+    "generic_shell_detected": false,
+    "notes": [
+      "The prototype reuses the current schedule-center sticky header, dense schedule table, operational navigation, semantic colors, detail drawer, mobile bottom navigation, theme toggle, and locale toggle.",
+      "All fixtures are masked and static; no Xianyu, Kuaidi100, database, or production API request is made."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [
+      "1440x900 desktop",
+      "768x1024 tablet",
+      "390x844 mobile",
+      "360x800 compact mobile"
+    ],
+    "theme_modes": [
+      "light",
+      "dark"
+    ],
+    "locales": [
+      "zh-CN",
+      "en"
+    ],
+    "states": [
+      "populated",
+      "loading",
+      "empty",
+      "error",
+      "permission",
+      "provider-disabled",
+      "mapping-required",
+      "query-throttled"
+    ]
+  },
+  "checks": [
+    "JavaScript syntax passed with node --check.",
+    "SpecNav screen-map, manifest, project-shell, screen, theme-control, and locale-control anchors passed contract validation.",
+    "Desktop, tablet, mobile, and compact-mobile viewports had zero page-level horizontal overflow.",
+    "Schedule, shipment result, logistics operations, and logistics risks screens rendered and navigated successfully.",
+    "The multi-package drawer exposed two packages, switched packages, rendered complete trace events, and queued an asynchronous refresh toast.",
+    "Closing the drawer and switching locale no longer reopens the drawer or leaves the backdrop active.",
+    "Light, dark, zh-CN, and en modes rendered without console errors or page errors.",
+    "All declared populated and non-happy states switched deterministically and displayed exactly one matching state surface."
+  ],
+  "evidence": [
+    "evidence/desktop-light-zh-1440.png",
+    "evidence/desktop-multi-package-drawer-1440.png",
+    "evidence/desktop-dark-en-operations-1440.png",
+    "evidence/desktop-dark-en-risks-1440.png",
+    "evidence/desktop-query-throttled-1440.png",
+    "evidence/mobile-light-zh-schedule-390.png",
+    "evidence/mobile-light-zh-shipment-390.png",
+    "evidence/mobile-compact-360.png"
+  ],
+  "blockers": []
+}

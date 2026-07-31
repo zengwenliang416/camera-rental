@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "change_id": "add-rental-logistics-tracking",
+  "stage": "development",
+  "allowed_roots": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-schedule-center",
+    "docs/decisions",
+    "openspec/changes/add-rental-logistics-tracking"
+  ],
+  "denied_roots": [
+    ".git",
+    "camera-rental-admin",
+    "camera-rental-staff",
+    "camera-rental-uniapp",
+    "camera-rental-web",
+    "node_modules",
+    "dist",
+    "coverage",
+    "camera-rental-server/yudao-server/src/main/resources/application-prod.yaml"
+  ],
+  "requires_review_on": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/pom.xml",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-schedule-center/package.json",
+    "camera-rental-schedule-center/pnpm-lock.yaml"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": false,
+    "rename": false
+  },
+  "prototype_sources": [
+    "openspec/changes/add-rental-logistics-tracking/prototype/artifact/index.html"
+  ],
+  "expires_when": "verification_started"
+}

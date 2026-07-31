@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>设备排期中心 · 物流追踪原型</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div
+      class="app-shell"
+      data-specnav-project-shell="camera-rental-schedule-center"
+      data-specnav-variant="schedule-tracking-command-center-v1"
+      data-specnav-state="populated"
+    >
+      <header class="topbar" data-specnav-component="ScheduleCenterAppShell">
+        <button class="brand" data-screen-target="schedule" aria-label="设备排期中心">
+          <span class="brand-mark"><i></i><i></i><i></i><i></i></span>
+          <span><strong data-copy="brand">设备排期中心</strong><small>RENTAL OPS</small></span>
+        </button>
+        <button class="global-search">
+          <span aria-hidden="true">⌕</span>
+          <span data-copy="search">搜索订单、SN、客户或运单号</span>
+          <kbd>⌘ K</kbd>
+        </button>
+        <div class="top-actions">
+          <span class="sync-health"><i></i><span data-copy="sync">本地物流摘要 15:42</span></span>
+          <button class="icon-button" aria-label="刷新本地摘要" data-action="local-sync">↻</button>
+          <button class="tenant"><span>捷</span><b>捷租达</b></button>
+          <button class="icon-button" data-specnav-theme-control data-theme-toggle aria-label="切换主题">◐</button>
+          <button class="locale-button" data-specnav-locale-control data-locale-toggle>EN</button>
+        </div>
+      </header>
+
+      <nav class="module-nav" data-specnav-component="ResponsiveWorkspaceNavigation" aria-label="物流功能导航">
+        <button class="is-active" data-screen-target="schedule"><span data-copy="navSchedule">设备排期</span><em>7</em></button>
+        <button data-screen-target="shipment"><span data-copy="navShipment">发货结果</span><em>3</em></button>
+        <button data-screen-target="operations"><span data-copy="navOperations">物流运营</span><em>4</em></button>
+        <button data-screen-target="risks"><span data-copy="navRisks">异常中心</span><em class="danger">5</em></button>
+      </nav>
+
+      <div class="architecture-strip">
+        <span><b>闲鱼发货</b><i>→</i><b>Delivery</b><i>→</i><b>Outbox</b><i>→</i><b>快递100</b><i>→</i><b>Inbox / Trace</b><i>→</i><b>排期中心</b></span>
+        <small data-copy="architectureNote">页面每 60 秒读取本地摘要，不直接查询快递100</small>
+      </div>
+
+      <main class="main-stage">
+        <section class="global-state state-loading" data-specnav-state="loading">
+          <span class="spinner"></span><strong data-copy="loadingTitle">正在读取物流摘要</strong>
+          <p data-copy="loadingBody">排期和筛选保持不变，完整轨迹仍按需加载。</p>
+        </section>
+        <section class="global-state state-empty" data-specnav-state="empty">
+          <span class="state-icon">○</span><strong data-copy="emptyTitle">当前窗口没有物流包裹</strong>
+          <p data-copy="emptyBody">尚未发货的订单不会创建物流追踪。</p>
+        </section>
+        <section class="global-state state-error" data-specnav-state="error">
+          <span class="state-icon danger">!</span><strong data-copy="errorTitle">本地物流摘要暂时不可用</strong>
+          <p data-copy="errorBody">不会直接回退到快递100查询，请保留页面状态后重试。</p>
+          <button class="primary-button" data-action="retry" data-copy="retry">重试</button>
+        </section>
+        <section class="global-state state-permission" data-specnav-state="permission">
+          <span class="state-icon">⌁</span><strong data-copy="permissionTitle">当前账号没有物流查看权限</strong>
+          <p data-copy="permissionBody">权限由管理端角色和租户数据范围共同控制。</p>
+        </section>
+        <section class="global-state state-provider-disabled" data-specnav-state="provider-disabled">
+          <span class="state-icon">Ⅱ</span><strong data-copy="providerDisabledTitle">快递100追踪未启用</strong>
+          <p data-copy="providerDisabledBody">闲鱼发货仍然成功，本地包裹保留为待启用状态。</p>
+        </section>
+        <section class="global-state state-mapping-required" data-specnav-state="mapping-required">
+          <span class="state-icon">↔</span><strong data-copy="mappingTitle">承运商编码待映射</strong>
+          <p data-copy="mappingBody">包裹已创建，但不会调用快递100。</p>
+        </section>
+        <section class="global-state state-query-throttled" data-specnav-state="query-throttled">
+          <span class="state-icon">◷</span><strong data-copy="throttledTitle">主动查询受限频保护</strong>
+          <p data-copy="throttledBody">当前本地快照仍可查看，下一次允许查询时间为 16:08。</p>
+        </section>
+
+        <div id="screen-root" data-specnav-screen="schedule-tracking" data-specnav-state="populated"></div>
+      </main>
+
+      <nav class="mobile-nav" aria-label="移动端物流功能导航">
+        <button class="is-active" data-screen-target="schedule"><span>▦</span><small data-copy="mobileSchedule">排期</small></button>
+        <button data-screen-target="shipment"><span>⇥</span><small data-copy="mobileShipment">发货</small></button>
+        <button data-screen-target="operations"><span>⚙</span><small data-copy="mobileOperations">运营</small></button>
+        <button data-screen-target="risks"><span>△</span><small data-copy="mobileRisks">异常</small></button>
+      </nav>
+
+      <aside class="review-panel is-collapsed" data-specnav-component="PrototypeReviewControls">
+        <button class="review-toggle" data-review-toggle><span data-copy="review">原型状态</span><b>×</b></button>
+        <div class="review-options">
+          <button class="is-active" data-review-state="populated" data-copy="statePopulated">有数据</button>
+          <button data-review-state="loading" data-copy="stateLoading">加载</button>
+          <button data-review-state="empty" data-copy="stateEmpty">空数据</button>
+          <button data-review-state="error" data-copy="stateError">错误</button>
+          <button data-review-state="permission" data-copy="statePermission">无权限</button>
+          <button data-review-state="provider-disabled" data-copy="stateProvider">Provider 关闭</button>
+          <button data-review-state="mapping-required" data-copy="stateMapping">待映射</button>
+          <button data-review-state="query-throttled" data-copy="stateThrottle">限频</button>
+        </div>
+      </aside>
+
+      <div class="drawer-backdrop" data-drawer-backdrop></div>
+      <aside class="tracking-drawer" data-tracking-drawer aria-hidden="true"></aside>
+      <div class="toast" role="status"></div>
+    </div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

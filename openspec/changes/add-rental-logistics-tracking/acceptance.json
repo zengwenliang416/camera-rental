@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "change_id": "add-rental-logistics-tracking",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "A successful Xianyu shipment atomically creates or reuses a physical Delivery, binds its devices, and enqueues subscribe and initial-query tasks without waiting for Kuaidi100.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "development/tasks/003-xianyu-shipment-delivery/spec-review.md"
+    },
+    {
+      "id": "A2",
+      "statement": "Kuaidi100 mapping, configuration, or network failure never rolls back an already successful Xianyu shipment and produces an explicit local tracking state.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "development/tasks/003-xianyu-shipment-delivery/spec-review.md"
+    },
+    {
+      "id": "A3",
+      "statement": "One order supports multiple independent outbound, return, exchange-out, and exchange-return packages, and one package supports multiple devices without duplicate relations.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A4",
+      "statement": "Provider calls execute outside business database transactions through leased idempotent Outbox workers.",
+      "verify_via": "redteam",
+      "status": "passing",
+      "evidence_ref": "development/tasks/002-kuaidi100-workers/spec-review.md"
+    },
+    {
+      "id": "A5",
+      "statement": "A verified callback is persisted idempotently before acknowledgement and is processed asynchronously under the located tenant.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "development/tasks/002-kuaidi100-workers/spec-review.md"
+    },
+    {
+      "id": "A6",
+      "statement": "Identical complete tracking snapshots are suppressed, corrected histories advance versions, and late data cannot regress terminal status.",
+      "verify_via": "unit",
+      "status": "passing",
+      "evidence_ref": "development/tasks/001-delivery-foundation/spec-review.md"
+    },
+    {
+      "id": "A7",
+      "statement": "The schedule center batch-loads local tracking summaries, renders single and multiple packages, and loads full traces only on demand.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "development/tasks/004-schedule-tracking/spec-review.md"
+    },
+    {
+      "id": "A8",
+      "statement": "Manual refresh enqueues an asynchronous query or returns a stable throttled response with the next allowed time and never performs a synchronous provider query.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "development/tasks/004-schedule-tracking/spec-review.md"
+    },
+    {
+      "id": "A9",
+      "statement": "The visible schedule page polls only local summaries every 60 seconds, pauses while hidden, and refreshes immediately when visible again.",
+      "verify_via": "unit",
+      "status": "passing",
+      "evidence_ref": "development/tasks/004-schedule-tracking/spec-review.md"
+    },
+    {
+      "id": "A10",
+      "statement": "Logistics risks are server-derived and visible in the exception center without automatically releasing or changing device lifecycle state.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "development/tasks/004-schedule-tracking/spec-review.md"
+    },
+    {
+      "id": "A11",
+      "statement": "Provider credentials, tracking phone, callback secrets, callback payloads, full waybills, addresses, and phone numbers are encrypted or masked and never leak through logs, errors, metrics, tests, or ordinary UI.",
+      "verify_via": "redteam",
+      "status": "passing",
+      "evidence_ref": "development/tasks/005-logistics-operations/spec-review.md"
+    },
+    {
+      "id": "A12",
+      "statement": "Every logistics table, unique key, query, callback, worker, configuration, and operation is tenant-isolated.",
+      "verify_via": "redteam",
+      "status": "passing",
+      "evidence_ref": "development/tasks/005-logistics-operations/spec-review.md"
+    },
+    {
+      "id": "A13",
+      "statement": "Kuaidi100 SDK types remain inside the provider adapter and ordinary CI performs no real provider network access.",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "development/tasks/003-xianyu-shipment-delivery/spec-review.md"
+    },
+    {
+      "id": "A14",
+      "statement": "The additive migration succeeds on a fresh schema and current upgrade path without changing existing shipment or order values.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "development/tasks/002-kuaidi100-workers/spec-review.md"
+    },
+    {
+      "id": "A15",
+      "statement": "Historical backfill and technical-data cleanup are explicit permissioned operations and never run inside structural migration or automatically call the real provider.",
+      "verify_via": "redteam",
+      "status": "passing",
+      "evidence_ref": "development/tasks/005-logistics-operations/spec-review.md"
+    },
+    {
+      "id": "A16",
+      "statement": "The complete logistics UI passes light and dark, zh-CN and en, desktop and narrow-screen, loading, empty, permission, failure, multi-package, and delivered sensory coverage.",
+      "verify_via": "sensory",
+      "status": "passing",
+      "evidence_ref": "development/tasks/004-schedule-tracking/spec-review.md; development/tasks/005-logistics-operations/spec-review.md"
+    },
+    {
+      "id": "A17",
+      "statement": "Each tenant can configure multiple encrypted Kuaidi100 credential pairs; a Delivery stably reuses its bound usable credential and safely reselects only when that credential is disabled, deleted, incomplete, cross-tenant, or for another Provider.",
+      "verify_via": "unit",
+      "status": "passing",
+      "evidence_ref": "development/tasks/006-multiple-provider-credentials/spec-review.md"
+    }
+  ]
+}

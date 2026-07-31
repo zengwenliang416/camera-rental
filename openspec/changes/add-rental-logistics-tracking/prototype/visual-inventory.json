@@ -1,0 +1,141 @@
+{
+  "schema": "specnav.prototype.visualInventory.v1",
+  "version": "1",
+  "discovery_status": "complete",
+  "source_project": "camera-rental-schedule-center",
+  "selected_variant": "schedule-tracking-command-center-v1",
+  "evidence": {
+    "screenshots": [
+      "openspec/changes/schedule-center-local-stability-v1/prototype/evidence/integrated-v4-schedule-1440.png",
+      "openspec/changes/schedule-center-local-stability-v1/prototype/evidence/integrated-v5-exceptions-1440.png",
+      "openspec/changes/schedule-center-local-stability-v1/prototype/evidence/integrated-v6-shipping-1440.png",
+      "openspec/changes/schedule-center-local-stability-v1/prototype/evidence/integrated-v6-shipping-390.png"
+    ],
+    "routes": [
+      "camera-rental-schedule-center/src/app/ScheduleCenterAppShell.tsx",
+      "camera-rental-schedule-center/src/features/schedule/SchedulePage.tsx",
+      "camera-rental-schedule-center/src/features/exceptions/ExceptionsPage.tsx",
+      "camera-rental-schedule-center/src/features/shipping/components/ShippingWorkbench.tsx"
+    ],
+    "design_specs": [
+      "openspec/specs/ui-design/design.md",
+      "openspec/changes/add-rental-logistics-tracking/requirements.md",
+      "openspec/changes/add-rental-logistics-tracking/acceptance.md",
+      "camera-rental-schedule-center/src/index.css"
+    ],
+    "component_sources": [
+      "camera-rental-schedule-center/src/features/schedule/components/ScheduleDeviceTable.tsx",
+      "camera-rental-schedule-center/src/shared/ui/StatusBadge.tsx",
+      "camera-rental-schedule-center/src/shared/ui/DetailDrawerShell.tsx",
+      "camera-rental-schedule-center/src/shared/ui/EmptyState.tsx",
+      "camera-rental-schedule-center/src/shared/ui/PermissionAwareAction.tsx",
+      "camera-rental-schedule-center/src/features/shipping/components/ShipmentDocket.tsx"
+    ],
+    "codegraph_claims": []
+  },
+  "project_shell": {
+    "source": "current React schedule-center sticky header, horizontal operational navigation, semantic CSS variables, dense schedule table, mobile bottom navigation, theme toggle, and locale toggle",
+    "required_elements": [
+      "设备排期中心 product identity",
+      "dashboard schedule orders devices shipping exceptions modules",
+      "global order SN customer and waybill search",
+      "server sync health",
+      "tenant identity",
+      "theme and locale controls",
+      "desktop top navigation",
+      "mobile bottom navigation",
+      "dense device schedule table",
+      "detail drawer",
+      "reviewable loading empty error permission disabled and populated states"
+    ],
+    "omitted_elements": [
+      "generic marketing hero",
+      "purple AI dashboard styling",
+      "customer storefront navigation",
+      "real customer PII",
+      "real provider credentials"
+    ],
+    "theme_policy": "light default with complete dark variant",
+    "i18n_policy": "zh-CN default with complete en variant"
+  },
+  "business_surface": {
+    "screens": [
+      "schedule-tracking",
+      "shipment-result",
+      "logistics-operations",
+      "logistics-risks"
+    ],
+    "fields": [
+      "delivery direction",
+      "package count",
+      "carrier",
+      "masked waybill",
+      "platform tracking status",
+      "latest trace time and context",
+      "last provider sync time",
+      "ETA optional",
+      "query throttle next allowed time",
+      "carrier mapping status",
+      "provider enable and health status",
+      "outbox inbox task status",
+      "logistics risk code and severity"
+    ],
+    "actions": [
+      "open tracking drawer",
+      "switch tracked package",
+      "queue manual refresh",
+      "review throttled result",
+      "inspect provider configuration",
+      "inspect carrier mappings",
+      "retry failed task",
+      "open logistics risk",
+      "switch theme locale screen and prototype state"
+    ],
+    "states": [
+      "populated",
+      "loading",
+      "empty",
+      "error",
+      "permission",
+      "provider-disabled",
+      "mapping-required",
+      "query-throttled",
+      "multi-package",
+      "exception",
+      "delivered"
+    ]
+  },
+  "verification_matrix": {
+    "viewports": [
+      "1440x900 desktop",
+      "768x1024 tablet",
+      "390x844 mobile",
+      "360x800 compact mobile"
+    ],
+    "theme_modes": [
+      "light",
+      "dark"
+    ],
+    "locales": [
+      "zh-CN",
+      "en"
+    ],
+    "states": [
+      "populated",
+      "loading",
+      "empty",
+      "error",
+      "permission",
+      "provider-disabled",
+      "mapping-required",
+      "query-throttled"
+    ]
+  },
+  "unsupported_capabilities": [
+    "real API requests",
+    "real Xianyu shipment",
+    "real Kuaidi100 subscription query or callback",
+    "persistent configuration",
+    "real retry backfill or cleanup"
+  ]
+}

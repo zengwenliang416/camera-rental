@@ -127,4 +127,3 @@ export const secondaryButtonClassName =
 
 export const primaryButtonClassName =
   'inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[var(--sc-ink)] px-4 text-xs font-bold text-[var(--sc-surface)] disabled:cursor-not-allowed disabled:opacity-45';
-

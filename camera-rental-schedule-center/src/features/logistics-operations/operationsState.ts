@@ -52,4 +52,3 @@ export function operationsResourceReducer<T>(
   }
   return initialOperationsResourceState<T>();
 }
-

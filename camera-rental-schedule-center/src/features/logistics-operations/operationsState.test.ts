@@ -37,4 +37,3 @@ test('panel resources distinguish ready and explicit empty states', () => {
   assert.equal(empty.status, 'empty');
   assert.equal(ready.status, 'ready');
 });
-

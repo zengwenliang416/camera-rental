@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -174,11 +175,11 @@ class XianyuOrderAdminServiceTest {
                 .build();
         XianyuOrderPageReqVO pageParam = new XianyuOrderPageReqVO();
         when(orderMapper.selectAdminPage(pageParam)).thenReturn(new PageResult<>(List.of(order), 1L));
-        when(rentalOrderMapper.selectById(99L)).thenReturn(RentalOrderDO.builder()
+        when(rentalOrderMapper.selectByIds(List.of(99L))).thenReturn(List.of(RentalOrderDO.builder()
                 .id(99L)
                 .billableStartDate(LocalDate.of(2026, 8, 1))
                 .billableEndDate(LocalDate.of(2026, 8, 5))
-                .build());
+                .build()));
         XianyuOrderAdminService service = new XianyuOrderAdminService(
                 orderMapper,
                 mock(XianyuShopMapper.class),
@@ -193,6 +194,8 @@ class XianyuOrderAdminServiceTest {
         assertEquals(LocalDate.of(2026, 8, 1), vo.getBillableStartDate());
         assertEquals(LocalDate.of(2026, 8, 5), vo.getBillableEndDate());
         assertEquals("SUCCESS", vo.getRentalPeriodStatus());
+        verify(rentalOrderMapper, times(1)).selectByIds(List.of(99L));
+        verify(rentalOrderMapper, never()).selectById(99L);
     }
 
     @Test

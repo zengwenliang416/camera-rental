@@ -84,6 +84,10 @@ public class XianyuOrderAdminService {
                 item -> item,
                 (first, ignored) -> first,
                 LinkedHashMap::new));
+        Map<Long, RentalOrderDO> rentalOrderById = rentalOrderIds.isEmpty()
+                ? Map.of()
+                : nullSafe(rentalOrderMapper.selectByIds(rentalOrderIds)).stream()
+                .collect(Collectors.toMap(RentalOrderDO::getId, order -> order));
         Map<Long, List<Long>> deviceIdsByOrderItemId = new LinkedHashMap<>();
         if (!rentalOrderIds.isEmpty()) {
             nullSafe(assignmentMapper.selectActiveListByRentalOrderIds(rentalOrderIds)).forEach(assignment ->
@@ -97,7 +101,10 @@ public class XianyuOrderAdminService {
                     List<Long> assignedDeviceIds = item == null
                             ? List.of()
                             : deviceIdsByOrderItemId.getOrDefault(item.getId(), List.of());
-                    return toVo(order, item, assignedDeviceIds);
+                    return toVo(order, item, assignedDeviceIds,
+                            order.getRentalOrderId() == null
+                                    ? null
+                                    : rentalOrderById.get(order.getRentalOrderId()));
                 })
                 .collect(Collectors.toList());
         return new PageResult<>(list, page.getTotal());
@@ -141,7 +148,7 @@ public class XianyuOrderAdminService {
     }
 
     private XianyuOrderRespVO toVo(XianyuOrderDO order, RentalOrderItemDO item,
-                                   List<Long> assignedDeviceIds) {
+                                   List<Long> assignedDeviceIds, RentalOrderDO rentalOrder) {
         XianyuOrderRespVO vo = new XianyuOrderRespVO();
         vo.setId(order.getId());
         vo.setShopId(order.getShopId());
@@ -157,7 +164,7 @@ public class XianyuOrderAdminService {
         vo.setBuyerNick(order.getBuyerNick());
         vo.setRemarkParseVersion(order.getRemarkParseVersion());
         vo.setRemarkParseStatus(order.getRemarkParseStatus());
-        fillRentalPeriod(order, vo);
+        fillRentalPeriod(order, rentalOrder, vo);
         vo.setConversionStatus(order.getConversionStatus());
         vo.setRentalOrderId(order.getRentalOrderId());
         vo.setSourceCreatedAt(order.getSourceCreatedAt());
@@ -204,16 +211,14 @@ public class XianyuOrderAdminService {
         return values == null ? Collections.emptyList() : values;
     }
 
-    private void fillRentalPeriod(XianyuOrderDO order, XianyuOrderRespVO vo) {
-        if (order.getRentalOrderId() != null) {
-            RentalOrderDO rentalOrder = rentalOrderMapper.selectById(order.getRentalOrderId());
-            if (rentalOrder != null && rentalOrder.getBillableStartDate() != null
-                    && rentalOrder.getBillableEndDate() != null) {
-                vo.setBillableStartDate(rentalOrder.getBillableStartDate());
-                vo.setBillableEndDate(rentalOrder.getBillableEndDate());
-                vo.setRentalPeriodStatus("SUCCESS");
-                return;
-            }
+    private void fillRentalPeriod(XianyuOrderDO order, RentalOrderDO rentalOrder,
+                                  XianyuOrderRespVO vo) {
+        if (rentalOrder != null && rentalOrder.getBillableStartDate() != null
+                && rentalOrder.getBillableEndDate() != null) {
+            vo.setBillableStartDate(rentalOrder.getBillableStartDate());
+            vo.setBillableEndDate(rentalOrder.getBillableEndDate());
+            vo.setRentalPeriodStatus("SUCCESS");
+            return;
         }
 
         vo.setBillableStartDate(order.getBillableStartDate());

@@ -1,5 +1,6 @@
 import { apiClient, PageResult } from './client';
 import { AdminUserCache, setCachedPermissionInfo } from './auth';
+import { fetchAllPages } from './pagination';
 import { loadAuthorizedSnapshot, type SnapshotLoaders } from './snapshotLoader';
 
 export interface PermissionInfoVO extends AdminUserCache {
@@ -197,37 +198,19 @@ export interface SnapshotAccess {
 // 后端 PageParam 限制 pageSize 最大为 200；这里循环分页拉完整列表。
 const PAGE_SIZE = 200;
 
-async function fetchAllPages<T>(
+async function fetchAllApiPages<T>(
   path: string,
   params: Record<string, unknown> = {},
   pageSize = PAGE_SIZE
 ) {
-  const list: T[] = [];
-  let pageNo = 1;
-  let total = 0;
-
-  while (true) {
-    const page = await apiClient.get<PageResult<T>>(path, {
+  return fetchAllPages<T>(
+    (pageNo, currentPageSize) => apiClient.get<PageResult<T>>(path, {
       ...params,
       pageNo,
-      pageSize,
-    });
-    const pageList = page.list || [];
-    if (pageNo === 1) {
-      total = page.total || 0;
-    }
-    list.push(...pageList);
-
-    if (pageList.length === 0) break;
-    if (total > 0 && list.length >= total) break;
-    if (pageList.length < pageSize) break;
-    pageNo += 1;
-  }
-
-  return {
-    list,
-    total: Math.max(total, list.length),
-  };
+      pageSize: currentPageSize,
+    }),
+    pageSize
+  );
 }
 
 export async function fetchPermissionInfo() {
@@ -245,12 +228,12 @@ export function fetchXianyuExpressCompanies() {
 }
 
 const snapshotLoaders: SnapshotLoaders = {
-  devices: () => fetchAllPages<RentalDeviceVO>('/rental/device/page'),
-  schedules: () => fetchAllPages<RentalScheduleVO>('/rental/schedule/page', { status: 'EFFECTIVE' }),
-  orders: () => fetchAllPages<XianyuOrderVO>('/rental/xianyu/order/page'),
+  devices: () => fetchAllApiPages<RentalDeviceVO>('/rental/device/page'),
+  schedules: () => fetchAllApiPages<RentalScheduleVO>('/rental/schedule/page', { status: 'EFFECTIVE' }),
+  orders: () => fetchAllApiPages<XianyuOrderVO>('/rental/xianyu/order/page'),
   pendingShipOrders: () =>
-    fetchAllPages<XianyuPendingShipOrderVO>('/rental/xianyu/order/pending-ship/page'),
-  reviews: () => fetchAllPages<RentalManualReviewVO>('/rental/manual-review/page', { status: 'PENDING' }),
+    fetchAllApiPages<XianyuPendingShipOrderVO>('/rental/xianyu/order/pending-ship/page'),
+  reviews: () => fetchAllApiPages<RentalManualReviewVO>('/rental/manual-review/page', { status: 'PENDING' }),
 };
 
 export function fetchScheduleCenterSnapshot(access: SnapshotAccess) {

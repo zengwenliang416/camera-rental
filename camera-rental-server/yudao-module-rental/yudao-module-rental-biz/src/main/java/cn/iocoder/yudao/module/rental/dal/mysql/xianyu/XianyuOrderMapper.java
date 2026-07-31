@@ -35,8 +35,9 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
         query.apply(pageReqVO.getEndDate() != null,
                 "COALESCE(order_time, source_created_at, create_time) < {0}",
                 pageReqVO.getEndDate() != null ? pageReqVO.getEndDate().plusDays(1).atStartOfDay() : null);
-        // Keep detail_json for historical receiver fallback; exclude blobs/payment credentials from list reads.
-        query.select(XianyuOrderDO.class, field -> !"goodsJson".equals(field.getProperty())
+        // Receiver fields are persisted separately; list reads do not need raw payload blobs.
+        query.select(XianyuOrderDO.class, field -> !"detailJson".equals(field.getProperty())
+                && !"goodsJson".equals(field.getProperty())
                 && !"payNo".equals(field.getProperty()));
         return selectPage(pageReqVO, query);
     }

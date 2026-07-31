@@ -1,6 +1,13 @@
 import type { ComponentType } from 'react';
 
-export type WorkspaceTab = 'dashboard' | 'schedule' | 'orders' | 'devices' | 'binding' | 'exceptions';
+export type WorkspaceTab =
+  | 'dashboard'
+  | 'schedule'
+  | 'orders'
+  | 'devices'
+  | 'binding'
+  | 'operations'
+  | 'exceptions';
 
 export interface WorkspaceNavItem {
   id: WorkspaceTab;

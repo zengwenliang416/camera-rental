@@ -10,7 +10,12 @@ Object.assign(globalThis, {
   localStorage: browser.localStorage,
 });
 
-const { getAccessToken, getRefreshToken, setTokenPair } = await import('./auth');
+const {
+  getAccessToken,
+  getRefreshToken,
+  setTenantId,
+  setTokenPair,
+} = await import('./auth');
 const { apiClient } = await import('./client');
 const originalFetch = globalThis.fetch;
 
@@ -46,4 +51,26 @@ test('a second 401 after token refresh resets authentication', async () => {
   assert.equal(calls, 3);
   assert.equal(getAccessToken(), undefined);
   assert.equal(getRefreshToken(), undefined);
+});
+
+test('delete requests use the shared authenticated request path', async () => {
+  setTokenPair({
+    accessToken: 'delete-access-token',
+    refreshToken: 'delete-refresh-token',
+  });
+  setTenantId(7);
+
+  let request: RequestInit | undefined;
+  globalThis.fetch = async (_input, init) => {
+    request = init;
+    return new Response(JSON.stringify({ code: 0, data: true }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  };
+
+  assert.equal(await apiClient.delete<boolean>('/rental/logistics/mapping/1'), true);
+  assert.equal(request?.method, 'DELETE');
+  assert.equal((request?.headers as Record<string, string>).Authorization, 'Bearer delete-access-token');
+  assert.equal((request?.headers as Record<string, string>)['tenant-id'], '7');
 });

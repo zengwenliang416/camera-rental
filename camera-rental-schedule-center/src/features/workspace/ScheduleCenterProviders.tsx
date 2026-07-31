@@ -4,6 +4,7 @@ import { ScheduleCenterCommandsProvider } from '../commands/ScheduleCenterComman
 import { ScheduleCenterDataProvider } from '../data/ScheduleCenterDataContext';
 import { PermissionProvider } from '../permissions/PermissionContext';
 import { SessionProvider } from '../session/SessionContext';
+import { DeliveryTrackingProvider } from '../tracking/TrackingContext';
 import { WorkspaceProvider } from './WorkspaceContext';
 
 export function ScheduleCenterProviders({ children }: { children: ReactNode }) {
@@ -11,11 +12,13 @@ export function ScheduleCenterProviders({ children }: { children: ReactNode }) {
     <SessionProvider>
       <PermissionProvider>
         <ScheduleCenterDataProvider>
-          <WorkspaceProvider>
-            <ScheduleCenterCommandsProvider>
-              {children}
-            </ScheduleCenterCommandsProvider>
-          </WorkspaceProvider>
+          <DeliveryTrackingProvider>
+            <WorkspaceProvider>
+              <ScheduleCenterCommandsProvider>
+                {children}
+              </ScheduleCenterCommandsProvider>
+            </WorkspaceProvider>
+          </DeliveryTrackingProvider>
         </ScheduleCenterDataProvider>
       </PermissionProvider>
     </SessionProvider>

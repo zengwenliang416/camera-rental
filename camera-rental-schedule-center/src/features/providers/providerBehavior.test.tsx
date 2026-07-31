@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test, { after, afterEach } from 'node:test';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { Window } from 'happy-dom';
 
@@ -17,8 +17,10 @@ import { useScheduleCenterCommands } from '../commands/ScheduleCenterCommandsCon
 import { ScheduleCenterDataProvider, useScheduleCenterData } from '../data/ScheduleCenterDataContext';
 import { PermissionProvider, usePermissions } from '../permissions/PermissionContext';
 import { SessionProvider, useSession } from '../session/SessionContext';
+import { DeliveryTrackingProvider, useDeliveryTracking } from '../tracking/TrackingContext';
 
 const browser = new Window();
+const originalFetch = globalThis.fetch;
 Object.assign(globalThis, {
   window: browser,
   document: browser.document,
@@ -33,6 +35,7 @@ Object.defineProperty(globalThis, 'navigator', {
 const { createRoot } = await import('react-dom/client');
 
 afterEach(() => {
+  globalThis.fetch = originalFetch;
   removeTokenPair();
   clearCachedPermissionInfo();
   document.body.innerHTML = '';
@@ -183,6 +186,27 @@ function CommandProbe() {
       >
         Switch
       </button>
+    </>
+  );
+}
+
+function TrackingDetailProbe() {
+  const { getDetailState, loadDetail } = useDeliveryTracking();
+  const detailState = getDetailState(91002);
+
+  useEffect(() => {
+    void loadDetail(91002);
+  }, [loadDetail]);
+
+  return (
+    <>
+      <output data-testid="tracking-loading">{String(detailState.isLoading)}</output>
+      <output data-testid="tracking-status">
+        {detailState.detail?.trackingStatus || 'none'}
+      </output>
+      <output data-testid="tracking-traces">
+        {detailState.detail?.traces.length || 0}
+      </output>
     </>
   );
 }
@@ -520,6 +544,145 @@ test('distinct commands remain independently current within one provider revisio
   assert.equal(
     document.querySelector('[data-testid="completed"]')?.textContent,
     '2'
+  );
+
+  flushSync(() => root.unmount());
+});
+
+test('tracking detail loader stays stable after detail state updates', async () => {
+  setTokenPair({ accessToken: 'access', refreshToken: 'refresh' });
+  let summaryCalls = 0;
+  let detailCalls = 0;
+
+  globalThis.fetch = async (input) => {
+    const url = String(input instanceof Request ? input.url : input);
+    if (url.includes('/rental/delivery/tracking-summary/batch')) {
+      summaryCalls += 1;
+      return new Response(JSON.stringify({
+        code: 0,
+        data: {
+          '71002': {
+            orderId: 71002,
+            packageCount: 1,
+            statusCounts: { IN_TRANSIT: 1 },
+            packages: [{
+              deliveryId: 91002,
+              direction: 'OUTBOUND',
+              packageSeq: 1,
+              carrierName: 'Test carrier',
+              maskedWaybillNo: 'TEST****0002',
+              trackingStatus: 'IN_TRANSIT',
+              mappingStatus: 'READY',
+              subscribeStatus: 'SUBSCRIBED',
+              queryStatus: 'READY_QUERY',
+              stale: false,
+            }],
+            risks: [],
+          },
+        },
+      }), {
+        headers: { 'Content-Type': 'application/json' },
+        status: 200,
+      });
+    }
+    if (url.includes('/rental/delivery/91002/tracking')) {
+      detailCalls += 1;
+      return new Response(JSON.stringify({
+        code: 0,
+        data: {
+          deliveryId: 91002,
+          rentalOrderId: 71002,
+          direction: 'OUTBOUND',
+          packageSeq: 1,
+          carrierName: 'Test carrier',
+          maskedWaybillNo: 'TEST****0002',
+          trackingStatus: 'IN_TRANSIT',
+          mappingStatus: 'READY',
+          subscribeStatus: 'SUBSCRIBED',
+          queryStatus: 'READY_QUERY',
+          stale: false,
+          risks: [],
+          devices: [{
+            deviceId: 101,
+            deviceNo: 'P4P-001-TEST',
+            equipmentModelCode: 'P4P',
+          }],
+          traces: [{
+            eventSeq: 1,
+            businessTime: '2026-07-31T10:00:00+08:00',
+            trackingStatus: 'IN_TRANSIT',
+            traceText: 'In transit',
+          }],
+        },
+      }), {
+        headers: { 'Content-Type': 'application/json' },
+        status: 200,
+      });
+    }
+    throw new Error(`Unexpected request: ${url}`);
+  };
+
+  document.body.innerHTML = '<div id="root"></div>';
+  const root = createRoot(document.querySelector('#root')!);
+  flushSync(() => root.render(
+    <SessionProvider>
+      <PermissionProvider
+        loadPermissionInfo={() => Promise.resolve({
+          permissions: [
+            'rental:device:query',
+            'rental:schedule:query',
+            'rental:delivery:tracking',
+          ],
+        })}
+      >
+        <ScheduleCenterDataProvider
+          loadSnapshot={() => Promise.resolve({
+            devices: [],
+            schedules: [{
+              id: 201,
+              deviceId: 101,
+              rentalOrderId: 71002,
+              scheduleType: 'RENTAL',
+              status: 'EFFECTIVE',
+              occupyStartDate: '2026-07-31',
+              occupyEndDateExclusive: '2026-08-06',
+            }],
+            channelOrders: [],
+            pendingShipOrders: [],
+            reviews: [],
+            totals: {
+              devices: 0,
+              schedules: 1,
+              channelOrders: 0,
+              pendingShipOrders: 0,
+              reviews: 0,
+            },
+            failures: [],
+          })}
+        >
+          <DeliveryTrackingProvider>
+            <TrackingDetailProbe />
+          </DeliveryTrackingProvider>
+        </ScheduleCenterDataProvider>
+      </PermissionProvider>
+    </SessionProvider>
+  ));
+
+  await waitFor(() => assert.equal(
+    document.querySelector('[data-testid="tracking-status"]')?.textContent,
+    'IN_TRANSIT'
+  ));
+  await new Promise((resolve) => setTimeout(resolve, 30));
+
+  assert.equal(summaryCalls, 1);
+  assert.equal(detailCalls, 1);
+  assert.equal(
+    document.querySelector('[data-testid="tracking-loading"]')?.textContent,
+    'false'
+  );
+  assert.equal(
+    document.querySelector('[data-testid="tracking-traces"]')?.textContent,
+    '1'
   );
 
   flushSync(() => root.unmount());

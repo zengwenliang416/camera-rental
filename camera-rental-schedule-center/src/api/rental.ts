@@ -186,6 +186,235 @@ export interface RentalDeviceOpsResultVO {
   assignmentStatus: string;
 }
 
+export interface RentalLogisticsRiskVO {
+  code: string;
+  severity: 'HIGH' | 'MEDIUM' | 'LOW' | string;
+  safeMessage: string;
+  nextAction?: string;
+  deviceIds?: number[];
+}
+
+export interface RentalDeliveryTrackingPackageSummaryVO {
+  deliveryId: number;
+  direction: 'OUTBOUND' | 'RETURN' | 'EXCHANGE_OUT' | 'EXCHANGE_RETURN';
+  packageSeq: number;
+  carrierName?: string;
+  maskedWaybillNo?: string | null;
+  trackingStatus: string;
+  mappingStatus: string;
+  subscribeStatus: string;
+  queryStatus: string;
+  latestTraceText?: string;
+  latestEventTime?: string;
+  lastSyncedAt?: string;
+  estimatedDeliveryAt?: string;
+  stale: boolean;
+  risk?: RentalLogisticsRiskVO;
+}
+
+export interface RentalDeliveryTrackingOrderSummaryRespVO {
+  orderId: number;
+  packageCount: number;
+  statusCounts: Record<string, number>;
+  packages: RentalDeliveryTrackingPackageSummaryVO[];
+  risks: RentalLogisticsRiskVO[];
+}
+
+export interface RentalDeliveryTrackingDeviceRespVO {
+  deviceId?: number;
+  deviceNo: string;
+  equipmentModelCode?: string;
+}
+
+export interface RentalDeliveryTrackingTraceRespVO {
+  eventSeq?: number;
+  businessTime?: string;
+  trackingStatus: string;
+  traceText?: string;
+  location?: string;
+}
+
+export interface RentalDeliveryTrackingDetailRespVO {
+  deliveryId: number;
+  rentalOrderId: number;
+  direction: 'OUTBOUND' | 'RETURN' | 'EXCHANGE_OUT' | 'EXCHANGE_RETURN';
+  packageSeq: number;
+  carrierName?: string;
+  maskedWaybillNo?: string | null;
+  trackingStatus: string;
+  mappingStatus: string;
+  subscribeStatus: string;
+  queryStatus: string;
+  latestTraceText?: string;
+  latestEventTime?: string;
+  lastSyncedAt?: string;
+  estimatedDeliveryAt?: string;
+  stale: boolean;
+  risks: RentalLogisticsRiskVO[];
+  devices: RentalDeliveryTrackingDeviceRespVO[];
+  traces: RentalDeliveryTrackingTraceRespVO[];
+}
+
+export interface RentalDeliveryRefreshRespVO {
+  accepted: boolean;
+  reason: string;
+  nextAllowedAt?: string;
+}
+
+export type RentalLogisticsSecretAction = 'KEEP' | 'REPLACE' | 'CLEAR';
+
+export interface RentalLogisticsProviderCredentialVO {
+  id: number;
+  providerCode: string;
+  credentialName: string;
+  enabled: boolean;
+  sortOrder: number;
+  customerCodeConfigured: boolean;
+  maskedCustomerCode?: string | null;
+  apiKeyConfigured: boolean;
+  maskedApiKey?: string | null;
+  configStatus: string;
+  lastVerifiedAt?: string | null;
+}
+
+export interface RentalLogisticsProviderConfigVO {
+  providerCode: string;
+  enabled: boolean;
+  queryEnabled: boolean;
+  subscribeEnabled: boolean;
+  callbackSecretConfigured: boolean;
+  maskedCallbackSecret?: string | null;
+  callbackBaseUrl?: string | null;
+  minimumQueryIntervalSeconds: number;
+  resultVersion: string;
+  configStatus: string;
+  lastVerifiedAt?: string | null;
+  credentials: RentalLogisticsProviderCredentialVO[];
+}
+
+export interface RentalLogisticsProviderConfigUpdateReqVO {
+  providerCode: string;
+  enabled: boolean;
+  queryEnabled: boolean;
+  subscribeEnabled: boolean;
+  callbackSecretAction: RentalLogisticsSecretAction;
+  callbackSecret?: string;
+  callbackBaseUrl?: string | null;
+  minimumQueryIntervalSeconds: number;
+  resultVersion: string;
+}
+
+export interface RentalLogisticsProviderCredentialSaveReqVO {
+  id?: number;
+  providerCode: string;
+  credentialName: string;
+  enabled: boolean;
+  sortOrder: number;
+  customerCodeAction: RentalLogisticsSecretAction;
+  customerCode?: string;
+  apiKeyAction: RentalLogisticsSecretAction;
+  apiKey?: string;
+}
+
+export interface RentalLogisticsProviderVerifyResultVO {
+  valid: boolean;
+  reason: string;
+  verifiedAt?: string | null;
+}
+
+export interface RentalLogisticsCarrierMappingVO {
+  id: number;
+  sourceType: string;
+  sourceCarrierCode: string;
+  canonicalCarrierCode: string;
+  displayName: string;
+  providerCode: string;
+  providerCarrierCode: string;
+  phoneRequirement: string;
+  status: string;
+}
+
+export interface RentalLogisticsCarrierMappingSaveReqVO {
+  id?: number;
+  sourceType: string;
+  sourceCarrierCode: string;
+  canonicalCarrierCode: string;
+  displayName: string;
+  providerCode: string;
+  providerCarrierCode: string;
+  phoneRequirement: string;
+  status: string;
+}
+
+export interface RentalLogisticsFailedTaskVO {
+  taskType: 'INBOX' | 'OUTBOX' | string;
+  id: number;
+  deliveryId?: number | null;
+  providerCode?: string | null;
+  eventType?: string | null;
+  processingStatus: string;
+  retryCount: number;
+  nextAttemptAt?: string | null;
+  errorCode?: string | null;
+  safeErrorMessage?: string | null;
+  occurredAt?: string | null;
+}
+
+export interface RentalLogisticsRetryResultVO {
+  accepted: boolean;
+  reason: string;
+  processingStatus: string;
+}
+
+export interface RentalLogisticsReconcileResultVO {
+  requestedLimit: number;
+  enqueuedCount: number;
+  deliveryIds: number[];
+}
+
+export interface RentalLogisticsMetricsVO {
+  deliveryCount: number;
+  deliveryStatusCounts: Record<string, number>;
+  outboxStatusCounts: Record<string, number>;
+  inboxStatusCounts: Record<string, number>;
+  staleDeliveryCount: number;
+  failedOutboxCount: number;
+  failedInboxCount: number;
+  retriedOutboxCount: number;
+  retriedInboxCount: number;
+  averageOutboxDelaySeconds: number;
+  lastOutboxSuccessAt?: string | null;
+  lastInboxSuccessAt?: string | null;
+}
+
+export interface RentalLogisticsBackfillItemVO {
+  shipmentId: number;
+  deliveryId?: number | null;
+  maskedWaybillNo?: string | null;
+  status: string;
+  reason: string;
+}
+
+export interface RentalLogisticsBackfillResultVO {
+  dryRun: boolean;
+  requestedLimit: number;
+  candidateCount: number;
+  createdOrReusedCount: number;
+  skippedCount: number;
+  providerTasksEnqueued: boolean;
+  providerTaskReason: string;
+  items: RentalLogisticsBackfillItemVO[];
+}
+
+export interface RentalLogisticsCleanupResultVO {
+  dryRun: boolean;
+  retentionDays: number;
+  limit: number;
+  traceCount: number;
+  inboxCount: number;
+  outboxCount: number;
+}
+
 export interface SnapshotAccess {
   devices: boolean;
   schedules: boolean;
@@ -284,4 +513,139 @@ export function resolveManualReview(data: { id: number; resolutionNote: string }
 
 export function closeManualReview(data: { id: number; resolutionNote: string }) {
   return apiClient.put('/rental/manual-review/close', data);
+}
+
+export function fetchDeliveryTrackingSummaries(orderIds: number[]) {
+  return apiClient.post<Record<string, RentalDeliveryTrackingOrderSummaryRespVO>>(
+    '/rental/delivery/tracking-summary/batch',
+    { orderIds }
+  );
+}
+
+export function fetchDeliveryTrackingDetail(deliveryId: number) {
+  return apiClient.get<RentalDeliveryTrackingDetailRespVO | null>(
+    `/rental/delivery/${deliveryId}/tracking`
+  );
+}
+
+export function requestDeliveryTrackingRefresh(deliveryId: number) {
+  return apiClient.post<RentalDeliveryRefreshRespVO>(
+    `/rental/delivery/${deliveryId}/refresh`
+  );
+}
+
+const LOGISTICS_OPERATIONS_PATH = '/rental/logistics/operations';
+
+export function fetchRentalLogisticsProviderConfig(providerCode = 'KUAIDI100') {
+  return apiClient.get<RentalLogisticsProviderConfigVO>(
+    `${LOGISTICS_OPERATIONS_PATH}/provider-config/${providerCode}`
+  );
+}
+
+export function saveRentalLogisticsProviderConfig(
+  data: RentalLogisticsProviderConfigUpdateReqVO
+) {
+  return apiClient.put<RentalLogisticsProviderConfigVO>(
+    `${LOGISTICS_OPERATIONS_PATH}/provider-config`,
+    data
+  );
+}
+
+export function verifyRentalLogisticsProviderConfig(providerCode = 'KUAIDI100') {
+  return apiClient.post<RentalLogisticsProviderVerifyResultVO>(
+    `${LOGISTICS_OPERATIONS_PATH}/provider-config/${providerCode}/verify`
+  );
+}
+
+export function saveRentalLogisticsProviderCredential(
+  data: RentalLogisticsProviderCredentialSaveReqVO
+) {
+  return apiClient.put<RentalLogisticsProviderCredentialVO>(
+    `${LOGISTICS_OPERATIONS_PATH}/provider-credential`,
+    data
+  );
+}
+
+export function deleteRentalLogisticsProviderCredential(id: number) {
+  return apiClient.delete<boolean>(
+    `${LOGISTICS_OPERATIONS_PATH}/provider-credential/${id}`
+  );
+}
+
+export function verifyRentalLogisticsProviderCredential(id: number) {
+  return apiClient.post<RentalLogisticsProviderVerifyResultVO>(
+    `${LOGISTICS_OPERATIONS_PATH}/provider-credential/${id}/verify`
+  );
+}
+
+export function fetchRentalLogisticsCarrierMappings() {
+  return apiClient.get<RentalLogisticsCarrierMappingVO[]>(
+    `${LOGISTICS_OPERATIONS_PATH}/carrier-mapping`
+  );
+}
+
+export function saveRentalLogisticsCarrierMapping(
+  data: RentalLogisticsCarrierMappingSaveReqVO
+) {
+  return apiClient.put<RentalLogisticsCarrierMappingVO>(
+    `${LOGISTICS_OPERATIONS_PATH}/carrier-mapping`,
+    data
+  );
+}
+
+export function deleteRentalLogisticsCarrierMapping(id: number) {
+  return apiClient.delete<boolean>(
+    `${LOGISTICS_OPERATIONS_PATH}/carrier-mapping/${id}`
+  );
+}
+
+export function fetchRentalLogisticsFailedTasks(
+  taskType: 'ALL' | 'INBOX' | 'OUTBOX' = 'ALL',
+  limit = 50
+) {
+  return apiClient.get<RentalLogisticsFailedTaskVO[]>(
+    `${LOGISTICS_OPERATIONS_PATH}/failed-task`,
+    { taskType, limit }
+  );
+}
+
+export function retryRentalLogisticsFailedTask(taskType: string, id: number) {
+  return apiClient.post<RentalLogisticsRetryResultVO>(
+    `${LOGISTICS_OPERATIONS_PATH}/failed-task/${taskType}/${id}/retry`
+  );
+}
+
+export function reconcileRentalLogistics(limit = 20) {
+  return apiClient.post<RentalLogisticsReconcileResultVO>(
+    `${LOGISTICS_OPERATIONS_PATH}/reconcile`,
+    { limit }
+  );
+}
+
+export function fetchRentalLogisticsMetrics() {
+  return apiClient.get<RentalLogisticsMetricsVO>(
+    `${LOGISTICS_OPERATIONS_PATH}/metrics`
+  );
+}
+
+export function backfillRentalLogistics(data: {
+  dryRun: boolean;
+  limit: number;
+  enqueueProviderTasks: boolean;
+}) {
+  return apiClient.post<RentalLogisticsBackfillResultVO>(
+    `${LOGISTICS_OPERATIONS_PATH}/backfill`,
+    data
+  );
+}
+
+export function cleanupRentalLogistics(data: {
+  dryRun: boolean;
+  retentionDays: number;
+  limit: number;
+}) {
+  return apiClient.post<RentalLogisticsCleanupResultVO>(
+    `${LOGISTICS_OPERATIONS_PATH}/cleanup`,
+    data
+  );
 }

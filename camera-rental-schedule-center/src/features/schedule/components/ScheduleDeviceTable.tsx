@@ -3,6 +3,12 @@ import { Wrench } from 'lucide-react';
 import type { DeviceInstance, ScheduleBlock } from '../../../types';
 import { EmptyState } from '../../../shared/ui/EmptyState';
 import { StatusBadge, type StatusTone } from '../../../shared/ui/StatusBadge';
+import { usePreferences } from '../../preferences/PreferenceContext';
+import { trackingCopy, trackingStatusLabel } from '../../tracking/trackingCopy';
+import {
+  trackingStatusPresentation,
+  type DeliveryOrderSummary,
+} from '../../tracking/trackingModel';
 import type { ScheduleDay, ScheduleViewMode } from '../scheduleModel';
 import { blocksForDevice } from '../scheduleModel';
 import { ScheduleTimeline } from './ScheduleTimeline';
@@ -36,6 +42,7 @@ interface ScheduleDeviceTableProps {
   blocks: ScheduleBlock[];
   days: ScheduleDay[];
   viewMode: ScheduleViewMode;
+  trackingByOrderId: Record<string, DeliveryOrderSummary>;
   labels: {
     internalScroller: string;
     noMatches: string;
@@ -60,9 +67,24 @@ interface ScheduleDeviceTableProps {
   };
   onOpenDevice: (deviceId: string) => void;
   onOpenOrder: (orderId: string) => void;
+  onOpenTracking: (orderId: string) => void;
+}
+
+function firstTrackedOrderSummary(
+  blocks: ScheduleBlock[],
+  trackingByOrderId: Record<string, DeliveryOrderSummary>
+) {
+  for (const block of blocks) {
+    if (!block.orderId) continue;
+    const summary = trackingByOrderId[block.orderId];
+    if (summary) return summary;
+  }
+  return null;
 }
 
 export function ScheduleDeviceTable(props: ScheduleDeviceTableProps) {
+  const { locale } = usePreferences();
+
   if (props.devices.length === 0) {
     return (
       <EmptyState
@@ -77,6 +99,12 @@ export function ScheduleDeviceTable(props: ScheduleDeviceTableProps) {
     return (
       <div className="grid gap-2">
         {props.devices.map((device) => {
+          const deviceBlocks = blocksForDevice(props.blocks, device.id);
+          const trackedSummary = firstTrackedOrderSummary(deviceBlocks, props.trackingByOrderId);
+          const trackedPackage = trackedSummary?.packages[0];
+          const trackedState = trackedPackage
+            ? trackingStatusPresentation(trackedPackage.trackingStatus)
+            : null;
           const status = statusPresentation(device.status, props.labels);
           return (
             <article
@@ -92,9 +120,29 @@ export function ScheduleDeviceTable(props: ScheduleDeviceTableProps) {
                 <span className="sc-data text-[10px] text-[var(--sc-ink-muted)]">{device.sn}</span>
               </button>
               <StatusBadge tone={status.tone}>{status.label}</StatusBadge>
-              <span className="sc-data text-[11px] text-[var(--sc-ink-soft)]">
-                {device.currentOrderId || '-'}
-              </span>
+              <div className="space-y-2">
+                <span className="sc-data block text-[11px] text-[var(--sc-ink-soft)]">
+                  {trackedSummary ? `RO-${trackedSummary.rentalOrderId}` : device.currentOrderId || '-'}
+                </span>
+                {trackedSummary && trackedPackage && trackedState && (
+                  <button
+                    type="button"
+                    onClick={() => props.onOpenTracking(String(trackedSummary.rentalOrderId))}
+                    className="min-h-11 rounded-lg text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]"
+                  >
+                    <div className="flex flex-wrap gap-2">
+                      <StatusBadge tone={trackedState.tone}>
+                        {trackingStatusLabel(locale, trackedPackage.trackingStatus)}
+                      </StatusBadge>
+                      {trackedSummary.risks.length > 0 && (
+                        <StatusBadge tone="red">
+                          {trackingCopy(locale, 'summary.risk')} {trackedSummary.risks.length}
+                        </StatusBadge>
+                      )}
+                    </div>
+                  </button>
+                )}
+              </div>
               <span className="text-xs text-[var(--sc-ink-soft)]">{device.currentCustomer || '-'}</span>
               <span className="text-xs font-semibold text-[var(--sc-ink)]">
                 {device.expectedAvailableDate
@@ -137,6 +185,11 @@ export function ScheduleDeviceTable(props: ScheduleDeviceTableProps) {
         <tbody>
           {props.devices.map((device) => {
             const deviceBlocks = blocksForDevice(props.blocks, device.id);
+            const trackedSummary = firstTrackedOrderSummary(deviceBlocks, props.trackingByOrderId);
+            const trackedPackage = trackedSummary?.packages[0];
+            const trackedState = trackedPackage
+              ? trackingStatusPresentation(trackedPackage.trackingStatus)
+              : null;
             const status = statusPresentation(device.status, props.labels);
             const blockedCellClass = blockedCellClasses[device.status];
             return (
@@ -145,19 +198,39 @@ export function ScheduleDeviceTable(props: ScheduleDeviceTableProps) {
                   scope="row"
                   className="sticky left-0 z-10 w-56 min-w-56 border-r border-[var(--sc-border)] bg-[var(--sc-surface)] px-4 py-2"
                 >
-                  <button
-                    type="button"
-                    onClick={() => props.onOpenDevice(device.id)}
-                    className="min-h-11 w-full rounded-md text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]"
-                  >
-                    <span className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
-                      <strong className="truncate text-xs text-[var(--sc-ink)]">{device.unitCode}</strong>
-                      <StatusBadge tone={status.tone}>{status.label}</StatusBadge>
-                    </span>
-                    <span className="sc-data mt-1 block truncate text-[9px] text-[var(--sc-ink-muted)]">
-                      {device.sn}
-                    </span>
-                  </button>
+                  <div className="grid gap-1">
+                    <button
+                      type="button"
+                      onClick={() => props.onOpenDevice(device.id)}
+                      className="min-h-11 w-full rounded-md text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]"
+                    >
+                      <span className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+                        <strong className="truncate text-xs text-[var(--sc-ink)]">{device.unitCode}</strong>
+                        <StatusBadge tone={status.tone}>{status.label}</StatusBadge>
+                      </span>
+                      <span className="sc-data mt-1 block truncate text-[9px] text-[var(--sc-ink-muted)]">
+                        {device.sn}
+                      </span>
+                    </button>
+                    {trackedSummary && trackedPackage && trackedState && (
+                      <span className="mt-2 flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() => props.onOpenTracking(String(trackedSummary.rentalOrderId))}
+                          className="rounded-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]"
+                        >
+                          <StatusBadge tone={trackedState.tone}>
+                            {trackingStatusLabel(locale, trackedPackage.trackingStatus)}
+                          </StatusBadge>
+                        </button>
+                        {trackedSummary.risks.length > 0 && (
+                          <StatusBadge tone="red">
+                            {trackingCopy(locale, 'summary.risk')} {trackedSummary.risks.length}
+                          </StatusBadge>
+                        )}
+                      </span>
+                    )}
+                  </div>
                 </th>
                 {props.days.map((day, index) => {
                   const block = deviceBlocks.find(

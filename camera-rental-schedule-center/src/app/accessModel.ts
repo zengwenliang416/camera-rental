@@ -1,12 +1,26 @@
 import type { WorkspaceTab } from './navigation';
 import type { SnapshotAccess } from '../api/rental';
 
-const TAB_PERMISSIONS: Partial<Record<WorkspaceTab, string>> = {
+const TAB_PERMISSIONS: Partial<Record<WorkspaceTab, string | string[]>> = {
   schedule: 'rental:schedule:query',
   orders: 'rental:xianyu:query',
   devices: 'rental:device:query',
   binding: 'rental:xianyu:ship',
-  exceptions: 'rental:review:query',
+  operations: [
+    'rental:logistics:config:query',
+    'rental:logistics:config:update',
+    'rental:logistics:config:verify',
+    'rental:logistics:mapping:query',
+    'rental:logistics:mapping:update',
+    'rental:logistics:mapping:delete',
+    'rental:logistics:task:query',
+    'rental:logistics:task:retry',
+    'rental:logistics:reconcile',
+    'rental:logistics:metrics:query',
+    'rental:logistics:backfill',
+    'rental:logistics:cleanup',
+  ],
+  exceptions: ['rental:review:query', 'rental:delivery:tracking'],
 };
 
 export function hasGrantedPermission(permissions: string[], permission: string) {
@@ -15,7 +29,11 @@ export function hasGrantedPermission(permissions: string[], permission: string) 
 
 export function canAccessTab(permissions: string[], tab: WorkspaceTab) {
   const required = TAB_PERMISSIONS[tab];
-  return !required || hasGrantedPermission(permissions, required);
+  if (!required) return true;
+  if (Array.isArray(required)) {
+    return required.some((permission) => hasGrantedPermission(permissions, permission));
+  }
+  return hasGrantedPermission(permissions, required);
 }
 
 export function permittedTabs(permissions: string[], tabs: WorkspaceTab[]) {

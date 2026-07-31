@@ -1,0 +1,245 @@
+import type {
+  DeliveryDirection,
+  DeliveryRisk,
+  DeliveryTrackingStatus,
+} from './trackingModel';
+
+export type TrackingLocale = 'zh-CN' | 'en';
+
+type CopyMap = Record<string, string>;
+
+const zhCN: CopyMap = {
+  'panel.eyebrow': 'LOCAL TRACKING · 14 DAY WINDOW',
+  'panel.title': '排期窗口物流摘要',
+  'panel.description': '只读取本地 Delivery 摘要与风险；不直接请求快递供应商。',
+  'panel.permission': '当前账号没有物流跟踪读取权限。',
+  'panel.empty': '当前 14 天窗口没有已建物流包裹。',
+  'panel.emptyDetail': '未发货订单不会生成物流摘要，待后端本地 Delivery 建立后再显示。',
+  'panel.error': '物流摘要暂不可用，可稍后重试。',
+  'panel.retry': '重试物流摘要',
+  'panel.loading': '正在读取本地物流摘要',
+  'panel.trackedOrders': '跟踪订单',
+  'panel.packages': '包裹数',
+  'panel.risks': '风险数',
+  'panel.updated': '最近刷新',
+  'panel.notAvailable': '不可用',
+  'panel.open': '查看物流详情',
+  'panel.singlePackage': '单包裹',
+  'panel.multiPackage': '多包裹',
+  'summary.unshipped': '未生成包裹',
+  'summary.multiple': '个包裹',
+  'summary.status': '状态',
+  'summary.risk': '风险',
+  'drawer.title': '物流详情',
+  'drawer.description': '仅展示本地规范化轨迹、脱敏运单和安全状态。',
+  'drawer.close': '关闭物流详情',
+  'drawer.packages': '包裹',
+  'drawer.direction': '方向',
+  'drawer.carrier': '承运商',
+  'drawer.waybill': '脱敏运单',
+  'drawer.lastSynced': '最近同步',
+  'drawer.latestEvent': '最新事件',
+  'drawer.eta': '预计送达',
+  'drawer.devices': '关联设备',
+  'drawer.risks': '物流风险',
+  'drawer.timeline': '完整轨迹',
+  'drawer.timelineEmpty': '当前没有可展示的本地轨迹快照。',
+  'drawer.timelineEmptyDetail': '刷新已排入异步查询后，新的本地快照会在后续轮询中出现。',
+  'drawer.detailEmpty': '当前包裹详情不可用。',
+  'drawer.detailEmptyDetail': '可能还未生成本地快照，或当前账号无权读取这条 Delivery。',
+  'drawer.detailError': '物流详情读取失败，请稍后重试。',
+  'drawer.refresh': '异步刷新',
+  'drawer.refreshBusy': '刷新请求中',
+  'drawer.refreshDenied': '无物流刷新权限',
+  'drawer.refreshResult': '刷新结果',
+  'drawer.stale': '轨迹陈旧',
+  'drawer.noRisks': '当前没有物流风险。',
+  'state.mapping': '承运商映射',
+  'state.subscribe': '订阅状态',
+  'state.query': '查询状态',
+  'state.refreshAccepted': '已受理异步刷新',
+  'state.nextAllowed': '下次允许刷新',
+  'exception.trackingAction': '查看物流',
+  'exception.noTrackingAction': '无物流读取权限',
+  'exception.nextAction': '建议下一步',
+  'exception.logisticsSource': '物流风险',
+  'status.CREATED': '已创建',
+  'status.INFO_RECEIVED': '已收单',
+  'status.PICKED_UP': '已揽收',
+  'status.IN_TRANSIT': '运输中',
+  'status.OUT_FOR_DELIVERY': '派送中',
+  'status.DELIVERED': '已签收',
+  'status.EXCEPTION': '物流异常',
+  'status.RETURNING': '返程运输',
+  'status.RETURNED': '已回仓',
+  'status.CUSTOMS': '清关中',
+  'status.UNKNOWN': '状态未知',
+  'direction.OUTBOUND': '寄出',
+  'direction.RETURN': '寄回',
+  'direction.EXCHANGE_OUT': '换货寄出',
+  'direction.EXCHANGE_RETURN': '换货寄回',
+  'code.READY': '正常',
+  'code.MAPPING_REQUIRED': '待补承运商映射',
+  'code.SUBSCRIBED': '已订阅',
+  'code.PENDING': '等待处理中',
+  'code.READY_QUERY': '可查询',
+  'code.QUEUED': '已排队',
+  'code.PROVIDER_DISABLED': '供应商已关闭',
+  'code.QUERY_THROTTLED': '查询限频中',
+  'code.QUERY_ALREADY_QUEUED': '已有刷新排队',
+  'code.REFRESH_QUEUED': '已加入刷新队列',
+  'code.DELIVERY_NOT_FOUND': '物流记录不存在',
+  'code.QUERY_DISABLED': '查询能力已关闭',
+  'code.PHONE_REQUIRED': '缺少跟踪手机号',
+  'code.FAILED': '处理失败',
+  'code.NOT_FOUND': '记录不存在',
+  'risk.OUTBOUND_NOT_PICKED_UP': '已发货但尚未揽收',
+  'risk.OUTBOUND_DELIVERY_DELAY': '寄出包裹配送延迟',
+  'risk.RETURN_NOT_SHIPPED': '回寄包裹尚未创建',
+  'risk.RETURN_DELIVERY_DELAY': '回寄包裹回仓延迟',
+  'risk.TRACKING_STALE': '轨迹长时间未更新',
+  'risk.LOGISTICS_EXCEPTION': '物流出现异常',
+  'risk.MAPPING_REQUIRED': '承运商映射缺失',
+  'risk.SUBSCRIPTION_FAILED': '物流订阅失败',
+};
+
+const en: CopyMap = {
+  'panel.eyebrow': 'LOCAL TRACKING · 14 DAY WINDOW',
+  'panel.title': 'Schedule-window tracking summaries',
+  'panel.description': 'Reads only local Delivery summaries and risks. The browser never calls the provider directly.',
+  'panel.permission': 'This account cannot read delivery tracking.',
+  'panel.empty': 'No local tracked packages exist in the current 14-day window.',
+  'panel.emptyDetail': 'Unshipped orders do not create package summaries until the backend creates a local Delivery.',
+  'panel.error': 'Tracking summaries are unavailable right now. Retry shortly.',
+  'panel.retry': 'Retry summaries',
+  'panel.loading': 'Loading local tracking summaries',
+  'panel.trackedOrders': 'Tracked orders',
+  'panel.packages': 'Packages',
+  'panel.risks': 'Risks',
+  'panel.updated': 'Updated',
+  'panel.notAvailable': 'Unavailable',
+  'panel.open': 'Open tracking details',
+  'panel.singlePackage': 'Single package',
+  'panel.multiPackage': 'Multi-package',
+  'summary.unshipped': 'No tracked package',
+  'summary.multiple': 'packages',
+  'summary.status': 'State',
+  'summary.risk': 'Risk',
+  'drawer.title': 'Tracking details',
+  'drawer.description': 'Only local normalized traces, masked waybills, and safe states are shown.',
+  'drawer.close': 'Close tracking details',
+  'drawer.packages': 'Packages',
+  'drawer.direction': 'Direction',
+  'drawer.carrier': 'Carrier',
+  'drawer.waybill': 'Masked waybill',
+  'drawer.lastSynced': 'Last synced',
+  'drawer.latestEvent': 'Latest event',
+  'drawer.eta': 'ETA',
+  'drawer.devices': 'Linked devices',
+  'drawer.risks': 'Logistics risks',
+  'drawer.timeline': 'Full trace',
+  'drawer.timelineEmpty': 'No local trace snapshot is available yet.',
+  'drawer.timelineEmptyDetail': 'Once the async refresh creates a newer local snapshot, it will appear in later polling cycles.',
+  'drawer.detailEmpty': 'This package detail is unavailable.',
+  'drawer.detailEmptyDetail': 'A local snapshot may not exist yet, or this account cannot read the Delivery.',
+  'drawer.detailError': 'Tracking detail failed to load. Retry later.',
+  'drawer.refresh': 'Async refresh',
+  'drawer.refreshBusy': 'Queueing refresh',
+  'drawer.refreshDenied': 'No refresh permission',
+  'drawer.refreshResult': 'Refresh result',
+  'drawer.stale': 'Trace is stale',
+  'drawer.noRisks': 'No logistics risk is currently open.',
+  'state.mapping': 'Carrier mapping',
+  'state.subscribe': 'Subscription',
+  'state.query': 'Query',
+  'state.refreshAccepted': 'Async refresh accepted',
+  'state.nextAllowed': 'Next refresh allowed',
+  'exception.trackingAction': 'View tracking',
+  'exception.noTrackingAction': 'No tracking permission',
+  'exception.nextAction': 'Next action',
+  'exception.logisticsSource': 'Logistics risk',
+  'status.CREATED': 'Created',
+  'status.INFO_RECEIVED': 'Info received',
+  'status.PICKED_UP': 'Picked up',
+  'status.IN_TRANSIT': 'In transit',
+  'status.OUT_FOR_DELIVERY': 'Out for delivery',
+  'status.DELIVERED': 'Delivered',
+  'status.EXCEPTION': 'Exception',
+  'status.RETURNING': 'Returning',
+  'status.RETURNED': 'Returned',
+  'status.CUSTOMS': 'Customs',
+  'status.UNKNOWN': 'Unknown',
+  'direction.OUTBOUND': 'Outbound',
+  'direction.RETURN': 'Return',
+  'direction.EXCHANGE_OUT': 'Exchange out',
+  'direction.EXCHANGE_RETURN': 'Exchange return',
+  'code.READY': 'Ready',
+  'code.MAPPING_REQUIRED': 'Mapping required',
+  'code.SUBSCRIBED': 'Subscribed',
+  'code.PENDING': 'Pending',
+  'code.READY_QUERY': 'Ready',
+  'code.QUEUED': 'Queued',
+  'code.PROVIDER_DISABLED': 'Provider disabled',
+  'code.QUERY_THROTTLED': 'Query throttled',
+  'code.QUERY_ALREADY_QUEUED': 'Refresh already queued',
+  'code.REFRESH_QUEUED': 'Refresh queued',
+  'code.DELIVERY_NOT_FOUND': 'Delivery not found',
+  'code.QUERY_DISABLED': 'Query disabled',
+  'code.PHONE_REQUIRED': 'Tracking phone required',
+  'code.FAILED': 'Failed',
+  'code.NOT_FOUND': 'Not found',
+  'risk.OUTBOUND_NOT_PICKED_UP': 'Outbound package not picked up',
+  'risk.OUTBOUND_DELIVERY_DELAY': 'Outbound package delayed',
+  'risk.RETURN_NOT_SHIPPED': 'Return package not created',
+  'risk.RETURN_DELIVERY_DELAY': 'Return package delayed',
+  'risk.TRACKING_STALE': 'Tracking is stale',
+  'risk.LOGISTICS_EXCEPTION': 'Logistics exception',
+  'risk.MAPPING_REQUIRED': 'Carrier mapping required',
+  'risk.SUBSCRIPTION_FAILED': 'Tracking subscription failed',
+};
+
+function copy(locale: TrackingLocale) {
+  return locale === 'en' ? en : zhCN;
+}
+
+export function trackingCopy(locale: TrackingLocale, key: string) {
+  return copy(locale)[key] || key;
+}
+
+export function deliveryDirectionLabel(locale: TrackingLocale, direction: DeliveryDirection) {
+  return trackingCopy(locale, `direction.${direction}`);
+}
+
+export function trackingStatusLabel(locale: TrackingLocale, status: DeliveryTrackingStatus | string) {
+  return trackingCopy(locale, `status.${status}`);
+}
+
+export function deliveryCodeLabel(locale: TrackingLocale, code?: string | null) {
+  if (!code) return trackingCopy(locale, 'panel.notAvailable');
+  return trackingCopy(locale, `code.${code}`);
+}
+
+export function logisticsRiskLabel(locale: TrackingLocale, code: string) {
+  return trackingCopy(locale, `risk.${code}`);
+}
+
+export function severityLabel(locale: TrackingLocale, severity: DeliveryRisk['severity']) {
+  if (locale === 'en') {
+    return severity === 'high' ? 'High' : severity === 'medium' ? 'Medium' : 'Low';
+  }
+  return severity === 'high' ? '高' : severity === 'medium' ? '中' : '低';
+}
+
+export function formatTrackingDateTime(locale: TrackingLocale, value?: string | null) {
+  if (!value) return null;
+  const normalized = value.includes('T') ? value : value.replace(' ', 'T');
+  const date = new Date(normalized);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat(locale, {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
+}

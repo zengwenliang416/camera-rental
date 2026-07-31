@@ -229,6 +229,11 @@ export const apiClient = {
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   },
+  delete<T>(path: string) {
+    return request<T>(path, {
+      method: 'DELETE',
+    });
+  },
   upload<T>(path: string, file: File, fieldName = 'file') {
     const data = new FormData();
     data.append(fieldName, file);

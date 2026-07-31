@@ -17,6 +17,9 @@ import {
 import { ScheduleFilters } from './components/ScheduleFilters';
 import { ScheduleDeviceTable } from './components/ScheduleDeviceTable';
 import { ScheduleStatusLegend } from './components/ScheduleStatusLegend';
+import { useDeliveryTracking } from '../tracking/TrackingContext';
+import { DeliveryTrackingDrawer } from '../tracking/components/DeliveryTrackingDrawer';
+import { DeliveryTrackingSummaryPanel } from '../tracking/components/DeliveryTrackingSummaryPanel';
 
 export function SchedulePage() {
   const {
@@ -29,9 +32,11 @@ export function SchedulePage() {
     openDeviceDetail,
   } = useApp();
   const { locale, t } = usePreferences();
+  const { trackingByOrderId } = useDeliveryTracking();
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState<ScheduleStatusFilter>('ALL');
   const [viewMode, setViewMode] = useState<ScheduleViewMode>('gantt');
+  const [selectedTrackingOrderId, setSelectedTrackingOrderId] = useState<string | null>(null);
 
   const currentModel = models.find((model) => model.id === selectedModelId) || models[0];
   const days = useMemo(() => buildScheduleWindow(new Date(), 14, locale), [locale]);
@@ -80,6 +85,8 @@ export function SchedulePage() {
         />
       ) : (
         <>
+          <DeliveryTrackingSummaryPanel onOpen={setSelectedTrackingOrderId} />
+
           <ScheduleFilters
             models={models}
             selectedModelId={currentModel.id}
@@ -154,7 +161,15 @@ export function SchedulePage() {
             }}
             onOpenDevice={(deviceId) => openDeviceDetail(deviceId)}
             onOpenOrder={(orderId) => openAllocationModal(orderId)}
+            onOpenTracking={setSelectedTrackingOrderId}
+            trackingByOrderId={trackingByOrderId}
           />
+          {selectedTrackingOrderId && (
+            <DeliveryTrackingDrawer
+              orderId={selectedTrackingOrderId}
+              onClose={() => setSelectedTrackingOrderId(null)}
+            />
+          )}
         </>
       )}
     </div>

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { canAccessTab } from '../app/accessModel';
 import type { DeviceStatus } from '../types';
 import { useScheduleCenterCommands } from '../features/commands/ScheduleCenterCommandsContext';
 import { useScheduleCenterData } from '../features/data/ScheduleCenterDataContext';
@@ -25,6 +26,7 @@ export function useApp() {
   const data = useScheduleCenterData();
   const workspace = useWorkspace();
   const commands = useScheduleCenterCommands();
+  const canAccessOperations = canAccessTab(permission.permissions, 'operations');
 
   const login = async (params: LoginParams) => {
     await session.login(params);
@@ -65,7 +67,7 @@ export function useApp() {
       || permission.permissionError
       || data.dataError,
     authRequired: session.authRequired,
-    accessDenied: permission.accessDenied,
+    accessDenied: permission.accessDenied && !canAccessOperations,
     permissions: permission.permissions,
     hasPermission: permission.hasPermission,
     xianyuConfig: data.xianyuConfig,

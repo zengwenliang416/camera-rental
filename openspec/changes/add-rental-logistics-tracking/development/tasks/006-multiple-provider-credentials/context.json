@@ -1,0 +1,46 @@
+{
+  "task_id": "006-multiple-provider-credentials",
+  "goal": "Tenant administrators manage multiple encrypted Kuaidi100 credentials and each Delivery keeps a stable usable credential assignment.",
+  "must_read": [
+    "openspec/changes/add-rental-logistics-tracking/development/tasks/006-multiple-provider-credentials/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-rental-logistics-tracking/requirements.md",
+    "openspec/changes/add-rental-logistics-tracking/acceptance.md",
+    "openspec/changes/add-rental-logistics-tracking/spec-map.json",
+    "openspec/changes/add-rental-logistics-tracking/component-impact-map.json",
+    "openspec/changes/add-rental-logistics-tracking/design.md",
+    "openspec/changes/add-rental-logistics-tracking/prototype/handoff.md",
+    "openspec/changes/add-rental-logistics-tracking/prototype/decision.json",
+    "openspec/changes/add-rental-logistics-tracking/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-schedule-center",
+    "docs/decisions",
+    "openspec/changes/add-rental-logistics-tracking"
+  ],
+  "test_paths": [
+    "tests/006-multiple-provider-credentials/**"
+  ],
+  "non_goals": [
+    "Do not configure production credentials, deploy, or call the real Provider.",
+    "Do not implement automatic quota failover or duplicate existing Provider infrastructure."
+  ],
+  "expected_evidence": [
+    "Stable credential selection and unusable-credential fallback tests",
+    "Tenant isolation and encrypted-field tests",
+    "Masked multi-credential operations API and UI tests",
+    "Fresh and legacy-upgrade MySQL migration evidence",
+    "Reuse and duplication review"
+  ],
+  "unsafe_assumptions": [
+    "Do not assume one tenant has only one credential.",
+    "Do not assume a bound credential remains enabled or exists forever.",
+    "Do not assume a credential ID is safe without a tenant-scoped lookup."
+  ],
+  "stop_condition": "Stop if credentials leak, tenant scope is bypassed, or Provider execution changes transaction boundaries."
+}

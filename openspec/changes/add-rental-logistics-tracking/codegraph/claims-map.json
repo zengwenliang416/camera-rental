@@ -1,0 +1,172 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-07-31T15:06:00.681Z",
+  "active_change": "add-rental-logistics-tracking",
+  "claims": [
+    {
+      "id": "development:task-001-delivery-foundation",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-delivery-foundation",
+      "text": "From a local Delivery command through validation, persistence, device relation,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-logistics-tracking/development/tasks/001-delivery-foundation/brief.md",
+        "openspec/changes/add-rental-logistics-tracking/development/tasks/001-delivery-foundation/context.json"
+      ],
+      "expected_evidence": [
+        "Additive migration and rollback strategy",
+        "Focused domain and persistence tests",
+        "Forbidden Provider dependency and sensitive-output checks",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/sql/mysql/migrations",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+        "docs/decisions",
+        "openspec/changes/add-rental-logistics-tracking"
+      ],
+      "query_ids": [
+        "development:task-001-delivery-foundation:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-kuaidi100-workers",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-kuaidi100-workers",
+      "text": "From a pending Outbox or verified public callback through Provider conversion,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-logistics-tracking/development/tasks/002-kuaidi100-workers/brief.md",
+        "openspec/changes/add-rental-logistics-tracking/development/tasks/002-kuaidi100-workers/context.json"
+      ],
+      "expected_evidence": [
+        "Official contract references",
+        "MockWebServer subscription, query, and callback fixtures",
+        "Lease, retry, throttle, duplicate, and crash-recovery tests",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+        "openspec/changes/add-rental-logistics-tracking"
+      ],
+      "query_ids": [
+        "development:task-002-kuaidi100-workers:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-xianyu-shipment-delivery",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-xianyu-shipment-delivery",
+      "text": "Extend the existing shipment command from validated device and order through",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-logistics-tracking/development/tasks/003-xianyu-shipment-delivery/brief.md",
+        "openspec/changes/add-rental-logistics-tracking/development/tasks/003-xianyu-shipment-delivery/context.json"
+      ],
+      "expected_evidence": [
+        "Shipment transaction and idempotent replay tests",
+        "Mapping/config degradation tests",
+        "Assertion that Provider network calls are absent from shipment",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+        "openspec/changes/add-rental-logistics-tracking"
+      ],
+      "query_ids": [
+        "development:task-003-xianyu-shipment-delivery:evidence"
+      ]
+    },
+    {
+      "id": "development:task-004-schedule-tracking",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "004-schedule-tracking",
+      "text": "From the visible schedule order IDs through one batch summary request, shared",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-logistics-tracking/development/tasks/004-schedule-tracking/brief.md",
+        "openspec/changes/add-rental-logistics-tracking/development/tasks/004-schedule-tracking/context.json"
+      ],
+      "expected_evidence": [
+        "Backend batch/detail/refresh/risk tests",
+        "Frontend model, polling, drawer, state, theme, and locale tests",
+        "Type check and production build",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+        "camera-rental-schedule-center",
+        "openspec/changes/add-rental-logistics-tracking"
+      ],
+      "query_ids": [
+        "development:task-004-schedule-tracking:evidence"
+      ]
+    },
+    {
+      "id": "development:task-005-logistics-operations",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "005-logistics-operations",
+      "text": "From permission-controlled operations pages and commands through masked local",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-logistics-tracking/development/tasks/005-logistics-operations/brief.md",
+        "openspec/changes/add-rental-logistics-tracking/development/tasks/005-logistics-operations/context.json"
+      ],
+      "expected_evidence": [
+        "Permission and tenant isolation tests",
+        "Secret masking and safe error tests",
+        "Dry-run backfill, bounded cleanup, retry, and metrics tests",
+        "Frontend operations state tests and production build"
+      ],
+      "allowed_files": [
+        "camera-rental-server/sql/mysql/migrations",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+        "camera-rental-schedule-center",
+        "openspec/changes/add-rental-logistics-tracking"
+      ],
+      "query_ids": [
+        "development:task-005-logistics-operations:evidence"
+      ]
+    },
+    {
+      "id": "development:task-006-multiple-provider-credentials",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "006-multiple-provider-credentials",
+      "text": "From masked credential CRUD in the existing logistics operations page through",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-logistics-tracking/development/tasks/006-multiple-provider-credentials/brief.md",
+        "openspec/changes/add-rental-logistics-tracking/development/tasks/006-multiple-provider-credentials/context.json"
+      ],
+      "expected_evidence": [
+        "Stable credential selection and unusable-credential fallback tests",
+        "Tenant isolation and encrypted-field tests",
+        "Masked multi-credential operations API and UI tests",
+        "Fresh and legacy-upgrade MySQL migration evidence",
+        "Reuse and duplication review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/sql/mysql/migrations",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+        "camera-rental-schedule-center",
+        "docs/decisions",
+        "openspec/changes/add-rental-logistics-tracking"
+      ],
+      "query_ids": [
+        "development:task-006-multiple-provider-credentials:evidence"
+      ]
+    }
+  ]
+}

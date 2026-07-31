@@ -1,0 +1,97 @@
+{
+  "schema": "specnav.codegraph.evidence_query_plan.v1",
+  "generated_at": "2026-07-31T15:06:00.682Z",
+  "active_change": "add-rental-logistics-tracking",
+  "queries": [
+    {
+      "id": "development:task-001-delivery-foundation:evidence",
+      "claim_id": "development:task-001-delivery-foundation",
+      "stage": "development",
+      "task_id": "001-delivery-foundation",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"From a local Delivery command through validation, persistence, device relation,\" in change \"add-rental-logistics-tracking\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-001-delivery-foundation --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-002-kuaidi100-workers:evidence",
+      "claim_id": "development:task-002-kuaidi100-workers",
+      "stage": "development",
+      "task_id": "002-kuaidi100-workers",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"From a pending Outbox or verified public callback through Provider conversion,\" in change \"add-rental-logistics-tracking\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-002-kuaidi100-workers --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-003-xianyu-shipment-delivery:evidence",
+      "claim_id": "development:task-003-xianyu-shipment-delivery",
+      "stage": "development",
+      "task_id": "003-xianyu-shipment-delivery",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Extend the existing shipment command from validated device and order through\" in change \"add-rental-logistics-tracking\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-003-xianyu-shipment-delivery --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-004-schedule-tracking:evidence",
+      "claim_id": "development:task-004-schedule-tracking",
+      "stage": "development",
+      "task_id": "004-schedule-tracking",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"From the visible schedule order IDs through one batch summary request, shared\" in change \"add-rental-logistics-tracking\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-004-schedule-tracking --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-005-logistics-operations:evidence",
+      "claim_id": "development:task-005-logistics-operations",
+      "stage": "development",
+      "task_id": "005-logistics-operations",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"From permission-controlled operations pages and commands through masked local\" in change \"add-rental-logistics-tracking\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-005-logistics-operations --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-006-multiple-provider-credentials:evidence",
+      "claim_id": "development:task-006-multiple-provider-credentials",
+      "stage": "development",
+      "task_id": "006-multiple-provider-credentials",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"From masked credential CRUD in the existing logistics operations page through\" in change \"add-rental-logistics-tracking\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-006-multiple-provider-credentials --query \"<query>\" --write --json"
+    }
+  ]
+}

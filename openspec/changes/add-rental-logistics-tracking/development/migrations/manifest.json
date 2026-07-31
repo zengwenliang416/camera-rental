@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "change_id": "add-rental-logistics-tracking",
+  "required": true,
+  "status": "ready",
+  "migrations": [
+    {
+      "id": "20260731_032_rental_delivery_tracking",
+      "kind": "ddl",
+      "order": 32,
+      "path": "development/migrations/20260731_032_rental_delivery_tracking.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260731_032_rental_delivery_tracking.sql",
+      "sha256": "4cb75cf9a2d8278e6a3d225af5cc24d58934716e709e6c25fdeeb2210d0ee36d"
+    }
+  ],
+  "rollback": [
+    "Stop logistics workers and roll back the application before schema rollback.",
+    "Drop idx_rental_shipment_delivery and delivery_id from rental_device_shipment only when no shipment references a Delivery.",
+    "Drop the eight rental logistics tables only when they contain no audit data that must be retained."
+  ],
+  "rollback_strategy": "Prefer application rollback while retaining additive logistics tables. Destructive schema rollback requires a separately approved data-retention review and a database backup; never drop Delivery, trace, Inbox, Outbox, mapping, or configuration data after production use without export.",
+  "verification": {
+    "commands": [
+      "shasum -a 256 camera-rental-server/sql/mysql/migrations/20260731_032_rental_delivery_tracking.sql",
+      "rg -c '^CREATE TABLE IF NOT EXISTS `rental_' camera-rental-server/sql/mysql/migrations/20260731_032_rental_delivery_tracking.sql",
+      "git diff --check"
+    ],
+    "evidence": [
+      "Observed production SQL sha256 4cb75cf9a2d8278e6a3d225af5cc24d58934716e709e6c25fdeeb2210d0ee36d.",
+      "Static table count is 8 and the shipment and Delivery credential alterations are guarded through information_schema.",
+      "Disposable MySQL 8.4.10 fresh-schema execution imported the baseline and migrations 001-032 successfully.",
+      "Disposable MySQL 8.4.10 legacy single-credential upgrade copied encrypted customer_code and api_key into one named default credential and applied migration 032 twice successfully.",
+      "Fresh and upgrade paths produced eight logistics tables, nullable delivery_id and provider_credential_id, and no duplicate migrated credential."
+    ]
+  },
+  "notes": [
+    "The production-path SQL is the deployment source; the development SQL is an executable mysql SOURCE wrapper.",
+    "The migration contains no credentials, customer payloads, provider calls, or historical backfill.",
+    "Provider configuration rows are not seeded and all switches remain disabled by default.",
+    "Pre-release single-credential rows are copied without decryption and are not automatically enabled beyond their prior state."
+  ]
+}

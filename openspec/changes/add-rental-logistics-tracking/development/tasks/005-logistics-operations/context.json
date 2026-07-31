@@ -1,0 +1,42 @@
+{
+  "task_id": "005-logistics-operations",
+  "goal": "Tenant administrators can safely operate logistics configuration, mappings, failures, maintenance, and metrics.",
+  "must_read": [
+    "openspec/changes/add-rental-logistics-tracking/development/tasks/005-logistics-operations/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-rental-logistics-tracking/requirements.md",
+    "openspec/changes/add-rental-logistics-tracking/acceptance.md",
+    "openspec/changes/add-rental-logistics-tracking/spec-map.json",
+    "openspec/changes/add-rental-logistics-tracking/component-impact-map.json",
+    "openspec/changes/add-rental-logistics-tracking/prototype/handoff.md",
+    "openspec/changes/add-rental-logistics-tracking/prototype/decision.json",
+    "openspec/changes/add-rental-logistics-tracking/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-schedule-center",
+    "openspec/changes/add-rental-logistics-tracking"
+  ],
+  "test_paths": [
+    "tests/005-logistics-operations/**"
+  ],
+  "non_goals": [
+    "Do not configure production credentials, deploy, or auto-subscribe history.",
+    "Do not delete Delivery, shipment, order, or active audit history."
+  ],
+  "expected_evidence": [
+    "Permission and tenant isolation tests",
+    "Secret masking and safe error tests",
+    "Dry-run backfill, bounded cleanup, retry, and metrics tests",
+    "Frontend operations state tests and production build"
+  ],
+  "unsafe_assumptions": [
+    "Do not assume verification enables Provider features.",
+    "Do not assume historical shipments have complete relationships."
+  ],
+  "stop_condition": "Stop if an operation exposes secrets, performs unbounded maintenance, or mutates business history."
+}

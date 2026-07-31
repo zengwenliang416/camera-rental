@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "component cohesion",
+      "limit": "one user-facing responsibility per shared component"
+    },
+    {
+      "area": "coupling",
+      "limit": "no page-specific imports inside shared components"
+    },
+    {
+      "area": "source size",
+      "limit": "extract when a new or materially changed source file reaches 450 physical lines"
+    },
+    {
+      "area": "provider boundary",
+      "limit": "zero Kuaidi100 DTO or SDK types outside integration.logistics.kuaidi100"
+    },
+    {
+      "area": "network transactions",
+      "limit": "zero Provider network calls inside shipment, Inbox persistence, or snapshot transactions"
+    }
+  ]
+}

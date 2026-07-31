@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "planning_status": "ready",
+  "tasks": [
+    {
+      "task_id": "001-delivery-foundation",
+      "depends_on": [],
+      "outcome": "Tenant-safe physical packages, relations, snapshots, mappings, config, Inbox, and Outbox persist locally."
+    },
+    {
+      "task_id": "002-kuaidi100-workers",
+      "depends_on": [
+        "001-delivery-foundation"
+      ],
+      "outcome": "Mock-verifiable Provider subscription, query, callback, and bounded workers advance local tracking."
+    },
+    {
+      "task_id": "003-xianyu-shipment-delivery",
+      "depends_on": [
+        "001-delivery-foundation",
+        "002-kuaidi100-workers"
+      ],
+      "outcome": "Successful Xianyu shipment atomically creates Delivery state and post-commit tasks."
+    },
+    {
+      "task_id": "004-schedule-tracking",
+      "depends_on": [
+        "001-delivery-foundation",
+        "003-xianyu-shipment-delivery"
+      ],
+      "outcome": "Schedule operators see local summaries, complete traces, refresh results, and risks."
+    },
+    {
+      "task_id": "005-logistics-operations",
+      "depends_on": [
+        "002-kuaidi100-workers",
+        "004-schedule-tracking"
+      ],
+      "outcome": "Tenant administrators operate configuration, mappings, failures, reconcile, backfill, cleanup, and metrics."
+    },
+    {
+      "task_id": "006-multiple-provider-credentials",
+      "depends_on": [
+        "005-logistics-operations"
+      ],
+      "outcome": "Tenant administrators manage multiple encrypted Kuaidi100 credentials and each Delivery keeps a stable usable credential assignment."
+    }
+  ]
+}

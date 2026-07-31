@@ -1,0 +1,26 @@
+{
+  "schema": "specnav.codegraph.claims_report.v1",
+  "generated_at": "2026-07-31T15:14:12.141Z",
+  "active_change": "add-rental-logistics-tracking",
+  "claims_file": "openspec/changes/add-rental-logistics-tracking/codegraph/claims-map.json",
+  "evidence_index": "openspec/changes/add-rental-logistics-tracking/codegraph/evidence-index.json",
+  "claims_count": 6,
+  "verified_claims": [],
+  "unverified_claims": [
+    "development:task-001-delivery-foundation",
+    "development:task-002-kuaidi100-workers",
+    "development:task-003-xianyu-shipment-delivery",
+    "development:task-004-schedule-tracking",
+    "development:task-005-logistics-operations",
+    "development:task-006-multiple-provider-credentials"
+  ],
+  "blockers": [],
+  "warnings": [
+    "codegraph:claim-unverified:development:task-001-delivery-foundation",
+    "codegraph:claim-unverified:development:task-002-kuaidi100-workers",
+    "codegraph:claim-unverified:development:task-003-xianyu-shipment-delivery",
+    "codegraph:claim-unverified:development:task-004-schedule-tracking",
+    "codegraph:claim-unverified:development:task-005-logistics-operations",
+    "codegraph:claim-unverified:development:task-006-multiple-provider-credentials"
+  ]
+}

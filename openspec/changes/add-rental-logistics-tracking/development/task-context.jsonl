@@ -1,0 +1,12 @@
+{"task_id":"001-delivery-foundation","status":"planned","source":"approved-prototype","note":"Create tenant-safe package persistence and provider-neutral local services before external integration."}
+{"task_id":"002-kuaidi100-workers","status":"planned","source":"approved-prototype","note":"Implement Provider adapter, callback verification, leases, retry, throttle, and mock-only tests."}
+{"task_id":"003-xianyu-shipment-delivery","status":"planned","source":"approved-prototype","note":"Extend successful shipment transaction with Delivery relations and post-commit tasks."}
+{"task_id":"004-schedule-tracking","status":"planned","source":"approved-prototype","note":"Implement local batch summary, detail, refresh, risk, responsive UI, theme, and locale behavior."}
+{"task_id":"005-logistics-operations","status":"planned","source":"approved-prototype","note":"Implement tenant operations for config, mapping, failures, reconcile, backfill, cleanup, and metrics."}
+{"task_id":"001-delivery-foundation","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet created; fill brief.md and context.json before development entry can pass."}
+{"task_id":"002-kuaidi100-workers","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet created; fill brief.md and context.json before development entry can pass."}
+{"task_id":"003-xianyu-shipment-delivery","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet created; fill brief.md and context.json before development entry can pass."}
+{"task_id":"004-schedule-tracking","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet created; fill brief.md and context.json before development entry can pass."}
+{"task_id":"005-logistics-operations","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet created; fill brief.md and context.json before development entry can pass."}
+{"task_id":"006-multiple-provider-credentials","status":"planned","source":"user-approved-requirement","note":"Split Provider common configuration from multiple encrypted credential pairs and keep a stable tenant-safe Delivery credential assignment."}
+{"task_id":"006-multiple-provider-credentials","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet created with multi-credential behavior, migration compatibility, reuse constraints, and focused validation."}

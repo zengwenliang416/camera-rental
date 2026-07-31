@@ -1,0 +1,41 @@
+{
+  "task_id": "004-schedule-tracking",
+  "goal": "Schedule operators can view local summaries, complete traces, refresh results, and logistics risks.",
+  "must_read": [
+    "openspec/changes/add-rental-logistics-tracking/development/tasks/004-schedule-tracking/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-rental-logistics-tracking/requirements.md",
+    "openspec/changes/add-rental-logistics-tracking/acceptance.md",
+    "openspec/changes/add-rental-logistics-tracking/spec-map.json",
+    "openspec/changes/add-rental-logistics-tracking/component-impact-map.json",
+    "openspec/changes/add-rental-logistics-tracking/prototype/handoff.md",
+    "openspec/changes/add-rental-logistics-tracking/prototype/decision.json",
+    "openspec/changes/add-rental-logistics-tracking/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-schedule-center",
+    "openspec/changes/add-rental-logistics-tracking"
+  ],
+  "test_paths": [
+    "tests/004-schedule-tracking/**"
+  ],
+  "non_goals": [
+    "Do not add SSE, direct Provider calls, PII, or automatic device release.",
+    "Do not duplicate complete tracking data inside schedule blocks."
+  ],
+  "expected_evidence": [
+    "Backend batch/detail/refresh/risk tests",
+    "Frontend model, polling, drawer, state, theme, and locale tests",
+    "Type check and production build",
+    "Task report, spec review, and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Do not assume all orders have packages or details load in order.",
+    "Do not infer Provider status, throttle, risk, or device state in the browser."
+  ],
+  "stop_condition": "Stop if UI needs raw Provider data, PII, direct Provider access, or authoritative backend logic."
+}

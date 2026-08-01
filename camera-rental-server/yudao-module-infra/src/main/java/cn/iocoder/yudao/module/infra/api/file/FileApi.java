@@ -1,5 +1,7 @@
 package cn.iocoder.yudao.module.infra.api.file;
 
+import cn.iocoder.yudao.module.infra.api.file.dto.FileConfirmedUploadRespDTO;
+import cn.iocoder.yudao.module.infra.api.file.dto.FilePresignedUploadRespDTO;
 import jakarta.validation.constraints.NotEmpty;
 
 /**
@@ -51,5 +53,19 @@ public interface FileApi {
      */
     String presignGetUrl(@NotEmpty(message = "URL 不能为空") String url,
                          Integer expirationSeconds);
+
+    FilePresignedUploadRespDTO presignPutUrl(String name, String directory);
+
+    FilePresignedUploadRespDTO presignPutUrl(String name, String directory,
+                                             Integer expirationSeconds);
+
+    FileConfirmedUploadRespDTO confirmPresignedUpload(Long configId, String path, String name,
+                                                      String expectedContentType, long maxSize);
+
+    String presignGetUrlById(Long fileId, Integer expirationSeconds);
+
+    void deleteFile(Long fileId);
+
+    void deleteFile(Long configId, String path);
 
 }

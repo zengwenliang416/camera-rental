@@ -49,4 +49,11 @@ public interface ErrorCodeConstants {
     ErrorCode RENTAL_MANUAL_REVIEW_PREREQUISITES_UNRESOLVED = new ErrorCode(1_040_003_002,
             "人工复核前置条件仍未解决：{}");
 
+    // ========== 客户退回登记 1-040-004-000 ==========
+    ErrorCode RETURN_REGISTRATION_NOT_AVAILABLE = new ErrorCode(1_040_004_000, "退回登记链接不可用");
+    ErrorCode RETURN_REGISTRATION_ORDER_INVALID = new ErrorCode(1_040_004_001, "退回登记订单不匹配");
+    ErrorCode RETURN_REGISTRATION_STATUS_INVALID = new ErrorCode(1_040_004_002, "当前登记状态不允许此操作");
+    ErrorCode RETURN_REGISTRATION_ATTACHMENT_INVALID = new ErrorCode(1_040_004_003, "退回登记附件无效：{}");
+    ErrorCode RETURN_REGISTRATION_SUBMISSION_INVALID = new ErrorCode(1_040_004_004, "退回登记信息无效：{}");
+
 }

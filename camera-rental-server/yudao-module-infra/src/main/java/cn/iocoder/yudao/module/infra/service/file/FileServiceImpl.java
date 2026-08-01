@@ -148,12 +148,19 @@ public class FileServiceImpl implements FileService {
     @Override
     @SneakyThrows
     public FilePresignedUrlRespVO presignPutUrl(String name, String directory) {
+        return presignPutUrl(name, directory, null);
+    }
+
+    @Override
+    @SneakyThrows
+    public FilePresignedUrlRespVO presignPutUrl(String name, String directory,
+                                                Integer expirationSeconds) {
         // 1. 生成上传的 path，需要保证唯一
         String path = generateUploadPath(name, directory);
 
         // 2. 获取文件预签名地址
         FileClient fileClient = fileConfigService.getMasterFileClient();
-        String uploadUrl = fileClient.presignPutUrl(path);
+        String uploadUrl = fileClient.presignPutUrl(path, expirationSeconds);
         String visitUrl = fileClient.presignGetUrl(path, null);
         return new FilePresignedUrlRespVO().setConfigId(fileClient.getId())
                 .setPath(path).setUploadUrl(uploadUrl).setUrl(visitUrl);
@@ -198,6 +205,14 @@ public class FileServiceImpl implements FileService {
 
         // 2.2 删除记录
         fileMapper.deleteById(id);
+    }
+
+    @Override
+    public void deleteFile(Long configId, String path) throws Exception {
+        FilePathUtils.validatePath(path);
+        FileClient client = fileConfigService.getFileClient(configId);
+        Assert.notNull(client, "客户端({}) 不能为空", configId);
+        client.delete(path);
     }
 
     @Override

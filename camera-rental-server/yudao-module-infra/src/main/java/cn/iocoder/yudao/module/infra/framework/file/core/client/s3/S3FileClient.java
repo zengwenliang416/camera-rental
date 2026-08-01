@@ -106,9 +106,11 @@ public class S3FileClient extends AbstractFileClient<S3FileClientConfig> {
     }
 
     @Override
-    public String presignPutUrl(String path) {
+    public String presignPutUrl(String path, Integer expirationSeconds) {
+        Duration expiration = expirationSeconds != null
+                ? Duration.ofSeconds(expirationSeconds) : EXPIRATION_DEFAULT;
         return presigner.presignPutObject(PutObjectPresignRequest.builder()
-                .signatureDuration(EXPIRATION_DEFAULT)
+                .signatureDuration(expiration)
                 .putObjectRequest(b -> b.bucket(config.getBucket()).key(path)).build())
                 .url().toString();
     }

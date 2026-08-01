@@ -25,6 +25,7 @@ public class RentalDeliveryDO extends TenantBaseDO {
     @TableId
     private Long id;
     private Long rentalOrderId;
+    private Long channelOrderId;
     private String direction;
     private Integer packageSeq;
     private String sourceType;

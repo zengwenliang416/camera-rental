@@ -49,6 +49,17 @@ public interface FileClient {
      * @return 文件预签名地址
      */
     default String presignPutUrl(String path) {
+        return presignPutUrl(path, null);
+    }
+
+    /**
+     * 获得文件预签名地址，用于上传
+     *
+     * @param path 相对路径
+     * @param expirationSeconds 上传有效期，单位秒
+     * @return 文件预签名地址
+     */
+    default String presignPutUrl(String path, Integer expirationSeconds) {
         throw new UnsupportedOperationException("不支持的操作");
     }
 

@@ -15,6 +15,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMap
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
+import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
 import cn.iocoder.yudao.module.rental.enums.logistics.RentalDeliveryDirectionEnum;
 import cn.iocoder.yudao.module.rental.enums.logistics.RentalDeliveryOutboxEventTypeEnum;
 import org.junit.jupiter.api.AfterEach;
@@ -41,6 +42,7 @@ class RentalDeliveryServiceImplTest {
     private final RentalDeliveryMapper deliveryMapper = mock(RentalDeliveryMapper.class);
     private final RentalDeliveryDeviceRelMapper relationMapper = mock(RentalDeliveryDeviceRelMapper.class);
     private final RentalOrderMapper orderMapper = mock(RentalOrderMapper.class);
+    private final XianyuOrderMapper xianyuOrderMapper = mock(XianyuOrderMapper.class);
     private final RentalOrderItemMapper orderItemMapper = mock(RentalOrderItemMapper.class);
     private final RentalDeviceAssignmentMapper assignmentMapper = mock(RentalDeviceAssignmentMapper.class);
     private final RentalDeviceMapper deviceMapper = mock(RentalDeviceMapper.class);
@@ -49,7 +51,7 @@ class RentalDeliveryServiceImplTest {
             mock(RentalLogisticsProviderConfigService.class);
     private final RentalDeliveryOutboxService outboxService = mock(RentalDeliveryOutboxService.class);
     private final RentalDeliveryService service = new RentalDeliveryServiceImpl(deliveryMapper, relationMapper,
-            orderMapper, orderItemMapper, assignmentMapper, deviceMapper, mappingService, configService,
+            orderMapper, xianyuOrderMapper, orderItemMapper, assignmentMapper, deviceMapper, mappingService, configService,
             outboxService, new WaybillPrivacy());
 
     @BeforeEach
@@ -68,7 +70,7 @@ class RentalDeliveryServiceImplTest {
     }
 
     @Test
-    void createsLocalDeliveryWhenMappingIsMissingAndEnqueuesSafeTasks() {
+    void createsLocalDeliveryWhenMappingIsMissingWithoutProviderTasks() {
         stubValidRelations(40L);
         when(deliveryMapper.selectMaxPackageSeq(9L, 30L, "OUTBOUND")).thenReturn(0);
         doAnswer(invocation -> {
@@ -76,8 +78,7 @@ class RentalDeliveryServiceImplTest {
             delivery.setId(99L);
             return 1;
         }).when(deliveryMapper).insert(any(RentalDeliveryDO.class));
-        when(outboxService.listPendingEventTypes(99L))
-                .thenReturn(List.of("SUBSCRIBE", "INITIAL_QUERY"));
+        when(outboxService.listPendingEventTypes(99L)).thenReturn(List.of());
 
         RentalDeliveryResult result = service.createOrReuse(command(40L));
 
@@ -86,15 +87,12 @@ class RentalDeliveryServiceImplTest {
         assertEquals("MAPPING_REQUIRED", result.mappingStatus());
         assertEquals("MAPPING_REQUIRED", result.subscribeStatus());
         assertEquals("MAPPING_REQUIRED", result.reasonCode());
-        assertEquals(List.of("SUBSCRIBE", "INITIAL_QUERY"), result.pendingEventTypes());
+        assertEquals(List.of(), result.pendingEventTypes());
         ArgumentCaptor<RentalDeliveryDO> deliveryCaptor = ArgumentCaptor.forClass(RentalDeliveryDO.class);
         verify(deliveryMapper).insert(deliveryCaptor.capture());
         assertEquals("SF1234567890", deliveryCaptor.getValue().getNormalizedWaybillNo());
         verify(relationMapper).insert(any(RentalDeliveryDeviceRelDO.class));
-        verify(outboxService).enqueue(99L, RentalDeliveryOutboxEventTypeEnum.SUBSCRIBE, null,
-                "delivery tracking subscription");
-        verify(outboxService).enqueue(99L, RentalDeliveryOutboxEventTypeEnum.INITIAL_QUERY, null,
-                "delivery initial tracking query");
+        verify(outboxService, never()).enqueue(any(), any(), any(), any());
     }
 
     @Test
@@ -108,7 +106,7 @@ class RentalDeliveryServiceImplTest {
                 .queryStatus("READY")
                 .waybillNo("SF1234567890")
                 .build();
-        when(deliveryMapper.selectByBusinessKeyForUpdate(9L, 30L, "OUTBOUND", "SF",
+        when(deliveryMapper.selectByReferenceBusinessKeyForUpdate(9L, 30L, null, "OUTBOUND", "SF",
                 "SF1234567890")).thenReturn(existing);
         when(outboxService.listPendingEventTypes(99L)).thenReturn(List.of());
 

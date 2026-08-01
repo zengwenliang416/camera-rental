@@ -23,6 +23,22 @@ public interface RentalDeliveryMapper extends BaseMapperX<RentalDeliveryDO> {
                 .eq(RentalDeliveryDO::getNormalizedWaybillNo, normalizedWaybillNo));
     }
 
+    default RentalDeliveryDO selectByReferenceBusinessKeyForUpdate(
+            Long tenantId, Long rentalOrderId, Long channelOrderId, String direction,
+            String canonicalCarrierCode, String normalizedWaybillNo) {
+        LambdaQueryWrapper<RentalDeliveryDO> wrapper = new LambdaQueryWrapper<RentalDeliveryDO>()
+                .eq(RentalDeliveryDO::getTenantId, tenantId)
+                .eq(RentalDeliveryDO::getDirection, direction)
+                .eq(RentalDeliveryDO::getCanonicalCarrierCode, canonicalCarrierCode)
+                .eq(RentalDeliveryDO::getNormalizedWaybillNo, normalizedWaybillNo);
+        if (channelOrderId != null) {
+            wrapper.eq(RentalDeliveryDO::getChannelOrderId, channelOrderId);
+        } else {
+            wrapper.eq(RentalDeliveryDO::getRentalOrderId, rentalOrderId);
+        }
+        return selectOneForUpdate(wrapper);
+    }
+
     default RentalDeliveryDO selectByTenantIdAndIdForUpdate(Long tenantId, Long id) {
         return selectOneForUpdate(new LambdaQueryWrapper<RentalDeliveryDO>()
                 .eq(RentalDeliveryDO::getTenantId, tenantId)
@@ -67,4 +83,16 @@ public interface RentalDeliveryMapper extends BaseMapperX<RentalDeliveryDO> {
     Integer selectMaxPackageSeq(@Param("tenantId") Long tenantId,
                                 @Param("rentalOrderId") Long rentalOrderId,
                                 @Param("direction") String direction);
+
+    @Select("""
+            SELECT COALESCE(MAX(package_seq), 0)
+            FROM rental_delivery
+            WHERE tenant_id = #{tenantId}
+              AND channel_order_id = #{channelOrderId}
+              AND direction = #{direction}
+              AND deleted = b'0'
+            """)
+    Integer selectMaxChannelPackageSeq(@Param("tenantId") Long tenantId,
+                                       @Param("channelOrderId") Long channelOrderId,
+                                       @Param("direction") String direction);
 }

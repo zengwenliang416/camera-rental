@@ -45,6 +45,17 @@ public interface FileService {
      */
     FilePresignedUrlRespVO presignPutUrl(@NotEmpty(message = "文件名不能为空") String name,
                                          String directory);
+
+    /**
+     * 生成指定有效期的文件上传预签名地址。
+     *
+     * @param name 文件名
+     * @param directory 目录
+     * @param expirationSeconds 上传有效期，单位秒
+     * @return 预签名地址信息
+     */
+    FilePresignedUrlRespVO presignPutUrl(@NotEmpty(message = "文件名不能为空") String name,
+                                         String directory, Integer expirationSeconds);
     /**
      * 生成文件预签名地址信息，用于读取
      *
@@ -69,6 +80,8 @@ public interface FileService {
      * @param id 编号
      */
     void deleteFile(Long id) throws Exception;
+
+    void deleteFile(Long configId, String path) throws Exception;
 
     /**
      * 批量删除文件

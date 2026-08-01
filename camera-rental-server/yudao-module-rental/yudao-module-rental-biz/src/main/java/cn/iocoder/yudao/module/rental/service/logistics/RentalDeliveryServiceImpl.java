@@ -9,12 +9,14 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceAssignme
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderItemDO;
+import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.logistics.RentalDeliveryDeviceRelMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.logistics.RentalDeliveryMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
+import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
 import cn.iocoder.yudao.module.rental.enums.logistics.RentalDeliveryLifecycleStatusEnum;
 import cn.iocoder.yudao.module.rental.enums.logistics.RentalDeliveryOutboxEventTypeEnum;
 import cn.iocoder.yudao.module.rental.enums.logistics.RentalDeliveryQueryStatusEnum;
@@ -40,6 +42,7 @@ public class RentalDeliveryServiceImpl implements RentalDeliveryService {
     private final RentalDeliveryMapper deliveryMapper;
     private final RentalDeliveryDeviceRelMapper relationMapper;
     private final RentalOrderMapper orderMapper;
+    private final XianyuOrderMapper xianyuOrderMapper;
     private final RentalOrderItemMapper orderItemMapper;
     private final RentalDeviceAssignmentMapper assignmentMapper;
     private final RentalDeviceMapper deviceMapper;
@@ -51,6 +54,7 @@ public class RentalDeliveryServiceImpl implements RentalDeliveryService {
     public RentalDeliveryServiceImpl(RentalDeliveryMapper deliveryMapper,
                                      RentalDeliveryDeviceRelMapper relationMapper,
                                      RentalOrderMapper orderMapper,
+                                     XianyuOrderMapper xianyuOrderMapper,
                                      RentalOrderItemMapper orderItemMapper,
                                      RentalDeviceAssignmentMapper assignmentMapper,
                                      RentalDeviceMapper deviceMapper,
@@ -61,6 +65,7 @@ public class RentalDeliveryServiceImpl implements RentalDeliveryService {
         this.deliveryMapper = deliveryMapper;
         this.relationMapper = relationMapper;
         this.orderMapper = orderMapper;
+        this.xianyuOrderMapper = xianyuOrderMapper;
         this.orderItemMapper = orderItemMapper;
         this.assignmentMapper = assignmentMapper;
         this.deviceMapper = deviceMapper;
@@ -85,25 +90,39 @@ public class RentalDeliveryServiceImpl implements RentalDeliveryService {
     private RentalDeliveryResult createOrReuse(RentalDeliveryCreateCommand command, boolean enqueueProviderTasks) {
         validateCommand(command);
         Long tenantId = TenantContextHolder.getRequiredTenantId();
-        RentalOrderDO order = orderMapper.selectByIdForUpdate(command.rentalOrderId());
-        requireEntity(order, tenantId, "RENTAL_ORDER_NOT_FOUND");
+        if (command.rentalOrderId() != null) {
+            RentalOrderDO order = orderMapper.selectByIdForUpdate(command.rentalOrderId());
+            requireEntity(order, tenantId, "RENTAL_ORDER_NOT_FOUND");
+        }
+        if (command.channelOrderId() != null) {
+            XianyuOrderDO channelOrder = xianyuOrderMapper.selectById(command.channelOrderId());
+            requireEntity(channelOrder, tenantId, "CHANNEL_ORDER_NOT_FOUND");
+        }
 
         String normalizedWaybill = waybillPrivacy.normalize(command.waybillNo());
         RentalCarrierResolution carrier = carrierMappingService.resolve(
                 command.sourceType(), command.sourceCarrierCode());
         RentalLogisticsCarrierMappingDO mapping = carrier.mapping();
-        RentalDeliveryDO delivery = deliveryMapper.selectByBusinessKeyForUpdate(tenantId, command.rentalOrderId(),
+        RentalDeliveryDO delivery = deliveryMapper.selectByReferenceBusinessKeyForUpdate(
+                tenantId, command.rentalOrderId(), command.channelOrderId(),
                 command.direction().name(), carrier.canonicalCarrierCode(), normalizedWaybill);
         boolean created = delivery == null;
         if (created) {
             delivery = createDelivery(command, carrier, normalizedWaybill, tenantId);
+        } else if (delivery.getRentalOrderId() == null && command.rentalOrderId() != null) {
+            delivery.setRentalOrderId(command.rentalOrderId());
+            deliveryMapper.updateById(delivery);
         }
         bindDevices(delivery, command.devices(), tenantId);
         if (created && enqueueProviderTasks && !isTrackingPhoneRequired(delivery)) {
-            outboxService.enqueue(delivery.getId(), RentalDeliveryOutboxEventTypeEnum.SUBSCRIBE, null,
-                    "delivery tracking subscription");
-            outboxService.enqueue(delivery.getId(), RentalDeliveryOutboxEventTypeEnum.INITIAL_QUERY, null,
-                    "delivery initial tracking query");
+            if (RentalDeliverySubscribeStatusEnum.PENDING.name().equals(delivery.getSubscribeStatus())) {
+                outboxService.enqueue(delivery.getId(), RentalDeliveryOutboxEventTypeEnum.SUBSCRIBE, null,
+                        "delivery tracking subscription");
+            }
+            if (RentalDeliveryQueryStatusEnum.PENDING.name().equals(delivery.getQueryStatus())) {
+                outboxService.enqueue(delivery.getId(), RentalDeliveryOutboxEventTypeEnum.INITIAL_QUERY, null,
+                        "delivery initial tracking query");
+            }
         }
         return toResult(delivery, created);
     }
@@ -143,10 +162,13 @@ public class RentalDeliveryServiceImpl implements RentalDeliveryService {
                 : providerEnabled && Boolean.TRUE.equals(config.getQueryEnabled())
                 ? RentalDeliveryQueryStatusEnum.PENDING.name()
                 : RentalDeliveryQueryStatusEnum.PROVIDER_DISABLED.name();
-        Integer maxSeq = deliveryMapper.selectMaxPackageSeq(tenantId, command.rentalOrderId(),
-                command.direction().name());
+        Integer maxSeq = command.channelOrderId() == null
+                ? deliveryMapper.selectMaxPackageSeq(tenantId, command.rentalOrderId(), command.direction().name())
+                : deliveryMapper.selectMaxChannelPackageSeq(
+                        tenantId, command.channelOrderId(), command.direction().name());
         RentalDeliveryDO delivery = RentalDeliveryDO.builder()
                 .rentalOrderId(command.rentalOrderId())
+                .channelOrderId(command.channelOrderId())
                 .direction(command.direction().name())
                 .packageSeq((maxSeq == null ? 0 : maxSeq) + 1)
                 .sourceType(carrier.sourceType())
@@ -196,10 +218,6 @@ public class RentalDeliveryServiceImpl implements RentalDeliveryService {
         }
         if (!MAPPING_READY.equals(delivery.getMappingStatus())) {
             return delivery.getMappingStatus();
-        }
-        if (!RentalDeliverySubscribeStatusEnum.PENDING.name().equals(delivery.getSubscribeStatus())
-                && !RentalDeliverySubscribeStatusEnum.SUBSCRIBED.name().equals(delivery.getSubscribeStatus())) {
-            return delivery.getSubscribeStatus();
         }
         if (!RentalDeliveryQueryStatusEnum.PENDING.name().equals(delivery.getQueryStatus())
                 && !RentalDeliveryQueryStatusEnum.READY.name().equals(delivery.getQueryStatus())
@@ -260,9 +278,12 @@ public class RentalDeliveryServiceImpl implements RentalDeliveryService {
     }
 
     private void validateCommand(RentalDeliveryCreateCommand command) {
-        if (command == null || command.rentalOrderId() == null || command.direction() == null
+        if (command == null || (command.rentalOrderId() == null && command.channelOrderId() == null)
+                || command.direction() == null
                 || !StringUtils.hasText(command.sourceType()) || !StringUtils.hasText(command.sourceCarrierCode())
-                || !StringUtils.hasText(command.waybillNo()) || command.devices().isEmpty()) {
+                || !StringUtils.hasText(command.waybillNo())
+                || (command.rentalOrderId() != null && command.devices().isEmpty()
+                    && command.channelOrderId() == null)) {
             throw new RentalLogisticsException("DELIVERY_COMMAND_INVALID");
         }
     }

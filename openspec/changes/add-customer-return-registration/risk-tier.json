@@ -1,0 +1,25 @@
+{
+  "tier": "high-risk",
+  "source": "path-trigger",
+  "triggers": [
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-admin/src/api/rental"
+  ],
+  "lane": "full",
+  "escalation_threshold": 10,
+  "reason": "high-risk path triggers: camera-rental-server/sql/mysql/migrations, camera-rental-admin/src/api/rental",
+  "checked_paths": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-server/yudao-module-infra/yudao-module-infra-api",
+    "camera-rental-server/yudao-module-infra/src/main/java",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-web",
+    "camera-rental-admin/src/api/rental",
+    "camera-rental-admin/src/views/rental/return-registration",
+    "camera-rental-admin/src/locales",
+    "ops/github-deploy",
+    "ops/rustfs",
+    "openspec/changes/add-customer-return-registration"
+  ],
+  "generated_at": "2026-08-01T06:57:12.372Z"
+}

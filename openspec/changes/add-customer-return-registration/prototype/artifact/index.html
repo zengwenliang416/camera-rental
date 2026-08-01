@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f2f0ea">
+  <title>设备退回登记 · 捷租达</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="page-shell" data-specnav-project-shell="customer-return-service">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="捷租达首页">
+        <span class="brand-mark" aria-hidden="true">J</span>
+        <span>
+          <strong>捷租达</strong>
+          <small>设备退回服务</small>
+        </span>
+      </a>
+      <button class="help-button" type="button" data-toast="如需帮助，请联系发送链接给您的客服。">
+        <span aria-hidden="true">?</span> 帮助
+      </button>
+    </header>
+
+    <main class="layout" data-specnav-screen="customer-return-registration"
+      data-specnav-variant="warm-mobile-first-five-step-return-flow">
+      <aside class="context-panel">
+        <p class="kicker">RETURN CHECK-IN</p>
+        <h1>寄回前，花 2 分钟完成登记。</h1>
+        <p class="context-copy">
+          提前登记物流与设备信息，仓库收到包裹后可以更快核对、检测和完成归还。
+        </p>
+
+        <div class="order-ticket">
+          <span class="ticket-label">本次登记</span>
+          <strong>客户退回设备</strong>
+          <dl>
+            <div><dt>预计用时</dt><dd>约 2 分钟</dd></div>
+            <div><dt>需要准备</dt><dd>运单、SN、照片</dd></div>
+          </dl>
+        </div>
+
+        <ol class="desktop-steps" aria-label="填写步骤"></ol>
+
+        <div class="privacy-note">
+          <span aria-hidden="true">⌁</span>
+          <p><strong>仅用于本次归还</strong>照片和物流信息只用于设备核验与售后处理。</p>
+        </div>
+      </aside>
+
+      <section class="form-shell" data-specnav-component="return-flow-shell" data-specnav-state="interactive">
+        <div class="prototype-notice">
+          <span>演示原型</span>
+          当前不会上传照片或写入数据库
+        </div>
+
+        <div class="mobile-progress">
+          <div class="mobile-progress__copy">
+            <span id="mobile-step-label">第 1 步，共 5 步</span>
+            <strong id="mobile-step-title">确认订单</strong>
+          </div>
+          <div class="progress-track"><span id="progress-fill"></span></div>
+        </div>
+
+        <form id="return-form" novalidate>
+          <section class="form-step is-active" data-step="0">
+            <div class="section-heading">
+              <span class="step-number">01</span>
+              <div>
+                <p class="kicker">ORDER</p>
+                <h2>先确认是哪笔订单</h2>
+                <p>请输入租赁订单号，后续系统会校验订单中的设备。</p>
+              </div>
+            </div>
+
+            <label class="field">
+              <span class="field-label">订单号 <em>必填</em></span>
+              <input id="order-no" name="orderNo" type="text" autocomplete="off"
+                placeholder="例如 CR20260801-DEMO" value="CR20260801-DEMO">
+              <small class="field-hint">可在订单详情或客服发送的信息中找到。</small>
+              <span class="field-error"></span>
+            </label>
+
+            <div class="linked-order">
+              <span class="linked-order__icon" aria-hidden="true">✓</span>
+              <div>
+                <strong>分享链接会绑定指定订单</strong>
+                <p>正式版本中，链接和订单不匹配时将无法提交。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="form-step" data-step="1">
+            <div class="section-heading">
+              <span class="step-number">02</span>
+              <div>
+                <p class="kicker">LOGISTICS</p>
+                <h2>填写寄回物流</h2>
+                <p>请在快递揽收后填写，避免输入尚未生效的运单号。</p>
+              </div>
+            </div>
+
+            <div class="field-grid">
+              <label class="field">
+                <span class="field-label">快递公司 <em>必填</em></span>
+                <span class="select-wrap">
+                  <select id="carrier" name="carrier">
+                    <option value="">请选择快递公司</option>
+                    <option>顺丰速运</option>
+                    <option>京东物流</option>
+                    <option>中通快递</option>
+                    <option>圆通速递</option>
+                    <option>申通快递</option>
+                    <option>韵达快递</option>
+                    <option>德邦快递</option>
+                    <option>其他</option>
+                  </select>
+                </span>
+                <span class="field-error"></span>
+              </label>
+
+              <label class="field">
+                <span class="field-label">寄出日期 <em>必填</em></span>
+                <input id="shipped-date" name="shippedDate" type="date">
+                <span class="field-error"></span>
+              </label>
+            </div>
+
+            <label class="field">
+              <span class="field-label">物流单号 <em>必填</em></span>
+              <div class="input-action">
+                <input id="tracking-no" name="trackingNo" type="text" inputmode="text"
+                  autocomplete="off" placeholder="输入或粘贴物流单号">
+                <button type="button" data-fill-tracking>填入演示</button>
+              </div>
+              <small class="field-hint">请勿填写下单编号或预约取件编号。</small>
+              <span class="field-error"></span>
+            </label>
+          </section>
+
+          <section class="form-step" data-step="2">
+            <div class="section-heading">
+              <span class="step-number">03</span>
+              <div>
+                <p class="kicker">DEVICES</p>
+                <h2>登记设备序列号</h2>
+                <p>请填写设备标签上的短编码，格式类似 A6-08-4L5H。</p>
+              </div>
+            </div>
+
+            <div id="device-list" class="device-list"></div>
+            <button id="add-device" class="add-button" type="button">
+              <span aria-hidden="true">＋</span> 添加另一台设备
+            </button>
+
+            <div class="serial-tip">
+              <div class="serial-illustration" aria-hidden="true">
+                <span>A6-08-4L5H</span>
+              </div>
+              <p><strong>请按标签原样填写</strong>系统会自动转为大写，但字母、数字和连字符均需完整保留。</p>
+            </div>
+          </section>
+
+          <section class="form-step" data-step="3">
+            <div class="section-heading">
+              <span class="step-number">04</span>
+              <div>
+                <p class="kicker">PHOTOS</p>
+                <h2>拍摄归还凭证</h2>
+                <p>建议在封箱前拍摄，画面清晰、光线充足，不使用滤镜。</p>
+              </div>
+            </div>
+
+            <div class="photo-checklist">
+              <article class="photo-card" data-photo-card="exterior">
+                <div class="photo-card__top">
+                  <span class="photo-icon" aria-hidden="true">▣</span>
+                  <div><strong>设备外观</strong><p>正面、背面和易磕碰位置</p></div>
+                  <span class="required-pill">必拍</span>
+                </div>
+                <div class="photo-previews"></div>
+                <label class="upload-button">
+                  <input type="file" accept="image/*" capture="environment" multiple data-photo-input="exterior">
+                  <span aria-hidden="true">＋</span> 拍照或选择图片
+                </label>
+                <span class="photo-error"></span>
+              </article>
+
+              <article class="photo-card" data-photo-card="serial">
+                <div class="photo-card__top">
+                  <span class="photo-icon" aria-hidden="true">⌗</span>
+                  <div><strong>SN 序列号</strong><p>铭牌完整入镜，文字清楚可读</p></div>
+                  <span class="required-pill">必拍</span>
+                </div>
+                <div class="photo-previews"></div>
+                <label class="upload-button">
+                  <input type="file" accept="image/*" capture="environment" multiple data-photo-input="serial">
+                  <span aria-hidden="true">＋</span> 拍照或选择图片
+                </label>
+                <span class="photo-error"></span>
+              </article>
+
+              <article class="photo-card" data-photo-card="package">
+                <div class="photo-card__top">
+                  <span class="photo-icon" aria-hidden="true">□</span>
+                  <div><strong>打包状态</strong><p>缓冲材料、配件和封箱后的包裹</p></div>
+                  <span class="optional-pill">选拍</span>
+                </div>
+                <div class="photo-previews"></div>
+                <label class="upload-button">
+                  <input type="file" accept="image/*" capture="environment" multiple data-photo-input="package">
+                  <span aria-hidden="true">＋</span> 拍照或选择图片
+                </label>
+                <span class="photo-error"></span>
+              </article>
+            </div>
+
+            <fieldset class="issue-fieldset">
+              <legend>设备是否有异常？</legend>
+              <div class="segmented">
+                <label><input type="radio" name="hasIssue" value="no" checked><span>没有异常</span></label>
+                <label><input type="radio" name="hasIssue" value="yes"><span>有异常或损伤</span></label>
+              </div>
+              <label class="field issue-description is-hidden">
+                <span class="field-label">情况说明</span>
+                <textarea id="issue-description" rows="4" maxlength="500"
+                  placeholder="请描述出现问题的设备、部位和情况"></textarea>
+                <small class="field-hint"><span id="issue-count">0</span>/500</small>
+              </label>
+            </fieldset>
+          </section>
+
+          <section class="form-step" data-step="4">
+            <div class="section-heading">
+              <span class="step-number">05</span>
+              <div>
+                <p class="kicker">REVIEW</p>
+                <h2>最后核对一次</h2>
+                <p>提交后仍可联系客户服务补充说明，但运单号修改需要人工确认。</p>
+              </div>
+            </div>
+
+            <div id="review-content" class="review-content"></div>
+            <label class="agreement">
+              <input id="agreement" type="checkbox">
+              <span>我确认以上信息和照片真实，设备已按要求妥善包装。</span>
+            </label>
+            <span id="agreement-error" class="standalone-error"></span>
+          </section>
+
+          <div class="form-actions">
+            <button id="back-button" class="button button--secondary" type="button">上一步</button>
+            <button id="next-button" class="button button--primary" type="button">
+              <span>下一步</span><span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </form>
+
+        <section id="success-screen" class="success-screen" hidden>
+          <div class="success-mark" aria-hidden="true">✓</div>
+          <p class="kicker">SUBMITTED</p>
+          <h2>退回信息已登记</h2>
+          <p>仓库收到包裹后会按登记信息核验设备。请保留物流底单，直至订单归还完成。</p>
+          <div class="receipt">
+            <div><span>登记编号</span><strong id="receipt-no">RT-DEMO</strong></div>
+            <div><span>物流单号</span><strong id="receipt-tracking">—</strong></div>
+            <div><span>当前状态</span><strong class="status-text">等待仓库收货</strong></div>
+          </div>
+          <button class="button button--secondary button--full" type="button" data-reset-demo>重新体验原型</button>
+        </section>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+  <script src="./app.js"></script>
+</body>
+</html>

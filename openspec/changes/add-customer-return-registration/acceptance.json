@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "change_id": "add-customer-return-registration",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "An operator can issue and revoke an order-bound customer return link.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A2",
+      "statement": "A customer can submit return logistics, assigned device serials, required photos, and optional packaging photos through the public link.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A3",
+      "statement": "Files are stored in private RustFS through the existing infra_file boundary and cannot be attached across registrations or tenants.",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A4",
+      "statement": "A valid submission creates or reuses one RETURN delivery without changing device, order, inspection, or schedule lifecycle state.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A5",
+      "statement": "The admin can page, inspect, and review return registrations with permission and tenant isolation.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    }
+  ]
+}

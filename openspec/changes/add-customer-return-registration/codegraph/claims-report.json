@@ -1,0 +1,12 @@
+{
+  "schema": "specnav.codegraph.claims_report.v1",
+  "generated_at": "2026-08-01T06:54:35.498Z",
+  "active_change": "add-customer-return-registration",
+  "claims_file": "openspec/changes/add-customer-return-registration/codegraph/claims-map.json",
+  "evidence_index": "openspec/changes/add-customer-return-registration/codegraph/evidence-index.json",
+  "claims_count": 0,
+  "verified_claims": [],
+  "unverified_claims": [],
+  "blockers": [],
+  "warnings": []
+}

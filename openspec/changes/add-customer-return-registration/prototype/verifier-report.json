@@ -1,0 +1,48 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "artifact/index.html",
+  "project_fidelity": {
+    "status": "green",
+    "inventory": "visual-inventory.json",
+    "shell_checked": true,
+    "generic_shell_detected": false,
+    "notes": [
+      "The page is a dedicated customer service flow in the existing Nuxt web product rather than an admin dashboard.",
+      "The approved brand, five-step structure, form density and mobile sticky actions are preserved."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [
+      "1440x980 desktop",
+      "390x844 mobile"
+    ],
+    "theme_modes": [
+      "light"
+    ],
+    "locales": [
+      "zh-CN"
+    ],
+    "states": [
+      "interactive",
+      "validation error",
+      "photo preview",
+      "optional packaging omitted",
+      "review",
+      "success"
+    ]
+  },
+  "checks": [
+    "JavaScript syntax check passed.",
+    "All prototype assets returned HTTP 200 from the local preview.",
+    "Desktop and mobile document widths matched their viewports without horizontal overflow.",
+    "Lowercase and full-width dash serial input normalized to A6-08-4L5H.",
+    "The flow advanced with required exterior and serial-label photos while packaging remained omitted."
+  ],
+  "evidence": [
+    "runs/ui-design/customer-return-intake/quality-report.md",
+    "runs/ui-design/customer-return-intake/code/prototype/app.js",
+    "User explicitly approved the prototype and requested full development on 2026-08-01."
+  ],
+  "blockers": []
+}

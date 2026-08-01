@@ -1,0 +1,97 @@
+{
+  "schema": "specnav.prototype.visualInventory.v1",
+  "version": "1",
+  "discovery_status": "complete",
+  "source_project": "camera-rental customer return intake",
+  "evidence": {
+    "screenshots": [
+      "runs/ui-design/customer-return-intake/quality-report.md",
+      "codex-clipboard-343ccec2-06fe-4c4a-b353-1fd6d7405382.png"
+    ],
+    "routes": [
+      "http://127.0.0.1:4182/",
+      "camera-rental-web/app/app.vue"
+    ],
+    "design_specs": [
+      "openspec/specs/ui-design/design.md",
+      "runs/ui-design/customer-return-intake/project-DESIGN.md"
+    ],
+    "component_sources": [
+      "runs/ui-design/customer-return-intake/code/prototype/index.html",
+      "openspec/changes/add-customer-return-registration/component-impact-map.json"
+    ],
+    "codegraph_claims": []
+  },
+  "project_shell": {
+    "source": "Dedicated public service page in the existing Nuxt customer web runtime.",
+    "required_elements": [
+      "Jiezuda brand header",
+      "return-service context panel",
+      "five-step progress",
+      "single task form region",
+      "mobile sticky navigation"
+    ],
+    "omitted_elements": [
+      "admin navigation",
+      "customer account navigation",
+      "commerce catalog navigation"
+    ],
+    "theme_policy": "Production supports light and dark; the approved prototype demonstrates the light visual direction.",
+    "i18n_policy": "Production supports zh-CN and en; the approved prototype demonstrates the default zh-CN copy."
+  },
+  "business_surface": {
+    "screens": [
+      "customer-return-registration"
+    ],
+    "fields": [
+      "bound order confirmation",
+      "carrier",
+      "return shipped date",
+      "waybill number",
+      "one to eight device serial numbers",
+      "device exterior photos",
+      "serial-label photos",
+      "optional packaging photos",
+      "optional issue description"
+    ],
+    "actions": [
+      "continue",
+      "go back",
+      "add device",
+      "remove device",
+      "capture or select photo",
+      "remove photo",
+      "confirm submission"
+    ],
+    "states": [
+      "interactive",
+      "validation error",
+      "photo preview",
+      "review",
+      "success"
+    ]
+  },
+  "verification_matrix": {
+    "viewports": [
+      "1440x980 desktop",
+      "390x844 mobile"
+    ],
+    "theme_modes": [
+      "light"
+    ],
+    "locales": [
+      "zh-CN"
+    ],
+    "states": [
+      "interactive",
+      "validation error",
+      "optional packaging omitted",
+      "review",
+      "success"
+    ]
+  },
+  "unsupported_capabilities": [
+    "The static prototype does not upload files or write a database.",
+    "Dark mode, English copy and production error states are required during implementation verification."
+  ]
+}

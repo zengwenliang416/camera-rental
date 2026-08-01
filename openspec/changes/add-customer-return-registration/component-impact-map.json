@@ -1,0 +1,99 @@
+{
+  "new_components": [
+    "RentalReturnRegistrationDO",
+    "RentalReturnRegistrationDeviceDO",
+    "RentalReturnRegistrationAttachmentDO",
+    "RentalReturnRegistrationService",
+    "RentalReturnRegistrationAdminService",
+    "RentalReturnRegistrationTokenService",
+    "RentalReturnRegistrationAttachmentPolicy",
+    "RentalReturnRegistrationController",
+    "AppRentalReturnRegistrationController",
+    "ReturnRegistrationPage",
+    "ReturnFlowShell",
+    "ReturnLogisticsStep",
+    "ReturnDeviceStep",
+    "ReturnPhotoStep",
+    "ReturnReviewStep",
+    "ReturnStatusPanel",
+    "ReturnRegistrationAdminPage",
+    "ReturnRegistrationDetailDrawer"
+  ],
+  "reused_components": [
+    "RentalOrderMapper",
+    "RentalDeviceMapper",
+    "RentalDeviceAssignmentMapper",
+    "RentalDeliveryService",
+    "FileService",
+    "FileApi",
+    "S3FileClient",
+    "infra_file",
+    "existing admin request client",
+    "existing admin table pagination and drawer components",
+    "existing Element Plus image preview",
+    "approved customer-return-intake prototype",
+    "existing GitHub incremental deployment scripts",
+    "existing Nuxt SSR runtime"
+  ],
+  "extraction_triggers": [
+    "token-hashing-and-constant-time-comparison-repeat-across-public-endpoints",
+    "serial-normalization-and-validation-repeat-across-submit-and-review",
+    "attachment-file-type-size-count-and-ownership-rules-repeat-across-upload-and-submit",
+    "registration-state-presentation-repeats-across-customer-and-admin-surfaces",
+    "photo-upload-progress-retry-and-removal-repeat-across-photo-categories",
+    "any-production-source-file-reaches-450-physical-lines"
+  ],
+  "forbidden_dependencies": [
+    "public-controller-to-rental-mapper",
+    "admin-controller-to-rental-mapper",
+    "nuxt-client-to-rustfs-credential",
+    "public-form-to-unrestricted-generic-file-upload",
+    "frontend-authoritative-device-order-matching",
+    "frontend-authoritative-registration-state-transition",
+    "attachment-row-to-object-storage-secret",
+    "object-key-containing-pii-order-number-or-serial-number",
+    "customer-submission-directly-releasing-device-or-schedule",
+    "public-response-containing-tenant-id-internal-order-id-address-or-full-mobile",
+    "raw-token-or-presigned-url-in-log",
+    "production-source-file-over-600-lines"
+  ],
+  "hooks": [
+    "useReturnRegistrationContext",
+    "useReturnRegistrationDraft",
+    "useReturnPhotoUploads",
+    "useReturnRegistrationSubmit",
+    "useReturnRegistrationAdminPage"
+  ],
+  "utilities": [
+    "normalizeReturnSerial",
+    "validateReturnSerial",
+    "normalizeReturnWaybill",
+    "mapReturnRegistrationStatus",
+    "formatSafeOrderSummary",
+    "buildReturnObjectKey",
+    "validateReturnAttachment"
+  ],
+  "services": [
+    "share-link lifecycle service",
+    "token lookup and tenant context service",
+    "return registration transaction service",
+    "order device matching service",
+    "return attachment authorization and confirmation service",
+    "return delivery creation adapter",
+    "admin review service",
+    "RustFS deployment and health-check service"
+  ],
+  "required_component_tests": [
+    "token generation hashing expiry revocation and non-disclosure tests",
+    "serial normalization format duplicate cross-order and cross-tenant tests",
+    "required optional attachment count size type ownership and removal tests",
+    "idempotent submit and concurrent replay tests",
+    "return delivery creation reuse and review-required tests",
+    "no-device-state-order-state-inspection-or-schedule-transition tests",
+    "admin permission pagination detail revoke and review tests",
+    "Nuxt mobile desktop SSR state and upload failure tests",
+    "RustFS private access health persistence and end-to-end upload tests",
+    "forbidden-import-source-line-limit-and-sensitive-data-static-tests"
+  ],
+  "unresolved_gaps": []
+}

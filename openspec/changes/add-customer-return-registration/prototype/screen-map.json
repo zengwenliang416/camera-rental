@@ -1,0 +1,54 @@
+{
+  "screens": [
+    {
+      "id": "customer-return-registration",
+      "label": "客户设备退回登记",
+      "requirements": [
+        "requirements.md#customer-submission",
+        "requirements.md#file-upload-and-rustfs"
+      ],
+      "acceptance": [
+        "acceptance.md#user-visible-criteria"
+      ],
+      "components": [
+        "ReturnFlowShell",
+        "ReturnLogisticsStep",
+        "ReturnDeviceStep",
+        "ReturnPhotoStep",
+        "ReturnReviewStep",
+        "ReturnStatusPanel"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#project_shell",
+        "runs/ui-design/customer-return-intake/project-DESIGN.md"
+      ],
+      "data_flows": [
+        "FLOW-PUBLIC-RETURN-CONTEXT",
+        "FLOW-PUBLIC-RETURN-UPLOAD",
+        "FLOW-PUBLIC-RETURN-SUBMIT"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-web/app/pages/return/[token].vue",
+        "camera-rental-web/app/components/return-registration"
+      ]
+    }
+  ],
+  "variants": [
+    "interactive",
+    "loading",
+    "expired",
+    "revoked",
+    "already-submitted",
+    "upload-failure",
+    "review-required",
+    "success"
+  ]
+}

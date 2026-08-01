@@ -1,0 +1,42 @@
+{
+  "task_id": "006-production-release-verification",
+  "goal": "Deploy and verify the complete return registration feature on the 211 production host.",
+  "must_read": [
+    "openspec/changes/add-customer-return-registration/development/tasks/006-production-release-verification/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-customer-return-registration/requirements.md",
+    "openspec/changes/add-customer-return-registration/acceptance.md",
+    "openspec/changes/add-customer-return-registration/spec-map.json",
+    "openspec/changes/add-customer-return-registration/component-impact-map.json",
+    "openspec/changes/add-customer-return-registration/prototype/handoff.md",
+    "openspec/changes/add-customer-return-registration/prototype/decision.json",
+    "openspec/changes/add-customer-return-registration/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "ops/github-deploy",
+    "ops/rustfs",
+    ".github/workflows/deploy-211.yml",
+    "openspec/changes/add-customer-return-registration"
+  ],
+  "test_paths": [
+    "ops/github-deploy/tests",
+    "ops/rustfs"
+  ],
+  "non_goals": [
+    "Do not publish unrelated worktree changes.",
+    "Do not use production customer data as test fixtures."
+  ],
+  "expected_evidence": [
+    "Migration shell tests",
+    "GitHub deployment run result",
+    "Production public upload and database evidence"
+  ],
+  "unsafe_assumptions": [
+    "Do not assume server SSH, RustFS or database state from earlier sessions.",
+    "Do not assume GitHub and Gitee main expose the same SHA before verification."
+  ],
+  "stop_condition": "Stop if deployment cannot prove source SHA, migration, service and storage health."
+}

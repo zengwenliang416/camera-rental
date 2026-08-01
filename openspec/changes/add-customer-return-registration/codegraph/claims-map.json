@@ -1,0 +1,157 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-08-01T06:59:55.546Z",
+  "active_change": "add-customer-return-registration",
+  "claims": [
+    {
+      "id": "development:task-001-secure-registration-foundation",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-secure-registration-foundation",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-customer-return-registration/development/tasks/001-secure-registration-foundation/brief.md",
+        "openspec/changes/add-customer-return-registration/development/tasks/001-secure-registration-foundation/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-001-secure-registration-foundation:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-private-rustfs-upload",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-private-rustfs-upload",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-customer-return-registration/development/tasks/002-private-rustfs-upload/brief.md",
+        "openspec/changes/add-customer-return-registration/development/tasks/002-private-rustfs-upload/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-002-private-rustfs-upload:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-idempotent-return-submission",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-idempotent-return-submission",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-customer-return-registration/development/tasks/003-idempotent-return-submission/brief.md",
+        "openspec/changes/add-customer-return-registration/development/tasks/003-idempotent-return-submission/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-003-idempotent-return-submission:evidence"
+      ]
+    },
+    {
+      "id": "development:task-004-nuxt-customer-return-flow",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "004-nuxt-customer-return-flow",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-customer-return-registration/development/tasks/004-nuxt-customer-return-flow/brief.md",
+        "openspec/changes/add-customer-return-registration/development/tasks/004-nuxt-customer-return-flow/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-004-nuxt-customer-return-flow:evidence"
+      ]
+    },
+    {
+      "id": "development:task-005-admin-return-operations",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "005-admin-return-operations",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-customer-return-registration/development/tasks/005-admin-return-operations/brief.md",
+        "openspec/changes/add-customer-return-registration/development/tasks/005-admin-return-operations/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-005-admin-return-operations:evidence"
+      ]
+    },
+    {
+      "id": "development:task-006-production-release-verification",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "006-production-release-verification",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-customer-return-registration/development/tasks/006-production-release-verification/brief.md",
+        "openspec/changes/add-customer-return-registration/development/tasks/006-production-release-verification/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-006-production-release-verification:evidence"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "camera-rental-server/yudao-module-rental",
+      "owner": "rental-backend"
+    },
+    {
+      "path": "camera-rental-server/yudao-module-infra",
+      "owner": "infra-file-boundary"
+    },
+    {
+      "path": "camera-rental-web",
+      "owner": "customer-web"
+    },
+    {
+      "path": "camera-rental-admin/src/views/rental/return-registration",
+      "owner": "rental-admin"
+    },
+    {
+      "path": "ops/rustfs",
+      "owner": "production-storage"
+    },
+    {
+      "path": "ops/github-deploy",
+      "owner": "production-release"
+    },
+    {
+      "path": "openspec/changes/add-customer-return-registration",
+      "owner": "specnav"
+    }
+  ]
+}

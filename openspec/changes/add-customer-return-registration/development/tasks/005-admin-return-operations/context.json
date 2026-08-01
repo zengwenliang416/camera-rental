@@ -1,0 +1,42 @@
+{
+  "task_id": "005-admin-return-operations",
+  "goal": "Manage return registration links and review submissions with tenant-safe permissions.",
+  "must_read": [
+    "openspec/changes/add-customer-return-registration/development/tasks/005-admin-return-operations/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-customer-return-registration/requirements.md",
+    "openspec/changes/add-customer-return-registration/acceptance.md",
+    "openspec/changes/add-customer-return-registration/spec-map.json",
+    "openspec/changes/add-customer-return-registration/component-impact-map.json",
+    "openspec/changes/add-customer-return-registration/prototype/handoff.md",
+    "openspec/changes/add-customer-return-registration/prototype/decision.json",
+    "openspec/changes/add-customer-return-registration/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-admin/src/api/rental/returnRegistration.ts",
+    "camera-rental-admin/src/views/rental/return-registration",
+    "openspec/changes/add-customer-return-registration"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test",
+    "camera-rental-admin/src/views/rental/return-registration"
+  ],
+  "non_goals": [
+    "Do not edit the schedule center.",
+    "Do not edit existing dirty admin locale files."
+  ],
+  "expected_evidence": [
+    "Admin permission and service tests",
+    "Admin type check and production build",
+    "Browser review flow evidence"
+  ],
+  "unsafe_assumptions": [
+    "Do not assume menu visibility grants backend permission.",
+    "Do not assume a stale review page can safely accept a changed submission."
+  ],
+  "stop_condition": "Stop if review actions cannot remain permissioned, tenant-safe and race-safe."
+}

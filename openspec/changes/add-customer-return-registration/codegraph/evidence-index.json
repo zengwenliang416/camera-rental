@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-01T06:54:35.489Z",
+  "generated_at": "2026-08-01T07:03:37.575Z",
   "active_change": "add-customer-return-registration",
   "source_raw": "openspec/changes/add-customer-return-registration/codegraph/evidence.jsonl",
   "by_claim": {},

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "change_id": "add-customer-return-registration",
+  "stage": "development",
+  "allowed_roots": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-server/yudao-module-infra/yudao-module-infra-api",
+    "camera-rental-server/yudao-module-infra/src/main/java",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-web",
+    "camera-rental-admin/src/api/rental/returnRegistration.ts",
+    "camera-rental-admin/src/views/rental/return-registration",
+    "ops/github-deploy",
+    "ops/rustfs",
+    "openspec/changes/add-customer-return-registration"
+  ],
+  "denied_roots": [
+    ".git",
+    "node_modules",
+    "dist",
+    "coverage",
+    "camera-rental-schedule-center",
+    "camera-rental-staff",
+    "camera-rental-uniapp",
+    "camera-rental-admin/src/locales",
+    "camera-rental-server/yudao-module-system",
+    "camera-rental-server/yudao-server/src/main/resources/application-prod.yaml"
+  ],
+  "requires_review_on": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/pom.xml",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics",
+    "camera-rental-server/yudao-module-infra/yudao-module-infra-api",
+    "camera-rental-server/yudao-module-infra/src/main/java",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-web/package.json",
+    "camera-rental-web/bun.lock",
+    "ops/github-deploy",
+    "ops/rustfs"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": false,
+    "rename": false
+  },
+  "prototype_sources": [
+    "openspec/changes/add-customer-return-registration/prototype/artifact/index.html"
+  ],
+  "expires_when": "verification_started"
+}

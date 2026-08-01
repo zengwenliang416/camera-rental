@@ -1,0 +1,6 @@
+{"task_id":"001-secure-registration-foundation","status":"task-ready","source":"specnav-vertical-slices","note":"Owns migration, persistence, token and tenant lookup foundation."}
+{"task_id":"002-private-rustfs-upload","status":"task-ready","source":"specnav-vertical-slices","note":"Owns infra file extension, attachment policy and RustFS deployment assets."}
+{"task_id":"003-idempotent-return-submission","status":"task-ready","source":"specnav-vertical-slices","note":"Owns public context, submission transaction, device matching and Return Delivery."}
+{"task_id":"004-nuxt-customer-return-flow","status":"task-ready","source":"specnav-vertical-slices","note":"Owns production Nuxt customer route, components, localized states and browser tests."}
+{"task_id":"005-admin-return-operations","status":"task-ready","source":"specnav-vertical-slices","note":"Owns admin APIs, page, detail and review operations."}
+{"task_id":"006-production-release-verification","status":"task-ready","source":"specnav-vertical-slices","note":"Owns migration runner, release integration, commits, pushes and production evidence."}

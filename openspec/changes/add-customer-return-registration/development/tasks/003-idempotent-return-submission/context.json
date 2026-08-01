@@ -1,0 +1,39 @@
+{
+  "task_id": "003-idempotent-return-submission",
+  "goal": "Submit one validated return registration and safely create or reuse its Return Delivery.",
+  "must_read": [
+    "openspec/changes/add-customer-return-registration/development/tasks/003-idempotent-return-submission/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-customer-return-registration/requirements.md",
+    "openspec/changes/add-customer-return-registration/acceptance.md",
+    "openspec/changes/add-customer-return-registration/spec-map.json",
+    "openspec/changes/add-customer-return-registration/component-impact-map.json",
+    "openspec/changes/add-customer-return-registration/prototype/handoff.md",
+    "openspec/changes/add-customer-return-registration/prototype/decision.json",
+    "openspec/changes/add-customer-return-registration/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "openspec/changes/add-customer-return-registration"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test"
+  ],
+  "non_goals": [
+    "Do not complete warehouse return or inspection.",
+    "Do not call third-party logistics providers during submission."
+  ],
+  "expected_evidence": [
+    "Idempotency and concurrency tests",
+    "Device matching tests",
+    "No-lifecycle-side-effect tests"
+  ],
+  "unsafe_assumptions": [
+    "Do not assume every external order already has an internal order and assignment.",
+    "Do not assume serial format equality proves order ownership."
+  ],
+  "stop_condition": "Stop if safe order-device matching or transactional idempotency cannot be proven."
+}

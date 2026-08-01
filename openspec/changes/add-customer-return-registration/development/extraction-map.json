@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "component_rules": [
+    "Extract token generation and hashing into RentalReturnRegistrationTokenService.",
+    "Extract serial normalization and validation into a pure reusable utility.",
+    "Extract attachment type, size, category, count and ownership checks into RentalReturnRegistrationAttachmentPolicy.",
+    "Extract order-assignment-device matching into a focused backend service.",
+    "Extract Nuxt photo upload progress, retry and removal into useReturnPhotoUploads.",
+    "Extract customer registration status rendering into ReturnStatusPanel.",
+    "Extract admin detail photo and match presentation into ReturnRegistrationDetailDrawer.",
+    "Split any new or refactored production file before it exceeds 600 physical lines."
+  ]
+}

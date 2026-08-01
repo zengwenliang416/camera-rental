@@ -1,0 +1,39 @@
+{
+  "task_id": "004-nuxt-customer-return-flow",
+  "goal": "Deliver the approved five-step return experience in production Nuxt.",
+  "must_read": [
+    "openspec/changes/add-customer-return-registration/development/tasks/004-nuxt-customer-return-flow/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-customer-return-registration/requirements.md",
+    "openspec/changes/add-customer-return-registration/acceptance.md",
+    "openspec/changes/add-customer-return-registration/spec-map.json",
+    "openspec/changes/add-customer-return-registration/component-impact-map.json",
+    "openspec/changes/add-customer-return-registration/prototype/handoff.md",
+    "openspec/changes/add-customer-return-registration/prototype/decision.json",
+    "openspec/changes/add-customer-return-registration/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-web",
+    "openspec/changes/add-customer-return-registration"
+  ],
+  "test_paths": [
+    "camera-rental-web"
+  ],
+  "non_goals": [
+    "Do not add commerce checkout behavior.",
+    "Do not embed object-store credentials in the client."
+  ],
+  "expected_evidence": [
+    "Nuxt production build",
+    "SSR-safe type check",
+    "Mobile and desktop browser evidence"
+  ],
+  "unsafe_assumptions": [
+    "Do not assume WeChat supports every desktop file API.",
+    "Do not assume a local validation result is authoritative."
+  ],
+  "stop_condition": "Stop if the page cannot remain SSR-safe or meet the approved responsive flow."
+}

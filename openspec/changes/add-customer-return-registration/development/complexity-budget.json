@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "source file size",
+      "limit": "target 450 physical lines and hard maximum 600 physical lines"
+    },
+    {
+      "area": "component cohesion",
+      "limit": "one user-facing or domain responsibility per shared component or service"
+    },
+    {
+      "area": "public controller",
+      "limit": "transport and validation delegation only; no direct Mapper or S3 client access"
+    },
+    {
+      "area": "frontend authority",
+      "limit": "no authoritative device matching, registration transition or Delivery creation"
+    },
+    {
+      "area": "dependencies",
+      "limit": "reuse current Spring, Nuxt, Vue, Element Plus and S3 libraries before adding dependencies"
+    }
+  ]
+}

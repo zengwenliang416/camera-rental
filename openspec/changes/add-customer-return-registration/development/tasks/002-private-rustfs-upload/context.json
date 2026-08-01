@@ -1,0 +1,44 @@
+{
+  "task_id": "002-private-rustfs-upload",
+  "goal": "Upload return photos privately through token-scoped authorization and existing file metadata.",
+  "must_read": [
+    "openspec/changes/add-customer-return-registration/development/tasks/002-private-rustfs-upload/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-customer-return-registration/requirements.md",
+    "openspec/changes/add-customer-return-registration/acceptance.md",
+    "openspec/changes/add-customer-return-registration/spec-map.json",
+    "openspec/changes/add-customer-return-registration/component-impact-map.json",
+    "openspec/changes/add-customer-return-registration/prototype/handoff.md",
+    "openspec/changes/add-customer-return-registration/prototype/decision.json",
+    "openspec/changes/add-customer-return-registration/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-infra/yudao-module-infra-api",
+    "camera-rental-server/yudao-module-infra/src/main/java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "ops/rustfs",
+    "openspec/changes/add-customer-return-registration"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-infra/src/test",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test",
+    "ops/rustfs"
+  ],
+  "non_goals": [
+    "Do not expose the RustFS console.",
+    "Do not implement unrestricted public file upload."
+  ],
+  "expected_evidence": [
+    "Attachment policy tests",
+    "RustFS compose validation",
+    "Cross-token and cross-tenant denial tests"
+  ],
+  "unsafe_assumptions": [
+    "Do not trust filename extensions or client Content-Type.",
+    "Do not assume a presigned PUT proves a valid infra_file record."
+  ],
+  "stop_condition": "Stop if private ownership or production persistence cannot be verified."
+}

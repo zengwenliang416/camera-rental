@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "planning_status": "ready",
+  "tasks": [
+    {
+      "id": "001-secure-registration-foundation",
+      "depends_on": []
+    },
+    {
+      "id": "002-private-rustfs-upload",
+      "depends_on": [
+        "001-secure-registration-foundation"
+      ]
+    },
+    {
+      "id": "003-idempotent-return-submission",
+      "depends_on": [
+        "001-secure-registration-foundation",
+        "002-private-rustfs-upload"
+      ]
+    },
+    {
+      "id": "004-nuxt-customer-return-flow",
+      "depends_on": [
+        "002-private-rustfs-upload",
+        "003-idempotent-return-submission"
+      ]
+    },
+    {
+      "id": "005-admin-return-operations",
+      "depends_on": [
+        "001-secure-registration-foundation",
+        "003-idempotent-return-submission"
+      ]
+    },
+    {
+      "id": "006-production-release-verification",
+      "depends_on": [
+        "004-nuxt-customer-return-flow",
+        "005-admin-return-operations"
+      ]
+    }
+  ]
+}

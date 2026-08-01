@@ -1,0 +1,97 @@
+{
+  "schema": "specnav.codegraph.evidence_query_plan.v1",
+  "generated_at": "2026-08-01T06:59:55.546Z",
+  "active_change": "add-customer-return-registration",
+  "queries": [
+    {
+      "id": "development:task-001-secure-registration-foundation:evidence",
+      "claim_id": "development:task-001-secure-registration-foundation",
+      "stage": "development",
+      "task_id": "001-secure-registration-foundation",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"add-customer-return-registration\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-001-secure-registration-foundation --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-002-private-rustfs-upload:evidence",
+      "claim_id": "development:task-002-private-rustfs-upload",
+      "stage": "development",
+      "task_id": "002-private-rustfs-upload",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"add-customer-return-registration\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-002-private-rustfs-upload --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-003-idempotent-return-submission:evidence",
+      "claim_id": "development:task-003-idempotent-return-submission",
+      "stage": "development",
+      "task_id": "003-idempotent-return-submission",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"add-customer-return-registration\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-003-idempotent-return-submission --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-004-nuxt-customer-return-flow:evidence",
+      "claim_id": "development:task-004-nuxt-customer-return-flow",
+      "stage": "development",
+      "task_id": "004-nuxt-customer-return-flow",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"add-customer-return-registration\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-004-nuxt-customer-return-flow --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-005-admin-return-operations:evidence",
+      "claim_id": "development:task-005-admin-return-operations",
+      "stage": "development",
+      "task_id": "005-admin-return-operations",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"add-customer-return-registration\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-005-admin-return-operations --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-006-production-release-verification:evidence",
+      "claim_id": "development:task-006-production-release-verification",
+      "stage": "development",
+      "task_id": "006-production-release-verification",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"add-customer-return-registration\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-006-production-release-verification --query \"<query>\" --write --json"
+    }
+  ]
+}

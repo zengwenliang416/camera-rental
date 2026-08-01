@@ -1,0 +1,2 @@
+camera-rental-server/sql/mysql/migrations/20260801_034_rental_delivery_channel_orders.sql
+camera-rental-server/sql/mysql/migrations/20260801_036_customer_return_registration.sql

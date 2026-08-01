@@ -20,13 +20,48 @@ mkdir -p "${release_dir}"
 tar -xzf "${RELEASE_ARCHIVE}" -C "${release_dir}"
 
 test -f "${release_dir}/server/yudao-server.jar"
+test -x "${release_dir}/server/apply-migrations.sh"
 test -f "${release_dir}/admin/index.html"
 test -f "${release_dir}/schedule-center/index.html"
+
+rustfs_source="${release_dir}/ops/rustfs"
+rustfs_root="${DEPLOY_ROOT}/rustfs"
+if [ -d "${rustfs_source}" ]; then
+  mkdir -p "${rustfs_root}" "${DEPLOY_ROOT}/shared"
+  if [ ! -f "${rustfs_root}/.env" ]; then
+    echo "[deploy] generate persistent RustFS credentials"
+    umask 077
+    cat > "${rustfs_root}/.env" <<EOF
+RUSTFS_IMAGE=rustfs/rustfs:1.0.0-beta.12
+RUSTFS_ACCESS_KEY=rustfsroot$(openssl rand -hex 8)
+RUSTFS_SECRET_KEY=$(openssl rand -hex 32)
+RUSTFS_APP_ACCESS_KEY=returnapp$(openssl rand -hex 8)
+RUSTFS_APP_SECRET_KEY=$(openssl rand -hex 32)
+RUSTFS_REGION=us-east-1
+RUSTFS_CORS_ALLOWED_ORIGINS=https://rental.motion-cover.com
+RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS=https://rental.motion-cover.com
+RUSTFS_BUCKET=camera-rental-return
+RUSTFS_PUBLIC_ENDPOINT=https://storage.motion-cover.com
+RUSTFS_RC_VERSION=v0.1.30
+EOF
+  fi
+  echo "[deploy] install and initialize RustFS"
+  bash "${rustfs_source}/install.sh" "${rustfs_root}"
+  (
+    umask 077
+    grep -E '^RUSTFS_(APP_ACCESS_KEY|APP_SECRET_KEY|REGION|BUCKET|PUBLIC_ENDPOINT)=' \
+      "${rustfs_root}/.env" > "${DEPLOY_ROOT}/shared/rustfs-app.env"
+  )
+fi
 
 # Archives built on macOS may preserve owner-only modes. Nginx must be able to
 # traverse release directories and read static frontend assets.
 chmod 755 "${release_dir}" "${release_dir}/server"
 chmod 644 "${release_dir}/server/yudao-server.jar"
+
+echo "[deploy] apply release migrations before activation"
+DEPLOY_ROOT="${DEPLOY_ROOT}" RELEASE_SHA="${RELEASE_SHA}" \
+  "${release_dir}/server/apply-migrations.sh" "${release_dir}"
 for static_dir in admin schedule-center; do
   find "${release_dir}/${static_dir}" -type d -exec chmod 755 {} +
   find "${release_dir}/${static_dir}" -type f -exec chmod 644 {} +

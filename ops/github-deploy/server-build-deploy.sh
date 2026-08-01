@@ -8,6 +8,7 @@ SOURCE_DIR="${SOURCE_DIR:-${DEPLOY_ROOT}/source}"
 GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh -i ~/.ssh/camera_rental_gitee_pull -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20 -C}"
 export GIT_SSH_COMMAND
 NODE_VERSION="${NODE_VERSION:-22.14.0}"
+BUN_VERSION="${BUN_VERSION:-1.3.11}"
 NODE_ARCHIVE_ARCH=""
 MAVEN_THREADS="${MAVEN_THREADS:-2}"
 FORCE_FULL_BUILD="${FORCE_FULL_BUILD:-false}"
@@ -58,6 +59,12 @@ ensure_node_runtime() {
     npm install -g pnpm@10
   fi
   pnpm --version
+
+  if ! command -v bun >/dev/null 2>&1 || [ "$(bun --version)" != "${BUN_VERSION}" ]; then
+    echo "[build-deploy] install bun v${BUN_VERSION}"
+    npm install -g "bun@${BUN_VERSION}"
+  fi
+  bun --version
 }
 
 prepare_incremental_build() {
@@ -225,6 +232,17 @@ else
   cp "${SOURCE_DIR}/camera-rental-server/yudao-server/target/yudao-server.jar" "${release_dir}/server/yudao-server.jar"
   built_components+=("server")
 fi
+
+mkdir -p "${release_dir}/server/migrations"
+cp "${SOURCE_DIR}/ops/github-deploy/migrations.txt" "${release_dir}/server/migrations.txt"
+while IFS= read -r migration_path; do
+  [ -n "${migration_path}" ] || continue
+  cp "${SOURCE_DIR}/${migration_path}" "${release_dir}/server/migrations/"
+done < "${SOURCE_DIR}/ops/github-deploy/migrations.txt"
+cp "${SOURCE_DIR}/ops/github-deploy/apply-migrations.sh" "${release_dir}/server/apply-migrations.sh"
+chmod 0755 "${release_dir}/server/apply-migrations.sh"
+mkdir -p "${release_dir}/ops"
+cp -R "${SOURCE_DIR}/ops/rustfs" "${release_dir}/ops/rustfs"
 
 if should_reuse_component admin; then
   reuse_component admin admin

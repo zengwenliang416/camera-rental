@@ -47,10 +47,16 @@ component_changed() {
 
 validate_admin_artifact() {
   local index_file="$1"
+  local release_sha="${2:-}"
+  local asset_prefix="/admin/assets"
+
+  if [ -n "${release_sha}" ]; then
+    asset_prefix="${asset_prefix}/${release_sha:0:12}"
+  fi
 
   [ -f "${index_file}" ] || return 1
   ! grep -q '%VITE_' "${index_file}" \
-    && grep -Eq 'src="/admin/assets/[^"]+\.js"' "${index_file}" \
+    && grep -Eq "src=\"${asset_prefix}/[^\"]+\\.js\"" "${index_file}" \
     && grep -q 'src="/admin/logo.gif"' "${index_file}"
 }
 

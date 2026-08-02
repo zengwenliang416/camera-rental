@@ -267,6 +267,7 @@ else
     VITE_DROP_CONSOLE="true" \
     VITE_SOURCEMAP="false" \
     VITE_OUT_DIR="dist" \
+    VITE_RELEASE_SHA="${RELEASE_SHA}" \
     VITE_UPLOAD_TYPE="server" \
     VITE_APP_API_ENCRYPT_ENABLE="false" \
     VITE_APP_API_ENCRYPT_HEADER="X-Api-Encrypt" \
@@ -275,8 +276,8 @@ else
     VITE_APP_API_ENCRYPT_RESPONSE_KEY="" \
     pnpm build:prod
   )
-  if ! validate_admin_artifact "${SOURCE_DIR}/camera-rental-admin/dist/index.html"; then
-    echo "[build-deploy][error] admin artifact is not scoped to /admin/ or still contains Vite placeholders" >&2
+  if ! validate_admin_artifact "${SOURCE_DIR}/camera-rental-admin/dist/index.html" "${RELEASE_SHA}"; then
+    echo "[build-deploy][error] admin artifact is not release-scoped to /admin/ or still contains Vite placeholders" >&2
     exit 1
   fi
   cp -R "${SOURCE_DIR}/camera-rental-admin/dist/." "${release_dir}/admin/"

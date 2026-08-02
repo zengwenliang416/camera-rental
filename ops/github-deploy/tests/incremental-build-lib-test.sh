@@ -89,11 +89,19 @@ artifact_dir="${test_dir}/admin-artifact"
 mkdir -p "${artifact_dir}"
 cat > "${artifact_dir}/index.html" <<'EOF'
 <title>相机租赁管理后台</title>
-<script type="module" src="/admin/assets/index-good.js"></script>
+<script type="module" src="/admin/assets/0123456789ab/index-good.js"></script>
 <img src="/admin/logo.gif" alt="Logo" />
 EOF
-assert_success "scoped admin artifact should pass validation" \
-  validate_admin_artifact "${artifact_dir}/index.html"
+assert_success "release-scoped admin artifact should pass validation" \
+  validate_admin_artifact "${artifact_dir}/index.html" "0123456789abcdef0123456789abcdef01234567"
+
+cat > "${artifact_dir}/index.html" <<'EOF'
+<title>相机租赁管理后台</title>
+<script type="module" src="/admin/assets/index-stale.js"></script>
+<img src="/admin/logo.gif" alt="Logo" />
+EOF
+assert_failure "unversioned admin artifact should fail release validation" \
+  validate_admin_artifact "${artifact_dir}/index.html" "0123456789abcdef0123456789abcdef01234567"
 
 cat > "${artifact_dir}/index.html" <<'EOF'
 <title>%VITE_APP_TITLE%</title>
@@ -101,6 +109,6 @@ cat > "${artifact_dir}/index.html" <<'EOF'
 <img src="/logo.gif" alt="Logo" />
 EOF
 assert_failure "root-scoped admin artifact should fail validation" \
-  validate_admin_artifact "${artifact_dir}/index.html"
+  validate_admin_artifact "${artifact_dir}/index.html" "0123456789abcdef0123456789abcdef01234567"
 
 echo "incremental build helper tests passed"

@@ -27,6 +27,9 @@ export default ({command, mode}: ConfigEnv): UserConfig => {
         env = loadEnv(mode, root)
     }
     const variablesScssPath = pathResolve('src/styles/variables.scss')
+    const releaseId = /^[0-9a-f]{7,40}$/.test(env.VITE_RELEASE_SHA)
+        ? env.VITE_RELEASE_SHA.slice(0, 12)
+        : undefined
     return {
         base: env.VITE_BASE_PATH,
         root: root,
@@ -80,6 +83,7 @@ export default ({command, mode}: ConfigEnv): UserConfig => {
             ]
         },
         build: {
+            assetsDir: releaseId ? `assets/${releaseId}` : 'assets',
             chunkSizeWarningLimit: 2000,
             minify: 'oxc',
             outDir: env.VITE_OUT_DIR || 'dist',

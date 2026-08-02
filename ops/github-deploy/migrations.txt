@@ -1,2 +1,4 @@
+camera-rental-server/sql/mysql/migrations/20260801_033_rental_logistics_admin_config_menu.sql
 camera-rental-server/sql/mysql/migrations/20260801_034_rental_delivery_channel_orders.sql
+camera-rental-server/sql/mysql/migrations/20260801_035_rental_logistics_backfill_menu.sql
 camera-rental-server/sql/mysql/migrations/20260801_036_customer_return_registration.sql

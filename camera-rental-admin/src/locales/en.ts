@@ -173,6 +173,7 @@ export default {
     rentalSchedule: 'Device schedules',
     rentalSyncRun: 'Sync run history',
     rentalReport: 'Business reports',
+    rentalLogisticsConfig: 'Kuaidi100 configuration',
 
     login: 'Login',
     home: 'Home',
@@ -532,6 +533,145 @@ export default {
         EFFECTIVE: 'Effective',
         CANCELLED: 'Cancelled',
         UNKNOWN: 'Unknown'
+      }
+    },
+    logistics: {
+      pageTitle: 'Kuaidi100 configuration',
+      pageDescription:
+        'Manage tenant-scoped Kuaidi100 settings and multiple credentials in the admin console. The schedule center only reads logistics results.',
+      loadError: 'Failed to load Kuaidi100 configuration. Check the network and permissions.',
+      secretHint:
+        'Customer Code and API Key values are encrypted by the backend and never returned as plaintext. Keep preserves stored values when editing a credential.',
+      providerTitle: 'Provider settings',
+      providerDescription: 'Controls active queries, push subscriptions, and the callback URL.',
+      enabled: 'Provider enabled',
+      enabledHint:
+        'Disabling stops Kuaidi100 calls without deleting saved settings or logistics data.',
+      queryEnabled: 'Active query',
+      queryEnabledHint:
+        'Used for initial lookup, recovery, and manual refresh. Each waybill is rate-limited.',
+      subscribeEnabled: 'Push subscription',
+      subscribeEnabledHint:
+        'Lets Kuaidi100 push tracking updates and is the primary source of routine updates.',
+      callbackBaseUrl: 'Public callback service URL',
+      callbackBaseUrlHint:
+        'Enter the public backend origin. Do not use localhost or append the callback path; the system adds:',
+      minimumQueryIntervalSeconds: 'Minimum query interval (seconds)',
+      minimumQueryIntervalHint:
+        'Currently {minutes} minutes. This limits active queries only, not subscription pushes.',
+      resultVersion: 'Tracking result version',
+      resultVersionHint:
+        'Maps to the Kuaidi100 resultv2 parameter. The project currently uses 4; change it only when the protocol changes.',
+      secretKeep: 'Keep',
+      secretReplace: 'Replace',
+      secretClear: 'Clear',
+      secretConfigured: 'Configured {masked}',
+      secretMissing: 'Not configured',
+      secretValuePlaceholder: 'Enter a new {label}',
+      lastVerified: 'Last verified',
+      saveProvider: 'Save provider settings',
+      verifyProvider: 'Verify provider settings',
+      providerSaved: 'Kuaidi100 provider settings saved',
+      providerVerified: 'Provider configuration passed local validation',
+      providerVerifyFailed: 'Provider validation failed: {reason}',
+      providerEnablePrerequisite:
+        'Configure the public callback service URL before enabling push subscriptions',
+      checkCallbackBaseUrl: 'public callback service URL',
+      checkCallbackBaseUrlOptional:
+        'push subscriptions are disabled, so no callback URL is required',
+      checkEnabledCredential: 'At least one complete enabled credential',
+      configurationOrderHint:
+        'Active queries only need a complete enabled credential. A public callback URL is required only when push subscriptions are enabled.',
+      configurationIncompleteSummary: 'Configuration is incomplete. Missing: {items}',
+      configurationReadySummary:
+        'Required settings are complete. Verify the provider settings to finish the local check.',
+      configurationVerifiedSummary:
+        'Provider settings and an enabled credential passed the local completeness check.',
+      configurationUnknownMissing: 'save the current form and check again',
+      listSeparator: ', ',
+      intervalRequired: 'Enter a query interval between 1800 and 86400 seconds',
+      resultVersionRequired: 'Enter resultVersion',
+      credentialsTitle: 'Kuaidi100 credentials',
+      credentialsDescription:
+        'Multiple Customer Code and API Key pairs are supported. Enabled credentials are selected by stable sort order.',
+      addCredential: 'Add credential',
+      editCredential: 'Edit credential',
+      credentialName: 'Credential name',
+      credentialNamePlaceholder: 'For example: Primary account',
+      credentialNameRequired: 'Enter a credential name',
+      credentialEnabled: 'Enabled',
+      enabledState: 'Enabled',
+      disabledState: 'Disabled',
+      customerCode: 'Customer Code',
+      apiKey: 'API Key',
+      sortOrder: 'Sort order',
+      sortOrderHint: 'Lower numbers have higher priority',
+      sortOrderRequired: 'Enter a sort order',
+      configStatus: 'Configuration status',
+      notConfigured: 'Not configured',
+      credentialsEmpty: 'No Kuaidi100 credentials. Add a Customer Code and API Key pair.',
+      credentialSecretsRequired:
+        'Customer Code and API Key must keep existing values or provide replacements',
+      credentialSaved: 'Kuaidi100 credential saved',
+      credentialDeleted: 'Kuaidi100 credential deleted',
+      deleteCredentialConfirm:
+        'Delete credential "{name}"? Historical deliveries already bound to it will not be rewritten.',
+      verify: 'Verify',
+      credentialVerified: 'Credential passed local validation',
+      credentialVerifyFailed: 'Credential validation failed: {reason}',
+      statusIncomplete: 'Incomplete',
+      statusReadyUnverified: 'Ready, unverified',
+      statusLocallyVerified: 'Locally verified',
+      statusUnknown: 'Unknown',
+      backfillTitle: 'Track historical shipped orders',
+      backfillDescription:
+        'Create Delivery records for shipped Xianyu orders that do not have local logistics records, then optionally start Kuaidi100 tracking.',
+      backfillAdminOnly: 'Admin operation only',
+      backfillSafetyHint:
+        'Preview does not create data or call Kuaidi100. Starting tracking creates or reuses deliveries and asynchronously enqueues active queries, which may incur provider charges.',
+      backfillDateRange: 'Shipment date range',
+      backfillDateSeparator: 'to',
+      backfillStartDate: 'Start date',
+      backfillEndDate: 'End date',
+      backfillDateHint:
+        'Uses the actual shipment timestamp as an inclusive range. Process historical orders in bounded date batches.',
+      backfillDateRequired: 'Select a complete shipment date range',
+      backfillLimit: 'Batch limit',
+      backfillLimitHint: 'At most 100 candidate orders are processed per request.',
+      backfillPreview: 'Preview',
+      backfillApply: 'Create and start tracking',
+      backfillCandidates: 'Candidates',
+      backfillEligible: 'Eligible',
+      backfillDistinctWaybills: 'Distinct waybills',
+      backfillSkipped: 'Skipped',
+      backfillPreviewCompleted: 'Historical logistics preview completed',
+      backfillPreviewRequired: 'The date range or limit changed. Run preview again.',
+      backfillPreviewSummary:
+        'Preview complete: {count} eligible orders across approximately {waybills} distinct waybills.',
+      backfillApplyConfirm:
+        'Process {count} orders and start Kuaidi100 tracking for approximately {waybills} waybills? Provider query charges may apply.',
+      backfillApplied:
+        '{count} delivery records were created or reused. Tracking tasks are processing asynchronously.',
+      backfillAppliedSummary:
+        '{count} delivery records were created or reused. Check the schedule center shortly for tracking updates.',
+      backfillWaybill: 'Waybill',
+      backfillWaybillUnavailable: 'Unavailable',
+      backfillItemStatus: 'Status',
+      backfillReason: 'Reason',
+      backfillItemsTruncated: 'Showing the first 20 of {count} items.',
+      backfillStatusEligible: 'Eligible',
+      backfillStatusCreated: 'Created',
+      backfillStatusReused: 'Reused',
+      backfillStatusSkipped: 'Skipped',
+      backfillReasons: {
+        DRY_RUN: 'Preview passed',
+        PROVIDER_TASKS_REQUESTED: 'Tracking task enqueued',
+        LOCAL_DELIVERY_ONLY: 'Local delivery only',
+        BACKFILL_CHANNEL_ORDER_MISSING: 'Channel order link is missing',
+        BACKFILL_RELATION_INCOMPLETE: 'Rental-order relations are incomplete',
+        BACKFILL_WAYBILL_MISSING: 'A valid waybill is missing',
+        BACKFILL_CARRIER_MISSING: 'Carrier code is missing',
+        BACKFILL_SHIPMENT_BIND_CONFLICT: 'Shipment is already linked to another delivery'
       }
     },
     xianyu: {

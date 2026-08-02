@@ -78,6 +78,17 @@ class ReturnRegistrationResolverTest {
     }
 
     @Test
+    void sessionLookupRejectsExpiredSessionEvenForTerminalRegistration() {
+        RentalReturnRegistrationDO accepted = registration(9L)
+                .setStatus(ReturnRegistrationStatusEnum.ACCEPTED.name())
+                .setExpiresAt(LocalDateTime.now().minusSeconds(1));
+        ReturnRegistrationTokenService.IssuedToken token = tokenService.issue();
+        when(registrationMapper.selectByTokenHash(token.hash())).thenReturn(accepted);
+
+        assertThrows(ServiceException.class, () -> resolver.requireSession(token.plaintext()));
+    }
+
+    @Test
     void lockRejectsMissingOrCrossTenantRows() {
         RentalReturnRegistrationDO registration = registration(9L).setId(11L);
         when(registrationMapper.selectByIdForUpdate(11L)).thenReturn(null);

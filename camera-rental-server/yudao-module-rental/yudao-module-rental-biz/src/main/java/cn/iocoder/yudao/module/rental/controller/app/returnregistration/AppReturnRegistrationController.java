@@ -1,8 +1,7 @@
 package cn.iocoder.yudao.module.rental.controller.app.returnregistration;
 
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
-import cn.iocoder.yudao.framework.ratelimiter.core.annotation.RateLimiter;
-import cn.iocoder.yudao.framework.ratelimiter.core.keyresolver.impl.ExpressionRateLimiterKeyResolver;
+import cn.iocoder.yudao.framework.common.util.servlet.ServletUtils;
 import cn.iocoder.yudao.framework.tenant.core.aop.TenantIgnore;
 import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationAttachmentService;
 import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationModels.AttachmentView;
@@ -10,11 +9,16 @@ import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrat
 import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationModels.Receipt;
 import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationModels.Submission;
 import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationModels.UploadAuthorization;
+import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationOrderVerificationService;
 import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationPublicService;
+import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationRateLimitService;
 import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationResolver;
 import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationSecurityAuditService;
+import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationSessionCookieService;
 import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationSubmissionService;
 import jakarta.annotation.security.PermitAll;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -22,6 +26,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,9 +36,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
+import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RETURN_REGISTRATION_NOT_AVAILABLE;
 
 @RestController
 @RequestMapping("/rental/return-registration")
@@ -47,69 +53,97 @@ public class AppReturnRegistrationController {
     private final ReturnRegistrationSubmissionService submissionService;
     private final ReturnRegistrationResolver resolver;
     private final ReturnRegistrationSecurityAuditService auditService;
+    private final ReturnRegistrationOrderVerificationService verificationService;
+    private final ReturnRegistrationSessionCookieService cookieService;
+    private final ReturnRegistrationRateLimitService rateLimitService;
 
     public AppReturnRegistrationController(ReturnRegistrationPublicService publicService,
                                            ReturnRegistrationAttachmentService attachmentService,
                                            ReturnRegistrationSubmissionService submissionService,
                                            ReturnRegistrationResolver resolver,
-                                           ReturnRegistrationSecurityAuditService auditService) {
+                                           ReturnRegistrationSecurityAuditService auditService,
+                                           ReturnRegistrationOrderVerificationService verificationService,
+                                           ReturnRegistrationSessionCookieService cookieService,
+                                           ReturnRegistrationRateLimitService rateLimitService) {
         this.publicService = publicService;
         this.attachmentService = attachmentService;
         this.submissionService = submissionService;
         this.resolver = resolver;
         this.auditService = auditService;
+        this.verificationService = verificationService;
+        this.cookieService = cookieService;
+        this.rateLimitService = rateLimitService;
     }
 
-    @GetMapping("/{token}")
-    @RateLimiter(time = 1, timeUnit = TimeUnit.MINUTES, count = 120,
-            keyResolver = ExpressionRateLimiterKeyResolver.class,
-            keyArg = "T(cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationTokenService).rateLimitKey(#token)")
-    public CommonResult<PublicContext> getContext(@PathVariable String token) {
-        return success(publicService.getContext(token));
+    @PostMapping("/verify")
+    public CommonResult<PublicContext> verify(
+            @Valid @RequestBody VerifyReq req,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        rateLimitService.checkVerification(ServletUtils.getClientIP(request), req.orderNo());
+        ReturnRegistrationOrderVerificationService.VerifiedSession verified =
+                verificationService.verify(req.orderNo(), req.mobileLast4());
+        cookieService.write(response, verified.sessionToken());
+        return success(verified.context());
     }
 
-    @PostMapping("/{token}/upload-authorizations")
-    @RateLimiter(time = 1, timeUnit = TimeUnit.MINUTES, count = 30,
-            keyResolver = ExpressionRateLimiterKeyResolver.class,
-            keyArg = "T(cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationTokenService).rateLimitKey(#token)")
-    public CommonResult<UploadAuthorization> authorize(
-            @PathVariable String token, @Valid @RequestBody UploadReq req) {
+    @GetMapping("/session")
+    public CommonResult<PublicContext> getSessionContext(
+            @CookieValue(name = ReturnRegistrationSessionCookieService.COOKIE_NAME,
+                    required = false) String sessionToken) {
+        String session = requireSessionCookie(sessionToken);
+        rateLimitService.checkSession(session, "context", 120);
+        return success(publicService.getSessionContext(session));
+    }
+
+    @PostMapping("/upload-authorizations")
+    public CommonResult<UploadAuthorization> authorizeSession(
+            @CookieValue(name = ReturnRegistrationSessionCookieService.COOKIE_NAME,
+                    required = false) String sessionToken,
+            @Valid @RequestBody UploadReq req) {
+        String session = requireSessionCookie(sessionToken);
+        rateLimitService.checkSession(session, "authorize", 30);
         return success(attachmentService.authorize(
-                token, req.category(), req.name(), req.contentType()));
+                session, req.category(), req.name(), req.contentType()));
     }
 
-    @PostMapping("/{token}/attachments/confirm")
-    @RateLimiter(time = 1, timeUnit = TimeUnit.MINUTES, count = 60,
-            keyResolver = ExpressionRateLimiterKeyResolver.class,
-            keyArg = "T(cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationTokenService).rateLimitKey(#token)")
-    public CommonResult<AttachmentView> confirm(
-            @PathVariable String token, @Valid @RequestBody ConfirmReq req) {
-        AttachmentView result = attachmentService.confirm(token, req.attachmentId());
-        auditService.record("UPLOAD_CONFIRM", token, resolver.require(token).getId(), "CONFIRMED");
+    @PostMapping("/attachments/confirm")
+    public CommonResult<AttachmentView> confirmSession(
+            @CookieValue(name = ReturnRegistrationSessionCookieService.COOKIE_NAME,
+                    required = false) String sessionToken,
+            @Valid @RequestBody ConfirmReq req) {
+        String session = requireSessionCookie(sessionToken);
+        rateLimitService.checkSession(session, "confirm", 60);
+        AttachmentView result = attachmentService.confirm(session, req.attachmentId());
+        auditService.record("UPLOAD_CONFIRM", session,
+                resolver.requireSession(session).getId(), "CONFIRMED");
         return success(result);
     }
 
-    @DeleteMapping("/{token}/attachments/{attachmentId}")
-    @RateLimiter(time = 1, timeUnit = TimeUnit.MINUTES, count = 60,
-            keyResolver = ExpressionRateLimiterKeyResolver.class,
-            keyArg = "T(cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationTokenService).rateLimitKey(#token)")
-    public CommonResult<Boolean> remove(
-            @PathVariable String token, @PathVariable Long attachmentId) {
-        attachmentService.remove(token, attachmentId);
+    @DeleteMapping("/attachments/{attachmentId}")
+    public CommonResult<Boolean> removeSession(
+            @CookieValue(name = ReturnRegistrationSessionCookieService.COOKIE_NAME,
+                    required = false) String sessionToken,
+            @PathVariable Long attachmentId) {
+        String session = requireSessionCookie(sessionToken);
+        rateLimitService.checkSession(session, "remove", 60);
+        attachmentService.remove(session, attachmentId);
         return success(true);
     }
 
-    @PostMapping("/{token}/submit")
-    @RateLimiter(time = 1, timeUnit = TimeUnit.MINUTES, count = 10,
-            keyResolver = ExpressionRateLimiterKeyResolver.class,
-            keyArg = "T(cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationTokenService).rateLimitKey(#token)")
-    public CommonResult<Receipt> submit(
-            @PathVariable String token, @Valid @RequestBody SubmitReq req) {
-        Receipt result = submissionService.submit(token, new Submission(
+    @PostMapping("/submit")
+    public CommonResult<Receipt> submitSession(
+            @CookieValue(name = ReturnRegistrationSessionCookieService.COOKIE_NAME,
+                    required = false) String sessionToken,
+            @Valid @RequestBody SubmitReq req) {
+        String session = requireSessionCookie(sessionToken);
+        rateLimitService.checkSession(session, "submit", 10);
+        Receipt result = submissionService.submit(session, new Submission(
                 req.orderNo(), req.carrierCode(), req.carrierName(), req.waybillNo(),
                 req.shippedDate(), req.serials(), req.attachmentIds(),
                 req.issueDescription(), req.idempotencyKey()));
-        auditService.record("SUBMIT", token, resolver.require(token).getId(), result.status());
+        auditService.record("SUBMIT", session,
+                resolver.requireSession(session).getId(), result.status());
         return success(result);
     }
 
@@ -123,6 +157,12 @@ public class AppReturnRegistrationController {
     public record ConfirmReq(@NotNull Long attachmentId) {
     }
 
+    public record VerifyReq(
+            @Size(max = 128) String orderNo,
+            @Size(max = 32) String mobileLast4
+    ) {
+    }
+
     public record SubmitReq(
             @NotBlank String orderNo,
             @NotBlank String carrierCode,
@@ -134,6 +174,14 @@ public class AppReturnRegistrationController {
             @Size(max = 1000) String issueDescription,
             @NotBlank @Size(max = 128) String idempotencyKey
     ) {
+    }
+
+    private String requireSessionCookie(String sessionToken) {
+        if (sessionToken == null || sessionToken.isBlank()) {
+            throw exception(RETURN_REGISTRATION_NOT_AVAILABLE);
+        }
+        resolver.requireSession(sessionToken);
+        return sessionToken;
     }
 
 }

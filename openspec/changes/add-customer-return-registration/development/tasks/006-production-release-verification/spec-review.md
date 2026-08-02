@@ -2,11 +2,12 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Missing Requirements
 
-- Replace this scaffold with direct review.
+- None for development. The GitHub workflow targets production-80, includes
+  migration 037, and no longer requires a Gitee checkout in its source path.
 
 ## Extra Behavior
 
@@ -18,12 +19,13 @@ blocked
 
 ## Cannot Verify From Diff
 
-- Replace this scaffold with direct review.
+- GitHub push, workflow completion, public probes and database checks are
+  explicitly deferred to verification.
 
 ## Acceptance Assertions Verified
 
-- Replace this scaffold with the acceptance.json assertion ids verified during review (e.g. A1, A3), or "not applicable" when the change has no acceptance.json.
+- A1, A2, A3, A4, A5 at local-development evidence level.
 
 ## Required Fixes
 
-- Replace this scaffold with direct review.
+- No required fixes.

@@ -2,11 +2,12 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Missing Requirements
 
-- Replace this scaffold with direct review.
+- None. Migration, hash-only token persistence, tenant restoration and safe
+  unavailable-link behavior match the requirements.
 
 ## Extra Behavior
 
@@ -18,12 +19,12 @@ blocked
 
 ## Cannot Verify From Diff
 
-- Replace this scaffold with direct review.
+- Production migration application is deferred to verification.
 
 ## Acceptance Assertions Verified
 
-- Replace this scaffold with the acceptance.json assertion ids verified during review (e.g. A1, A3), or "not applicable" when the change has no acceptance.json.
+- A1, A4.
 
 ## Required Fixes
 
-- Replace this scaffold with direct review.
+- No required fixes.

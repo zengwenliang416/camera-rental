@@ -40,6 +40,9 @@ public final class ReturnRegistrationModels {
     ) {
     }
 
+    public record VerificationRequest(String orderNo, String mobileLast4) {
+    }
+
     public record AdminCreateResult(Long id, String formNo, String token, String sharePath,
                                     LocalDateTime expiresAt) {
     }

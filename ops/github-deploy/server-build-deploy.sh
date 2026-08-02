@@ -3,10 +3,8 @@ set -euo pipefail
 
 DEPLOY_ROOT="${DEPLOY_ROOT:-/opt/camera-rental}"
 RELEASE_SHA="${RELEASE_SHA:?RELEASE_SHA is required}"
-REPO_URL="${REPO_URL:-git@gitee.com:wenliang_zeng/camera-rental.git}"
+REPO_URL="${REPO_URL:-https://github.com/zengwenliang416/camera-rental.git}"
 SOURCE_DIR="${SOURCE_DIR:-${DEPLOY_ROOT}/source}"
-GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh -i ~/.ssh/camera_rental_gitee_pull -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20 -C}"
-export GIT_SSH_COMMAND
 NODE_VERSION="${NODE_VERSION:-22.14.0}"
 BUN_VERSION="${BUN_VERSION:-1.3.11}"
 NODE_ARCHIVE_ARCH=""

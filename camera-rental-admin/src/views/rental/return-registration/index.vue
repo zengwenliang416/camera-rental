@@ -4,15 +4,14 @@
       <div>
         <p>RETURN REGISTRATION</p>
         <h2>客户退回登记</h2>
-        <span>创建微信分享链接，核对客户提交的物流、设备序列号和归还照片。</span>
+        <span>统一入口验证闲鱼订单，核对客户提交的物流、设备序列号和归还照片。</span>
       </div>
-      <el-button
-        v-hasPermi="['rental:return-registration:create']"
-        type="primary"
-        @click="createVisible = true"
-      >
-        <Icon icon="ep:link" class="mr-5px" />创建退回链接
-      </el-button>
+      <div class="public-entry">
+        <code>{{ publicReturnUrl }}</code>
+        <el-button type="primary" @click="copy(publicReturnUrl)">
+          <Icon icon="ep:copy-document" class="mr-5px" />复制固定入口
+        </el-button>
+      </div>
     </div>
 
     <el-form :inline="true" :model="query" @submit.prevent>
@@ -73,20 +72,13 @@
           <small class="muted">{{ row.waybillNo || '尚未提交' }}</small>
         </template>
       </el-table-column>
-      <el-table-column prop="expiresAt" label="链接有效期" width="180" />
+      <el-table-column prop="expiresAt" label="会话有效期" width="180" />
       <el-table-column prop="submittedAt" label="提交时间" width="180">
         <template #default="{ row }">{{ row.submittedAt || '—' }}</template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width="250">
         <template #default="{ row }">
           <el-button link type="primary" @click="openDetail(row.id)">详情</el-button>
-          <el-button
-            v-if="canReissueReturnRegistration(row.status)"
-            v-hasPermi="['rental:return-registration:create']"
-            link
-            type="primary"
-            @click="reissue(row)"
-          >重新签发</el-button>
           <el-button
             v-if="canRevokeReturnRegistration(row.status)"
             v-hasPermi="['rental:return-registration:revoke']"
@@ -103,29 +95,6 @@
       v-model:limit="query.pageSize"
       @pagination="load"
     />
-
-    <el-dialog v-model="createVisible" title="创建客户退回链接" width="520px">
-      <el-alert type="info" :closable="false" title="只能为已经分配具体设备的内部租赁订单创建链接。" class="mb-18px" />
-      <el-form label-width="120px">
-        <el-form-item label="内部订单 ID" required>
-          <el-input-number v-model="createForm.rentalOrderId" :min="1" class="!w-100%" controls-position="right" />
-        </el-form-item>
-        <el-form-item label="有效天数">
-          <el-input-number v-model="createForm.validDays" :min="1" :max="30" class="!w-100%" controls-position="right" />
-        </el-form-item>
-      </el-form>
-      <div v-if="createdUrl" class="created-link">
-        <small>链接只在本次创建后显示，请立即发送给客户</small>
-        <code>{{ createdUrl }}</code>
-        <el-button type="primary" plain @click="copy(createdUrl)">复制链接</el-button>
-      </div>
-      <template #footer>
-        <el-button @click="createVisible = false">关闭</el-button>
-        <el-button type="primary" :loading="creating" :disabled="!createForm.rentalOrderId" @click="createLink">
-          创建链接
-        </el-button>
-      </template>
-    </el-dialog>
 
     <el-drawer v-model="detailVisible" title="退回登记详情" size="min(720px, 94vw)">
       <div v-loading="detailLoading" class="detail-body">
@@ -178,10 +147,8 @@
 
 <script setup lang="ts">
 import {
-  createReturnRegistration,
   getReturnRegistration,
   getReturnRegistrationPage,
-  reissueReturnRegistration,
   reviewReturnRegistration,
   revokeReturnRegistration,
   type ReturnRegistrationDetail,
@@ -191,7 +158,6 @@ import {
 import { useMessage } from '@/hooks/web/useMessage'
 import {
   buildReturnRegistrationPageParams,
-  canReissueReturnRegistration,
   canReviewReturnRegistration,
   canRevokeReturnRegistration,
   RETURN_REGISTRATION_STATUSES,
@@ -213,14 +179,11 @@ const query = reactive<ReturnRegistrationPageParams>({
   rentalOrderId: undefined
 })
 const submittedRange = ref<[string, string]>()
-const createVisible = ref(false)
-const creating = ref(false)
-const createdUrl = ref('')
-const createForm = reactive({ rentalOrderId: undefined as number | undefined, validDays: 7 })
 const detailVisible = ref(false)
 const detailLoading = ref(false)
 const detail = ref<ReturnRegistrationDetail>()
 const reviewNote = ref('')
+const publicReturnUrl = 'https://rental.motion-cover.com/return'
 
 const statusLabel = returnRegistrationStatusLabel
 const tagType = (value: string) => value === 'ACCEPTED' ? 'success' : value === 'REVIEW_REQUIRED' ? 'warning' : value === 'REJECTED' || value === 'REVOKED' ? 'danger' : 'info'
@@ -250,18 +213,7 @@ function reset() {
   submittedRange.value = undefined
   load()
 }
-async function createLink() {
-  if (!createForm.rentalOrderId) return
-  creating.value = true
-  try {
-    const result = await createReturnRegistration({ rentalOrderId: createForm.rentalOrderId, validDays: createForm.validDays })
-    createdUrl.value = `${window.location.origin}${result.sharePath}`
-    await load()
-  } finally {
-    creating.value = false
-  }
-}
-async function copy(value: string) { await navigator.clipboard.writeText(value); message.success('链接已复制') }
+async function copy(value: string) { await navigator.clipboard.writeText(value); message.success('固定入口已复制') }
 async function openDetail(id: number) {
   detailVisible.value = true
   detailLoading.value = true
@@ -272,14 +224,6 @@ async function revoke(row: ReturnRegistrationRow) {
   await message.confirm(`确认撤销 ${row.formNo}？撤销后客户无法继续填写。`)
   await revokeReturnRegistration(row.id)
   message.success('已撤销')
-  await load()
-}
-async function reissue(row: ReturnRegistrationRow) {
-  await message.confirm(`确认重新签发 ${row.formNo}？旧链接会立即失效。`)
-  const result = await reissueReturnRegistration(row.id, 7)
-  const url = `${window.location.origin}${result.sharePath}`
-  await copy(url)
-  message.success('新链接已签发，旧链接已失效')
   await load()
 }
 async function review(accept: boolean) {
@@ -297,13 +241,13 @@ onMounted(load)
 .registration-heading p { margin: 0; color: #33775b; font-size: 11px; font-weight: 800; letter-spacing: .16em; }
 .registration-heading h2 { margin: 6px 0; font-size: 27px; }
 .registration-heading span, .muted { color: var(--el-text-color-secondary); font-size: 12px; }
-.created-link { display: grid; gap: 12px; padding: 16px; border-radius: 12px; background: var(--el-fill-color-light); }
-.created-link code { overflow-wrap: anywhere; line-height: 1.6; }
+.public-entry { display: flex; align-items: center; gap: 10px; max-width: 52%; }
+.public-entry code { overflow-wrap: anywhere; color: var(--el-text-color-regular); font-size: 12px; line-height: 1.5; }
 .detail-body h3 { margin: 28px 0 12px; }
 .attachment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .attachment-grid a { display: grid; gap: 7px; color: inherit; text-decoration: none; }
 .attachment-grid :deep(.el-image) { aspect-ratio: 1; border-radius: 10px; background: var(--el-fill-color); }
 .review-box { display: grid; gap: 14px; margin-top: 24px; padding: 16px; border: 1px solid var(--el-border-color); border-radius: 14px; }
 .review-box > div { display: flex; justify-content: flex-end; gap: 10px; }
-@media (max-width: 720px) { .registration-heading { align-items: flex-start; flex-direction: column; } .attachment-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 720px) { .registration-heading { align-items: flex-start; flex-direction: column; } .public-entry { align-items: flex-start; flex-direction: column; max-width: 100%; } .attachment-grid { grid-template-columns: repeat(2, 1fr); } }
 </style>

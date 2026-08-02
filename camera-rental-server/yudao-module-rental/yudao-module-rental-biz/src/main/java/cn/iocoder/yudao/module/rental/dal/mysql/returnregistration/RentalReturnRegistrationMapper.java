@@ -22,6 +22,13 @@ public interface RentalReturnRegistrationMapper extends BaseMapperX<RentalReturn
                 .eq(RentalReturnRegistrationDO::getId, id));
     }
 
+    default RentalReturnRegistrationDO selectLatestByRentalOrderIdForUpdate(Long rentalOrderId) {
+        return selectOneForUpdate(new LambdaQueryWrapperX<RentalReturnRegistrationDO>()
+                .eq(RentalReturnRegistrationDO::getRentalOrderId, rentalOrderId)
+                .orderByDesc(RentalReturnRegistrationDO::getId)
+                .last("LIMIT 1"));
+    }
+
     default PageResult<RentalReturnRegistrationDO> selectPage(
             PageParam page, String status, Long orderId, String keyword,
             String serial, LocalDateTime submittedStart, LocalDateTime submittedEnd) {

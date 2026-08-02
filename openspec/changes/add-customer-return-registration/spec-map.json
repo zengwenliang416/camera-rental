@@ -67,7 +67,7 @@
     "idempotent-submit-and-return-delivery-reuse",
     "no-device-order-inspection-or-schedule-auto-transition",
     "additive-migration-only",
-    "github-main-auto-deploy-to-211",
+    "github-main-auto-deploy-to-154.9.235.80",
     "production-upload-database-and-admin-e2e-verification"
   ],
   "data_flows": [

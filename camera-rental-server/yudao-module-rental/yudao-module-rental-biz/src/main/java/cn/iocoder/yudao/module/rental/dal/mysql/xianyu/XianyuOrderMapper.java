@@ -57,6 +57,16 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
                 .eq(XianyuOrderDO::getExternalOrderId, externalOrderId));
     }
 
+    default List<XianyuOrderDO> selectListByExternalOrderId(String externalOrderId) {
+        return selectList(new LambdaQueryWrapperX<XianyuOrderDO>()
+                .select(XianyuOrderDO::getId, XianyuOrderDO::getTenantId,
+                        XianyuOrderDO::getExternalOrderId, XianyuOrderDO::getReceiverMobile,
+                        XianyuOrderDO::getRentalOrderId)
+                .eq(XianyuOrderDO::getExternalOrderId, externalOrderId)
+                .orderByAsc(XianyuOrderDO::getId)
+                .last("LIMIT 2"));
+    }
+
     default List<XianyuOrderDO> selectListByShopIdsAndExternalOrderId(List<Long> shopIds, String externalOrderId) {
         return selectList(new LambdaQueryWrapperX<XianyuOrderDO>()
                 .in(XianyuOrderDO::getShopId, shopIds)

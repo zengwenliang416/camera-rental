@@ -35,6 +35,16 @@ public class ReturnRegistrationPublicService {
     @Transactional(rollbackFor = Exception.class)
     public PublicContext getContext(String token) {
         RentalReturnRegistrationDO registration = resolver.require(token);
+        return getContext(registration);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public PublicContext getSessionContext(String sessionToken) {
+        RentalReturnRegistrationDO registration = resolver.requireSession(sessionToken);
+        return getContext(registration);
+    }
+
+    private PublicContext getContext(RentalReturnRegistrationDO registration) {
         return resolver.execute(registration, () -> {
             RentalReturnRegistrationDO current = registrationMapper.selectByIdForUpdate(registration.getId());
             String status = resolver.publicStatus(current);

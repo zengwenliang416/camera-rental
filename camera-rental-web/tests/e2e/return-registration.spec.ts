@@ -39,7 +39,10 @@ test('mobile customer can retry upload, omit packaging and submit only once', as
     await route.fulfill({ status: 200, body: '' })
   })
 
-  await page.goto('/return/test-token')
+  await page.goto('/return')
+  await page.getByPlaceholder('请输入完整闲鱼订单号').fill('ORDER-001')
+  await page.getByPlaceholder('4 位数字').fill('8000')
+  await page.getByRole('button', { name: '验证并继续' }).click()
   await expect(page.locator('.order-confirm').getByText('ORDER-001', { exact: true }))
     .toBeVisible()
   await page.getByRole('button', { name: '下一步 →' }).click()
@@ -74,16 +77,19 @@ test('mobile customer can retry upload, omit packaging and submit only once', as
   expect(submitCount).toBe(1)
 })
 
-test('terminal links hide order identity', async ({ page }) => {
-  await mockReturnApi(page, { status: 'EXPIRED' })
-  await page.goto('/return/expired-token')
-  await expect(page.getByRole('heading', { name: '链接已过期' })).toBeVisible()
+test('failed verification uses one enumeration-resistant error', async ({ page }) => {
+  await mockReturnApi(page, { status: 'DRAFT', verifyFailure: true })
+  await page.goto('/return')
+  await page.getByPlaceholder('请输入完整闲鱼订单号').fill('ORDER-404')
+  await page.getByPlaceholder('4 位数字').fill('9999')
+  await page.getByRole('button', { name: '验证并继续' }).click()
+  await expect(page.getByText('订单号或手机号后四位不匹配')).toBeVisible()
   await expect(page.getByText('ORDER-001')).toHaveCount(0)
 })
 
 test('theme and locale preferences remain responsive on mobile', async ({ page }) => {
-  await mockReturnApi(page, { status: 'DRAFT' })
-  await page.goto('/return/draft-token')
+  await mockReturnApi(page, { status: 'DRAFT', initialSession: true })
+  await page.goto('/return')
   await expect(page.getByRole('heading', { name: '确认本次退回订单' })).toBeVisible()
   await page.getByRole('button', { name: '切换主题' }).click()
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
@@ -95,29 +101,43 @@ test('theme and locale preferences remain responsive on mobile', async ({ page }
   expect(overflow).toBeLessThanOrEqual(0)
 })
 
+test('historical token routes redirect to the fixed public entry', async ({ page }) => {
+  await mockReturnApi(page, { status: 'DRAFT' })
+  await page.goto('/return/legacy-token')
+  await expect(page).toHaveURL(/\/return$/)
+  await expect(page.getByRole('heading', { name: '验证您的租赁订单' })).toBeVisible()
+})
+
 interface MockOptions {
   status: 'DRAFT' | 'EXPIRED' | 'REVOKED' | 'ACCEPTED'
+  initialSession?: boolean
+  verifyFailure?: boolean
   onAuthorize?: (request: import('@playwright/test').Request) => Promise<unknown>
   onSubmit?: () => Promise<unknown>
   attachmentCategories?: Map<number, string>
 }
 
 async function mockReturnApi(page: Page, options: MockOptions) {
+  let sessionActive = options.initialSession ?? false
   await page.route('**/app-api/rental/return-registration/**', async (route) => {
     const request = route.request()
     const url = new URL(request.url())
     const path = url.pathname
-    if (request.method() === 'GET') {
-      await json(route, {
-        status: options.status,
-        formNo: options.status === 'DRAFT' ? 'RR202608010001' : null,
-        orderNo: options.status === 'DRAFT' ? 'ORDER-001' : null,
-        assignedDeviceCount: options.status === 'DRAFT' ? 1 : 0,
-        expiresAt: '2026-08-08T17:00:00',
-        receipt: options.status === 'ACCEPTED'
-          ? { formNo: 'RR202608010001', status: 'ACCEPTED', waybillNo: 'SF1000000001' }
-          : null
-      })
+    if (request.method() === 'GET' && path.endsWith('/session')) {
+      if (!sessionActive) {
+        await apiError(route, '退回登记链接不可用')
+        return
+      }
+      await json(route, context(options.status))
+      return
+    }
+    if (request.method() === 'POST' && path.endsWith('/verify')) {
+      if (options.verifyFailure) {
+        await apiError(route, '订单号或手机号后四位不匹配')
+        return
+      }
+      sessionActive = true
+      await json(route, context(options.status))
       return
     }
     if (path.endsWith('/upload-authorizations') && options.onAuthorize) {
@@ -145,10 +165,31 @@ async function mockReturnApi(page: Page, options: MockOptions) {
   })
 }
 
+function context(status: MockOptions['status']) {
+  return {
+    status,
+    formNo: status === 'DRAFT' ? 'RR202608010001' : null,
+    orderNo: status === 'DRAFT' ? 'ORDER-001' : null,
+    assignedDeviceCount: status === 'DRAFT' ? 1 : 0,
+    expiresAt: '2026-08-08T17:00:00',
+    receipt: status === 'ACCEPTED'
+      ? { formNo: 'RR202608010001', status: 'ACCEPTED', waybillNo: 'SF1000000001' }
+      : null
+  }
+}
+
 async function json(route: import('@playwright/test').Route, data: unknown) {
   await route.fulfill({
     status: 200,
     contentType: 'application/json',
     body: JSON.stringify({ code: 0, data })
+  })
+}
+
+async function apiError(route: import('@playwright/test').Route, message: string) {
+  await route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ code: 1, msg: message, data: null })
   })
 }

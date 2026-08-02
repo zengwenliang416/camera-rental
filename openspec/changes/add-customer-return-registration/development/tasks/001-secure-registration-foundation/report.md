@@ -39,7 +39,7 @@ DONE
 
 ## Follow-up Needed
 
-- Verify the applied migration checksum and table/index shape on 211 after deployment.
+- Verify the applied migration checksum and table/index shape on `154.9.235.80` after deployment.
 
 ## Adjudication
 

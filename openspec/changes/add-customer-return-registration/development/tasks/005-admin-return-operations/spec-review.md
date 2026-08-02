@@ -2,11 +2,12 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Missing Requirements
 
-- Replace this scaffold with direct review.
+- None. The admin now copies the fixed public URL while preserving page,
+  detail, revoke and review operations.
 
 ## Extra Behavior
 
@@ -18,12 +19,12 @@ blocked
 
 ## Cannot Verify From Diff
 
-- Replace this scaffold with direct review.
+- Live permission, preview and review behavior remains production verification.
 
 ## Acceptance Assertions Verified
 
-- Replace this scaffold with the acceptance.json assertion ids verified during review (e.g. A1, A3), or "not applicable" when the change has no acceptance.json.
+- A5.
 
 ## Required Fixes
 
-- Replace this scaffold with direct review.
+- No required fixes.

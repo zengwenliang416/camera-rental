@@ -1,6 +1,6 @@
 {
   "task_id": "006-production-release-verification",
-  "goal": "Deploy and verify the complete return registration feature on the 211 production host.",
+  "goal": "Prepare and verify the complete return registration release path for the 154.9.235.80 production host.",
   "must_read": [
     "openspec/changes/add-customer-return-registration/development/tasks/006-production-release-verification/brief.md",
     "openspec/specs/ui-design/design.md",
@@ -36,7 +36,8 @@
   ],
   "unsafe_assumptions": [
     "Do not assume server SSH, RustFS or database state from earlier sessions.",
-    "Do not assume GitHub and Gitee main expose the same SHA before verification."
+    "Do not assume GitHub main and the active production release expose the same SHA before verification.",
+    "Do not reactivate the 211 rental services during migration or verification."
   ],
   "stop_condition": "Stop if deployment cannot prove source SHA, migration, service and storage health."
 }

@@ -70,13 +70,16 @@ public class ReturnRegistrationAdminService {
         }
         int days = validDays == null ? 7 : Math.max(1, Math.min(validDays, 30));
         ReturnRegistrationTokenService.IssuedToken token = tokenService.issue();
+        XianyuOrderDO channelOrder = order.getChannelOrderId() == null ? null
+                : xianyuOrderMapper.selectById(order.getChannelOrderId());
         String formNo = "RR" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
                 + ThreadLocalRandom.current().nextInt(1000, 10000);
         RentalReturnRegistrationDO registration = new RentalReturnRegistrationDO()
                 .setFormNo(formNo)
                 .setRentalOrderId(order.getId())
                 .setChannelOrderId(order.getChannelOrderId())
-                .setExternalOrderNo(order.getOrderNo())
+                .setExternalOrderNo(channelOrder == null
+                        ? order.getSourceOrderId() : channelOrder.getExternalOrderId())
                 .setTokenHash(token.hash())
                 .setStatus(ReturnRegistrationStatusEnum.DRAFT.name())
                 .setExpiresAt(LocalDateTime.now().plusDays(days));

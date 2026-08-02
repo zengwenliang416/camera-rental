@@ -50,6 +50,31 @@ set_env_default() {
   set_env_value "${file}" "${key}" "${value}"
 }
 
+generate_encryptor_password() {
+  if command -v openssl >/dev/null 2>&1; then
+    openssl rand -hex 16
+    return
+  fi
+  od -An -N16 -tx1 /dev/urandom | tr -d ' \n'
+}
+
+ensure_encryptor_password() {
+  local file="$1"
+  local current=""
+  local length=0
+
+  if grep -q '^MYBATIS_PLUS_ENCRYPTOR_PASSWORD=' "${file}" 2>/dev/null; then
+    current="$(sed -n 's/^MYBATIS_PLUS_ENCRYPTOR_PASSWORD=//p' "${file}" | tail -n 1)"
+    length="$(printf '%s' "${current}" | wc -c | tr -d ' ')"
+    case "${length}" in
+      16|24|32) return ;;
+    esac
+    echo "[production-80][error] existing MYBATIS_PLUS_ENCRYPTOR_PASSWORD must be 16, 24, or 32 bytes; refusing automatic key rotation" >&2
+    exit 1
+  fi
+  set_env_value "${file}" MYBATIS_PLUS_ENCRYPTOR_PASSWORD "$(generate_encryptor_password)"
+}
+
 discover_nginx_config() {
   local search_root
   local candidate
@@ -87,6 +112,7 @@ set_env_default "${BACKEND_ENV}" WX_MP_APP_ID disabled
 set_env_default "${BACKEND_ENV}" WX_MP_SECRET disabled
 set_env_default "${BACKEND_ENV}" WX_MINIAPP_APP_ID disabled
 set_env_default "${BACKEND_ENV}" WX_MINIAPP_SECRET disabled
+ensure_encryptor_password "${BACKEND_ENV}"
 
 # Production API documentation is disabled. Knife4j must be disabled with
 # SpringDoc, otherwise its auto-configuration requires a bean SpringDoc omits.

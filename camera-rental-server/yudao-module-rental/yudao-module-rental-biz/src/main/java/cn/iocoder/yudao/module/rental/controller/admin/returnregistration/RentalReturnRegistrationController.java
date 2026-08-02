@@ -4,13 +4,9 @@ import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationAdminService;
-import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationModels.AdminCreateResult;
 import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationModels.AdminDetail;
 import cn.iocoder.yudao.module.rental.service.returnregistration.ReturnRegistrationModels.AdminRow;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -37,19 +33,6 @@ public class RentalReturnRegistrationController {
 
     public RentalReturnRegistrationController(ReturnRegistrationAdminService adminService) {
         this.adminService = adminService;
-    }
-
-    @PostMapping("/create")
-    @PreAuthorize("@ss.hasPermission('rental:return-registration:create')")
-    public CommonResult<AdminCreateResult> create(@Valid @RequestBody CreateReq req) {
-        return success(adminService.create(req.rentalOrderId(), req.validDays()));
-    }
-
-    @PostMapping("/{id}/reissue")
-    @PreAuthorize("@ss.hasPermission('rental:return-registration:create')")
-    public CommonResult<AdminCreateResult> reissue(
-            @PathVariable Long id, @Valid @RequestBody ReissueReq req) {
-        return success(adminService.reissue(id, req.validDays()));
     }
 
     @GetMapping("/page")
@@ -87,12 +70,6 @@ public class RentalReturnRegistrationController {
             @PathVariable Long id, @Valid @RequestBody ReviewReq req) {
         adminService.review(id, req.accept(), req.note(), getLoginUserId());
         return success(true);
-    }
-
-    public record CreateReq(@NotNull Long rentalOrderId, @Min(1) @Max(30) Integer validDays) {
-    }
-
-    public record ReissueReq(@Min(1) @Max(30) Integer validDays) {
     }
 
     public record ReviewReq(boolean accept, @Size(max = 1000) String note) {

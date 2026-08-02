@@ -2,32 +2,37 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Separation Of Concerns
 
-- Replace this scaffold with direct review.
+- Persistence, token issuance, resolution and tenant restoration remain in
+  focused services and Mappers.
 
 ## Component Cohesion / Coupling
 
-- Confirm high cohesion, low coupling, and required extraction.
+- Token hashing and public resolution are reusable and do not couple the
+  controller to persistence.
 
 ## Test Quality
 
-- Replace this scaffold with direct review.
+- Focused tests cover entropy, hash-only persistence, expiry, revocation,
+  tenant restoration and the missing-mobile `0000` regression.
 
 ## Error Handling
 
-- Replace this scaffold with direct review.
+- Public failures use uniform business errors without returning tenant or order
+  details.
 
 ## Reuse / Duplication
 
-- Replace this scaffold with direct review.
+- Existing tenant, order and Mapper conventions are reused.
 
 ## Complexity Delta
 
-- Replace this scaffold with direct review.
+- The added services and queries are bounded; no broad framework changes were
+  introduced.
 
 ## Required Fixes
 
-- Replace this scaffold with direct review.
+- No required fixes.

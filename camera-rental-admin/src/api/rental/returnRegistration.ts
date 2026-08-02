@@ -58,14 +58,6 @@ export interface ReturnRegistrationPageParams {
   submittedEnd?: string
 }
 
-export interface ReturnRegistrationCreateResult {
-  id: number
-  formNo: string
-  token: string
-  sharePath: string
-  expiresAt: string
-}
-
 const path = '/rental/return-registration'
 
 export const getReturnRegistrationPage = (params: ReturnRegistrationPageParams) =>
@@ -73,15 +65,6 @@ export const getReturnRegistrationPage = (params: ReturnRegistrationPageParams) 
 
 export const getReturnRegistration = (id: number) =>
   request.get<ReturnRegistrationDetail>({ url: `${path}/get`, params: { id } })
-
-export const createReturnRegistration = (data: { rentalOrderId: number; validDays: number }) =>
-  request.post<ReturnRegistrationCreateResult>({ url: `${path}/create`, data })
-
-export const reissueReturnRegistration = (id: number, validDays: number) =>
-  request.post<ReturnRegistrationCreateResult>({
-    url: `${path}/${id}/reissue`,
-    data: { validDays }
-  })
 
 export const revokeReturnRegistration = (id: number) =>
   request.post<boolean>({ url: `${path}/${id}/revoke` })

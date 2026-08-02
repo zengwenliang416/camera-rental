@@ -7,7 +7,9 @@
 - Row-locked idempotent submission, assigned-device matching and conditional `RETURN` Delivery creation.
 - Production Nuxt five-step customer form with retry, draft recovery, locale/theme and terminal states.
 - Permissioned admin page for create, page, detail, revoke and review operations.
-- Checksum-pinned migration runner and RustFS release integration for the 211 deployment.
+- Checksum-pinned migration runner and RustFS release integration for the production-80 deployment.
+- Fixed `/return` entry with Xianyu order number plus receiver mobile last-four verification.
+- Automatic 24-hour `Secure`, `HttpOnly`, `SameSite=Lax` session with hash-only persistence and per-IP/order/session rate limits.
 
 ## Files Changed
 
@@ -43,8 +45,11 @@
 
 ## API / Data Flow Changes
 
-- Admin creates a one-time `/return/{token}` link for an order with active device assignments.
-- Public context resolves the token hash globally, restores tenant context and returns only order/form metadata.
+- Customer opens `/return`, verifies the Xianyu order number and receiver mobile last four digits, and receives a cookie-bound session.
+- Public verification locates one channel order, restores tenant context, creates or resumes the registration and returns only safe order/form metadata.
+- Historical `/return/{token}` routes redirect to the fixed entry; old public
+  token APIs and admin issue/reissue APIs are closed while existing hash data
+  remains available for authorized audit.
 - Upload authorization returns a short-lived PUT URL; confirmation creates or reuses `infra_file` metadata after content validation.
 - Submission locks the registration, revalidates attachments, matches assigned devices and either binds one `RETURN` Delivery or persists review evidence.
 - Admin review repeats attachment and device validation before accepting a review-required registration.
@@ -66,15 +71,16 @@
 
 ## Known Risks
 
-- GitHub/Gitee push and production deployment are not yet complete, so this file is not a final verification handoff.
+- GitHub push and production deployment are not yet complete, so this file is not final production evidence.
 - RustFS is pre-1.0 and requires health monitoring plus off-host backup.
 - The S3 public endpoint requires DNS, TLS and Nginx while port 9001 must remain private.
 - The application must use the generated least-privilege `RUSTFS_APP_*` credentials, never RustFS root credentials.
 
 ## Items Requiring Six-Domain Verification
 
-- Prove the same committed SHA on GitHub, Gitee and `/release-info.json`.
-- Prove migrations 034 and 036 and their checksums in the production schema migration table.
+- Prove the same committed SHA on GitHub and `/release-info.json`.
+- Prove migrations 034, 036 and 037 and their checksums in the production schema migration table.
 - Prove RustFS health, private bucket policy, application service account and non-public console.
 - Configure the private S3 file configuration in the management application.
 - Execute a synthetic public upload-to-database-to-admin review flow and verify `infra_file`, all return-registration tables and `rental_delivery.direction=RETURN`.
+- Prove `camera-rental-server.service` and `camera-rental-web.service` remain disabled/inactive on 211.

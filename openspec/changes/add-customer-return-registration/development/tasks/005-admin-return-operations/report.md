@@ -39,7 +39,7 @@ DONE
 
 ## Follow-up Needed
 
-- Verify tenant permissions, page/detail rendering, photo preview and review actions on 211 using synthetic data.
+- Verify tenant permissions, fixed-entry copy, page/detail rendering, photo preview and review actions on `154.9.235.80` using synthetic data.
 
 ## Adjudication
 

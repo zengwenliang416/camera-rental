@@ -12,17 +12,26 @@ interface ApiResult<T> {
   data: T
 }
 
-export function useReturnRegistration(token: string) {
+export function useReturnRegistration() {
   const config = useRuntimeConfig()
-  const base = `${config.public.apiBase}/rental/return-registration/${encodeURIComponent(token)}`
+  const base = `${config.public.apiBase}/rental/return-registration`
 
   async function request<T>(path = '', options: Parameters<typeof $fetch>[1] = {}) {
-    const result = await $fetch<ApiResult<T>>(`${base}${path}`, options)
+    const result = await $fetch<ApiResult<T>>(`${base}${path}`, {
+      credentials: 'include',
+      ...options
+    })
     if (result.code !== 0) throw new Error(result.msg || '请求失败')
     return result.data
   }
 
-  const loadContext = () => request<ReturnContext>()
+  const verify = (orderNo: string, mobileLast4: string) =>
+    request<ReturnContext>('/verify', {
+      method: 'POST',
+      body: { orderNo, mobileLast4 }
+    })
+
+  const loadContext = () => request<ReturnContext>('/session')
 
   async function upload(
     file: File,
@@ -96,5 +105,5 @@ export function useReturnRegistration(token: string) {
       }
     })
 
-  return { loadContext, upload, removePhoto, submit }
+  return { verify, loadContext, upload, removePhoto, submit }
 }

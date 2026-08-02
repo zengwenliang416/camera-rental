@@ -2,11 +2,12 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Missing Requirements
 
-- Replace this scaffold with direct review.
+- None. Submission locks the registration, revalidates files and assignments,
+  and creates or reuses one Return Delivery only for safe matches.
 
 ## Extra Behavior
 
@@ -18,12 +19,12 @@ blocked
 
 ## Cannot Verify From Diff
 
-- Replace this scaffold with direct review.
+- Production row and transaction evidence remains in verification.
 
 ## Acceptance Assertions Verified
 
-- Replace this scaffold with the acceptance.json assertion ids verified during review (e.g. A1, A3), or "not applicable" when the change has no acceptance.json.
+- A2, A3, A4.
 
 ## Required Fixes
 
-- Replace this scaffold with direct review.
+- No required fixes.

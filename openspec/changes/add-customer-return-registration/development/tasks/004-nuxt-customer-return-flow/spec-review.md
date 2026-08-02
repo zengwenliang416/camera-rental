@@ -2,11 +2,12 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Missing Requirements
 
-- Replace this scaffold with direct review.
+- None. `/return` provides fixed-entry verification and the five-step flow;
+  historical token routes redirect without exposing token data.
 
 ## Extra Behavior
 
@@ -18,12 +19,13 @@ blocked
 
 ## Cannot Verify From Diff
 
-- Replace this scaffold with direct review.
+- Public production API, WeChat and RustFS behavior remain verification
+  surfaces.
 
 ## Acceptance Assertions Verified
 
-- Replace this scaffold with the acceptance.json assertion ids verified during review (e.g. A1, A3), or "not applicable" when the change has no acceptance.json.
+- A1, A2.
 
 ## Required Fixes
 
-- Replace this scaffold with direct review.
+- No required fixes.

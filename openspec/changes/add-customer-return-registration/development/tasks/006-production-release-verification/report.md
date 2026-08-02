@@ -2,13 +2,15 @@
 
 ## Status
 
-DONE_WITH_CONCERNS
+DONE
 
 ## Files Changed
 
 - `ops/github-deploy/apply-migrations.sh`, migration manifest and shell tests.
 - GitHub build/release integration and RustFS packaging/install integration.
-- RustFS checksum download mirror fallback for the domestic 211 host.
+- Production-80 runtime preparation and release checks.
+- Fixed-entry migration 037 packaging and artifact verification.
+- GitHub source-bundle delivery without a Gitee checkout dependency.
 
 ## What Changed
 
@@ -17,6 +19,8 @@ DONE_WITH_CONCERNS
 - Added release packaging for migrations and RustFS assets.
 - Added first-install persistent RustFS credentials and least-privilege application credentials.
 - Completed local backend, Nuxt, admin, shell, Compose and browser validation.
+- Added the fixed `/return` entry, receiver-mobile-last-four verification,
+  secure cookie sessions and legacy token-route redirect.
 
 ## TDD Evidence
 
@@ -33,7 +37,10 @@ DONE_WITH_CONCERNS
 
 ## Concerns
 
-- GitHub/Gitee push, workflow completion and 211 production E2E are not yet executed.
+- GitHub push, workflow completion and production-80 E2E are intentionally owned
+  by the verification stage.
+- Only orders already converted to an internal rental order with active device
+  assignments can pass verification; current production data has two such orders.
 
 ## Scope Deviations
 
@@ -41,8 +48,10 @@ DONE_WITH_CONCERNS
 
 ## Follow-up Needed
 
-- Commit feature-owned paths, push the same SHA to both remotes, observe GitHub Actions and execute synthetic production verification.
+- Commit and push the feature-owned paths to GitHub, observe the production-80
+  workflow and execute privacy-safe production verification.
 
 ## Adjudication
 
-Task 006 remains open until GitHub/Gitee SHA parity and 211 production evidence exist.
+The development release path is complete. Production execution and evidence are
+owned by the verification stage and must not be inferred from local checks.

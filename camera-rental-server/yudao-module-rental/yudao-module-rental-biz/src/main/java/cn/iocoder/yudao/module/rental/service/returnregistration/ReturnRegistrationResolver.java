@@ -33,6 +33,15 @@ public class ReturnRegistrationResolver {
         return registration;
     }
 
+    public RentalReturnRegistrationDO requireSession(String token) {
+        RentalReturnRegistrationDO registration = require(token);
+        if (registration.getExpiresAt() == null
+                || !registration.getExpiresAt().isAfter(LocalDateTime.now())) {
+            throw exception(RETURN_REGISTRATION_NOT_AVAILABLE);
+        }
+        return registration;
+    }
+
     public <T> T execute(RentalReturnRegistrationDO registration, Callable<T> callable) {
         return TenantUtils.execute(registration.getTenantId(), callable);
     }

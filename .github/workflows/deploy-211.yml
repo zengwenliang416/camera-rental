@@ -1,4 +1,4 @@
-name: Deploy camera rental to 211
+name: Deploy camera rental to production-80
 
 on:
   workflow_dispatch:
@@ -18,14 +18,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: camera-rental-211-deploy
+  group: camera-rental-production-80-deploy
   cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-24.04
     timeout-minutes: 90
-    environment: production-211
+    environment: production-80
     steps:
       - uses: actions/checkout@v4
         with:
@@ -44,8 +44,8 @@ jobs:
           chmod 700 ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          HOST="${DEPLOY_HOST:-211.101.246.160}"
-          PORT="${DEPLOY_PORT:-22}"
+          HOST="${DEPLOY_HOST:-154.9.235.80}"
+          PORT="${DEPLOY_PORT:-2222}"
           if [ -n "$SSH_KNOWN_HOSTS" ]; then
             printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
           else
@@ -61,8 +61,8 @@ jobs:
           RELEASE_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          HOST="${DEPLOY_HOST:-211.101.246.160}"
-          PORT="${DEPLOY_PORT:-22}"
+          HOST="${DEPLOY_HOST:-154.9.235.80}"
+          PORT="${DEPLOY_PORT:-2222}"
           USER="${DEPLOY_USER:-root}"
           ROOT="${DEPLOY_ROOT:-/opt/camera-rental}"
           CONTROL_PATH="${RUNNER_TEMP}/camera-rental-ssh-%C"

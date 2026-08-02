@@ -78,8 +78,12 @@ chmod +x "${mock_bin}/uname" "${mock_bin}/curl" "${mock_bin}/sha256sum" "${mock_
 CURL_LOG="${curl_log}" PATH="${mock_bin}:${PATH}" \
   bash "${repo_root}/ops/rustfs/bootstrap.sh" "${rustfs_root}"
 
-expected_base="rustfs-cli-linux-amd64-gnu-v0.1.30.tar.gz"
+expected_base="rustfs-cli-linux-amd64-v0.1.30.tar.gz"
 grep -Fq "/v0.1.30/${expected_base}" "${curl_log}"
 grep -Fq "/v0.1.30/${expected_base}.sha256" "${curl_log}"
+if grep -Fq -- "-gnu-" "${curl_log}"; then
+  echo "glibc-linked RustFS CLI asset must not be used" >&2
+  exit 1
+fi
 
 echo "RustFS bootstrap tests passed"

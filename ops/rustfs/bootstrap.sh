@@ -24,7 +24,9 @@ install_rc() {
     aarch64|arm64) arch="arm64" ;;
     *) echo "[rustfs] unsupported rc architecture: $(uname -m)" >&2; exit 1 ;;
   esac
-  asset="rustfs-cli-linux-${arch}-gnu-${rc_version}.tar.gz"
+  # The default Linux release is statically linked. The GNU build currently
+  # requires a newer glibc than Ubuntu 22.04 provides.
+  asset="rustfs-cli-linux-${arch}-${rc_version}.tar.gz"
   archive="$(mktemp)"
   checksum="$(mktemp)"
 

@@ -1,9 +1,12 @@
-# GitHub Actions 部署到 211.101.246.160
+# GitHub Actions 部署到 154.9.235.80
 
 本部署方案把 GitHub `main` 作为发布源。Actions 仅通过 SSH 下发小型部署脚本，
-由 `211.101.246.160` 拉取指定 Git SHA，并复用服务器上的 Maven、pnpm、Bun
+由 `154.9.235.80` 构建指定 Git SHA，并复用服务器上的 Maven、pnpm、Bun
 依赖和上一版构建产物完成增量发布。公网域名使用 `rental.motion-cover.com`，
 生产密钥和数据库配置不进入 Git。
+
+文件名保留 `github-actions-211.md` 仅为兼容既有链接；GitHub 生产部署目标已经
+迁移到 `154.9.235.80`。Gitee 发布路径不属于本方案。
 
 ## 发布范围
 
@@ -22,14 +25,8 @@
 
 ## 国内 GitHub 加速
 
-211 服务器位于国内，直连 GitHub 可能超时。流水线按顺序探测：
-
-1. `gh-proxy.com` Git 镜像。
-2. `ghfast.top` Git 镜像。
-3. Gitee 仓库镜像。
-
-候选源的 `main` 必须精确等于本次 `${{ github.sha }}` 才会使用，避免镜像延迟
-导致发布旧代码。所有候选源均没有目标 SHA 时，发布直接失败。
+Actions 会把经过 Git 校验的 source bundle 直接上传到生产服务器。服务器构建
+不依赖访问 GitHub、GitHub 代理或 Gitee。
 
 ## GitHub Secrets
 
@@ -38,31 +35,17 @@
 | Secret | 必填 | 说明 |
 | --- | --- | --- |
 | `DEPLOY_SSH_PRIVATE_KEY` | 是 | 可登录服务器的私钥 |
-| `DEPLOY_HOST` | 否 | 默认 `211.101.246.160` |
-| `DEPLOY_PORT` | 否 | 默认 `22` |
+| `DEPLOY_HOST` | 否 | 默认 `154.9.235.80` |
+| `DEPLOY_PORT` | 否 | 默认 `2222` |
 | `DEPLOY_USER` | 否 | 默认 `root` |
 | `DEPLOY_ROOT` | 否 | 默认 `/opt/camera-rental` |
 | `DEPLOY_SSH_KNOWN_HOSTS` | 建议 | 服务器 known_hosts，未配置时 Actions 会 ssh-keyscan |
 
-当前已创建专用部署 key，本机私钥位置：
+为 `154.9.235.80` 创建独立部署 key，不复用个人 SSH 私钥。私钥只写入 GitHub
+Actions Secret，公钥加入服务器 `root` 用户：
 
 ```text
-~/.ssh/camera_rental_actions_211
-```
-
-对应公钥需要加入服务器 `root` 用户：
-
-```text
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILVxM555NweJzQ6vuAvj37q2BeKDnGP3F7QIqQl5YmUH camera-rental-actions@github
-```
-
-服务器执行示例：
-
-```bash
-mkdir -p /root/.ssh
-chmod 700 /root/.ssh
-printf '%s\n' 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILVxM555NweJzQ6vuAvj37q2BeKDnGP3F7QIqQl5YmUH camera-rental-actions@github' >> /root/.ssh/authorized_keys
-chmod 600 /root/.ssh/authorized_keys
+~/.ssh/camera_rental_actions_80
 ```
 
 ## 服务器一次性准备
@@ -110,9 +93,9 @@ bash ops/rustfs/provision.sh /opt/camera-rental/rustfs /opt/camera-rental
 
 ## 发布方式
 
-- 手动：GitHub Actions 页面运行 `Deploy camera rental to 211`。
+- 手动：GitHub Actions 页面运行 `Deploy camera rental to production-80`。
 - 自动：向 GitHub `main` 推送后端、管理后台、排期中心、员工端、PC Web 或
-  部署脚本变更时，自动运行 `Deploy camera rental to 211`。
+  部署脚本变更时，自动运行 `Deploy camera rental to production-80`。
 - `ops/rustfs/**` 变更不会触发应用发布；RustFS 由服务器运维独立安装和升级。
 - Actions 会根据服务器现有源码 HEAD 生成并上传经过 Git 校验的增量 bundle；
   生产机构建不依赖访问 GitHub、GitHub 代理或 Gitee。

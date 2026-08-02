@@ -19,7 +19,7 @@ image, rotates credentials, or changes the RustFS container.
 
 Copy `nginx-storage.conf.example` into the server Nginx configuration after:
 
-1. Creating `storage.motion-cover.com` DNS for the 211 server.
+1. Creating `storage.motion-cover.com` DNS for `154.9.235.80`.
 2. Issuing a TLS certificate for that hostname.
 3. Testing and reloading Nginx.
 

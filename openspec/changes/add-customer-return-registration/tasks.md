@@ -59,3 +59,15 @@ verified from public form through private object storage to admin review.
 - [x] 6.2 Run focused Maven tests, admin type-check/build, Nuxt build, static/redteam checks and browser sensory checks.
 - [ ] 6.3 Commit feature-owned paths in logical batches and push the same `main` SHA to GitHub and Gitee without staging unrelated logistics changes.
 - [ ] 6.4 Observe the GitHub production workflow, verify RustFS and service health, then execute public upload-to-database-to-admin end-to-end checks on 211.
+
+## 7. Fixed public entry without manually issued links
+
+User outcome: A customer can open one permanent return page, verify an order
+with the Xianyu order number and receiver mobile last four digits, and complete
+the existing return workflow without an operator issuing a tokenized URL.
+
+- [ ] 7.1 Replace manual-link requirements with fixed-entry verification, automatic HttpOnly session, enumeration-resistant errors and rate limits.
+- [ ] 7.2 Add backend order verification, unique tenant restoration, automatic registration create/resume and session-scoped upload/submit APIs.
+- [ ] 7.3 Promote `/return` to the customer entry page, add order/mobile-last4 verification states, and redirect historical token routes safely.
+- [ ] 7.4 Update admin guidance from per-order link generation to one fixed public URL while preserving registration search, detail, revoke and review operations.
+- [ ] 7.5 Add migration/index support and unit, redteam, browser, build and production verification for the fixed-entry flow.

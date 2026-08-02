@@ -5,7 +5,8 @@
     "RentalReturnRegistrationAttachmentDO",
     "RentalReturnRegistrationService",
     "RentalReturnRegistrationAdminService",
-    "RentalReturnRegistrationTokenService",
+    "RentalReturnRegistrationSessionService",
+    "RentalReturnOrderVerificationService",
     "RentalReturnRegistrationAttachmentPolicy",
     "RentalReturnRegistrationController",
     "AppRentalReturnRegistrationController",
@@ -36,7 +37,8 @@
     "existing Nuxt SSR runtime"
   ],
   "extraction_triggers": [
-    "token-hashing-and-constant-time-comparison-repeat-across-public-endpoints",
+    "session-hashing-cookie-extraction-and-constant-time-comparison-repeat-across-public-endpoints",
+    "order-number-and-mobile-last4-normalization-repeat-across-verification-and-tests",
     "serial-normalization-and-validation-repeat-across-submit-and-review",
     "attachment-file-type-size-count-and-ownership-rules-repeat-across-upload-and-submit",
     "registration-state-presentation-repeats-across-customer-and-admin-surfaces",
@@ -54,10 +56,11 @@
     "object-key-containing-pii-order-number-or-serial-number",
     "customer-submission-directly-releasing-device-or-schedule",
     "public-response-containing-tenant-id-internal-order-id-address-or-full-mobile",
-    "raw-token-or-presigned-url-in-log",
+    "raw-session-order-verification-input-or-presigned-url-in-log",
     "production-source-file-over-600-lines"
   ],
   "hooks": [
+    "useReturnOrderVerification",
     "useReturnRegistrationContext",
     "useReturnRegistrationDraft",
     "useReturnPhotoUploads",
@@ -74,8 +77,8 @@
     "validateReturnAttachment"
   ],
   "services": [
-    "share-link lifecycle service",
-    "token lookup and tenant context service",
+    "public order verification service",
+    "automatic session issue lookup and tenant context service",
     "return registration transaction service",
     "order device matching service",
     "return attachment authorization and confirmation service",
@@ -84,7 +87,8 @@
     "RustFS deployment and health-check service"
   ],
   "required_component_tests": [
-    "token generation hashing expiry revocation and non-disclosure tests",
+    "order-number-mobile-last4 verification enumeration resistance and ambiguity tests",
+    "session generation hashing expiry cookie flags rotation and non-disclosure tests",
     "serial normalization format duplicate cross-order and cross-tenant tests",
     "required optional attachment count size type ownership and removal tests",
     "idempotent submit and concurrent replay tests",

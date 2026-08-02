@@ -9,7 +9,8 @@
     "promote-approved-warm-mobile-first-return-prototype",
     "five-step-order-logistics-devices-photos-review-flow",
     "required-exterior-and-serial-photos-optional-packaging",
-    "loading-expired-revoked-submitted-review-and-success-states",
+    "fixed-return-entry-with-order-and-mobile-last4-verification",
+    "verification-loading-failure-submitted-review-and-success-states",
     "minimum-44px-touch-targets-and-visible-focus",
     "no-page-horizontal-overflow-from-360px",
     "light-dark-and-zh-CN-en-production-coverage"
@@ -25,16 +26,16 @@
     "ops/rustfs"
   ],
   "api_contracts": [
-    "POST /admin-api/rental/return-registration/create",
     "GET /admin-api/rental/return-registration/page",
     "GET /admin-api/rental/return-registration/get",
     "POST /admin-api/rental/return-registration/{id}/revoke",
     "POST /admin-api/rental/return-registration/{id}/review",
-    "GET /app-api/rental/return-registration/{token}",
-    "POST /app-api/rental/return-registration/{token}/upload-authorizations",
-    "POST /app-api/rental/return-registration/{token}/attachments/confirm",
-    "DELETE /app-api/rental/return-registration/{token}/attachments/{fileId}",
-    "POST /app-api/rental/return-registration/{token}/submit"
+    "POST /app-api/rental/return-registration/verify",
+    "GET /app-api/rental/return-registration/session",
+    "POST /app-api/rental/return-registration/upload-authorizations",
+    "POST /app-api/rental/return-registration/attachments/confirm",
+    "DELETE /app-api/rental/return-registration/attachments/{fileId}",
+    "POST /app-api/rental/return-registration/submit"
   ],
   "database_entities": [
     "rental_return_registration",
@@ -46,14 +47,17 @@
   ],
   "permissions": [
     "rental:return-registration:query",
-    "rental:return-registration:create",
     "rental:return-registration:revoke",
     "rental:return-registration:review",
-    "token-scoped-public-access",
+    "order-number-and-mobile-last4-public-verification",
+    "http-only-cookie-session-scoped-public-access",
     "backend-tenant-and-order-scope-authoritative"
   ],
   "operational_constraints": [
-    "global-unique-sha256-token-hash",
+    "fixed-public-return-url-without-manual-token",
+    "global-unique-sha256-session-hash",
+    "secure-http-only-samesite-lax-session-cookie",
+    "ip-and-order-digest-verification-rate-limit",
     "private-rustfs-bucket-and-non-public-console",
     "short-lived-registration-scoped-upload-authorization",
     "reuse-infra-file-metadata-and-s3-client",
@@ -67,7 +71,7 @@
     "production-upload-database-and-admin-e2e-verification"
   ],
   "data_flows": [
-    "FLOW-RETURN-LINK-ISSUE",
+    "FLOW-PUBLIC-RETURN-VERIFY",
     "FLOW-PUBLIC-RETURN-CONTEXT",
     "FLOW-PUBLIC-RETURN-UPLOAD",
     "FLOW-PUBLIC-RETURN-SUBMIT",

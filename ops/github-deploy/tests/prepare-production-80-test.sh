@@ -9,7 +9,8 @@ deploy_root="${test_dir}/deploy"
 backend_env="${deploy_root}/shared/backend.env"
 web_env="${deploy_root}/shared/web.env"
 nginx_config="${test_dir}/camera-rental.conf"
-mkdir -p "${deploy_root}/shared"
+nginx_search_root="${test_dir}/nginx/sites-enabled"
+mkdir -p "${deploy_root}/shared" "${nginx_search_root}"
 
 cat > "${backend_env}" <<'EOF'
 JAVA_OPTS=-Xms128m
@@ -25,16 +26,18 @@ EOF
 
 cat > "${nginx_config}" <<'EOF'
 server {
+    server_name rental.motion-cover.com;
     location / {
         proxy_pass http://127.0.0.1:3001;
     }
 }
 EOF
+ln -s "${nginx_config}" "${nginx_search_root}/rental"
 
 DEPLOY_ROOT="${deploy_root}" \
 BACKEND_ENV="${backend_env}" \
 WEB_ENV="${web_env}" \
-NGINX_CONFIG="${nginx_config}" \
+NGINX_SEARCH_ROOTS="${nginx_search_root}" \
 NGINX_TEST_CMD=true \
   bash "${repo_root}/ops/github-deploy/prepare-production-80.sh"
 

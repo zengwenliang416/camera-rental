@@ -5,7 +5,8 @@ DEPLOY_ROOT="${DEPLOY_ROOT:-/opt/camera-rental}"
 WEB_PORT="${WEB_PORT:-3102}"
 BACKEND_ENV="${BACKEND_ENV:-${DEPLOY_ROOT}/shared/backend.env}"
 WEB_ENV="${WEB_ENV:-${DEPLOY_ROOT}/shared/web.env}"
-NGINX_CONFIG="${NGINX_CONFIG:-/etc/nginx/conf.d/camera-rental.conf}"
+NGINX_CONFIG="${NGINX_CONFIG:-}"
+NGINX_SEARCH_ROOTS="${NGINX_SEARCH_ROOTS:-/etc/nginx/conf.d /etc/nginx/sites-enabled}"
 NGINX_TEST_CMD="${NGINX_TEST_CMD:-nginx -t}"
 
 set_env_value() {
@@ -49,6 +50,32 @@ set_env_default() {
   set_env_value "${file}" "${key}" "${value}"
 }
 
+discover_nginx_config() {
+  local search_root
+  local candidate
+  local -a candidates=()
+
+  for search_root in ${NGINX_SEARCH_ROOTS}; do
+    [ -d "${search_root}" ] || continue
+    while IFS= read -r candidate; do
+      [ -n "${candidate}" ] || continue
+      if grep -qE 'server_name[[:space:]]+[^;]*rental\.motion-cover\.com' \
+        "${candidate}"; then
+        candidates+=("$(readlink -f "${candidate}")")
+      fi
+    done < <(
+      find -L "${search_root}" -type f -print 2>/dev/null || true
+    )
+  done
+
+  if [ "${#candidates[@]}" -eq 0 ]; then
+    echo "[production-80][error] unable to locate rental.motion-cover.com nginx config" >&2
+    return 1
+  fi
+
+  printf '%s\n' "${candidates[@]}" | awk '!seen[$0]++'
+}
+
 mkdir -p "${DEPLOY_ROOT}/shared"
 set_env_value "${WEB_ENV}" HOST 127.0.0.1
 set_env_value "${WEB_ENV}" PORT "${WEB_PORT}"
@@ -61,6 +88,18 @@ set_env_default "${BACKEND_ENV}" WX_MP_SECRET disabled
 set_env_default "${BACKEND_ENV}" WX_MINIAPP_APP_ID disabled
 set_env_default "${BACKEND_ENV}" WX_MINIAPP_SECRET disabled
 chmod 600 "${BACKEND_ENV}" "${WEB_ENV}"
+
+if [ -z "${NGINX_CONFIG}" ]; then
+  nginx_configs="$(discover_nginx_config)"
+  nginx_config_count="$(printf '%s\n' "${nginx_configs}" | sed '/^$/d' | wc -l | tr -d ' ')"
+  if [ "${nginx_config_count}" -ne 1 ]; then
+    printf '[production-80][error] expected one nginx config, found %s\n' \
+      "${nginx_config_count}" >&2
+    printf '%s\n' "${nginx_configs}" | sed 's/^/  /' >&2
+    exit 1
+  fi
+  NGINX_CONFIG="${nginx_configs}"
+fi
 
 if [ ! -f "${NGINX_CONFIG}" ]; then
   echo "[production-80][error] nginx config not found: ${NGINX_CONFIG}" >&2
@@ -90,3 +129,4 @@ rm -f "${nginx_backup}"
 
 echo "[production-80] runtime configuration prepared"
 echo "[production-80] PC Web port=${WEB_PORT}"
+echo "[production-80] nginx config=${NGINX_CONFIG}"

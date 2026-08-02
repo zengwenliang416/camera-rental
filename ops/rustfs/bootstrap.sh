@@ -24,7 +24,7 @@ install_rc() {
     aarch64|arm64) arch="arm64" ;;
     *) echo "[rustfs] unsupported rc architecture: $(uname -m)" >&2; exit 1 ;;
   esac
-  asset="rustfs-cli-linux-${arch}-gnu-${rc_version#v}.tar.gz"
+  asset="rustfs-cli-linux-${arch}-gnu-${rc_version}.tar.gz"
   archive="$(mktemp)"
   checksum="$(mktemp)"
 

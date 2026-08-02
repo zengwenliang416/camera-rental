@@ -30,7 +30,7 @@ grep -Eq '^RUSTFS_ACCESS_KEY=rustfsroot[0-9a-f]{16}$' "${rustfs_root}/.env"
 grep -Eq '^RUSTFS_SECRET_KEY=[0-9a-f]{64}$' "${rustfs_root}/.env"
 grep -Eq '^RUSTFS_APP_ACCESS_KEY=returnapp[0-9a-f]{16}$' \
   "${deploy_root}/shared/rustfs-app.env"
-grep -Eq '^RUSTFS_APP_SECRET_KEY=[0-9a-f]{64}$' \
+grep -Eq '^RUSTFS_APP_SECRET_KEY=[0-9a-f]{40}$' \
   "${deploy_root}/shared/rustfs-app.env"
 if grep -q '^RUSTFS_ACCESS_KEY=' "${deploy_root}/shared/rustfs-app.env"; then
   echo "root access key leaked into application environment" >&2

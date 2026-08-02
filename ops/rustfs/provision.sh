@@ -14,11 +14,11 @@ if [ ! -f "${env_file}" ]; then
   echo "[rustfs] generate persistent root and application credentials"
   umask 077
   cat > "${env_file}" <<EOF
-RUSTFS_IMAGE=rustfs/rustfs:1.0.0-beta.12
+RUSTFS_IMAGE=quay.io/rustfs/rustfs:1.0.0-beta.12
 RUSTFS_ACCESS_KEY=rustfsroot$(openssl rand -hex 8)
 RUSTFS_SECRET_KEY=$(openssl rand -hex 32)
 RUSTFS_APP_ACCESS_KEY=returnapp$(openssl rand -hex 8)
-RUSTFS_APP_SECRET_KEY=$(openssl rand -hex 32)
+RUSTFS_APP_SECRET_KEY=$(openssl rand -hex 20)
 RUSTFS_REGION=us-east-1
 RUSTFS_CORS_ALLOWED_ORIGINS=https://rental.motion-cover.com
 RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS=https://rental.motion-cover.com

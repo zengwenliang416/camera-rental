@@ -1,6 +1,6 @@
 services:
   rustfs:
-    image: ${RUSTFS_IMAGE:-rustfs/rustfs:1.0.0-beta.12}
+    image: ${RUSTFS_IMAGE:-quay.io/rustfs/rustfs:1.0.0-beta.12}
     container_name: camera-rental-rustfs
     restart: unless-stopped
     security_opt:

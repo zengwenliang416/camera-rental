@@ -6,6 +6,7 @@ import cn.iocoder.yudao.module.rental.integration.logistics.LogisticsTrackingEve
 import cn.iocoder.yudao.module.rental.integration.logistics.LogisticsTrackingSnapshot;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -29,6 +30,7 @@ public class Kuaidi100Converter {
     private final Kuaidi100StatusMapper statusMapper;
     private final Clock clock;
 
+    @Autowired
     public Kuaidi100Converter(ObjectMapper objectMapper, Kuaidi100StatusMapper statusMapper) {
         this(objectMapper, statusMapper, Clock.system(BUSINESS_ZONE));
     }

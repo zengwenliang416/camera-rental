@@ -320,7 +320,8 @@ public class XianyuOrderShipService {
                                                               RentalDeviceDO device) {
         String sourceIdentifier = "shipment:"
                 + DigestUtils.md5DigestAsHex(reqVO.getIdempotencyKey().getBytes(StandardCharsets.UTF_8));
-        return new RentalDeliveryCreateCommand(item.getRentalOrderId(), RentalDeliveryDirectionEnum.OUTBOUND,
+        return new RentalDeliveryCreateCommand(item.getRentalOrderId(), order.getId(),
+                RentalDeliveryDirectionEnum.OUTBOUND,
                 "XIANYU", sourceIdentifier, reqVO.getExpressCode(), reqVO.getExpressName(),
                 reqVO.getWaybillNo(), order.getReceiverMobile(),
                 List.of(new RentalDeliveryDeviceCommand(item.getId(), assignment.assignmentId(), device.getId())));

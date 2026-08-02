@@ -26,24 +26,34 @@ public class RentalLogisticsBackfillTransactionService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public RentalDeliveryResult apply(RentalLogisticsOperationsMapper.BackfillCandidateRow candidate) {
+    public RentalDeliveryResult apply(RentalLogisticsOperationsMapper.BackfillCandidateRow candidate,
+                                      boolean enqueueProviderTasks) {
         Long tenantId = TenantContextHolder.getRequiredTenantId();
-        RentalDeliveryResult result = deliveryService.createOrReuseLocalOnly(toCommand(candidate));
-        int updated = operationsMapper.bindShipmentDelivery(tenantId, candidate.getShipmentId(), result.deliveryId());
-        if (updated != 1) {
-            throw new RentalLogisticsException("BACKFILL_SHIPMENT_BIND_CONFLICT");
+        RentalDeliveryResult result = enqueueProviderTasks
+                ? deliveryService.createOrReuse(toCommand(candidate))
+                : deliveryService.createOrReuseLocalOnly(toCommand(candidate));
+        if (candidate.getShipmentId() != null) {
+            int updated = operationsMapper.bindShipmentDelivery(
+                    tenantId, candidate.getShipmentId(), result.deliveryId());
+            if (updated != 1) {
+                throw new RentalLogisticsException("BACKFILL_SHIPMENT_BIND_CONFLICT");
+            }
         }
         return result;
     }
 
     private RentalDeliveryCreateCommand toCommand(
             RentalLogisticsOperationsMapper.BackfillCandidateRow candidate) {
-        return new RentalDeliveryCreateCommand(candidate.getRentalOrderId(),
+        return new RentalDeliveryCreateCommand(candidate.getRentalOrderId(), candidate.getChannelOrderId(),
                 RentalDeliveryDirectionEnum.OUTBOUND, "XIANYU",
-                "legacy-shipment:" + candidate.getShipmentId(),
+                candidate.getShipmentId() == null
+                        ? "xianyu-order:" + candidate.getChannelOrderId()
+                        : "legacy-shipment:" + candidate.getShipmentId(),
                 candidate.getExpressCode(), candidate.getExpressName(), candidate.getWaybillNo(),
                 candidate.getReceiverMobile(),
-                List.of(new RentalDeliveryDeviceCommand(candidate.getRentalOrderItemId(),
-                        candidate.getAssignmentId(), candidate.getDeviceId())));
+                candidate.getShipmentId() == null
+                        ? List.of()
+                        : List.of(new RentalDeliveryDeviceCommand(candidate.getRentalOrderItemId(),
+                                candidate.getAssignmentId(), candidate.getDeviceId())));
     }
 }

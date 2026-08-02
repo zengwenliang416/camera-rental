@@ -167,11 +167,67 @@ public interface RentalLogisticsOperationsMapper {
             WHERE s.tenant_id = #{tenantId}
               AND s.deleted = b'0'
               AND s.delivery_id IS NULL
+              AND (#{consignDateStart} IS NULL
+                   OR COALESCE(xo.consign_time, s.create_time) >= #{consignDateStart})
+              AND (#{consignDateEnd} IS NULL
+                   OR COALESCE(xo.consign_time, s.create_time) < DATE_ADD(#{consignDateEnd}, INTERVAL 1 DAY))
             ORDER BY s.id
             LIMIT #{limit}
             """)
     List<BackfillCandidateRow> selectBackfillCandidates(@Param("tenantId") Long tenantId,
+                                                        @Param("consignDateStart") java.time.LocalDate consignDateStart,
+                                                        @Param("consignDateEnd") java.time.LocalDate consignDateEnd,
                                                         @Param("limit") int limit);
+
+    @Select("""
+            SELECT 'CHANNEL_ORDER' AS candidate_type,
+                   NULL AS shipment_id,
+                   NULL AS delivery_id,
+                   xo.id AS channel_order_id,
+                   NULL AS assignment_id,
+                   NULL AS device_id,
+                   xo.rental_order_id,
+                   NULL AS rental_order_item_id,
+                   xo.receiver_mobile,
+                   xo.waybill_no,
+                   xo.express_code,
+                   xo.express_name
+            FROM xianyu_order xo
+            WHERE xo.tenant_id = #{tenantId}
+              AND xo.deleted = b'0'
+              AND xo.consign_type = 1
+              AND UPPER(TRIM(COALESCE(xo.order_status, ''))) IN ('21', 'SHIPPED', 'CONSIGNED')
+              AND xo.waybill_no IS NOT NULL
+              AND TRIM(xo.waybill_no) <> ''
+              AND TRIM(xo.waybill_no) <> '0000'
+              AND xo.express_code IS NOT NULL
+              AND TRIM(xo.express_code) <> ''
+              AND UPPER(TRIM(xo.express_code)) <> 'GENERAL'
+              AND (
+                    xo.rental_order_id IS NOT NULL
+                    OR UPPER(TRIM(COALESCE(xo.rental_period_status, ''))) = 'SUCCESS'
+                    OR TRIM(COALESCE(xo.seller_remark, '')) <> ''
+                    OR xo.goods_title REGEXP '租赁|出租|免押|租机|租借'
+                  )
+              AND (#{consignDateStart} IS NULL
+                   OR COALESCE(xo.consign_time, xo.update_time) >= #{consignDateStart})
+              AND (#{consignDateEnd} IS NULL
+                   OR COALESCE(xo.consign_time, xo.update_time) < DATE_ADD(#{consignDateEnd}, INTERVAL 1 DAY))
+              AND NOT EXISTS (
+                    SELECT 1
+                    FROM rental_delivery d
+                    WHERE d.tenant_id = xo.tenant_id
+                      AND d.channel_order_id = xo.id
+                      AND d.direction = 'OUTBOUND'
+                      AND d.deleted = b'0'
+                  )
+            ORDER BY COALESCE(xo.consign_time, xo.update_time) DESC, xo.id DESC
+            LIMIT #{limit}
+            """)
+    List<BackfillCandidateRow> selectChannelOrderBackfillCandidates(@Param("tenantId") Long tenantId,
+                                                                    @Param("consignDateStart") java.time.LocalDate consignDateStart,
+                                                                    @Param("consignDateEnd") java.time.LocalDate consignDateEnd,
+                                                                    @Param("limit") int limit);
 
     @Update("""
             UPDATE rental_device_shipment
@@ -316,6 +372,7 @@ public interface RentalLogisticsOperationsMapper {
 
     @Data
     class BackfillCandidateRow {
+        private String candidateType;
         private Long shipmentId;
         private Long deliveryId;
         private Long channelOrderId;

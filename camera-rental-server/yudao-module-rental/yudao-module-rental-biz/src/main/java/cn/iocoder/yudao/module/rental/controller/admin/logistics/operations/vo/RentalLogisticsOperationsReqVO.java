@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 public final class RentalLogisticsOperationsReqVO {
 
     private RentalLogisticsOperationsReqVO() {
@@ -100,6 +102,10 @@ public final class RentalLogisticsOperationsReqVO {
         @Max(100)
         private Integer limit;
         private Boolean enqueueProviderTasks;
+        @Schema(description = "发货日期开始，闭区间", example = "2026-07-30")
+        private LocalDate consignDateStart;
+        @Schema(description = "发货日期结束，闭区间", example = "2026-07-31")
+        private LocalDate consignDateEnd;
     }
 
     @Schema(description = "管理后台 - 物流技术数据清理 Request VO")

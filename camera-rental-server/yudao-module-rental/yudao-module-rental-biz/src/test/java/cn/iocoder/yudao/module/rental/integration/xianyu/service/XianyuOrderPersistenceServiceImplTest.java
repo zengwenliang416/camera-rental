@@ -9,6 +9,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuRawPayloadMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuSyncCursorMapper;
 import cn.iocoder.yudao.module.rental.service.SellerRemarkRentalPeriodParser;
 import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
+import cn.iocoder.yudao.module.rental.service.logistics.XianyuOrderDeliverySyncService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +50,8 @@ class XianyuOrderPersistenceServiceImplTest {
     private XianyuSyncCursorMapper cursorMapper;
     @Mock
     private XianyuRentalConversionService conversionService;
+    @Mock
+    private XianyuOrderDeliverySyncService deliverySyncService;
 
     private XianyuOrderPersistenceService service;
 
@@ -63,6 +66,7 @@ class XianyuOrderPersistenceServiceImplTest {
                 cursorMapper,
                 new XianyuSyncCursorAdvancer(),
                 conversionService,
+                deliverySyncService,
                 new SellerRemarkRentalPeriodParser(),
                 Clock.fixed(Instant.parse("2026-07-23T10:11:12Z"), ZoneOffset.UTC));
     }

@@ -5,6 +5,7 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.logistics.RentalDeliveryDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.logistics.RentalLogisticsProviderConfigDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.logistics.RentalDeliveryMapper;
 import cn.iocoder.yudao.module.rental.enums.logistics.RentalDeliveryOutboxEventTypeEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -29,6 +30,7 @@ public class RentalDeliveryTrackingRefreshService {
     private final RentalDeliveryOutboxService outboxService;
     private final Clock clock;
 
+    @Autowired
     public RentalDeliveryTrackingRefreshService(RentalDeliveryMapper deliveryMapper,
                                                 RentalLogisticsProviderConfigService configService,
                                                 RentalDeliveryOutboxService outboxService) {

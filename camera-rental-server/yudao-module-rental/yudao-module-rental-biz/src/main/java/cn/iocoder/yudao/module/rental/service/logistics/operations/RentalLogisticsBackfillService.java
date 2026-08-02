@@ -33,8 +33,14 @@ public class RentalLogisticsBackfillService {
     public BackfillResult backfill(BackfillCommand command) {
         BackfillCommand bounded = normalize(command);
         Long tenantId = TenantContextHolder.getRequiredTenantId();
-        List<RentalLogisticsOperationsMapper.BackfillCandidateRow> candidates =
-                operationsMapper.selectBackfillCandidates(tenantId, bounded.limit());
+        List<RentalLogisticsOperationsMapper.BackfillCandidateRow> candidates = new ArrayList<>(
+                operationsMapper.selectBackfillCandidates(
+                        tenantId, bounded.consignDateStart(), bounded.consignDateEnd(), bounded.limit()));
+        if (candidates.size() < bounded.limit()) {
+            candidates.addAll(operationsMapper.selectChannelOrderBackfillCandidates(
+                    tenantId, bounded.consignDateStart(), bounded.consignDateEnd(),
+                    bounded.limit() - candidates.size()));
+        }
         List<BackfillItem> items = new ArrayList<>();
         int applied = 0;
         int skipped = 0;
@@ -52,21 +58,30 @@ public class RentalLogisticsBackfillService {
                 continue;
             }
             try {
-                RentalDeliveryResult result = transactionService.apply(candidate);
+                RentalDeliveryResult result = transactionService.apply(
+                        candidate, bounded.enqueueProviderTasks());
                 applied++;
                 items.add(new BackfillItem(candidate.getShipmentId(), result.deliveryId(),
                         result.maskedWaybillNo(), result.created() ? "CREATED" : "REUSED",
-                        "LOCAL_DELIVERY_ONLY"));
+                        bounded.enqueueProviderTasks() ? "PROVIDER_TASKS_REQUESTED" : "LOCAL_DELIVERY_ONLY"));
             } catch (RentalLogisticsException ex) {
                 skipped++;
                 items.add(new BackfillItem(candidate.getShipmentId(), null,
                         maskIfPresent(candidate.getWaybillNo()), "SKIPPED", ex.getCode()));
             }
         }
-        String providerTaskReason = bounded.enqueueProviderTasks()
-                ? "PROVIDER_ENQUEUE_DEFERRED" : "PROVIDER_ENQUEUE_DISABLED";
-        return new BackfillResult(bounded.dryRun(), bounded.limit(), candidates.size(), applied, skipped,
-                false, providerTaskReason, items);
+        boolean providerTasksEnqueued = bounded.enqueueProviderTasks() && applied > 0;
+        String providerTaskReason = providerTasksEnqueued
+                ? "PROVIDER_TASKS_REQUESTED" : "PROVIDER_ENQUEUE_DISABLED";
+        int distinctWaybillCount = (int) candidates.stream()
+                .filter(candidate -> StringUtils.hasText(candidate.getWaybillNo())
+                        && StringUtils.hasText(candidate.getExpressCode()))
+                .map(candidate -> candidate.getExpressCode().trim().toUpperCase()
+                        + ":" + candidate.getWaybillNo().trim().toUpperCase())
+                .distinct()
+                .count();
+        return new BackfillResult(bounded.dryRun(), bounded.limit(), candidates.size(),
+                distinctWaybillCount, applied, skipped, providerTasksEnqueued, providerTaskReason, items);
     }
 
     private BackfillCommand normalize(BackfillCommand command) {
@@ -76,13 +91,20 @@ public class RentalLogisticsBackfillService {
         if (command.limit() < 1 || command.limit() > MAX_LIMIT) {
             throw new RentalLogisticsException("BACKFILL_LIMIT_OUT_OF_RANGE");
         }
+        if (command.consignDateStart() != null && command.consignDateEnd() != null
+                && command.consignDateStart().isAfter(command.consignDateEnd())) {
+            throw new RentalLogisticsException("BACKFILL_DATE_RANGE_INVALID");
+        }
         return command;
     }
 
     private String validateCandidate(RentalLogisticsOperationsMapper.BackfillCandidateRow candidate) {
-        if (candidate.getShipmentId() == null || candidate.getRentalOrderId() == null
+        if (candidate.getChannelOrderId() == null) {
+            return "BACKFILL_CHANNEL_ORDER_MISSING";
+        }
+        if (candidate.getShipmentId() != null && (candidate.getRentalOrderId() == null
                 || candidate.getRentalOrderItemId() == null || candidate.getAssignmentId() == null
-                || candidate.getDeviceId() == null) {
+                || candidate.getDeviceId() == null)) {
             return "BACKFILL_RELATION_INCOMPLETE";
         }
         if (!StringUtils.hasText(candidate.getWaybillNo())) {

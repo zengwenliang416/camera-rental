@@ -115,6 +115,71 @@ class RentalLogisticsOperationsConfigurationServiceTest {
     }
 
     @Test
+    void queryOnlyConfigurationNeedsCredentialsButNoCallbackSettings() {
+        RentalLogisticsProviderConfigDO config = RentalLogisticsProviderConfigDO.builder()
+                .providerCode("KUAIDI100")
+                .enabled(false)
+                .queryEnabled(true)
+                .subscribeEnabled(false)
+                .configStatus("INCOMPLETE")
+                .build();
+        when(configMapper.selectByProviderCode(9L, "KUAIDI100")).thenReturn(config);
+        when(credentialMapper.selectListByProvider(9L, "KUAIDI100"))
+                .thenReturn(java.util.List.of(credential(11L, "primary", "customer", "key", true)));
+
+        ProviderConfigView view = service.getProviderConfig("KUAIDI100");
+
+        assertEquals("READY_UNVERIFIED", view.configStatus());
+        assertFalse(view.callbackSecretConfigured());
+        assertNull(view.callbackBaseUrl());
+    }
+
+    @Test
+    void subscriptionConfigurationRequiresCallbackUrlButNotGlobalSecret() {
+        RentalLogisticsProviderConfigDO config = RentalLogisticsProviderConfigDO.builder()
+                .providerCode("KUAIDI100")
+                .enabled(false)
+                .queryEnabled(true)
+                .subscribeEnabled(false)
+                .configStatus("INCOMPLETE")
+                .build();
+        when(configMapper.selectByProviderCodeForUpdate(9L, "KUAIDI100")).thenReturn(config);
+        when(credentialMapper.selectListByProvider(9L, "KUAIDI100"))
+                .thenReturn(java.util.List.of(credential(11L, "primary", "customer", "key", true)));
+
+        ProviderConfigView view = service.saveProviderConfig(new ProviderConfigCommand(
+                "KUAIDI100", true, true, true, SecretAction.KEEP, null,
+                "https://api.example.com", 1800, "4"));
+
+        assertEquals("READY_UNVERIFIED", view.configStatus());
+        assertFalse(view.callbackSecretConfigured());
+        assertEquals("https://api.example.com", view.callbackBaseUrl());
+        verify(configMapper).updateById(config);
+    }
+
+    @Test
+    void subscriptionConfigurationRejectsMissingCallbackUrl() {
+        RentalLogisticsProviderConfigDO config = RentalLogisticsProviderConfigDO.builder()
+                .providerCode("KUAIDI100")
+                .enabled(false)
+                .queryEnabled(true)
+                .subscribeEnabled(false)
+                .configStatus("INCOMPLETE")
+                .build();
+        when(configMapper.selectByProviderCodeForUpdate(9L, "KUAIDI100")).thenReturn(config);
+        when(credentialMapper.selectListByProvider(9L, "KUAIDI100"))
+                .thenReturn(java.util.List.of(credential(11L, "primary", "customer", "key", true)));
+
+        RentalLogisticsException exception = assertThrows(RentalLogisticsException.class,
+                () -> service.saveProviderConfig(new ProviderConfigCommand(
+                        "KUAIDI100", true, true, true, SecretAction.KEEP, null,
+                        null, 1800, "4")));
+
+        assertEquals("PROVIDER_CONFIG_INCOMPLETE", exception.getCode());
+        verify(configMapper, never()).updateById(config);
+    }
+
+    @Test
     void savesMultipleCredentialsWithoutReturningPlaintext() {
         when(credentialMapper.selectByNameForUpdate(9L, "KUAIDI100", "primary")).thenReturn(null);
         when(configMapper.selectByProviderCodeForUpdate(9L, "KUAIDI100")).thenReturn(null);

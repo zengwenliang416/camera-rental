@@ -197,7 +197,8 @@ public class RentalLogisticsOperationsController {
                 ? new BackfillCommand(true, 20, false)
                 : new BackfillCommand(reqVO.getDryRun() == null || reqVO.getDryRun(),
                 reqVO.getLimit() == null ? 20 : reqVO.getLimit(),
-                Boolean.TRUE.equals(reqVO.getEnqueueProviderTasks()));
+                Boolean.TRUE.equals(reqVO.getEnqueueProviderTasks()),
+                reqVO.getConsignDateStart(), reqVO.getConsignDateEnd());
         return success(backfillService.backfill(command));
     }
 

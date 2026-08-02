@@ -10,6 +10,9 @@ import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuSyncCursorMapper;
 import cn.iocoder.yudao.module.rental.service.SellerRemarkRentalPeriod;
 import cn.iocoder.yudao.module.rental.service.SellerRemarkRentalPeriodParser;
 import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
+import cn.iocoder.yudao.module.rental.service.logistics.RentalLogisticsException;
+import cn.iocoder.yudao.module.rental.service.logistics.XianyuOrderDeliverySyncService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +28,7 @@ import java.util.Objects;
  * After a successful order-detail upsert, triggers Hermes-style automatic conversion.
  */
 @Service
+@Slf4j
 public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistenceService {
 
     static final String ORDER_DETAIL_SOURCE_TYPE = "ORDER_DETAIL";
@@ -39,6 +43,7 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
     private final XianyuSyncCursorMapper cursorMapper;
     private final XianyuSyncCursorAdvancer cursorAdvancer;
     private final XianyuRentalConversionService conversionService;
+    private final XianyuOrderDeliverySyncService deliverySyncService;
     private final SellerRemarkRentalPeriodParser rentalPeriodParser;
     private final Clock clock;
 
@@ -49,6 +54,7 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
                                              XianyuSyncCursorMapper cursorMapper,
                                              XianyuSyncCursorAdvancer cursorAdvancer,
                                              XianyuRentalConversionService conversionService,
+                                             XianyuOrderDeliverySyncService deliverySyncService,
                                              SellerRemarkRentalPeriodParser rentalPeriodParser,
                                              @Qualifier("xianyuClock") Clock clock) {
         this.payloadParser = payloadParser;
@@ -58,6 +64,7 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
         this.cursorMapper = cursorMapper;
         this.cursorAdvancer = cursorAdvancer;
         this.conversionService = conversionService;
+        this.deliverySyncService = deliverySyncService;
         this.rentalPeriodParser = rentalPeriodParser;
         this.clock = clock;
     }
@@ -148,6 +155,7 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
         }
         // Hermes-style: durable channel fact → automatic remark parse / convert / review.
         conversionService.autoConvertAfterPersist(order.getId());
+        syncDelivery(orderMapper.selectById(order.getId()));
         return order;
     }
 
@@ -168,8 +176,18 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
             order.setUpdater("system");
             orderMapper.updateById(order);
             conversionService.autoConvertAfterPersist(order.getId());
+            syncDelivery(orderMapper.selectById(order.getId()));
         }
         return orders.size();
+    }
+
+    private void syncDelivery(XianyuOrderDO order) {
+        try {
+            deliverySyncService.syncOutboundIfTrackable(order);
+        } catch (RentalLogisticsException ex) {
+            log.warn("[xianyu][delivery-sync] channelOrderId={} skipped: {}",
+                    order == null ? null : order.getId(), ex.getCode());
+        }
     }
 
     private static void applyRentalPeriod(XianyuOrderDO order, SellerRemarkRentalPeriod rentalPeriod) {

@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.rental.service.logistics.operations;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -149,7 +150,16 @@ public final class RentalLogisticsOperationsModels {
         }
     }
 
-    public record BackfillCommand(boolean dryRun, int limit, boolean enqueueProviderTasks) {
+    public record BackfillCommand(
+            boolean dryRun,
+            int limit,
+            boolean enqueueProviderTasks,
+            LocalDate consignDateStart,
+            LocalDate consignDateEnd
+    ) {
+        public BackfillCommand(boolean dryRun, int limit, boolean enqueueProviderTasks) {
+            this(dryRun, limit, enqueueProviderTasks, null, null);
+        }
     }
 
     public record BackfillItem(
@@ -165,6 +175,7 @@ public final class RentalLogisticsOperationsModels {
             boolean dryRun,
             int requestedLimit,
             int candidateCount,
+            int distinctWaybillCount,
             int createdOrReusedCount,
             int skippedCount,
             boolean providerTasksEnqueued,

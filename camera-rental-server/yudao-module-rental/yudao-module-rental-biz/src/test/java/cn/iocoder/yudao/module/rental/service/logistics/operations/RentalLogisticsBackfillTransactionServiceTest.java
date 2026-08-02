@@ -36,7 +36,7 @@ class RentalLogisticsBackfillTransactionServiceTest {
     @Test
     void createAndShipmentBindingShareOneRollbackTransaction() throws Exception {
         Transactional transactional = RentalLogisticsBackfillTransactionService.class
-                .getMethod("apply", RentalLogisticsOperationsMapper.BackfillCandidateRow.class)
+                .getMethod("apply", RentalLogisticsOperationsMapper.BackfillCandidateRow.class, boolean.class)
                 .getAnnotation(Transactional.class);
         assertNotNull(transactional);
         assertArrayEquals(new Class<?>[]{Exception.class}, transactional.rollbackFor());
@@ -51,7 +51,7 @@ class RentalLogisticsBackfillTransactionServiceTest {
         when(operationsMapper.bindShipmentDelivery(9L, 10L, 99L)).thenReturn(0);
 
         RentalLogisticsException exception = assertThrows(RentalLogisticsException.class,
-                () -> service.apply(candidate));
+                () -> service.apply(candidate, false));
 
         assertEquals("BACKFILL_SHIPMENT_BIND_CONFLICT", exception.getCode());
         verify(deliveryService).createOrReuseLocalOnly(any());
@@ -66,10 +66,28 @@ class RentalLogisticsBackfillTransactionServiceTest {
                         "PENDING", "SF5****2626", null, List.of()));
         when(operationsMapper.bindShipmentDelivery(9L, 10L, 99L)).thenReturn(1);
 
-        service.apply(candidate);
+        service.apply(candidate, false);
 
         verify(deliveryService).createOrReuseLocalOnly(any());
         verify(deliveryService, never()).createOrReuse(any());
+    }
+
+    @Test
+    void channelOrderBackfillCanRequestProviderTasksWithoutShipmentBinding() {
+        RentalLogisticsOperationsMapper.BackfillCandidateRow candidate = candidate();
+        candidate.setShipmentId(null);
+        candidate.setAssignmentId(null);
+        candidate.setDeviceId(null);
+        candidate.setRentalOrderId(null);
+        candidate.setRentalOrderItemId(null);
+        when(deliveryService.createOrReuse(any()))
+                .thenReturn(new RentalDeliveryResult(99L, true, "READY", "PROVIDER_DISABLED",
+                        "PENDING", "SF5****2626", null, List.of("INITIAL_QUERY")));
+
+        service.apply(candidate, true);
+
+        verify(deliveryService).createOrReuse(any());
+        verify(operationsMapper, never()).bindShipmentDelivery(any(), any(), any());
     }
 
     private RentalLogisticsOperationsMapper.BackfillCandidateRow candidate() {

@@ -20,6 +20,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -56,6 +57,7 @@ public class RentalDeliveryTrackingQueryService {
     private final RentalLogisticsRiskService riskService;
     private final Clock clock;
 
+    @Autowired
     public RentalDeliveryTrackingQueryService(RentalDeliveryMapper deliveryMapper,
                                               RentalDeliveryDeviceRelMapper relationMapper,
                                               RentalDeliveryTraceMapper traceMapper,
@@ -98,20 +100,31 @@ public class RentalDeliveryTrackingQueryService {
         }
         Long tenantId = TenantContextHolder.getRequiredTenantId();
         List<RentalDeliveryDO> deliveries = loadDeliveries(tenantId, requestedOrderIds);
-        List<RentalOrderDO> orders = nullSafe(orderMapper.selectByIds(requestedOrderIds));
+        List<Long> rentalOrderIds = deliveries.stream()
+                .map(RentalDeliveryDO::getRentalOrderId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
+        List<RentalOrderDO> orders = rentalOrderIds.isEmpty()
+                ? List.of()
+                : nullSafe(orderMapper.selectByIds(rentalOrderIds));
         ReadModelContext context = loadContext(tenantId, deliveries);
         Map<Long, RentalOrderDO> ordersById = indexById(orders, RentalOrderDO::getId);
-        Map<Long, List<RentalDeliveryDO>> deliveriesByOrderId = deliveries.stream()
-                .collect(Collectors.groupingBy(RentalDeliveryDO::getRentalOrderId,
-                        LinkedHashMap::new, Collectors.toList()));
         LocalDateTime now = now();
 
         Map<Long, RentalDeliveryTrackingOrderSummaryRespVO> result = new LinkedHashMap<>();
         for (Long orderId : requestedOrderIds) {
-            List<RentalDeliveryDO> orderDeliveries =
-                    deliveriesByOrderId.getOrDefault(orderId, List.of());
+            List<RentalDeliveryDO> orderDeliveries = deliveries.stream()
+                    .filter(delivery -> Objects.equals(orderId, delivery.getRentalOrderId())
+                            || Objects.equals(orderId, delivery.getChannelOrderId()))
+                    .toList();
+            Long rentalOrderId = orderDeliveries.stream()
+                    .map(RentalDeliveryDO::getRentalOrderId)
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElse(null);
             List<RentalLogisticsRisk> risks = riskService.evaluate(
-                    ordersById.get(orderId), orderDeliveries, context.deviceIdsByDeliveryId(),
+                    ordersById.get(rentalOrderId), orderDeliveries, context.deviceIdsByDeliveryId(),
                     context.schedules(), now);
             result.put(orderId, toOrderSummary(orderId, orderDeliveries, risks,
                     context.deviceIdsByDeliveryId(), now));
@@ -126,9 +139,10 @@ public class RentalDeliveryTrackingQueryService {
             return null;
         }
 
-        RentalOrderDO order = orderMapper.selectById(delivery.getRentalOrderId());
-        List<RentalDeliveryDO> orderDeliveries = loadDeliveries(
-                tenantId, List.of(delivery.getRentalOrderId()));
+        RentalOrderDO order = delivery.getRentalOrderId() == null
+                ? null : orderMapper.selectById(delivery.getRentalOrderId());
+        Long referenceId = referenceId(delivery);
+        List<RentalDeliveryDO> orderDeliveries = loadDeliveries(tenantId, List.of(referenceId));
         ReadModelContext context = loadContext(tenantId, orderDeliveries);
         List<RentalLogisticsRisk> risks = riskService.evaluate(
                 order, orderDeliveries, context.deviceIdsByDeliveryId(), context.schedules(), now());
@@ -144,8 +158,9 @@ public class RentalDeliveryTrackingQueryService {
         }
         return nullSafe(deliveryMapper.selectList(new LambdaQueryWrapper<RentalDeliveryDO>()
                 .eq(RentalDeliveryDO::getTenantId, tenantId)
-                .in(RentalDeliveryDO::getRentalOrderId, orderIds)
-                .orderByAsc(RentalDeliveryDO::getRentalOrderId)
+                .and(wrapper -> wrapper.in(RentalDeliveryDO::getRentalOrderId, orderIds)
+                        .or()
+                        .in(RentalDeliveryDO::getChannelOrderId, orderIds))
                 .orderByAsc(RentalDeliveryDO::getId)));
     }
 
@@ -224,7 +239,7 @@ public class RentalDeliveryTrackingQueryService {
         RentalDeliveryTrackingPackageSummaryRespVO result =
                 new RentalDeliveryTrackingPackageSummaryRespVO();
         result.setDeliveryId(delivery.getId());
-        result.setRentalOrderId(delivery.getRentalOrderId());
+        result.setRentalOrderId(referenceId(delivery));
         result.setDirection(delivery.getDirection());
         result.setPackageSeq(delivery.getPackageSeq());
         result.setCarrierName(safeCarrierName(delivery));
@@ -248,7 +263,7 @@ public class RentalDeliveryTrackingQueryService {
             ReadModelContext context) {
         RentalDeliveryTrackingDetailRespVO result = new RentalDeliveryTrackingDetailRespVO();
         result.setDeliveryId(delivery.getId());
-        result.setRentalOrderId(delivery.getRentalOrderId());
+        result.setRentalOrderId(referenceId(delivery));
         result.setDirection(delivery.getDirection());
         result.setPackageSeq(delivery.getPackageSeq());
         result.setCarrierName(safeCarrierName(delivery));
@@ -310,6 +325,11 @@ public class RentalDeliveryTrackingQueryService {
                 .findFirst()
                 .map(this::toRisk)
                 .orElse(null);
+    }
+
+    private Long referenceId(RentalDeliveryDO delivery) {
+        return delivery.getRentalOrderId() != null
+                ? delivery.getRentalOrderId() : delivery.getChannelOrderId();
     }
 
     private RentalDeliveryTrackingRiskRespVO toRisk(RentalLogisticsRisk risk) {

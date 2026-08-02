@@ -277,6 +277,7 @@ public class RentalLogisticsConfigurationOperationsService {
 
     private ProviderConfigView toView(RentalLogisticsProviderConfigDO config,
                                       List<RentalLogisticsProviderCredentialDO> credentials) {
+        String effectiveConfigStatus = effectiveProviderStatus(config, credentials);
         return new ProviderConfigView(config.getProviderCode(),
                 Boolean.TRUE.equals(config.getEnabled()),
                 Boolean.TRUE.equals(config.getQueryEnabled()),
@@ -287,7 +288,7 @@ public class RentalLogisticsConfigurationOperationsService {
                         ? RentalLogisticsProviderConfigService.MINIMUM_QUERY_INTERVAL_SECONDS
                         : Math.max(RentalLogisticsProviderConfigService.MINIMUM_QUERY_INTERVAL_SECONDS,
                         config.getMinimumQueryIntervalSeconds()),
-                config.getResultVersion(), config.getConfigStatus(), config.getLastVerifiedAt(),
+                config.getResultVersion(), effectiveConfigStatus, config.getLastVerifiedAt(),
                 credentials.stream().map(this::toView).toList());
     }
 
@@ -307,8 +308,8 @@ public class RentalLogisticsConfigurationOperationsService {
     }
 
     private boolean isGlobalConfigComplete(RentalLogisticsProviderConfigDO config) {
-        return StringUtils.hasText(config.getCallbackSecret())
-                && StringUtils.hasText(config.getCallbackBaseUrl());
+        return !Boolean.TRUE.equals(config.getSubscribeEnabled())
+                || StringUtils.hasText(config.getCallbackBaseUrl());
     }
 
     private boolean isCredentialComplete(RentalLogisticsProviderCredentialDO credential) {
@@ -321,6 +322,15 @@ public class RentalLogisticsConfigurationOperationsService {
         return isGlobalConfigComplete(config)
                 && credentials.stream().anyMatch(credential ->
                 Boolean.TRUE.equals(credential.getEnabled()) && isCredentialComplete(credential));
+    }
+
+    private String effectiveProviderStatus(RentalLogisticsProviderConfigDO config,
+                                           List<RentalLogisticsProviderCredentialDO> credentials) {
+        if (!isProviderReady(config, credentials)) {
+            return "INCOMPLETE";
+        }
+        return "LOCALLY_VERIFIED".equals(config.getConfigStatus())
+                ? "LOCALLY_VERIFIED" : "READY_UNVERIFIED";
     }
 
     private void refreshProviderStatus(Long tenantId, String providerCode) {

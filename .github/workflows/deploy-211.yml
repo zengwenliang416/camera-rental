@@ -8,6 +8,7 @@ on:
     paths:
       - '.github/workflows/deploy-211.yml'
       - 'ops/github-deploy/**'
+      - 'ops/rustfs/**'
       - 'camera-rental-server/**'
       - 'camera-rental-admin/**'
       - 'camera-rental-schedule-center/**'

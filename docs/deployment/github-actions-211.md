@@ -100,11 +100,20 @@ cp ops/github-deploy/nginx.camera-rental.conf.example /etc/nginx/conf.d/camera-r
 nginx -t && systemctl reload nginx
 ```
 
+RustFS 也必须在服务器上单独预安装，流水线只检查其健康状态，不负责安装 Docker、
+拉取镜像或生成凭据：
+
+```bash
+cd /opt/camera-rental/source
+bash ops/rustfs/provision.sh /opt/camera-rental/rustfs /opt/camera-rental
+```
+
 ## 发布方式
 
 - 手动：GitHub Actions 页面运行 `Deploy camera rental to 211`。
 - 自动：向 GitHub `main` 推送后端、管理后台、排期中心、员工端、PC Web 或
   部署脚本变更时，自动运行 `Deploy camera rental to 211`。
+- `ops/rustfs/**` 变更不会触发应用发布；RustFS 由服务器运维独立安装和升级。
 - 纯文档、SpecNav 状态等非发布文件变化不会重启生产服务。
 - 启用 GitHub 自动发布后，应在 Gitee 页面关闭自动触发，避免两套流水线并发
   操作同一生产环境。
@@ -115,7 +124,8 @@ nginx -t && systemctl reload nginx
 
 ## 生产注意事项
 
-- 数据库迁移不在流水线中自动执行；每次有 `sql/mysql/migrations` 变更时，先备份再人工执行。
+- `ops/github-deploy/migrations.txt` 中登记的数据库迁移会在版本激活前自动执行；
+  迁移失败或历史迁移校验和变化时发布会停止，线上仍保留上一版本。
 - 闲管家写操作、AppSecret、NewAPI Key、数据库密码必须只放在 GitHub Secrets 或服务器配置。
 - 首次部署前先在服务器上确认 Java 21、Node、Nginx、MySQL、Redis 和端口策略。
 - 如果需要 HTTPS，建议先配置域名和证书，再把 Nginx 示例改成 443。

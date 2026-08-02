@@ -27,31 +27,8 @@ test -f "${release_dir}/schedule-center/index.html"
 rustfs_source="${release_dir}/ops/rustfs"
 rustfs_root="${DEPLOY_ROOT}/rustfs"
 if [ -d "${rustfs_source}" ]; then
-  mkdir -p "${rustfs_root}" "${DEPLOY_ROOT}/shared"
-  if [ ! -f "${rustfs_root}/.env" ]; then
-    echo "[deploy] generate persistent RustFS credentials"
-    umask 077
-    cat > "${rustfs_root}/.env" <<EOF
-RUSTFS_IMAGE=rustfs/rustfs:1.0.0-beta.12
-RUSTFS_ACCESS_KEY=rustfsroot$(openssl rand -hex 8)
-RUSTFS_SECRET_KEY=$(openssl rand -hex 32)
-RUSTFS_APP_ACCESS_KEY=returnapp$(openssl rand -hex 8)
-RUSTFS_APP_SECRET_KEY=$(openssl rand -hex 32)
-RUSTFS_REGION=us-east-1
-RUSTFS_CORS_ALLOWED_ORIGINS=https://rental.motion-cover.com
-RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS=https://rental.motion-cover.com
-RUSTFS_BUCKET=camera-rental-return
-RUSTFS_PUBLIC_ENDPOINT=https://storage.motion-cover.com
-RUSTFS_RC_VERSION=v0.1.30
-EOF
-  fi
-  echo "[deploy] install and initialize RustFS"
-  bash "${rustfs_source}/install.sh" "${rustfs_root}"
-  (
-    umask 077
-    grep -E '^RUSTFS_(APP_ACCESS_KEY|APP_SECRET_KEY|REGION|BUCKET|PUBLIC_ENDPOINT)=' \
-      "${rustfs_root}/.env" > "${DEPLOY_ROOT}/shared/rustfs-app.env"
-  )
+  echo "[deploy] verify pre-provisioned RustFS"
+  bash "${rustfs_source}/verify.sh" "${rustfs_root}" "${DEPLOY_ROOT}"
 fi
 
 # Archives built on macOS may preserve owner-only modes. Nginx must be able to

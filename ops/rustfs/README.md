@@ -1,10 +1,19 @@
 # RustFS Return Photo Storage
 
 RustFS is deployed under `/opt/camera-rental/rustfs` with loopback-only S3 and
-console ports. The GitHub production deployment creates persistent random root
-and application credentials on first install, starts the container, creates the
-private `camera-rental-return` bucket, and attaches a bucket-scoped policy to a
-dedicated service account.
+console ports. Provision it once on the 211 server before running the application
+deployment:
+
+```bash
+cd /opt/camera-rental/source
+bash ops/rustfs/provision.sh /opt/camera-rental/rustfs /opt/camera-rental
+```
+
+The provisioning script creates persistent random root and application
+credentials, starts the container, creates the private `camera-rental-return`
+bucket, and attaches a bucket-scoped policy to a dedicated service account.
+GitHub Actions only runs `verify.sh`; it never installs Docker, pulls the RustFS
+image, rotates credentials, or changes the RustFS container.
 
 ## Public S3 Endpoint
 

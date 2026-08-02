@@ -87,6 +87,12 @@ set_env_default "${BACKEND_ENV}" WX_MP_APP_ID disabled
 set_env_default "${BACKEND_ENV}" WX_MP_SECRET disabled
 set_env_default "${BACKEND_ENV}" WX_MINIAPP_APP_ID disabled
 set_env_default "${BACKEND_ENV}" WX_MINIAPP_SECRET disabled
+
+# Production API documentation is disabled. Knife4j must be disabled with
+# SpringDoc, otherwise its auto-configuration requires a bean SpringDoc omits.
+set_env_value "${BACKEND_ENV}" SPRINGDOC_API_DOCS_ENABLED false
+set_env_value "${BACKEND_ENV}" SPRINGDOC_SWAGGER_UI_ENABLED false
+set_env_value "${BACKEND_ENV}" KNIFE4J_ENABLE false
 chmod 600 "${BACKEND_ENV}" "${WEB_ENV}"
 
 if [ -z "${NGINX_CONFIG}" ]; then

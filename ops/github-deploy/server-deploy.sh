@@ -8,8 +8,16 @@ KEEP_RELEASES="${KEEP_RELEASES:-5}"
 SERVER_SERVICE="${SERVER_SERVICE:-camera-rental-server.service}"
 WEB_SERVICE="${WEB_SERVICE:-camera-rental-web.service}"
 NGINX_RELOAD_CMD="${NGINX_RELOAD_CMD:-nginx -t && systemctl reload nginx}"
+BACKEND_HEALTH_URL="${BACKEND_HEALTH_URL:-http://127.0.0.1:48080/admin-api/system/auth/get-permission-info}"
+WEB_HEALTH_ATTEMPTS="${WEB_HEALTH_ATTEMPTS:-60}"
+BACKEND_HEALTH_ATTEMPTS="${BACKEND_HEALTH_ATTEMPTS:-90}"
+HEALTH_INTERVAL_SECONDS="${HEALTH_INTERVAL_SECONDS:-2}"
+HEALTH_STABILIZE_SECONDS="${HEALTH_STABILIZE_SECONDS:-5}"
 
 release_dir="${DEPLOY_ROOT}/releases/${RELEASE_SHA}"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=deployment-runtime-lib.sh
+source "${script_dir}/deployment-runtime-lib.sh"
 
 echo "[deploy] root=${DEPLOY_ROOT}"
 echo "[deploy] release=${RELEASE_SHA}"
@@ -23,6 +31,9 @@ test -f "${release_dir}/server/yudao-server.jar"
 test -x "${release_dir}/server/apply-migrations.sh"
 test -f "${release_dir}/admin/index.html"
 test -f "${release_dir}/schedule-center/index.html"
+test -f "${release_dir}/server/migrations/20260801_036_customer_return_registration.sql"
+jar tf "${release_dir}/server/yudao-server.jar" \
+  | grep -F 'AppReturnRegistrationController.class' >/dev/null
 
 rustfs_source="${release_dir}/ops/rustfs"
 rustfs_root="${DEPLOY_ROOT}/rustfs"
@@ -49,6 +60,13 @@ if [ -f "${release_dir}/web/server/index.mjs" ]; then
   has_web_artifact=true
 fi
 
+web_port="$(
+  sed -n 's/^PORT=//p' "${DEPLOY_ROOT}/shared/web.env" 2>/dev/null \
+    | tail -n 1
+)"
+web_port="${web_port:-3001}"
+WEB_HEALTH_URL="${WEB_HEALTH_URL:-http://127.0.0.1:${web_port}/}"
+
 for preserved_dir in staff web; do
   if [ ! -e "${release_dir}/${preserved_dir}" ] && [ -e "${DEPLOY_ROOT}/current/${preserved_dir}" ]; then
     echo "[deploy] preserve existing ${preserved_dir} artifact"
@@ -66,7 +84,8 @@ if systemctl list-unit-files "${SERVER_SERVICE}" >/dev/null 2>&1; then
   echo "[deploy] restart ${SERVER_SERVICE}"
   systemctl restart "${SERVER_SERVICE}"
 else
-  echo "[deploy][warn] ${SERVER_SERVICE} not found; backend artifact deployed but not restarted"
+  echo "[deploy][error] ${SERVER_SERVICE} not found" >&2
+  exit 1
 fi
 
 if [ "${has_web_artifact}" = true ] && systemctl list-unit-files "${WEB_SERVICE}" >/dev/null 2>&1; then
@@ -75,7 +94,8 @@ if [ "${has_web_artifact}" = true ] && systemctl list-unit-files "${WEB_SERVICE}
 elif [ "${has_web_artifact}" = false ]; then
   echo "[deploy] skip ${WEB_SERVICE}; web artifact not included"
 else
-  echo "[deploy][warn] ${WEB_SERVICE} not found; PC web artifact deployed but not restarted"
+  echo "[deploy][error] ${WEB_SERVICE} not found" >&2
+  exit 1
 fi
 
 if command -v nginx >/dev/null 2>&1; then
@@ -83,6 +103,24 @@ if command -v nginx >/dev/null 2>&1; then
   bash -lc "${NGINX_RELOAD_CMD}"
 else
   echo "[deploy][warn] nginx not installed or not on PATH; static frontends deployed but nginx not reloaded"
+fi
+
+wait_for_service_http \
+  "${SERVER_SERVICE}" \
+  "${BACKEND_HEALTH_URL}" \
+  reachable \
+  "${BACKEND_HEALTH_ATTEMPTS}" \
+  "${HEALTH_INTERVAL_SECONDS}" \
+  "${HEALTH_STABILIZE_SECONDS}"
+
+if [ "${has_web_artifact}" = true ]; then
+  wait_for_service_http \
+    "${WEB_SERVICE}" \
+    "${WEB_HEALTH_URL}" \
+    success \
+    "${WEB_HEALTH_ATTEMPTS}" \
+    "${HEALTH_INTERVAL_SECONDS}" \
+    "${HEALTH_STABILIZE_SECONDS}"
 fi
 
 echo "[deploy] cleanup old releases, keep=${KEEP_RELEASES}"

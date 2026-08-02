@@ -81,6 +81,7 @@ jobs:
           scp "${SCP_OPTS[@]}" \
             ops/github-deploy/server-build-deploy.sh \
             ops/github-deploy/incremental-build-lib.sh \
+            ops/github-deploy/prepare-production-80.sh \
             "${bundle_path}" \
             "${USER}@${HOST}:/tmp/"
 
@@ -101,5 +102,6 @@ jobs:
           export DEPLOY_ROOT RELEASE_SHA REPO_URL
           export SOURCE_DIR="${DEPLOY_ROOT}/source"
 
+          bash /tmp/prepare-production-80.sh
           bash /tmp/server-build-deploy.sh
           REMOTE

@@ -242,6 +242,7 @@ while IFS= read -r migration_path; do
   cp "${SOURCE_DIR}/${migration_path}" "${release_dir}/server/migrations/"
 done < "${SOURCE_DIR}/ops/github-deploy/migrations.txt"
 cp "${SOURCE_DIR}/ops/github-deploy/apply-migrations.sh" "${release_dir}/server/apply-migrations.sh"
+cp "${SOURCE_DIR}/ops/github-deploy/deployment-runtime-lib.sh" "${release_dir}/server/deployment-runtime-lib.sh"
 chmod 0755 "${release_dir}/server/apply-migrations.sh"
 mkdir -p "${release_dir}/ops"
 cp -R "${SOURCE_DIR}/ops/rustfs" "${release_dir}/ops/rustfs"
@@ -331,4 +332,5 @@ rm -f "${release_archive}"
 tar -czf "${release_archive}" -C "${release_dir}" .
 
 install -m 0755 "${SOURCE_DIR}/ops/github-deploy/server-deploy.sh" /tmp/camera-rental-server-deploy.sh
+install -m 0644 "${SOURCE_DIR}/ops/github-deploy/deployment-runtime-lib.sh" /tmp/deployment-runtime-lib.sh
 exec bash /tmp/camera-rental-server-deploy.sh "${release_archive}"

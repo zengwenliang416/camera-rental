@@ -67,6 +67,10 @@ cp ops/github-deploy/web.env.example /opt/camera-rental/shared/web.env
 该文件应包含生产 MySQL、Redis、租户、文件存储、闲管家、OCR/NewAPI 等配置。
 不要提交到 Git。
 
+当前 80 主机上的 PC Web 使用 `127.0.0.1:3102`，避免与已有 Nginx
+`127.0.0.1:3001` 监听冲突。微信能力未配置真实凭据时，`backend.env` 中保留
+`disabled` 占位值以满足 WxJava 启动校验；配置真实凭据后，部署脚本不会覆盖。
+
 安装 systemd 服务：
 
 ```bash
@@ -111,6 +115,8 @@ bash ops/rustfs/provision.sh /opt/camera-rental/rustfs /opt/camera-rental
 
 - `ops/github-deploy/migrations.txt` 中登记的数据库迁移会在版本激活前自动执行；
   迁移失败或历史迁移校验和变化时发布会停止，线上仍保留上一版本。
+- 后端和 PC Web 重启后必须通过 systemd 与 HTTP 稳定性检查，失败时 Actions
+  直接失败，不再把反复重启的服务误报为部署成功。
 - 闲管家写操作、AppSecret、NewAPI Key、数据库密码必须只放在 GitHub Secrets 或服务器配置。
 - 首次部署前先在服务器上确认 Java 21、Node、Nginx、MySQL、Redis 和端口策略。
 - 如果需要 HTTPS，建议先配置域名和证书，再把 Nginx 示例改成 443。

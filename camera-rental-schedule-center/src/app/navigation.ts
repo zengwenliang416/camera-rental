@@ -6,7 +6,6 @@ export type WorkspaceTab =
   | 'orders'
   | 'devices'
   | 'binding'
-  | 'operations'
   | 'exceptions';
 
 export interface WorkspaceNavItem {

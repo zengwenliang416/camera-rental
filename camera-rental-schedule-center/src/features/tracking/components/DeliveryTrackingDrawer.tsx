@@ -49,7 +49,7 @@ function PackageSelector({
       <h3 className="text-sm font-black text-[var(--sc-ink)]">
         {trackingCopy(locale, 'drawer.packages')}
       </h3>
-      <div className="grid gap-2">
+      <div className="grid gap-2 sm:grid-cols-2">
         {summary.packages.map((item) => {
           const state = trackingStatusPresentation(item.trackingStatus);
           const Icon = iconByName[state.icon];
@@ -95,9 +95,13 @@ function PackageSelector({
 
 export function DeliveryTrackingDrawer({
   orderId,
+  orderNumber,
+  customerName,
   onClose,
 }: {
   orderId: string;
+  orderNumber?: string;
+  customerName?: string;
   onClose: () => void;
 }) {
   const { locale } = usePreferences();
@@ -139,13 +143,22 @@ export function DeliveryTrackingDrawer({
       Icon,
     };
   }, [detail]);
+  const linkedDevices = detail?.devices.map((device) => device.deviceNo).join(' · ');
+  const drawerContext = [customerName, linkedDevices].filter(Boolean).join(' · ');
 
   if (!summary) return null;
 
   return (
     <DetailDrawerShell
-      title={`${trackingCopy(locale, 'drawer.title')} · RO-${summary.rentalOrderId}`}
-      description={trackingCopy(locale, 'drawer.description')}
+      title={
+        <span className="grid gap-1">
+          <span className="sc-data text-[9px] uppercase tracking-[0.12em] text-[var(--sc-blue)]">
+            {trackingCopy(locale, 'drawer.eyebrow')}
+          </span>
+          <span>{orderNumber || `RO-${summary.rentalOrderId}`}</span>
+        </span>
+      }
+      description={drawerContext || trackingCopy(locale, 'drawer.description')}
       closeLabel={trackingCopy(locale, 'drawer.close')}
       onClose={onClose}
     >
@@ -325,15 +338,16 @@ export function DeliveryTrackingDrawer({
                   description={trackingCopy(locale, 'drawer.timelineEmptyDetail')}
                 />
               ) : (
-                <div className="mt-3 space-y-3">
+                <div className="relative ml-2 mt-4 space-y-5 border-l border-[var(--sc-border-strong)] pl-6">
                   {detail.traces.map((trace) => {
                     const state = trackingStatusPresentation(trace.trackingStatus);
                     const Icon = iconByName[state.icon];
                     return (
                       <article
                         key={`${detail.deliveryId}-${trace.eventSeq || trace.businessTime || trace.traceText}`}
-                        className="rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-3"
+                        className="relative"
                       >
+                        <span className="absolute -left-[31px] top-1.5 h-3 w-3 rounded-full border-2 border-[var(--sc-surface)] bg-[var(--sc-blue)] ring-1 ring-[var(--sc-blue)]" />
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <StatusBadge tone={state.tone} icon={<Icon className="h-3 w-3" />}>
                             {trackingStatusLabel(locale, trace.trackingStatus)}

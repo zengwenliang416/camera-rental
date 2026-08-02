@@ -6,6 +6,7 @@ import {
   Send,
   ShieldAlert,
   Sparkles,
+  Truck,
   UserRound,
 } from 'lucide-react';
 import type { Key } from 'react';
@@ -20,20 +21,25 @@ import {
   orderDisplayRanges,
   orderStatusTone,
 } from '../orderModel';
+import type { DeliveryOrderSummary } from '../../tracking/trackingModel';
+import { DeliveryTrackingSummaryBadges } from '../../tracking/components/DeliveryTrackingSummaryBadges';
 
 export function OrderCard({
   order,
   devices,
   permissions,
   labels,
+  trackingSummary,
   onAssign,
   onShip,
   onOpenDevice,
+  onOpenTracking,
 }: {
   key?: Key;
   order: RentalOrder;
   devices: DeviceInstance[];
   permissions: { canAssign: boolean; canShip: boolean; canViewDevice: boolean };
+  trackingSummary?: DeliveryOrderSummary;
   labels: {
     channel: Record<RentalOrder['channel'], string>;
     status: Record<RentalOrder['status'], string>;
@@ -52,12 +58,14 @@ export function OrderCard({
     assign: string;
     ship: string;
     openDevice: string;
+    openTracking: string;
     returnOperational: string;
     noAction: string;
   };
   onAssign: () => void;
   onShip: () => void;
   onOpenDevice: (deviceId: string) => void;
+  onOpenTracking: () => void;
 }) {
   const actions = getOrderActionAvailability(order, permissions);
   const ranges = orderDisplayRanges(order);
@@ -159,6 +167,17 @@ export function OrderCard({
       </div>
 
       <footer className="mt-4 flex flex-col gap-2 border-t border-[var(--sc-border)] pt-4 sm:flex-row sm:flex-wrap sm:items-center">
+        {trackingSummary && (
+          <button
+            type="button"
+            onClick={onOpenTracking}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)] px-4 text-xs font-black text-[var(--sc-ink)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]"
+          >
+            <Truck className="h-4 w-4 text-[var(--sc-blue)]" />
+            <span>{labels.openTracking}</span>
+            <DeliveryTrackingSummaryBadges summary={trackingSummary} />
+          </button>
+        )}
         {actions.canShip && (
           <button type="button" onClick={onShip} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[var(--sc-ink)] px-4 text-xs font-black text-[var(--sc-surface)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]">
             <Send className="h-4 w-4" />
@@ -183,7 +202,7 @@ export function OrderCard({
             {labels.returnOperational}
           </span>
         )}
-        {!actions.canAssign && !actions.canShip && !actions.detailDeviceId && !actions.returnRequiresOperationalFlow && (
+        {!trackingSummary && !actions.canAssign && !actions.canShip && !actions.detailDeviceId && !actions.returnRequiresOperationalFlow && (
           <span className="text-[10px] font-semibold text-[var(--sc-ink-muted)]">{labels.noAction}</span>
         )}
       </footer>

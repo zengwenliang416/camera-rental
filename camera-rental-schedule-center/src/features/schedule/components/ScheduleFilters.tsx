@@ -2,26 +2,31 @@ import { Grid3X3, List, Search } from 'lucide-react';
 
 import type { EquipmentModel } from '../../../types';
 import type { ScheduleStatusFilter, ScheduleViewMode } from '../scheduleModel';
+import type { ScheduleTrackingFilter } from './ScheduleTrackingWorkspace';
 
 export function ScheduleFilters({
   models,
   selectedModelId,
   search,
   status,
+  trackingStatus,
   viewMode,
   labels,
   onModelChange,
   onSearchChange,
   onStatusChange,
+  onTrackingStatusChange,
   onViewModeChange,
 }: {
   models: EquipmentModel[];
   selectedModelId: string;
   search: string;
   status: ScheduleStatusFilter;
+  trackingStatus: ScheduleTrackingFilter;
   viewMode: ScheduleViewMode;
   labels: Record<
     | 'model'
+    | 'modelAll'
     | 'search'
     | 'statusAll'
     | 'statusIdle'
@@ -29,6 +34,12 @@ export function ScheduleFilters({
     | 'statusReserved'
     | 'statusRepair'
     | 'statusLocked'
+    | 'trackingAll'
+    | 'trackingActive'
+    | 'trackingDelivered'
+    | 'trackingRisk'
+    | 'trackingMapping'
+    | 'window'
     | 'viewGantt'
     | 'viewTable',
     string
@@ -36,10 +47,11 @@ export function ScheduleFilters({
   onModelChange: (value: string) => void;
   onSearchChange: (value: string) => void;
   onStatusChange: (value: ScheduleStatusFilter) => void;
+  onTrackingStatusChange: (value: ScheduleTrackingFilter) => void;
   onViewModeChange: (value: ScheduleViewMode) => void;
 }) {
   return (
-    <section className="grid gap-3 rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-3 lg:grid-cols-[minmax(180px,0.8fr)_minmax(240px,1.4fr)_minmax(160px,0.7fr)_auto]">
+    <section className="grid gap-3 rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-3 lg:grid-cols-[minmax(160px,0.8fr)_minmax(220px,1.25fr)_minmax(150px,0.72fr)_minmax(170px,0.82fr)_minmax(140px,0.64fr)_auto]">
       <label className="grid gap-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--sc-ink-muted)]">
         {labels.model}
         <select
@@ -47,6 +59,7 @@ export function ScheduleFilters({
           onChange={(event) => onModelChange(event.target.value)}
           className="min-h-11 rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)] px-3 text-xs font-bold text-[var(--sc-ink)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]"
         >
+          <option value="ALL">{labels.modelAll}</option>
           {models.map((model) => (
             <option key={model.id} value={model.id}>
               {model.name} · {model.totalUnits}
@@ -81,6 +94,32 @@ export function ScheduleFilters({
           <option value="RESERVED">{labels.statusReserved}</option>
           <option value="REPAIR">{labels.statusRepair}</option>
           <option value="LOCKED">{labels.statusLocked}</option>
+        </select>
+      </label>
+
+      <label className="grid gap-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--sc-ink-muted)]">
+        {labels.trackingAll}
+        <select
+          value={trackingStatus}
+          onChange={(event) => onTrackingStatusChange(event.target.value as ScheduleTrackingFilter)}
+          className="min-h-11 rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)] px-3 text-xs font-bold text-[var(--sc-ink)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]"
+        >
+          <option value="ALL">{labels.trackingAll}</option>
+          <option value="ACTIVE">{labels.trackingActive}</option>
+          <option value="DELIVERED">{labels.trackingDelivered}</option>
+          <option value="RISK">{labels.trackingRisk}</option>
+          <option value="MAPPING_REQUIRED">{labels.trackingMapping}</option>
+        </select>
+      </label>
+
+      <label className="grid gap-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--sc-ink-muted)]">
+        {labels.window}
+        <select
+          value="14"
+          disabled
+          className="min-h-11 rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)] px-3 text-xs font-bold text-[var(--sc-ink)] disabled:cursor-not-allowed disabled:opacity-80"
+        >
+          <option value="14">{labels.window}</option>
         </select>
       </label>
 

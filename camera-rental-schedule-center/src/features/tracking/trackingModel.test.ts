@@ -5,9 +5,10 @@ import type {
   RentalDeliveryTrackingDetailRespVO,
   RentalDeliveryTrackingOrderSummaryRespVO,
 } from '../../api/rental';
-import type { ScheduleBlock } from '../../types';
+import type { RentalOrder, ScheduleBlock } from '../../types';
 import {
   groupTrackingByOrderId,
+  onlyTrackedSummaries,
   summarizeMultiPackageStatus,
   trackingStatusPresentation,
   toDeliveryOrderSummary,
@@ -34,6 +35,36 @@ test('groups one shared summary per rental order', () => {
   assert.equal(Object.keys(grouped).length, 1);
 });
 
+test('excludes API placeholders that do not contain a local delivery', () => {
+  assert.deepEqual(
+    onlyTrackedSummaries([
+      {
+        ...summary,
+        packageCount: 1,
+        packages: [{
+          deliveryId: 1,
+          rentalOrderId: 30,
+          direction: 'OUTBOUND',
+          packageSeq: 1,
+          trackingStatus: 'IN_TRANSIT',
+          mappingStatus: 'READY',
+          subscribeStatus: 'SUBSCRIBED',
+          queryStatus: 'READY_QUERY',
+          stale: false,
+        }],
+      },
+      {
+        rentalOrderId: 31,
+        packageCount: 0,
+        statusCounts: {},
+        packages: [],
+        risks: [],
+      },
+    ]).map((item) => item.rentalOrderId),
+    [30]
+  );
+});
+
 test('creates deterministic multi-package status copy input', () => {
   assert.equal(summarizeMultiPackageStatus(summary), '2|DELIVERED:1,IN_TRANSIT:1');
 });
@@ -49,7 +80,7 @@ test('maps normalized server states to non-color-only presentation metadata', ()
   });
 });
 
-test('collects only numeric rental orders overlapping the visible window', () => {
+test('collects scheduled rental orders and shipped channel orders with waybills', () => {
   const blocks: ScheduleBlock[] = [
     {
       id: 'one',
@@ -85,7 +116,34 @@ test('collects only numeric rental orders overlapping the visible window', () =>
     },
   ];
 
-  assert.deepEqual(visibleRentalOrderIds(blocks, '2026-07-31', '2026-08-13'), [30]);
+  const shippedOrder = {
+    id: '88',
+    rentalOrderId: 99,
+    orderNumber: 'XIANYU-88',
+    channel: 'XIANYU',
+    customerName: '客*',
+    customerPhone: '',
+    startDate: '',
+    endDate: '',
+    occupyStartDate: '',
+    occupyEndDateExclusive: '',
+    rentalPeriodLabel: '待复核',
+    rentalPeriodReady: false,
+    status: 'RENTING',
+    items: [],
+    totalPrice: 0,
+    deposit: 0,
+    createdTime: '2026-07-31 10:00:00',
+    logisticsNumber: 'SF1234567890',
+    canAssign: false,
+    canShip: false,
+    canReturn: false,
+  } satisfies RentalOrder;
+
+  assert.deepEqual(
+    visibleRentalOrderIds(blocks, [shippedOrder], '2026-07-31', '2026-08-13'),
+    [30, 99]
+  );
 });
 
 test('maps order summary using backend risk and nullable waybill fields', () => {

@@ -5,6 +5,10 @@ import { Window } from 'happy-dom';
 
 import { PreferenceProvider } from '../../preferences/PreferenceContext';
 import { ScheduleDeviceTable } from './ScheduleDeviceTable';
+import {
+  filterDevicesByTracking,
+  matchesTrackingFilter,
+} from './ScheduleTrackingWorkspace';
 
 const browser = new Window();
 Object.assign(globalThis, {
@@ -73,6 +77,7 @@ test('renders device and tracking actions as sibling buttons', () => {
           blockReserve: 'Reserve',
           blockRepair: 'Repair',
           blockLock: 'Lock',
+          occupiedInRange: 'Occupied',
           statusIdle: 'Idle',
           statusRenting: 'Renting',
           statusReserved: 'Reserved',
@@ -82,6 +87,7 @@ test('renders device and tracking actions as sibling buttons', () => {
         onOpenDevice={(deviceId) => openedDevices.push(deviceId)}
         onOpenOrder={() => undefined}
         onOpenTracking={(orderId) => openedTracking.push(orderId)}
+        orderNumberByOrderId={{ '71002': '3313011255890094097' }}
         trackingByOrderId={{
           '71002': {
             rentalOrderId: 71002,
@@ -108,7 +114,10 @@ test('renders device and tracking actions as sibling buttons', () => {
   assert.equal(document.querySelectorAll('button button').length, 0);
   const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('button'));
   const deviceButton = buttons.find((button) => button.textContent?.includes('001号'));
-  const trackingButton = buttons.find((button) => button.textContent?.includes('运输中'));
+  const trackingButton = buttons.find(
+    (button) => button.textContent?.includes('3313011255890094097')
+      && button.textContent?.includes('运输中')
+  );
   assert.ok(deviceButton);
   assert.ok(trackingButton);
 
@@ -118,4 +127,70 @@ test('renders device and tracking actions as sibling buttons', () => {
   assert.deepEqual(openedTracking, ['71002']);
 
   flushSync(() => root.unmount());
+});
+
+test('filters schedule devices by order-linked tracking state', () => {
+  const summaries = {
+    '71002': {
+      rentalOrderId: 71002,
+      packageCount: 1,
+      statusCounts: { IN_TRANSIT: 1 },
+      packages: [{
+        deliveryId: 91002,
+        rentalOrderId: 71002,
+        direction: 'OUTBOUND' as const,
+        packageSeq: 1,
+        trackingStatus: 'IN_TRANSIT' as const,
+        mappingStatus: 'READY',
+        subscribeStatus: 'SUBSCRIBED',
+        queryStatus: 'READY_QUERY',
+        stale: false,
+      }],
+      risks: [],
+    },
+    '71003': {
+      rentalOrderId: 71003,
+      packageCount: 1,
+      statusCounts: { DELIVERED: 1 },
+      packages: [{
+        deliveryId: 91003,
+        rentalOrderId: 71003,
+        direction: 'OUTBOUND' as const,
+        packageSeq: 1,
+        trackingStatus: 'DELIVERED' as const,
+        mappingStatus: 'READY',
+        subscribeStatus: 'SUBSCRIBED',
+        queryStatus: 'READY_QUERY',
+        stale: false,
+      }],
+      risks: [],
+    },
+  };
+  const devices = [{ id: '101' }, { id: '102' }, { id: '103' }];
+  const blocks = [{
+    id: '201',
+    deviceId: '101',
+    orderId: '71002',
+    type: 'RENTAL' as const,
+    startDate: '2026-08-01',
+    endDate: '2026-08-02',
+  }, {
+    id: '202',
+    deviceId: '102',
+    orderId: '71003',
+    type: 'RENTAL' as const,
+    startDate: '2026-08-01',
+    endDate: '2026-08-02',
+  }];
+
+  assert.equal(matchesTrackingFilter(summaries['71002'], 'ACTIVE'), true);
+  assert.equal(matchesTrackingFilter(summaries['71003'], 'ACTIVE'), false);
+  assert.deepEqual(
+    filterDevicesByTracking(devices, blocks, summaries, 'DELIVERED').map((item) => item.id),
+    ['102']
+  );
+  assert.deepEqual(
+    filterDevicesByTracking(devices, blocks, summaries, 'ALL').map((item) => item.id),
+    ['101', '102', '103']
+  );
 });

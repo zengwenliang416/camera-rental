@@ -13,20 +13,10 @@ test('workspace access uses one permission model for every navigation intent', (
   assert.equal(canAccessTab(permissions, 'schedule'), true);
   assert.equal(canAccessTab(permissions, 'orders'), false);
   assert.equal(canAccessTab(['rental:delivery:tracking'], 'exceptions'), true);
-  assert.equal(
-    canAccessTab(['rental:logistics:metrics:query'], 'operations'),
-    true
-  );
   assert.deepEqual(
-    permittedTabs(permissions, ['dashboard', 'schedule', 'orders', 'devices', 'binding', 'operations', 'exceptions']),
+    permittedTabs(permissions, ['dashboard', 'schedule', 'orders', 'devices', 'binding', 'exceptions']),
     ['dashboard', 'schedule', 'devices']
   );
-});
-
-test('operations navigation is hidden without any operations permission', () => {
-  assert.equal(canAccessTab(['rental:delivery:tracking'], 'operations'), false);
-  assert.equal(canAccessTab(['rental:logistics:cleanup'], 'operations'), true);
-  assert.equal(canAccessTab(['rental:logistics:mapping:delete'], 'operations'), true);
 });
 
 test('snapshot access separates permission-scoped queries', () => {

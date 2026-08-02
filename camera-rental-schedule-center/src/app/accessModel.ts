@@ -6,20 +6,6 @@ const TAB_PERMISSIONS: Partial<Record<WorkspaceTab, string | string[]>> = {
   orders: 'rental:xianyu:query',
   devices: 'rental:device:query',
   binding: 'rental:xianyu:ship',
-  operations: [
-    'rental:logistics:config:query',
-    'rental:logistics:config:update',
-    'rental:logistics:config:verify',
-    'rental:logistics:mapping:query',
-    'rental:logistics:mapping:update',
-    'rental:logistics:mapping:delete',
-    'rental:logistics:task:query',
-    'rental:logistics:task:retry',
-    'rental:logistics:reconcile',
-    'rental:logistics:metrics:query',
-    'rental:logistics:backfill',
-    'rental:logistics:cleanup',
-  ],
   exceptions: ['rental:review:query', 'rental:delivery:tracking'],
 };
 

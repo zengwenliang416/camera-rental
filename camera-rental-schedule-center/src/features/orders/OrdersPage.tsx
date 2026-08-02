@@ -15,6 +15,8 @@ import {
   type OrderStatusFilter,
 } from './orderModel';
 import { OrderCard } from './components/OrderCard';
+import { useDeliveryTracking } from '../tracking/TrackingContext';
+import { DeliveryTrackingDrawer } from '../tracking/components/DeliveryTrackingDrawer';
 
 export function OrdersPage() {
   const {
@@ -27,11 +29,13 @@ export function OrdersPage() {
     hasPermission,
   } = useApp();
   const { t } = usePreferences();
+  const { trackingByOrderId } = useDeliveryTracking();
   const [status, setStatus] = useState<OrderStatusFilter>('ALL');
   const [channel, setChannel] = useState<OrderChannelFilter>('ALL');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [selectedTrackingOrderId, setSelectedTrackingOrderId] = useState<string | null>(null);
   const filtered = useMemo(
     () => filterOrders(orders, { status, channel, search }),
     [channel, orders, search, status]
@@ -39,6 +43,14 @@ export function OrdersPage() {
   const paged = useMemo(
     () => paginateOrders(filtered, page, pageSize),
     [filtered, page, pageSize]
+  );
+  const selectedTrackingOrder = useMemo(
+    () => selectedTrackingOrderId
+      ? orders.find(
+          (order) => String(order.rentalOrderId ?? order.id) === selectedTrackingOrderId
+        )
+      : undefined,
+    [orders, selectedTrackingOrderId]
   );
   const canShip = hasPermission('rental:xianyu:ship');
   const canAssign = hasPermission('rental:device:assign');
@@ -120,38 +132,44 @@ export function OrdersPage() {
         <EmptyState icon={<Search className="h-4 w-4" />} title={t('orders.noMatches')} description={t('orders.noMatchesDetail')} />
       ) : (
         <ResponsiveDataList label={t('orders.results')}>
-          {paged.items.map((order) => (
-            <OrderCard
-              key={order.id}
-              order={order}
-              devices={devices}
-              permissions={{ canAssign, canShip, canViewDevice }}
-              labels={{
-                channel: channelLabels,
-                status: statusLabels,
-                customer: t('orders.customer'),
-                phone: t('orders.phone'),
-                address: t('orders.address'),
-                periodPending: t('orders.periodPending'),
-                billable: t('schedule.billable'),
-                occupied: t('schedule.occupied'),
-                billableHint: t('schedule.billableHint'),
-                occupiedHint: t('schedule.occupiedHint'),
-                requirements: t('orders.requirements'),
-                assigned: t('orders.assigned'),
-                unassigned: t('orders.unassigned'),
-                created: t('orders.created'),
-                assign: t('orders.assign'),
-                ship: t('orders.ship'),
-                openDevice: t('orders.openDevice'),
-                returnOperational: t('orders.returnOperational'),
-                noAction: t('orders.noAction'),
-              }}
-              onAssign={() => openAllocationModal(order.id)}
-              onShip={() => openShipping(order.id)}
-              onOpenDevice={openDeviceDetail}
-            />
-          ))}
+          {paged.items.map((order) => {
+            const trackingOrderId = String(order.rentalOrderId ?? order.id);
+            return (
+              <OrderCard
+                key={order.id}
+                order={order}
+                devices={devices}
+                trackingSummary={trackingByOrderId[trackingOrderId]}
+                permissions={{ canAssign, canShip, canViewDevice }}
+                labels={{
+                  channel: channelLabels,
+                  status: statusLabels,
+                  customer: t('orders.customer'),
+                  phone: t('orders.phone'),
+                  address: t('orders.address'),
+                  periodPending: t('orders.periodPending'),
+                  billable: t('schedule.billable'),
+                  occupied: t('schedule.occupied'),
+                  billableHint: t('schedule.billableHint'),
+                  occupiedHint: t('schedule.occupiedHint'),
+                  requirements: t('orders.requirements'),
+                  assigned: t('orders.assigned'),
+                  unassigned: t('orders.unassigned'),
+                  created: t('orders.created'),
+                  assign: t('orders.assign'),
+                  ship: t('orders.ship'),
+                  openDevice: t('orders.openDevice'),
+                  openTracking: t('orders.openTracking'),
+                  returnOperational: t('orders.returnOperational'),
+                  noAction: t('orders.noAction'),
+                }}
+                onAssign={() => openAllocationModal(order.id)}
+                onShip={() => openShipping(order.id)}
+                onOpenDevice={openDeviceDetail}
+                onOpenTracking={() => setSelectedTrackingOrderId(trackingOrderId)}
+              />
+            );
+          })}
         </ResponsiveDataList>
       )}
 
@@ -202,6 +220,17 @@ export function OrdersPage() {
             </button>
           </div>
         </nav>
+      )}
+
+      {selectedTrackingOrderId && (
+        <DeliveryTrackingDrawer
+          orderId={selectedTrackingOrderId}
+          orderNumber={selectedTrackingOrder?.orderNumber}
+          customerName={
+            selectedTrackingOrder?.receiverName || selectedTrackingOrder?.customerName
+          }
+          onClose={() => setSelectedTrackingOrderId(null)}
+        />
       )}
     </div>
   );

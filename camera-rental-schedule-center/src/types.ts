@@ -88,6 +88,7 @@ export interface RentalOrder {
   totalPrice: number;
   deposit: number;
   createdTime: string;
+  consignTime?: string;
   logisticsNumber?: string; // 物流运单号 e.g. "SF1893029104"
   expressCode?: string;
   expressName?: string;

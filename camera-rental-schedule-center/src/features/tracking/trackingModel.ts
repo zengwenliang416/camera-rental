@@ -1,4 +1,4 @@
-import type { ScheduleBlock } from '../../types';
+import type { RentalOrder, ScheduleBlock } from '../../types';
 import type { StatusTone } from '../../shared/ui/StatusBadge';
 import type {
   RentalDeliveryRefreshRespVO,
@@ -109,6 +109,10 @@ export function groupTrackingByOrderId(items: DeliveryOrderSummary[]) {
   return Object.fromEntries(items.map((item) => [String(item.rentalOrderId), item]));
 }
 
+export function onlyTrackedSummaries(items: DeliveryOrderSummary[]) {
+  return items.filter((item) => item.packageCount > 0 && item.packages.length > 0);
+}
+
 export function summarizeMultiPackageStatus(summary: DeliveryOrderSummary) {
   if (summary.packageCount <= 1) {
     return summary.packages[0]?.trackingStatus || 'CREATED';
@@ -122,18 +126,24 @@ export function summarizeMultiPackageStatus(summary: DeliveryOrderSummary) {
 
 export function visibleRentalOrderIds(
   blocks: ScheduleBlock[],
+  orders: RentalOrder[],
   windowStart: string,
   windowEnd: string
 ) {
-  return Array.from(
-    new Set(
-      blocks
+  const scheduledRentalOrderIds = blocks
         .filter((block) => Boolean(block.orderId))
         .filter((block) => block.startDate <= windowEnd && block.endDate >= windowStart)
         .map((block) => Number(block.orderId))
-        .filter((orderId) => Number.isSafeInteger(orderId) && orderId > 0)
-    )
-  ).sort((left, right) => left - right);
+        .filter((orderId) => Number.isSafeInteger(orderId) && orderId > 0);
+  const shippedChannelOrderIds = orders
+    .filter((order) => order.status === 'RENTING')
+    .filter((order) => Boolean(order.logisticsNumber?.trim()))
+    .map((order) => Number(order.rentalOrderId ?? order.id))
+    .filter((orderId) => Number.isSafeInteger(orderId) && orderId > 0);
+  return Array.from(new Set([
+    ...scheduledRentalOrderIds,
+    ...shippedChannelOrderIds,
+  ])).sort((left, right) => left - right);
 }
 
 export function riskTone(severity: DeliveryRisk['severity']): StatusTone {

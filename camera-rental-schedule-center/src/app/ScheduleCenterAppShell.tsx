@@ -6,14 +6,11 @@ import {
   Layers3,
   RefreshCw,
   Send,
-  Settings2,
   ShoppingBag,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useApp } from '../context/AppContext';
-import { redirectToAdminLogin } from '../api/client';
 import { usePreferences } from '../features/preferences/PreferenceContext';
-import LogisticsOperationsPage from '../features/logistics-operations/LogisticsOperationsPage';
 import { useDeliveryTracking } from '../features/tracking/TrackingContext';
 import { EmptyState } from '../shared/ui/EmptyState';
 import { StatusBadge } from '../shared/ui/StatusBadge';
@@ -66,12 +63,6 @@ export function ScheduleCenterHeader() {
       badge: devices.filter((device) => device.status === 'REPAIR' || device.status === 'LOCKED').length || undefined,
     },
     { id: 'binding', label: t('nav.shipping'), icon: Send, permission: 'rental:xianyu:ship' },
-    {
-      id: 'operations',
-      label: t('nav.operations'),
-      icon: Settings2,
-      permission: 'rental:logistics:config:query',
-    },
     {
       id: 'exceptions',
       label: t('nav.exceptions'),
@@ -139,8 +130,8 @@ export function ScheduleCenterAppShell({ children }: { children: ReactNode }) {
     loadError,
     authRequired,
     accessDenied,
-    activeTab,
     syncFromManagementSystem,
+    setIsLoginPageVisible,
   } = useApp();
   const { t } = usePreferences();
 
@@ -154,7 +145,7 @@ export function ScheduleCenterAppShell({ children }: { children: ReactNode }) {
           authRequired={authRequired}
           accessDenied={accessDenied}
           onRetry={() => void syncFromManagementSystem()}
-          onLogin={redirectToAdminLogin}
+          onLogin={() => setIsLoginPageVisible(true)}
         />
         {accessDenied ? (
           <div className="sc-surface grid min-h-[55vh] place-items-center rounded-xl p-6">
@@ -164,8 +155,6 @@ export function ScheduleCenterAppShell({ children }: { children: ReactNode }) {
               description={t('state.noAccess')}
             />
           </div>
-        ) : activeTab === 'operations' ? (
-          <LogisticsOperationsPage />
         ) : children}
       </main>
       <footer className="border-t border-[var(--sc-border)] bg-[var(--sc-surface)] px-4 py-4 text-center text-[10px] text-[var(--sc-ink-muted)]">

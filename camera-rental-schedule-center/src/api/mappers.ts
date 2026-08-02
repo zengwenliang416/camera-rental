@@ -339,6 +339,7 @@ export function mapChannelOrders(
         totalPrice: order.payAmount ? Math.round(order.payAmount / 100) : 0,
         deposit: 0,
         createdTime: firstDateTime(order.orderTime, order.sourceCreatedAt, order.sourceUpdatedAt),
+        consignTime: formatDateTimeValue(order.consignTime),
         logisticsNumber: order.waybillNo,
         expressCode: order.expressCode,
         expressName: order.expressName,

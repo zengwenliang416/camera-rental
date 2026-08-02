@@ -44,6 +44,7 @@ export const zhOrderMessages = {
   'orders.assign': '安排或调整设备',
   'orders.ship': '进入发货确认',
   'orders.openDevice': '查看设备履历',
+  'orders.openTracking': '查看物流',
   'orders.returnOperational': '归还必须进入设备回仓与检测作业，普通订单卡不直接改状态。',
   'orders.noAction': '当前状态没有可进入的操作流程。',
 } as const;
@@ -96,6 +97,7 @@ export const enOrderMessages: Record<OrderMessageKey, string> = {
   'orders.assign': 'Assign or adjust devices',
   'orders.ship': 'Open shipment confirmation',
   'orders.openDevice': 'View device history',
+  'orders.openTracking': 'View tracking',
   'orders.returnOperational': 'Returns must use the device return and inspection workflow; general order cards never change status directly.',
   'orders.noAction': 'No permitted workflow is available for this state.',
 };

@@ -24,6 +24,7 @@ import { useSession } from '../session/SessionContext';
 import { startVisibleSummaryPolling } from './trackingPolling';
 import {
   groupTrackingByOrderId,
+  onlyTrackedSummaries,
   toDeliveryOrderSummary,
   toDeliveryPackageDetail,
   toDeliveryRefreshResult,
@@ -80,7 +81,7 @@ function plusDays(date: Date, days: number) {
 }
 
 export function DeliveryTrackingProvider({ children }: { children: ReactNode }) {
-  const { blocks, isDataLoading } = useScheduleCenterData();
+  const { blocks, orders, isDataLoading } = useScheduleCenterData();
   const { hasPermission, permissionRevision } = usePermissions();
   const { isLoggedIn, requireAuthentication, sessionRevision } = useSession();
   const canReadTracking = hasPermission('rental:delivery:tracking');
@@ -88,8 +89,8 @@ export function DeliveryTrackingProvider({ children }: { children: ReactNode }) 
   const windowStart = localDateString(today);
   const windowEnd = localDateString(plusDays(today, 13));
   const visibleTrackingOrderIds = useMemo(
-    () => (canReadTracking ? visibleRentalOrderIds(blocks, windowStart, windowEnd) : []),
-    [blocks, canReadTracking, windowEnd, windowStart]
+    () => (canReadTracking ? visibleRentalOrderIds(blocks, orders, windowStart, windowEnd) : []),
+    [blocks, canReadTracking, orders, windowEnd, windowStart]
   );
   const visibleKey = visibleTrackingOrderIds.join(',');
   const beginSummaryRequest = useLatestRequest(
@@ -129,9 +130,15 @@ export function DeliveryTrackingProvider({ children }: { children: ReactNode }) 
     setIsSummaryLoading(true);
     setSummaryError(null);
     try {
-      const result = await fetchDeliveryTrackingSummaries(visibleTrackingOrderIds);
+      const batches: number[][] = [];
+      for (let index = 0; index < visibleTrackingOrderIds.length; index += 200) {
+        batches.push(visibleTrackingOrderIds.slice(index, index + 200));
+      }
+      const results = await Promise.all(batches.map(fetchDeliveryTrackingSummaries));
       if (!isCurrent()) return;
-      const summaries = Object.values(result).map(toDeliveryOrderSummary);
+      const summaries = onlyTrackedSummaries(results.flatMap((result) =>
+        Object.values(result).map(toDeliveryOrderSummary)
+      ));
       setTrackingByOrderId(groupTrackingByOrderId(summaries));
       setLastSummarySyncAt(Date.now());
     } catch (error) {

@@ -2,22 +2,19 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
   buildReturnRegistrationPageParams,
-  canReissueReturnRegistration,
   canReviewReturnRegistration,
   canRevokeReturnRegistration,
   RETURN_REGISTRATION_STATUSES,
   returnRegistrationStatusLabel
 } from '../src/views/rental/return-registration/returnRegistrationModel.ts'
 
-test('draft rows expose only link lifecycle operations', () => {
-  assert.equal(canReissueReturnRegistration('DRAFT'), true)
+test('draft rows expose only revoke before customer submission', () => {
   assert.equal(canRevokeReturnRegistration('DRAFT'), true)
   assert.equal(canReviewReturnRegistration('DRAFT'), false)
 })
 
-test('expired and revoked links cannot be reissued in place', () => {
+test('expired and revoked registrations cannot be revoked again', () => {
   for (const status of ['EXPIRED', 'REVOKED']) {
-    assert.equal(canReissueReturnRegistration(status), false)
     assert.equal(canRevokeReturnRegistration(status), false)
   }
 })

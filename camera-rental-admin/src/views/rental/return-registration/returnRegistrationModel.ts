@@ -21,8 +21,6 @@ const STATUS_LABELS: Record<string, string> = {
 export const returnRegistrationStatusLabel = (status: string) =>
   STATUS_LABELS[status] || status
 
-export const canReissueReturnRegistration = (status: string) => status === 'DRAFT'
-
 export const canRevokeReturnRegistration = (status: string) => status === 'DRAFT'
 
 export const canReviewReturnRegistration = (status: string) =>

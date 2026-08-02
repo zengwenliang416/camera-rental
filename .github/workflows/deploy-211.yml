@@ -28,6 +28,8 @@ jobs:
     environment: production-211
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Configure SSH
         env:
@@ -63,15 +65,25 @@ jobs:
           PORT="${DEPLOY_PORT:-22}"
           USER="${DEPLOY_USER:-root}"
           ROOT="${DEPLOY_ROOT:-/opt/camera-rental}"
-          SSH_OPTS=(-i ~/.ssh/deploy_key -p "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20)
-          SCP_OPTS=(-i ~/.ssh/deploy_key -P "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20)
+          CONTROL_PATH="${RUNNER_TEMP}/camera-rental-ssh-%C"
+          SSH_OPTS=(-i ~/.ssh/deploy_key -p "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20 -o ControlMaster=auto -o ControlPersist=15m -o ControlPath="${CONTROL_PATH}")
+          SCP_OPTS=(-i ~/.ssh/deploy_key -P "${PORT}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20 -o ControlMaster=auto -o ControlPersist=15m -o ControlPath="${CONTROL_PATH}")
+
+          printf -v root_q '%q' "${ROOT}"
+          remote_source_sha="$(
+            ssh "${SSH_OPTS[@]}" "${USER}@${HOST}" \
+              "git -C ${root_q}/source rev-parse HEAD 2>/dev/null || true"
+          )"
+          bundle_path="${RUNNER_TEMP}/camera-rental-source.bundle"
+          bash ops/github-deploy/create-source-bundle.sh \
+            "${remote_source_sha}" "${RELEASE_SHA}" "${bundle_path}"
 
           scp "${SCP_OPTS[@]}" \
             ops/github-deploy/server-build-deploy.sh \
             ops/github-deploy/incremental-build-lib.sh \
+            "${bundle_path}" \
             "${USER}@${HOST}:/tmp/"
 
-          printf -v root_q '%q' "${ROOT}"
           printf -v sha_q '%q' "${RELEASE_SHA}"
 
           ssh "${SSH_OPTS[@]}" "${USER}@${HOST}" \
@@ -80,37 +92,14 @@ jobs:
 
           DEPLOY_ROOT="$1"
           RELEASE_SHA="$2"
-          readonly github_repo="zengwenliang416/camera-rental"
-          readonly gitee_repo="wenliang_zeng/camera-rental"
-          candidates=(
-            "https://gh-proxy.com/https://github.com/${github_repo}.git"
-            "https://ghfast.top/https://github.com/${github_repo}.git"
-            "git@gitee.com:${gitee_repo}.git"
-          )
+          SOURCE_BUNDLE="/tmp/camera-rental-source.bundle"
+          test -s "${SOURCE_BUNDLE}"
+          trap 'rm -f "${SOURCE_BUNDLE}"' EXIT
 
-          REPO_URL=""
-          for candidate in "${candidates[@]}"; do
-            echo "[github-deploy] probe ${candidate}"
-            remote_sha="$(
-              timeout 30 git ls-remote "${candidate}" refs/heads/main 2>/dev/null \
-                | awk 'NR == 1 { print $1 }'
-            )" || true
-            if [ "${remote_sha}" = "${RELEASE_SHA}" ]; then
-              REPO_URL="${candidate}"
-              break
-            fi
-            echo "[github-deploy] skip mirror: expected ${RELEASE_SHA}, got ${remote_sha:-unavailable}"
-          done
-
-          if [ -z "${REPO_URL}" ]; then
-            echo "[github-deploy][error] no source mirror exposes GitHub SHA ${RELEASE_SHA}" >&2
-            exit 1
-          fi
-
-          echo "[github-deploy] source mirror selected: ${REPO_URL}"
+          echo "[github-deploy] source bundle received for ${RELEASE_SHA}"
+          REPO_URL="${SOURCE_BUNDLE}"
           export DEPLOY_ROOT RELEASE_SHA REPO_URL
           export SOURCE_DIR="${DEPLOY_ROOT}/source"
-          export GIT_SSH_COMMAND="ssh -i /root/.ssh/camera_rental_gitee_pull -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=20 -C"
 
           bash /tmp/server-build-deploy.sh
           REMOTE

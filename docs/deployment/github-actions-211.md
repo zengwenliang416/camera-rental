@@ -114,6 +114,8 @@ bash ops/rustfs/provision.sh /opt/camera-rental/rustfs /opt/camera-rental
 - 自动：向 GitHub `main` 推送后端、管理后台、排期中心、员工端、PC Web 或
   部署脚本变更时，自动运行 `Deploy camera rental to 211`。
 - `ops/rustfs/**` 变更不会触发应用发布；RustFS 由服务器运维独立安装和升级。
+- Actions 会根据服务器现有源码 HEAD 生成并上传经过 Git 校验的增量 bundle；
+  生产机构建不依赖访问 GitHub、GitHub 代理或 Gitee。
 - 纯文档、SpecNav 状态等非发布文件变化不会重启生产服务。
 - 启用 GitHub 自动发布后，应在 Gitee 页面关闭自动触发，避免两套流水线并发
   操作同一生产环境。

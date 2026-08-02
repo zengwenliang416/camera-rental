@@ -81,9 +81,11 @@ prepare_incremental_build() {
     echo "[build-deploy] no Git release baseline; use full build"
     return
   fi
-  if ! git -C "${SOURCE_DIR}" fetch --quiet --no-tags --depth 1 origin "${previous_release_sha}"; then
-    echo "[build-deploy][warn] unable to fetch previous release ${previous_release_sha}; use full build"
-    return
+  if ! git -C "${SOURCE_DIR}" cat-file -e "${previous_release_sha}^{commit}" 2>/dev/null; then
+    if ! git -C "${SOURCE_DIR}" fetch --quiet --no-tags --depth 1 origin "${previous_release_sha}"; then
+      echo "[build-deploy][warn] unable to fetch previous release ${previous_release_sha}; use full build"
+      return
+    fi
   fi
   if ! git -C "${SOURCE_DIR}" diff --name-only "${previous_release_sha}" "${RELEASE_SHA}" > "${changed_files}"; then
     echo "[build-deploy][warn] unable to compare releases; use full build"

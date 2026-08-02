@@ -32,8 +32,7 @@ test -x "${release_dir}/server/apply-migrations.sh"
 test -f "${release_dir}/admin/index.html"
 test -f "${release_dir}/schedule-center/index.html"
 test -f "${release_dir}/server/migrations/20260801_036_customer_return_registration.sql"
-jar tf "${release_dir}/server/yudao-server.jar" \
-  | grep -F 'AppReturnRegistrationController.class' >/dev/null
+verify_return_registration_artifact "${release_dir}/server/yudao-server.jar"
 
 rustfs_source="${release_dir}/ops/rustfs"
 rustfs_root="${DEPLOY_ROOT}/rustfs"

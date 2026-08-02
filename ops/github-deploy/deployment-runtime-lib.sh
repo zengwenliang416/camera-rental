@@ -18,6 +18,49 @@ is_http_status_acceptable() {
   esac
 }
 
+verify_return_registration_artifact() {
+  local application_jar="$1"
+  local nested_paths
+  local nested_count
+  local nested_path
+  local verification_dir
+  local nested_jar
+
+  application_jar="$(
+    cd "$(dirname "${application_jar}")"
+    printf '%s/%s\n' "$(pwd)" "$(basename "${application_jar}")"
+  )"
+  nested_paths="$(
+    jar tf "${application_jar}" \
+      | grep -E '^BOOT-INF/lib/yudao-module-rental-biz-.*\.jar$' || true
+  )"
+  nested_count="$(
+    printf '%s\n' "${nested_paths}" | sed '/^$/d' | wc -l | tr -d ' '
+  )"
+  if [ "${nested_count}" -ne 1 ]; then
+    echo "[deploy][error] expected one rental module JAR, found ${nested_count}" >&2
+    return 1
+  fi
+
+  nested_path="${nested_paths}"
+  verification_dir="$(mktemp -d /tmp/camera-rental-jar-check.XXXXXX)"
+  (
+    cd "${verification_dir}"
+    jar xf "${application_jar}" "${nested_path}"
+  )
+  nested_jar="${verification_dir}/${nested_path}"
+
+  if ! jar tf "${nested_jar}" \
+    | grep -F 'AppReturnRegistrationController.class' >/dev/null; then
+    rm -rf "${verification_dir}"
+    echo "[deploy][error] customer return controller is missing from backend artifact" >&2
+    return 1
+  fi
+
+  rm -rf "${verification_dir}"
+  echo "[deploy] customer return backend artifact verified"
+}
+
 dump_service_diagnostics() {
   local service="$1"
 

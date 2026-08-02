@@ -1,8 +1,32 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-30T11:45:04.177Z",
-  "current_focus": "schedule-center-local-stability-v1",
+  "generated_at": "2026-08-01T10:10:44.497Z",
+  "current_focus": "add-customer-return-registration",
   "changes": [
+    {
+      "id": "add-customer-return-registration",
+      "stage": "development",
+      "status": "active",
+      "branch": null,
+      "created_at": null,
+      "last_active_at": null
+    },
+    {
+      "id": "add-rental-delivery-foundation",
+      "stage": "prototype",
+      "status": "active",
+      "branch": null,
+      "created_at": null,
+      "last_active_at": null
+    },
+    {
+      "id": "add-rental-logistics-tracking",
+      "stage": "development",
+      "status": "active",
+      "branch": null,
+      "created_at": null,
+      "last_active_at": null
+    },
     {
       "id": "camera-rental-full-platform-v1",
       "stage": "requirements",

@@ -1,0 +1,95 @@
+{
+  "touched_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "change-ui-impact:none",
+    "private-fields-masked-by-default",
+    "status-never-color-only",
+    "future-logistics-ui-must-read-local-backend-model",
+    "prototype:not-required-for-backend-foundation"
+  ],
+  "architecture_modules": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-server/sql/mysql/migrations",
+    "docs/decisions",
+    "rental-logistics-domain",
+    "rental-logistics-provider-abstraction"
+  ],
+  "api_contracts": [
+    "internal-java:RentalDeliveryService",
+    "internal-java:RentalTrackingSnapshotService",
+    "internal-java:RentalDeliveryOutboxService",
+    "internal-java:LogisticsProvider.subscribe",
+    "internal-java:LogisticsProvider.query",
+    "internal-java:LogisticsProvider.parseVerifiedCallback",
+    "http:none"
+  ],
+  "database_entities": [
+    "rental_delivery",
+    "rental_delivery_device_rel",
+    "rental_delivery_trace",
+    "rental_delivery_callback_inbox",
+    "rental_delivery_outbox",
+    "rental_logistics_carrier_mapping",
+    "rental_logistics_provider_config",
+    "rental_device_shipment.delivery_id"
+  ],
+  "permissions": [
+    "no-new-http-permissions",
+    "tenant-isolation-required-for-all-logistics-entities"
+  ],
+  "operational_constraints": [
+    "shipment-is-channel-dispatch-audit",
+    "delivery-is-physical-package",
+    "one-order-many-deliveries",
+    "one-delivery-many-devices",
+    "separate-outbound-return-exchange-deliveries",
+    "provider-independent-domain-contracts",
+    "outbox-written-in-local-transaction",
+    "provider-network-call-outside-database-transaction",
+    "callback-inbox-before-async-processing",
+    "full-tracking-snapshot-not-incremental-append",
+    "same-snapshot-hash-does-not-increment-tracking-version",
+    "terminal-tracking-state-cannot-regress",
+    "provider-and-carrier-mapping-absence-does-not-block-local-delivery",
+    "all-provider-features-default-disabled",
+    "additive-migration-only",
+    "migration-number-rechecked-before-apply",
+    "no-history-backfill-in-structure-migration",
+    "no-controller-webhook-job-or-worker-implementation",
+    "no-xianyu-shipping-service-change",
+    "no-schedule-center-change",
+    "no-real-provider-access-in-tests-or-ci",
+    "encrypted-sensitive-persistence",
+    "outbox-payload-contains-no-pii-or-secret",
+    "logs-contain-no-full-waybill-phone-address-secret-token-salt-or-callback",
+    "logistics-delivered-does-not-release-device",
+    "estimated-arrival-time-optional",
+    "sse-deferred"
+  ],
+  "data_flows": [
+    "FLOW-DELIVERY-CREATE",
+    "FLOW-DELIVERY-DEVICE-BIND",
+    "FLOW-DELIVERY-SNAPSHOT-APPLY",
+    "FLOW-DELIVERY-OUTBOX-ENQUEUE",
+    "FLOW-DELIVERY-INBOX-PERSISTENCE-FOUNDATION"
+  ],
+  "theme_modes": [
+    "light-dark",
+    "theme-toggle:user",
+    "change-ui-impact:none",
+    "prototype:none"
+  ],
+  "locale_policy": [
+    "i18n:enabled",
+    "locales:zh-CN,en",
+    "default-locale:zh-CN",
+    "locale-toggle:user",
+    "change-copy-impact:none"
+  ],
+  "unresolved_gaps": []
+}

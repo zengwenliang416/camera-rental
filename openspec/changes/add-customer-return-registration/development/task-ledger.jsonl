@@ -1,1 +1,6 @@
-{"task_id":"001-secure-registration-foundation","status":"planned","source":"vertical-slice-scaffold"}
+{"task_id":"001-secure-registration-foundation","status":"implementation_complete","source":"migration-token-persistence-and-focused-tests","at":"2026-08-01T16:48:17+08:00"}
+{"task_id":"002-private-rustfs-upload","status":"implementation_complete","source":"file-boundary-rustfs-assets-and-focused-tests","at":"2026-08-01T16:48:17+08:00"}
+{"task_id":"003-idempotent-return-submission","status":"implementation_complete","source":"submission-device-match-delivery-and-focused-tests","at":"2026-08-01T16:48:17+08:00"}
+{"task_id":"004-nuxt-customer-return-flow","status":"implementation_complete","source":"nuxt-tests-typecheck-build-and-sensory-matrix","at":"2026-08-01T16:48:45+08:00"}
+{"task_id":"005-admin-return-operations","status":"implementation_complete","source":"admin-backend-tests-typecheck-and-production-build","at":"2026-08-01T16:49:02+08:00"}
+{"task_id":"006-production-release-verification","status":"local_release_ready","source":"migration-runner-incremental-build-shell-compose-and-local-builds","at":"2026-08-01T16:49:02+08:00"}

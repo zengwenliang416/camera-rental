@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "change_id": "add-rental-delivery-foundation",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "A delivery is created idempotently from its tenant-scoped business key.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A2",
+      "statement": "One order can own multiple packages and one package can bind multiple devices without duplicate relations.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A3",
+      "statement": "Mismatched tenant order item assignment or device relationships are rejected atomically.",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A4",
+      "statement": "Identical full tracking snapshots do not create a new effective version or increment trackingVersion.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A5",
+      "statement": "Late tracking data cannot regress a terminal delivery state.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A6",
+      "statement": "Outbox and Inbox persistence are tenant-scoped and deduplicate stable keys without storing plaintext PII or secrets in Outbox payloads.",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A7",
+      "statement": "Sensitive logistics and provider configuration fields use the project encryption type handler and are excluded from string output.",
+      "verify_via": "static",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A8",
+      "statement": "The provider abstraction contains no Kuaidi100 SDK type and ordinary tests perform no real provider network request.",
+      "verify_via": "static",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A9",
+      "statement": "The additive migration succeeds for a fresh schema and for an upgrade from migration 031 without changing existing business values.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A10",
+      "statement": "This change adds no logistics HTTP endpoint worker provider adapter Xianyu shipment integration schedule-center UI or automatic device-availability transition.",
+      "verify_via": "facticity",
+      "status": "failing",
+      "evidence_ref": null
+    }
+  ]
+}

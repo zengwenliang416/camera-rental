@@ -1,0 +1,10 @@
+{
+  "status": "blocked",
+  "prototype_code": "required_present",
+  "prototype_type": "logic-state",
+  "approved_variant": "",
+  "promotion": "requires_development_gate",
+  "blocked_reasons": [
+    "Explicit user approval for deterministic-snapshot-v1 has not been recorded."
+  ]
+}

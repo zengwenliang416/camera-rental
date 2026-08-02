@@ -1,14 +1,37 @@
 {
   "schema_version": 1,
   "change_id": "add-customer-return-registration",
-  "required": false,
-  "status": "not_required",
-  "migrations": [],
+  "required": true,
+  "status": "ready",
+  "migrations": [
+    {
+      "id": "20260801_034_rental_delivery_channel_orders",
+      "kind": "ddl",
+      "order": 1,
+      "path": "development/migrations/20260801_034_rental_delivery_channel_orders.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260801_034_rental_delivery_channel_orders.sql",
+      "sha256": "d570d16298e79c6a943722159331974cbaa20da6831b0d32365f44c019b58d5d"
+    },
+    {
+      "id": "20260801_036_customer_return_registration",
+      "kind": "ddl",
+      "order": 2,
+      "path": "development/migrations/20260801_036_customer_return_registration.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260801_036_customer_return_registration.sql",
+      "sha256": "44e99c99dcf919fd08cd7ede6dec720f29d0b54a7fff5899bc14480f71e6b272"
+    }
+  ],
   "rollback": [],
-  "rollback_strategy": "No database or seed migration is required for this change.",
+  "rollback_strategy": "Release rollback keeps the additive tables and columns. Disable the menu and revoke issued links before a separately reviewed destructive rollback.",
   "verification": {
-    "commands": [],
-    "evidence": []
+    "commands": [
+      "bash ops/github-deploy/tests/migration-runner-test.sh",
+      "bash -n ops/github-deploy/apply-migrations.sh"
+    ],
+    "evidence": [
+      "The migration runner records SHA-256 checksums and refuses changed migration content.",
+      "The release applies 034 before 036 and blocks activation on failure."
+    ]
   },
   "notes": [
     "If any requirement, task, report, or handoff mentions SQL, DDL, DML, seed data, menus, permissions, or migrations, set required=true and add executable SQL files under development/migrations/."

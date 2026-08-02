@@ -1,7 +1,7 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-07-31T15:14:12.140Z",
+  "generated_at": "2026-07-31T15:24:46.063Z",
   "project_root": "/Volumes/zwl/camera-rental-github",
   "active_change": "add-rental-logistics-tracking",
   "policy": {

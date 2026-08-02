@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-07-31T15:14:12.141Z",
+  "generated_at": "2026-07-31T15:24:46.065Z",
   "active_change": "add-rental-logistics-tracking",
   "claims_file": "openspec/changes/add-rental-logistics-tracking/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/add-rental-logistics-tracking/codegraph/evidence-index.json",

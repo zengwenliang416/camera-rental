@@ -1,0 +1,85 @@
+{
+  "new_components": [
+    "logistics architecture decision record",
+    "RentalDeliveryDO and RentalDeliveryMapper",
+    "RentalDeliveryDeviceRelDO and RentalDeliveryDeviceRelMapper",
+    "RentalDeliveryTraceDO and RentalDeliveryTraceMapper",
+    "RentalDeliveryCallbackInboxDO and RentalDeliveryCallbackInboxMapper",
+    "RentalDeliveryOutboxDO and RentalDeliveryOutboxMapper",
+    "RentalLogisticsCarrierMappingDO and RentalLogisticsCarrierMappingMapper",
+    "RentalLogisticsProviderConfigDO and RentalLogisticsProviderConfigMapper",
+    "RentalDeliveryService",
+    "RentalTrackingSnapshotService",
+    "RentalDeliveryOutboxService",
+    "LogisticsProvider",
+    "provider-independent logistics command result and event models",
+    "rental tracking status direction mapping subscription and task enums",
+    "tracking snapshot normalizer hasher and state aggregator"
+  ],
+  "reused_components": [
+    "TenantBaseDO audit tenant and logical-delete conventions",
+    "BaseMapperX and MyBatis Plus mapper conventions",
+    "Spring service transaction conventions",
+    "EncryptTypeHandler",
+    "existing RentalOrderDO RentalOrderItemDO RentalDeviceDO RentalDeviceAssignmentDO relationships",
+    "existing RentalDeviceShipmentDO dispatch audit model",
+    "existing rental module test starter and MySQL migration conventions"
+  ],
+  "extraction_triggers": [
+    "tracking snapshot normalization is shared by future callback and active-query paths",
+    "snapshot hashing and event fingerprinting must have one canonical implementation",
+    "terminal-state protection and tracking-state precedence must not be duplicated across providers",
+    "provider protocol conversion must stay behind LogisticsProvider",
+    "delivery creation and device binding invariants must stay in RentalDeliveryService",
+    "outbox dedupe and task creation must stay in RentalDeliveryOutboxService",
+    "sensitive-field masking and safe error summaries must reuse one backend policy"
+  ],
+  "forbidden_dependencies": [
+    "controller-to-mapper",
+    "domain-service-to-kuaidi100-sdk",
+    "domain-model-to-provider-specific-dto",
+    "mapper-to-provider-client",
+    "database-transaction-to-provider-network-call",
+    "outbox-payload-to-phone-address-full-waybill-secret-token-salt-or-callback-body",
+    "frontend-to-logistics-provider",
+    "schedule-center-to-logistics-provider",
+    "delivery-foundation-to-XianyuOrderShipService",
+    "tracking-status-to-device-availability-transition",
+    "tests-to-real-logistics-provider"
+  ],
+  "hooks": [],
+  "utilities": [
+    "normalized waybill business-key builder",
+    "tracking event fingerprint calculator",
+    "full snapshot hash calculator",
+    "tracking event sorter",
+    "tracking status precedence and terminal-state guard",
+    "safe waybill and sensitive-value redactor"
+  ],
+  "services": [
+    "RentalDeliveryService",
+    "RentalTrackingSnapshotService",
+    "RentalDeliveryOutboxService",
+    "LogisticsProvider"
+  ],
+  "required_component_tests": [
+    "single-device delivery creation",
+    "multi-device delivery creation",
+    "idempotent duplicate delivery creation",
+    "order assignment and device relationship rejection",
+    "duplicate delivery-device relation rejection",
+    "outbox dedupe-key idempotency",
+    "tracking event fingerprint idempotency",
+    "full snapshot hash idempotency",
+    "different snapshot version advancement",
+    "ftime ordering and latest-summary selection",
+    "terminal tracking state regression protection",
+    "optional ETA handling",
+    "tenant isolation for every logistics entity",
+    "EncryptTypeHandler annotations and toString exclusions",
+    "forbidden provider SDK dependency scan",
+    "sensitive log and exception output scan",
+    "empty-database and upgrade-database migration verification"
+  ],
+  "unresolved_gaps": []
+}

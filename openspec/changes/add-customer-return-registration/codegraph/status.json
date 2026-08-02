@@ -1,7 +1,7 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-08-01T07:03:37.574Z",
+  "generated_at": "2026-08-01T09:39:20.961Z",
   "project_root": "/Volumes/zwl/camera-rental-github",
   "active_change": "add-customer-return-registration",
   "policy": {

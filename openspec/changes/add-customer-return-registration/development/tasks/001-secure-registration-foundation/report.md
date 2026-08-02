@@ -2,27 +2,36 @@
 
 ## Status
 
-DONE_WITH_CONCERNS
+DONE
 
 ## Files Changed
 
-- `<decision-required>`
+- `camera-rental-server/sql/mysql/migrations/20260801_036_customer_return_registration.sql`
+- Return-registration DOs, Mappers, enums, error codes, token resolver and admin link creation service.
+- Focused token and admin creation tests.
 
 ## What Changed
 
-- `<decision-required>`
+- Added three tenant-scoped tables for registrations, submitted devices and attachments.
+- Added globally unique SHA-256 token hashes; the plaintext 256-bit token is returned once and never persisted.
+- Added tenant-ignore token resolution followed by explicit tenant context restoration.
+- Added expiry, revoke and safe unavailable-link states.
 
 ## TDD Evidence
 
-- `<decision-required>`
+- `ReturnRegistrationTokenServiceTest` covers 256-bit URL-safe entropy, stable hashing and rate-limit key privacy.
+- `ReturnRegistrationAdminServiceTest` proves only the hash is persisted and the one-time plaintext token forms the share path.
+- Submission and public-context tests exercise draft, terminal and unavailable states through the same persistence boundary.
 
 ## Verification Commands
 
-- `<decision-required>`
+- `mvn -pl yudao-module-rental/yudao-module-rental-biz -am -DskipTests=false -Dtest='ReturnRegistration*Test,FileApiImplTest' -Dsurefire.failIfNoSpecifiedTests=false test`
+- `sha256sum` and `cmp` across production migrations and SpecNav audit copies.
+- `git diff --check`
 
 ## Concerns
 
-- Replace this scaffold before handoff.
+- Production MySQL execution is owned by task 006 and remains pending until the committed SHA deploys.
 
 ## Scope Deviations
 
@@ -30,8 +39,8 @@ DONE_WITH_CONCERNS
 
 ## Follow-up Needed
 
-- Replace this scaffold before handoff.
+- Verify the applied migration checksum and table/index shape on 211 after deployment.
 
 ## Adjudication
 
-Controller must adjudicate scaffold concerns before verification handoff.
+Implementation and local evidence are complete; production migration evidence remains in task 006.

@@ -1,0 +1,52 @@
+{
+  "schema": "specnav.prototype.manifest.v1",
+  "version": "1",
+  "type": "logic-state",
+  "entry": "logic/harness.js",
+  "mock_strategy": "deterministic in-memory fixtures only; no database or network access",
+  "touches_real_data": false,
+  "may_promote": false,
+  "promotion_requirement": "requires green verifier-report.json, explicit user approval, prototype handoff, and development entry gate",
+  "visual_context": {
+    "required_for_ui_html": true,
+    "inventory": "visual-inventory.json",
+    "project_shell_required": true,
+    "generic_shell_allowed": false
+  },
+  "dependencies": [
+    "node:assert/strict",
+    "node:crypto"
+  ],
+  "referenced_foundation_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "referenced_requirements": [
+    "requirements.md",
+    "acceptance.md",
+    "spec-map.json",
+    "component-impact-map.json",
+    "specs/rental-delivery-foundation/spec.md"
+  ],
+  "ui_capabilities": {
+    "theme": {
+      "support": "none",
+      "modes": [
+        "none"
+      ],
+      "toggle_in_prototype": false,
+      "source": "requirements.md#Theme & Locale Capability Impact; this Change has no UI"
+    },
+    "i18n": {
+      "enabled": false,
+      "locales": [
+        "none"
+      ],
+      "default_locale": "none",
+      "locale_switch_in_prototype": false,
+      "source": "requirements.md#Theme & Locale Capability Impact; this logic harness renders no copy"
+    }
+  }
+}

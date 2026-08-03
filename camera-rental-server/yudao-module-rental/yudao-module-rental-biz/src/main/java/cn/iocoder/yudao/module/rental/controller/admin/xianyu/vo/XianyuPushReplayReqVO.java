@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class XianyuPushReplayReqVO {
 
-    @Schema(description = "推送事件编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
+    @Schema(description = "推送事件编号", example = "1024")
     @NotNull(message = "推送事件编号不能为空")
     private Long eventId;
 

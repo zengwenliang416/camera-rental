@@ -18,12 +18,12 @@ public class RentalReportQueryReqVO extends PageParam {
 
     private static final long MAX_RANGE_DAYS = 366;
 
-    @Schema(description = "统计开始日（含）", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "统计开始日（含）")
     @NotNull(message = "统计开始日不能为空")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate startDate;
 
-    @Schema(description = "统计结束日（含）", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "统计结束日（含）")
     @NotNull(message = "统计结束日不能为空")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate endDate;

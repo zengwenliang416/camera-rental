@@ -10,11 +10,11 @@ import lombok.Data;
 @Data
 public class RentalManualReviewHandleReqVO {
 
-    @Schema(description = "复核记录编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
+    @Schema(description = "复核记录编号", example = "1024")
     @NotNull(message = "复核记录编号不能为空")
     private Long id;
 
-    @Schema(description = "处理备注", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "处理备注")
     @NotBlank(message = "处理备注不能为空")
     @Size(max = 512, message = "处理备注长度不能超过 512 个字符")
     private String resolutionNote;

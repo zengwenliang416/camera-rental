@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class XianyuAlertResolveReqVO {
 
-    @Schema(description = "告警编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @Schema(description = "告警编号", example = "1")
     @NotNull(message = "告警编号不能为空")
     private Long id;
 

@@ -8,7 +8,8 @@ import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuRawPayloadMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuSyncCursorMapper;
 import cn.iocoder.yudao.module.rental.service.SellerRemarkRentalPeriod;
-import cn.iocoder.yudao.module.rental.service.SellerRemarkRentalPeriodParser;
+import cn.iocoder.yudao.module.rental.service.SellerRemarkRentalPeriodResolver;
+import cn.iocoder.yudao.module.rental.service.SellerRemarkResolution;
 import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalLogisticsException;
 import cn.iocoder.yudao.module.rental.service.logistics.XianyuOrderDeliverySyncService;
@@ -44,7 +45,7 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
     private final XianyuSyncCursorAdvancer cursorAdvancer;
     private final XianyuRentalConversionService conversionService;
     private final XianyuOrderDeliverySyncService deliverySyncService;
-    private final SellerRemarkRentalPeriodParser rentalPeriodParser;
+    private final SellerRemarkRentalPeriodResolver rentalPeriodResolver;
     private final Clock clock;
 
     public XianyuOrderPersistenceServiceImpl(XianyuOrderPayloadParser payloadParser,
@@ -55,7 +56,7 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
                                              XianyuSyncCursorAdvancer cursorAdvancer,
                                              XianyuRentalConversionService conversionService,
                                              XianyuOrderDeliverySyncService deliverySyncService,
-                                             SellerRemarkRentalPeriodParser rentalPeriodParser,
+                                             SellerRemarkRentalPeriodResolver rentalPeriodResolver,
                                              @Qualifier("xianyuClock") Clock clock) {
         this.payloadParser = payloadParser;
         this.payloadHasher = payloadHasher;
@@ -65,7 +66,7 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
         this.cursorAdvancer = cursorAdvancer;
         this.conversionService = conversionService;
         this.deliverySyncService = deliverySyncService;
-        this.rentalPeriodParser = rentalPeriodParser;
+        this.rentalPeriodResolver = rentalPeriodResolver;
         this.clock = clock;
     }
 
@@ -81,8 +82,9 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
         if (isOlderThanStoredSnapshot(existing, snapshot)) {
             return existing;
         }
-        SellerRemarkRentalPeriod rentalPeriod = rentalPeriodParser.parse(
+        SellerRemarkResolution resolution = rentalPeriodResolver.resolve(
                 snapshot.sellerRemark(), referenceDate(snapshot.orderTime(), snapshot.sourceCreatedAt()));
+        SellerRemarkRentalPeriod rentalPeriod = resolution.period();
         XianyuOrderDO order = XianyuOrderDO.builder()
                 .id(existing == null ? null : existing.getId())
                 .shopId(shopId)
@@ -95,6 +97,10 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
                 .sellerRemark(snapshot.sellerRemark())
                 .remarkParseVersion(rentalPeriod.version())
                 .remarkParseStatus(rentalPeriod.status())
+                .remarkParseSource(resolution.source())
+                .remarkParseConfidence(resolution.confidence())
+                .remarkParseModel(resolution.model())
+                .remarkParseEvidenceJson(resolution.evidenceJson())
                 .billableStartDate(rentalPeriod.billableStartDate())
                 .billableEndDate(rentalPeriod.billableEndDate())
                 .shipDate(rentalPeriod.shipDate())
@@ -168,17 +174,45 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
     public int backfillMissingRentalPeriods(int limit) {
         int boundedLimit = Math.max(1, Math.min(500, limit));
         List<XianyuOrderDO> orders = orderMapper.selectMissingRentalPeriodRefs(
-                SellerRemarkRentalPeriodParser.VERSION, boundedLimit);
+                SellerRemarkRentalPeriodResolver.VERSION, boundedLimit);
         for (XianyuOrderDO order : orders) {
-            SellerRemarkRentalPeriod rentalPeriod = rentalPeriodParser.parse(
+            SellerRemarkResolution resolution = rentalPeriodResolver.resolve(
                     order.getSellerRemark(), referenceDate(order.getOrderTime(), order.getSourceCreatedAt()));
-            applyRentalPeriod(order, rentalPeriod);
+            applyRentalPeriod(order, resolution);
             order.setUpdater("system");
             orderMapper.updateById(order);
             conversionService.autoConvertAfterPersist(order.getId());
             syncDelivery(orderMapper.selectById(order.getId()));
         }
         return orders.size();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int reparseRentalPeriods(int limit) {
+        int remaining = Math.max(1, Math.min(10_000, limit));
+        int processed = 0;
+        Long beforeId = null;
+        while (remaining > 0) {
+            List<XianyuOrderDO> orders = orderMapper.selectRemarkReparseCandidates(
+                    beforeId, Math.min(500, remaining));
+            if (orders.isEmpty()) {
+                break;
+            }
+            for (XianyuOrderDO order : orders) {
+                SellerRemarkResolution resolution = rentalPeriodResolver.resolve(
+                        order.getSellerRemark(), referenceDate(order.getOrderTime(), order.getSourceCreatedAt()));
+                applyRentalPeriod(order, resolution);
+                order.setUpdater("system");
+                orderMapper.updateById(order);
+                conversionService.autoConvertAfterPersist(order.getId());
+                syncDelivery(orderMapper.selectById(order.getId()));
+                processed++;
+            }
+            beforeId = orders.get(orders.size() - 1).getId();
+            remaining -= orders.size();
+        }
+        return processed;
     }
 
     private void syncDelivery(XianyuOrderDO order) {
@@ -190,9 +224,14 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
         }
     }
 
-    private static void applyRentalPeriod(XianyuOrderDO order, SellerRemarkRentalPeriod rentalPeriod) {
+    private static void applyRentalPeriod(XianyuOrderDO order, SellerRemarkResolution resolution) {
+        SellerRemarkRentalPeriod rentalPeriod = resolution.period();
         order.setRemarkParseVersion(rentalPeriod.version());
         order.setRemarkParseStatus(rentalPeriod.status());
+        order.setRemarkParseSource(resolution.source());
+        order.setRemarkParseConfidence(resolution.confidence());
+        order.setRemarkParseModel(resolution.model());
+        order.setRemarkParseEvidenceJson(resolution.evidenceJson());
         order.setBillableStartDate(rentalPeriod.billableStartDate());
         order.setBillableEndDate(rentalPeriod.billableEndDate());
         order.setShipDate(rentalPeriod.shipDate());

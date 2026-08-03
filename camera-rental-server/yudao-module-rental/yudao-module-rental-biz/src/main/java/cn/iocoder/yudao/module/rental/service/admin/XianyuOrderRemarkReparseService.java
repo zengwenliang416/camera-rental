@@ -13,7 +13,6 @@ import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_ORD
 @Service
 public class XianyuOrderRemarkReparseService {
 
-    private static final int MAX_BATCH_SIZE = 500;
     private static final int MAX_ORDER_COUNT = 10_000;
 
     private final XianyuOrderPersistenceService orderPersistenceService;
@@ -43,16 +42,7 @@ public class XianyuOrderRemarkReparseService {
 
     private int reparseLocked(int maxOrders) {
         int boundedMax = Math.max(1, Math.min(MAX_ORDER_COUNT, maxOrders));
-        int processed = 0;
-        while (processed < boundedMax) {
-            int batchSize = Math.min(MAX_BATCH_SIZE, boundedMax - processed);
-            int batchProcessed = orderPersistenceService.backfillMissingRentalPeriods(batchSize);
-            processed += batchProcessed;
-            if (batchProcessed < batchSize) {
-                break;
-            }
-        }
-        return processed;
+        return orderPersistenceService.reparseRentalPeriods(boundedMax);
     }
 
 }

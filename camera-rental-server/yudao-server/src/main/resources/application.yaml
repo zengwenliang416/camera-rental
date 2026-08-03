@@ -184,6 +184,7 @@ spring:
     stabilityai:
       api-key: ${REDACTED_SECRET:}
     dashscope: # 通义千问
+      enabled: ${AI_DASHSCOPE_ENABLE:false}
       api-key: ${REDACTED_SECRET:}
     minimax: # Minimax：https://www.minimaxi.com/
       api-key: ${REDACTED_SECRET:}
@@ -195,7 +196,15 @@ spring:
         options:
           model: deepseek-chat
     model:
-      rerank: false # 是否开启“通义千问”的 Rerank 模型，填写 dashscope 开启
+      chat: ${SPRING_AI_MODEL_CHAT:none}
+      embedding: ${SPRING_AI_MODEL_EMBEDDING:none}
+      image: ${SPRING_AI_MODEL_IMAGE:none}
+      audio:
+        transcription: ${SPRING_AI_MODEL_AUDIO_TRANSCRIPTION:none}
+        speech: ${SPRING_AI_MODEL_AUDIO_SPEECH:none}
+      moderation: ${SPRING_AI_MODEL_MODERATION:none}
+      rerank: ${SPRING_AI_MODEL_RERANK:none}
+      video: ${SPRING_AI_MODEL_VIDEO:none}
     mcp:
       server:
         enabled: false
@@ -217,42 +226,42 @@ spring:
 yudao:
   ai:
     gemini: # 谷歌 Gemini
-      enable: true
+      enable: ${AI_GEMINI_ENABLE:false}
       api-key: ${REDACTED_SECRET:}
       model: gemini-2.5-flash
     doubao: # 字节豆包
-      enable: true
+      enable: ${AI_DOUBAO_ENABLE:false}
       api-key: ${REDACTED_SECRET:}
       model: doubao-1-5-lite-32k-250115
     hunyuan: # 腾讯混元
-      enable: true
+      enable: ${AI_HUNYUAN_ENABLE:false}
       api-key: ${REDACTED_SECRET:}
       model: hunyuan-turbo
     siliconflow: # 硅基流动
-      enable: true
+      enable: ${AI_SILICONFLOW_ENABLE:false}
       api-key: ${REDACTED_SECRET:}
       model: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
     xinghuo: # 讯飞星火
-      enable: true
+      enable: ${AI_XINGHUO_ENABLE:false}
       appKey: 75b161ed2aef4719b275d6e7f2a4d4cd
       secretKey: ${REDACTED_SECRET:}
       model: x1
     baichuan: # 百川智能
-      enable: true
+      enable: ${AI_BAICHUAN_ENABLE:false}
       api-key: ${REDACTED_SECRET:}
       model: Baichuan4-Turbo
     midjourney:
-      enable: true
+      enable: ${AI_MIDJOURNEY_ENABLE:false}
   #    base-url: https://api.holdai.top/mj-relax/mj
       base-url: https://api.holdai.top/mj
       api-key: ${REDACTED_SECRET:}
       notify-url: http://java.nat300.top/admin-api/ai/image/midjourney/notify
     suno:
-      enable: true
+      enable: ${AI_SUNO_ENABLE:false}
   #    base-url: https://suno-55ishh05u-status2xxs-projects.vercel.app
       base-url: http://127.0.0.1:3001
     web-search:
-      enable: true
+      enable: ${AI_WEB_SEARCH_ENABLE:false}
       api-key: ${REDACTED_SECRET:}
     shipment-ocr: # 发货图片 OCR：OpenAI-compatible / New API 中转站
       enable: ${SHIPMENT_OCR_ENABLE:${NEWAPI_ENABLE:false}}

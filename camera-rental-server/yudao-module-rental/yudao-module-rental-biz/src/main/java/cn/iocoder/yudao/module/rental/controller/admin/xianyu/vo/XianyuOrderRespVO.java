@@ -1,10 +1,12 @@
 package cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Schema(description = "管理后台 - 闲鱼渠道订单摘要")
@@ -29,7 +31,12 @@ public class XianyuOrderRespVO {
     private String buyerNick;
     private String remarkParseVersion;
     private String remarkParseStatus;
+    private String remarkParseSource;
+    private BigDecimal remarkParseConfidence;
+    private String remarkParseModel;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate billableStartDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate billableEndDate;
     private String rentalPeriodStatus;
     private String rentalPeriodReasonCode;
@@ -66,7 +73,9 @@ public class XianyuOrderRespVO {
     private Long rentalOrderItemId;
     private String equipmentModelCode;
     private Integer rentalQuantity;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate occupyStartDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate occupyEndDateExclusive;
     private List<Long> assignedDeviceIds;
 

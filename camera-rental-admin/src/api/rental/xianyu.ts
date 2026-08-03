@@ -64,6 +64,9 @@ export interface XianyuOrderVO {
   buyerNick?: string
   remarkParseVersion?: string
   remarkParseStatus?: string
+  remarkParseSource?: 'RULE' | 'AI'
+  remarkParseConfidence?: number
+  remarkParseModel?: string
   billableStartDate?: string
   billableEndDate?: string
   rentalPeriodStatus?: string

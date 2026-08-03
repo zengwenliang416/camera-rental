@@ -109,8 +109,23 @@ const value = (input?: string | null) => input?.trim() || '-'
 const amount = (input?: number | null) =>
   input == null ? '-' : t('rental.common.yuanAmount', { amount: fenToYuan(input) })
 const dateTime = (input?: string | null) => formatNullableDate(input)
-const dateRange = (start?: string | null, end?: string | null) =>
-  start && end ? `${start} → ${end}` : start || end || '-'
+const dateValue = (input?: string | number[] | null) => {
+  if (Array.isArray(input) && input.length >= 3) {
+    const [year, month, day] = input
+    return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+  }
+  return typeof input === 'string' ? input.trim() : ''
+}
+const dateRange = (
+  start?: string | number[] | null,
+  end?: string | number[] | null
+) => {
+  const normalizedStart = dateValue(start)
+  const normalizedEnd = dateValue(end)
+  return normalizedStart && normalizedEnd
+    ? `${normalizedStart} → ${normalizedEnd}`
+    : normalizedStart || normalizedEnd || '-'
+}
 const rentalLabel = (group: RentalLabelGroup, input?: string | number | null) =>
   t(getRentalLabelKey(group, input), { code: input ?? '' })
 

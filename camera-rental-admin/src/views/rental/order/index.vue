@@ -131,12 +131,13 @@
     </p>
 
     <el-table v-loading="loading" :data="list">
-      <el-table-column type="expand" width="46">
+      <el-table-column label="ID" width="80">
         <template #default="{ row }">
-          <XianyuOrderDetailPanel :order="row" />
+          <el-button link type="primary" @click="openOrderDetail(row)">
+            {{ row.id }}
+          </el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="id" label="ID" width="70" />
       <el-table-column prop="shopId" :label="t('rental.order.shopId')" width="90" />
       <el-table-column :label="t('rental.xianyu.shopName')" min-width="110">
         <template #default="{ row }">{{ shopNameById(row.shopId) }}</template>
@@ -199,17 +200,34 @@
         min-width="140"
         show-overflow-tooltip
       />
-      <el-table-column :label="t('rental.order.remarkParseStatus')" width="120">
+      <el-table-column :label="t('rental.order.remarkParseStatus')" width="150">
         <template #default="{ row }">
-          <el-tooltip :content="remarkReasonLabel(row.rentalPeriodReasonCode)" placement="top">
-            <el-tag :type="remarkParseTagType(row.remarkParseStatus)">
-              {{ remarkParseStatusLabel(row.remarkParseStatus) }}
-            </el-tag>
+          <el-tooltip
+            :content="[
+              remarkReasonLabel(row.rentalPeriodReasonCode),
+              row.remarkParseModel
+            ].filter(Boolean).join(' / ')"
+            placement="top"
+          >
+            <div class="flex items-center gap-4px">
+              <el-tag :type="remarkParseTagType(row.remarkParseStatus)">
+                {{ remarkParseStatusLabel(row.remarkParseStatus) }}
+              </el-tag>
+              <span class="text-12px text-[var(--el-text-color-secondary)]">
+                {{ row.remarkParseSource === 'AI' ? 'AI' : '规则' }}
+                <template v-if="row.remarkParseConfidence">
+                  {{ Math.round(row.remarkParseConfidence * 100) }}%
+                </template>
+              </span>
+            </div>
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column :label="t('table.action')" width="110" fixed="right">
+      <el-table-column :label="t('table.action')" width="170" fixed="right">
         <template #default="{ row }">
+          <el-button link type="primary" @click="openOrderDetail(row)">
+            {{ t('rental.order.viewDetail') }}
+          </el-button>
           <el-button
             v-if="canRetryConvert(row.conversionStatus)"
             link
@@ -220,7 +238,6 @@
           >
             {{ t('rental.order.convert') }}
           </el-button>
-          <span v-else class="text-[var(--el-text-color-placeholder)]">—</span>
         </template>
       </el-table-column>
       <template #empty>
@@ -236,6 +253,15 @@
       v-model:limit="queryParams.pageSize"
       @pagination="getList"
     />
+
+    <el-drawer
+      v-model="detailVisible"
+      :title="t('rental.order.detailTitle')"
+      size="min(840px, 96vw)"
+      destroy-on-close
+    >
+      <XianyuOrderDetailPanel v-if="detailOrder" :order="detailOrder" />
+    </el-drawer>
 
     <!-- Manual catch-up: secondary, not mixed into filter bar -->
     <el-dialog
@@ -335,6 +361,8 @@ const loadError = ref(false)
 const shopLoadError = ref(false)
 const showAdvanced = ref(false)
 const syncVisible = ref(false)
+const detailVisible = ref(false)
+const detailOrder = ref<XianyuOrderVO>()
 const list = ref<XianyuOrderVO[]>([])
 const shops = ref<XianyuShopVO[]>([])
 const total = ref(0)
@@ -383,6 +411,11 @@ const formatYuan = (amount?: number) => {
 const shopNameById = (id?: number) => {
   if (id == null) return '-'
   return shops.value.find((s) => s.id === id)?.shopName || String(id)
+}
+
+const openOrderDetail = (order: XianyuOrderVO) => {
+  detailOrder.value = order
+  detailVisible.value = true
 }
 
 const fillLast30Days = () => {

@@ -44,4 +44,15 @@ class XianyuOrderMapperTest {
         assertTrue(sql.contains("goods_title like"));
     }
 
+    @Test
+    void receiverMobileLast4QueryOnlyReturnsConvertedCandidates() {
+        String sql = XianyuOrderMapper.receiverMobileLast4Query("8000")
+                .getCustomSqlSegment()
+                .toLowerCase();
+
+        assertTrue(sql.contains("rental_order_id is not null"));
+        assertTrue(sql.contains("receiver_mobile like"));
+        assertTrue(sql.contains("limit 3"));
+    }
+
 }

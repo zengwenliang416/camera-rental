@@ -3,7 +3,9 @@ package cn.iocoder.yudao.module.ai.dal.dataobject.model;
 import cn.iocoder.yudao.module.ai.enums.model.AiPlatformEnum;
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
+import cn.iocoder.yudao.framework.mybatis.core.type.EncryptTypeHandler;
 import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
@@ -13,7 +15,7 @@ import lombok.*;
  *
  * @author 芋道源码
  */
-@TableName("ai_api_key")
+@TableName(value = "ai_api_key", autoResultMap = true)
 @KeySequence("ai_api_key_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
 @Data
 @Builder
@@ -33,6 +35,7 @@ public class AiApiKeyDO extends BaseDO {
     /**
      * 密钥
      */
+    @TableField(typeHandler = EncryptTypeHandler.class)
     private String apiKey;
     /**
      * 平台

@@ -8,6 +8,8 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -67,6 +69,49 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
                 .last("LIMIT 2"));
     }
 
+    default List<XianyuOrderDO> selectListByReceiverMobileLast4(String mobileLast4) {
+        return selectList(receiverMobileLast4Query(mobileLast4));
+    }
+
+    @Select("""
+            SELECT xo.id, xo.tenant_id, xo.external_order_id, xo.receiver_mobile,
+                   xo.rental_order_id, xo.source_updated_at
+              FROM xianyu_order xo
+              JOIN rental_order ro
+                ON ro.id = xo.rental_order_id
+               AND ro.tenant_id = xo.tenant_id
+               AND ro.deleted = b'0'
+              JOIN rental_device_assignment assignment
+                ON assignment.rental_order_id = ro.id
+               AND assignment.tenant_id = ro.tenant_id
+               AND assignment.deleted = b'0'
+               AND assignment.status IN ('ASSIGNED', 'DISPATCHED')
+              JOIN rental_device device
+                ON device.id = assignment.device_id
+               AND device.tenant_id = assignment.tenant_id
+               AND device.deleted = b'0'
+             WHERE xo.deleted = b'0'
+               AND (UPPER(device.device_no) = #{machineCode}
+                    OR UPPER(COALESCE(device.legacy_device_no, '')) = #{machineCode}
+                    OR UPPER(COALESCE(device.serial_number, '')) = #{machineCode})
+             ORDER BY xo.source_updated_at DESC, xo.id DESC
+             LIMIT 3
+            """)
+    List<XianyuOrderDO> selectListByAssignedMachineCode(@Param("machineCode") String machineCode);
+
+    static LambdaQueryWrapperX<XianyuOrderDO> receiverMobileLast4Query(String mobileLast4) {
+        LambdaQueryWrapperX<XianyuOrderDO> query = new LambdaQueryWrapperX<>();
+        query.select(XianyuOrderDO::getId, XianyuOrderDO::getTenantId,
+                XianyuOrderDO::getExternalOrderId, XianyuOrderDO::getReceiverMobile,
+                XianyuOrderDO::getRentalOrderId, XianyuOrderDO::getSourceUpdatedAt);
+        query.isNotNull(XianyuOrderDO::getRentalOrderId)
+                .likeLeft(XianyuOrderDO::getReceiverMobile, mobileLast4)
+                .orderByDesc(XianyuOrderDO::getSourceUpdatedAt)
+                .orderByDesc(XianyuOrderDO::getId);
+        query.last("LIMIT 3");
+        return query;
+    }
+
     default List<XianyuOrderDO> selectListByShopIdsAndExternalOrderId(List<Long> shopIds, String externalOrderId) {
         return selectList(new LambdaQueryWrapperX<XianyuOrderDO>()
                 .in(XianyuOrderDO::getShopId, shopIds)
@@ -97,6 +142,21 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
                 .or().isNull(XianyuOrderDO::getRemarkParseVersion)
                 .or().ne(XianyuOrderDO::getRemarkParseVersion, currentParseVersion));
         query.orderByDesc(XianyuOrderDO::getSourceUpdatedAt);
+        query.orderByDesc(XianyuOrderDO::getId);
+        query.last("LIMIT " + boundedLimit);
+        return selectList(query);
+    }
+
+    default List<XianyuOrderDO> selectRemarkReparseCandidates(Long beforeId, int limit) {
+        int boundedLimit = Math.max(1, Math.min(500, limit));
+        LambdaQueryWrapperX<XianyuOrderDO> query = new LambdaQueryWrapperX<>();
+        query.select(XianyuOrderDO::getId, XianyuOrderDO::getSellerRemark,
+                XianyuOrderDO::getOrderTime, XianyuOrderDO::getSourceCreatedAt);
+        query.isNotNull(XianyuOrderDO::getSellerRemark)
+                .ne(XianyuOrderDO::getSellerRemark, "")
+                .and(wrapper -> wrapper.isNull(XianyuOrderDO::getRentalPeriodStatus)
+                        .or().ne(XianyuOrderDO::getRentalPeriodStatus, "SUCCESS"));
+        query.lt(beforeId != null, XianyuOrderDO::getId, beforeId);
         query.orderByDesc(XianyuOrderDO::getId);
         query.last("LIMIT " + boundedLimit);
         return selectList(query);

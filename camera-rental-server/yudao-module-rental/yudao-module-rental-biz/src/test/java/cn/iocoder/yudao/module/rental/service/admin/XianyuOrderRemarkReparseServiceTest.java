@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,15 +40,15 @@ class XianyuOrderRemarkReparseServiceTest {
     }
 
     @Test
-    void reparseProcessesOutdatedRowsInBoundedBatchesUnderOrderSyncLock() {
+    void reparseProcessesCandidatesOnceUnderOrderSyncLock() {
         when(lock.tryLock()).thenReturn(true);
         when(lock.isHeldByCurrentThread()).thenReturn(true);
-        when(persistenceService.backfillMissingRentalPeriods(500)).thenReturn(500, 200);
+        when(persistenceService.reparseRentalPeriods(5_000)).thenReturn(700);
 
         int processed = service.reparse(5_000);
 
         assertEquals(700, processed);
-        verify(persistenceService, times(2)).backfillMissingRentalPeriods(500);
+        verify(persistenceService).reparseRentalPeriods(5_000);
         verify(lock).unlock();
     }
 
@@ -60,7 +59,7 @@ class XianyuOrderRemarkReparseServiceTest {
         ServiceException exception = assertThrows(ServiceException.class, () -> service.reparse(5_000));
 
         assertEquals(XIANYU_ORDER_REPARSE_BUSY.getCode(), exception.getCode());
-        verify(persistenceService, never()).backfillMissingRentalPeriods(500);
+        verify(persistenceService, never()).reparseRentalPeriods(5_000);
         verify(lock, never()).unlock();
     }
 

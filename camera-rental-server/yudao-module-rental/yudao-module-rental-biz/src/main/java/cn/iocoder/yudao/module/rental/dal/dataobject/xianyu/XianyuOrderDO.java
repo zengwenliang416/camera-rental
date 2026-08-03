@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 /**
  * Channel order: queryable columns + full detail_json (all order-detail fields).
@@ -37,6 +38,13 @@ public class XianyuOrderDO extends TenantBaseDO {
     private String sellerRemark;
     private String remarkParseVersion;
     private String remarkParseStatus;
+    private String remarkParseSource;
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
+    private BigDecimal remarkParseConfidence;
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
+    private String remarkParseModel;
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
+    private String remarkParseEvidenceJson;
     @TableField(updateStrategy = FieldStrategy.ALWAYS)
     private LocalDate billableStartDate;
     @TableField(updateStrategy = FieldStrategy.ALWAYS)

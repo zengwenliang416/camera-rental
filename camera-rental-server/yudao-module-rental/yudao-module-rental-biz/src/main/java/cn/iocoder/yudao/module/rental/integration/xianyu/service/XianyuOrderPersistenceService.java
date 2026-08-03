@@ -13,6 +13,8 @@ public interface XianyuOrderPersistenceService {
 
     int backfillMissingRentalPeriods(int limit);
 
+    int reparseRentalPeriods(int limit);
+
     boolean advanceOrderCursor(Long shopId, LocalDateTime sourceUpdatedAt, String externalOrderId,
                                LocalDateTime safeUpperBound);
 

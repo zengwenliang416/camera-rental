@@ -164,6 +164,9 @@ public class XianyuOrderAdminService {
         vo.setBuyerNick(order.getBuyerNick());
         vo.setRemarkParseVersion(order.getRemarkParseVersion());
         vo.setRemarkParseStatus(order.getRemarkParseStatus());
+        vo.setRemarkParseSource(order.getRemarkParseSource());
+        vo.setRemarkParseConfidence(order.getRemarkParseConfidence());
+        vo.setRemarkParseModel(order.getRemarkParseModel());
         fillRentalPeriod(order, rentalOrder, vo);
         vo.setConversionStatus(order.getConversionStatus());
         vo.setRentalOrderId(order.getRentalOrderId());

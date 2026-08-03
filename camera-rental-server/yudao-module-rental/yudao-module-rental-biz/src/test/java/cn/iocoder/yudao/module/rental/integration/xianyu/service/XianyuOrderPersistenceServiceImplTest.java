@@ -8,6 +8,8 @@ import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuRawPayloadMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuSyncCursorMapper;
 import cn.iocoder.yudao.module.rental.service.SellerRemarkRentalPeriodParser;
+import cn.iocoder.yudao.module.rental.service.SellerRemarkAiFallbackService;
+import cn.iocoder.yudao.module.rental.service.SellerRemarkRentalPeriodResolver;
 import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
 import cn.iocoder.yudao.module.rental.service.logistics.XianyuOrderDeliverySyncService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,6 +54,8 @@ class XianyuOrderPersistenceServiceImplTest {
     private XianyuRentalConversionService conversionService;
     @Mock
     private XianyuOrderDeliverySyncService deliverySyncService;
+    @Mock
+    private SellerRemarkAiFallbackService aiFallbackService;
 
     private XianyuOrderPersistenceService service;
 
@@ -67,7 +71,8 @@ class XianyuOrderPersistenceServiceImplTest {
                 new XianyuSyncCursorAdvancer(),
                 conversionService,
                 deliverySyncService,
-                new SellerRemarkRentalPeriodParser(),
+                new SellerRemarkRentalPeriodResolver(
+                        new SellerRemarkRentalPeriodParser(), aiFallbackService),
                 Clock.fixed(Instant.parse("2026-07-23T10:11:12Z"), ZoneOffset.UTC));
     }
 
@@ -139,7 +144,7 @@ class XianyuOrderPersistenceServiceImplTest {
         assertEquals("REVIEW_REQUIRED", result.getConversionStatus());
         assertEquals(7L, result.getRentalOrderId());
         assertEquals("0", result.getExternalSkuId());
-        assertEquals(SellerRemarkRentalPeriodParser.VERSION, result.getRemarkParseVersion());
+        assertEquals(SellerRemarkRentalPeriodResolver.VERSION, result.getRemarkParseVersion());
         assertEquals("SUCCESS", result.getRemarkParseStatus());
         assertEquals(LocalDate.of(2026, 7, 27), result.getBillableStartDate());
         assertEquals(LocalDate.of(2026, 8, 2), result.getBillableEndDate());
@@ -236,7 +241,7 @@ class XianyuOrderPersistenceServiceImplTest {
                 .sellerRemark("发货7.27/收货7.28/发回8.05")
                 .orderTime(LocalDateTime.of(2026, 7, 27, 18, 0))
                 .build();
-        when(orderMapper.selectMissingRentalPeriodRefs(SellerRemarkRentalPeriodParser.VERSION, 500))
+        when(orderMapper.selectMissingRentalPeriodRefs(SellerRemarkRentalPeriodResolver.VERSION, 500))
                 .thenReturn(List.of(historical));
 
         int count = service.backfillMissingRentalPeriods(999);

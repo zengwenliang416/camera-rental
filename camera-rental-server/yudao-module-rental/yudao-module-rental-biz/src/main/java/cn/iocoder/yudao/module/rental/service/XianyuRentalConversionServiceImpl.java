@@ -163,8 +163,10 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
                 .billableEndDate(period.billableEndDate())
                 .conversionVersion(period.version())
                 .build();
+        rentalOrder.setCreator(SYSTEM_OPERATOR);
+        rentalOrder.setUpdater(SYSTEM_OPERATOR);
         rentalOrderMapper.insert(rentalOrder);
-        rentalOrderItemMapper.insert(RentalOrderItemDO.builder()
+        RentalOrderItemDO rentalOrderItem = RentalOrderItemDO.builder()
                 .rentalOrderId(rentalOrder.getId())
                 .equipmentModelCode(mapping.getEquipmentModelCode())
                 .sourceProductId(source.getExternalProductId())
@@ -175,7 +177,10 @@ public class XianyuRentalConversionServiceImpl implements XianyuRentalConversion
                 .billableEndDate(period.billableEndDate())
                 .occupyStartDate(period.occupyStartDate())
                 .occupyEndDateExclusive(period.occupyEndDateExclusive())
-                .build());
+                .build();
+        rentalOrderItem.setCreator(SYSTEM_OPERATOR);
+        rentalOrderItem.setUpdater(SYSTEM_OPERATOR);
+        rentalOrderItemMapper.insert(rentalOrderItem);
         source.setRentalOrderId(rentalOrder.getId());
         source.setConversionStatus(CONVERSION_STATUS_CONVERTED);
         xianyuOrderMapper.updateById(source);

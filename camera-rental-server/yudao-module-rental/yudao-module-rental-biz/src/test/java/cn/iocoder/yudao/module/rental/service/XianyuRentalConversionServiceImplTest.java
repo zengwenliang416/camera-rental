@@ -73,11 +73,15 @@ class XianyuRentalConversionServiceImplTest {
         verify(rentalOrderMapper).insert(orderCaptor.capture());
         assertEquals(4_294_967_296L, orderCaptor.getValue().getRentAmount());
         assertEquals("7:order-1", orderCaptor.getValue().getSourceOrderId());
+        assertEquals("system", orderCaptor.getValue().getCreator());
+        assertEquals("system", orderCaptor.getValue().getUpdater());
         assertEquals(LocalDateTime.of(2026, 7, 25, 0, 0).toLocalDate(),
                 orderCaptor.getValue().getBillableStartDate());
         ArgumentCaptor<RentalOrderItemDO> itemCaptor = ArgumentCaptor.forClass(RentalOrderItemDO.class);
         verify(rentalOrderItemMapper).insert(itemCaptor.capture());
         assertEquals(4_294_967_296L, itemCaptor.getValue().getRentAmount());
+        assertEquals("system", itemCaptor.getValue().getCreator());
+        assertEquals("system", itemCaptor.getValue().getUpdater());
         assertEquals(LocalDate.of(2026, 7, 22), itemCaptor.getValue().getOccupyStartDate());
         assertEquals(LocalDate.of(2026, 7, 28), itemCaptor.getValue().getOccupyEndDateExclusive());
         assertEquals("CONVERTED", source.getConversionStatus());

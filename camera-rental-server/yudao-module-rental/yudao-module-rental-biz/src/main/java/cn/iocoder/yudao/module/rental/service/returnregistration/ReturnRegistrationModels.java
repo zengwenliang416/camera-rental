@@ -1,5 +1,7 @@
 package cn.iocoder.yudao.module.rental.service.returnregistration;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -56,7 +58,8 @@ public final class ReturnRegistrationModels {
 
     public record AdminDetail(
             Long id, String formNo, Long rentalOrderId, String orderNo, String status,
-            String carrierCode, String carrierName, String waybillNo, LocalDate shippedDate,
+            String carrierCode, String carrierName, String waybillNo,
+            @JsonFormat(pattern = "yyyy-MM-dd") LocalDate shippedDate,
             String issueDescription, Long deliveryId, LocalDateTime expiresAt,
             LocalDateTime submittedAt, LocalDateTime reviewedAt, Long reviewerId,
             String reviewNote, AdminCustomerView customer,

@@ -76,18 +76,21 @@ public class AppReturnRegistrationController {
     }
 
     @PostMapping("/verify")
+    @PermitAll
     public CommonResult<PublicContext> verify(
             @Valid @RequestBody VerifyReq req,
             HttpServletRequest request,
             HttpServletResponse response) {
-        rateLimitService.checkVerification(ServletUtils.getClientIP(request), req.orderNo());
+        rateLimitService.checkVerification(
+                ServletUtils.getClientIP(request), req.orderNo(), req.mobileLast4(), req.machineCode());
         ReturnRegistrationOrderVerificationService.VerifiedSession verified =
-                verificationService.verify(req.orderNo(), req.mobileLast4());
+                verificationService.verify(req.orderNo(), req.mobileLast4(), req.machineCode());
         cookieService.write(response, verified.sessionToken());
         return success(verified.context());
     }
 
     @GetMapping("/session")
+    @PermitAll
     public CommonResult<PublicContext> getSessionContext(
             @CookieValue(name = ReturnRegistrationSessionCookieService.COOKIE_NAME,
                     required = false) String sessionToken) {
@@ -97,6 +100,7 @@ public class AppReturnRegistrationController {
     }
 
     @PostMapping("/upload-authorizations")
+    @PermitAll
     public CommonResult<UploadAuthorization> authorizeSession(
             @CookieValue(name = ReturnRegistrationSessionCookieService.COOKIE_NAME,
                     required = false) String sessionToken,
@@ -108,6 +112,7 @@ public class AppReturnRegistrationController {
     }
 
     @PostMapping("/attachments/confirm")
+    @PermitAll
     public CommonResult<AttachmentView> confirmSession(
             @CookieValue(name = ReturnRegistrationSessionCookieService.COOKIE_NAME,
                     required = false) String sessionToken,
@@ -121,6 +126,7 @@ public class AppReturnRegistrationController {
     }
 
     @DeleteMapping("/attachments/{attachmentId}")
+    @PermitAll
     public CommonResult<Boolean> removeSession(
             @CookieValue(name = ReturnRegistrationSessionCookieService.COOKIE_NAME,
                     required = false) String sessionToken,
@@ -132,6 +138,7 @@ public class AppReturnRegistrationController {
     }
 
     @PostMapping("/submit")
+    @PermitAll
     public CommonResult<Receipt> submitSession(
             @CookieValue(name = ReturnRegistrationSessionCookieService.COOKIE_NAME,
                     required = false) String sessionToken,
@@ -147,6 +154,29 @@ public class AppReturnRegistrationController {
         return success(result);
     }
 
+    @PostMapping("/simple-submit")
+    @PermitAll
+    public CommonResult<Receipt> submitSimple(
+            @Valid @RequestBody SimpleSubmitReq req,
+            @CookieValue(name = ReturnRegistrationSessionCookieService.COOKIE_NAME,
+                    required = false) String sessionToken,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        rateLimitService.checkVerification(
+                ServletUtils.getClientIP(request), req.orderNo(), req.mobileLast4(), req.machineCode());
+        ReturnRegistrationOrderVerificationService.VerifiedSession verified =
+                verificationService.verifyOrReuseStandalone(
+                        sessionToken, req.orderNo(), req.mobileLast4(), req.machineCode());
+        cookieService.write(response, verified.sessionToken());
+        rateLimitService.checkSession(verified.sessionToken(), "simple-submit", 10);
+        Receipt result = submissionService.submitSimple(
+                verified.sessionToken(), req.machineCode(), req.waybillNo(),
+                req.attachmentIds());
+        auditService.record("SIMPLE_SUBMIT", verified.sessionToken(),
+                verified.registrationId(), result.status());
+        return success(result);
+    }
+
     public record UploadReq(
             @NotBlank String category,
             @NotBlank @Size(max = 255) String name,
@@ -159,7 +189,8 @@ public class AppReturnRegistrationController {
 
     public record VerifyReq(
             @Size(max = 128) String orderNo,
-            @Size(max = 32) String mobileLast4
+            @Size(max = 32) String mobileLast4,
+            @NotBlank @Size(max = 128) String machineCode
     ) {
     }
 
@@ -173,6 +204,15 @@ public class AppReturnRegistrationController {
             @NotEmpty @Size(max = 20) List<Long> attachmentIds,
             @Size(max = 1000) String issueDescription,
             @NotBlank @Size(max = 128) String idempotencyKey
+    ) {
+    }
+
+    public record SimpleSubmitReq(
+            @Size(max = 128) String orderNo,
+            @Size(max = 32) String mobileLast4,
+            @NotBlank @Size(max = 128) String machineCode,
+            @NotBlank @Size(max = 128) String waybillNo,
+            @Size(max = 10) List<Long> attachmentIds
     ) {
     }
 

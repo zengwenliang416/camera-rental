@@ -12,8 +12,11 @@ public class ReturnRegistrationSecurityAuditService {
                 action, ReturnRegistrationTokenService.rateLimitKey(token), registrationId, result);
     }
 
-    public void recordVerification(String orderNo, Long registrationId, String result) {
-        log.info("[return-registration][security-audit] action=VERIFY orderRef={} registrationId={} result={}",
-                ReturnRegistrationRateLimitService.orderReference(orderNo), registrationId, result);
+    public void recordVerification(String orderNo, String mobileLast4, String machineCode,
+                                   Long registrationId, String result) {
+        log.info("[return-registration][security-audit] action=VERIFY verificationRef={} registrationId={} result={}",
+                ReturnRegistrationRateLimitService.verificationReference(
+                        orderNo, mobileLast4, machineCode),
+                registrationId, result);
     }
 }

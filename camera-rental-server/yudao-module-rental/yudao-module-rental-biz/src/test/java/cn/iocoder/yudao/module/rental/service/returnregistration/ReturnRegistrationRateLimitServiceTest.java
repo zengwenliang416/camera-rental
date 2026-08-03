@@ -19,16 +19,16 @@ class ReturnRegistrationRateLimitServiceTest {
             new ReturnRegistrationRateLimitService(redisDAO);
 
     @Test
-    void verificationUsesIndependentIpAndOrderDigestBuckets() {
+    void verificationUsesIndependentIpAndSubjectDigestBuckets() {
         when(redisDAO.tryAcquire(contains("return:verify:"), org.mockito.ArgumentMatchers.anyInt(),
                 org.mockito.ArgumentMatchers.anyInt(), org.mockito.ArgumentMatchers.eq(TimeUnit.MINUTES)))
                 .thenReturn(true);
 
-        service.checkVerification("203.0.113.8", "ORDER-001");
+        service.checkVerification("203.0.113.8", "ORDER-001", "8000", "P4-01");
 
         verify(redisDAO).tryAcquire(contains("return:verify:ip:"), org.mockito.ArgumentMatchers.eq(30),
                 org.mockito.ArgumentMatchers.eq(10), org.mockito.ArgumentMatchers.eq(TimeUnit.MINUTES));
-        verify(redisDAO).tryAcquire(contains("return:verify:order:"), org.mockito.ArgumentMatchers.eq(10),
+        verify(redisDAO).tryAcquire(contains("return:verify:subject:"), org.mockito.ArgumentMatchers.eq(10),
                 org.mockito.ArgumentMatchers.eq(10), org.mockito.ArgumentMatchers.eq(TimeUnit.MINUTES));
     }
 
@@ -39,6 +39,6 @@ class ReturnRegistrationRateLimitServiceTest {
                 .thenReturn(false);
 
         assertThrows(ServiceException.class,
-                () -> service.checkVerification("203.0.113.8", "ORDER-001"));
+                () -> service.checkVerification("203.0.113.8", "", "", "P4-01"));
     }
 }

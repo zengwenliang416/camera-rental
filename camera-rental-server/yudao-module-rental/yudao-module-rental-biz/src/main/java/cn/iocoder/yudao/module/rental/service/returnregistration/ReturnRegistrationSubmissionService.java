@@ -15,11 +15,14 @@ import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryCreateComm
 import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryDeviceCommand;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryResult;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryService;
+import cn.hutool.crypto.digest.DigestUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -70,7 +73,27 @@ public class ReturnRegistrationSubmissionService {
     @Transactional(rollbackFor = Exception.class)
     public Receipt submit(String token, Submission submission) {
         RentalReturnRegistrationDO resolved = resolver.require(token);
-        return resolver.execute(resolved, () -> submitLocked(resolved.getId(), submission));
+        return resolver.execute(resolved, () -> submitLocked(resolved.getId(), submission, false));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Receipt submitSimple(String token, String machineCode, String waybillNo,
+                                List<Long> attachmentIds) {
+        RentalReturnRegistrationDO resolved = resolver.require(token);
+        return resolver.execute(resolved, () -> {
+            String normalizedWaybill = normalizeWaybill(waybillNo);
+            Submission submission = new Submission(
+                    resolved.getExternalOrderNo(),
+                    "UNSPECIFIED",
+                    "待仓库识别",
+                    waybillNo,
+                    LocalDate.now(ZoneId.of("Asia/Shanghai")),
+                    List.of(machineCode),
+                    attachmentIds == null ? List.of() : attachmentIds,
+                    null,
+                    "simple:" + DigestUtil.sha256Hex(resolved.getId() + ":" + normalizedWaybill));
+            return submitLocked(resolved.getId(), submission, true);
+        });
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -82,8 +105,6 @@ public class ReturnRegistrationSubmissionService {
         }
         List<String> serials = registrationDeviceMapper.selectListByRegistrationId(registrationId)
                 .stream().map(RentalReturnRegistrationDeviceDO::getSubmittedSerial).toList();
-        List<Long> attachmentIds = attachmentService.listConfirmedIds(registrationId);
-        attachmentService.validateForSubmission(registrationId, attachmentIds);
         MatchResult match = replaceDeviceMatches(registration, serials);
         if (!match.safe()) {
             throw exception(RETURN_REGISTRATION_SUBMISSION_INVALID, "设备仍无法与订单安全匹配");
@@ -96,7 +117,8 @@ public class ReturnRegistrationSubmissionService {
         return receipt(registration);
     }
 
-    private Receipt submitLocked(Long registrationId, Submission submission) {
+    private Receipt submitLocked(Long registrationId, Submission submission,
+                                 boolean validateOptionalAttachments) {
         RentalReturnRegistrationDO registration = registrationMapper.selectByIdForUpdate(registrationId);
         if (registration == null) {
             throw exception(RETURN_REGISTRATION_STATUS_INVALID);
@@ -108,7 +130,10 @@ public class ReturnRegistrationSubmissionService {
             throw exception(RETURN_REGISTRATION_STATUS_INVALID);
         }
         validateSubmission(registration, submission);
-        attachmentService.validateForSubmission(registration.getId(), submission.attachmentIds());
+        if (validateOptionalAttachments) {
+            attachmentService.validateOptionalForSubmission(
+                    registration, submission.attachmentIds());
+        }
         MatchResult match = replaceDeviceMatches(registration, submission.serials());
 
         registration.setCarrierCode(normalizeCode(submission.carrierCode()))
@@ -132,8 +157,9 @@ public class ReturnRegistrationSubmissionService {
 
     private MatchResult replaceDeviceMatches(RentalReturnRegistrationDO registration, List<String> serials) {
         registrationDeviceMapper.deleteByRegistrationId(registration.getId());
-        List<RentalDeviceAssignmentDO> assignments =
-                assignmentMapper.selectActiveListByRentalOrderId(registration.getRentalOrderId());
+        List<RentalDeviceAssignmentDO> assignments = registration.getRentalOrderId() == null
+                ? List.of()
+                : assignmentMapper.selectActiveListByRentalOrderId(registration.getRentalOrderId());
         Map<String, MatchedDevice> allowed = new HashMap<>();
         for (RentalDeviceAssignmentDO assignment : assignments) {
             RentalDeviceDO device = deviceMapper.selectById(assignment.getDeviceId());
@@ -141,6 +167,7 @@ public class ReturnRegistrationSubmissionService {
                 continue;
             }
             addCandidate(allowed, device.getSerialNumber(), assignment, device);
+            addCandidate(allowed, device.getLegacyDeviceNo(), assignment, device);
             addCandidate(allowed, device.getDeviceNo(), assignment, device);
         }
         Set<String> seen = new HashSet<>();
@@ -190,10 +217,7 @@ public class ReturnRegistrationSubmissionService {
                 || submission.serials().size() > 8
                 || submission.serials().stream().anyMatch(value -> !serialNormalizer.isValid(value))) {
             throw exception(RETURN_REGISTRATION_SUBMISSION_INVALID,
-                    "设备序列号应为 1-8 个，格式类似 A6-08-4L5H");
-        }
-        if (submission.attachmentIds() == null || submission.attachmentIds().isEmpty()) {
-            throw exception(RETURN_REGISTRATION_SUBMISSION_INVALID, "请上传必拍照片");
+                    "设备机器编码应为 1-8 个，格式类似 P4-01");
         }
     }
 

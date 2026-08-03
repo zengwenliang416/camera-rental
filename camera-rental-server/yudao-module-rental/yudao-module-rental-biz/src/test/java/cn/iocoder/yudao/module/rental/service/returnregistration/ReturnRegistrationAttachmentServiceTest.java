@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.stream.LongStream;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -78,6 +79,37 @@ class ReturnRegistrationAttachmentServiceTest {
         assertThrows(RuntimeException.class,
                 () -> service.authorize(
                         "token", "DEVICE_EXTERIOR", "photo.jpg", "image/jpeg"));
+
+        verify(fileApi, never()).presignPutUrl(any(), any(), any());
+    }
+
+    @Test
+    void simpleReturnCategoryAllowsUpToTenPhotos() throws Exception {
+        RentalReturnRegistrationDO registration = draftRegistration();
+        stubResolver(registration);
+        when(attachmentMapper.countByCategory(11L, "RETURN_PHOTO")).thenReturn(9L);
+        when(fileApi.presignPutUrl(any(), any(), any()))
+                .thenReturn(new FilePresignedUploadRespDTO(
+                        8L,
+                        "return-registration/tenant-9/registration-11/return_photo/photo.jpg",
+                        "signed-upload", "private-object"));
+        org.mockito.Mockito.doAnswer(invocation -> {
+            invocation.<RentalReturnRegistrationAttachmentDO>getArgument(0).setId(21L);
+            return 1;
+        }).when(attachmentMapper).insert(any(RentalReturnRegistrationAttachmentDO.class));
+
+        assertDoesNotThrow(() ->
+                service.authorize("token", "RETURN_PHOTO", "photo.jpg", "image/jpeg"));
+    }
+
+    @Test
+    void simpleReturnCategoryRejectsEleventhPhoto() throws Exception {
+        RentalReturnRegistrationDO registration = draftRegistration();
+        stubResolver(registration);
+        when(attachmentMapper.countByCategory(11L, "RETURN_PHOTO")).thenReturn(10L);
+
+        assertThrows(RuntimeException.class, () ->
+                service.authorize("token", "RETURN_PHOTO", "photo.jpg", "image/jpeg"));
 
         verify(fileApi, never()).presignPutUrl(any(), any(), any());
     }
@@ -200,6 +232,68 @@ class ReturnRegistrationAttachmentServiceTest {
                 () -> service.validateForSubmission(11L, List.of(21L, 22L)));
     }
 
+    @Test
+    void optionalSubmissionAllowsNoPhotos() {
+        assertDoesNotThrow(() ->
+                service.validateOptionalForSubmission(draftRegistration(), List.of()));
+
+        verify(attachmentMapper, never()).selectByRegistrationAndId(any(), any());
+        verify(fileApi, never()).confirmPresignedUpload(
+                any(), any(), any(), any(), anyLong());
+    }
+
+    @Test
+    void optionalSubmissionAcceptsConfirmedOwnedPhoto() {
+        RentalReturnRegistrationDO registration = draftRegistration();
+        RentalReturnRegistrationAttachmentDO photo = confirmedReturnPhoto(true);
+        when(attachmentMapper.selectByRegistrationAndId(11L, 21L)).thenReturn(photo);
+        when(fileApi.confirmPresignedUpload(any(), any(), any(), any(), anyLong()))
+                .thenReturn(new FileConfirmedUploadRespDTO(
+                        31L, 2048L, "image/jpeg", "sha256", "preview"));
+
+        assertDoesNotThrow(() ->
+                service.validateOptionalForSubmission(registration, List.of(21L)));
+    }
+
+    @Test
+    void optionalSubmissionRejectsMoreThanTenPhotosBeforeDatabaseAccess() {
+        List<Long> ids = LongStream.rangeClosed(1, 11).boxed().toList();
+
+        assertThrows(RuntimeException.class, () ->
+                service.validateOptionalForSubmission(draftRegistration(), ids));
+
+        verify(attachmentMapper, never()).selectByRegistrationAndId(any(), any());
+    }
+
+    @Test
+    void optionalSubmissionRejectsForeignOrUnconfirmedPhoto() {
+        RentalReturnRegistrationDO registration = draftRegistration();
+        when(attachmentMapper.selectByRegistrationAndId(11L, 99L)).thenReturn(null);
+
+        assertThrows(RuntimeException.class, () ->
+                service.validateOptionalForSubmission(registration, List.of(99L)));
+
+        RentalReturnRegistrationAttachmentDO unconfirmed = confirmedReturnPhoto(false);
+        when(attachmentMapper.selectByRegistrationAndId(11L, 21L)).thenReturn(unconfirmed);
+        assertThrows(RuntimeException.class, () ->
+                service.validateOptionalForSubmission(registration, List.of(21L)));
+        verify(fileApi, never()).confirmPresignedUpload(
+                any(), any(), any(), any(), anyLong());
+    }
+
+    @Test
+    void optionalSubmissionRejectsRustfsContentChange() {
+        RentalReturnRegistrationDO registration = draftRegistration();
+        RentalReturnRegistrationAttachmentDO photo = confirmedReturnPhoto(true);
+        when(attachmentMapper.selectByRegistrationAndId(11L, 21L)).thenReturn(photo);
+        when(fileApi.confirmPresignedUpload(any(), any(), any(), any(), anyLong()))
+                .thenReturn(new FileConfirmedUploadRespDTO(
+                        31L, 2048L, "image/jpeg", "changed", "preview"));
+
+        assertThrows(RuntimeException.class, () ->
+                service.validateOptionalForSubmission(registration, List.of(21L)));
+    }
+
     private RentalReturnRegistrationDO draftRegistration() {
         RentalReturnRegistrationDO registration = new RentalReturnRegistrationDO()
                 .setId(11L)
@@ -226,6 +320,24 @@ class ReturnRegistrationAttachmentServiceTest {
                 .setContentSha256("sha256")
                 .setCategory(category)
                 .setConfirmed(true);
+    }
+
+    private RentalReturnRegistrationAttachmentDO confirmedReturnPhoto(boolean confirmed) {
+        String path =
+                "return-registration/tenant-9/registration-11/return_photo/photo.jpg";
+        return new RentalReturnRegistrationAttachmentDO()
+                .setId(21L)
+                .setRegistrationId(11L)
+                .setInfraFileId(31L)
+                .setFileConfigId(1L)
+                .setObjectPath(path)
+                .setObjectPathHash(DigestUtil.sha256Hex(path))
+                .setOriginalName("photo.jpg")
+                .setContentType("image/jpeg")
+                .setFileSize(2048L)
+                .setContentSha256("sha256")
+                .setCategory("RETURN_PHOTO")
+                .setConfirmed(confirmed);
     }
 
     private void stubResolver(RentalReturnRegistrationDO registration) throws Exception {

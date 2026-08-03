@@ -23,6 +23,7 @@ public class RentalDeviceDO extends TenantBaseDO {
     @TableId
     private Long id;
     private String deviceNo;
+    private String legacyDeviceNo;
     private String serialNumber;
     private String equipmentModelCode;
     private String status;

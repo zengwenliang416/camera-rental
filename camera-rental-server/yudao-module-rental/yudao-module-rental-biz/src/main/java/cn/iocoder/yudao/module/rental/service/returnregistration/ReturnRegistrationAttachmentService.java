@@ -32,6 +32,7 @@ public class ReturnRegistrationAttachmentService {
     public static final long MAX_SIZE = 15L * 1024L * 1024L;
     public static final int MAX_TOTAL_COUNT = 20;
     public static final int MAX_CATEGORY_COUNT = 6;
+    public static final int MAX_OPTIONAL_RETURN_PHOTO_COUNT = 10;
     public static final int UPLOAD_URL_EXPIRATION_SECONDS = 300;
     private static final Set<String> ALLOWED_TYPES =
             Set.of("image/jpeg", "image/png", "image/webp");
@@ -63,8 +64,9 @@ public class ReturnRegistrationAttachmentService {
             if (attachmentMapper.countByRegistration(current.getId()) >= MAX_TOTAL_COUNT) {
                 throw exception(RETURN_REGISTRATION_ATTACHMENT_INVALID, "照片总数最多 20 张");
             }
-            if (attachmentMapper.countByCategory(current.getId(), category.name()) >= MAX_CATEGORY_COUNT) {
-                throw exception(RETURN_REGISTRATION_ATTACHMENT_INVALID, "每类最多 6 张");
+            if (attachmentMapper.countByCategory(current.getId(), category.name()) >= category.getMaxCount()) {
+                throw exception(RETURN_REGISTRATION_ATTACHMENT_INVALID,
+                        "该类照片最多 " + category.getMaxCount() + " 张");
             }
             String extension = FileUtil.extName(originalName);
             String safeName = IdUtil.fastSimpleUUID() + (extension.isBlank() ? "" : "." + extension);
@@ -159,15 +161,7 @@ public class ReturnRegistrationAttachmentService {
         Set<String> categories = new HashSet<>();
         for (RentalReturnRegistrationAttachmentDO attachment : attachments) {
             categories.add(attachment.getCategory());
-            FileConfirmedUploadRespDTO file = fileApi.confirmPresignedUpload(
-                    attachment.getFileConfigId(), attachment.getObjectPath(),
-                    attachment.getOriginalName(), attachment.getContentType(), MAX_SIZE);
-            if (!Objects.equals(file.fileId(), attachment.getInfraFileId())
-                    || !Objects.equals(file.size(), attachment.getFileSize())
-                    || !Objects.equals(file.contentType(), attachment.getContentType())
-                    || !Objects.equals(file.sha256(), attachment.getContentSha256())) {
-                throw exception(RETURN_REGISTRATION_ATTACHMENT_INVALID, "附件内容或文件关系已变化");
-            }
+            validateStoredFile(attachment);
         }
         for (ReturnAttachmentCategoryEnum category : ReturnAttachmentCategoryEnum.values()) {
             if (category.isRequired() && !categories.contains(category.name())) {
@@ -176,6 +170,30 @@ public class ReturnRegistrationAttachmentService {
         }
         if (attachments.size() > MAX_TOTAL_COUNT) {
             throw exception(RETURN_REGISTRATION_ATTACHMENT_INVALID, "照片总数最多 20 张");
+        }
+    }
+
+    public void validateOptionalForSubmission(RentalReturnRegistrationDO registration,
+                                              List<Long> requestedIds) {
+        List<Long> ids = requestedIds == null ? List.of() : requestedIds;
+        if (ids.size() > MAX_OPTIONAL_RETURN_PHOTO_COUNT) {
+            throw exception(RETURN_REGISTRATION_ATTACHMENT_INVALID, "照片最多 10 张");
+        }
+        Set<Long> uniqueIds = new HashSet<>(ids);
+        if (uniqueIds.size() != ids.size()) {
+            throw exception(RETURN_REGISTRATION_ATTACHMENT_INVALID, "附件编号不能重复");
+        }
+        for (Long attachmentId : ids) {
+            RentalReturnRegistrationAttachmentDO attachment =
+                    requireAttachment(registration.getId(), attachmentId);
+            if (!Boolean.TRUE.equals(attachment.getConfirmed())
+                    || !ReturnAttachmentCategoryEnum.RETURN_PHOTO.name()
+                    .equals(attachment.getCategory())) {
+                throw exception(RETURN_REGISTRATION_ATTACHMENT_INVALID,
+                        "附件不属于当前登记、尚未确认或类别无效");
+            }
+            validateObjectOwnership(registration, attachment);
+            validateStoredFile(attachment);
         }
     }
 
@@ -217,6 +235,18 @@ public class ReturnRegistrationAttachmentService {
                 || !DigestUtil.sha256Hex(attachment.getObjectPath())
                 .equals(attachment.getObjectPathHash())) {
             throw exception(RETURN_REGISTRATION_ATTACHMENT_INVALID, "附件对象关系无效");
+        }
+    }
+
+    private void validateStoredFile(RentalReturnRegistrationAttachmentDO attachment) {
+        FileConfirmedUploadRespDTO file = fileApi.confirmPresignedUpload(
+                attachment.getFileConfigId(), attachment.getObjectPath(),
+                attachment.getOriginalName(), attachment.getContentType(), MAX_SIZE);
+        if (!Objects.equals(file.fileId(), attachment.getInfraFileId())
+                || !Objects.equals(file.size(), attachment.getFileSize())
+                || !Objects.equals(file.contentType(), attachment.getContentType())
+                || !Objects.equals(file.sha256(), attachment.getContentSha256())) {
+            throw exception(RETURN_REGISTRATION_ATTACHMENT_INVALID, "附件内容或文件关系已变化");
         }
     }
 

@@ -13,6 +13,7 @@ import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentCommand;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentException;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentResult;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentService;
+import cn.iocoder.yudao.module.rental.service.device.RentalDeviceCode;
 import cn.iocoder.yudao.module.rental.service.device.RentalDeviceQrCodec;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_ASSIGN_FAILED;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_CODE_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_NOT_EXISTS;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_QR_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_QR_MODEL_MISMATCH;
@@ -54,8 +56,12 @@ public class RentalDeviceAdminService {
     }
 
     public Long createDevice(RentalDeviceCreateReqVO reqVO) {
+        String deviceNo = RentalDeviceCode.normalize(reqVO.getDeviceNo());
+        if (!RentalDeviceCode.isValid(deviceNo)) {
+            throw exception(RENTAL_DEVICE_CODE_INVALID);
+        }
         RentalDeviceDO device = RentalDeviceDO.builder()
-                .deviceNo(reqVO.getDeviceNo())
+                .deviceNo(deviceNo)
                 .serialNumber(reqVO.getSerialNumber())
                 .equipmentModelCode(reqVO.getEquipmentModelCode())
                 .status(reqVO.getStatus() == null ? "AVAILABLE" : reqVO.getStatus())
@@ -97,6 +103,9 @@ public class RentalDeviceAdminService {
         RentalDeviceDO device = deviceMapper.selectByDeviceNo(parsed.deviceNo());
         if (device == null) {
             device = deviceMapper.selectBySerialNumber(parsed.deviceNo());
+        }
+        if (device == null) {
+            device = deviceMapper.selectByLegacyDeviceNo(parsed.deviceNo());
         }
         if (device == null) {
             throw exception(RENTAL_DEVICE_NOT_EXISTS);

@@ -38,6 +38,7 @@ public class RentalDeliveryServiceImpl implements RentalDeliveryService {
 
     private static final String MAPPING_READY = "READY";
     private static final String MAPPING_REQUIRED = "MAPPING_REQUIRED";
+    private static final String SYSTEM_OPERATOR = "system";
 
     private final RentalDeliveryMapper deliveryMapper;
     private final RentalDeliveryDeviceRelMapper relationMapper;
@@ -111,6 +112,7 @@ public class RentalDeliveryServiceImpl implements RentalDeliveryService {
             delivery = createDelivery(command, carrier, normalizedWaybill, tenantId);
         } else if (delivery.getRentalOrderId() == null && command.rentalOrderId() != null) {
             delivery.setRentalOrderId(command.rentalOrderId());
+            delivery.setUpdater(SYSTEM_OPERATOR);
             deliveryMapper.updateById(delivery);
         }
         bindDevices(delivery, command.devices(), tenantId);
@@ -191,6 +193,8 @@ public class RentalDeliveryServiceImpl implements RentalDeliveryService {
                 .lastErrorCode(trackingPhoneRequired ? "TRACKING_PHONE_REQUIRED" : null)
                 .lastErrorMessage(trackingPhoneRequired ? "Tracking phone is required by carrier mapping" : null)
                 .build();
+        delivery.setCreator(SYSTEM_OPERATOR);
+        delivery.setUpdater(SYSTEM_OPERATOR);
         deliveryMapper.insert(delivery);
         return delivery;
     }
@@ -245,13 +249,16 @@ public class RentalDeliveryServiceImpl implements RentalDeliveryService {
             if (relationMapper.selectByDeliveryAndDeviceForUpdate(tenantId, delivery.getId(), device.getId()) != null) {
                 continue;
             }
-            relationMapper.insert(RentalDeliveryDeviceRelDO.builder()
+            RentalDeliveryDeviceRelDO relation = RentalDeliveryDeviceRelDO.builder()
                     .deliveryId(delivery.getId())
                     .rentalOrderId(delivery.getRentalOrderId())
                     .rentalOrderItemId(deviceCommand.rentalOrderItemId())
                     .assignmentId(assignment.getId())
                     .deviceId(device.getId())
-                    .build());
+                    .build();
+            relation.setCreator(SYSTEM_OPERATOR);
+            relation.setUpdater(SYSTEM_OPERATOR);
+            relationMapper.insert(relation);
         }
     }
 

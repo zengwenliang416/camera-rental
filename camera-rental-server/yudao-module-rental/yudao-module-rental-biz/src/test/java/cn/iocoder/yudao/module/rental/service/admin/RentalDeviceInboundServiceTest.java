@@ -47,7 +47,7 @@ class RentalDeviceInboundServiceTest {
                 .id(7L).barCode("A7M4").name("索尼A7M4").build());
         when(deviceMapper.countBySourceItem("ERP_PURCHASE_IN", 10L, 100L)).thenReturn(1L);
         when(deviceMapper.selectLatestByDeviceNoPrefix("A7M4-")).thenReturn(
-                RentalDeviceDO.builder().deviceNo("A7M4-0001").build());
+                RentalDeviceDO.builder().deviceNo("A7M4-01").build());
         when(deviceMapper.insert(any(RentalDeviceDO.class))).thenAnswer(inv -> {
             RentalDeviceDO d = inv.getArgument(0);
             d.setId(System.nanoTime());
@@ -65,7 +65,7 @@ class RentalDeviceInboundServiceTest {
 
         ArgumentCaptor<RentalDeviceDO> cap = ArgumentCaptor.forClass(RentalDeviceDO.class);
         verify(deviceMapper, times(2)).insert(cap.capture());
-        assertEquals("A7M4-0002", cap.getAllValues().get(0).getDeviceNo());
+        assertEquals("A7M4-02", cap.getAllValues().get(0).getDeviceNo());
         assertEquals("A7M4", cap.getAllValues().get(0).getEquipmentModelCode());
         assertEquals(199950, cap.getAllValues().get(0).getPurchaseAmount());
     }

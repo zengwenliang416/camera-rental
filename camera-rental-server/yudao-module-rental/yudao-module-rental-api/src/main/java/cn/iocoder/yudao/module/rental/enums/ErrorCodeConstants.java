@@ -41,6 +41,8 @@ public interface ErrorCodeConstants {
     ErrorCode RENTAL_DEVICE_DISPATCH_FAILED = new ErrorCode(1_040_002_004, "设备出库失败：{}");
     ErrorCode RENTAL_DEVICE_RETURN_FAILED = new ErrorCode(1_040_002_005, "设备回仓失败：{}");
     ErrorCode RENTAL_DEVICE_INBOUND_FAILED = new ErrorCode(1_040_002_006, "采购入库生成设备失败：{}");
+    ErrorCode RENTAL_DEVICE_CODE_INVALID = new ErrorCode(1_040_002_007,
+            "机器编码格式应类似 P4-01");
 
     // ========== 人工复核 1-040-003-000 ==========
     ErrorCode RENTAL_MANUAL_REVIEW_NOT_EXISTS = new ErrorCode(1_040_003_000, "人工复核记录不存在");
@@ -56,6 +58,6 @@ public interface ErrorCodeConstants {
     ErrorCode RETURN_REGISTRATION_ATTACHMENT_INVALID = new ErrorCode(1_040_004_003, "退回登记附件无效：{}");
     ErrorCode RETURN_REGISTRATION_SUBMISSION_INVALID = new ErrorCode(1_040_004_004, "退回登记信息无效：{}");
     ErrorCode RETURN_REGISTRATION_VERIFICATION_FAILED = new ErrorCode(1_040_004_005,
-            "订单号或手机号后四位不匹配");
+            "订单信息或机器编码不匹配");
 
 }

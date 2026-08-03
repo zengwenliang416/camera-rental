@@ -62,16 +62,19 @@ public class ReturnRegistrationPublicService {
                 return new PublicContext(status, null, null, null,
                         null, null, 0, current.getExpiresAt(), null);
             }
-            RentalOrderDO order = orderMapper.selectById(current.getRentalOrderId());
+            RentalOrderDO order = current.getRentalOrderId() == null
+                    ? null : orderMapper.selectById(current.getRentalOrderId());
             Receipt receipt = ReturnRegistrationStatusEnum.DRAFT.name().equals(status)
                     ? null
                     : new Receipt(current.getFormNo(), status, current.getWaybillNo(),
                     current.getDeliveryId(), current.getSubmittedAt());
+            int assignedDeviceCount = current.getRentalOrderId() == null ? 0
+                    : assignmentMapper.selectActiveListByRentalOrderId(current.getRentalOrderId()).size();
             return new PublicContext(status, current.getFormNo(), current.getExternalOrderNo(),
                     order == null ? null : order.getSourceType(),
                     order == null ? null : order.getBillableStartDate(),
                     order == null ? null : order.getBillableEndDate(),
-                    assignmentMapper.selectActiveListByRentalOrderId(current.getRentalOrderId()).size(),
+                    assignedDeviceCount,
                     current.getExpiresAt(), receipt);
         });
     }

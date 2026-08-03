@@ -19,6 +19,7 @@ import java.util.List;
 public class RentalDeliveryOutboxServiceImpl implements RentalDeliveryOutboxService {
 
     private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
+    private static final String SYSTEM_OPERATOR = "system";
     private final RentalDeliveryMapper deliveryMapper;
     private final RentalDeliveryOutboxMapper outboxMapper;
     private final SensitiveValueRedactor redactor;
@@ -51,6 +52,8 @@ public class RentalDeliveryOutboxServiceImpl implements RentalDeliveryOutboxServ
                 .retryCount(0)
                 .scheduledAt(LocalDateTime.now(BUSINESS_ZONE))
                 .build();
+        outbox.setCreator(SYSTEM_OPERATOR);
+        outbox.setUpdater(SYSTEM_OPERATOR);
         outboxMapper.insertOrReuse(tenantId, outbox);
         RentalDeliveryOutboxDO persisted = outboxMapper.selectByDedupeKeyForUpdate(tenantId, dedupeKey);
         if (persisted == null) {

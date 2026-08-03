@@ -12,6 +12,7 @@ import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceGen
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceGenerateFromPurchaseRespVO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
+import cn.iocoder.yudao.module.rental.service.device.RentalDeviceCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -19,7 +20,6 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -121,7 +121,7 @@ public class RentalDeviceInboundService {
         Integer purchaseAmountFen = toFen(item.getProductPrice());
 
         for (int i = 0; i < toCreate; i++) {
-            String deviceNo = prefix + "-" + String.format(Locale.ROOT, "%04d", nextSeq++);
+            String deviceNo = formatDeviceNo(prefix, nextSeq++);
             RentalDeviceDO device = RentalDeviceDO.builder()
                     .deviceNo(deviceNo)
                     .equipmentModelCode(modelCode)
@@ -137,7 +137,7 @@ public class RentalDeviceInboundService {
                 deviceMapper.insert(device);
             } catch (Exception ex) {
                 // device_no unique conflict: bump seq once more
-                deviceNo = prefix + "-" + String.format(Locale.ROOT, "%04d", nextSeq++);
+                deviceNo = formatDeviceNo(prefix, nextSeq++);
                 device.setDeviceNo(deviceNo);
                 deviceMapper.insert(device);
             }
@@ -162,6 +162,14 @@ public class RentalDeviceInboundService {
             }
         }
         return 1;
+    }
+
+    private String formatDeviceNo(String prefix, int sequence) {
+        try {
+            return RentalDeviceCode.format(prefix, sequence);
+        } catch (IllegalArgumentException ex) {
+            throw exception(RENTAL_DEVICE_INBOUND_FAILED, ex.getMessage());
+        }
     }
 
     private String resolveWarehouseName(Long warehouseId) {

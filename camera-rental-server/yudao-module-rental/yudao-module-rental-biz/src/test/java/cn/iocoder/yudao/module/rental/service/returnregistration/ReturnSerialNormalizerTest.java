@@ -12,13 +12,21 @@ class ReturnSerialNormalizerTest {
 
     @Test
     void normalizesCustomerLabelFormat() {
-        assertEquals("A6-08-4L5H", normalizer.normalize(" a6 － 08 — 4l5h "));
-        assertTrue(normalizer.isValid("A6-08-4L5H"));
+        assertEquals("P4-01", normalizer.normalize(" p4 － 01 "));
+        assertTrue(normalizer.isValid("P4-01"));
     }
 
     @Test
-    void rejectsSerialsWithoutGroupedDashFormat() {
-        assertFalse(normalizer.isValid("A6084L5H"));
-        assertFalse(normalizer.isValid("A6-08-"));
+    void acceptsModelPrefixesWithTwoDigitSequence() {
+        assertTrue(normalizer.isValid("P4P-01"));
+        assertTrue(normalizer.isValid("DJI-P4P-09"));
+    }
+
+    @Test
+    void rejectsLegacyLongOrNonTwoDigitCodes() {
+        assertFalse(normalizer.isValid("A6-08-4L5H"));
+        assertFalse(normalizer.isValid("P4-1"));
+        assertFalse(normalizer.isValid("P4-001"));
+        assertFalse(normalizer.isValid("P4/01"));
     }
 }

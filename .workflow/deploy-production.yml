@@ -5,7 +5,7 @@ stages:
 - name: 构建并发布到 211
   displayName: 构建并发布到 211
   strategy: naturally
-  trigger: auto
+  trigger: manual
   steps:
   - step: shell@agent
     name: d9ae95ef
@@ -48,7 +48,7 @@ stages:
       retry: "0"
       timeout: 90
 triggers:
-  trigger: auto
+  trigger: manual
   push:
     branches:
       prefix: []

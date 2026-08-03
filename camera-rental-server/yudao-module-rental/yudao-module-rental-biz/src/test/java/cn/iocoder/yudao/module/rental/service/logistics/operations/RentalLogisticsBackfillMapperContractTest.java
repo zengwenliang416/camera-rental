@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Update;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -15,10 +16,12 @@ class RentalLogisticsBackfillMapperContractTest {
     @Test
     void backfillSqlIsTenantScopedBoundedAndIdempotent() throws Exception {
         Method select = RentalLogisticsOperationsMapper.class.getMethod(
-                "selectBackfillCandidates", Long.class, int.class);
+                "selectBackfillCandidates", Long.class, LocalDate.class, LocalDate.class, int.class);
         String selectSql = String.join("\n", select.getAnnotation(Select.class).value());
         assertTrue(selectSql.contains("s.tenant_id = #{tenantId}"));
         assertTrue(selectSql.contains("s.delivery_id IS NULL"));
+        assertTrue(selectSql.contains("#{consignDateStart} IS NULL"));
+        assertTrue(selectSql.contains("#{consignDateEnd} IS NULL"));
         assertTrue(selectSql.contains("LIMIT #{limit}"));
         assertFalse(selectSql.toUpperCase().contains("INSERT INTO RENTAL_DELIVERY"));
 

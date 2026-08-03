@@ -26,6 +26,17 @@ export const canRevokeReturnRegistration = (status: string) => status === 'DRAFT
 export const canReviewReturnRegistration = (status: string) =>
   status === 'REVIEW_REQUIRED'
 
+export function formatReturnRegistrationDate(
+  value?: string | readonly number[]
+): string {
+  if (!value) return '—'
+  if (Array.isArray(value) && value.length >= 3) {
+    const [year, month, day] = value
+    return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+  }
+  return String(value)
+}
+
 export function buildReturnRegistrationPageParams(
   query: ReturnRegistrationPageParams,
   submittedRange?: [string, string]

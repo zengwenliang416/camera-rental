@@ -31,6 +31,7 @@ export type PhotoCategory =
   | 'SERIAL_LABEL'
   | 'PACKAGING'
   | 'DAMAGE_DETAIL'
+  | 'RETURN_PHOTO'
 
 export interface UploadedPhoto {
   attachmentId: number

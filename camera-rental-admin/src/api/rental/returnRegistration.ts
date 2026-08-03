@@ -1,5 +1,7 @@
 import request from '@/config/axios'
 
+export type ApiLocalDate = string | [number, number, number]
+
 export interface ReturnRegistrationRow {
   id: number
   formNo: string
@@ -32,7 +34,7 @@ export interface ReturnRegistrationAttachment {
 
 export interface ReturnRegistrationDetail extends ReturnRegistrationRow {
   carrierCode?: string
-  shippedDate?: string
+  shippedDate?: ApiLocalDate
   issueDescription?: string
   deliveryId?: number
   reviewedAt?: string

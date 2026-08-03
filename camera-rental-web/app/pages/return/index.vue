@@ -1,50 +1,37 @@
 <script setup lang="ts">
-import type {
-  PhotoCategory,
-  PhotoUploadTask,
-  RegistrationStatus,
-  ReturnContext,
-  ReturnDraft,
-  ReturnReceipt,
-  UploadedPhoto
-} from '~/types/return-registration'
+import type { RegistrationStatus, ReturnContext, ReturnReceipt } from '~/types/return-registration'
 import { normalizeReturnSerial, returnSerialPattern } from '~/utils/returnSerial'
-import { hasRequiredReturnPhotos } from '~/utils/returnValidation'
 
+type SelectedPhotoStatus = 'PENDING' | 'UPLOADING' | 'UPLOADED' | 'FAILED'
+
+interface SelectedPhoto {
+  id: string
+  file: File
+  previewUrl: string
+  progress: number
+  status: SelectedPhotoStatus
+  attachmentId?: number
+  error?: string
+}
+
+const MAX_PHOTO_COUNT = 10
+const MAX_PHOTO_SIZE = 15 * 1024 * 1024
+const ALLOWED_PHOTO_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp'])
 const api = useReturnRegistration()
 const preferences = useReturnPreferences()
-const { locale, theme, t } = preferences
-const step = ref(0)
+const { theme, t } = preferences
 const loading = ref(true)
-const verifying = ref(false)
 const submitting = ref(false)
 const error = ref('')
 const context = ref<ReturnContext>()
 const receipt = ref<ReturnReceipt>()
-const verification = reactive({
+const photos = reactive<SelectedPhoto[]>([])
+const form = reactive({
   orderNo: '',
-  mobileLast4: ''
+  mobileLast4: '',
+  machineCode: '',
+  waybillNo: ''
 })
-const uploadTasks = reactive<PhotoUploadTask[]>([])
-const draft = reactive<ReturnDraft>({
-  carrierCode: '',
-  carrierName: '',
-  waybillNo: '',
-  shippedDate: '',
-  serials: [''],
-  issueDescription: '',
-  photos: []
-})
-const carriers = [
-  { code: 'SHUNFENG', zh: '顺丰速运', en: 'SF Express' },
-  { code: 'JD', zh: '京东物流', en: 'JD Logistics' },
-  { code: 'ZHONGTONG', zh: '中通快递', en: 'ZTO Express' },
-  { code: 'YUANTONG', zh: '圆通速递', en: 'YTO Express' },
-  { code: 'SHENTONG', zh: '申通快递', en: 'STO Express' },
-  { code: 'YUNDA', zh: '韵达快递', en: 'Yunda Express' },
-  { code: 'DEPPON', zh: '德邦快递', en: 'Deppon Express' },
-  { code: 'OTHER', zh: '其他', en: 'Other' }
-]
 
 useHead(() => ({ title: `${t('service')} · 捷租达` }))
 
@@ -53,7 +40,6 @@ onMounted(async () => {
   try {
     context.value = await api.loadContext()
     receipt.value = context.value.receipt
-    restoreDraft()
   } catch {
     context.value = undefined
   } finally {
@@ -61,141 +47,123 @@ onMounted(async () => {
   }
 })
 
-function restoreDraft() {
-  if (!context.value?.formNo || context.value.status !== 'DRAFT') return
-  const saved = sessionStorage.getItem(`return-draft:${context.value.formNo}`)
-  if (saved) Object.assign(draft, JSON.parse(saved))
+onBeforeUnmount(() => {
+  for (const photo of photos) URL.revokeObjectURL(photo.previewUrl)
+})
+
+function validate() {
+  error.value = ''
+  const orderNo = form.orderNo.trim()
+  const mobileLast4 = form.mobileLast4.replace(/\D/g, '')
+  const machineCode = normalizeReturnSerial(form.machineCode)
+  const waybillNo = form.waybillNo.trim()
+
+  if (mobileLast4 && !/^\d{4}$/.test(mobileLast4)) {
+    error.value = t('verificationInputError')
+    return false
+  }
+  if (!returnSerialPattern.test(machineCode)) {
+    error.value = t('machineCodeRequired')
+    return false
+  }
+  if (!waybillNo) {
+    error.value = t('waybillRequired')
+    return false
+  }
+
+  form.orderNo = orderNo
+  form.mobileLast4 = mobileLast4
+  form.machineCode = machineCode
+  form.waybillNo = waybillNo
+  return true
 }
 
-async function verifyOrder() {
+function selectPhotos(event: Event) {
+  const input = event.target as HTMLInputElement
+  const files = Array.from(input.files || [])
+  input.value = ''
   error.value = ''
-  const orderNo = verification.orderNo.trim()
-  const mobileLast4 = verification.mobileLast4.replace(/\D/g, '')
-  if (!orderNo || !/^\d{4}$/.test(mobileLast4)) {
-    error.value = t('verificationInputError')
+
+  if (photos.length + files.length > MAX_PHOTO_COUNT) {
+    error.value = t('photoLimit')
     return
   }
-  verifying.value = true
-  try {
-    context.value = await api.verify(orderNo, mobileLast4)
-    receipt.value = context.value.receipt
-    restoreDraft()
-  } catch {
-    error.value = t('verificationFailed')
-  } finally {
-    verifying.value = false
-  }
-}
-
-watch(
-  draft,
-  (value) => {
-    if (import.meta.client && context.value?.status === 'DRAFT') {
-      sessionStorage.setItem(`return-draft:${context.value.formNo}`, JSON.stringify(value))
-    }
-  },
-  { deep: true }
-)
-
-const photos = (category: PhotoCategory) =>
-  draft.photos.filter((photo) => photo.category === category)
-const tasks = (category: PhotoCategory) =>
-  uploadTasks.filter((task) => task.category === category)
-const isUploadBusy = (category: PhotoCategory) =>
-  tasks(category).some((task) => task.status === 'UPLOADING')
-
-function selectCarrier() {
-  draft.carrierName = carriers.find((carrier) => carrier.code === draft.carrierCode)?.zh || ''
-}
-
-function validateCurrent() {
-  error.value = ''
-  if (step.value === 1 && (!draft.carrierCode || !draft.waybillNo.trim() || !draft.shippedDate)) {
-    error.value = t('completeLogistics')
-  }
-  if (step.value === 2) {
-    draft.serials = draft.serials.map(normalizeReturnSerial)
-    if (
-      draft.serials.some((serial) => !returnSerialPattern.test(serial)) ||
-      new Set(draft.serials).size !== draft.serials.length
-    ) {
-      error.value = t('invalidSerial')
-    }
-  }
-  if (step.value === 3 && !hasRequiredReturnPhotos(draft.photos)) {
-    error.value = t('missingPhotos')
-  }
-  return !error.value
-}
-
-function next() {
-  if (!validateCurrent()) return
-  step.value = Math.min(4, step.value + 1)
-  scrollTo({ top: 0, behavior: 'smooth' })
-}
-
-function addSerial() {
-  if (draft.serials.length < 8) draft.serials.push('')
-}
-
-async function uploadFiles(category: PhotoCategory, files: File[]) {
-  error.value = ''
   for (const file of files) {
-    const task = reactive<PhotoUploadTask>({
-      id: crypto.randomUUID(),
-      category,
-      file,
-      progress: 0,
-      status: 'UPLOADING'
-    })
-    uploadTasks.push(task)
-    await runUpload(task)
-  }
-}
-
-async function runUpload(task: PhotoUploadTask) {
-  task.status = 'UPLOADING'
-  task.progress = 0
-  task.error = undefined
-  try {
-    if (task.file.size > 15 * 1024 * 1024) {
-      throw new Error(`${task.file.name} ${t('oversized')}`)
+    if (!ALLOWED_PHOTO_TYPES.has(file.type)) {
+      error.value = t('photoTypeInvalid')
+      continue
     }
-    const photo = await api.upload(task.file, task.category, (value) => {
-      task.progress = value
+    if (file.size > MAX_PHOTO_SIZE) {
+      error.value = `${file.name} ${t('oversized')}`
+      continue
+    }
+    photos.push({
+      id: crypto.randomUUID(),
+      file,
+      previewUrl: URL.createObjectURL(file),
+      progress: 0,
+      status: 'PENDING'
     })
-    draft.photos.push(photo)
-    uploadTasks.splice(uploadTasks.findIndex((value) => value.id === task.id), 1)
-  } catch (cause) {
-    task.status = 'FAILED'
-    task.error = cause instanceof Error ? cause.message : t('uploadFailed')
-    error.value = task.error
   }
 }
 
-async function removePhoto(photo: UploadedPhoto) {
+async function uploadPhoto(photo: SelectedPhoto) {
+  photo.status = 'UPLOADING'
+  photo.progress = 0
+  photo.error = undefined
   try {
-    await api.removePhoto(photo.attachmentId)
-    draft.photos = draft.photos.filter((item) => item.attachmentId !== photo.attachmentId)
+    const uploaded = await api.upload(photo.file, 'RETURN_PHOTO', (progress) => {
+      photo.progress = progress
+    })
+    photo.attachmentId = uploaded.attachmentId
+    photo.status = 'UPLOADED'
+  } catch (cause) {
+    photo.status = 'FAILED'
+    photo.error = cause instanceof Error ? cause.message : t('uploadFailed')
+    throw cause
+  }
+}
+
+async function retryPhoto(photo: SelectedPhoto) {
+  if (submitting.value || photo.status === 'UPLOADING') return
+  error.value = ''
+  try {
+    await uploadPhoto(photo)
+  } catch {
+    error.value = photo.error || t('uploadFailed')
+  }
+}
+
+async function removePhoto(photo: SelectedPhoto) {
+  if (submitting.value || photo.status === 'UPLOADING') return
+  error.value = ''
+  try {
+    if (photo.attachmentId) await api.removePhoto(photo.attachmentId)
+    URL.revokeObjectURL(photo.previewUrl)
+    photos.splice(photos.findIndex((item) => item.id === photo.id), 1)
   } catch (cause) {
     error.value = cause instanceof Error ? cause.message : t('deleteFailed')
   }
 }
 
 async function submit() {
-  if (!context.value || submitting.value) return
+  if (submitting.value || !validate()) return
   submitting.value = true
   error.value = ''
   try {
-    const keyName = `return-submit-key:${context.value.formNo}`
-    let key = sessionStorage.getItem(keyName)
-    if (!key) {
-      key = crypto.randomUUID()
-      sessionStorage.setItem(keyName, key)
+    if (photos.length) {
+      await api.verify(form.orderNo, form.mobileLast4, form.machineCode)
+      for (const photo of photos) {
+        if (photo.status !== 'UPLOADED') await uploadPhoto(photo)
+      }
     }
-    receipt.value = await api.submit(context.value, draft, key)
-    context.value.status = receipt.value.status
-    sessionStorage.removeItem(`return-draft:${context.value.formNo}`)
+    receipt.value = await api.simpleSubmit({
+      ...form,
+      attachmentIds: photos
+        .map((photo) => photo.attachmentId)
+        .filter((attachmentId): attachmentId is number => attachmentId !== undefined)
+    })
+    context.value = undefined
   } catch (cause) {
     error.value = cause instanceof Error ? cause.message : t('submitFailed')
   } finally {
@@ -203,22 +171,23 @@ async function submit() {
   }
 }
 
-const status = computed<RegistrationStatus | 'INVALID'>(() => {
-  if (!context.value) return 'INVALID'
-  return context.value.status
-})
+const status = computed<RegistrationStatus | undefined>(() =>
+  receipt.value?.status || (context.value?.status === 'DRAFT' ? undefined : context.value?.status)
+)
 </script>
 
 <template>
   <main class="return-page">
     <header class="return-topbar">
-      <a href="/" class="return-brand"><b>J</b><span><strong>捷租达</strong><small>{{ t('service') }}</small></span></a>
+      <a href="/" class="return-brand">
+        <b>J</b>
+        <span><strong>捷租达</strong><small>{{ t('service') }}</small></span>
+      </a>
       <div class="return-tools">
         <button type="button" :aria-label="t('theme')" @click="preferences.toggleTheme()">
           {{ theme === 'light' ? '◐' : '☀' }}
         </button>
         <button type="button" @click="preferences.toggleLocale()">{{ t('locale') }}</button>
-        <a href="tel:" class="return-help">{{ t('help') }}</a>
       </div>
     </header>
 
@@ -227,133 +196,511 @@ const status = computed<RegistrationStatus | 'INVALID'>(() => {
       <p>{{ t('loading') }}</p>
     </section>
 
-    <section v-else-if="!context" class="verification-panel">
-      <p class="return-kicker">ORDER VERIFICATION</p>
-      <h1>{{ t('verificationTitle') }}</h1>
-      <p>{{ t('verificationBody') }}</p>
-      <form @submit.prevent="verifyOrder">
+    <ReturnStatusPanel
+      v-else-if="status"
+      :status="status"
+      :receipt="receipt || context?.receipt"
+    />
+
+    <section v-else class="return-card">
+      <div class="return-intro">
+        <p class="return-kicker">RETURN CHECK-IN</p>
+        <h1>{{ t('simpleReturnTitle') }}</h1>
+        <p>{{ t('simpleReturnBody') }}</p>
+      </div>
+
+      <form class="return-form" @submit.prevent="submit">
         <label>
           <span>{{ t('xianyuOrderNo') }}</span>
           <input
-            v-model="verification.orderNo"
+            v-model="form.orderNo"
             maxlength="128"
             autocomplete="off"
             :placeholder="t('xianyuOrderPlaceholder')"
           >
         </label>
+
         <label>
-          <span>{{ t('mobileLast4') }}</span>
+          <span>{{ t('mobileLast4Optional') }}</span>
           <input
-            v-model="verification.mobileLast4"
+            v-model="form.mobileLast4"
             maxlength="4"
             inputmode="numeric"
             autocomplete="off"
             :placeholder="t('mobileLast4Placeholder')"
           >
         </label>
+
+        <label>
+          <span>{{ t('machineCode') }} <b>{{ t('required') }}</b></span>
+          <input
+            v-model="form.machineCode"
+            maxlength="128"
+            autocomplete="off"
+            :placeholder="t('serialPlaceholder')"
+          >
+        </label>
+
+        <label>
+          <span>{{ t('waybill') }} <b>{{ t('required') }}</b></span>
+          <input
+            v-model="form.waybillNo"
+            maxlength="128"
+            autocomplete="off"
+            :placeholder="t('waybillPlaceholder')"
+          >
+        </label>
+
+        <fieldset class="return-photos">
+          <legend>
+            <span>
+              <strong>{{ t('optionalPhotos') }}</strong>
+              <small>{{ t('optionalPhotosHint') }}</small>
+            </span>
+            <b>{{ t('photoCount') }} {{ photos.length }}/{{ MAX_PHOTO_COUNT }}</b>
+          </legend>
+
+          <div v-if="photos.length" class="return-photo-grid">
+            <figure v-for="photo in photos" :key="photo.id">
+              <img :src="photo.previewUrl" :alt="photo.file.name">
+              <button
+                type="button"
+                :aria-label="t('remove')"
+                :disabled="submitting || photo.status === 'UPLOADING'"
+                @click="removePhoto(photo)"
+              >
+                ×
+              </button>
+              <figcaption>
+                <progress
+                  v-if="photo.status === 'UPLOADING'"
+                  :value="photo.progress"
+                  max="100"
+                />
+                <span v-if="photo.status === 'PENDING'">{{ t('photoReady') }}</span>
+                <span v-else-if="photo.status === 'UPLOADING'">
+                  {{ t('uploading') }} {{ photo.progress }}%
+                </span>
+                <span v-else-if="photo.status === 'UPLOADED'">{{ t('photoUploaded') }}</span>
+                <button
+                  v-else
+                  type="button"
+                  :disabled="submitting"
+                  @click="retryPhoto(photo)"
+                >
+                  {{ t('retry') }}
+                </button>
+              </figcaption>
+            </figure>
+          </div>
+
+          <label
+            class="return-photo-picker"
+            :aria-disabled="submitting || photos.length >= MAX_PHOTO_COUNT"
+          >
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              :disabled="submitting || photos.length >= MAX_PHOTO_COUNT"
+              @change="selectPhotos"
+            >
+            {{ t('upload') }}
+          </label>
+        </fieldset>
+
         <p v-if="error" class="return-error" role="alert">{{ error }}</p>
-        <button type="submit" :disabled="verifying">
-          {{ verifying ? t('verifying') : t('verifyAndContinue') }}
+        <button class="return-submit" type="submit" :disabled="submitting">
+          {{ submitting && photos.length ? t('photosUploading') : submitting ? t('submitting') : t('simpleSubmit') }}
         </button>
       </form>
-      <div class="verification-privacy">
-        <b>{{ t('verificationPrivacyTitle') }}</b>
-        <span>{{ t('verificationPrivacyBody') }}</span>
+
+      <div class="return-note">
+        <b>{{ t('simplePrivacyTitle') }}</b>
+        <span>{{ t('simplePrivacyBody') }}</span>
       </div>
     </section>
-
-    <ReturnStatusPanel
-      v-else-if="status !== 'DRAFT'"
-      :status="status"
-      :receipt="receipt"
-    />
-
-    <div v-else-if="context" class="return-layout">
-      <aside class="return-aside">
-        <p class="return-kicker">{{ t('kicker') }}</p>
-        <h1>{{ t('introTitle') }}</h1>
-        <p>{{ t('introBody') }}</p>
-        <div class="return-ticket">
-          <small>{{ t('registration') }}</small>
-          <strong>{{ context.orderNo }}</strong>
-          <span>{{ context.assignedDeviceCount }} {{ t('assigned') }}</span>
-        </div>
-        <ReturnProgress :step="step" />
-        <div class="return-privacy"><b>{{ t('privacyTitle') }}</b><span>{{ t('privacyBody') }}</span></div>
-      </aside>
-
-      <section class="return-form-shell">
-        <div class="mobile-step">
-          <span>{{ locale === 'zh-CN' ? '第 ' : '' }}{{ step + 1 }} {{ t('stepCount') }}</span>
-          <i><b :style="{ width: `${(step + 1) * 20}%` }" /></i>
-        </div>
-
-        <div v-if="step === 0" class="return-step">
-          <header><span>01</span><div><p>ORDER</p><h2>{{ t('orderTitle') }}</h2></div></header>
-          <div class="order-confirm">
-            <small>{{ t('orderNo') }}</small><strong>{{ context.orderNo }}</strong>
-            <span v-if="context.rentalStart">{{ t('rentalPeriod') }} {{ context.rentalStart }} - {{ context.rentalEnd }}</span>
-          </div>
-          <p class="field-note">{{ t('orderNote') }}</p>
-        </div>
-
-        <div v-else-if="step === 1" class="return-step">
-          <header><span>02</span><div><p>LOGISTICS</p><h2>{{ t('logisticsTitle') }}</h2></div></header>
-          <div class="field-grid">
-            <label><span>{{ t('carrier') }} <em>{{ t('required') }}</em></span><select v-model="draft.carrierCode" @change="selectCarrier">
-              <option value="">{{ t('chooseCarrier') }}</option>
-              <option v-for="carrier in carriers" :key="carrier.code" :value="carrier.code">
-                {{ locale === 'zh-CN' ? carrier.zh : carrier.en }}
-              </option>
-            </select></label>
-            <label><span>{{ t('shippedDate') }} <em>{{ t('required') }}</em></span><input v-model="draft.shippedDate" type="date"></label>
-          </div>
-          <label><span>{{ t('waybill') }} <em>{{ t('required') }}</em></span><input v-model.trim="draft.waybillNo" autocomplete="off" :placeholder="t('waybillPlaceholder')"></label>
-          <p class="field-note">{{ t('logisticsNote') }}</p>
-        </div>
-
-        <div v-else-if="step === 2" class="return-step">
-          <header><span>03</span><div><p>DEVICES</p><h2>{{ t('deviceTitle') }}</h2></div></header>
-          <div class="serial-list">
-            <div v-for="(_, index) in draft.serials" :key="index">
-              <b>{{ String(index + 1).padStart(2, '0') }}</b>
-              <input v-model="draft.serials[index]" maxlength="48" :placeholder="t('serialPlaceholder')" @blur="draft.serials[index] = normalizeReturnSerial(draft.serials[index] || '')">
-              <button v-if="draft.serials.length > 1" type="button" @click="draft.serials.splice(index, 1)">×</button>
-            </div>
-          </div>
-          <button class="add-serial" type="button" :disabled="draft.serials.length >= 8" @click="addSerial">{{ t('addDevice') }}</button>
-          <div class="serial-sample"><code>A6-08-4L5H</code><span><b>{{ t('serialHintTitle') }}</b>{{ t('serialHint') }}</span></div>
-        </div>
-
-        <div v-else-if="step === 3" class="return-step">
-          <header><span>04</span><div><p>PHOTOS</p><h2>{{ t('photoTitle') }}</h2></div></header>
-          <ReturnPhotoField category="DEVICE_EXTERIOR" :title="t('exterior')" :hint="t('exteriorHint')" required :photos="photos('DEVICE_EXTERIOR')" :tasks="tasks('DEVICE_EXTERIOR')" :busy="isUploadBusy('DEVICE_EXTERIOR')" @upload="uploadFiles('DEVICE_EXTERIOR', $event)" @remove="removePhoto" @retry="runUpload" />
-          <ReturnPhotoField category="SERIAL_LABEL" :title="t('label')" :hint="t('labelHint')" required :photos="photos('SERIAL_LABEL')" :tasks="tasks('SERIAL_LABEL')" :busy="isUploadBusy('SERIAL_LABEL')" @upload="uploadFiles('SERIAL_LABEL', $event)" @remove="removePhoto" @retry="runUpload" />
-          <ReturnPhotoField category="PACKAGING" :title="t('packaging')" :hint="t('packagingHint')" :photos="photos('PACKAGING')" :tasks="tasks('PACKAGING')" :busy="isUploadBusy('PACKAGING')" @upload="uploadFiles('PACKAGING', $event)" @remove="removePhoto" @retry="runUpload" />
-          <ReturnPhotoField category="DAMAGE_DETAIL" :title="t('damagePhotos')" :hint="t('damagePhotosHint')" :photos="photos('DAMAGE_DETAIL')" :tasks="tasks('DAMAGE_DETAIL')" :busy="isUploadBusy('DAMAGE_DETAIL')" @upload="uploadFiles('DAMAGE_DETAIL', $event)" @remove="removePhoto" @retry="runUpload" />
-          <label><span>{{ t('issue') }} <i>{{ t('optional') }}</i></span><textarea v-model="draft.issueDescription" maxlength="1000" rows="4" :placeholder="t('issuePlaceholder')"></textarea></label>
-        </div>
-
-        <div v-else class="return-step">
-          <header><span>05</span><div><p>REVIEW</p><h2>{{ t('reviewTitle') }}</h2></div></header>
-          <dl class="review-list">
-            <div><dt>{{ t('orderNo') }}</dt><dd>{{ context.orderNo }}</dd></div>
-            <div><dt>{{ t('returnLogistics') }}</dt><dd>{{ draft.carrierName }} · {{ draft.waybillNo }}<br>{{ draft.shippedDate }}</dd></div>
-            <div><dt>{{ t('deviceSerials') }}</dt><dd><code v-for="serial in draft.serials" :key="serial">{{ serial }}</code></dd></div>
-            <div><dt>{{ t('returnPhotos') }}</dt><dd>{{ t('uploaded') }} {{ draft.photos.length }} {{ t('photosOptional') }}</dd></div>
-            <div><dt>{{ t('issueSummary') }}</dt><dd>{{ draft.issueDescription || t('noIssue') }}</dd></div>
-          </dl>
-        </div>
-
-        <p v-if="error" class="return-error" role="alert">{{ error }}</p>
-        <footer class="return-actions">
-          <button v-if="step > 0" type="button" class="secondary" @click="step--">{{ t('previous') }}</button>
-          <button v-if="step < 4" type="button" class="primary" @click="next">{{ t('next') }}</button>
-          <button v-else type="button" class="primary" :disabled="submitting" @click="submit">
-            {{ submitting ? t('submitting') : t('submit') }}
-          </button>
-        </footer>
-      </section>
-    </div>
   </main>
 </template>
+
+<style scoped>
+.return-page {
+  --ink: #102a20;
+  --muted: #667068;
+  --paper: #fffdf8;
+  --line: #d8d7ce;
+  --accent: #0e5b42;
+  min-height: 100svh;
+  padding: 18px;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 12% 8%, rgb(236 194 105 / 28%), transparent 30rem),
+    radial-gradient(circle at 90% 88%, rgb(29 111 82 / 18%), transparent 28rem),
+    #f0eee7;
+}
+
+:global(html[data-theme='dark']) .return-page {
+  --ink: #edf5ee;
+  --muted: #aab8ae;
+  --paper: #13241c;
+  --line: #385044;
+  --accent: #dba84d;
+  background:
+    radial-gradient(circle at 12% 8%, rgb(219 168 77 / 18%), transparent 30rem),
+    radial-gradient(circle at 90% 88%, rgb(39 133 98 / 22%), transparent 28rem),
+    #09130f;
+}
+
+.return-topbar {
+  width: min(100%, 880px);
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.return-brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.return-brand > b {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  color: #fff;
+  background: #0e5b42;
+  font: 800 24px/1 Georgia, serif;
+}
+
+.return-brand span {
+  display: grid;
+}
+
+.return-brand strong {
+  font-size: 19px;
+}
+
+.return-brand small {
+  color: var(--muted);
+}
+
+.return-tools {
+  display: flex;
+  gap: 8px;
+}
+
+.return-tools button {
+  min-width: 46px;
+  height: 46px;
+  padding: 0 15px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  color: var(--ink);
+  background: var(--paper);
+  font: inherit;
+}
+
+.return-card,
+.return-loading {
+  width: min(100%, 720px);
+  margin: 0 auto;
+  border: 1px solid rgb(120 119 110 / 24%);
+  border-radius: 30px;
+  background: var(--paper);
+  box-shadow: 0 24px 70px rgb(36 48 40 / 13%);
+}
+
+.return-card {
+  padding: clamp(24px, 6vw, 52px);
+}
+
+.return-kicker {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font: 800 12px/1.2 ui-monospace, monospace;
+  letter-spacing: .16em;
+}
+
+.return-intro h1 {
+  max-width: 11em;
+  margin: 0;
+  font: 800 clamp(36px, 8vw, 60px)/.98 Georgia, 'Songti SC', serif;
+  letter-spacing: -.045em;
+}
+
+.return-intro > p:last-child {
+  max-width: 35em;
+  margin: 20px 0 0;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+.return-form {
+  margin-top: 34px;
+  display: grid;
+  gap: 20px;
+}
+
+.return-form label {
+  display: grid;
+  gap: 9px;
+  font-weight: 700;
+}
+
+.return-form label span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.return-form label b {
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.return-form input {
+  width: 100%;
+  height: 58px;
+  box-sizing: border-box;
+  padding: 0 17px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  color: var(--ink);
+  background: transparent;
+  font: 500 18px/1 ui-monospace, 'SFMono-Regular', monospace;
+  outline: none;
+}
+
+.return-form input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.return-photos {
+  min-width: 0;
+  margin: 4px 0 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+
+.return-photos legend {
+  width: 100%;
+  padding: 0;
+  display: flex;
+  gap: 18px;
+  align-items: start;
+  justify-content: space-between;
+}
+
+.return-photos legend span {
+  display: grid;
+  gap: 5px;
+}
+
+.return-photos legend small {
+  color: var(--muted);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.return-photos legend b {
+  flex: 0 0 auto;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.return-photo-grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.return-photo-grid figure {
+  position: relative;
+  aspect-ratio: 1;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
+.return-photo-grid img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.return-photo-grid > figure > button {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  background: rgb(0 0 0 / 65%);
+  font-size: 18px;
+}
+
+.return-photo-grid figcaption {
+  position: absolute;
+  inset: auto 0 0;
+  min-height: 28px;
+  padding: 5px 7px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(transparent, rgb(0 0 0 / 78%));
+  font-size: 10px;
+  text-align: center;
+}
+
+.return-photo-grid progress {
+  width: 100%;
+  height: 4px;
+}
+
+.return-photo-grid figcaption button {
+  border: 0;
+  color: #fff;
+  background: transparent;
+  font: inherit;
+  text-decoration: underline;
+}
+
+.return-photo-picker {
+  min-height: 50px;
+  margin-top: 14px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--accent);
+  border-radius: 15px;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+  cursor: pointer;
+}
+
+.return-photo-picker[aria-disabled='true'] {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.return-photo-picker input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.return-submit {
+  min-height: 60px;
+  border: 0;
+  border-radius: 18px;
+  color: #fff;
+  background: #0e5b42;
+  font: 800 19px/1.2 inherit;
+}
+
+.return-submit:disabled {
+  opacity: .65;
+}
+
+.return-error {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  color: #a4342c;
+  background: #fff0ec;
+  line-height: 1.5;
+}
+
+.return-note {
+  margin-top: 26px;
+  padding: 18px;
+  display: grid;
+  gap: 7px;
+  border-radius: 18px;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
+  line-height: 1.6;
+}
+
+.return-note b {
+  color: var(--ink);
+}
+
+.return-loading {
+  min-height: 360px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  color: var(--muted);
+}
+
+.return-loading span {
+  width: 34px;
+  height: 34px;
+  border: 3px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 560px) {
+  .return-page {
+    padding: 12px;
+  }
+
+  .return-topbar {
+    margin-bottom: 12px;
+  }
+
+  .return-brand small {
+    display: none;
+  }
+
+  .return-tools button {
+    height: 44px;
+    padding: 0 12px;
+  }
+
+  .return-card {
+    padding: 26px 20px;
+    border-radius: 24px;
+  }
+
+  .return-intro h1 {
+    font-size: 40px;
+  }
+
+  .return-form {
+    margin-top: 28px;
+    gap: 17px;
+  }
+
+  .return-photos legend {
+    display: grid;
+    gap: 8px;
+  }
+
+  .return-photo-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+</style>

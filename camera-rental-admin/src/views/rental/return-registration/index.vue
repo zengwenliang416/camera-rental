@@ -104,7 +104,9 @@
             <el-descriptions-item label="状态">{{ statusLabel(detail.status) }}</el-descriptions-item>
             <el-descriptions-item label="订单号">{{ detail.orderNo }}</el-descriptions-item>
             <el-descriptions-item label="运单号">{{ detail.waybillNo || '—' }}</el-descriptions-item>
-            <el-descriptions-item label="寄出日期">{{ detail.shippedDate || '—' }}</el-descriptions-item>
+            <el-descriptions-item label="寄出日期">
+              {{ formatReturnRegistrationDate(detail.shippedDate) }}
+            </el-descriptions-item>
             <el-descriptions-item label="Return Delivery">{{ detail.deliveryId || '尚未创建' }}</el-descriptions-item>
             <el-descriptions-item label="异常说明" :span="2">{{ detail.issueDescription || '无' }}</el-descriptions-item>
           </el-descriptions>
@@ -160,6 +162,7 @@ import {
   buildReturnRegistrationPageParams,
   canReviewReturnRegistration,
   canRevokeReturnRegistration,
+  formatReturnRegistrationDate,
   RETURN_REGISTRATION_STATUSES,
   returnRegistrationStatusLabel
 } from './returnRegistrationModel'

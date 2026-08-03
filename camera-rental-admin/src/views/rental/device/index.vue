@@ -105,7 +105,10 @@
     <el-dialog v-model="createVisible" :title="t('rental.device.createTitle')" width="480px">
       <el-form ref="createFormRef" :model="createForm" :rules="createRules" label-width="120px">
         <el-form-item :label="t('rental.device.deviceNo')" prop="deviceNo">
-          <el-input v-model="createForm.deviceNo" />
+          <el-input
+            v-model="createForm.deviceNo"
+            :placeholder="t('rental.device.deviceNoPlaceholder')"
+          />
         </el-form-item>
         <el-form-item :label="t('rental.device.serialNumber')">
           <el-input v-model="createForm.serialNumber" />
@@ -241,7 +244,14 @@ const createVisible = ref(false)
 const createForm = reactive({ deviceNo: '', serialNumber: '', equipmentModelCode: '' })
 const createFormRef = ref<FormInstance>()
 const createRules = computed<FormRules>(() => ({
-  deviceNo: [{ required: true, message: t('rental.device.deviceNoRequired'), trigger: 'blur' }],
+  deviceNo: [
+    { required: true, message: t('rental.device.deviceNoRequired'), trigger: 'blur' },
+    {
+      pattern: /^(?=.{4,64}$)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*-\d{2}$/,
+      message: t('rental.device.deviceNoFormat'),
+      trigger: 'blur'
+    }
+  ],
   equipmentModelCode: [
     { required: true, message: t('rental.device.modelCodeRequired'), trigger: 'blur' }
   ]

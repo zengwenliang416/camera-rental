@@ -25,13 +25,25 @@ export function useReturnRegistration() {
     return result.data
   }
 
-  const verify = (orderNo: string, mobileLast4: string) =>
+  const verify = (orderNo: string, mobileLast4: string, machineCode: string) =>
     request<ReturnContext>('/verify', {
       method: 'POST',
-      body: { orderNo, mobileLast4 }
+      body: { orderNo, mobileLast4, machineCode }
     })
 
   const loadContext = () => request<ReturnContext>('/session')
+
+  const simpleSubmit = (form: {
+    orderNo: string
+    mobileLast4: string
+    machineCode: string
+    waybillNo: string
+    attachmentIds?: number[]
+  }) =>
+    request<ReturnReceipt>('/simple-submit', {
+      method: 'POST',
+      body: form
+    })
 
   async function upload(
     file: File,
@@ -105,5 +117,5 @@ export function useReturnRegistration() {
       }
     })
 
-  return { verify, loadContext, upload, removePhoto, submit }
+  return { verify, loadContext, simpleSubmit, upload, removePhoto, submit }
 }

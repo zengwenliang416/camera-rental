@@ -3,3 +3,7 @@ camera-rental-server/sql/mysql/migrations/20260801_034_rental_delivery_channel_o
 camera-rental-server/sql/mysql/migrations/20260801_035_rental_logistics_backfill_menu.sql
 camera-rental-server/sql/mysql/migrations/20260801_036_customer_return_registration.sql
 camera-rental-server/sql/mysql/migrations/20260802_037_return_registration_fixed_entry.sql
+camera-rental-server/sql/mysql/migrations/20260802_038_enable_yudao_ai_module.sql
+camera-rental-server/sql/mysql/migrations/20260802_039_xianyu_remark_ai_audit.sql
+camera-rental-server/sql/mysql/migrations/20260802_040_return_registration_channel_review.sql
+camera-rental-server/sql/mysql/migrations/20260803_041_rental_device_short_codes.sql

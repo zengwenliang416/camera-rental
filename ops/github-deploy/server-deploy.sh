@@ -13,6 +13,8 @@ WEB_HEALTH_ATTEMPTS="${WEB_HEALTH_ATTEMPTS:-60}"
 BACKEND_HEALTH_ATTEMPTS="${BACKEND_HEALTH_ATTEMPTS:-90}"
 HEALTH_INTERVAL_SECONDS="${HEALTH_INTERVAL_SECONDS:-2}"
 HEALTH_STABILIZE_SECONDS="${HEALTH_STABILIZE_SECONDS:-5}"
+ADMIN_HEALTH_URL="${ADMIN_HEALTH_URL:-https://rental.motion-cover.com/admin/}"
+ADMIN_HEALTH_RESOLVE="${ADMIN_HEALTH_RESOLVE:-rental.motion-cover.com:443:127.0.0.1}"
 
 release_dir="${DEPLOY_ROOT}/releases/${RELEASE_SHA}"
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -33,7 +35,15 @@ test -f "${release_dir}/admin/index.html"
 test -f "${release_dir}/schedule-center/index.html"
 test -f "${release_dir}/server/migrations/20260801_036_customer_return_registration.sql"
 test -f "${release_dir}/server/migrations/20260802_037_return_registration_fixed_entry.sql"
+test -f "${release_dir}/server/migrations/20260802_038_enable_yudao_ai_module.sql"
+test -f "${release_dir}/server/migrations/20260802_039_xianyu_remark_ai_audit.sql"
+test -f "${release_dir}/server/migrations/20260802_040_return_registration_channel_review.sql"
+test -f "${release_dir}/server/migrations/20260803_041_rental_device_short_codes.sql"
 verify_return_registration_artifact "${release_dir}/server/yudao-server.jar"
+if ! validate_admin_artifact "${release_dir}/admin/index.html"; then
+  echo "[deploy][error] admin artifact has an invalid base path, placeholder, or missing entry asset" >&2
+  exit 1
+fi
 
 rustfs_source="${release_dir}/ops/rustfs"
 rustfs_root="${DEPLOY_ROOT}/rustfs"
@@ -50,10 +60,6 @@ chmod 644 "${release_dir}/server/yudao-server.jar"
 echo "[deploy] apply release migrations before activation"
 DEPLOY_ROOT="${DEPLOY_ROOT}" RELEASE_SHA="${RELEASE_SHA}" \
   "${release_dir}/server/apply-migrations.sh" "${release_dir}"
-for static_dir in admin schedule-center; do
-  find "${release_dir}/${static_dir}" -type d -exec chmod 755 {} +
-  find "${release_dir}/${static_dir}" -type f -exec chmod 644 {} +
-done
 
 has_web_artifact=false
 if [ -f "${release_dir}/web/server/index.mjs" ]; then
@@ -78,6 +84,15 @@ echo "[deploy] link schedule center under admin route"
 rm -rf "${release_dir}/admin/schedule-center"
 ln -sfn ../schedule-center "${release_dir}/admin/schedule-center"
 
+# Normalize after every copy/link operation. macOS archives can preserve
+# owner-only modes that make Nginx return 403 for otherwise valid files.
+for static_dir in admin schedule-center staff; do
+  if [ -d "${release_dir}/${static_dir}" ]; then
+    find "${release_dir}/${static_dir}" -type d -exec chmod 755 {} +
+    find "${release_dir}/${static_dir}" -type f -exec chmod 644 {} +
+  fi
+done
+
 ln -sfn "${release_dir}" "${DEPLOY_ROOT}/current"
 
 if systemctl list-unit-files "${SERVER_SERVICE}" >/dev/null 2>&1; then
@@ -101,6 +116,7 @@ fi
 if command -v nginx >/dev/null 2>&1; then
   echo "[deploy] reload nginx"
   bash -lc "${NGINX_RELOAD_CMD}"
+  verify_admin_frontend_route "${ADMIN_HEALTH_URL}" "${ADMIN_HEALTH_RESOLVE}"
 else
   echo "[deploy][warn] nginx not installed or not on PATH; static frontends deployed but nginx not reloaded"
 fi
@@ -112,6 +128,7 @@ wait_for_service_http \
   "${BACKEND_HEALTH_ATTEMPTS}" \
   "${HEALTH_INTERVAL_SECONDS}" \
   "${HEALTH_STABILIZE_SECONDS}"
+verify_rental_routes "http://127.0.0.1:48080"
 
 if [ "${has_web_artifact}" = true ]; then
   wait_for_service_http \

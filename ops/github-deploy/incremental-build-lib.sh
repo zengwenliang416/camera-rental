@@ -45,28 +45,17 @@ component_changed() {
   return 1
 }
 
-validate_admin_artifact() {
-  local index_file="$1"
-  local release_sha="${2:-}"
-  local asset_prefix="/admin/assets"
-
-  if [ -n "${release_sha}" ]; then
-    asset_prefix="${asset_prefix}/${release_sha:0:12}"
-  fi
-
-  [ -f "${index_file}" ] || return 1
-  ! grep -q '%VITE_' "${index_file}" \
-    && grep -Eq "src=\"${asset_prefix}/[^\"]+\\.js\"" "${index_file}" \
-    && grep -q 'src="/admin/logo.gif"' "${index_file}"
-}
-
 component_artifact_available() {
   local release_dir="$1"
   local component="$2"
   local artifact
 
   artifact="$(component_required_artifact "${component}")"
-  [ -f "${release_dir}/${artifact}" ]
+  if [ "${component}" = "admin" ]; then
+    validate_admin_artifact "${release_dir}/${artifact}"
+  else
+    [ -f "${release_dir}/${artifact}" ]
+  fi
 }
 
 dependency_input_paths() {

@@ -12,6 +12,8 @@ MAVEN_THREADS="${MAVEN_THREADS:-2}"
 FORCE_FULL_BUILD="${FORCE_FULL_BUILD:-false}"
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=deployment-runtime-lib.sh
+source "${script_dir}/deployment-runtime-lib.sh"
 # shellcheck source=incremental-build-lib.sh
 source "${script_dir}/incremental-build-lib.sh"
 

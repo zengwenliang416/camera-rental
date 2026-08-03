@@ -2,6 +2,8 @@
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../deployment-runtime-lib.sh
+source "${script_dir}/../deployment-runtime-lib.sh"
 # shellcheck source=../incremental-build-lib.sh
 source "${script_dir}/../incremental-build-lib.sh"
 
@@ -86,7 +88,8 @@ assert_failure "manifest changes should invalidate dependency reuse" \
   dependencies_are_current "${project_dir}" admin
 
 artifact_dir="${test_dir}/admin-artifact"
-mkdir -p "${artifact_dir}"
+mkdir -p "${artifact_dir}/assets/0123456789ab"
+touch "${artifact_dir}/assets/0123456789ab/index-good.js" "${artifact_dir}/logo.gif"
 cat > "${artifact_dir}/index.html" <<'EOF'
 <title>相机租赁管理后台</title>
 <script type="module" src="/admin/assets/0123456789ab/index-good.js"></script>
@@ -94,6 +97,11 @@ cat > "${artifact_dir}/index.html" <<'EOF'
 EOF
 assert_success "release-scoped admin artifact should pass validation" \
   validate_admin_artifact "${artifact_dir}/index.html" "0123456789abcdef0123456789abcdef01234567"
+release_dir="${test_dir}/release"
+mkdir -p "${release_dir}/admin"
+cp -R "${artifact_dir}/." "${release_dir}/admin/"
+assert_success "valid admin artifacts should be reusable" \
+  component_artifact_available "${release_dir}" admin
 
 cat > "${artifact_dir}/index.html" <<'EOF'
 <title>相机租赁管理后台</title>
@@ -102,6 +110,9 @@ cat > "${artifact_dir}/index.html" <<'EOF'
 EOF
 assert_failure "unversioned admin artifact should fail release validation" \
   validate_admin_artifact "${artifact_dir}/index.html" "0123456789abcdef0123456789abcdef01234567"
+cp "${artifact_dir}/index.html" "${release_dir}/admin/index.html"
+assert_failure "invalid admin artifacts must not be reused" \
+  component_artifact_available "${release_dir}" admin
 
 cat > "${artifact_dir}/index.html" <<'EOF'
 <title>%VITE_APP_TITLE%</title>
@@ -109,6 +120,14 @@ cat > "${artifact_dir}/index.html" <<'EOF'
 <img src="/logo.gif" alt="Logo" />
 EOF
 assert_failure "root-scoped admin artifact should fail validation" \
+  validate_admin_artifact "${artifact_dir}/index.html" "0123456789abcdef0123456789abcdef01234567"
+
+cat > "${artifact_dir}/index.html" <<'EOF'
+<title>相机租赁管理后台</title>
+<script type="module" src="/admin/assets/0123456789ab/missing.js"></script>
+<img src="/admin/logo.gif" alt="Logo" />
+EOF
+assert_failure "missing admin entry assets should fail validation" \
   validate_admin_artifact "${artifact_dir}/index.html" "0123456789abcdef0123456789abcdef01234567"
 
 echo "incremental build helper tests passed"

@@ -1,0 +1,30 @@
+{
+  "task_id": "001-enable-ai-runtime",
+  "goal": "User can complete the primary approved flow from the prototype handoff.",
+  "must_read": [
+    "openspec/changes/enable-yudao-ai-module/development/tasks/001-enable-ai-runtime/brief.md",
+    "openspec/changes/enable-yudao-ai-module/requirements.md",
+    "openspec/changes/enable-yudao-ai-module/acceptance.md",
+    "openspec/changes/enable-yudao-ai-module/prototype/handoff.md"
+  ],
+  "allowed_files": [
+    "src"
+  ],
+  "test_paths": [
+    "tests/001-enable-ai-runtime/**"
+  ],
+  "non_goals": [
+    "Do not expand scope beyond the active change.",
+    "Do not bypass component extraction rules."
+  ],
+  "expected_evidence": [
+    "Focused tests or command output",
+    "Task report",
+    "Spec review",
+    "Quality review"
+  ],
+  "unsafe_assumptions": [
+    "Any missing requirement, API, database, or component decision blocks implementation."
+  ],
+  "stop_condition": "Stop if the task would edit outside scope or duplicate reusable component behavior."
+}

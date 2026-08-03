@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-02T16:50:34.223Z",
+  "project_root": "/Volumes/zwl/camera-rental-github",
+  "required_plugins": [
+    "specnav-core",
+    "specnav-requirements",
+    "specnav-prototype",
+    "specnav-development",
+    "specnav-verification",
+    "specnav-operations",
+    "specnav-codegraph"
+  ],
+  "plugin_suite": {
+    "ok": true,
+    "marketplace_root": "/Users/wenliang_zeng/.codex/plugins/cache/specnav-marketplace",
+    "blockers": []
+  },
+  "state_source": "openspec-cli",
+  "blockers": [],
+  "change_resolution": {
+    "source": "active-change-file",
+    "candidates": [
+      "add-customer-return-registration",
+      "add-rental-delivery-foundation",
+      "add-rental-logistics-tracking",
+      "camera-rental-full-platform-v1",
+      "enable-yudao-ai-module",
+      "schedule-center-local-stability-v1",
+      "xian-guanjia-data-integration-v1"
+    ],
+    "blockers": []
+  },
+  "change_registry": {
+    "schema_version": 1,
+    "generated_at": "2026-08-02T16:50:31.752Z",
+    "current_focus": "add-customer-return-registration",
+    "changes": [
+      {
+        "id": "add-customer-return-registration",
+        "stage": "development",
+        "status": "active",
+        "branch": null,
+        "created_at": null,
+        "last_active_at": null
+      },
+      {
+        "id": "add-rental-delivery-foundation",
+        "stage": "prototype",
+        "status": "active",
+        "branch": null,
+        "created_at": null,
+        "last_active_at": null
+      },
+      {
+        "id": "add-rental-logistics-tracking",
+        "stage": "development",
+        "status": "active",
+        "branch": null,
+        "created_at": null,
+        "last_active_at": null
+      },
+      {
+        "id": "camera-rental-full-platform-v1",
+        "stage": "requirements",
+        "status": "active",
+        "branch": null,
+        "created_at": null,
+        "last_active_at": null
+      },
+      {
+        "id": "enable-yudao-ai-module",
+        "stage": "created",
+        "status": "active",
+        "branch": null,
+        "created_at": null,
+        "last_active_at": null
+      },
+      {
+        "id": "schedule-center-local-stability-v1",
+        "stage": "created",
+        "status": "active",
+        "branch": null,
+        "created_at": null,
+        "last_active_at": null
+      },
+      {
+        "id": "xian-guanjia-data-integration-v1",
+        "stage": "requirements",
+        "status": "active",
+        "branch": null,
+        "created_at": "2026-07-23T00:00:00.000Z",
+        "last_active_at": "2026-07-23T00:00:00.000Z"
+      },
+      {
+        "id": "xian-guanjia-order-dispatch-ship-v1",
+        "stage": "archived",
+        "status": "archived",
+        "branch": "main",
+        "created_at": "2026-07-25T00:00:00.000Z",
+        "last_active_at": "2026-07-27",
+        "archive_path": "openspec/changes/archive/2026-07-27-xian-guanjia-order-dispatch-ship-v1",
+        "archived_at": "2026-07-27T11:21:00.342Z"
+      }
+    ]
+  },
+  "legacy_openspec_entrypoints": [],
+  "openspec_status": {
+    "schema_name": "spec-driven",
+    "is_complete": false,
+    "apply_requires": [
+      "tasks"
+    ]
+  },
+  "active_change": "add-customer-return-registration",
+  "risk_tier": "high-risk",
+  "risk_source": "path-trigger",
+  "verify_status": "red",
+  "verify_report_stale": true,
+  "artifacts": {
+    "openspec": true,
+    "proposal": false,
+    "design": true,
+    "scope": true,
+    "tasks": true,
+    "specs": false,
+    "signoff": false,
+    "operations_readiness": false
+  },
+  "actions": [
+    {
+      "id": "bootstrap",
+      "state": "blocked",
+      "reversible": true,
+      "required_plugins": [
+        "specnav-core"
+      ],
+      "blocked_by": [
+        "openspec-exists"
+      ]
+    },
+    {
+      "id": "requirements",
+      "state": "ready",
+      "reversible": true,
+      "required_plugins": [
+        "specnav-core",
+        "specnav-requirements"
+      ],
+      "blocked_by": []
+    },
+    {
+      "id": "design",
+      "state": "blocked",
+      "reversible": true,
+      "required_plugins": [
+        "specnav-core",
+        "specnav-requirements"
+      ],
+      "blocked_by": [
+        "proposal"
+      ]
+    },
+    {
+      "id": "tasks",
+      "state": "blocked",
+      "reversible": true,
+      "required_plugins": [
+        "specnav-core",
+        "specnav-requirements"
+      ],
+      "blocked_by": []
+    },
+    {
+      "id": "implement",
+      "state": "ready",
+      "reversible": true,
+      "required_plugins": [
+        "specnav-core",
+        "specnav-development"
+      ],
+      "blocked_by": []
+    },
+    {
+      "id": "fix",
+      "state": "ready",
+      "reversible": true,
+      "required_plugins": [
+        "specnav-core",
+        "specnav-development",
+        "specnav-verification"
+      ],
+      "blocked_by": []
+    },
+    {
+      "id": "verify",
+      "state": "ready",
+      "reversible": true,
+      "required_plugins": [
+        "specnav-core",
+        "specnav-verification"
+      ],
+      "blocked_by": []
+    },
+    {
+      "id": "release",
+      "state": "blocked",
+      "reversible": false,
+      "required_plugins": [
+        "specnav-core",
+        "specnav-verification",
+        "specnav-operations"
+      ],
+      "blocked_by": [
+        "verify",
+        "fresh-verify",
+        "human-signoff"
+      ]
+    },
+    {
+      "id": "archive",
+      "state": "blocked",
+      "reversible": false,
+      "required_plugins": [
+        "specnav-core",
+        "specnav-verification",
+        "specnav-operations"
+      ],
+      "blocked_by": [
+        "verify",
+        "fresh-verify",
+        "human-signoff",
+        "operations"
+      ]
+    },
+    {
+      "id": "status",
+      "state": "ready",
+      "reversible": true,
+      "required_plugins": [
+        "specnav-core"
+      ],
+      "blocked_by": []
+    }
+  ]
+}

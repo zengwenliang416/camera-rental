@@ -63,12 +63,76 @@ verification stage.
 
 ## 7. Fixed public entry without manually issued links
 
-User outcome: A customer can open one permanent return page, verify an order
-with the Xianyu order number and receiver mobile last four digits, and complete
+User outcome: A customer can open one permanent return page, verify a uniquely
+matched order with the receiver mobile last four digits alone, optionally add
+the Xianyu order number when multiple orders share the same suffix, and complete
 the existing return workflow without an operator issuing a tokenized URL.
 
 - [x] 7.1 Replace manual-link requirements with fixed-entry verification, automatic HttpOnly session, enumeration-resistant errors and rate limits.
-- [x] 7.2 Add backend order verification, unique tenant restoration, automatic registration create/resume and session-scoped upload/submit APIs.
-- [x] 7.3 Promote `/return` to the customer entry page, add order/mobile-last4 verification states, and redirect historical token routes safely.
+- [x] 7.2 Allow receiver mobile last four digits to verify a unique returnable order, with optional order-number disambiguation, tenant restoration, and safe ambiguous-match rejection.
+- [x] 7.3 Promote `/return` to a mobile-last4-first customer entry page, keep order number optional, and redirect historical token routes safely.
 - [x] 7.4 Update admin guidance from per-order link generation to one fixed public URL while preserving registration search, detail, revoke and review operations.
 - [x] 7.5 Add migration/index support and unit, redteam, browser and build verification for the fixed-entry flow; production verification remains in the verification stage.
+
+## 8. One-page four-field return registration
+
+User outcome: A customer submits the complete return registration from one page
+with only order/mobile lookup, machine code and waybill inputs.
+
+- [x] 8.1 Add one public `simple-submit` endpoint that locates the order, issues
+  the protected session and submits one machine code and waybill transactionally.
+- [x] 8.2 Make machine code and waybill required, allow both order number and
+  mobile suffix to stay empty, and use the assigned machine code as the default
+  order locator.
+- [x] 8.3 Replace the five-step Nuxt experience with one four-field form and
+  preserve accepted/review/error status feedback.
+- [x] 8.4 Add unit, browser, anonymous-access and duplicate-submission tests.
+- [x] 8.5 Reject compressed Spring Boot nested rental JARs and verify the rental
+  controllers/jobs are live after deployment.
+
+## 9. Optional RustFS photos on the one-page return form
+
+User outcome: A customer can optionally add up to ten return photos on the same
+one-page form without making photos or an upload token part of the required
+return-registration flow.
+
+- [x] 9.1 Add one optional `RETURN_PHOTO` category with a backend-enforced
+  ten-photo limit while retaining JPEG, PNG, WebP and 15 MiB file controls.
+- [x] 9.2 Let `simple-submit` accept zero to ten confirmed attachment IDs and
+  revalidate registration ownership, confirmation state and RustFS content
+  identity while holding the registration lock.
+- [x] 9.3 Add one-page photo selection, local previews, progress, removal,
+  failure state and retry without restoring the previous five-step workflow.
+- [x] 9.4 Preserve the no-photo fast path and use
+  `verify -> presigned PUT -> confirm -> simple-submit` only when photos exist.
+- [x] 9.5 Add backend and mobile browser tests for zero photos, upload order,
+  retry, the ten-photo limit, foreign/unconfirmed attachments and changed
+  RustFS content.
+- [x] 9.6 Deploy directly to production-80 and verify the public page, backend
+  route, Web/backend services and private RustFS runtime.
+
+## 10. Machine-code-only order location
+
+User outcome: A customer can submit a return with only the required machine code
+and waybill while optionally adding order information for consistency checks.
+
+- [x] 10.1 Include the normalized machine code in verification, rate-limit and
+  security-audit subjects without logging the plaintext value.
+- [x] 10.2 Locate a unique channel order through the machine's active assignment
+  when order number and mobile suffix are both empty.
+- [x] 10.3 Remove the frontend requirement for either optional locator and cover
+  the no-order/no-mobile path with backend and mobile browser tests.
+
+## 11. Two-digit customer machine codes
+
+User outcome: A customer enters a short machine code such as `P4-01` instead of
+an internal serial-style identifier.
+
+- [x] 11.1 Standardize customer machine-code validation and copy as
+  `MODEL-01`, including lowercase and full-width-dash normalization.
+- [x] 11.2 Generate future ERP-inbound device numbers with two-digit sequences
+  and reject a model prefix after sequence `99`.
+- [x] 11.3 Add an incremental migration that assigns stable per-model short
+  codes while preserving the prior device number as a compatibility alias.
+- [x] 11.4 Cover the short-code rule in backend, admin and Nuxt tests and deploy
+  it directly to production-80.

@@ -4,6 +4,7 @@
 
 1. `20260801_034_rental_delivery_channel_orders.sql`
 2. `20260801_036_customer_return_registration.sql`
+3. `20260803_041_rental_device_short_codes.sql`
 
 The files in this directory are exact audit copies of the production migrations
 listed by `production_path` and pinned by SHA-256 in `manifest.json`.
@@ -21,3 +22,7 @@ listed by `production_path` and pinned by SHA-256 in `manifest.json`.
 - The migration is additive. Rollback retains schema and data, disables the
   menu and revokes active links. Destructive table/column removal requires a
   separate reviewed migration after confirming no Return Delivery references.
+- Migration 041 preserves every previous `device_no` in `legacy_device_no`.
+  Rolling back application code can continue resolving those legacy values,
+  but restoring them as primary device numbers requires a separately reviewed
+  data migration.

@@ -1,0 +1,32 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-08-02T15:07:40.947Z",
+  "active_change": "enable-yudao-ai-module",
+  "claims": [
+    {
+      "id": "development:task-001-enable-ai-runtime",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-enable-ai-runtime",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/enable-yudao-ai-module/development/tasks/001-enable-ai-runtime/brief.md",
+        "openspec/changes/enable-yudao-ai-module/development/tasks/001-enable-ai-runtime/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-001-enable-ai-runtime:evidence"
+      ]
+    }
+  ]
+}

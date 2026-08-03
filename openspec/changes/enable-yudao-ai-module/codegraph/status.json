@@ -1,9 +1,9 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-08-03T10:49:42.803Z",
+  "generated_at": "2026-08-02T15:06:16.778Z",
   "project_root": "/Volumes/zwl/camera-rental-github",
-  "active_change": "add-customer-return-registration",
+  "active_change": "enable-yudao-ai-module",
   "policy": {
     "enabled": true,
     "profile": "bootstrap",

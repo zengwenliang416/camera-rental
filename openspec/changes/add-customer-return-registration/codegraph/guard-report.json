@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-02T12:05:17.416Z",
+  "generated_at": "2026-08-03T10:49:42.806Z",
   "active_change": "add-customer-return-registration",
   "stage": "development",
   "ok": true,
@@ -63,7 +63,7 @@
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-02T12:05:17.414Z",
+    "generated_at": "2026-08-03T10:49:42.803Z",
     "active_change": "add-customer-return-registration",
     "source_raw": "openspec/changes/add-customer-return-registration/codegraph/evidence.jsonl",
     "by_claim": {},
@@ -74,7 +74,7 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-02T12:05:17.416Z",
+    "generated_at": "2026-08-03T10:49:42.806Z",
     "active_change": "add-customer-return-registration",
     "claims_file": "openspec/changes/add-customer-return-registration/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/add-customer-return-registration/codegraph/evidence-index.json",

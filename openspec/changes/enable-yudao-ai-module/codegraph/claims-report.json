@@ -1,0 +1,12 @@
+{
+  "schema": "specnav.codegraph.claims_report.v1",
+  "generated_at": "2026-08-02T15:06:16.781Z",
+  "active_change": "enable-yudao-ai-module",
+  "claims_file": "openspec/changes/enable-yudao-ai-module/codegraph/claims-map.json",
+  "evidence_index": "openspec/changes/enable-yudao-ai-module/codegraph/evidence-index.json",
+  "claims_count": 0,
+  "verified_claims": [],
+  "unverified_claims": [],
+  "blockers": [],
+  "warnings": []
+}

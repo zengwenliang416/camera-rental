@@ -1,0 +1,9 @@
+{
+  "status": "approved",
+  "prototype_code": "required_present",
+  "prototype_type": "data-flow",
+  "approved_variant": "database-backed dynamic OpenAI-compatible provider with auto-model providers disabled by default",
+  "approval_source": "User explicitly requested enabling the current complete yudao-module-ai implementation and database migration.",
+  "promotion": "requires_development_gate",
+  "blocked_reasons": []
+}

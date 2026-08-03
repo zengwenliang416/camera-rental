@@ -19,6 +19,14 @@
       "path": "development/migrations/20260801_036_customer_return_registration.sql",
       "production_path": "camera-rental-server/sql/mysql/migrations/20260801_036_customer_return_registration.sql",
       "sha256": "44e99c99dcf919fd08cd7ede6dec720f29d0b54a7fff5899bc14480f71e6b272"
+    },
+    {
+      "id": "20260803_041_rental_device_short_codes",
+      "kind": "ddl",
+      "order": 3,
+      "path": "development/migrations/20260803_041_rental_device_short_codes.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260803_041_rental_device_short_codes.sql",
+      "sha256": "a4d18e2fcc598774ec07571c5e9d8eeed4c323f98220c8c361c4a88930fd0906"
     }
   ],
   "rollback": [],
@@ -30,7 +38,8 @@
     ],
     "evidence": [
       "The migration runner records SHA-256 checksums and refuses changed migration content.",
-      "The release applies 034 before 036 and blocks activation on failure."
+      "The release applies 034, 036 and 041 in order and blocks activation on failure.",
+      "Migration 041 preserves the previous device number in legacy_device_no before assigning short codes."
     ]
   },
   "notes": [

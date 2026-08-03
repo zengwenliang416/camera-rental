@@ -1,0 +1,98 @@
+{
+  "touched_specs": [
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "reuse-existing-admin-ai-pages",
+    "dynamic-menu-and-permission-authoritative",
+    "no-api-key-in-frontend-storage-or-response-log",
+    "existing-light-dark-and-zh-CN-en-capabilities-preserved"
+  ],
+  "architecture_modules": [
+    "camera-rental-server/pom.xml",
+    "camera-rental-server/yudao-server",
+    "camera-rental-server/yudao-module-ai",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-admin/src/api/ai",
+    "camera-rental-admin/src/views/ai",
+    "ops/github-deploy"
+  ],
+  "api_contracts": [
+    "/admin-api/ai/api-key/**",
+    "/admin-api/ai/model/**",
+    "/admin-api/ai/chat-role/**",
+    "/admin-api/ai/chat/**",
+    "/admin-api/ai/knowledge/**",
+    "/admin-api/ai/workflow/**",
+    "/admin-api/ai/write/**",
+    "/admin-api/ai/image/**",
+    "/admin-api/ai/music/**",
+    "/admin-api/ai/mind-map/**"
+  ],
+  "database_entities": [
+    "ai_api_key",
+    "ai_model",
+    "ai_chat_role",
+    "ai_chat_conversation",
+    "ai_chat_message",
+    "ai_image",
+    "ai_music",
+    "ai_write",
+    "ai_mind_map",
+    "ai_knowledge",
+    "ai_knowledge_document",
+    "ai_knowledge_segment",
+    "ai_tool",
+    "ai_workflow",
+    "system_dict_type",
+    "system_dict_data",
+    "system_menu",
+    "system_role_menu"
+  ],
+  "permissions": [
+    "ai:api-key:*",
+    "ai:model:*",
+    "ai:chat-role:*",
+    "ai:chat-conversation:*",
+    "ai:chat-message:*",
+    "ai:knowledge:*",
+    "ai:workflow:*",
+    "ai:write:*",
+    "ai:image:*",
+    "ai:music:*",
+    "ai:mind-map:*",
+    "super-admin-role-only-seed-grant"
+  ],
+  "operational_constraints": [
+    "additive-idempotent-migration-only",
+    "migration-checksum-enforced",
+    "database-backup-before-production-migration",
+    "encrypted-api-key-at-rest",
+    "no-secret-in-git-sql-logs-or-receipts",
+    "preserve-customer-return-and-rental-services",
+    "production-target-154.9.235.80",
+    "rollback-to-previous-release-on-runtime-failure"
+  ],
+  "data_flows": [
+    "FLOW-AI-MENU-AUTHORIZATION",
+    "FLOW-AI-API-KEY-ENCRYPTED-PERSISTENCE",
+    "FLOW-AI-MODEL-CONFIGURATION",
+    "FLOW-AI-MODEL-INVOCATION"
+  ],
+  "theme_modes": [
+    "light-dark",
+    "theme-toggle:user",
+    "theme-preference:persisted"
+  ],
+  "locale_policy": [
+    "i18n:enabled",
+    "locales:zh-CN,en",
+    "default-locale:zh-CN",
+    "fallback-locale:zh-CN",
+    "locale-toggle:user",
+    "locale-preference:persisted"
+  ],
+  "unresolved_gaps": []
+}

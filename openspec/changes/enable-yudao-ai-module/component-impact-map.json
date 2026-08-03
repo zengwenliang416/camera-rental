@@ -1,0 +1,60 @@
+{
+  "new_components": [
+    "20260802_038_enable_yudao_ai_module.sql",
+    "AiApiKeyDOTest"
+  ],
+  "reused_components": [
+    "yudao-module-ai",
+    "AiApiKeyController",
+    "AiApiKeyService",
+    "AiModelService",
+    "AiModelFactory",
+    "EncryptTypeHandler",
+    "system_menu",
+    "system_role_menu",
+    "camera_rental_schema_migration",
+    "existing GitHub deployment runner",
+    "existing admin AI views and API clients"
+  ],
+  "extraction_triggers": [
+    "migration-seed-generation-becomes-nondeterministic",
+    "secret-encryption-logic-duplicates-existing-type-handler",
+    "deployment-verification-duplicates-existing-runtime-library"
+  ],
+  "forbidden_dependencies": [
+    "admin-frontend-to-relay-api-key",
+    "migration-to-plaintext-api-key",
+    "source-code-to-production-api-key",
+    "ai-controller-to-mapper",
+    "ordinary-role-to-api-key-management",
+    "deployment-log-to-secret-value",
+    "ai-module-enablement-to-rental-data-rewrite"
+  ],
+  "hooks": [
+    "existing admin request authentication and permission hooks"
+  ],
+  "utilities": [
+    "EncryptTypeHandler",
+    "existing dictionary and menu utilities",
+    "existing deployment migration checksum utilities"
+  ],
+  "services": [
+    "AI API key administration service",
+    "AI model administration service",
+    "AI chat and generation services",
+    "MyBatis encrypted field persistence",
+    "production migration runner",
+    "systemd backend runtime"
+  ],
+  "required_component_tests": [
+    "AI module reactor compile",
+    "API key encrypted persistence mapping",
+    "AI table coverage against data objects",
+    "idempotent migration runner",
+    "menu and role grant uniqueness",
+    "production health and protected AI API",
+    "customer return and rental regression probes",
+    "secret absence scan"
+  ],
+  "unresolved_gaps": []
+}

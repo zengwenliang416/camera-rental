@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-02T11:48:09.791Z",
+  "generated_at": "2026-08-03T10:45:06.595Z",
   "current_focus": "add-customer-return-registration",
   "changes": [
     {
@@ -30,6 +30,14 @@
     {
       "id": "camera-rental-full-platform-v1",
       "stage": "requirements",
+      "status": "active",
+      "branch": null,
+      "created_at": null,
+      "last_active_at": null
+    },
+    {
+      "id": "enable-yudao-ai-module",
+      "stage": "created",
       "status": "active",
       "branch": null,
       "created_at": null,

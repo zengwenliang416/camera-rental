@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "active_change": "enable-yudao-ai-module",
+  "status": "blocked",
+  "ok": false,
+  "checked_at": "2026-08-02T15:05:57.851Z",
+  "blockers": [
+    "Replace this scaffold after requirements, prototype, and scope gates are verified."
+  ]
+}

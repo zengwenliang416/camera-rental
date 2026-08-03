@@ -1,0 +1,33 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "data-flow-map.md",
+  "project_fidelity": {
+    "status": "not-applicable",
+    "inventory": null,
+    "shell_checked": false,
+    "generic_shell_detected": false,
+    "notes": [
+      "This is a non-visual data-flow prototype."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [],
+    "theme_modes": [],
+    "locales": [],
+    "states": []
+  },
+  "checks": [
+    "Executed prototype/data-flow/flow-harness.js successfully.",
+    "Inspected the six declared boundaries from protected admin API through encrypted MySQL persistence to dynamic model creation.",
+    "Confirmed the flow forbids startup-time unconfigured providers and plaintext key persistence.",
+    "Confirmed the customer return route is an explicit preserved invariant."
+  ],
+  "evidence": [
+    "prototype/data-flow/flow-harness.js",
+    "prototype/data-flow-map.md",
+    "requirements.md",
+    "acceptance.md"
+  ],
+  "blockers": []
+}

@@ -15,6 +15,7 @@ import {
   type RentalLogisticsCarrierMappingSaveReqVO,
   type RentalLogisticsCarrierMappingVO,
 } from '../../../api/rental';
+import { Button } from '../../../shared/ui/Button';
 import { ConfirmDialogShell } from '../../../shared/ui/ConfirmDialogShell';
 import { EmptyState } from '../../../shared/ui/EmptyState';
 import { OperationResultPanel } from '../../../shared/ui/OperationResultPanel';
@@ -36,8 +37,6 @@ import {
   fieldClassName,
   OperationsPanel,
   PanelQueryBoundary,
-  primaryButtonClassName,
-  secondaryButtonClassName,
 } from './OperationsPanel';
 
 function MappingForm({
@@ -69,7 +68,7 @@ function MappingForm({
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       {fields.map((field) => (
-        <label key={field.key} className="text-[10px] font-bold text-[var(--sc-ink-muted)]">
+        <label key={field.key} className="sc-field-label">
           {field.label}
           <input
             value={String(draft[field.key] || '')}
@@ -79,7 +78,7 @@ function MappingForm({
           />
         </label>
       ))}
-      <label className="text-[10px] font-bold text-[var(--sc-ink-muted)]">
+      <label className="sc-field-label">
         {operationsCopy(locale, 'mapping.phone')}
         <select
           value={draft.phoneRequirement}
@@ -92,7 +91,7 @@ function MappingForm({
           <option value="REQUIRED">REQUIRED</option>
         </select>
       </label>
-      <label className="text-[10px] font-bold text-[var(--sc-ink-muted)]">
+      <label className="sc-field-label">
         {operationsCopy(locale, 'mapping.state')}
         <select
           value={draft.status}
@@ -180,26 +179,28 @@ export function CarrierMappingPanel({
         actions={
           <>
             {access.canQueryMappings && (
-              <button
+              <Button
+                variant="outline"
+                size="md"
                 type="button"
                 onClick={() => void load()}
                 disabled={query.state.status === 'loading'}
-                className={secondaryButtonClassName}
+                icon={<RefreshCw className={`h-3.5 w-3.5 ${query.state.status === 'loading' ? 'animate-spin' : ''}`} />}
               >
-                <RefreshCw className={`h-3.5 w-3.5 ${query.state.status === 'loading' ? 'animate-spin' : ''}`} />
                 {operationsCopy(locale, 'common.refresh')}
-              </button>
+              </Button>
             )}
-            <button
+            <Button
+              variant="primary"
+              size="md"
               type="button"
               onClick={openNew}
               disabled={!access.canUpdateMappings || !access.canQueryMappings}
               title={!access.canUpdateMappings ? operationsCopy(locale, 'common.noPermission') : undefined}
-              className={primaryButtonClassName}
+              icon={<Plus className="h-3.5 w-3.5" />}
             >
-              <Plus className="h-3.5 w-3.5" />
               {operationsCopy(locale, 'mapping.new')}
-            </button>
+            </Button>
           </>
         }
       >
@@ -223,10 +224,10 @@ export function CarrierMappingPanel({
               <OperationResultPanel state="success" message={successMessage} />
             )}
 
-            <div className="hidden overflow-x-auto sm:block">
+            <div className="sc-workspace-card hidden overflow-x-auto rounded-xl sm:block">
               <table className="w-full min-w-[760px] border-collapse text-left">
                 <thead>
-                  <tr className="border-b border-[var(--sc-border)] text-[9px] uppercase tracking-[0.12em] text-[var(--sc-ink-muted)]">
+                  <tr className="sc-panel-header border-b text-[9px] uppercase tracking-[0.12em] text-[var(--sc-ink-muted)]">
                     <th className="px-2 py-3">{operationsCopy(locale, 'mapping.source')}</th>
                     <th className="px-2 py-3">{operationsCopy(locale, 'mapping.sourceCode')}</th>
                     <th className="px-2 py-3">{operationsCopy(locale, 'mapping.canonical')}</th>
@@ -251,24 +252,24 @@ export function CarrierMappingPanel({
                       </td>
                       <td className="px-2 py-3">
                         <div className="flex justify-end gap-1">
-                          <button
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             type="button"
                             onClick={() => openEdit(mapping)}
                             disabled={!access.canUpdateMappings}
                             aria-label={operationsCopy(locale, 'common.edit')}
-                            className="grid h-10 w-10 place-items-center rounded-lg border border-[var(--sc-border)] disabled:opacity-40"
-                          >
-                            <Pencil className="h-3.5 w-3.5" />
-                          </button>
-                          <button
+                            icon={<Pencil className="h-3.5 w-3.5" />}
+                          />
+                          <Button
+                            variant="danger"
+                            size="icon"
                             type="button"
                             onClick={() => setDeleteTarget(mapping)}
                             disabled={!access.canDeleteMappings}
                             aria-label={operationsCopy(locale, 'common.delete')}
-                            className="grid h-10 w-10 place-items-center rounded-lg border border-[var(--sc-border)] text-[var(--sc-red)] disabled:opacity-40"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </button>
+                            icon={<Trash2 className="h-3.5 w-3.5" />}
+                          />
                         </div>
                       </td>
                     </tr>
@@ -279,7 +280,7 @@ export function CarrierMappingPanel({
 
             <div className="grid gap-3 sm:hidden">
               {mappings.map((mapping) => (
-                <article key={mapping.id} className="rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-3">
+                <article key={mapping.id} className="sc-workspace-card rounded-xl p-3">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-xs font-black text-[var(--sc-ink)]">{mapping.displayName}</p>
@@ -292,14 +293,12 @@ export function CarrierMappingPanel({
                     </StatusBadge>
                   </div>
                   <div className="mt-3 flex gap-2">
-                    <button type="button" onClick={() => openEdit(mapping)} disabled={!access.canUpdateMappings} className={secondaryButtonClassName}>
-                      <Pencil className="h-3.5 w-3.5" />
+                    <Button type="button" variant="outline" size="sm" onClick={() => openEdit(mapping)} disabled={!access.canUpdateMappings} icon={<Pencil className="h-3.5 w-3.5" />}>
                       {operationsCopy(locale, 'common.edit')}
-                    </button>
-                    <button type="button" onClick={() => setDeleteTarget(mapping)} disabled={!access.canDeleteMappings} className={`${secondaryButtonClassName} text-[var(--sc-red)]`}>
-                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button type="button" variant="danger" size="sm" onClick={() => setDeleteTarget(mapping)} disabled={!access.canDeleteMappings} icon={<Trash2 className="h-3.5 w-3.5" />}>
                       {operationsCopy(locale, 'common.delete')}
-                    </button>
+                    </Button>
                   </div>
                 </article>
               ))}
@@ -317,13 +316,12 @@ export function CarrierMappingPanel({
           onClose={() => setDraft(null)}
           footer={
             <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setDraft(null)} className={secondaryButtonClassName}>
+              <Button type="button" variant="outline" size="md" onClick={() => setDraft(null)}>
                 {operationsCopy(locale, 'common.cancel')}
-              </button>
-              <button type="button" onClick={() => void submit()} disabled={isMutating || !carrierMappingDraftIsValid(draft)} className={primaryButtonClassName}>
-                {isMutating ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+              </Button>
+              <Button type="button" variant="primary" size="md" onClick={() => void submit()} disabled={isMutating || !carrierMappingDraftIsValid(draft)} icon={isMutating ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}>
                 {isMutating ? operationsCopy(locale, 'common.saving') : operationsCopy(locale, 'common.save')}
-              </button>
+              </Button>
             </div>
           }
         >
@@ -345,17 +343,16 @@ export function CarrierMappingPanel({
           onClose={() => setDeleteTarget(null)}
           footer={
             <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setDeleteTarget(null)} className={secondaryButtonClassName}>
+              <Button type="button" variant="outline" size="md" onClick={() => setDeleteTarget(null)}>
                 {operationsCopy(locale, 'common.cancel')}
-              </button>
-              <button type="button" onClick={() => void remove()} disabled={isMutating} className={`${primaryButtonClassName} bg-[var(--sc-red)]`}>
-                {isMutating ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
+              </Button>
+              <Button type="button" variant="danger" size="md" onClick={() => void remove()} disabled={isMutating} icon={isMutating ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}>
                 {isMutating ? operationsCopy(locale, 'common.deleting') : operationsCopy(locale, 'common.delete')}
-              </button>
+              </Button>
             </div>
           }
         >
-          <p className="sc-data rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-3 text-xs">
+          <p className="sc-workspace-card sc-data rounded-xl p-3 text-xs">
             {deleteTarget.sourceType}:{deleteTarget.sourceCarrierCode} → {deleteTarget.providerCarrierCode}
           </p>
         </ConfirmDialogShell>

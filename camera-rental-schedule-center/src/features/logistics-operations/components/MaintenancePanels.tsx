@@ -8,6 +8,7 @@ import {
   type RentalLogisticsBackfillResultVO,
   type RentalLogisticsCleanupResultVO,
 } from '../../../api/rental';
+import { Button } from '../../../shared/ui/Button';
 import { ConfirmDialogShell } from '../../../shared/ui/ConfirmDialogShell';
 import { EmptyState } from '../../../shared/ui/EmptyState';
 import { OperationResultPanel } from '../../../shared/ui/OperationResultPanel';
@@ -27,8 +28,6 @@ import { useOperationsRequest } from '../useOperationsRequest';
 import {
   fieldClassName,
   OperationsPanel,
-  primaryButtonClassName,
-  secondaryButtonClassName,
 } from './OperationsPanel';
 
 function PermissionBoundary({
@@ -80,7 +79,7 @@ export function BackfillPanel({
       >
         <PermissionBoundary allowed={access.canBackfill} locale={locale}>
           <div className="space-y-4">
-            <label className="flex min-h-11 items-center gap-3 rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] px-3 text-xs font-bold">
+            <label className="sc-glass-control flex min-h-11 items-center gap-3 rounded-xl px-3 text-xs font-bold">
               <input
                 type="checkbox"
                 checked={command.dryRun}
@@ -96,7 +95,7 @@ export function BackfillPanel({
               />
               {operationsCopy(locale, 'backfill.dryRun')}
             </label>
-            <label className="text-[10px] font-bold text-[var(--sc-ink-muted)]">
+            <label className="sc-field-label">
               {operationsCopy(locale, 'backfill.limit')}
               <input
                 type="number"
@@ -108,7 +107,7 @@ export function BackfillPanel({
                 className={`${fieldClassName} mt-1.5`}
               />
             </label>
-            <label className="flex items-start gap-3 rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-3 text-xs">
+            <label className="sc-glass-control flex items-start gap-3 rounded-xl p-3 text-xs">
               <input
                 type="checkbox"
                 checked={command.enqueueProviderTasks}
@@ -141,7 +140,7 @@ export function BackfillPanel({
               />
             )}
             {result && result.items.length > 0 && (
-              <div className="max-h-48 overflow-y-auto rounded-lg border border-[var(--sc-border)]">
+              <div className="sc-workspace-card max-h-48 overflow-y-auto rounded-xl">
                 {result.items.map((item) => (
                   <div key={item.shipmentId} className="flex items-center justify-between gap-3 border-b border-[var(--sc-border)] px-3 py-2 text-[10px] last:border-0">
                     <span className="sc-data">SHP-{item.shipmentId} · {item.maskedWaybillNo || '—'}</span>
@@ -150,10 +149,9 @@ export function BackfillPanel({
                 ))}
               </div>
             )}
-            <button type="button" onClick={() => void run()} disabled={request.state.status === 'loading'} className={primaryButtonClassName}>
-              {request.state.status === 'loading' ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <DatabaseZap className="h-3.5 w-3.5" />}
+            <Button type="button" variant="primary" size="md" onClick={() => void run()} disabled={request.state.status === 'loading'} icon={request.state.status === 'loading' ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <DatabaseZap className="h-3.5 w-3.5" />}>
               {request.state.status === 'loading' ? operationsCopy(locale, 'backfill.running') : operationsCopy(locale, 'backfill.run')}
-            </button>
+            </Button>
           </div>
         </PermissionBoundary>
       </OperationsPanel>
@@ -166,8 +164,8 @@ export function BackfillPanel({
           onClose={() => setConfirming(false)}
           footer={
             <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setConfirming(false)} className={secondaryButtonClassName}>{operationsCopy(locale, 'common.cancel')}</button>
-              <button type="button" onClick={() => void run()} className={primaryButtonClassName}>{operationsCopy(locale, 'common.confirm')}</button>
+              <Button type="button" variant="outline" size="md" onClick={() => setConfirming(false)}>{operationsCopy(locale, 'common.cancel')}</Button>
+              <Button type="button" variant="primary" size="md" onClick={() => void run()}>{operationsCopy(locale, 'common.confirm')}</Button>
             </div>
           }
         >
@@ -204,26 +202,25 @@ export function CleanupPanel({
       <OperationsPanel title={operationsCopy(locale, 'cleanup.title')} description={operationsCopy(locale, 'cleanup.description')}>
         <PermissionBoundary allowed={access.canCleanup} locale={locale}>
           <div className="space-y-4">
-            <label className="flex min-h-11 items-center gap-3 rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] px-3 text-xs font-bold">
+            <label className="sc-glass-control flex min-h-11 items-center gap-3 rounded-xl px-3 text-xs font-bold">
               <input type="checkbox" checked={command.dryRun} onChange={(event) => setCommand({ ...command, dryRun: event.target.checked })} className="h-4 w-4 accent-[var(--sc-blue)]" />
               {operationsCopy(locale, 'cleanup.dryRun')}
             </label>
             <div className="grid grid-cols-2 gap-3">
-              <label className="text-[10px] font-bold text-[var(--sc-ink-muted)]">
+              <label className="sc-field-label">
                 {operationsCopy(locale, 'cleanup.retention')}
                 <input type="number" min={30} max={3650} value={command.retentionDays} onChange={(event) => setCommand({ ...command, retentionDays: Number(event.target.value) })} className={`${fieldClassName} mt-1.5`} />
               </label>
-              <label className="text-[10px] font-bold text-[var(--sc-ink-muted)]">
+              <label className="sc-field-label">
                 {operationsCopy(locale, 'cleanup.limit')}
                 <input type="number" min={1} max={1000} value={command.limit} onChange={(event) => setCommand({ ...command, limit: Number(event.target.value) })} className={`${fieldClassName} mt-1.5`} />
               </label>
             </div>
             {request.state.status === 'error' && <OperationResultPanel state="error" message={operationsErrorCopy(locale, request.state.error)} />}
             {result && <OperationResultPanel state="success" message={operationsCopy(locale, 'cleanup.result', { traces: result.traceCount, inbox: result.inboxCount, outbox: result.outboxCount })} />}
-            <button type="button" onClick={() => void run()} disabled={request.state.status === 'loading'} className={primaryButtonClassName}>
-              {request.state.status === 'loading' ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
+            <Button type="button" variant="primary" size="md" onClick={() => void run()} disabled={request.state.status === 'loading'} icon={request.state.status === 'loading' ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}>
               {request.state.status === 'loading' ? operationsCopy(locale, 'cleanup.running') : operationsCopy(locale, 'cleanup.run')}
-            </button>
+            </Button>
           </div>
         </PermissionBoundary>
       </OperationsPanel>
@@ -236,8 +233,8 @@ export function CleanupPanel({
           onClose={() => setConfirming(false)}
           footer={
             <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setConfirming(false)} className={secondaryButtonClassName}>{operationsCopy(locale, 'common.cancel')}</button>
-              <button type="button" onClick={() => void run()} className={`${primaryButtonClassName} bg-[var(--sc-red)]`}>{operationsCopy(locale, 'common.confirm')}</button>
+              <Button type="button" variant="outline" size="md" onClick={() => setConfirming(false)}>{operationsCopy(locale, 'common.cancel')}</Button>
+              <Button type="button" variant="danger" size="md" onClick={() => void run()}>{operationsCopy(locale, 'common.confirm')}</Button>
             </div>
           }
         >

@@ -82,16 +82,16 @@ export function ConfirmDialogShell({
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-zinc-950/70 p-2 backdrop-blur-sm sm:p-5">
+    <div className="sc-overlay-scrim fixed inset-0 z-50 grid place-items-center p-2 sm:p-5">
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label={ariaLabel}
         tabIndex={-1}
-        className="flex max-h-[94vh] w-full max-w-4xl flex-col overflow-hidden rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] shadow-2xl focus:outline-none"
+        className="sc-overlay-surface flex max-h-[94vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl focus:outline-none"
       >
-        <header className="flex items-start justify-between gap-4 border-b border-[var(--sc-border)] px-4 py-4 sm:px-6">
+        <header className="sc-panel-header flex items-start justify-between gap-4 border-b px-4 py-4 sm:px-6">
           <div>
             <h2 className="text-base font-black text-[var(--sc-ink)] sm:text-lg">{title}</h2>
             {description && (
@@ -104,14 +104,14 @@ export function ConfirmDialogShell({
             type="button"
             onClick={onClose}
             aria-label={closeLabel}
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-lg text-[var(--sc-ink-muted)] hover:bg-[var(--sc-surface-soft)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]"
+            className="sc-button sc-button-ghost grid h-11 w-11 shrink-0 place-items-center rounded-xl"
           >
             <X className="h-4 w-4" />
           </button>
         </header>
         <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">{children}</div>
         {footer && (
-          <footer className="border-t border-[var(--sc-border)] bg-[var(--sc-surface-soft)] px-4 py-3 sm:px-6">
+          <footer className="sc-panel-header border-t px-4 py-3 sm:px-6">
             {footer}
           </footer>
         )}

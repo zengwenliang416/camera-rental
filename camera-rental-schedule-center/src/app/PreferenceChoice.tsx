@@ -16,10 +16,10 @@ export const PreferenceChoice = forwardRef<
       type="button"
       onClick={onSelect}
       aria-pressed={active}
-      className={`flex min-h-11 items-center gap-2.5 rounded-lg border px-3 text-[13px] font-semibold leading-5 ${
+      className={`sc-button flex min-h-11 items-center gap-2.5 rounded-xl border px-3 text-[13px] font-semibold leading-5 ${
         active
-          ? 'border-[var(--sc-blue)] bg-[var(--sc-blue-soft)] text-[var(--sc-blue)]'
-          : 'border-[var(--sc-border)] bg-[var(--sc-surface)] text-[var(--sc-ink-soft)]'
+          ? 'sc-segmented-active border-transparent text-[var(--sc-surface)]'
+          : 'sc-glass-control text-[var(--sc-ink-soft)]'
       }`}
     >
       {icon}

@@ -13,13 +13,13 @@ export function ShippingWorkbench({ embedded = false }: { embedded?: boolean }) 
     <section
       className={`relative isolate overflow-hidden ${
         embedded
-          ? 'rounded-2xl bg-[var(--sc-bg)] p-3 sm:p-5'
-          : 'rounded-[1.75rem] border border-[var(--sc-border)] bg-[var(--sc-bg)] p-3 shadow-sm sm:p-5 lg:p-6'
+          ? 'sc-soft-panel rounded-2xl p-3 sm:p-5'
+          : 'sc-workspace-card rounded-[1.75rem] p-3 sm:p-5 lg:p-6'
       }`}
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-64 bg-[radial-gradient(circle_at_top_left,rgba(0,107,255,0.12),transparent_48%),linear-gradient(to_bottom,var(--sc-surface),transparent)]"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-64 bg-[radial-gradient(circle_at_top_left,color-mix(in_srgb,var(--sc-blue)_12%,transparent),transparent_48%),linear-gradient(to_bottom,var(--sc-surface),transparent)]"
       />
       <div className="mx-auto max-w-[1480px] space-y-4">
         {!embedded && <ShippingOverview controller={controller} />}

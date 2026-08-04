@@ -12,6 +12,7 @@ import {
   trackingStatusLabel,
 } from '../trackingCopy';
 import { trackingStatusPresentation, type DeliveryOrderSummary } from '../trackingModel';
+import { Button } from '../../../shared/ui/Button';
 
 const iconByName = {
   alert: AlertTriangle,
@@ -42,7 +43,7 @@ function SummaryCard({
     <button
       type="button"
       onClick={() => onOpen(String(summary.rentalOrderId))}
-      className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4 text-left transition hover:bg-[var(--sc-surface-soft)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]"
+      className="sc-workspace-card rounded-2xl p-4 text-left"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
@@ -121,7 +122,7 @@ export function DeliveryTrackingSummaryPanel({
 
   return (
     <section className="grid gap-3 xl:grid-cols-[minmax(260px,0.6fr)_minmax(0,1fr)]">
-      <div className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4">
+      <div className="sc-workspace-card rounded-2xl p-4">
         <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--sc-ink-muted)]">
           {trackingCopy(locale, 'panel.eyebrow')}
         </p>
@@ -149,17 +150,16 @@ export function DeliveryTrackingSummaryPanel({
             : trackingCopy(locale, 'panel.notAvailable')}
         </p>
         {summaryError && (
-          <button
-            type="button"
+          <Button
             onClick={() => void refreshSummaries()}
-            className="mt-3 min-h-11 rounded-lg border border-[var(--sc-border-strong)] px-3 text-xs font-bold text-[var(--sc-ink)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]"
+            className="mt-3"
           >
             {trackingCopy(locale, 'panel.retry')}
-          </button>
+          </Button>
         )}
       </div>
 
-      <div className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4">
+      <div className="sc-workspace-card rounded-2xl p-4">
         {!canReadTracking ? (
           <EmptyState
             icon={<AlertTriangle className="h-4 w-4" />}

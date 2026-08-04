@@ -13,6 +13,7 @@ import {
   type RentalLogisticsFailedTaskVO,
   type RentalLogisticsReconcileResultVO,
 } from '../../../api/rental';
+import { Button } from '../../../shared/ui/Button';
 import { OperationResultPanel } from '../../../shared/ui/OperationResultPanel';
 import { StatusBadge } from '../../../shared/ui/StatusBadge';
 import type { LocalePreference } from '../../preferences/preferenceModel';
@@ -32,8 +33,6 @@ import {
   fieldClassName,
   OperationsPanel,
   PanelQueryBoundary,
-  primaryButtonClassName,
-  secondaryButtonClassName,
 } from './OperationsPanel';
 
 export function TaskQueuePanel({
@@ -110,15 +109,16 @@ export function TaskQueuePanel({
       description={operationsCopy(locale, 'tasks.description')}
       actions={
         access.canQueryTasks ? (
-          <button
+          <Button
+            variant="outline"
+            size="md"
             type="button"
             onClick={() => void load()}
             disabled={query.state.status === 'loading'}
-            className={secondaryButtonClassName}
+            icon={<RefreshCw className={`h-3.5 w-3.5 ${query.state.status === 'loading' ? 'animate-spin' : ''}`} />}
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${query.state.status === 'loading' ? 'animate-spin' : ''}`} />
             {operationsCopy(locale, 'common.refresh')}
-          </button>
+          </Button>
         ) : undefined
       }
     >
@@ -133,7 +133,7 @@ export function TaskQueuePanel({
       >
         <div className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-[minmax(0,12rem)_minmax(0,10rem)_auto]">
-            <label className="text-[10px] font-bold text-[var(--sc-ink-muted)]">
+            <label className="sc-field-label">
               {operationsCopy(locale, 'tasks.filter')}
               <select
                 value={taskType}
@@ -146,7 +146,7 @@ export function TaskQueuePanel({
                 <option value="INBOX">INBOX</option>
               </select>
             </label>
-            <label className="text-[10px] font-bold text-[var(--sc-ink-muted)]">
+            <label className="sc-field-label">
               {operationsCopy(locale, 'tasks.limit')}
               <input
                 type="number"
@@ -157,14 +157,16 @@ export function TaskQueuePanel({
                 className={`${fieldClassName} mt-1.5`}
               />
             </label>
-            <button
+            <Button
+              variant="outline"
+              size="md"
               type="button"
               onClick={() => void load()}
-              className={`${secondaryButtonClassName} self-end`}
+              className="self-end"
+              icon={<RefreshCw className="h-3.5 w-3.5" />}
             >
-              <RefreshCw className="h-3.5 w-3.5" />
               {operationsCopy(locale, 'common.refresh')}
-            </button>
+            </Button>
           </div>
 
           {retry.state.status === 'error' && (
@@ -177,10 +179,10 @@ export function TaskQueuePanel({
             <OperationResultPanel state="success" message={successMessage} />
           )}
 
-          <div className="overflow-x-auto">
+          <div className="sc-workspace-card overflow-x-auto rounded-xl">
             <table className="w-full min-w-[900px] border-collapse text-left">
               <thead>
-                <tr className="border-y border-[var(--sc-border)] bg-[var(--sc-surface-soft)] text-[9px] uppercase tracking-[0.12em] text-[var(--sc-ink-muted)]">
+                <tr className="sc-panel-header border-y text-[9px] uppercase tracking-[0.12em] text-[var(--sc-ink-muted)]">
                   <th className="px-3 py-3">{operationsCopy(locale, 'tasks.type')}</th>
                   <th className="px-3 py-3">{operationsCopy(locale, 'tasks.delivery')}</th>
                   <th className="px-3 py-3">{operationsCopy(locale, 'tasks.event')}</th>
@@ -213,22 +215,21 @@ export function TaskQueuePanel({
                         {formatOperationsDateTime(locale, task.occurredAt) || '—'}
                       </td>
                       <td className="px-3 py-3 text-right">
-                        <button
+                        <Button
+                          variant="outline"
+                          size="sm"
                           type="button"
                           onClick={() => void safeRetry(task)}
                           disabled={!access.canRetryTasks || Boolean(retryingKey)}
                           title={!access.canRetryTasks ? operationsCopy(locale, 'common.noPermission') : undefined}
-                          className={secondaryButtonClassName}
+                          icon={isRetrying
+                            ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
+                            : <RotateCcw className="h-3.5 w-3.5" />}
                         >
-                          {isRetrying ? (
-                            <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
-                          ) : (
-                            <RotateCcw className="h-3.5 w-3.5" />
-                          )}
                           {isRetrying
                             ? operationsCopy(locale, 'tasks.retrying')
                             : operationsCopy(locale, 'tasks.retry')}
-                        </button>
+                        </Button>
                       </td>
                     </tr>
                   );
@@ -237,7 +238,7 @@ export function TaskQueuePanel({
             </table>
           </div>
 
-          <div className="grid gap-4 rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,10rem)_auto] lg:items-end">
+          <div className="sc-workspace-card grid gap-4 rounded-2xl p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,10rem)_auto] lg:items-end">
             <div>
               <div className="flex items-center gap-2">
                 <ShieldAlert className="h-4 w-4 text-[var(--sc-blue)]" />
@@ -249,7 +250,7 @@ export function TaskQueuePanel({
                 {operationsCopy(locale, 'reconcile.description')}
               </p>
             </div>
-            <label className="text-[10px] font-bold text-[var(--sc-ink-muted)]">
+            <label className="sc-field-label">
               {operationsCopy(locale, 'reconcile.limit')}
               <input
                 type="number"
@@ -261,22 +262,21 @@ export function TaskQueuePanel({
                 className={`${fieldClassName} mt-1.5`}
               />
             </label>
-            <button
+            <Button
+              variant="primary"
+              size="md"
               type="button"
               onClick={() => void runReconcile()}
               disabled={!access.canReconcile || reconcile.state.status === 'loading'}
               title={!access.canReconcile ? operationsCopy(locale, 'common.noPermission') : undefined}
-              className={primaryButtonClassName}
+              icon={reconcile.state.status === 'loading'
+                ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
+                : <RotateCcw className="h-3.5 w-3.5" />}
             >
-              {reconcile.state.status === 'loading' ? (
-                <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <RotateCcw className="h-3.5 w-3.5" />
-              )}
               {reconcile.state.status === 'loading'
                 ? operationsCopy(locale, 'reconcile.running')
                 : operationsCopy(locale, 'reconcile.run')}
-            </button>
+            </Button>
           </div>
           {reconcile.state.status === 'error' && (
             <OperationResultPanel

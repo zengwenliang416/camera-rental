@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Button } from './Button';
 
 export function PermissionAwareAction({
   allowed,
@@ -16,18 +17,13 @@ export function PermissionAwareAction({
   tone?: 'primary' | 'secondary';
 }) {
   return (
-    <button
-      type="button"
+    <Button
       disabled={!allowed}
       onClick={onSelect}
-      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 text-xs font-bold focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)] disabled:cursor-not-allowed disabled:opacity-45 ${
-        tone === 'primary'
-          ? 'bg-[var(--sc-ink)] text-[var(--sc-surface)]'
-          : 'border border-[var(--sc-border-strong)] text-[var(--sc-ink)]'
-      }`}
+      variant={tone === 'primary' ? 'secondary' : 'outline'}
+      icon={icon}
     >
-      {icon}
       {allowed ? label : deniedLabel}
-    </button>
+    </Button>
   );
 }

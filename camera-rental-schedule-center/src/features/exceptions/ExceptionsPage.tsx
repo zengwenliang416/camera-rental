@@ -66,7 +66,7 @@ export function ExceptionsPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="sc-page-stack space-y-4">
       <FeaturePageHeader
         eyebrow={t('exceptions.eyebrow')}
         title={t('exceptions.title')}
@@ -74,9 +74,9 @@ export function ExceptionsPage() {
         meta={<StatusBadge tone="red" icon={<ShieldAlert className="h-3 w-3" />}>{allItems.filter((item) => !item.resolved).length} {t('exceptions.open')}</StatusBadge>}
       />
       <FilterToolbar label={t('exceptions.filters')} summary={`${visible.length} / ${allItems.length} ${t('unit.item')}`}>
-        <label className="grid gap-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--sc-ink-muted)]">
+        <label className="sc-field-label">
           {t('exceptions.state')}
-          <select value={filter} onChange={(event) => setFilter(event.target.value as ExceptionFilter)} className="min-h-11 rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)] px-3 text-xs font-bold text-[var(--sc-ink)]">
+          <select value={filter} onChange={(event) => setFilter(event.target.value as ExceptionFilter)} className="sc-form-control min-h-11 rounded-xl border px-3 text-xs font-bold text-[var(--sc-ink)]">
             <option value="OPEN">{t('exceptions.filterOpen')}</option>
             <option value="RESOLVED">{t('exceptions.filterResolved')}</option>
             <option value="ALL">{t('exceptions.filterAll')}</option>
@@ -94,7 +94,7 @@ export function ExceptionsPage() {
           {visible.map((item) => {
             const actions = exceptionActions(item, permissions);
             return (
-              <article key={item.id} className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4">
+              <article key={item.id} className="sc-workspace-card rounded-2xl p-4">
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">

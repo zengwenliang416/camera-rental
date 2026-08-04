@@ -10,13 +10,13 @@ export function EmptyState({
   description?: string;
 }) {
   return (
-    <div className="grid min-h-28 place-items-center rounded-lg border border-dashed border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)] px-4 py-5 text-center">
+    <div className="sc-empty-state grid min-h-32 place-items-center rounded-xl border border-dashed px-5 py-7 text-center">
       <div>
-        <span className="mx-auto mb-2 grid h-8 w-8 place-items-center rounded-full bg-[var(--sc-green-soft)] text-[var(--sc-green)]">
+        <span className="mx-auto mb-3 grid h-10 w-10 place-items-center rounded-xl bg-[var(--sc-green-soft)] text-[var(--sc-green)]">
           {icon}
         </span>
-        <p className="text-xs font-bold text-[var(--sc-ink)]">{title}</p>
-        {description && <p className="mt-1 text-[11px] leading-5 text-[var(--sc-ink-muted)]">{description}</p>}
+        <p className="text-sm font-bold text-[var(--sc-ink)]">{title}</p>
+        {description && <p className="mx-auto mt-1 max-w-md text-[11px] leading-5 text-[var(--sc-ink-muted)]">{description}</p>}
       </div>
     </div>
   );

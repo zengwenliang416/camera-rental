@@ -224,6 +224,20 @@ test('schedule end date is displayed as the inclusive day before the backend exc
   assert.equal(schedule.endDate, '2026-08-05');
 });
 
+test('schedule date arrays are normalized before display', () => {
+  const [schedule] = mapSchedules([{
+    id: 2,
+    deviceId: 3,
+    scheduleType: 'RENTAL',
+    status: 'EFFECTIVE',
+    occupyStartDate: [2026, 7, 29],
+    occupyEndDateExclusive: [2026, 8, 8],
+  }]);
+
+  assert.equal(schedule.startDate, '2026-07-29');
+  assert.equal(schedule.endDate, '2026-08-07');
+});
+
 test('fallback express codes match the XianGuanJia company list', () => {
   assert.equal(expressCodeFromName('顺丰速运'), 'shunfeng');
   assert.equal(expressCodeFromName('京东物流'), 'jd');

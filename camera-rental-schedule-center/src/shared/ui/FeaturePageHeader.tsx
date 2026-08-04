@@ -14,7 +14,7 @@ export function FeaturePageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <header className="relative overflow-hidden rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] px-4 py-5 sm:px-6 sm:py-6">
+    <header className="sc-feature-hero relative overflow-hidden rounded-2xl px-4 py-5 sm:px-6 sm:py-7">
       <div className="sc-subtle-grid pointer-events-none absolute inset-x-0 top-0 h-28 opacity-40" />
       <div className="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-3xl">

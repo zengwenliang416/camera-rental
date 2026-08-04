@@ -21,6 +21,7 @@ import {
   type RentalLogisticsProviderCredentialVO,
   type RentalLogisticsSecretAction,
 } from '../../../api/rental';
+import { Button } from '../../../shared/ui/Button';
 import { OperationResultPanel } from '../../../shared/ui/OperationResultPanel';
 import { StatusBadge } from '../../../shared/ui/StatusBadge';
 import type { LocalePreference } from '../../preferences/preferenceModel';
@@ -49,8 +50,6 @@ import {
   fieldClassName,
   OperationsPanel,
   PanelQueryBoundary,
-  primaryButtonClassName,
-  secondaryButtonClassName,
 } from './OperationsPanel';
 
 function ToggleField({
@@ -65,7 +64,7 @@ function ToggleField({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <label className="flex min-h-12 items-center justify-between gap-3 rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] px-3">
+    <label className="sc-glass-control flex min-h-12 items-center justify-between gap-3 rounded-xl px-3">
       <span className="text-[11px] font-bold text-[var(--sc-ink-soft)]">{label}</span>
       <input
         type="checkbox"
@@ -95,7 +94,7 @@ function SecretField({
 }) {
   const actions: RentalLogisticsSecretAction[] = ['KEEP', 'REPLACE', 'CLEAR'];
   return (
-    <div className="rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-3">
+    <div className="sc-workspace-card rounded-xl p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="flex items-center gap-2 text-[11px] font-black text-[var(--sc-ink)]">
           <KeyRound className="h-3.5 w-3.5 text-[var(--sc-blue)]" />
@@ -288,15 +287,16 @@ export function ProviderConfigPanel({
       description={operationsCopy(locale, 'provider.description')}
       actions={
         access.canQueryConfig ? (
-          <button
+          <Button
+            variant="outline"
+            size="md"
             type="button"
             onClick={() => void load()}
             disabled={query.state.status === 'loading'}
-            className={secondaryButtonClassName}
+            icon={<RefreshCw className={`h-3.5 w-3.5 ${query.state.status === 'loading' ? 'animate-spin' : ''}`} />}
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${query.state.status === 'loading' ? 'animate-spin' : ''}`} />
             {operationsCopy(locale, 'common.refresh')}
-          </button>
+          </Button>
         ) : undefined
       }
     >
@@ -341,7 +341,7 @@ export function ProviderConfigPanel({
             </div>
 
             <div className="grid gap-3 lg:grid-cols-2">
-              <label className="text-[10px] font-bold text-[var(--sc-ink-muted)]">
+              <label className="sc-field-label">
                 {operationsCopy(locale, 'provider.callbackBaseUrl')}
                 <input
                   value={draft.callbackBaseUrl}
@@ -353,7 +353,7 @@ export function ProviderConfigPanel({
                 />
               </label>
               <div className="grid grid-cols-2 gap-3">
-                <label className="text-[10px] font-bold text-[var(--sc-ink-muted)]">
+                <label className="sc-field-label">
                   {operationsCopy(locale, 'provider.minimumInterval')}
                   <input
                     type="number"
@@ -369,7 +369,7 @@ export function ProviderConfigPanel({
                     className={`${fieldClassName} mt-1.5`}
                   />
                 </label>
-                <label className="text-[10px] font-bold text-[var(--sc-ink-muted)]">
+                <label className="sc-field-label">
                   {operationsCopy(locale, 'provider.resultVersion')}
                   <input
                     value={draft.resultVersion}
@@ -393,7 +393,7 @@ export function ProviderConfigPanel({
               />
             </div>
 
-            <div className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-4">
+            <div className="sc-workspace-card rounded-2xl p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="text-xs font-black text-[var(--sc-ink)]">
@@ -403,15 +403,16 @@ export function ProviderConfigPanel({
                     {operationsCopy(locale, 'provider.credentials.description')}
                   </div>
                 </div>
-                <button
+                <Button
+                  variant="outline"
+                  size="md"
                   type="button"
                   disabled={!access.canUpdateConfig}
                   onClick={() => setCredentialDraft(emptyProviderCredentialDraft())}
-                  className={secondaryButtonClassName}
+                  icon={<Plus className="h-3.5 w-3.5" />}
                 >
-                  <Plus className="h-3.5 w-3.5" />
                   {operationsCopy(locale, 'provider.credential.new')}
-                </button>
+                </Button>
               </div>
 
               <div className="mt-3 grid gap-2">
@@ -423,7 +424,7 @@ export function ProviderConfigPanel({
                 {config.credentials.map((credential) => (
                   <div
                     key={credential.id}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface)] px-3 py-3"
+                    className="sc-glass-control flex flex-wrap items-center justify-between gap-3 rounded-xl px-3 py-3"
                   >
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
@@ -452,43 +453,46 @@ export function ProviderConfigPanel({
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      <button
+                      <Button
+                        variant="outline"
+                        size="sm"
                         type="button"
                         disabled={!access.canVerifyConfig}
                         onClick={() => void verifyCredential(credential.id)}
-                        className={secondaryButtonClassName}
+                        icon={<ShieldCheck className="h-3.5 w-3.5" />}
                       >
-                        <ShieldCheck className="h-3.5 w-3.5" />
                         {operationsCopy(locale, 'provider.verify')}
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
                         type="button"
                         disabled={!access.canUpdateConfig}
                         onClick={() =>
                           setCredentialDraft(providerCredentialDraftFromConfig(credential))}
-                        className={secondaryButtonClassName}
+                        icon={<Pencil className="h-3.5 w-3.5" />}
                       >
-                        <Pencil className="h-3.5 w-3.5" />
                         {operationsCopy(locale, 'common.edit')}
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant="danger"
+                        size="sm"
                         type="button"
                         disabled={!access.canUpdateConfig}
                         onClick={() => void deleteCredential(credential)}
-                        className={secondaryButtonClassName}
+                        icon={<Trash2 className="h-3.5 w-3.5" />}
                       >
-                        <Trash2 className="h-3.5 w-3.5" />
                         {operationsCopy(locale, 'common.delete')}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ))}
               </div>
 
               {credentialDraft && (
-                <div className="mt-4 space-y-3 rounded-lg border border-[var(--sc-blue)]/30 bg-[var(--sc-surface)] p-3">
+                <div className="sc-overlay-surface mt-4 space-y-3 rounded-xl p-3">
                   <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_8rem]">
-                    <label className="text-[10px] font-bold text-[var(--sc-ink-muted)]">
+                    <label className="sc-field-label">
                       {operationsCopy(locale, 'provider.credential.name')}
                       <input
                         value={credentialDraft.credentialName}
@@ -498,7 +502,7 @@ export function ProviderConfigPanel({
                         className={`${fieldClassName} mt-1.5`}
                       />
                     </label>
-                    <label className="text-[10px] font-bold text-[var(--sc-ink-muted)]">
+                    <label className="sc-field-label">
                       {operationsCopy(locale, 'provider.credential.order')}
                       <input
                         type="number"
@@ -542,25 +546,27 @@ export function ProviderConfigPanel({
                       current ? { ...current, apiKey } : current)}
                   />
                   <div className="flex justify-end gap-2">
-                    <button
+                    <Button
+                      variant="outline"
+                      size="md"
                       type="button"
                       onClick={() => setCredentialDraft(null)}
-                      className={secondaryButtonClassName}
                     >
                       {operationsCopy(locale, 'common.cancel')}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant="primary"
+                      size="md"
                       type="button"
                       disabled={!providerCredentialDraftIsValid(credentialDraft)
                         || credentialSave.state.status === 'loading'}
                       onClick={() => void saveCredential()}
-                      className={primaryButtonClassName}
-                    >
-                      {credentialSave.state.status === 'loading'
+                      icon={credentialSave.state.status === 'loading'
                         ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
                         : <Save className="h-3.5 w-3.5" />}
+                    >
                       {operationsCopy(locale, 'common.save')}
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
@@ -597,23 +603,24 @@ export function ProviderConfigPanel({
             )}
 
             <div className="flex flex-wrap justify-end gap-2">
-              <button
+              <Button
+                variant="outline"
+                size="md"
                 type="button"
                 onClick={() => void runVerify()}
                 disabled={!access.canVerifyConfig || verify.state.status === 'loading'}
                 title={!access.canVerifyConfig ? operationsCopy(locale, 'common.noPermission') : undefined}
-                className={secondaryButtonClassName}
+                icon={verify.state.status === 'loading'
+                  ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
+                  : <ShieldCheck className="h-3.5 w-3.5" />}
               >
-                {verify.state.status === 'loading' ? (
-                  <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <ShieldCheck className="h-3.5 w-3.5" />
-                )}
                 {verify.state.status === 'loading'
                   ? operationsCopy(locale, 'provider.verifying')
                   : operationsCopy(locale, 'provider.verify')}
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
                 type="button"
                 onClick={() => void submit()}
                 disabled={
@@ -622,17 +629,14 @@ export function ProviderConfigPanel({
                   || save.state.status === 'loading'
                 }
                 title={!access.canUpdateConfig ? operationsCopy(locale, 'common.noPermission') : undefined}
-                className={primaryButtonClassName}
+                icon={save.state.status === 'loading'
+                  ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
+                  : <Save className="h-3.5 w-3.5" />}
               >
-                {save.state.status === 'loading' ? (
-                  <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <Save className="h-3.5 w-3.5" />
-                )}
                 {save.state.status === 'loading'
                   ? operationsCopy(locale, 'common.saving')
                   : operationsCopy(locale, 'common.save')}
-              </button>
+              </Button>
             </div>
           </div>
         )}

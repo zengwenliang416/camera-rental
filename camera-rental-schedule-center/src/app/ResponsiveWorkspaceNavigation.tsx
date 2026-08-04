@@ -23,13 +23,13 @@ const NavButton = forwardRef<HTMLButtonElement, {
       type="button"
       onClick={onSelect}
       aria-current={active ? 'page' : undefined}
-      className={`relative flex items-center gap-2 text-xs font-bold transition ${
+      className={`relative flex items-center gap-2 rounded-lg text-xs font-bold transition ${
         mobile ? 'min-h-12 rounded-md border px-3 text-left' : 'min-h-10 px-3'
       } ${
         active
           ? mobile
             ? 'border-[var(--sc-blue)] bg-[var(--sc-blue-soft)] text-[var(--sc-blue)]'
-            : 'text-[var(--sc-brand)] after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:bg-[var(--sc-blue)]'
+            : 'sc-nav-active'
           : mobile
             ? 'border-[var(--sc-border)] bg-[var(--sc-surface)] text-[var(--sc-ink-soft)]'
             : 'text-[var(--sc-ink-muted)] hover:text-[var(--sc-ink)]'
@@ -85,7 +85,7 @@ export function ResponsiveWorkspaceNavigation({
 
   return (
     <>
-      <nav className="hidden min-w-0 flex-1 items-center justify-center xl:flex" aria-label="Workspace">
+      <nav className="sc-desktop-nav hidden min-w-0 flex-1 items-center justify-center xl:flex" aria-label="Workspace">
         {items.map((item) => (
           <NavButton key={item.id} item={item} active={activeTab === item.id} onSelect={() => select(item.id)} />
         ))}
@@ -96,12 +96,12 @@ export function ResponsiveWorkspaceNavigation({
         onClick={() => setOpen((current) => !current)}
         aria-expanded={open}
         aria-label={open ? t('nav.close') : t('nav.open')}
-        className="grid h-11 w-11 place-items-center rounded-md border border-[var(--sc-border)] bg-[var(--sc-surface)] text-[var(--sc-ink)] xl:hidden"
+        className="sc-glass-control grid h-11 w-11 place-items-center rounded-xl text-[var(--sc-ink)] xl:hidden"
       >
         {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
       </button>
       {open && (
-        <div className="sc-mobile-nav-panel absolute inset-x-0 top-full border-b border-[var(--sc-border)] bg-[var(--sc-surface)] p-3 shadow-[var(--sc-shadow)] xl:hidden">
+        <div className="sc-mobile-nav-panel sc-glass-strong absolute inset-x-0 top-full border-b border-[var(--sc-glass-border)] p-3 shadow-[var(--sc-shadow)] xl:hidden">
           <nav className="mx-auto grid max-w-[1600px] grid-cols-2 gap-2 sm:grid-cols-3" aria-label="Workspace mobile">
             {items.map((item, index) => (
               <NavButton ref={index === 0 ? firstItemRef : undefined} key={item.id} item={item} active={activeTab === item.id} onSelect={() => select(item.id)} mobile />

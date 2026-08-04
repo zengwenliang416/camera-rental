@@ -1,6 +1,7 @@
 import { ChevronDown, LogOut, UserRound } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { usePreferences } from '../features/preferences/PreferenceContext';
+import { Button } from '../shared/ui/Button';
 import { LocaleToggle } from './LocaleToggle';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -52,7 +53,8 @@ export function AccountAndPreferenceMenu({
         onClick={() => setOpen((current) => !current)}
         aria-expanded={open}
         aria-label={t('action.account')}
-        className="flex min-h-11 items-center gap-2 rounded-md border border-[var(--sc-border)] bg-[var(--sc-surface)] p-1.5 pr-2 text-[var(--sc-ink)]"
+        data-login-return-focus
+        className="sc-glass-control flex min-h-11 items-center gap-2 rounded-xl p-1.5 pr-2 text-[var(--sc-ink)]"
       >
         {user?.avatar ? (
           <img src={user.avatar} alt={displayName} className="h-8 w-8 rounded-md object-cover" />
@@ -61,31 +63,29 @@ export function AccountAndPreferenceMenu({
             {displayName.slice(0, 2).toUpperCase()}
           </span>
         )}
-        <span className="hidden max-w-28 truncate text-left text-[13px] font-semibold leading-5 md:block">{displayName}</span>
-        <ChevronDown className="hidden h-3.5 w-3.5 text-[var(--sc-ink-muted)] sm:block" />
+        <span className="hidden max-w-28 truncate text-left text-[13px] font-semibold leading-5 2xl:block">{displayName}</span>
+        <ChevronDown className="hidden h-3.5 w-3.5 text-[var(--sc-ink-muted)] 2xl:block" />
       </button>
 
       {open && (
         <>
           <button type="button" aria-label="Close menu" className="fixed inset-0 z-40 cursor-default" onClick={() => closeMenu(true)} />
-          <section role="dialog" aria-label={t('action.account')} className="absolute right-0 z-50 mt-2 w-[min(344px,calc(100vw-24px))] rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4 shadow-[var(--sc-shadow)]">
+          <section role="dialog" aria-label={t('action.account')} className="sc-popover absolute right-0 z-50 mt-2 w-[min(344px,calc(100vw-24px))] rounded-2xl p-4">
             <div className="mb-4 border-b border-[var(--sc-border)] pb-4">
               <strong className="block text-[15px] font-semibold leading-6 text-[var(--sc-ink)]">{displayName}</strong>
               <span className="sc-data mt-1 block text-[11px] leading-4 text-[var(--sc-ink-muted)]">ID: {user?.id ?? '-'}</span>
             </div>
-            <div className="space-y-4">
+            <div className="grid gap-4">
               <ThemeToggle firstButtonRef={firstChoiceRef} />
               <LocaleToggle />
             </div>
             <div className="mt-4 grid grid-cols-2 gap-2 border-t border-[var(--sc-border)] pt-4">
-              <button type="button" onClick={() => { closeMenu(); onRelogin(); }} className="flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[var(--sc-border)] px-3 text-[13px] font-semibold leading-5 text-[var(--sc-blue)]">
-                <UserRound className="h-4 w-4" />
+              <Button onClick={() => { closeMenu(); onRelogin(); }} size="sm" icon={<UserRound />}>
                 {t('action.login')}
-              </button>
-              <button type="button" onClick={() => { closeMenu(); onLogout(); }} className="flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[color-mix(in_srgb,var(--sc-red)_25%,var(--sc-border))] px-3 text-[13px] font-semibold leading-5 text-[var(--sc-red)]">
-                <LogOut className="h-4 w-4" />
+              </Button>
+              <Button onClick={() => { closeMenu(); onLogout(); }} variant="danger" size="sm" icon={<LogOut />}>
                 {t('action.logout')}
-              </button>
+              </Button>
             </div>
           </section>
         </>

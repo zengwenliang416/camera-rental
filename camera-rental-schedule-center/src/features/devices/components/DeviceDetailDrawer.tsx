@@ -47,9 +47,9 @@ function ScheduleHistory({
           description={emptyDetail}
         />
       ) : (
-        <div className="space-y-2">
+        <div className="grid gap-2">
           {blocks.map((block) => (
-            <article key={block.id} className="rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-3">
+            <article key={block.id} className="sc-soft-panel rounded-xl p-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <IdentifierText value={block.orderNumber || block.statusText || block.type} emphasis />
                 <StatusBadge tone={block.type === 'REPAIR' ? 'red' : block.type === 'LOCK' ? 'neutral' : 'blue'}>
@@ -115,8 +115,8 @@ export function DeviceDetailDrawer() {
       closeLabel={t('deviceDetail.close')}
       onClose={() => openDeviceDetail(null)}
     >
-      <div className="space-y-5">
-        <section className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4">
+      <div className="grid gap-5">
+        <section className="sc-workspace-card rounded-2xl p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="grid gap-2 sm:grid-cols-2">
               <IdentifierText value={device.unitCode} emphasis />
@@ -132,7 +132,7 @@ export function DeviceDetailDrawer() {
               hint={t('deviceDetail.serverRange')}
               tone="blue"
             />
-            <div className="rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] px-3 py-2.5">
+            <div className="sc-soft-panel rounded-xl px-3 py-2.5">
               <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--sc-ink-muted)]">
                 {t('deviceDetail.expectedAvailable')}
               </span>
@@ -142,7 +142,7 @@ export function DeviceDetailDrawer() {
             </div>
           </div>
           {device.currentOrderId && (
-            <div className="mt-4 grid gap-2 border-t border-[var(--sc-border)] pt-4 text-[11px] text-[var(--sc-ink-soft)] sm:grid-cols-2">
+            <div className="mt-4 grid gap-2 border-t border-[var(--sc-glass-hairline)] pt-4 text-[11px] text-[var(--sc-ink-soft)] sm:grid-cols-2">
               <span>{t('deviceDetail.order')} <span className="sc-data font-bold text-[var(--sc-ink)]">{device.currentOrderId}</span></span>
               <span>{t('deviceDetail.customer')} {device.currentCustomer || '-'}</span>
               {device.logisticsNumber && <span className="sm:col-span-2">{t('deviceDetail.waybill')} <span className="sc-data font-bold text-[var(--sc-ink)]">{device.logisticsNumber}</span></span>}
@@ -165,7 +165,7 @@ export function DeviceDetailDrawer() {
         />
 
         {presentation.note && (
-          <section className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-amber-soft)] p-4">
+          <section className="sc-workspace-card rounded-2xl border-[color-mix(in_srgb,var(--sc-amber)_25%,var(--sc-border))] p-4">
             <h3 className="flex items-center gap-2 text-xs font-black text-[var(--sc-ink)]">
               <Wrench className="h-4 w-4 text-[var(--sc-amber)]" />
               {presentation.note.kind === 'warehouse' ? t('devices.warehouse') : t('deviceDetail.note')}
@@ -189,7 +189,7 @@ export function DeviceDetailDrawer() {
           icon="past"
         />
 
-        <p className="rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-3 text-[10px] leading-5 text-[var(--sc-ink-muted)]">
+        <p className="sc-soft-panel rounded-xl p-3 text-[10px] leading-5 text-[var(--sc-ink-muted)]">
           {t('deviceDetail.readOnlyBoundary')}
         </p>
       </div>

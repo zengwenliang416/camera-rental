@@ -14,13 +14,13 @@ export function DateRangeDisplay({
   tone?: 'neutral' | 'blue' | 'amber';
 }) {
   const toneClass = {
-    neutral: 'border-[var(--sc-border)] bg-[var(--sc-surface-soft)]',
+    neutral: 'border-[var(--sc-glass-hairline)] bg-[var(--sc-glass-soft)]',
     blue: 'border-[color-mix(in_srgb,var(--sc-blue)_24%,var(--sc-border))] bg-[var(--sc-blue-soft)]',
     amber: 'border-[color-mix(in_srgb,var(--sc-amber)_28%,var(--sc-border))] bg-[var(--sc-amber-soft)]',
   }[tone];
 
   return (
-    <div className={`rounded-lg border px-3 py-2.5 ${toneClass}`}>
+    <div className={`rounded-xl border px-3 py-2.5 shadow-[inset_0_1px_0_color-mix(in_srgb,white_60%,transparent)] ${toneClass}`}>
       <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--sc-ink-muted)]">
         <CalendarRange className="h-3.5 w-3.5" />
         <span>{label}</span>

@@ -53,10 +53,10 @@ export interface RentalScheduleVO {
   rentalOrderItemId?: number;
   scheduleType: string;
   status: string;
-  billableStartDate?: string;
-  billableEndDate?: string;
-  occupyStartDate: string;
-  occupyEndDateExclusive: string;
+  billableStartDate?: RentalDateValue;
+  billableEndDate?: RentalDateValue;
+  occupyStartDate: RentalDateValue;
+  occupyEndDateExclusive: RentalDateValue;
 }
 
 export type RentalDateValue =

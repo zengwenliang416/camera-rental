@@ -2,6 +2,7 @@ import { Check, ShieldAlert } from 'lucide-react';
 
 import type { DeviceInstance, ScheduleBlock } from '../../../types';
 import { checkDeviceAvailability, inclusiveDateFromExclusive } from '../../../lib/scheduleEngine';
+import { Button } from '../../../shared/ui/Button';
 
 export function AllocationCandidatePicker({
   modelId,
@@ -49,26 +50,27 @@ export function AllocationCandidatePicker({
   const availableCount = candidates.filter((candidate) => candidate.availability.available).length;
 
   return (
-    <section className="rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-ink)] p-3 text-white">
+    <section className="rounded-2xl border border-white/10 bg-[var(--sc-inverse)] p-3 text-[var(--sc-inverse-ink)] shadow-[var(--sc-glass-shadow)]">
       <header className="flex items-center justify-between gap-3 border-b border-white/10 pb-2">
         <div>
           <strong className="text-xs">{labels.candidates}</strong>
-          <span className="ml-2 text-[10px] text-zinc-400">
+          <span className="ml-2 text-[10px] text-[var(--sc-inverse-muted)]">
             {availableCount} {labels.available}
           </span>
         </div>
-        <button
-          type="button"
+        <Button
           onClick={onClose}
-          className="min-h-11 rounded-md px-3 text-[10px] font-bold text-zinc-300 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-300/40"
+          variant="ghost"
+          size="sm"
+          className="text-[var(--sc-inverse-muted)] hover:bg-white/10"
         >
           {labels.close}
-        </button>
+        </Button>
       </header>
 
       {availableCount === 0 ? (
-        <p className="mt-3 flex items-start gap-2 rounded-md bg-white/5 p-3 text-[11px] leading-5 text-zinc-300">
-          <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
+        <p className="mt-3 flex items-start gap-2 rounded-xl bg-white/5 p-3 text-[11px] leading-5 text-[var(--sc-inverse-muted)]">
+          <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-[var(--sc-amber)]" />
           {labels.noCandidates}
         </p>
       ) : (
@@ -83,12 +85,12 @@ export function AllocationCandidatePicker({
                 type="button"
                 disabled={disabled}
                 onClick={() => onToggle(device.id)}
-                className={`min-h-16 rounded-lg border p-2 text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-300/40 disabled:cursor-not-allowed ${
+                className={`sc-button min-h-16 rounded-xl border p-2 text-left disabled:cursor-not-allowed ${
                   selected
-                    ? 'border-blue-400 bg-blue-600 text-white'
+                    ? 'border-[var(--sc-blue)] bg-[var(--sc-blue)] text-[var(--sc-on-accent)]'
                     : availability.available
-                      ? 'border-white/15 bg-white/8 text-zinc-100 hover:bg-white/12'
-                      : 'border-white/5 bg-white/3 text-zinc-500 opacity-70'
+                      ? 'border-white/15 bg-white/8 text-[var(--sc-inverse-ink)] hover:bg-white/12'
+                      : 'border-white/5 bg-white/3 text-[var(--sc-inverse-muted)] opacity-70'
                 }`}
               >
                 <span className="flex items-center justify-between gap-2 text-xs font-black">
@@ -97,7 +99,7 @@ export function AllocationCandidatePicker({
                 </span>
                 <span className="sc-data mt-1 block truncate text-[9px]">{device.sn}</span>
                 {!availability.available && (
-                  <span className="mt-1 block truncate text-[9px] text-rose-300">
+                  <span className="mt-1 block truncate text-[9px] text-[var(--sc-red)]">
                     {availability.reason}
                   </span>
                 )}

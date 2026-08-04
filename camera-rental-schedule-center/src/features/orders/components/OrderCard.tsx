@@ -23,6 +23,7 @@ import {
 } from '../orderModel';
 import type { DeliveryOrderSummary } from '../../tracking/trackingModel';
 import { DeliveryTrackingSummaryBadges } from '../../tracking/components/DeliveryTrackingSummaryBadges';
+import { Button } from '../../../shared/ui/Button';
 
 export function OrderCard({
   order,
@@ -71,8 +72,8 @@ export function OrderCard({
   const ranges = orderDisplayRanges(order);
 
   return (
-    <article className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4 sm:p-5">
-      <header className="flex flex-col gap-3 border-b border-[var(--sc-border)] pb-4 lg:flex-row lg:items-start lg:justify-between">
+    <article className="sc-workspace-card overflow-hidden rounded-2xl p-4 sm:p-5">
+      <header className="flex flex-col gap-3 border-b border-[var(--sc-glass-hairline)] pb-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0 space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <StatusBadge tone={orderChannelTone(order.channel)}>{labels.channel[order.channel]}</StatusBadge>
@@ -81,7 +82,7 @@ export function OrderCard({
           <IdentifierText value={order.orderNumber} emphasis />
           <p className="text-[10px] text-[var(--sc-ink-muted)]">{labels.created} {order.createdTime}</p>
         </div>
-        <div className="grid max-w-xl gap-2 rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-3 text-left lg:min-w-80">
+        <div className="sc-soft-panel grid max-w-xl gap-2 rounded-xl p-3 text-left lg:min-w-80">
           <div className="flex items-start gap-2">
             <UserRound className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--sc-blue)]" />
             <div className="min-w-0">
@@ -128,7 +129,7 @@ export function OrderCard({
           occupied={ranges.occupied}
         />
 
-        <section className="rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-3">
+        <section className="sc-soft-panel rounded-xl p-3">
           <h3 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.1em] text-[var(--sc-ink-muted)]">
             <Cpu className="h-3.5 w-3.5" />
             {labels.requirements}
@@ -139,7 +140,7 @@ export function OrderCard({
                 .map((deviceId) => devices.find((device) => device.id === deviceId))
                 .filter((device): device is DeviceInstance => Boolean(device));
               return (
-                <div key={`${item.modelId}-${item.rentalOrderItemId || 'pending'}`} className="rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface)] p-3">
+                <div key={`${item.modelId}-${item.rentalOrderItemId || 'pending'}`} className="rounded-xl border border-[var(--sc-glass-hairline)] bg-[var(--sc-glass-soft)] p-3">
                   <div className="flex items-start justify-between gap-2">
                     <strong className="text-xs text-[var(--sc-ink)]">{item.modelName}</strong>
                     <StatusBadge tone={assigned.length >= item.quantity ? 'green' : 'amber'}>
@@ -166,35 +167,30 @@ export function OrderCard({
         </section>
       </div>
 
-      <footer className="mt-4 flex flex-col gap-2 border-t border-[var(--sc-border)] pt-4 sm:flex-row sm:flex-wrap sm:items-center">
+      <footer className="mt-4 flex flex-col gap-2 border-t border-[var(--sc-glass-hairline)] pt-4 sm:flex-row sm:flex-wrap sm:items-center">
         {trackingSummary && (
-          <button
-            type="button"
+          <Button
             onClick={onOpenTracking}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)] px-4 text-xs font-black text-[var(--sc-ink)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]"
+            icon={<Truck />}
           >
-            <Truck className="h-4 w-4 text-[var(--sc-blue)]" />
             <span>{labels.openTracking}</span>
             <DeliveryTrackingSummaryBadges summary={trackingSummary} />
-          </button>
+          </Button>
         )}
         {actions.canShip && (
-          <button type="button" onClick={onShip} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[var(--sc-ink)] px-4 text-xs font-black text-[var(--sc-surface)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]">
-            <Send className="h-4 w-4" />
+          <Button onClick={onShip} variant="primary" icon={<Send />}>
             {labels.ship}
-          </button>
+          </Button>
         )}
         {actions.canAssign && (
-          <button type="button" onClick={onAssign} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-blue-soft)] px-4 text-xs font-black text-[var(--sc-blue)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]">
-            <Sparkles className="h-4 w-4" />
+          <Button onClick={onAssign} variant="outline" icon={<Sparkles />}>
             {labels.assign}
-          </button>
+          </Button>
         )}
         {actions.detailDeviceId && (
-          <button type="button" onClick={() => onOpenDevice(actions.detailDeviceId!)} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[var(--sc-border-strong)] px-4 text-xs font-bold text-[var(--sc-ink)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]">
-            <CalendarClock className="h-4 w-4" />
+          <Button onClick={() => onOpenDevice(actions.detailDeviceId!)} variant="glass" icon={<CalendarClock />}>
             {labels.openDevice}
-          </button>
+          </Button>
         )}
         {actions.returnRequiresOperationalFlow && (
           <span className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[var(--sc-amber-soft)] px-3 text-[10px] font-semibold text-[var(--sc-ink-soft)]">

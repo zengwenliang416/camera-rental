@@ -17,7 +17,7 @@ export function DeviceQrPanel({
   const { t } = usePreferences();
 
   return (
-    <section className="grid gap-4 rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+    <section className="sc-soft-panel grid gap-4 rounded-2xl p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
       <div>
         <span className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-[var(--sc-blue)]">
           <QrCode className="h-3.5 w-3.5" />
@@ -30,7 +30,7 @@ export function DeviceQrPanel({
           {t('deviceDetail.qrRenderOnly')}
         </p>
       </div>
-      <div className="grid min-h-28 min-w-28 place-items-center rounded-xl border border-[var(--sc-border)] bg-white p-3">
+      <div className="grid min-h-28 min-w-28 place-items-center rounded-2xl border border-[var(--sc-glass-border)] bg-white p-3 shadow-[var(--sc-glass-shadow-soft)]">
         {state.status === 'ready' ? (
           <QRCodeSVG
             value={state.payload}

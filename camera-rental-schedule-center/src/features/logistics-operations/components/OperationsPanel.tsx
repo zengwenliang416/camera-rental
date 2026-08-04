@@ -1,6 +1,7 @@
 import { AlertTriangle, LoaderCircle, LockKeyhole } from 'lucide-react';
 import type { ReactNode } from 'react';
 
+import { Button } from '../../../shared/ui/Button';
 import { EmptyState } from '../../../shared/ui/EmptyState';
 import type { OperationsResourceState } from '../operationsState';
 import {
@@ -23,15 +24,15 @@ export function OperationsPanel({
   className?: string;
 }) {
   return (
-    <section className={`sc-surface min-w-0 overflow-hidden rounded-xl ${className}`}>
-      <header className="flex flex-col gap-3 border-b border-[var(--sc-border)] px-4 py-4 sm:flex-row sm:items-start sm:justify-between">
+    <section className={`sc-workspace-card min-w-0 overflow-hidden rounded-2xl ${className}`}>
+      <header className="sc-panel-header flex flex-col gap-3 border-b px-4 py-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <h2 className="text-sm font-black text-[var(--sc-ink)]">{title}</h2>
           <p className="mt-1 text-[10px] leading-5 text-[var(--sc-ink-muted)]">{description}</p>
         </div>
         {actions && <div className="flex shrink-0 flex-wrap gap-2">{actions}</div>}
       </header>
-      <div className="min-w-0 p-4">{children}</div>
+      <div className="min-w-0 p-4 sm:p-5">{children}</div>
     </section>
   );
 }
@@ -76,7 +77,7 @@ export function PanelQueryBoundary<T>({
   }
   if (state.status === 'error' && state.data === null) {
     return (
-      <div role="alert" className="rounded-lg border border-[var(--sc-red)] bg-[var(--sc-red-soft)] p-4">
+      <div role="alert" className="sc-overlay-surface rounded-xl border-[var(--sc-red)]/35 p-4">
         <div className="flex items-start gap-2">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[var(--sc-red)]" />
           <div>
@@ -88,13 +89,14 @@ export function PanelQueryBoundary<T>({
             </p>
           </div>
         </div>
-        <button
-          type="button"
+        <Button
+          variant="outline"
+          size="sm"
           onClick={onRetry}
-          className="mt-3 min-h-10 rounded-lg border border-[var(--sc-border-strong)] px-3 text-xs font-bold"
+          className="mt-3"
         >
           {operationsCopy(locale, 'common.retry')}
-        </button>
+        </Button>
       </div>
     );
   }
@@ -120,10 +122,4 @@ export function PanelQueryBoundary<T>({
 }
 
 export const fieldClassName =
-  'min-h-11 w-full rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] px-3 text-xs text-[var(--sc-ink)] placeholder:text-[var(--sc-ink-muted)] disabled:cursor-not-allowed disabled:opacity-55';
-
-export const secondaryButtonClassName =
-  'inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[var(--sc-border-strong)] px-3 text-xs font-bold text-[var(--sc-ink)] disabled:cursor-not-allowed disabled:opacity-45';
-
-export const primaryButtonClassName =
-  'inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[var(--sc-ink)] px-4 text-xs font-bold text-[var(--sc-surface)] disabled:cursor-not-allowed disabled:opacity-45';
+  'sc-form-control min-h-11 w-full rounded-xl border px-3 text-xs text-[var(--sc-ink)] placeholder:text-[var(--sc-ink-muted)] disabled:cursor-not-allowed disabled:opacity-55';

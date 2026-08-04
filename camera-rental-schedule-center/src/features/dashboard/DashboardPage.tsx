@@ -19,6 +19,7 @@ import { StatusBadge } from '../../shared/ui/StatusBadge';
 import { DashboardQueueCard, type QueueRow } from './DashboardQueueCard';
 import { buildDashboardReadModel, formatSyncSummary } from './dashboardModel';
 import { canAccessTab } from '../../app/accessModel';
+import { Button } from '../../shared/ui/Button';
 
 function orderItemsLabel(items: Array<{ modelName: string; quantity: number }>) {
   return items.length > 0
@@ -162,7 +163,7 @@ export function DashboardPage() {
   }));
 
   return (
-    <div className="space-y-3">
+    <div className="sc-page-stack space-y-4">
       <FeaturePageHeader
         eyebrow={t('dashboard.eyebrow')}
         title={t('dashboard.title')}
@@ -178,16 +179,14 @@ export function DashboardPage() {
         actions={(
           <>
             {canOpen('schedule') && (
-              <button type="button" onClick={() => setActiveTab('schedule')} className="inline-flex min-h-11 items-center gap-2 rounded-md border border-[var(--sc-border-strong)] bg-[var(--sc-surface)] px-3 text-xs font-bold text-[var(--sc-ink)]">
-                <CalendarDays className="h-3.5 w-3.5 text-[var(--sc-blue)]" />
+              <Button onClick={() => setActiveTab('schedule')} variant="glass" icon={<CalendarDays />}>
                 {t('action.openSchedule')}
-              </button>
+              </Button>
             )}
             {canOpen('binding') && (
-              <button type="button" onClick={() => setActiveTab('binding')} className="inline-flex min-h-11 items-center gap-2 rounded-md bg-[var(--sc-brand)] px-3 text-xs font-bold text-[var(--sc-surface)]">
-                <Send className="h-3.5 w-3.5" />
+              <Button onClick={() => setActiveTab('binding')} variant="primary" icon={<Send />}>
                 {t('action.openShipping')}
-              </button>
+              </Button>
             )}
           </>
         )}
@@ -195,7 +194,7 @@ export function DashboardPage() {
 
       <OperationalMetricGrid metrics={metrics} />
 
-      <section className="sc-surface rounded-lg p-3">
+      <section className="sc-workspace-card rounded-2xl p-4">
         <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="text-sm font-black text-[var(--sc-ink)]">{t('dashboard.queueTitle')}</h2>
@@ -220,7 +219,7 @@ export function DashboardPage() {
       </section>
 
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,0.7fr)]">
-        {canOpen('devices') && <section className="sc-surface rounded-lg p-4">
+        {canOpen('devices') && <section className="sc-workspace-card rounded-2xl p-4">
           <div className="flex items-start gap-3">
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-[var(--sc-amber-soft)] text-[var(--sc-amber)]">
               <Cpu className="h-4 w-4" />
@@ -229,14 +228,15 @@ export function DashboardPage() {
               <p className="sc-data text-[9px] font-bold tracking-[0.14em] text-[var(--sc-amber)]">{t('dashboard.registeredBoundary')}</p>
               <h2 className="mt-1 text-sm font-black text-[var(--sc-ink)]">{t('dashboard.boundaryTitle')}</h2>
               <p className="mt-2 text-[11px] leading-5 text-[var(--sc-ink-soft)]">{t('dashboard.boundaryBody')}</p>
-              <button type="button" onClick={() => setActiveTab('devices')} className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-md border border-[var(--sc-border)] px-3 text-xs font-bold text-[var(--sc-blue)]">
-                <Cpu className="h-3.5 w-3.5" />
+              <Button onClick={() => setActiveTab('devices')} className="mt-3" icon={<Cpu />}>
                 {t('action.openDevices')}
-              </button>
+              </Button>
             </div>
           </div>
         </section>}
-        <section className="rounded-lg border border-[var(--sc-border)] bg-[var(--sc-brand)] p-4 text-[var(--sc-surface)]">
+        <section className="relative overflow-hidden rounded-2xl border border-[color-mix(in_srgb,var(--sc-brand)_45%,var(--sc-border))] bg-[var(--sc-brand)] p-4 text-[var(--sc-surface)] shadow-[var(--sc-glass-shadow-soft)]">
+          <div className="pointer-events-none absolute -right-14 -top-16 size-40 rounded-full bg-white/10 blur-2xl" />
+          <div className="relative">
           <div className="flex items-center gap-2">
             <ClipboardCheck className="h-4 w-4" />
             <h2 className="text-sm font-black">{t('dashboard.healthTitle')}</h2>
@@ -246,17 +246,18 @@ export function DashboardPage() {
           </p>
           <div className="mt-4 grid grid-cols-2 gap-2">
             {canOpen('devices') && (
-              <button type="button" onClick={() => setActiveTab('devices')} className="min-h-11 rounded-md border border-white/20 bg-white/10 px-2 text-xs font-bold">
+              <button type="button" onClick={() => setActiveTab('devices')} className="sc-button min-h-11 rounded-xl border border-white/20 bg-white/10 px-2 text-xs font-bold">
                 <Wrench className="mr-1.5 inline h-3.5 w-3.5" />
                 {model.maintenanceDevices.length} {t('unit.device')}
               </button>
             )}
             {canOpen('exceptions') && (
-              <button type="button" onClick={() => setActiveTab('exceptions')} className="min-h-11 rounded-md border border-white/20 bg-white/10 px-2 text-xs font-bold">
+              <button type="button" onClick={() => setActiveTab('exceptions')} className="sc-button min-h-11 rounded-xl border border-white/20 bg-white/10 px-2 text-xs font-bold">
                 <AlertTriangle className="mr-1.5 inline h-3.5 w-3.5" />
                 {model.openReviews.length} {t('unit.item')}
               </button>
             )}
+          </div>
           </div>
         </section>
       </div>

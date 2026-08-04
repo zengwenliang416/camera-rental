@@ -58,10 +58,10 @@ function PackageSelector({
               key={item.deliveryId}
               type="button"
               onClick={() => onSelect(item.deliveryId)}
-              className={`rounded-lg border p-3 text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)] ${
+              className={`sc-button rounded-xl border p-3 text-left ${
                 selectedDeliveryId === item.deliveryId
-                  ? 'border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)]'
-                  : 'border-[var(--sc-border)] bg-[var(--sc-surface)]'
+                  ? 'border-[var(--sc-blue)] bg-[var(--sc-blue-soft)]'
+                  : 'border-[var(--sc-glass-hairline)] bg-[var(--sc-glass-soft)]'
               }`}
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -193,7 +193,7 @@ export function DeliveryTrackingDrawer({
           />
         ) : (
           <>
-            <section className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4">
+            <section className="sc-workspace-card rounded-2xl p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
@@ -260,7 +260,7 @@ export function DeliveryTrackingDrawer({
                 </StatusBadge>
               </div>
               {detailState?.refreshResult && (
-                <div className="mt-4 rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-3 text-[11px] text-[var(--sc-ink-soft)]">
+                <div className="sc-soft-panel mt-4 rounded-xl p-3 text-[11px] text-[var(--sc-ink-soft)]">
                   <strong className="block text-[var(--sc-ink)]">{trackingCopy(locale, 'drawer.refreshResult')}</strong>
                   <p className="mt-1">
                     {deliveryCodeLabel(locale, detailState.refreshResult.reason)}
@@ -275,7 +275,7 @@ export function DeliveryTrackingDrawer({
               )}
             </section>
 
-            <section className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4">
+            <section className="sc-workspace-card rounded-2xl p-4">
               <h3 className="text-sm font-black text-[var(--sc-ink)]">
                 {trackingCopy(locale, 'drawer.devices')}
               </h3>
@@ -290,7 +290,7 @@ export function DeliveryTrackingDrawer({
               </div>
             </section>
 
-            <section className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4">
+            <section className="sc-workspace-card rounded-2xl p-4">
               <h3 className="text-sm font-black text-[var(--sc-ink)]">
                 {trackingCopy(locale, 'drawer.risks')}
               </h3>
@@ -303,7 +303,7 @@ export function DeliveryTrackingDrawer({
                   {detailRisks.map((risk) => (
                     <article
                       key={`${detail.deliveryId}-${risk.code}`}
-                      className="rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-3"
+                      className="sc-soft-panel rounded-xl p-3"
                     >
                       <div className="flex flex-wrap items-center gap-2">
                         <StatusBadge tone={risk.severity === 'high' ? 'red' : risk.severity === 'medium' ? 'amber' : 'neutral'}>
@@ -327,7 +327,7 @@ export function DeliveryTrackingDrawer({
               )}
             </section>
 
-            <section className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4">
+            <section className="sc-workspace-card rounded-2xl p-4">
               <h3 className="text-sm font-black text-[var(--sc-ink)]">
                 {trackingCopy(locale, 'drawer.timeline')}
               </h3>

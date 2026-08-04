@@ -15,7 +15,7 @@ export interface OperationalMetric {
 
 export function OperationalMetricGrid({ metrics }: { metrics: OperationalMetric[] }) {
   return (
-    <section className="grid grid-cols-2 gap-2 lg:grid-cols-4 2xl:grid-cols-6" aria-label="Operational metrics">
+    <section className="sc-metric-group grid grid-cols-1" aria-label="Operational metrics">
       {metrics.map((metric) => <OperationalMetricCard key={metric.id} metric={metric} />)}
     </section>
   );

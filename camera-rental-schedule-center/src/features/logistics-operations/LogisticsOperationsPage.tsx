@@ -23,7 +23,7 @@ export default function LogisticsOperationsPage() {
 
   if (!hasLogisticsOperationsAccess(permissions)) {
     return (
-      <div className="sc-surface grid min-h-[55vh] place-items-center rounded-xl p-6">
+      <div className="sc-workspace-card grid min-h-[55vh] place-items-center rounded-2xl p-6">
         <EmptyState
           icon={<LockKeyhole className="h-4 w-4" />}
           title={operationsCopy(locale, 'page.noAccess')}
@@ -34,7 +34,7 @@ export default function LogisticsOperationsPage() {
   }
 
   return (
-    <div className="min-w-0 space-y-4">
+    <div className="sc-page-stack min-w-0 space-y-4">
       <FeaturePageHeader
         eyebrow={operationsCopy(locale, 'page.eyebrow')}
         title={operationsCopy(locale, 'page.title')}

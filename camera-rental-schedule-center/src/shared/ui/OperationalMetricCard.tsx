@@ -12,33 +12,34 @@ const toneStyles: Record<StatusTone, string> = {
 
 function MetricContent({ metric }: { metric: OperationalMetric }) {
   return (
-    <>
+    <div className="flex h-full min-w-0 flex-col justify-between">
       <div className="flex items-start justify-between gap-2">
-        <span className={`grid h-8 w-8 place-items-center rounded-md ${toneStyles[metric.tone]}`}>
+        <span className={`grid size-9 place-items-center rounded-xl ${toneStyles[metric.tone]}`}>
           {metric.icon}
         </span>
         {metric.detail && (
-          <span className="sc-data text-[9px] text-[var(--sc-ink-muted)]">{metric.detail}</span>
+          <span className="sc-data rounded-full border border-[var(--sc-glass-hairline)] bg-[var(--sc-glass-soft)] px-2 py-1 text-[9px] text-[var(--sc-ink-muted)]">
+            {metric.detail}
+          </span>
         )}
       </div>
       <div className="mt-4">
         <div className="flex items-baseline gap-1">
-          <strong className="sc-data text-2xl tracking-[-0.05em] text-[var(--sc-ink)]">
+          <strong className="sc-data text-[1.7rem] leading-none tracking-[-0.055em] text-[var(--sc-ink)]">
             {metric.value}
           </strong>
           <span className="text-[10px] text-[var(--sc-ink-muted)]">{metric.unit}</span>
         </div>
         <p className="mt-1 text-[11px] font-semibold text-[var(--sc-ink-soft)]">{metric.label}</p>
       </div>
-    </>
+    </div>
   );
 }
 
 export function OperationalMetricCard({ metric }: { key?: Key; metric: OperationalMetric }) {
-  const className =
-    'sc-surface min-h-32 rounded-lg p-3 text-left transition hover:border-[var(--sc-border-strong)]';
+  const className = 'sc-metric-card min-h-36 p-4 text-left';
   return metric.onSelect ? (
-    <button type="button" onClick={metric.onSelect} className={`${className} hover:-translate-y-0.5`}>
+    <button type="button" onClick={metric.onSelect} className={`${className} w-full`}>
       <MetricContent metric={metric} />
     </button>
   ) : (

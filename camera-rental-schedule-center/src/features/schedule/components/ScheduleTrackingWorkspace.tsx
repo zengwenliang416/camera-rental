@@ -154,12 +154,12 @@ export function ScheduleTrackingMetrics({
   return (
     <section
       aria-label={trackingCopy(locale, 'workspace.metrics')}
-      className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5"
+      className="sc-metric-group"
     >
       {cards.map(({ label, value, detail, icon: Icon, tone }) => (
         <article
           key={label}
-          className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4"
+          className="sc-metric-card p-4"
         >
           <div className="flex items-center justify-between gap-3">
             <span className="text-[11px] font-semibold text-[var(--sc-ink-muted)]">{label}</span>
@@ -201,8 +201,8 @@ export function CurrentWindowTracking({
 
   return (
     <aside className="grid content-start gap-3">
-      <section className="overflow-hidden rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)]">
-        <header className="flex items-center justify-between gap-3 border-b border-[var(--sc-border)] px-4 py-3">
+      <section className="sc-workspace-card overflow-hidden rounded-2xl">
+        <header className="sc-panel-header flex items-center justify-between gap-3 border-b px-4 py-3">
           <strong className="text-xs text-[var(--sc-ink)]">
             {trackingCopy(locale, 'workspace.current')}
           </strong>
@@ -274,8 +274,8 @@ export function CurrentWindowTracking({
         )}
       </section>
 
-      <section className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)]">
-        <header className="border-b border-[var(--sc-border)] px-4 py-3">
+      <section className="sc-workspace-card rounded-2xl">
+        <header className="sc-panel-header border-b px-4 py-3">
           <strong className="text-xs text-[var(--sc-ink)]">
             {trackingCopy(locale, 'workspace.boundary')}
           </strong>

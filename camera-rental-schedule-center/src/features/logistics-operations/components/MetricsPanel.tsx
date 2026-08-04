@@ -12,6 +12,7 @@ import {
   fetchRentalLogisticsMetrics,
   type RentalLogisticsMetricsVO,
 } from '../../../api/rental';
+import { Button } from '../../../shared/ui/Button';
 import { OperationalMetricGrid } from '../../../shared/ui/OperationalMetricGrid';
 import { StatusBadge } from '../../../shared/ui/StatusBadge';
 import type { LocalePreference } from '../../preferences/preferenceModel';
@@ -29,7 +30,6 @@ import { useOperationsRequest } from '../useOperationsRequest';
 import {
   OperationsPanel,
   PanelQueryBoundary,
-  secondaryButtonClassName,
 } from './OperationsPanel';
 
 function StatusDistribution({
@@ -42,7 +42,7 @@ function StatusDistribution({
   counts: Record<string, number>;
 }) {
   return (
-    <div className="rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-3">
+    <div className="sc-workspace-card rounded-xl p-3">
       <p className="text-[10px] font-black text-[var(--sc-ink-soft)]">{title}</p>
       <div className="mt-2 flex flex-wrap gap-2">
         {Object.entries(counts).length === 0 ? (
@@ -89,15 +89,16 @@ export function MetricsPanel({
       description={operationsCopy(locale, 'metrics.description')}
       actions={
         access.canQueryMetrics ? (
-          <button
+          <Button
+            variant="outline"
+            size="md"
             type="button"
             onClick={() => void load()}
             disabled={query.state.status === 'loading'}
-            className={secondaryButtonClassName}
+            icon={<RefreshCw className={`h-3.5 w-3.5 ${query.state.status === 'loading' ? 'animate-spin' : ''}`} />}
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${query.state.status === 'loading' ? 'animate-spin' : ''}`} />
             {operationsCopy(locale, 'common.refresh')}
-          </button>
+          </Button>
         ) : undefined
       }
     >
@@ -163,8 +164,8 @@ export function MetricsPanel({
               <StatusDistribution locale={locale} title={`Inbox · ${operationsCopy(locale, 'metrics.distribution')}`} counts={metrics.inboxStatusCounts} />
             </div>
             <div className="grid gap-2 text-[10px] text-[var(--sc-ink-muted)] sm:grid-cols-2">
-              <div>{operationsCopy(locale, 'metrics.lastOutbox')}: {formatOperationsDateTime(locale, metrics.lastOutboxSuccessAt) || '—'}</div>
-              <div>{operationsCopy(locale, 'metrics.lastInbox')}: {formatOperationsDateTime(locale, metrics.lastInboxSuccessAt) || '—'}</div>
+              <div className="sc-glass-control rounded-xl px-3 py-2">{operationsCopy(locale, 'metrics.lastOutbox')}: {formatOperationsDateTime(locale, metrics.lastOutboxSuccessAt) || '—'}</div>
+              <div className="sc-glass-control rounded-xl px-3 py-2">{operationsCopy(locale, 'metrics.lastInbox')}: {formatOperationsDateTime(locale, metrics.lastInboxSuccessAt) || '—'}</div>
             </div>
           </div>
         )}

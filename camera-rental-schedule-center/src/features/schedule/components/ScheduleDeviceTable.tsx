@@ -14,15 +14,15 @@ import { blocksForDevice } from '../scheduleModel';
 import { ScheduleTimeline } from './ScheduleTimeline';
 
 const blockClasses: Record<ScheduleBlock['type'], string> = {
-  RENTAL: 'border-blue-700 bg-blue-600 text-white',
-  RESERVE: 'border-amber-700 bg-amber-500 text-zinc-950',
-  REPAIR: 'border-rose-700 bg-rose-600 text-white',
-  LOCK: 'border-zinc-800 bg-zinc-700 text-white',
+  RENTAL: 'border-[var(--sc-blue)] bg-[var(--sc-blue)] text-[var(--sc-on-accent)]',
+  RESERVE: 'border-[var(--sc-amber)] bg-[var(--sc-amber)] text-[var(--sc-inverse)]',
+  REPAIR: 'border-[var(--sc-red)] bg-[var(--sc-red)] text-[var(--sc-on-accent)]',
+  LOCK: 'border-[var(--sc-ink)] bg-[var(--sc-ink)] text-[var(--sc-surface)]',
 };
 
 const blockedCellClasses: Partial<Record<DeviceInstance['status'], string>> = {
-  REPAIR: 'border-rose-300 bg-rose-50 text-rose-700 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300',
-  LOCKED: 'border-zinc-400 bg-zinc-100 text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300',
+  REPAIR: 'border-[color-mix(in_srgb,var(--sc-red)_34%,var(--sc-border))] bg-[var(--sc-red-soft)] text-[var(--sc-red)]',
+  LOCKED: 'border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)] text-[var(--sc-ink-soft)]',
 };
 
 function statusPresentation(status: DeviceInstance['status'], labels: ScheduleDeviceTableProps['labels']) {
@@ -84,10 +84,10 @@ function uniqueOrderBlocks(blocks: ScheduleBlock[]) {
 function trackingRiskClass(summary?: DeliveryOrderSummary) {
   if (!summary) return '';
   if (summary.risks.some((risk) => risk.severity === 'high')) {
-    return 'ring-2 ring-inset ring-rose-200 dark:ring-rose-900';
+    return 'ring-2 ring-inset ring-[color-mix(in_srgb,var(--sc-red)_28%,transparent)]';
   }
   if (summary.risks.length > 0 || summary.packages.some((item) => item.stale)) {
-    return 'ring-2 ring-inset ring-amber-200 dark:ring-amber-900';
+    return 'ring-2 ring-inset ring-[color-mix(in_srgb,var(--sc-amber)_30%,transparent)]';
   }
   return '';
 }
@@ -115,7 +115,7 @@ export function ScheduleDeviceTable(props: ScheduleDeviceTableProps) {
           return (
             <article
               key={device.id}
-              className="grid gap-3 rounded-lg border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4 md:grid-cols-[minmax(180px,1.2fr)_repeat(4,minmax(120px,1fr))_auto] md:items-center"
+              className="sc-workspace-card grid gap-3 rounded-xl p-4 md:grid-cols-[minmax(180px,1.2fr)_repeat(4,minmax(120px,1fr))_auto] md:items-center"
             >
               <button
                 type="button"
@@ -179,14 +179,14 @@ export function ScheduleDeviceTable(props: ScheduleDeviceTableProps) {
     <section
       aria-label={props.labels.internalScroller}
       tabIndex={0}
-      className="overflow-x-auto rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]"
+      className="sc-table-shell overflow-x-auto rounded-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]"
     >
       <table className="min-w-[1220px] border-collapse text-left">
         <thead className="bg-[var(--sc-surface-soft)] text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--sc-ink-muted)]">
           <tr>
             <th
               scope="col"
-              className="sticky left-0 z-20 w-56 min-w-56 border-r border-[var(--sc-border)] bg-[var(--sc-surface-soft)] px-4 py-3"
+              className="sc-table-sticky sticky left-0 z-20 w-56 min-w-56 border-r border-[var(--sc-border)] px-4 py-3"
             >
               {props.labels.deviceIdentity}
             </th>
@@ -202,7 +202,7 @@ export function ScheduleDeviceTable(props: ScheduleDeviceTableProps) {
               <tr key={device.id} className="border-t border-[var(--sc-border)]">
                 <th
                   scope="row"
-                  className="sticky left-0 z-10 w-56 min-w-56 border-r border-[var(--sc-border)] bg-[var(--sc-surface)] px-4 py-2"
+                  className="sc-table-sticky sticky left-0 z-10 w-56 min-w-56 border-r border-[var(--sc-border)] px-4 py-2"
                 >
                   <div className="grid gap-1">
                     <button

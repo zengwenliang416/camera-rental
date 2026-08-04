@@ -2,13 +2,15 @@ import { AlertTriangle, Check, LoaderCircle, Send, ShieldCheck, X } from 'lucide
 
 import type { ShippingWorkbenchController } from '../useShippingWorkbench';
 import { useShippingMessages } from '../shippingMessages';
+import { Button } from '../../../shared/ui/Button';
+import { StatusBadge } from '../../../shared/ui/StatusBadge';
 import { PanelHeader } from './PanelHeader';
 
 const gateTone = {
-  ready: 'border-emerald-200 bg-emerald-50 text-emerald-900',
-  blocked: 'border-rose-200 bg-rose-50 text-rose-900',
-  warning: 'border-amber-200 bg-amber-50 text-amber-900',
-  pending: 'border-zinc-200 bg-zinc-50 text-zinc-600',
+  ready: 'border-[color-mix(in_srgb,var(--sc-green)_28%,var(--sc-border))] bg-[var(--sc-green-soft)] text-[var(--sc-green)]',
+  blocked: 'border-[color-mix(in_srgb,var(--sc-red)_28%,var(--sc-border))] bg-[var(--sc-red-soft)] text-[var(--sc-red)]',
+  warning: 'border-[color-mix(in_srgb,var(--sc-amber)_28%,var(--sc-border))] bg-[var(--sc-amber-soft)] text-[var(--sc-amber)]',
+  pending: 'border-[var(--sc-border)] bg-[var(--sc-surface-soft)] text-[var(--sc-ink-soft)]',
 };
 
 export function ShipmentDocket({
@@ -30,20 +32,16 @@ export function ShipmentDocket({
   } = controller;
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-[var(--sc-border)] bg-[var(--sc-surface)] shadow-sm">
+    <section className="sc-workspace-card overflow-hidden rounded-2xl">
       <PanelHeader
         step="04"
         eyebrow="SERVER-AUTHORITATIVE COMMAND"
         title={text('docket.title')}
         tone={readiness.canSubmit ? 'blue' : 'red'}
         badge={(
-          <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${
-            readiness.canSubmit
-              ? 'bg-emerald-50 text-emerald-700'
-              : 'bg-rose-50 text-rose-700'
-          }`}>
+          <StatusBadge tone={readiness.canSubmit ? 'green' : 'red'}>
             {readiness.canSubmit ? text('docket.canSubmit') : text('docket.blocked')}
-          </span>
+          </StatusBadge>
         )}
       />
       <div className="space-y-4 p-4">
@@ -98,7 +96,7 @@ export function ShipmentDocket({
         </div>
 
         {readiness.primaryBlockReason && (
-          <div className="flex gap-2 rounded-xl border border-rose-200 bg-rose-50 p-3 text-[11px] leading-5 text-rose-900">
+          <div className="flex gap-2 rounded-xl border border-[color-mix(in_srgb,var(--sc-red)_28%,var(--sc-border))] bg-[var(--sc-red-soft)] p-3 text-[11px] leading-5 text-[var(--sc-red)]">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <div>
               <strong className="block">{text('docket.cannotShip')}</strong>
@@ -108,34 +106,37 @@ export function ShipmentDocket({
         )}
 
         {notice && (
-          <div className="flex items-start justify-between gap-3 rounded-xl border border-blue-200 bg-blue-50 p-3 text-[11px] leading-5 text-blue-900">
+          <div className="flex items-start justify-between gap-3 rounded-xl border border-[color-mix(in_srgb,var(--sc-blue)_28%,var(--sc-border))] bg-[var(--sc-blue-soft)] p-3 text-[11px] leading-5 text-[var(--sc-blue)]">
             <span>{notice}</span>
-            <button
+            <Button
               type="button"
               onClick={() => setNotice(null)}
               aria-label={text('docket.closeNotice')}
-              className="grid h-7 w-7 shrink-0 place-items-center rounded-md hover:bg-blue-100 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-100"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 shrink-0 rounded-md text-[var(--sc-blue)] hover:bg-[var(--sc-blue-soft)]"
+              icon={<X className="h-3.5 w-3.5" />}
+            />
           </div>
         )}
 
-        <button
+        <Button
           type="button"
           onClick={() => void submitShipment()}
           disabled={!readiness.canSubmit || isSubmitting}
-          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-zinc-950 px-4 text-sm font-black text-white transition hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-200 disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-500"
-        >
-          {isSubmitting
+          variant={readiness.canSubmit ? 'primary' : 'secondary'}
+          size="lg"
+          className="w-full rounded-xl px-4 text-sm font-black"
+          icon={isSubmitting
             ? <LoaderCircle className="h-4 w-4 animate-spin" />
             : readiness.canSubmit
               ? <Send className="h-4 w-4" />
               : <ShieldCheck className="h-4 w-4" />}
+        >
           {isSubmitting ? text('docket.submitting') : text('docket.submit')}
-        </button>
+        </Button>
 
-        <p className="text-center text-[10px] leading-5 text-zinc-400">
+        <p className="text-center text-[10px] leading-5 text-[var(--sc-ink-muted)]">
           {text('docket.serverAuthority')}
         </p>
       </div>

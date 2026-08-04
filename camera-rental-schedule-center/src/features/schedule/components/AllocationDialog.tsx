@@ -15,6 +15,7 @@ import {
 } from '../scheduleModel';
 import { AllocationCandidatePicker } from './AllocationCandidatePicker';
 import { AllocationItemCard } from './AllocationItemCard';
+import { Button } from '../../../shared/ui/Button';
 
 export function AllocationDialog() {
   const {
@@ -117,22 +118,20 @@ export function AllocationDialog() {
       onClose={close}
       footer={
         <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <button
-            type="button"
+          <Button
             onClick={close}
-            className="min-h-11 rounded-lg px-4 text-xs font-bold text-[var(--sc-ink-soft)] hover:bg-[var(--sc-surface)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]"
+            variant="ghost"
           >
             {t('allocation.cancel')}
-          </button>
+          </Button>
           <div className="flex flex-col items-stretch gap-1 sm:items-end">
-            <button
-              type="button"
+            <Button
               onClick={() => void submit()}
               disabled={!submitState.ready}
-              className="min-h-11 rounded-lg bg-[var(--sc-ink)] px-5 text-xs font-black text-[var(--sc-surface)] hover:opacity-90 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)] disabled:cursor-not-allowed disabled:opacity-45"
+              variant="primary"
             >
               {reasonLabel}
-            </button>
+            </Button>
             <span className="text-[9px] text-[var(--sc-ink-muted)]">
               {t('allocation.serverAuthority')}
             </span>
@@ -150,18 +149,16 @@ export function AllocationDialog() {
             billable={ranges.billable}
             occupied={ranges.occupied}
           />
-          <button
-            type="button"
+          <Button
             onClick={recommend}
             disabled={!hasCompleteOccupiedRange}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-blue-soft)] px-4 text-xs font-black text-[var(--sc-blue)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)] disabled:cursor-not-allowed disabled:opacity-45"
+            icon={<Sparkles />}
           >
-            <Sparkles className="h-4 w-4" />
             {t('allocation.recommend')}
-          </button>
+          </Button>
         </section>
 
-        <section className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface-soft)] p-4">
+        <section className="sc-soft-panel rounded-xl p-4">
           <div className="flex items-center justify-between gap-3 text-xs font-bold text-[var(--sc-ink)]">
             <span>{t('allocation.progress')}</span>
             <span className="sc-data">{progress.totalAssigned} / {progress.totalRequired}</span>

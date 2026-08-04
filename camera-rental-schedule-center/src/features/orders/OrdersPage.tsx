@@ -17,6 +17,7 @@ import {
 import { OrderCard } from './components/OrderCard';
 import { useDeliveryTracking } from '../tracking/TrackingContext';
 import { DeliveryTrackingDrawer } from '../tracking/components/DeliveryTrackingDrawer';
+import { Button } from '../../shared/ui/Button';
 
 export function OrdersPage() {
   const {
@@ -85,17 +86,16 @@ export function OrdersPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="sc-page-stack space-y-4">
       <FeaturePageHeader
         eyebrow={t('orders.eyebrow')}
         title={t('orders.title')}
         description={t('orders.description')}
         meta={<StatusBadge tone="neutral">{t('orders.privateBoundary')}</StatusBadge>}
         actions={canShip ? (
-          <button type="button" onClick={() => openShipping(null)} className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[var(--sc-ink)] px-4 text-xs font-black text-[var(--sc-surface)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]">
-            <Send className="h-4 w-4" />
+          <Button onClick={() => openShipping(null)} variant="primary" icon={<Send />}>
             {t('orders.openShipping')}
-          </button>
+          </Button>
         ) : undefined}
       />
 
@@ -103,25 +103,25 @@ export function OrdersPage() {
         label={t('orders.filters')}
         summary={`${filtered.length} / ${orders.length} ${t('unit.order')} · ${t('orders.page')} ${paged.page}/${paged.totalPages}`}
       >
-        <label className="grid gap-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--sc-ink-muted)]">
+        <label className="sc-field-label">
           {t('orders.status')}
-          <select value={status} onChange={(event) => setStatus(event.target.value as OrderStatusFilter)} className="min-h-11 rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)] px-3 text-xs font-bold text-[var(--sc-ink)]">
+          <select value={status} onChange={(event) => setStatus(event.target.value as OrderStatusFilter)} className="sc-form-control min-h-11 rounded-xl border px-3 text-xs font-bold text-[var(--sc-ink)]">
             <option value="ALL">{t('orders.allStatuses')}</option>
             {Object.entries(statusLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
         </label>
-        <label className="grid gap-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--sc-ink-muted)]">
+        <label className="sc-field-label">
           {t('orders.channel')}
-          <select value={channel} onChange={(event) => setChannel(event.target.value as OrderChannelFilter)} className="min-h-11 rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)] px-3 text-xs font-bold text-[var(--sc-ink)]">
+          <select value={channel} onChange={(event) => setChannel(event.target.value as OrderChannelFilter)} className="sc-form-control min-h-11 rounded-xl border px-3 text-xs font-bold text-[var(--sc-ink)]">
             <option value="ALL">{t('orders.allChannels')}</option>
             {Object.entries(channelLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
         </label>
-        <label className="grid min-w-0 gap-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--sc-ink-muted)] lg:min-w-64">
+        <label className="sc-field-label lg:min-w-64">
           {t('orders.search')}
           <span className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--sc-ink-muted)]" />
-            <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t('orders.searchPlaceholder')} className="min-h-11 w-full rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)] pl-10 pr-3 text-xs font-semibold text-[var(--sc-ink)]" />
+            <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t('orders.searchPlaceholder')} className="sc-form-control min-h-11 w-full rounded-xl border pl-10 pr-3 text-xs font-semibold text-[var(--sc-ink)]" />
           </span>
         </label>
       </FilterToolbar>
@@ -176,7 +176,7 @@ export function OrdersPage() {
       {filtered.length > 0 && (
         <nav
           aria-label={t('orders.pagination')}
-          className="flex flex-col gap-3 rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-3 sm:flex-row sm:items-center sm:justify-between"
+          className="sc-workspace-card flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between"
         >
           <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold text-[var(--sc-ink-muted)]">
             <span>{t('orders.total').replace('{count}', String(paged.totalItems))}</span>
@@ -188,7 +188,7 @@ export function OrdersPage() {
                   setPageSize(Number(event.target.value));
                   setPage(1);
                 }}
-                className="min-h-10 rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)] px-3 text-xs font-bold text-[var(--sc-ink)]"
+                className="sc-form-control min-h-10 rounded-xl border px-3 text-xs font-bold text-[var(--sc-ink)]"
               >
                 {[10, 20, 50].map((size) => (
                   <option key={size} value={size}>{size}</option>
@@ -197,27 +197,25 @@ export function OrdersPage() {
             </label>
           </div>
           <div className="flex items-center justify-between gap-2 sm:justify-end">
-            <button
-              type="button"
+            <Button
               disabled={paged.page <= 1}
               onClick={() => setPage((current) => Math.max(1, current - 1))}
-              className="inline-flex min-h-10 items-center gap-1 rounded-lg border border-[var(--sc-border-strong)] px-3 text-xs font-bold text-[var(--sc-ink)] disabled:cursor-not-allowed disabled:opacity-40"
+              size="sm"
+              icon={<ChevronLeft />}
             >
-              <ChevronLeft className="h-4 w-4" />
               {t('orders.previous')}
-            </button>
+            </Button>
             <span className="sc-data min-w-20 text-center text-xs font-black text-[var(--sc-ink)]">
               {paged.page} / {paged.totalPages}
             </span>
-            <button
-              type="button"
+            <Button
               disabled={paged.page >= paged.totalPages}
               onClick={() => setPage((current) => Math.min(paged.totalPages, current + 1))}
-              className="inline-flex min-h-10 items-center gap-1 rounded-lg border border-[var(--sc-border-strong)] px-3 text-xs font-bold text-[var(--sc-ink)] disabled:cursor-not-allowed disabled:opacity-40"
+              size="sm"
             >
               {t('orders.next')}
-              <ChevronRight className="h-4 w-4" />
-            </button>
+              <ChevronRight data-icon="inline-end" />
+            </Button>
           </div>
         </nav>
       )}

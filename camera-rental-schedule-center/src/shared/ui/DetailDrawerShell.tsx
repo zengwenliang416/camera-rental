@@ -47,7 +47,7 @@ export function DetailDrawerShell({
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-zinc-950/70 p-0 backdrop-blur-sm sm:p-4">
+    <div className="sc-overlay-scrim fixed inset-0 z-50 flex justify-end p-0 sm:p-4">
       <div
         ref={drawerRef}
         role="dialog"
@@ -55,14 +55,14 @@ export function DetailDrawerShell({
         aria-labelledby={titleId}
         aria-describedby={description ? descriptionId : undefined}
         tabIndex={-1}
-        className="flex h-full w-full max-w-xl flex-col overflow-hidden border border-[var(--sc-border)] bg-[var(--sc-surface)] shadow-2xl focus:outline-none sm:rounded-xl"
+        className="sc-overlay-surface flex h-full w-full max-w-xl flex-col overflow-hidden focus:outline-none sm:rounded-2xl"
       >
-        <header className="flex items-start justify-between gap-4 border-b border-[var(--sc-border)] px-4 py-4 sm:px-5">
+        <header className="sc-panel-header flex items-start justify-between gap-4 border-b px-4 py-4 sm:px-5">
           <div>
             <h2 id={titleId} className="text-base font-black text-[var(--sc-ink)]">{title}</h2>
             {description && <p id={descriptionId} className="mt-1 text-[11px] text-[var(--sc-ink-muted)]">{description}</p>}
           </div>
-          <button type="button" onClick={onClose} aria-label={closeLabel} className="grid h-11 w-11 shrink-0 place-items-center rounded-lg text-[var(--sc-ink-muted)] hover:bg-[var(--sc-surface-soft)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)]">
+          <button type="button" onClick={onClose} aria-label={closeLabel} className="sc-button sc-button-ghost grid h-11 w-11 shrink-0 place-items-center rounded-xl">
             <X className="h-4 w-4" />
           </button>
         </header>

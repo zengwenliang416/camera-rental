@@ -27,8 +27,8 @@ export function IntegrationReadinessBadge({ state }: { state: IntegrationReadine
         tone={meta.tone}
         icon={<Icon className={`h-3 w-3 ${state === 'loading' ? 'animate-spin' : ''}`} />}
       >
-        <span className="sm:hidden">{shortLabel}</span>
-        <span className="hidden sm:inline">{fullLabel}</span>
+        <span className="2xl:hidden">{shortLabel}</span>
+        <span className="hidden 2xl:inline">{fullLabel}</span>
       </StatusBadge>
     </span>
   );

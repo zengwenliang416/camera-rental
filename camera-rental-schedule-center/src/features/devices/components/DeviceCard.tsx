@@ -5,6 +5,7 @@ import type { DeviceInstance } from '../../../types';
 import { IdentifierText } from '../../../shared/ui/IdentifierText';
 import { StatusBadge } from '../../../shared/ui/StatusBadge';
 import { deviceCardPresentation, deviceStatusTone } from '../deviceModel';
+import { Button } from '../../../shared/ui/Button';
 
 export function DeviceCard({
   device,
@@ -38,7 +39,7 @@ export function DeviceCard({
       : labels.unavailable;
 
   return (
-    <article className="grid gap-4 rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)_auto] lg:items-center">
+    <article className="sc-workspace-card grid gap-4 rounded-2xl p-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)_auto] lg:items-center">
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
           <StatusBadge tone={deviceStatusTone(device.status)}>{labels.status[device.status]}</StatusBadge>
@@ -58,14 +59,13 @@ export function DeviceCard({
         {presentation.note && <span className="sm:col-span-2 inline-flex items-start gap-1.5"><Wrench className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--sc-amber)]" />{presentation.note.kind === 'warehouse' ? labels.warehouse : labels.note} {presentation.note.value}</span>}
       </div>
 
-      <button
-        type="button"
+      <Button
         onClick={onOpen}
         disabled={!canOpen}
-        className="min-h-11 rounded-lg border border-[var(--sc-border-strong)] px-4 text-xs font-bold text-[var(--sc-ink)] hover:bg-[var(--sc-surface-soft)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)] disabled:cursor-not-allowed disabled:opacity-45"
+        variant="glass"
       >
         {canOpen ? labels.detail : labels.noAccess}
-      </button>
+      </Button>
     </article>
   );
 }

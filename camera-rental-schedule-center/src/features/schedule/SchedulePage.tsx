@@ -23,6 +23,7 @@ import {
   type ScheduleTrackingFilter,
 } from './components/ScheduleTrackingWorkspace';
 import { trackingCopy } from '../tracking/trackingCopy';
+import { Button } from '../../shared/ui/Button';
 
 export function SchedulePage() {
   const {
@@ -100,10 +101,10 @@ export function SchedulePage() {
     : undefined;
 
   return (
-    <div className="space-y-4">
+    <div className="sc-page-stack space-y-4">
       <nav
         aria-label={t('schedule.flow')}
-        className="flex min-h-9 items-center gap-2 overflow-x-auto rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] px-3 text-[9px] font-bold text-[var(--sc-ink-muted)]"
+        className="sc-flow-nav flex min-h-9 items-center gap-2 overflow-x-auto rounded-xl px-3 text-[9px] font-bold text-[var(--sc-ink-muted)]"
       >
         {[
           t('schedule.flowShipment'),
@@ -125,15 +126,14 @@ export function SchedulePage() {
         title={t('schedule.title')}
         description={t('schedule.description')}
         actions={
-          <button
-            type="button"
+          <Button
             onClick={() => void refreshSummaries()}
             disabled={isSummaryLoading || !canReadTracking}
-            className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-surface)] px-4 text-xs font-black text-[var(--sc-ink)] disabled:cursor-not-allowed disabled:opacity-45"
+            variant="glass"
+            icon={<RefreshCw className={isSummaryLoading ? 'animate-spin' : ''} />}
           >
-            <RefreshCw className={`h-4 w-4 ${isSummaryLoading ? 'animate-spin' : ''}`} />
             {trackingCopy(locale, 'workspace.refresh')}
-          </button>
+          </Button>
         }
       />
 

@@ -2,6 +2,7 @@ import { Cpu, Plus, X } from 'lucide-react';
 
 import type { DeviceInstance, OrderItemNeed } from '../../../types';
 import { StatusBadge } from '../../../shared/ui/StatusBadge';
+import { Button } from '../../../shared/ui/Button';
 
 export function AllocationItemCard({
   item,
@@ -29,8 +30,8 @@ export function AllocationItemCard({
 }) {
   const missing = Math.max(0, item.quantity - selectedIds.length);
   return (
-    <section className="rounded-xl border border-[var(--sc-border)] bg-[var(--sc-surface)] p-4">
-      <header className="flex flex-wrap items-center gap-2 border-b border-[var(--sc-border)] pb-3">
+    <section className="sc-workspace-card rounded-2xl p-4">
+      <header className="flex flex-wrap items-center gap-2 border-b border-[var(--sc-glass-hairline)] pb-3">
         <Cpu className="h-4 w-4 text-[var(--sc-blue)]" />
         <strong className="mr-auto text-sm text-[var(--sc-ink)]">{item.modelName}</strong>
         <StatusBadge tone="neutral">{labels.need} {item.quantity}</StatusBadge>
@@ -66,15 +67,15 @@ export function AllocationItemCard({
           );
         })}
         {missing > 0 && (
-          <button
-            type="button"
+          <Button
             onClick={onOpenCandidates}
             disabled={!canSelect}
-            className="flex min-h-14 items-center justify-center gap-2 rounded-lg border border-dashed border-[var(--sc-border-strong)] px-3 text-xs font-bold text-[var(--sc-blue)] hover:bg-[var(--sc-blue-soft)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)] disabled:cursor-not-allowed disabled:opacity-45"
+            variant="glass"
+            className="min-h-14 border-dashed"
+            icon={<Plus />}
           >
-            <Plus className="h-4 w-4" />
             {canSelect ? labels.select : labels.selectUnavailable}
-          </button>
+          </Button>
         )}
       </div>
     </section>

@@ -210,16 +210,19 @@ export function deriveModels(devices: RentalDeviceVO[]): EquipmentModel[] {
 }
 
 export function mapSchedules(schedules: RentalScheduleVO[]): ScheduleBlock[] {
-  return schedules.map((schedule) => ({
-    id: String(schedule.id),
-    deviceId: String(schedule.deviceId),
-    orderId: schedule.rentalOrderId ? String(schedule.rentalOrderId) : undefined,
-    orderNumber: schedule.rentalOrderId ? `RO-${schedule.rentalOrderId}` : undefined,
-    type: schedule.scheduleType === 'REPAIR' ? 'REPAIR' : 'RENTAL',
-    startDate: schedule.occupyStartDate,
-    endDate: inclusiveDateFromExclusive(schedule.occupyEndDateExclusive) || schedule.occupyStartDate,
-    statusText: schedule.status,
-  }));
+  return schedules.map((schedule) => {
+    const startDate = formatDateValue(schedule.occupyStartDate) || '';
+    return {
+      id: String(schedule.id),
+      deviceId: String(schedule.deviceId),
+      orderId: schedule.rentalOrderId ? String(schedule.rentalOrderId) : undefined,
+      orderNumber: schedule.rentalOrderId ? `RO-${schedule.rentalOrderId}` : undefined,
+      type: schedule.scheduleType === 'REPAIR' ? 'REPAIR' : 'RENTAL',
+      startDate,
+      endDate: inclusiveDateFromExclusive(schedule.occupyEndDateExclusive) || startDate,
+      statusText: schedule.status,
+    };
+  });
 }
 
 function orderStatus(order: XianyuOrderVO, pendingShipIds: Set<number>): RentalOrder['status'] {

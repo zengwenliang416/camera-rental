@@ -30,8 +30,8 @@ export function DashboardQueueCard({
   rows: QueueRow[];
 }) {
   return (
-    <section className="sc-surface min-w-0 overflow-hidden rounded-lg">
-      <header className="flex min-h-14 items-center gap-3 border-b border-[var(--sc-border)] bg-[var(--sc-surface-soft)] px-3">
+    <section className="sc-soft-panel min-w-0 overflow-hidden rounded-xl">
+      <header className="sc-panel-header flex min-h-14 items-center gap-3 border-b px-3">
         <span className="sc-data text-xs font-bold text-[var(--sc-blue)]">{step}</span>
         <h3 className="min-w-0 flex-1 truncate text-xs font-black text-[var(--sc-ink)]">{title}</h3>
         <span className="sc-data grid h-7 min-w-7 place-items-center rounded-full bg-[var(--sc-brand-soft)] px-2 text-[10px] text-[var(--sc-brand)]">{count}</span>
@@ -40,7 +40,7 @@ export function DashboardQueueCard({
         {rows.length === 0 ? (
           <EmptyState icon={<CheckCircle2 className="h-4 w-4" />} title={emptyText} />
         ) : (
-          <div className="space-y-1">
+          <div className="grid gap-1">
             {rows.slice(0, 4).map((row) => (
               <button
                 key={row.id}
@@ -60,7 +60,7 @@ export function DashboardQueueCard({
           </div>
         )}
       </div>
-      <button type="button" onClick={onViewAll} className="flex min-h-11 w-full items-center justify-center gap-2 border-t border-[var(--sc-border)] text-[10px] font-bold text-[var(--sc-blue)]">
+      <button type="button" onClick={onViewAll} className="sc-button sc-button-ghost flex min-h-11 w-full items-center justify-center gap-2 rounded-none border-t border-[var(--sc-glass-hairline)] text-[10px] text-[var(--sc-blue)]">
         {actionLabel}
         <ArrowUpRight className="h-3.5 w-3.5" />
       </button>

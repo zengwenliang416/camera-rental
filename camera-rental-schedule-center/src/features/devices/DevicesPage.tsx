@@ -46,7 +46,7 @@ export function DevicesPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="sc-page-stack space-y-4">
       <FeaturePageHeader
         eyebrow={t('devices.eyebrow')}
         title={t('devices.title')}
@@ -60,7 +60,7 @@ export function DevicesPage() {
         }
       />
 
-      <section className="rounded-xl border border-[color-mix(in_srgb,var(--sc-blue)_22%,var(--sc-border))] bg-[var(--sc-blue-soft)] p-4">
+      <section className="sc-workspace-card rounded-2xl border-[color-mix(in_srgb,var(--sc-blue)_22%,var(--sc-border))] p-4">
         <div className="flex items-start gap-3">
           <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[var(--sc-blue)]" />
           <div>
@@ -79,27 +79,27 @@ export function DevicesPage() {
               const stats = calculateModelStats(model.id, devices, blocks);
               const selected = model.id === currentModel.id;
               return (
-                <button key={model.id} type="button" onClick={() => setSelectedModelId(model.id)} aria-pressed={selected} className={`min-h-24 rounded-xl border p-3 text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sc-focus)] ${selected ? 'border-[var(--sc-ink)] bg-[var(--sc-ink)] text-[var(--sc-surface)]' : 'border-[var(--sc-border)] bg-[var(--sc-surface)] text-[var(--sc-ink)]'}`}>
+                <button key={model.id} type="button" onClick={() => setSelectedModelId(model.id)} aria-pressed={selected} className={`sc-button min-h-24 rounded-2xl border p-3 text-left ${selected ? 'sc-segmented-active border-transparent text-[var(--sc-surface)]' : 'sc-workspace-card text-[var(--sc-ink)]'}`}>
                   <strong className="block truncate text-xs">{model.name}</strong>
-                  <span className={`mt-2 block text-[10px] ${selected ? 'text-zinc-300' : 'text-[var(--sc-ink-muted)]'}`}>{stats.totalUnits} {t('unit.device')} · {stats.idleCount} {t('devices.available')}</span>
+                  <span className={`mt-2 block text-[10px] ${selected ? 'text-white/72' : 'text-[var(--sc-ink-muted)]'}`}>{stats.totalUnits} {t('unit.device')} · {stats.idleCount} {t('devices.available')}</span>
                 </button>
               );
             })}
           </section>
 
           <FilterToolbar label={t('devices.filters')} summary={`${filtered.length} / ${currentModel.totalUnits} ${t('unit.device')}`}>
-            <label className="grid gap-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--sc-ink-muted)]">
+            <label className="sc-field-label">
               {t('devices.status')}
-              <select value={status} onChange={(event) => setStatus(event.target.value as DeviceStatusFilter)} className="min-h-11 rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)] px-3 text-xs font-bold text-[var(--sc-ink)]">
+              <select value={status} onChange={(event) => setStatus(event.target.value as DeviceStatusFilter)} className="sc-form-control min-h-11 rounded-xl border px-3 text-xs font-bold text-[var(--sc-ink)]">
                 <option value="ALL">{t('devices.allStatuses')}</option>
                 {Object.entries(statusLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
               </select>
             </label>
-            <label className="grid min-w-0 gap-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--sc-ink-muted)] lg:min-w-72">
+            <label className="sc-field-label lg:min-w-72">
               {t('devices.search')}
               <span className="relative">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--sc-ink-muted)]" />
-                <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t('devices.searchPlaceholder')} className="min-h-11 w-full rounded-lg border border-[var(--sc-border-strong)] bg-[var(--sc-surface-soft)] pl-10 pr-3 text-xs font-semibold text-[var(--sc-ink)]" />
+                <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t('devices.searchPlaceholder')} className="sc-form-control min-h-11 w-full rounded-xl border pl-10 pr-3 text-xs font-semibold text-[var(--sc-ink)]" />
               </span>
             </label>
           </FilterToolbar>

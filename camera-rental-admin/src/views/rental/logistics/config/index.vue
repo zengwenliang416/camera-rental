@@ -1,13 +1,14 @@
 <template>
   <ContentWrap>
-    <div class="logistics-hero">
-      <div>
-        <div class="logistics-kicker">KUAIDI100 · TENANT CONFIGURATION</div>
-        <h2>{{ t('rental.logistics.pageTitle') }}</h2>
-        <p>{{ t('rental.logistics.pageDescription') }}</p>
+    <div class="logistics-toolbar">
+      <div class="logistics-toolbar__info">
+        <div class="logistics-toolbar__title">{{ t('rental.logistics.pageTitle') }}</div>
+        <div class="logistics-toolbar__description">
+          {{ t('rental.logistics.pageDescription') }}
+        </div>
       </div>
-      <div class="flex items-center gap-8px">
-        <el-tag :type="logisticsStatusTagType(config?.configStatus)" effect="dark">
+      <div class="logistics-toolbar__actions">
+        <el-tag :type="logisticsStatusTagType(config?.configStatus)" effect="plain">
           {{ statusLabel }}
         </el-tag>
         <el-button :loading="loading" @click="loadConfig">
@@ -159,40 +160,37 @@ onMounted(loadConfig)
 </script>
 
 <style scoped>
-.logistics-hero {
+.logistics-toolbar {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  padding: 22px 24px;
-  margin-bottom: 16px;
-  color: #f8fbff;
-  background:
-    linear-gradient(120deg, rgb(8 35 51 / 96%), rgb(16 74 86 / 92%)),
-    radial-gradient(circle at 85% 0%, rgb(67 208 170 / 45%), transparent 42%);
-  border-radius: 10px;
-  box-shadow: 0 12px 28px rgb(11 47 60 / 16%);
+  gap: 16px;
+  margin-bottom: 12px;
 }
 
-.logistics-hero h2 {
-  margin: 6px 0;
-  font-size: 24px;
-  line-height: 1.25;
+.logistics-toolbar__info {
+  min-width: 0;
 }
 
-.logistics-hero p {
-  max-width: 760px;
-  margin: 0;
+.logistics-toolbar__title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  color: var(--el-text-color-primary);
+}
+
+.logistics-toolbar__description {
+  margin-top: 2px;
   font-size: 13px;
-  line-height: 1.7;
-  color: rgb(232 246 248 / 78%);
+  line-height: 20px;
+  color: var(--el-text-color-secondary);
 }
 
-.logistics-kicker {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  color: #6ee7c4;
+.logistics-toolbar__actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
 }
 
 .config-checklist {
@@ -218,8 +216,14 @@ onMounted(loadConfig)
 }
 
 @media (width <= 720px) {
-  .logistics-hero {
+  .logistics-toolbar {
+    align-items: flex-start;
     flex-direction: column;
+  }
+
+  .logistics-toolbar__actions {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 </style>

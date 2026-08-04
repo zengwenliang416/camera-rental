@@ -1,35 +1,33 @@
 <template>
   <ContentWrap class="rental-report-page">
     <section class="report-shell">
-      <div class="report-hero">
-        <div class="hero-copy">
-          <div class="report-kicker">{{ t('rental.report.kicker') }}</div>
+      <div class="report-page-heading">
+        <div class="report-page-heading__copy">
           <h2>{{ t('rental.report.pageTitle') }}</h2>
           <p>{{ t('rental.report.scopeHint') }}</p>
         </div>
 
-        <div class="hero-panel">
-          <div class="hero-panel__label">{{ t('rental.report.dateRange') }}</div>
-          <strong>{{ reportWindowLabel }}</strong>
-          <el-form :inline="true" :model="queryParams" class="report-filter">
-            <el-form-item>
-              <el-date-picker
-                v-model="dateRange"
-                type="daterange"
-                value-format="YYYY-MM-DD"
-                :range-separator="t('rental.report.dateSeparator')"
-                :start-placeholder="t('rental.report.startDate')"
-                :end-placeholder="t('rental.report.endDate')"
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :loading="querying" @click="handleQuery">
-                <Icon icon="ep:data-analysis" class="mr-5px" />
-                {{ t('rental.report.refresh') }}
-              </el-button>
-            </el-form-item>
-          </el-form>
-        </div>
+        <el-form :inline="true" :model="queryParams" class="report-filter" @submit.prevent>
+          <el-form-item :label="t('rental.report.dateRange')">
+            <el-date-picker
+              v-model="dateRange"
+              type="daterange"
+              value-format="YYYY-MM-DD"
+              :range-separator="t('rental.report.dateSeparator')"
+              :start-placeholder="t('rental.report.startDate')"
+              :end-placeholder="t('rental.report.endDate')"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" :loading="querying" @click="handleQuery">
+              <Icon icon="ep:data-analysis" class="mr-5px" />
+              {{ t('rental.report.refresh') }}
+            </el-button>
+          </el-form-item>
+          <el-form-item class="report-window">
+            <span>{{ reportWindowLabel }}</span>
+          </el-form-item>
+        </el-form>
       </div>
 
       <el-alert
@@ -79,7 +77,7 @@
             :percentage="utilizationPercent"
             :stroke-width="9"
             :show-text="false"
-            color="#0f766e"
+            color="var(--el-color-primary)"
           />
           <small>{{ t('rental.report.utilizationHint') }}</small>
         </article>
@@ -111,10 +109,12 @@
       <section class="report-section report-section--source">
         <div class="section-heading">
           <div>
-            <span class="section-eyebrow">{{ sourceCountLabel }}</span>
             <h3>{{ t('rental.report.sourceBreakdown') }}</h3>
           </div>
-          <small>{{ t('rental.report.sourceBreakdownHint') }}</small>
+          <div class="section-heading__meta">
+            <span class="section-count">{{ sourceCountLabel }}</span>
+            <small>{{ t('rental.report.sourceBreakdownHint') }}</small>
+          </div>
         </div>
         <el-table :data="overview?.sources || []" class="report-table">
           <el-table-column :label="t('rental.report.sourceType')" min-width="160">
@@ -427,111 +427,10 @@ onMounted(loadAll)
 
 <style scoped>
 .rental-report-page {
-  --report-ink: #172033;
-  --report-muted: #64748b;
-  --report-line: rgb(15 23 42 / 8%);
-  --report-teal: #0f766e;
-  --report-gold: #c47f24;
-
-  background:
-    radial-gradient(circle at 8% 8%, rgb(20 184 166 / 10%), transparent 28%),
-    linear-gradient(180deg, #f8fafc 0%, #eef3f8 100%);
-}
-
-.report-shell {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.report-hero {
-  position: relative;
-  display: flex;
-  min-height: 218px;
-  padding: 28px;
-  overflow: hidden;
-  color: #fff;
-  background:
-    radial-gradient(circle at 86% 14%, rgb(245 158 11 / 34%), transparent 30%),
-    radial-gradient(circle at 62% 76%, rgb(20 184 166 / 30%), transparent 28%),
-    linear-gradient(135deg, #111827 0%, #17313c 48%, #0f766e 100%);
-  border: 1px solid rgb(255 255 255 / 56%);
-  border-radius: 24px;
-  box-shadow: 0 24px 60px rgb(15 23 42 / 14%);
-  align-items: stretch;
-  justify-content: space-between;
-  gap: 24px;
-  isolation: isolate;
-}
-
-.report-hero::before {
-  position: absolute;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgb(255 255 255 / 8%) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(255 255 255 / 8%) 1px, transparent 1px);
-  background-size: 34px 34px;
-  border: 1px solid rgb(255 255 255 / 12%);
-  border-radius: 18px;
-  content: '';
-  inset: 18px;
-  mask-image: linear-gradient(90deg, #000 0%, transparent 72%);
-}
-
-.hero-copy {
-  max-width: 520px;
-  align-self: center;
-}
-
-.report-hero h2 {
-  margin: 10px 0 12px;
-  font-family: 'DIN Alternate', 'Avenir Next', 'PingFang SC', sans-serif;
-  font-size: 38px;
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-}
-
-.report-hero p {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.8;
-  color: rgb(226 232 240 / 78%);
-}
-
-.report-kicker {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  color: #a7f3d0;
-  text-transform: uppercase;
-}
-
-.hero-panel {
-  display: flex;
-  width: min(520px, 48%);
-  padding: 20px;
-  align-self: center;
-  flex-direction: column;
-  justify-content: center;
-  background: rgb(255 255 255 / 12%);
-  border: 1px solid rgb(255 255 255 / 20%);
-  border-radius: 20px;
-  backdrop-filter: blur(18px);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 18%);
-}
-
-.hero-panel__label {
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  color: rgb(226 232 240 / 70%);
-}
-
-.hero-panel strong {
-  margin: 6px 0 18px;
-  font-family: 'DIN Alternate', 'Avenir Next', 'PingFang SC', sans-serif;
-  font-size: 24px;
-  font-variant-numeric: tabular-nums;
+  --report-ink: var(--el-text-color-primary);
+  --report-muted: var(--el-text-color-secondary);
+  --report-line: var(--el-border-color-lighter);
+  --report-teal: var(--el-color-primary);
 }
 
 .report-filter {
@@ -553,9 +452,9 @@ onMounted(loadAll)
 }
 
 .report-filter :deep(.el-button--primary) {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  border: 0;
-  box-shadow: 0 12px 26px rgb(146 64 14 / 26%);
+  background: #409eff;
+  border: 1px solid #409eff;
+  box-shadow: none;
 }
 
 .metric-grid {
@@ -591,9 +490,7 @@ onMounted(loadAll)
 }
 
 .metric-card--income {
-  background:
-    linear-gradient(145deg, rgb(255 251 235 / 94%), rgb(255 255 255 / 92%)),
-    linear-gradient(135deg, #f59e0b, #fef3c7);
+  background: #fff;
   border-color: rgb(245 158 11 / 24%);
 }
 
@@ -603,14 +500,12 @@ onMounted(loadAll)
 }
 
 .metric-card--net {
-  background: linear-gradient(145deg, rgb(240 253 250 / 94%), rgb(255 255 255 / 92%));
+  background: #fff;
   border-color: rgb(20 184 166 / 20%);
 }
 
 .metric-card--utilization {
-  background:
-    radial-gradient(circle at 92% 20%, rgb(20 184 166 / 20%), transparent 28%),
-    rgb(255 255 255 / 92%);
+  background: #fff;
 }
 
 .metric-card__top {
@@ -627,7 +522,7 @@ onMounted(loadAll)
   display: inline-flex;
   width: 32px;
   height: 32px;
-  font-family: 'DIN Alternate', 'Avenir Next', sans-serif;
+  font-family: inherit;
   font-style: normal;
   font-weight: 700;
   color: var(--report-teal);
@@ -648,7 +543,7 @@ onMounted(loadAll)
   position: relative;
   z-index: 1;
   margin: 10px 0 8px;
-  font-family: 'DIN Alternate', 'Avenir Next', 'PingFang SC', sans-serif;
+  font-family: inherit;
   font-size: 30px;
   line-height: 1.1;
   color: var(--report-ink);
@@ -670,7 +565,7 @@ onMounted(loadAll)
 .device-day-bar span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #0f766e, #14b8a6);
+  background: var(--el-color-primary);
   border-radius: inherit;
 }
 
@@ -701,14 +596,6 @@ onMounted(loadAll)
   color: var(--report-muted);
 }
 
-.section-eyebrow {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--report-gold);
-  text-transform: uppercase;
-}
-
 .source-name {
   display: inline-flex;
   font-weight: 600;
@@ -720,7 +607,7 @@ onMounted(loadAll)
 .source-name span {
   width: 10px;
   height: 10px;
-  background: linear-gradient(135deg, #f59e0b, #0f766e);
+  background: var(--el-color-primary);
   border-radius: 999px;
 }
 
@@ -777,15 +664,6 @@ onMounted(loadAll)
 }
 
 @media (width <= 1080px) {
-  .report-hero {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .hero-panel {
-    width: auto;
-  }
-
   .metric-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -796,14 +674,6 @@ onMounted(loadAll)
     grid-template-columns: 1fr;
   }
 
-  .report-hero {
-    padding: 22px;
-  }
-
-  .report-hero h2 {
-    font-size: 30px;
-  }
-
   .report-filter :deep(.el-range-editor.el-input__wrapper) {
     width: 100%;
   }
@@ -811,6 +681,245 @@ onMounted(loadAll)
   .section-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+/* Keep the report in the standard flat Element Plus admin layout. */
+.rental-report-page {
+  background: transparent;
+}
+
+.report-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: var(--el-text-color-primary);
+}
+
+.report-page-heading {
+  display: flex;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.report-page-heading__copy {
+  min-width: 0;
+}
+
+.report-page-heading h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.report-page-heading p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--el-text-color-secondary);
+}
+
+.report-filter {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.report-filter :deep(.el-form-item) {
+  margin: 0;
+}
+
+.report-filter :deep(.el-form-item__label) {
+  font-weight: 400;
+  color: var(--el-text-color-regular);
+}
+
+.report-filter :deep(.el-range-editor.el-input__wrapper) {
+  width: 290px;
+  background: var(--el-fill-color-blank);
+  border: 0;
+  box-shadow: 0 0 0 1px var(--el-border-color) inset;
+}
+
+.report-filter :deep(.el-button--primary) {
+  background: var(--el-color-primary);
+  border-color: var(--el-color-primary);
+  box-shadow: none;
+}
+
+.report-window {
+  color: var(--el-text-color-secondary);
+  white-space: nowrap;
+}
+
+.metric-grid {
+  min-height: 0;
+  gap: 12px;
+}
+
+.metric-card {
+  min-height: 112px;
+  padding: 14px;
+  background: var(--el-fill-color-blank);
+  border: 1px solid var(--el-border-color-lighter);
+  border-radius: var(--el-border-radius-base);
+  box-shadow: none;
+}
+
+.metric-card::after {
+  display: none;
+}
+
+.metric-card__top {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--el-text-color-secondary);
+}
+
+.metric-card__icon {
+  width: 28px;
+  height: 28px;
+  font-family: inherit;
+  font-weight: 600;
+  color: var(--el-color-primary);
+  background: var(--el-color-primary-light-9);
+  border-radius: var(--el-border-radius-base);
+}
+
+.metric-card strong {
+  margin: 8px 0 6px;
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--el-text-color-primary);
+}
+
+.metric-card--income,
+.metric-card--net,
+.metric-card--utilization {
+  background: var(--el-fill-color-blank);
+  border-color: var(--el-border-color-lighter);
+}
+
+.metric-card :deep(.el-progress) {
+  margin: 2px 0 6px;
+}
+
+.device-day-bar {
+  height: 8px;
+  margin: 2px 0 6px;
+  background: var(--el-fill-color-light);
+  border-radius: var(--el-border-radius-base);
+}
+
+.device-day-bar span {
+  background: var(--el-color-primary);
+}
+
+.report-section {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.report-section--source {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+}
+
+.report-section--tabs {
+  padding-top: 16px;
+}
+
+.section-heading {
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.section-heading h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--el-text-color-primary);
+}
+
+.section-heading__meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-count {
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+}
+
+.report-tabs :deep(.el-tabs__header) {
+  margin-bottom: 12px;
+}
+
+.report-tabs :deep(.el-tabs__item) {
+  font-weight: 400;
+  color: var(--el-text-color-regular);
+}
+
+.report-tabs :deep(.el-tabs__item.is-active) {
+  color: var(--el-color-primary);
+}
+
+.report-table {
+  --el-table-header-bg-color: var(--el-fill-color-light);
+  --el-table-row-hover-bg-color: var(--el-fill-color-light);
+
+  border: 1px solid var(--el-border-color-lighter);
+  border-radius: var(--el-border-radius-base);
+}
+
+.report-table :deep(th.el-table__cell) {
+  font-weight: 500;
+  color: var(--el-text-color-regular);
+}
+
+@media (width <= 1080px) {
+  .report-page-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .report-filter {
+    flex-shrink: 1;
+  }
+}
+
+@media (width <= 600px) {
+  .report-filter {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .report-filter :deep(.el-form-item),
+  .report-filter :deep(.el-form-item__content),
+  .report-filter :deep(.el-date-editor),
+  .report-filter :deep(.el-range-editor.el-input__wrapper) {
+    width: 100%;
+  }
+
+  .report-window {
+    align-self: flex-start;
+  }
+
+  .section-heading__meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
   }
 }
 </style>

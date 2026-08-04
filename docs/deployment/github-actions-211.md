@@ -1,4 +1,14 @@
-# GitHub Actions 部署到 154.9.235.80
+# GitHub Actions 部署方案已停用
+
+GitHub Actions 工作流已删除，仓库改用 Woodpecker CI。当前部署方案见：
+
+- `docs/deployment/woodpecker.md`
+- `.woodpecker/deploy.yml`
+- `ops/woodpecker/`
+
+下方内容仅保留为旧部署链路的历史说明；生产发布仍复用
+`ops/github-deploy/server-build-deploy.sh` 的增量构建、迁移、原子切换和
+健康检查实现。
 
 本部署方案把 GitHub `main` 作为发布源。Actions 仅通过 SSH 下发小型部署脚本，
 由 `154.9.235.80` 构建指定 Git SHA，并复用服务器上的 Maven、pnpm、Bun

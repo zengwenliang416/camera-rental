@@ -24,7 +24,7 @@ steps:
   - name: deployment-script-tests
     image: alpine:3.22
     commands:
-      - apk add --no-cache bash coreutils findutils git openssh-client
+      - apk add --no-cache bash coreutils findutils git openjdk21-jdk openssh-client zip
       - for test_file in ops/github-deploy/tests/*-test.sh; do bash "$${test_file}"; done
       - bash -n ops/woodpecker/deploy.sh
       - bash -n ops/woodpecker/remote-deploy.sh

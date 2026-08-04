@@ -1,3 +1,10 @@
+clone:
+  git:
+    image: woodpeckerci/plugin-git:2.9.2
+    settings:
+      partial: false
+      depth: 0
+
 labels:
   location: production-80
 
@@ -25,6 +32,7 @@ steps:
     image: alpine:3.22
     commands:
       - apk add --no-cache bash coreutils findutils git openjdk21-jdk openssh-client zip
+      - git rev-parse --is-shallow-repository | grep -qx false
       - for test_file in ops/github-deploy/tests/*-test.sh; do bash "$${test_file}"; done
       - bash -n ops/woodpecker/deploy.sh
       - bash -n ops/woodpecker/remote-deploy.sh

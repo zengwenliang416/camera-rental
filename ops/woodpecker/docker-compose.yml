@@ -1,0 +1,50 @@
+name: camera-rental-woodpecker
+
+services:
+  server:
+    image: woodpeckerci/woodpecker-server:v3.17.0
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8008:8000"
+    volumes:
+      - ./data:/var/lib/woodpecker
+    environment:
+      WOODPECKER_HOST: ${WOODPECKER_HOST}
+      WOODPECKER_OPEN: "false"
+      WOODPECKER_ADMIN: ${WOODPECKER_ADMIN}
+      WOODPECKER_REPO_OWNERS: ${WOODPECKER_REPO_OWNERS}
+      WOODPECKER_GITHUB: "true"
+      WOODPECKER_GITHUB_CLIENT: ${WOODPECKER_GITHUB_CLIENT}
+      WOODPECKER_GITHUB_SECRET: ${WOODPECKER_GITHUB_SECRET}
+      WOODPECKER_AGENT_SECRET: ${WOODPECKER_AGENT_SECRET}
+      WOODPECKER_GRPC_SECRET: ${WOODPECKER_GRPC_SECRET}
+      WOODPECKER_DEFAULT_APPROVAL_MODE: all_events
+      WOODPECKER_DEFAULT_CANCEL_PREVIOUS_PIPELINE_EVENTS: pull_request
+      WOODPECKER_FORCE_IGNORE_SERVICE_FAILURE: "false"
+      WOODPECKER_LOG_LEVEL: info
+    networks:
+      - woodpecker
+
+  agent:
+    image: woodpeckerci/woodpecker-agent:v3.17.0
+    command: agent
+    restart: unless-stopped
+    depends_on:
+      server:
+        condition: service_healthy
+    volumes:
+      - ./agent:/etc/woodpecker
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WOODPECKER_SERVER: server:9000
+      WOODPECKER_AGENT_SECRET: ${WOODPECKER_AGENT_SECRET}
+      WOODPECKER_HOSTNAME: camera-rental-production-80
+      WOODPECKER_MAX_WORKFLOWS: "1"
+      WOODPECKER_AGENT_LABELS: location=production-80,repo=zengwenliang416/camera-rental
+      WOODPECKER_BACKEND: docker
+      WOODPECKER_LOG_LEVEL: info
+    networks:
+      - woodpecker
+
+networks:
+  woodpecker:

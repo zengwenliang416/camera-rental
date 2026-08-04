@@ -1,0 +1,49 @@
+labels:
+  location: production-80
+
+when:
+  - event: manual
+  - event: push
+    branch: main
+    path:
+      include:
+        - .woodpecker/**
+        - ops/github-deploy/**
+        - ops/woodpecker/**
+        - camera-rental-server/**
+        - camera-rental-admin/**
+        - camera-rental-schedule-center/**
+        - camera-rental-staff/**
+        - camera-rental-web/**
+
+concurrency:
+  limit: 1
+  group: camera-rental-production-80
+
+steps:
+  - name: deployment-script-tests
+    image: alpine:3.22
+    commands:
+      - apk add --no-cache bash coreutils findutils git openssh-client
+      - for test_file in ops/github-deploy/tests/*-test.sh; do bash "$${test_file}"; done
+      - bash -n ops/woodpecker/deploy.sh
+      - bash -n ops/woodpecker/remote-deploy.sh
+
+  - name: deploy-production
+    image: alpine:3.22
+    environment:
+      DEPLOY_HOST:
+        from_secret: deploy_host
+      DEPLOY_PORT:
+        from_secret: deploy_port
+      DEPLOY_USER:
+        from_secret: deploy_user
+      DEPLOY_ROOT:
+        from_secret: deploy_root
+      DEPLOY_SSH_PRIVATE_KEY:
+        from_secret: deploy_ssh_private_key
+      DEPLOY_SSH_KNOWN_HOSTS:
+        from_secret: deploy_ssh_known_hosts
+    commands:
+      - apk add --no-cache bash git openssh-client
+      - bash ops/woodpecker/deploy.sh

@@ -71,6 +71,18 @@ class XianyuOrderMapperTest {
     }
 
     @Test
+    void adminPageQueryFiltersExactParsedShipDate() {
+        XianyuOrderPageReqVO request = new XianyuOrderPageReqVO();
+        request.setShipDate(LocalDate.of(2026, 8, 6));
+
+        String sql = XianyuOrderMapper.adminPageQuery(request)
+                .getCustomSqlSegment()
+                .toLowerCase();
+
+        assertTrue(sql.contains("ship_date ="));
+    }
+
+    @Test
     void adminPageQueryUsesInclusiveRentalPeriodOverlapWithoutJoiningOrderItems() {
         XianyuOrderPageReqVO request = new XianyuOrderPageReqVO();
         request.setRentalStartDate(LocalDate.of(2026, 8, 8));

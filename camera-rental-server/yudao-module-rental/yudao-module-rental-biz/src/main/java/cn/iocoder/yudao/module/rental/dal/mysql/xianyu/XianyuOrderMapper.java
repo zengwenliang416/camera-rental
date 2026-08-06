@@ -34,6 +34,7 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
                 .likeIfPresent(XianyuOrderDO::getExternalOrderId, pageReqVO.getExternalOrderId())
                 .eqIfPresent(XianyuOrderDO::getExternalProductId, pageReqVO.getExternalProductId())
                 .eqIfPresent(XianyuOrderDO::getExternalSkuId, pageReqVO.getExternalSkuId())
+                .eqIfPresent(XianyuOrderDO::getShipDate, pageReqVO.getShipDate())
                 .orderByDesc(XianyuOrderDO::getSourceUpdatedAt)
                 .orderByDesc(XianyuOrderDO::getId);
         query.apply(pageReqVO.getStartDate() != null,

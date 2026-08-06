@@ -29,6 +29,9 @@ public class XianyuOrderPageReqVO extends PageParam {
     private LocalDate endDate;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate shipDate;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate rentalStartDate;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

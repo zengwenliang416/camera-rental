@@ -35,6 +35,8 @@ public class XianyuOrderRespVO {
     private BigDecimal remarkParseConfidence;
     private String remarkParseModel;
     @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate shipDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate billableStartDate;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate billableEndDate;

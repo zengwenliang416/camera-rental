@@ -317,6 +317,7 @@ class XianyuOrderAdminServiceTest {
 
         XianyuOrderRespVO vo = service.getOrderPage(pageParam).getList().get(0);
 
+        assertEquals(LocalDate.of(2026, 7, 28), vo.getShipDate());
         assertEquals(LocalDate.of(2026, 7, 28), vo.getOccupyStartDate());
         assertEquals(LocalDate.of(2026, 8, 6), vo.getOccupyEndDateExclusive());
         assertNull(vo.getRentalOrderItemId());

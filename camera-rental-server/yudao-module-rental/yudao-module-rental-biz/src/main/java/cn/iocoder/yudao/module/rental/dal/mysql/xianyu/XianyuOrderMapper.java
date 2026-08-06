@@ -23,8 +23,13 @@ import java.util.Map;
 public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
 
     default PageResult<XianyuOrderDO> selectAdminPage(XianyuOrderPageReqVO pageReqVO) {
+        return selectPage(pageReqVO, adminPageQuery(pageReqVO));
+    }
+
+    static LambdaQueryWrapper<XianyuOrderDO> adminPageQuery(XianyuOrderPageReqVO pageReqVO) {
         LambdaQueryWrapper<XianyuOrderDO> query = new LambdaQueryWrapperX<XianyuOrderDO>()
                 .eqIfPresent(XianyuOrderDO::getShopId, pageReqVO.getShopId())
+                .eqIfPresent(XianyuOrderDO::getOrderStatus, pageReqVO.getOrderStatus())
                 .eqIfPresent(XianyuOrderDO::getConversionStatus, pageReqVO.getConversionStatus())
                 .likeIfPresent(XianyuOrderDO::getExternalOrderId, pageReqVO.getExternalOrderId())
                 .eqIfPresent(XianyuOrderDO::getExternalProductId, pageReqVO.getExternalProductId())
@@ -37,11 +42,43 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
         query.apply(pageReqVO.getEndDate() != null,
                 "COALESCE(order_time, source_created_at, create_time) < {0}",
                 pageReqVO.getEndDate() != null ? pageReqVO.getEndDate().plusDays(1).atStartOfDay() : null);
+        query.apply(pageReqVO.getRentalStartDate() != null && pageReqVO.getRentalEndDate() != null,
+                """
+                (
+                    EXISTS (
+                        SELECT 1
+                          FROM rental_order ro
+                         WHERE ro.id = xianyu_order.rental_order_id
+                           AND ro.tenant_id = xianyu_order.tenant_id
+                           AND ro.deleted = b'0'
+                           AND ro.billable_start_date IS NOT NULL
+                           AND ro.billable_end_date IS NOT NULL
+                           AND ro.billable_start_date <= {0}
+                           AND ro.billable_end_date >= {1}
+                    )
+                    OR (
+                        NOT EXISTS (
+                            SELECT 1
+                              FROM rental_order ro_period
+                             WHERE ro_period.id = xianyu_order.rental_order_id
+                               AND ro_period.tenant_id = xianyu_order.tenant_id
+                               AND ro_period.deleted = b'0'
+                               AND ro_period.billable_start_date IS NOT NULL
+                               AND ro_period.billable_end_date IS NOT NULL
+                        )
+                        AND billable_start_date IS NOT NULL
+                        AND billable_end_date IS NOT NULL
+                        AND billable_start_date <= {0}
+                        AND billable_end_date >= {1}
+                    )
+                )
+                """,
+                pageReqVO.getRentalEndDate(), pageReqVO.getRentalStartDate());
         // Receiver fields are persisted separately; list reads do not need raw payload blobs.
         query.select(XianyuOrderDO.class, field -> !"detailJson".equals(field.getProperty())
                 && !"goodsJson".equals(field.getProperty())
                 && !"payNo".equals(field.getProperty()));
-        return selectPage(pageReqVO, query);
+        return query;
     }
 
     default Map<String, Object> selectRevenueSummary(Long shopId) {

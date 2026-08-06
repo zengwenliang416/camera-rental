@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.rental.dal.mysql.xianyu;
 
+import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderPageReqVO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderDO;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
@@ -7,8 +8,10 @@ import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class XianyuOrderMapperTest {
@@ -53,6 +56,69 @@ class XianyuOrderMapperTest {
         assertTrue(sql.contains("rental_order_id is not null"));
         assertTrue(sql.contains("receiver_mobile like"));
         assertTrue(sql.contains("limit 3"));
+    }
+
+    @Test
+    void adminPageQueryFiltersExactOrderStatus() {
+        XianyuOrderPageReqVO request = new XianyuOrderPageReqVO();
+        request.setOrderStatus("21");
+
+        String sql = XianyuOrderMapper.adminPageQuery(request)
+                .getCustomSqlSegment()
+                .toLowerCase();
+
+        assertTrue(sql.contains("order_status ="));
+    }
+
+    @Test
+    void adminPageQueryUsesInclusiveRentalPeriodOverlapWithoutJoiningOrderItems() {
+        XianyuOrderPageReqVO request = new XianyuOrderPageReqVO();
+        request.setRentalStartDate(LocalDate.of(2026, 8, 8));
+        request.setRentalEndDate(LocalDate.of(2026, 8, 17));
+
+        String sql = XianyuOrderMapper.adminPageQuery(request)
+                .getCustomSqlSegment()
+                .toLowerCase();
+
+        assertTrue(sql.contains("ro.billable_start_date <="));
+        assertTrue(sql.contains("ro.billable_end_date >="));
+        assertTrue(sql.contains("billable_start_date <="));
+        assertTrue(sql.contains("billable_end_date >="));
+        assertTrue(sql.contains("exists"));
+        assertFalse(sql.contains("rental_order_item"));
+    }
+
+    @Test
+    void adminPageQueryFallsBackToChannelPeriodOnlyWhenConvertedPeriodIsUnavailable() {
+        XianyuOrderPageReqVO request = new XianyuOrderPageReqVO();
+        request.setRentalStartDate(LocalDate.of(2026, 8, 8));
+        request.setRentalEndDate(LocalDate.of(2026, 8, 17));
+
+        String sql = XianyuOrderMapper.adminPageQuery(request)
+                .getCustomSqlSegment()
+                .toLowerCase();
+
+        assertTrue(sql.contains("not exists"));
+        assertTrue(sql.contains("ro_period.billable_start_date is not null"));
+        assertTrue(sql.contains("ro_period.billable_end_date is not null"));
+        assertTrue(sql.contains("ro.tenant_id = xianyu_order.tenant_id"));
+    }
+
+    @Test
+    void rentalDateRangeRequiresBothInclusiveBoundaries() {
+        XianyuOrderPageReqVO request = new XianyuOrderPageReqVO();
+        assertTrue(request.isRentalDateRangeComplete());
+        assertTrue(request.isRentalDateRangeValid());
+
+        request.setRentalStartDate(LocalDate.of(2026, 8, 8));
+        assertFalse(request.isRentalDateRangeComplete());
+
+        request.setRentalEndDate(LocalDate.of(2026, 8, 8));
+        assertTrue(request.isRentalDateRangeComplete());
+        assertTrue(request.isRentalDateRangeValid());
+
+        request.setRentalEndDate(LocalDate.of(2026, 8, 7));
+        assertFalse(request.isRentalDateRangeValid());
     }
 
 }

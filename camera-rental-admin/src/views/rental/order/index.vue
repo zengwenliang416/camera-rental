@@ -420,7 +420,7 @@ const conversionStatusOptions = computed(() =>
 )
 const shipDateShortcuts = computed(() => [
   {
-    text: t('common.today'),
+    text: t('rental.order.today'),
     value: () => new Date()
   }
 ])

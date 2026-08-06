@@ -841,6 +841,7 @@ export default {
       rentalDateRange: '租期范围',
       shipDate: '发货日期',
       shipDatePlaceholder: '选择发货日期',
+      today: '今天',
       orderStatus: '订单状态',
       payAmountFen: '实付',
       sellerRemark: '卖家备注',

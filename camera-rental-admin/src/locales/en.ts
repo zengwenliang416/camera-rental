@@ -875,6 +875,7 @@ export default {
       rentalDateRange: 'Rental period',
       shipDate: 'Ship date',
       shipDatePlaceholder: 'Select ship date',
+      today: 'Today',
       orderStatus: 'Order status',
       payAmountFen: 'Paid amount',
       sellerRemark: 'Seller remark',

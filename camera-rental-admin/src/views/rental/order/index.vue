@@ -53,6 +53,21 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item :label="t('rental.order.orderStatus')">
+        <el-select
+          v-model="queryParams.orderStatus"
+          class="!w-150px"
+          clearable
+          :placeholder="t('common.selectText')"
+        >
+          <el-option
+            v-for="option in orderStatusOptions"
+            :key="option.value"
+            :label="option.label"
+            :value="option.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item :label="t('rental.order.conversionStatus')">
         <el-select
           v-model="queryParams.conversionStatus"
@@ -71,6 +86,16 @@
       <el-form-item :label="t('rental.order.reportDateRange')">
         <el-date-picker
           v-model="queryParams.dateRange"
+          type="daterange"
+          value-format="YYYY-MM-DD"
+          class="!w-240px"
+          :start-placeholder="t('rental.report.startDate')"
+          :end-placeholder="t('rental.report.endDate')"
+        />
+      </el-form-item>
+      <el-form-item :label="t('rental.order.rentalDateRange')">
+        <el-date-picker
+          v-model="queryParams.rentalDateRange"
           type="daterange"
           value-format="YYYY-MM-DD"
           class="!w-240px"
@@ -203,10 +228,11 @@
       <el-table-column :label="t('rental.order.remarkParseStatus')" width="150">
         <template #default="{ row }">
           <el-tooltip
-            :content="[
-              remarkReasonLabel(row.rentalPeriodReasonCode),
-              row.remarkParseModel
-            ].filter(Boolean).join(' / ')"
+            :content="
+              [remarkReasonLabel(row.rentalPeriodReasonCode), row.remarkParseModel]
+                .filter(Boolean)
+                .join(' / ')
+            "
             placement="top"
           >
             <div class="flex items-center gap-4px">
@@ -366,6 +392,12 @@ const detailOrder = ref<XianyuOrderVO>()
 const list = ref<XianyuOrderVO[]>([])
 const shops = ref<XianyuShopVO[]>([])
 const total = ref(0)
+const orderStatusOptions = computed(() =>
+  getRentalStatusValues('channelOrder').map((value) => ({
+    value,
+    label: rentalLabel('channelOrder', value)
+  }))
+)
 const conversionStatusOptions = computed(() =>
   getRentalStatusValues('conversion').map((value) => ({
     value,
@@ -377,11 +409,13 @@ const queryParams = reactive<{
   pageNo: number
   pageSize: number
   shopId?: number
+  orderStatus?: string
   conversionStatus?: string
   externalOrderId?: string
   externalProductId?: string
   externalSkuId?: string
   dateRange?: [string, string]
+  rentalDateRange?: [string, string]
 }>({
   pageNo: 1,
   pageSize: 10
@@ -484,12 +518,15 @@ const getList = async () => {
       pageNo: queryParams.pageNo,
       pageSize: queryParams.pageSize,
       shopId: queryParams.shopId,
+      orderStatus: queryParams.orderStatus || undefined,
       conversionStatus: queryParams.conversionStatus || undefined,
       externalOrderId: queryParams.externalOrderId?.trim() || undefined,
       externalProductId: queryParams.externalProductId || undefined,
       externalSkuId: queryParams.externalSkuId || undefined,
       startDate: queryParams.dateRange?.[0],
-      endDate: queryParams.dateRange?.[1]
+      endDate: queryParams.dateRange?.[1],
+      rentalStartDate: queryParams.rentalDateRange?.[0],
+      rentalEndDate: queryParams.rentalDateRange?.[1]
     })
     list.value = data.list
     total.value = data.total
@@ -509,11 +546,13 @@ const handleQuery = async () => {
 
 const resetQuery = async () => {
   queryParams.shopId = undefined
+  queryParams.orderStatus = undefined
   queryParams.conversionStatus = undefined
   queryParams.externalOrderId = undefined
   queryParams.externalProductId = undefined
   queryParams.externalSkuId = undefined
   queryParams.dateRange = undefined
+  queryParams.rentalDateRange = undefined
   queryParams.pageNo = 1
   showAdvanced.value = false
   await getList()
@@ -596,6 +635,8 @@ const handleConvert = async (id: number) => {
 onMounted(async () => {
   const shopId = Number(route.query.shopId)
   queryParams.shopId = Number.isInteger(shopId) && shopId > 0 ? shopId : undefined
+  queryParams.orderStatus =
+    typeof route.query.orderStatus === 'string' ? route.query.orderStatus : undefined
   queryParams.externalOrderId =
     typeof route.query.externalOrderId === 'string' ? route.query.externalOrderId : undefined
   queryParams.externalProductId =
@@ -607,6 +648,12 @@ onMounted(async () => {
   }
   if (typeof route.query.startDate === 'string' && typeof route.query.endDate === 'string') {
     queryParams.dateRange = [route.query.startDate, route.query.endDate]
+  }
+  if (
+    typeof route.query.rentalStartDate === 'string' &&
+    typeof route.query.rentalEndDate === 'string'
+  ) {
+    queryParams.rentalDateRange = [route.query.rentalStartDate, route.query.rentalEndDate]
   }
   fillLast30Days()
   await loadShops()

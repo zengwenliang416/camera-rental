@@ -296,12 +296,15 @@ export const syncAuthorizedShops = () => {
 export const getXianyuOrderPage = (
   params: PageParam & {
     shopId?: number
+    orderStatus?: string
     conversionStatus?: string
     externalOrderId?: string
     externalProductId?: string
     externalSkuId?: string
     startDate?: string
     endDate?: string
+    rentalStartDate?: string
+    rentalEndDate?: string
   }
 ) => {
   return request.get<PageResult<XianyuOrderVO[]>>({ url: '/rental/xianyu/order/page', params })

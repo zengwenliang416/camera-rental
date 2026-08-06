@@ -103,6 +103,17 @@
           :end-placeholder="t('rental.report.endDate')"
         />
       </el-form-item>
+      <el-form-item :label="t('rental.order.shipDate')">
+        <el-date-picker
+          v-model="queryParams.shipDate"
+          type="date"
+          value-format="YYYY-MM-DD"
+          class="!w-160px"
+          clearable
+          :placeholder="t('rental.order.shipDatePlaceholder')"
+          :shortcuts="shipDateShortcuts"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleQuery">
           <Icon icon="ep:search" class="mr-5px" />{{ t('common.query') }}
@@ -186,6 +197,9 @@
             {{ rentalLabel('channelOrder', row.orderStatus) }}
           </el-tag>
         </template>
+      </el-table-column>
+      <el-table-column :label="t('rental.order.shipDate')" width="120">
+        <template #default="{ row }">{{ row.shipDate || '-' }}</template>
       </el-table-column>
       <el-table-column :label="t('rental.order.payAmountFen')" width="130">
         <template #default="{ row }">
@@ -404,6 +418,12 @@ const conversionStatusOptions = computed(() =>
     label: rentalLabel('conversion', value)
   }))
 )
+const shipDateShortcuts = computed(() => [
+  {
+    text: t('common.today'),
+    value: () => new Date()
+  }
+])
 const route = useRoute()
 const queryParams = reactive<{
   pageNo: number
@@ -416,6 +436,7 @@ const queryParams = reactive<{
   externalSkuId?: string
   dateRange?: [string, string]
   rentalDateRange?: [string, string]
+  shipDate?: string
 }>({
   pageNo: 1,
   pageSize: 10
@@ -525,6 +546,7 @@ const getList = async () => {
       externalSkuId: queryParams.externalSkuId || undefined,
       startDate: queryParams.dateRange?.[0],
       endDate: queryParams.dateRange?.[1],
+      shipDate: queryParams.shipDate,
       rentalStartDate: queryParams.rentalDateRange?.[0],
       rentalEndDate: queryParams.rentalDateRange?.[1]
     })
@@ -553,6 +575,7 @@ const resetQuery = async () => {
   queryParams.externalSkuId = undefined
   queryParams.dateRange = undefined
   queryParams.rentalDateRange = undefined
+  queryParams.shipDate = undefined
   queryParams.pageNo = 1
   showAdvanced.value = false
   await getList()
@@ -655,6 +678,7 @@ onMounted(async () => {
   ) {
     queryParams.rentalDateRange = [route.query.rentalStartDate, route.query.rentalEndDate]
   }
+  queryParams.shipDate = typeof route.query.shipDate === 'string' ? route.query.shipDate : undefined
   fillLast30Days()
   await loadShops()
   await getList()

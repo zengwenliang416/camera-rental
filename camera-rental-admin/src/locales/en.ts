@@ -873,6 +873,8 @@ export default {
       externalSkuId: 'External SKU ID',
       reportDateRange: 'Order dates',
       rentalDateRange: 'Rental period',
+      shipDate: 'Ship date',
+      shipDatePlaceholder: 'Select ship date',
       orderStatus: 'Order status',
       payAmountFen: 'Paid amount',
       sellerRemark: 'Seller remark',

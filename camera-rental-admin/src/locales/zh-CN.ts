@@ -839,6 +839,8 @@ export default {
       externalSkuId: '外部 SKU ID',
       reportDateRange: '订单日期',
       rentalDateRange: '租期范围',
+      shipDate: '发货日期',
+      shipDatePlaceholder: '选择发货日期',
       orderStatus: '订单状态',
       payAmountFen: '实付',
       sellerRemark: '卖家备注',

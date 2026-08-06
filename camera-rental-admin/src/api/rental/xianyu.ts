@@ -67,6 +67,7 @@ export interface XianyuOrderVO {
   remarkParseSource?: 'RULE' | 'AI'
   remarkParseConfidence?: number
   remarkParseModel?: string
+  shipDate?: string
   billableStartDate?: string
   billableEndDate?: string
   rentalPeriodStatus?: string
@@ -303,6 +304,7 @@ export const getXianyuOrderPage = (
     externalSkuId?: string
     startDate?: string
     endDate?: string
+    shipDate?: string
     rentalStartDate?: string
     rentalEndDate?: string
   }

@@ -10,7 +10,7 @@
         </div>
         <el-button
           type="primary"
-          v-hasPermi="['rental:logistics:config:update']"
+          v-hasRole="['super_admin']"
           @click="openDialog()"
         >
           <Icon icon="ep:plus" class="mr-5px" />
@@ -73,7 +73,7 @@
           <el-button
             link
             type="primary"
-            v-hasPermi="['rental:logistics:config:verify']"
+            v-hasRole="['super_admin']"
             :loading="verifyingId === row.id"
             @click="verify(row.id)"
           >
@@ -82,7 +82,7 @@
           <el-button
             link
             type="primary"
-            v-hasPermi="['rental:logistics:config:update']"
+            v-hasRole="['super_admin']"
             @click="openDialog(row)"
           >
             {{ t('action.edit') }}
@@ -90,7 +90,7 @@
           <el-button
             link
             type="danger"
-            v-hasPermi="['rental:logistics:config:update']"
+            v-hasRole="['super_admin']"
             @click="remove(row)"
           >
             {{ t('action.del') }}

@@ -57,7 +57,7 @@
           type="primary"
           plain
           :loading="previewing"
-          v-hasPermi="['rental:logistics:backfill']"
+          v-hasRole="['super_admin']"
           @click="preview"
         >
           <Icon icon="ep:view" class="mr-5px" />
@@ -67,7 +67,7 @@
           type="danger"
           :loading="applying"
           :disabled="!canApply"
-          v-hasPermi="['rental:logistics:backfill']"
+          v-hasRole="['super_admin']"
           @click="apply"
         >
           <Icon icon="ep:connection" class="mr-5px" />

@@ -88,14 +88,14 @@
         <el-button
           type="primary"
           :loading="saving"
-          v-hasPermi="['rental:logistics:config:update']"
+          v-hasRole="['super_admin']"
           @click="save"
         >
           {{ t('rental.logistics.saveProvider') }}
         </el-button>
         <el-button
           :loading="verifying"
-          v-hasPermi="['rental:logistics:config:verify']"
+          v-hasRole="['super_admin']"
           @click="verify"
         >
           {{ t('rental.logistics.verifyProvider') }}

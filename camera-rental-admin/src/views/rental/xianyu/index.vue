@@ -1,5 +1,6 @@
 <template>
-  <ContentWrap>
+  <Error v-if="!isSuperAdmin" type="403" />
+  <ContentWrap v-else>
     <el-alert
       v-if="loadError"
       class="mb-16px"
@@ -509,6 +510,7 @@ import { computed, ref, reactive, onMounted } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
 import { hasPermission } from '@/directives/permission/hasPermi'
+import { useUserStore } from '@/store/modules/user'
 import {
   getXianyuAfterSalePage,
   getXianyuAlertPage,
@@ -537,8 +539,10 @@ import XianyuConfigPanel from './components/XianyuConfigPanel.vue'
 defineOptions({ name: 'RentalXianyuOps' })
 const { t } = useI18n()
 const message = useMessage()
+const userStore = useUserStore()
 
 const configPanelRef = ref<{ reload: () => Promise<void> }>()
+const isSuperAdmin = computed(() => userStore.getRoles.includes('super_admin'))
 const loadError = ref(false)
 const loading = ref(false)
 const syncing = ref(false)
@@ -819,5 +823,9 @@ const retryAll = async () => {
   await loadExpressCompanies()
 }
 
-onMounted(retryAll)
+onMounted(() => {
+  if (isSuperAdmin.value) {
+    retryAll()
+  }
+})
 </script>

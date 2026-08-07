@@ -1,5 +1,6 @@
 <template>
-  <ContentWrap>
+  <Error v-if="!isSuperAdmin" type="403" />
+  <ContentWrap v-else>
     <div class="logistics-toolbar">
       <div class="logistics-toolbar__info">
         <div class="logistics-toolbar__title">{{ t('rental.logistics.pageTitle') }}</div>
@@ -80,6 +81,7 @@ import { computed, onMounted, ref } from 'vue'
 import { getRentalLogisticsProviderConfig } from '@/api/rental/logistics'
 import type { RentalLogisticsProviderConfigVO } from '@/api/rental/logistics'
 import { useI18n } from '@/hooks/web/useI18n'
+import { useUserStore } from '@/store/modules/user'
 import LogisticsBackfillCard from './components/LogisticsBackfillCard.vue'
 import LogisticsCredentialsCard from './components/LogisticsCredentialsCard.vue'
 import LogisticsProviderCard from './components/LogisticsProviderCard.vue'
@@ -88,6 +90,8 @@ import { logisticsStatusKey, logisticsStatusTagType } from './logisticsConfigMod
 defineOptions({ name: 'RentalLogisticsConfig' })
 
 const { t } = useI18n()
+const userStore = useUserStore()
+const isSuperAdmin = computed(() => userStore.getRoles.includes('super_admin'))
 const config = ref<RentalLogisticsProviderConfigVO>()
 const loading = ref(false)
 const loadError = ref(false)
@@ -156,7 +160,11 @@ const loadConfig = async () => {
   }
 }
 
-onMounted(loadConfig)
+onMounted(() => {
+  if (isSuperAdmin.value) {
+    loadConfig()
+  }
+})
 </script>
 
 <style scoped>

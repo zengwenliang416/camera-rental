@@ -40,7 +40,7 @@ public class XianyuConfigController {
     @PutMapping("/update")
     @Operation(summary = "更新当前租户闲管家配置（AppSecret 仅支持覆盖且永不回显）")
     @ApiAccessLog(requestEnable = false)
-    @PreAuthorize("@ss.hasPermission('rental:xianyu:config:update')")
+    @PreAuthorize("@ss.hasRole('super_admin')")
     public CommonResult<Boolean> updateConfig(@Valid @RequestBody XianyuConfigUpdateReqVO reqVO) {
         configAdminService.updateConfig(reqVO);
         return success(true);

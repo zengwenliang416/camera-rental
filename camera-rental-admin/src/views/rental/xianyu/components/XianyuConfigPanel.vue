@@ -116,7 +116,7 @@
           type="primary"
           :loading="saving"
           @click="save"
-          v-hasPermi="['rental:xianyu:config:update']"
+          v-hasRole="['super_admin']"
         >
           {{ t('common.save') }}
         </el-button>

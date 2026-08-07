@@ -76,7 +76,7 @@ public class RentalLogisticsOperationsController {
 
     @GetMapping("/provider-config/{providerCode}")
     @Operation(summary = "查询脱敏 Provider 配置")
-    @PreAuthorize("@ss.hasPermission('rental:logistics:config:query')")
+    @PreAuthorize("@ss.hasRole('super_admin')")
     public CommonResult<ProviderConfigView> getProviderConfig(
             @PathVariable("providerCode") String providerCode) {
         return success(configurationService.getProviderConfig(providerCode));
@@ -85,7 +85,7 @@ public class RentalLogisticsOperationsController {
     @PutMapping("/provider-config")
     @Operation(summary = "保存 Provider 公共配置，回调密钥仅支持保留、替换或清除")
     @ApiAccessLog(requestEnable = false)
-    @PreAuthorize("@ss.hasPermission('rental:logistics:config:update')")
+    @PreAuthorize("@ss.hasRole('super_admin')")
     public CommonResult<ProviderConfigView> saveProviderConfig(
             @Valid @RequestBody ProviderConfigUpdateReqVO reqVO) {
         ProviderConfigCommand command = new ProviderConfigCommand(reqVO.getProviderCode(), reqVO.getEnabled(),
@@ -98,7 +98,7 @@ public class RentalLogisticsOperationsController {
     @PutMapping("/provider-credential")
     @Operation(summary = "新增或更新当前租户 Provider 凭据")
     @ApiAccessLog(requestEnable = false)
-    @PreAuthorize("@ss.hasPermission('rental:logistics:config:update')")
+    @PreAuthorize("@ss.hasRole('super_admin')")
     public CommonResult<ProviderCredentialView> saveProviderCredential(
             @Valid @RequestBody ProviderCredentialSaveReqVO reqVO) {
         ProviderCredentialCommand command = new ProviderCredentialCommand(reqVO.getId(),
@@ -110,7 +110,7 @@ public class RentalLogisticsOperationsController {
 
     @DeleteMapping("/provider-credential/{id}")
     @Operation(summary = "删除当前租户 Provider 凭据")
-    @PreAuthorize("@ss.hasPermission('rental:logistics:config:update')")
+    @PreAuthorize("@ss.hasRole('super_admin')")
     public CommonResult<Boolean> deleteProviderCredential(@PathVariable("id") Long id) {
         configurationService.deleteProviderCredential(id);
         return success(true);
@@ -118,14 +118,14 @@ public class RentalLogisticsOperationsController {
 
     @PostMapping("/provider-credential/{id}/verify")
     @Operation(summary = "执行 Provider 凭据本地完整性验证，不访问供应商网络")
-    @PreAuthorize("@ss.hasPermission('rental:logistics:config:verify')")
+    @PreAuthorize("@ss.hasRole('super_admin')")
     public CommonResult<ProviderVerifyResult> verifyProviderCredential(@PathVariable("id") Long id) {
         return success(configurationService.verifyProviderCredential(id));
     }
 
     @PostMapping("/provider-config/{providerCode}/verify")
     @Operation(summary = "执行 Provider 配置本地完整性验证，不访问供应商网络")
-    @PreAuthorize("@ss.hasPermission('rental:logistics:config:verify')")
+    @PreAuthorize("@ss.hasRole('super_admin')")
     public CommonResult<ProviderVerifyResult> verifyProviderConfig(
             @PathVariable("providerCode") String providerCode) {
         return success(configurationService.verifyProviderConfig(providerCode));
@@ -191,7 +191,7 @@ public class RentalLogisticsOperationsController {
 
     @PostMapping("/backfill")
     @Operation(summary = "执行 dry-run 或有界历史 shipment 到 Delivery 回填")
-    @PreAuthorize("@ss.hasPermission('rental:logistics:backfill')")
+    @PreAuthorize("@ss.hasRole('super_admin')")
     public CommonResult<BackfillResult> backfill(@Valid @RequestBody(required = false) BackfillReqVO reqVO) {
         BackfillCommand command = reqVO == null
                 ? new BackfillCommand(true, 20, false)

@@ -8,3 +8,4 @@ camera-rental-server/sql/mysql/migrations/20260802_039_xianyu_remark_ai_audit.sq
 camera-rental-server/sql/mysql/migrations/20260802_040_return_registration_channel_review.sql
 camera-rental-server/sql/mysql/migrations/20260803_041_rental_device_short_codes.sql
 camera-rental-server/sql/mysql/migrations/20260807_044_xianyu_admin_only_console.sql
+camera-rental-server/sql/mysql/migrations/20260807_045_xianyu_ship_permissions_under_orders.sql

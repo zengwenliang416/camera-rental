@@ -24,8 +24,6 @@
       </el-button>
     </el-alert>
 
-    <XianyuShipWorkbench />
-
     <!-- Primary filter: local list only -->
     <el-form class="order-filter-form" :inline="true" :model="queryParams" @submit.prevent>
       <el-form-item :label="t('rental.order.externalOrderId')">
@@ -133,6 +131,7 @@
         >
           <Icon icon="ep:magic-stick" class="mr-5px" />{{ t('rental.order.reparseAction') }}
         </el-button>
+        <XianyuOrderColumnSettings v-model="selectedColumnKeys" />
       </el-form-item>
     </el-form>
 
@@ -167,81 +166,35 @@
     </p>
 
     <el-table v-loading="loading" :data="list">
-      <el-table-column label="ID" width="80">
+      <el-table-column
+        v-for="column in visibleOrderColumns"
+        :key="column.key"
+        :prop="column.key === 'shopName' ? undefined : column.key"
+        :label="orderColumnLabel(column)"
+        :width="column.minWidth ? undefined : column.width"
+        :min-width="column.minWidth || column.width"
+        :fixed="column.key === 'id' ? 'left' : undefined"
+        :show-overflow-tooltip="isOverflowColumn(column)"
+      >
         <template #default="{ row }">
-          <el-button link type="primary" @click="openOrderDetail(row)">
+          <el-button v-if="column.key === 'id'" link type="primary" @click="openOrderDetail(row)">
             {{ row.id }}
           </el-button>
-        </template>
-      </el-table-column>
-      <el-table-column prop="shopId" :label="t('rental.order.shopId')" width="90" />
-      <el-table-column :label="t('rental.xianyu.shopName')" min-width="110">
-        <template #default="{ row }">{{ shopNameById(row.shopId) }}</template>
-      </el-table-column>
-      <el-table-column
-        :label="t('rental.order.externalOrderId')"
-        min-width="180"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">{{ row.externalOrderId || '-' }}</template>
-      </el-table-column>
-      <el-table-column
-        prop="goodsTitle"
-        :label="t('rental.order.goodsTitle')"
-        min-width="140"
-        show-overflow-tooltip
-      />
-      <el-table-column :label="t('rental.order.orderStatus')" width="110">
-        <template #default="{ row }">
-          <el-tag :type="getRentalTagType('channelOrder', row.orderStatus)">
+          <span v-else-if="column.key === 'shopName'">{{ shopNameById(row.shopId) }}</span>
+          <el-tag
+            v-else-if="column.key === 'orderStatus'"
+            :type="getRentalTagType('channelOrder', row.orderStatus)"
+          >
             {{ rentalLabel('channelOrder', row.orderStatus) }}
           </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column :label="t('rental.order.shipDate')" width="120">
-        <template #default="{ row }">{{ row.shipDate || '-' }}</template>
-      </el-table-column>
-      <el-table-column :label="t('rental.order.payAmountFen')" width="130">
-        <template #default="{ row }">
-          {{ formatYuan(row.payAmount) }}
-        </template>
-      </el-table-column>
-      <el-table-column :label="t('rental.order.receiverName')" width="100" show-overflow-tooltip>
-        <template #default="{ row }">{{ row.receiverName || '-' }}</template>
-      </el-table-column>
-      <el-table-column :label="t('rental.order.receiverMobile')" width="140">
-        <template #default="{ row }">{{ row.receiverMobile || '-' }}</template>
-      </el-table-column>
-      <el-table-column
-        :label="t('rental.order.receiverAddress')"
-        min-width="180"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">{{ row.receiverAddress || '-' }}</template>
-      </el-table-column>
-      <el-table-column
-        prop="buyerNick"
-        :label="t('rental.xianyu.buyerNick')"
-        min-width="110"
-        show-overflow-tooltip
-      />
-      <el-table-column prop="expressName" :label="t('rental.order.expressName')" width="100" />
-      <el-table-column :label="t('rental.order.conversionStatus')" width="120">
-        <template #default="{ row }">
-          <el-tag :type="getRentalTagType('conversion', row.conversionStatus)">
+          <el-tag
+            v-else-if="column.key === 'conversionStatus'"
+            :type="getRentalTagType('conversion', row.conversionStatus)"
+          >
             {{ rentalLabel('conversion', row.conversionStatus) }}
           </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="sellerRemark"
-        :label="t('rental.order.sellerRemark')"
-        min-width="140"
-        show-overflow-tooltip
-      />
-      <el-table-column :label="t('rental.order.remarkParseStatus')" width="150">
-        <template #default="{ row }">
           <el-tooltip
+            v-else-if="column.key === 'remarkParseStatus'"
             :content="
               [remarkReasonLabel(row.rentalPeriodReasonCode), row.remarkParseModel]
                 .filter(Boolean)
@@ -254,19 +207,35 @@
                 {{ remarkParseStatusLabel(row.remarkParseStatus) }}
               </el-tag>
               <span class="text-12px text-[var(--el-text-color-secondary)]">
-                {{ row.remarkParseSource === 'AI' ? 'AI' : '规则' }}
+                {{
+                  row.remarkParseSource === 'AI'
+                    ? 'AI'
+                    : row.remarkParseSource === 'RULE'
+                      ? '规则'
+                      : '-'
+                }}
                 <template v-if="row.remarkParseConfidence">
                   {{ Math.round(row.remarkParseConfidence * 100) }}%
                 </template>
               </span>
             </div>
           </el-tooltip>
+          <span v-else>{{ formatOrderColumnValue(row, column) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="t('table.action')" width="170" fixed="right">
+      <el-table-column :label="t('table.action')" width="220" fixed="right">
         <template #default="{ row }">
           <el-button link type="primary" @click="openOrderDetail(row)">
             {{ t('rental.order.viewDetail') }}
+          </el-button>
+          <el-button
+            v-if="canShipOrder(row)"
+            v-hasPermi="['rental:xianyu:ship']"
+            link
+            type="primary"
+            @click="openShipWorkbench(row)"
+          >
+            {{ t('rental.order.shipAction') }}
           </el-button>
           <el-button
             v-if="canRetryConvert(row.conversionStatus)"
@@ -301,6 +270,19 @@
       destroy-on-close
     >
       <XianyuOrderDetailPanel v-if="detailOrder" :order="detailOrder" />
+    </el-drawer>
+
+    <el-drawer
+      v-model="shipDrawerVisible"
+      :title="t('rental.order.shipDrawerTitle')"
+      size="min(960px, 96vw)"
+      destroy-on-close
+    >
+      <XianyuShipWorkbench
+        v-if="shipDrawerOrder"
+        :initial-order="shipDrawerOrder"
+        @shipped="handleOrderShipped"
+      />
     </el-drawer>
 
     <!-- Manual catch-up: secondary, not mixed into filter bar -->
@@ -366,9 +348,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive, onMounted } from 'vue'
+import { computed, ref, reactive, onMounted, watch } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
+import { useCache } from '@/hooks/web/useCache'
 import {
   convertXianyuOrder,
   getXianyuOrderPage,
@@ -379,7 +362,7 @@ import {
   type XianyuShopVO
 } from '@/api/rental/xianyu'
 import { toEpochMillis } from '@/utils/rentalDate'
-import { formatDate } from '@/utils/formatTime'
+import { formatDate, formatNullableDate } from '@/utils/formatTime'
 import { fenToYuan } from '@/utils'
 import {
   getRentalLabelKey,
@@ -389,10 +372,19 @@ import {
 } from '@/utils/rentalLabels'
 import XianyuShipWorkbench from './components/XianyuShipWorkbench.vue'
 import XianyuOrderDetailPanel from './components/XianyuOrderDetailPanel.vue'
+import XianyuOrderColumnSettings from './components/XianyuOrderColumnSettings.vue'
+import {
+  XIANYU_ORDER_COLUMNS,
+  sanitizePersistedXianyuOrderColumnKeys,
+  type XianyuOrderColumnDefinition,
+  type XianyuOrderColumnKey
+} from './components/xianyuOrderColumns'
 
 defineOptions({ name: 'RentalChannelOrder' })
 const { t } = useI18n()
 const message = useMessage()
+const { wsCache } = useCache()
+const orderColumnCacheKey = 'rental:xianyu:order:visible-columns:v1'
 
 const loading = ref(false)
 const syncing = ref(false)
@@ -402,10 +394,19 @@ const shopLoadError = ref(false)
 const showAdvanced = ref(false)
 const syncVisible = ref(false)
 const detailVisible = ref(false)
+const shipDrawerVisible = ref(false)
 const detailOrder = ref<XianyuOrderVO>()
+const shipDrawerOrder = ref<XianyuOrderVO>()
 const list = ref<XianyuOrderVO[]>([])
 const shops = ref<XianyuShopVO[]>([])
 const total = ref(0)
+const selectedColumnKeys = ref<XianyuOrderColumnKey[]>(
+  sanitizePersistedXianyuOrderColumnKeys(wsCache.get(orderColumnCacheKey))
+)
+const visibleOrderColumns = computed(() => {
+  const selected = new Set(selectedColumnKeys.value)
+  return XIANYU_ORDER_COLUMNS.filter((column) => selected.has(column.key))
+})
 const orderStatusOptions = computed(() =>
   getRentalStatusValues('channelOrder').map((value) => ({
     value,
@@ -463,6 +464,61 @@ const formatYuan = (amount?: number) => {
   return amount == null ? '-' : t('rental.common.yuanAmount', { amount: fenToYuan(amount) })
 }
 
+const orderColumnLabel = (column: XianyuOrderColumnDefinition) => {
+  if (!column.labelKey) return column.label
+  const translated = t(column.labelKey)
+  return translated === column.labelKey ? column.label : translated
+}
+
+const isOverflowColumn = (column: XianyuOrderColumnDefinition) => {
+  return column.format === 'text' || column.format === 'array'
+}
+
+const normalizeDateValue = (value: unknown, includeTime: boolean) => {
+  if (Array.isArray(value) && value.length >= 3) {
+    const [year, month, day, hour = 0, minute = 0, second = 0] = value
+    const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+    if (!includeTime) return date
+    return `${date} ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(
+      second
+    ).padStart(2, '0')}`
+  }
+  if (typeof value !== 'string' || !value.trim()) return '-'
+  return includeTime ? formatNullableDate(value) : value.trim()
+}
+
+const formatOrderColumnValue = (order: XianyuOrderVO, column: XianyuOrderColumnDefinition) => {
+  const value =
+    column.key === 'shopName'
+      ? shopNameById(order.shopId)
+      : order[column.key as keyof XianyuOrderVO]
+  if (column.key === 'rentalPeriodReasonCode') {
+    return remarkReasonLabel(typeof value === 'string' ? value : undefined)
+  }
+  if (column.format === 'amount-fen') {
+    return typeof value === 'number' ? formatYuan(value) : '-'
+  }
+  if (column.format === 'date') {
+    return normalizeDateValue(value, false)
+  }
+  if (column.format === 'datetime') {
+    return normalizeDateValue(value, true)
+  }
+  if (column.format === 'boolean') {
+    return typeof value === 'boolean' ? t(value ? 'common.yes' : 'common.no') : '-'
+  }
+  if (column.format === 'confidence') {
+    return typeof value === 'number' ? `${Math.round(value * 100)}%` : '-'
+  }
+  if (column.format === 'array') {
+    return Array.isArray(value) && value.length > 0 ? value.join(', ') : '-'
+  }
+  if (typeof value === 'string') {
+    return value.trim() || '-'
+  }
+  return value ?? '-'
+}
+
 const shopNameById = (id?: number) => {
   if (id == null) return '-'
   return shops.value.find((s) => s.id === id)?.shopName || String(id)
@@ -472,6 +528,26 @@ const openOrderDetail = (order: XianyuOrderVO) => {
   detailOrder.value = order
   detailVisible.value = true
 }
+
+const pendingShipStatuses = new Set(['12', 'WAIT_SHIP', 'WAIT_SEND', 'WAIT_SELLER_SEND_GOODS'])
+
+const canShipOrder = (order: XianyuOrderVO) => {
+  return pendingShipStatuses.has(order.orderStatus)
+}
+
+const openShipWorkbench = (order: XianyuOrderVO) => {
+  shipDrawerOrder.value = order
+  shipDrawerVisible.value = true
+}
+
+const handleOrderShipped = async () => {
+  await getList()
+}
+
+watch(selectedColumnKeys, (keys) => {
+  const sanitized = sanitizePersistedXianyuOrderColumnKeys(keys)
+  wsCache.set(orderColumnCacheKey, sanitized)
+})
 
 const fillLast30Days = () => {
   const end = Date.now()

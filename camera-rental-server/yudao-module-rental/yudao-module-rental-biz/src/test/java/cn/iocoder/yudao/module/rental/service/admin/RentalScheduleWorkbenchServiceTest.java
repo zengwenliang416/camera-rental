@@ -116,7 +116,7 @@ class RentalScheduleWorkbenchServiceTest {
     }
 
     @Test
-    void shouldKeepReturnedDeviceOccupiedUntilInspectionAndExposePendingAllocation() {
+    void shouldKeepReturnedDeviceOccupiedUntilInspectionWithoutDuplicatingPendingQueue() {
         RentalDeviceDO device = RentalDeviceDO.builder()
                 .id(201L).deviceNo("A7M4-0002").equipmentModelCode("SONY-A7M4")
                 .status("RENTED").enabled(true).build();
@@ -131,15 +131,6 @@ class RentalScheduleWorkbenchServiceTest {
         when(deliveryMapper.selectList(any())).thenReturn(List.of(RentalDeliveryDO.builder()
                 .id(301L).rentalOrderId(401L).direction("RETURN").trackingStatus("RETURNED")
                 .lifecycleStatus("ACTIVE").build()));
-        when(orderMapper.selectList(any())).thenReturn(List.of(RentalOrderDO.builder()
-                .id(501L).orderNo("R-501").status("PENDING_ALLOCATION").build()));
-        when(orderItemMapper.selectList(any())).thenReturn(List.of(RentalOrderItemDO.builder()
-                .id(502L).rentalOrderId(501L).equipmentModelCode("SONY-A7M4")
-                .quantity(2).occupyStartDate(LocalDate.of(2026, 8, 10))
-                .occupyEndDateExclusive(LocalDate.of(2026, 8, 13)).build()));
-        when(assignmentMapper.selectList(any())).thenReturn(List.of(RentalDeviceAssignmentDO.builder()
-                .id(503L).rentalOrderId(501L).rentalOrderItemId(502L).deviceId(201L)
-                .status("ASSIGNED").build()));
 
         RentalScheduleWorkbenchRespVO result = service.getWorkbench(
                 request(LocalDate.of(2026, 8, 1), LocalDate.of(2026, 8, 15), "14D"));
@@ -149,10 +140,7 @@ class RentalScheduleWorkbenchServiceTest {
         assertTrue(lane.getOccupied());
         assertEquals(1, result.getExceptions().stream()
                 .filter(item -> "RETURN_INSPECTION_PENDING".equals(item.getCode())).count());
-        assertEquals(1, result.getPendingAllocations().size());
-        assertEquals(2, result.getPendingAllocations().get(0).getRequiredQuantity());
-        assertEquals(1, result.getPendingAllocations().get(0).getAssignedQuantity());
-        assertEquals(1, result.getPendingAllocations().get(0).getRemainingQuantity());
+        assertTrue(result.getPendingAllocations().isEmpty());
     }
 
     private RentalScheduleWorkbenchReqVO request(LocalDate from, LocalDate toExclusive, String viewMode) {

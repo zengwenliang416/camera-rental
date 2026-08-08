@@ -6,7 +6,6 @@ import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalScheduleWorkbenchDeviceLaneRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalScheduleWorkbenchExceptionRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalScheduleWorkbenchMetricsRespVO;
-import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalScheduleWorkbenchPendingAllocationRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalScheduleWorkbenchReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalScheduleWorkbenchRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalScheduleWorkbenchSegmentRespVO;
@@ -55,7 +54,6 @@ import java.util.stream.Collectors;
 public class RentalScheduleWorkbenchService {
 
     static final String SCHEDULE_EFFECTIVE = "EFFECTIVE";
-    static final String ORDER_PENDING_ALLOCATION = "PENDING_ALLOCATION";
     static final String STATUS_ASSIGNED = "ASSIGNED";
     static final String STATUS_DISPATCHED = "DISPATCHED";
     static final String DEVICE_RENTED = "RENTED";
@@ -137,17 +135,12 @@ public class RentalScheduleWorkbenchService {
 
         Set<Long> scheduleOrderIds = schedules.stream()
                 .map(RentalScheduleDO::getRentalOrderId).filter(Objects::nonNull).collect(Collectors.toSet());
-        List<RentalOrderDO> pendingOrders = nullSafe(orderMapper.selectList(
-                new LambdaQueryWrapper<RentalOrderDO>()
+        List<RentalOrderDO> scheduleOrders = scheduleOrderIds.isEmpty() ? List.of()
+                : nullSafe(orderMapper.selectList(new LambdaQueryWrapper<RentalOrderDO>()
                         .eq(RentalOrderDO::getTenantId, tenantId)
-                        .and(wrapper -> {
-                            wrapper.eq(RentalOrderDO::getStatus, ORDER_PENDING_ALLOCATION);
-                            if (!scheduleOrderIds.isEmpty()) {
-                                wrapper.or().in(RentalOrderDO::getId, scheduleOrderIds);
-                            }
-                        })
+                        .in(RentalOrderDO::getId, scheduleOrderIds)
                         .orderByAsc(RentalOrderDO::getId)));
-        List<Long> orderIds = pendingOrders.stream().map(RentalOrderDO::getId)
+        List<Long> orderIds = scheduleOrders.stream().map(RentalOrderDO::getId)
                 .filter(Objects::nonNull).distinct().toList();
         List<RentalOrderItemDO> orderItems = orderIds.isEmpty() ? List.of() : nullSafe(orderItemMapper.selectList(
                 new LambdaQueryWrapper<RentalOrderItemDO>()
@@ -197,15 +190,11 @@ public class RentalScheduleWorkbenchService {
                         .orderByAsc(RentalManualReviewDO::getId)));
 
         Map<Long, RentalOrderItemDO> orderItemsById = indexById(orderItems, RentalOrderItemDO::getId);
-        Map<Long, RentalOrderDO> ordersById = indexById(pendingOrders, RentalOrderDO::getId);
+        Map<Long, RentalOrderDO> ordersById = indexById(scheduleOrders, RentalOrderDO::getId);
         Map<Long, RentalDeviceAssignmentDO> assignmentsByScheduleId = assignments.stream()
                 .filter(assignment -> assignment.getScheduleId() != null)
                 .collect(Collectors.toMap(RentalDeviceAssignmentDO::getScheduleId, Function.identity(),
                         (left, right) -> left, LinkedHashMap::new));
-        Map<Long, List<RentalDeviceAssignmentDO>> assignmentsByItemId = assignments.stream()
-                .filter(assignment -> assignment.getRentalOrderItemId() != null)
-                .collect(Collectors.groupingBy(RentalDeviceAssignmentDO::getRentalOrderItemId,
-                        LinkedHashMap::new, Collectors.toList()));
         Map<Long, List<RentalDeliveryDO>> deliveriesByDeviceId = deliveriesByDeviceId(deliveryRelations, deliveries);
         Map<Long, List<RentalScheduleDO>> schedulesByDeviceId = schedules.stream()
                 .filter(schedule -> schedule.getDeviceId() != null)
@@ -217,8 +206,6 @@ public class RentalScheduleWorkbenchService {
                         orderItemsById, ordersById, assignmentsByScheduleId,
                         deliveriesByDeviceId.getOrDefault(device.getId(), List.of()), window))
                 .toList();
-        List<RentalScheduleWorkbenchPendingAllocationRespVO> pendingAllocations =
-                toPendingAllocations(pendingOrders, orderItems, assignmentsByItemId);
         List<RentalScheduleWorkbenchExceptionRespVO> exceptions =
                 toExceptions(devices, lanes, deliveriesByDeviceId, reviews);
 
@@ -226,12 +213,7 @@ public class RentalScheduleWorkbenchService {
                 tenantId, window.fromDate(), window.toDateExclusive(), keyword, equipmentModelCode,
                 deviceStatus, logisticsStatus);
         metrics = metrics == null ? fallbackMetrics(lanes, page == null ? 0L : page.getTotal(), window) : copy(metrics);
-        metrics.setPendingAllocationCount((long) pendingAllocations.size());
-        metrics.setPendingAllocationItems((long) pendingAllocations.size());
-        metrics.setPendingAllocationOrders(pendingAllocations.stream()
-                .map(RentalScheduleWorkbenchPendingAllocationRespVO::getRentalOrderId)
-                .filter(Objects::nonNull).distinct().count());
-        metrics.setExceptionCount((long) exceptions.size());
+        metrics.setPendingAllocationCount(safeLong(metrics.getPendingAllocationItems()));
         metrics.setTotalDeviceDays(safeLong(metrics.getTotalDevices()) * window.dayCount());
         metrics.setUtilizationRate(utilization(metrics.getOccupiedDeviceDays(), metrics.getTotalDeviceDays()));
 
@@ -239,7 +221,7 @@ public class RentalScheduleWorkbenchService {
         response.setWindow(toWindowResp(window));
         response.setMetrics(metrics);
         response.setDevicePage(new PageResult<>(lanes, page == null ? 0L : page.getTotal()));
-        response.setPendingAllocations(pendingAllocations);
+        response.setPendingAllocations(List.of());
         response.setExceptions(exceptions);
         return response;
     }
@@ -299,41 +281,6 @@ public class RentalScheduleWorkbenchService {
         segment.setLeftContinuation(schedule.getOccupyStartDate().isBefore(window.fromDate()));
         segment.setRightContinuation(schedule.getOccupyEndDateExclusive().isAfter(window.toDateExclusive()));
         return segment;
-    }
-
-    private List<RentalScheduleWorkbenchPendingAllocationRespVO> toPendingAllocations(
-            List<RentalOrderDO> orders, List<RentalOrderItemDO> items,
-            Map<Long, List<RentalDeviceAssignmentDO>> assignmentsByItemId) {
-        Map<Long, RentalOrderDO> ordersById = indexById(orders, RentalOrderDO::getId);
-        List<RentalScheduleWorkbenchPendingAllocationRespVO> result = new ArrayList<>();
-        for (RentalOrderItemDO item : items) {
-            RentalOrderDO order = ordersById.get(item.getRentalOrderId());
-            if (order == null || !ORDER_PENDING_ALLOCATION.equals(order.getStatus())) {
-                continue;
-            }
-            int required = item.getQuantity() == null ? 0 : item.getQuantity();
-            int assigned = assignmentsByItemId.getOrDefault(item.getId(), List.of()).size();
-            int remaining = Math.max(0, required - assigned);
-            if (remaining == 0) {
-                continue;
-            }
-            RentalScheduleWorkbenchPendingAllocationRespVO vo =
-                    new RentalScheduleWorkbenchPendingAllocationRespVO();
-            vo.setRentalOrderId(order.getId());
-            vo.setRentalOrderItemId(item.getId());
-            vo.setOrderNo(order.getOrderNo());
-            vo.setOrderStatus(order.getStatus());
-            vo.setEquipmentModelCode(item.getEquipmentModelCode());
-            vo.setRequiredQuantity(required);
-            vo.setAssignedQuantity(assigned);
-            vo.setRemainingQuantity(remaining);
-            vo.setBillableStartDate(item.getBillableStartDate());
-            vo.setBillableEndDate(item.getBillableEndDate());
-            vo.setOccupyStartDate(item.getOccupyStartDate());
-            vo.setOccupyEndDateExclusive(item.getOccupyEndDateExclusive());
-            result.add(vo);
-        }
-        return result;
     }
 
     private List<RentalScheduleWorkbenchExceptionRespVO> toExceptions(
@@ -428,6 +375,10 @@ public class RentalScheduleWorkbenchService {
         target.setAvailableDevices(safeLong(source.getAvailableDevices()));
         target.setOccupiedDevices(safeLong(source.getOccupiedDevices()));
         target.setInTransitDevices(safeLong(source.getInTransitDevices()));
+        target.setPendingAllocationOrders(safeLong(source.getPendingAllocationOrders()));
+        target.setPendingAllocationItems(safeLong(source.getPendingAllocationItems()));
+        target.setPendingAllocationCount(safeLong(source.getPendingAllocationItems()));
+        target.setExceptionCount(safeLong(source.getExceptionCount()));
         target.setOccupiedDeviceDays(safeLong(source.getOccupiedDeviceDays()));
         return target;
     }

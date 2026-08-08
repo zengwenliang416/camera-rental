@@ -64,6 +64,7 @@ public class RentalScheduleAllocationService {
     private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
     private static final Set<String> ACTIVE_ASSIGNMENT_STATUSES = Set.of("ASSIGNED", "DISPATCHED");
     private static final Set<String> TERMINAL_TRACKING_STATUSES = Set.of("DELIVERED", "RETURNED");
+    private static final int MAX_CANDIDATE_DEVICES = 100;
     private static final int MAX_NEIGHBORING_SCHEDULES = 8;
     private static final long STALE_HOURS = 24;
 
@@ -164,7 +165,8 @@ public class RentalScheduleAllocationService {
 
         List<RentalDeviceDO> devices = tenantRows(deviceMapper.selectList(new LambdaQueryWrapper<RentalDeviceDO>()
                 .eq(RentalDeviceDO::getEquipmentModelCode, item.getEquipmentModelCode())
-                .orderByAsc(RentalDeviceDO::getId)), tenantId);
+                .orderByAsc(RentalDeviceDO::getId)
+                .last("LIMIT " + MAX_CANDIDATE_DEVICES)), tenantId);
         List<Long> deviceIds = ids(devices, RentalDeviceDO::getId);
         if (deviceIds.isEmpty()) {
             result.setCandidates(List.of());

@@ -71,6 +71,15 @@
                           AND s0.occupy_start_date &lt; #{toDateExclusive}
                           AND s0.occupy_end_date_exclusive &gt; #{fromDate}
                     )
+                    AND NOT EXISTS (
+                        SELECT 1
+                        FROM rental_device_lock l0
+                        WHERE l0.tenant_id = #{tenantId}
+                          AND l0.deleted = b'0'
+                          AND l0.device_id = d.id
+                          AND l0.status = 'ACTIVE'
+                          AND (l0.planned_end_time IS NULL OR l0.planned_end_time &gt; NOW())
+                    )
                 THEN 1 ELSE 0 END
             ), 0) AS available_devices,
             COALESCE(SUM(
@@ -84,6 +93,15 @@
                           AND s1.status = 'EFFECTIVE'
                           AND s1.occupy_start_date &lt; #{toDateExclusive}
                           AND s1.occupy_end_date_exclusive &gt; #{fromDate}
+                    )
+                    OR EXISTS (
+                        SELECT 1
+                        FROM rental_device_lock l1
+                        WHERE l1.tenant_id = #{tenantId}
+                          AND l1.deleted = b'0'
+                          AND l1.device_id = d.id
+                          AND l1.status = 'ACTIVE'
+                          AND (l1.planned_end_time IS NULL OR l1.planned_end_time &gt; NOW())
                     )
                 THEN 1 ELSE 0 END
             ), 0) AS occupied_devices,
@@ -114,7 +132,81 @@
                   AND s2.status = 'EFFECTIVE'
                   AND s2.occupy_start_date &lt; #{toDateExclusive}
                   AND s2.occupy_end_date_exclusive &gt; #{fromDate}
-            )), 0) AS occupied_device_days
+            )), 0) AS occupied_device_days,
+            (
+                SELECT COUNT(DISTINCT ro.id)
+                FROM rental_order ro
+                WHERE ro.tenant_id = #{tenantId}
+                  AND ro.deleted = b'0'
+                  AND ro.status = 'PENDING_ALLOCATION'
+                  AND EXISTS (
+                      SELECT 1
+                      FROM rental_order_item roi
+                      WHERE roi.tenant_id = ro.tenant_id
+                        AND roi.deleted = b'0'
+                        AND roi.rental_order_id = ro.id
+                        AND COALESCE(roi.quantity, 0) &gt; (
+                            SELECT COUNT(1)
+                            FROM rental_device_assignment rda
+                            WHERE rda.tenant_id = roi.tenant_id
+                              AND rda.deleted = b'0'
+                              AND rda.rental_order_item_id = roi.id
+                              AND rda.status IN ('ASSIGNED', 'DISPATCHED')
+                        )
+                  )
+            ) AS pending_allocation_orders,
+            (
+                SELECT COUNT(1)
+                FROM rental_order_item roi
+                INNER JOIN rental_order ro ON ro.id = roi.rental_order_id
+                    AND ro.tenant_id = #{tenantId}
+                    AND ro.deleted = b'0'
+                    AND ro.status = 'PENDING_ALLOCATION'
+                WHERE roi.tenant_id = #{tenantId}
+                  AND roi.deleted = b'0'
+                  AND COALESCE(roi.quantity, 0) &gt; (
+                      SELECT COUNT(1)
+                      FROM rental_device_assignment rda
+                      WHERE rda.tenant_id = roi.tenant_id
+                        AND rda.deleted = b'0'
+                        AND rda.rental_order_item_id = roi.id
+                        AND rda.status IN ('ASSIGNED', 'DISPATCHED')
+                  )
+            ) AS pending_allocation_items,
+            (
+                COALESCE(SUM(
+                    CASE WHEN EXISTS (
+                        SELECT 1
+                        FROM rental_delivery_device_rel dr3
+                        INNER JOIN rental_delivery dl3 ON dl3.id = dr3.delivery_id
+                            AND dl3.tenant_id = #{tenantId}
+                            AND dl3.deleted = b'0'
+                            AND dl3.lifecycle_status = 'ACTIVE'
+                        WHERE dr3.tenant_id = #{tenantId}
+                          AND dr3.deleted = b'0'
+                          AND dr3.device_id = d.id
+                          AND (
+                              dl3.tracking_status = 'EXCEPTION'
+                              OR (
+                                  dl3.tracking_status NOT IN ('DELIVERED', 'RETURNED')
+                                  AND dl3.last_synced_at &lt; DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                              )
+                              OR (
+                                  d.status = 'RENTED'
+                                  AND dl3.direction = 'RETURN'
+                                  AND dl3.tracking_status = 'RETURNED'
+                              )
+                          )
+                    ) THEN 1 ELSE 0 END
+                ), 0)
+                + (
+                    SELECT COUNT(1)
+                    FROM rental_manual_review mr
+                    WHERE mr.tenant_id = #{tenantId}
+                      AND mr.deleted = b'0'
+                      AND mr.status = 'OPEN'
+                )
+            ) AS exception_count
         FROM rental_device d
         WHERE 1 = 1
         <include refid="DeviceFilters"/>

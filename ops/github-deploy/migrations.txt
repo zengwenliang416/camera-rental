@@ -9,3 +9,4 @@ camera-rental-server/sql/mysql/migrations/20260802_040_return_registration_chann
 camera-rental-server/sql/mysql/migrations/20260803_041_rental_device_short_codes.sql
 camera-rental-server/sql/mysql/migrations/20260807_044_xianyu_admin_only_console.sql
 camera-rental-server/sql/mysql/migrations/20260807_045_xianyu_ship_permissions_under_orders.sql
+camera-rental-server/sql/mysql/migrations/20260808_046_rental_device_schedule_v2.sql

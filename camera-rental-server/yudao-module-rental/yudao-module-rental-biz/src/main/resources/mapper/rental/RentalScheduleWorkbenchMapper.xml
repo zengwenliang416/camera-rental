@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleWorkbenchMapper">
+
+    <sql id="DeviceFilters">
+        AND d.tenant_id = #{tenantId}
+        AND d.deleted = b'0'
+        <if test="keyword != null and keyword != ''">
+            AND (
+                d.device_no LIKE CONCAT('%', #{keyword}, '%')
+                OR d.legacy_device_no LIKE CONCAT('%', #{keyword}, '%')
+                OR d.serial_number LIKE CONCAT('%', #{keyword}, '%')
+                OR d.equipment_model_code LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+        <if test="equipmentModelCode != null and equipmentModelCode != ''">
+            AND d.equipment_model_code = #{equipmentModelCode}
+        </if>
+        <if test="deviceStatus != null and deviceStatus != ''">
+            AND d.status = #{deviceStatus}
+        </if>
+        <if test="logisticsStatus != null and logisticsStatus != ''">
+            AND EXISTS (
+                SELECT 1
+                FROM rental_delivery_device_rel dr
+                INNER JOIN rental_delivery dl ON dl.id = dr.delivery_id
+                    AND dl.tenant_id = #{tenantId}
+                    AND dl.deleted = b'0'
+                    AND dl.lifecycle_status = 'ACTIVE'
+                WHERE dr.tenant_id = #{tenantId}
+                  AND dr.deleted = b'0'
+                  AND dr.device_id = d.id
+                <choose>
+                    <when test="logisticsStatus == 'RETURNED_PENDING_INSPECTION'">
+                        AND dr.device_id = d.id
+                        AND d.status = 'RENTED'
+                        AND dl.direction = 'RETURN'
+                        AND dl.tracking_status = 'RETURNED'
+                    </when>
+                    <otherwise>
+                        AND dl.tracking_status = #{logisticsStatus}
+                    </otherwise>
+                </choose>
+            )
+        </if>
+    </sql>
+
+    <select id="selectDevicePage"
+            resultType="cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO">
+        SELECT d.*
+        FROM rental_device d
+        WHERE 1 = 1
+        <include refid="DeviceFilters"/>
+        ORDER BY d.id ASC
+    </select>
+
+    <select id="selectDeviceMetrics"
+            resultType="cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalScheduleWorkbenchMetricsRespVO">
+        SELECT
+            COUNT(1) AS total_devices,
+            COALESCE(SUM(
+                CASE WHEN d.enabled = b'1'
+                    AND d.status = 'AVAILABLE'
+                    AND NOT EXISTS (
+                        SELECT 1
+                        FROM rental_schedule s0
+                        WHERE s0.tenant_id = #{tenantId}
+                          AND s0.deleted = b'0'
+                          AND s0.device_id = d.id
+                          AND s0.status = 'EFFECTIVE'
+                          AND s0.occupy_start_date &lt; #{toDateExclusive}
+                          AND s0.occupy_end_date_exclusive &gt; #{fromDate}
+                    )
+                THEN 1 ELSE 0 END
+            ), 0) AS available_devices,
+            COALESCE(SUM(
+                CASE WHEN d.status IN ('RENTED', 'MAINTENANCE')
+                    OR EXISTS (
+                        SELECT 1
+                        FROM rental_schedule s1
+                        WHERE s1.tenant_id = #{tenantId}
+                          AND s1.deleted = b'0'
+                          AND s1.device_id = d.id
+                          AND s1.status = 'EFFECTIVE'
+                          AND s1.occupy_start_date &lt; #{toDateExclusive}
+                          AND s1.occupy_end_date_exclusive &gt; #{fromDate}
+                    )
+                THEN 1 ELSE 0 END
+            ), 0) AS occupied_devices,
+            COALESCE(SUM(
+                CASE WHEN EXISTS (
+                    SELECT 1
+                    FROM rental_delivery_device_rel dr2
+                    INNER JOIN rental_delivery dl2 ON dl2.id = dr2.delivery_id
+                        AND dl2.tenant_id = #{tenantId}
+                        AND dl2.deleted = b'0'
+                        AND dl2.lifecycle_status = 'ACTIVE'
+                    WHERE dr2.tenant_id = #{tenantId}
+                      AND dr2.deleted = b'0'
+                      AND dr2.device_id = d.id
+                      AND dl2.tracking_status IN
+                          ('PICKED_UP', 'IN_TRANSIT', 'OUT_FOR_DELIVERY', 'RETURNING')
+                ) THEN 1 ELSE 0 END
+            ), 0) AS in_transit_devices,
+            COALESCE(SUM((
+                SELECT COALESCE(SUM(DATEDIFF(
+                    LEAST(s2.occupy_end_date_exclusive, #{toDateExclusive}),
+                    GREATEST(s2.occupy_start_date, #{fromDate})
+                )), 0)
+                FROM rental_schedule s2
+                WHERE s2.tenant_id = #{tenantId}
+                  AND s2.deleted = b'0'
+                  AND s2.device_id = d.id
+                  AND s2.status = 'EFFECTIVE'
+                  AND s2.occupy_start_date &lt; #{toDateExclusive}
+                  AND s2.occupy_end_date_exclusive &gt; #{fromDate}
+            )), 0) AS occupied_device_days
+        FROM rental_device d
+        WHERE 1 = 1
+        <include refid="DeviceFilters"/>
+    </select>
+
+</mapper>

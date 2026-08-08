@@ -7,6 +7,7 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceAssignme
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
+import cn.iocoder.yudao.module.rental.enums.rental.RentalDeviceLockTypeEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -33,11 +34,14 @@ public class RentalDeviceOpsService {
 
     private final RentalDeviceMapper deviceMapper;
     private final RentalDeviceAssignmentMapper assignmentMapper;
+    private final RentalDeviceLockService lockService;
 
     public RentalDeviceOpsService(RentalDeviceMapper deviceMapper,
-                                  RentalDeviceAssignmentMapper assignmentMapper) {
+                                  RentalDeviceAssignmentMapper assignmentMapper,
+                                  RentalDeviceLockService lockService) {
         this.deviceMapper = deviceMapper;
         this.assignmentMapper = assignmentMapper;
+        this.lockService = lockService;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -89,6 +93,17 @@ public class RentalDeviceOpsService {
         }
 
         boolean passed = reqVO.getInspectPassed() == null || Boolean.TRUE.equals(reqVO.getInspectPassed());
+        lockService.releaseSystemLockForLockedDevice(device.getId(),
+                RentalDeviceLockTypeEnum.RETURN_INSPECTION, "INSPECTION_COMPLETED");
+        if (passed) {
+            lockService.releaseSystemLockForLockedDevice(device.getId(),
+                    RentalDeviceLockTypeEnum.MAINTENANCE, "INSPECTION_PASSED");
+        } else {
+            lockService.createSystemLockForLockedDevice(device.getId(),
+                    RentalDeviceLockTypeEnum.MAINTENANCE,
+                    StringUtils.hasText(reqVO.getNote()) ? reqVO.getNote() : "INSPECTION_FAILED",
+                    assignment.getRentalOrderId(), assignment.getRentalOrderItemId());
+        }
         device.setStatus(passed ? DEVICE_AVAILABLE : DEVICE_MAINTENANCE);
         deviceMapper.updateById(device);
 

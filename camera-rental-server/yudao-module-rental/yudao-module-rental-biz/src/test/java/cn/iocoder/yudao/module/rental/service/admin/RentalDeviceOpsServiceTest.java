@@ -8,6 +8,7 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceAssignme
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
+import cn.iocoder.yudao.module.rental.enums.rental.RentalDeviceLockTypeEnum;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -26,7 +27,8 @@ class RentalDeviceOpsServiceTest {
     void dispatchThenReturnPass() {
         RentalDeviceMapper deviceMapper = mock(RentalDeviceMapper.class);
         RentalDeviceAssignmentMapper assignmentMapper = mock(RentalDeviceAssignmentMapper.class);
-        RentalDeviceOpsService service = new RentalDeviceOpsService(deviceMapper, assignmentMapper);
+        RentalDeviceLockService lockService = mock(RentalDeviceLockService.class);
+        RentalDeviceOpsService service = new RentalDeviceOpsService(deviceMapper, assignmentMapper, lockService);
 
         RentalDeviceDO device = RentalDeviceDO.builder()
                 .id(1L).deviceNo("A7M4-0001").status("AVAILABLE").enabled(true).build();
@@ -52,6 +54,8 @@ class RentalDeviceOpsServiceTest {
         RentalDeviceOpsRespVO returned = service.returnDevice(returnReq);
         assertEquals("AVAILABLE", returned.getDeviceStatus());
         assertEquals("RETURNED", returned.getAssignmentStatus());
+        verify(lockService).releaseSystemLockForLockedDevice(1L,
+                RentalDeviceLockTypeEnum.RETURN_INSPECTION, "INSPECTION_COMPLETED");
 
         ArgumentCaptor<RentalDeviceDO> deviceCap = ArgumentCaptor.forClass(RentalDeviceDO.class);
         verify(deviceMapper, org.mockito.Mockito.atLeastOnce()).updateById(deviceCap.capture());
@@ -61,7 +65,8 @@ class RentalDeviceOpsServiceTest {
     void returnFailGoesMaintenance() {
         RentalDeviceMapper deviceMapper = mock(RentalDeviceMapper.class);
         RentalDeviceAssignmentMapper assignmentMapper = mock(RentalDeviceAssignmentMapper.class);
-        RentalDeviceOpsService service = new RentalDeviceOpsService(deviceMapper, assignmentMapper);
+        RentalDeviceLockService lockService = mock(RentalDeviceLockService.class);
+        RentalDeviceOpsService service = new RentalDeviceOpsService(deviceMapper, assignmentMapper, lockService);
 
         RentalDeviceDO device = RentalDeviceDO.builder()
                 .id(1L).deviceNo("A7M4-0001").status("RENTED").enabled(true).build();
@@ -76,13 +81,16 @@ class RentalDeviceOpsServiceTest {
         RentalDeviceOpsRespVO returned = service.returnDevice(returnReq);
         assertEquals("MAINTENANCE", returned.getDeviceStatus());
         assertEquals("RETURNED", returned.getAssignmentStatus());
+        verify(lockService).createSystemLockForLockedDevice(1L, RentalDeviceLockTypeEnum.MAINTENANCE,
+                "INSPECTION_FAILED", assignment.getRentalOrderId(), assignment.getRentalOrderItemId());
     }
 
     @Test
     void dispatchWithoutAssignmentFails() {
         RentalDeviceMapper deviceMapper = mock(RentalDeviceMapper.class);
         RentalDeviceAssignmentMapper assignmentMapper = mock(RentalDeviceAssignmentMapper.class);
-        RentalDeviceOpsService service = new RentalDeviceOpsService(deviceMapper, assignmentMapper);
+        RentalDeviceOpsService service = new RentalDeviceOpsService(deviceMapper, assignmentMapper,
+                mock(RentalDeviceLockService.class));
 
         when(deviceMapper.selectByIdForUpdate(1L)).thenReturn(RentalDeviceDO.builder()
                 .id(1L).status("AVAILABLE").enabled(true).build());
@@ -98,7 +106,8 @@ class RentalDeviceOpsServiceTest {
     void returnWhenNotRentedFails() {
         RentalDeviceMapper deviceMapper = mock(RentalDeviceMapper.class);
         RentalDeviceAssignmentMapper assignmentMapper = mock(RentalDeviceAssignmentMapper.class);
-        RentalDeviceOpsService service = new RentalDeviceOpsService(deviceMapper, assignmentMapper);
+        RentalDeviceOpsService service = new RentalDeviceOpsService(deviceMapper, assignmentMapper,
+                mock(RentalDeviceLockService.class));
 
         when(deviceMapper.selectByIdForUpdate(1L)).thenReturn(RentalDeviceDO.builder()
                 .id(1L).status("AVAILABLE").enabled(true).build());

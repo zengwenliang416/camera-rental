@@ -10,6 +10,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleMapper;
+import cn.iocoder.yudao.module.rental.service.admin.RentalDeviceLockService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,13 +48,15 @@ class RentalDeviceAssignmentServiceImplTest {
     private RentalOrderMapper orderMapper;
     @Mock
     private RentalScheduleMapper scheduleMapper;
+    @Mock
+    private RentalDeviceLockService deviceLockService;
 
     private RentalDeviceAssignmentService service;
 
     @BeforeEach
     void setUp() {
         service = new RentalDeviceAssignmentServiceImpl(assignmentMapper, deviceMapper, orderItemMapper, orderMapper,
-                scheduleMapper);
+                scheduleMapper, deviceLockService);
     }
 
     @Test
@@ -189,11 +192,28 @@ class RentalDeviceAssignmentServiceImplTest {
     private void stubAssignableCommand() {
         when(deviceMapper.selectByIdForUpdate(31L)).thenReturn(RentalDeviceDO.builder().id(31L).enabled(true)
                 .status("AVAILABLE").equipmentModelCode("A7M4").build());
+        when(deviceLockService.getActiveLocksForUpdate(31L)).thenReturn(List.of());
         when(orderItemMapper.selectByIdForUpdate(21L)).thenReturn(RentalOrderItemDO.builder().id(21L)
                 .rentalOrderId(11L).quantity(1).equipmentModelCode("A7M4").build());
         when(orderMapper.selectByIdForUpdate(11L)).thenReturn(RentalOrderDO.builder().id(11L)
                 .status("PENDING_ALLOCATION").build());
         when(assignmentMapper.countAssignedByOrderItem(21L)).thenReturn(0L);
+    }
+
+    @Test
+    void shouldRejectDeviceThatBecomesLockedBeforeFinalAssignment() {
+        when(deviceMapper.selectByIdForUpdate(31L)).thenReturn(RentalDeviceDO.builder().id(31L).enabled(true)
+                .status("AVAILABLE").equipmentModelCode("A7M4").build());
+        when(deviceLockService.getActiveLocksForUpdate(31L)).thenReturn(List.of(
+                cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceLockDO.builder()
+                        .lockType("ORDER_HOLD").status("ACTIVE").build()));
+
+        RentalDeviceAssignmentException exception = assertThrows(RentalDeviceAssignmentException.class,
+                () -> service.assign(command()));
+
+        assertEquals(RentalDeviceAssignmentException.Code.DEVICE_LOCKED, exception.getCode());
+        verify(orderItemMapper, never()).selectByIdForUpdate(anyLong());
+        verify(scheduleMapper, never()).insert(any(RentalScheduleDO.class));
     }
 
     private RentalDeviceAssignmentCommand command() {

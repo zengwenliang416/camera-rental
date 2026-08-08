@@ -43,6 +43,9 @@ public interface ErrorCodeConstants {
     ErrorCode RENTAL_DEVICE_INBOUND_FAILED = new ErrorCode(1_040_002_006, "采购入库生成设备失败：{}");
     ErrorCode RENTAL_DEVICE_CODE_INVALID = new ErrorCode(1_040_002_007,
             "机器编码格式应类似 P4-01");
+    ErrorCode RENTAL_DEVICE_LOCK_NOT_EXISTS = new ErrorCode(1_040_002_008, "设备锁定记录不存在");
+    ErrorCode RENTAL_DEVICE_LOCK_INVALID = new ErrorCode(1_040_002_009, "设备锁定操作无效：{}");
+    ErrorCode RENTAL_DEVICE_LOCK_CONFLICT = new ErrorCode(1_040_002_010, "设备存在活动锁定：{}");
 
     // ========== 人工复核 1-040-003-000 ==========
     ErrorCode RENTAL_MANUAL_REVIEW_NOT_EXISTS = new ErrorCode(1_040_003_000, "人工复核记录不存在");

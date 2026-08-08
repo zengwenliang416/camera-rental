@@ -13,6 +13,7 @@ public class RentalDeviceAssignmentException extends RuntimeException {
         ITEM_ALREADY_FULLY_ASSIGNED,
         DEVICE_NOT_FOUND,
         DEVICE_NOT_ASSIGNABLE,
+        DEVICE_LOCKED,
         DEVICE_MODEL_MISMATCH,
         SCHEDULE_CONFLICT
     }

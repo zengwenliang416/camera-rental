@@ -10,6 +10,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleMapper;
+import cn.iocoder.yudao.module.rental.service.admin.RentalDeviceLockService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -39,17 +40,20 @@ public class RentalDeviceAssignmentServiceImpl implements RentalDeviceAssignment
     private final RentalOrderItemMapper orderItemMapper;
     private final RentalOrderMapper orderMapper;
     private final RentalScheduleMapper scheduleMapper;
+    private final RentalDeviceLockService deviceLockService;
 
     public RentalDeviceAssignmentServiceImpl(RentalDeviceAssignmentMapper assignmentMapper,
                                              RentalDeviceMapper deviceMapper,
                                              RentalOrderItemMapper orderItemMapper,
                                              RentalOrderMapper orderMapper,
-                                             RentalScheduleMapper scheduleMapper) {
+                                             RentalScheduleMapper scheduleMapper,
+                                             RentalDeviceLockService deviceLockService) {
         this.assignmentMapper = assignmentMapper;
         this.deviceMapper = deviceMapper;
         this.orderItemMapper = orderItemMapper;
         this.orderMapper = orderMapper;
         this.scheduleMapper = scheduleMapper;
+        this.deviceLockService = deviceLockService;
     }
 
     @Override
@@ -65,6 +69,10 @@ public class RentalDeviceAssignmentServiceImpl implements RentalDeviceAssignment
         // This lock serializes all schedule writers for this physical device.
         RentalDeviceDO device = deviceMapper.selectByIdForUpdate(command.deviceId());
         requireDeviceAssignable(device);
+        if (!deviceLockService.getActiveLocksForUpdate(device.getId()).isEmpty()) {
+            throw new RentalDeviceAssignmentException(RentalDeviceAssignmentException.Code.DEVICE_LOCKED,
+                    "Rental device has an active classified lock");
+        }
         RentalOrderItemDO item = orderItemMapper.selectByIdForUpdate(command.rentalOrderItemId());
         requireItemMatchesDevice(item, device);
         RentalOrderDO order = orderMapper.selectByIdForUpdate(item.getRentalOrderId());

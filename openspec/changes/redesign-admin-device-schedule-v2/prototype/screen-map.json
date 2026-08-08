@@ -1,0 +1,54 @@
+{
+  "screens": [
+    {
+      "id": "admin-device-schedule-v2",
+      "label": "设备排期 V2 工作台",
+      "requirements": [
+        "requirements.md"
+      ],
+      "acceptance": [
+        "acceptance.md"
+      ],
+      "components": [
+        "ScheduleMetrics",
+        "ScheduleFilters",
+        "ScheduleTimeline",
+        "PendingAllocationPanel",
+        "AllocationRecommendationPanel",
+        "ScheduleExceptionQueue",
+        "ScheduleOrderDrawer",
+        "ScheduleDeviceDrawer",
+        "ScheduleLogisticsDrawer"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#project_shell"
+      ],
+      "data_flows": [
+        "FLOW-SCHEDULE-WORKBENCH-QUERY",
+        "FLOW-SCHEDULE-DETAIL",
+        "FLOW-SCHEDULE-CANDIDATES",
+        "FLOW-SCHEDULE-ASSIGN",
+        "FLOW-SCHEDULE-DEVICE-LOCK"
+      ],
+      "theme_modes": [
+        "light"
+      ],
+      "locales": [
+        "zh-CN"
+      ],
+      "implementation_files": [
+        "camera-rental-admin/src/views/rental/schedule/index.vue"
+      ]
+    }
+  ],
+  "variants": [
+    "default",
+    "loading",
+    "empty",
+    "error",
+    "disabled",
+    "permission",
+    "device-search-v7",
+    "classified-device-lock"
+  ]
+}

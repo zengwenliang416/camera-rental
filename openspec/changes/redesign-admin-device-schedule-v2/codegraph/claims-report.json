@@ -1,0 +1,22 @@
+{
+  "schema": "specnav.codegraph.claims_report.v1",
+  "generated_at": "2026-08-08T07:34:01.823Z",
+  "active_change": "redesign-admin-device-schedule-v2",
+  "claims_file": "openspec/changes/redesign-admin-device-schedule-v2/codegraph/claims-map.json",
+  "evidence_index": "openspec/changes/redesign-admin-device-schedule-v2/codegraph/evidence-index.json",
+  "claims_count": 4,
+  "verified_claims": [],
+  "unverified_claims": [
+    "development:task-001-workbench-read-model",
+    "development:task-002-lock-and-allocation",
+    "development:task-003-admin-schedule-interface",
+    "development:task-004-integration-verification"
+  ],
+  "blockers": [],
+  "warnings": [
+    "codegraph:claim-unverified:development:task-001-workbench-read-model",
+    "codegraph:claim-unverified:development:task-002-lock-and-allocation",
+    "codegraph:claim-unverified:development:task-003-admin-schedule-interface",
+    "codegraph:claim-unverified:development:task-004-integration-verification"
+  ]
+}

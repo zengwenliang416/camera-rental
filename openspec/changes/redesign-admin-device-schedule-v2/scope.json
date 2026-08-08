@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "change_id": "redesign-admin-device-schedule-v2",
+  "stage": "development",
+  "allowed_roots": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-admin/src/api/rental",
+    "camera-rental-admin/src/views/rental/schedule",
+    "camera-rental-admin/src/locales/zh-CN.ts",
+    "camera-rental-admin/src/locales/en.ts",
+    "camera-rental-admin/tests/scheduleModel.test.ts",
+    "openspec/changes/redesign-admin-device-schedule-v2"
+  ],
+  "denied_roots": [
+    ".git",
+    "node_modules",
+    "dist",
+    "coverage"
+    ,"camera-rental-web"
+    ,"camera-rental-uniapp"
+    ,"camera-rental-staff"
+    ,"camera-rental-admin/src/views/rental/order"
+    ,"camera-rental-server/yudao-module-system"
+  ],
+  "requires_review_on": [
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/RentalDeviceAssignmentServiceImpl.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceOpsService.java",
+    "camera-rental-admin/src/locales"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": false,
+    "rename": false
+  },
+  "prototype_sources": [
+    "openspec/changes/redesign-admin-device-schedule-v2/prototype/artifact/index.html"
+  ],
+  "expires_when": "verification_started"
+}

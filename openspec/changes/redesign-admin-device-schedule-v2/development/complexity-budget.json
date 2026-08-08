@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "source file size",
+      "limit": "target 450 physical lines and split before 600 physical lines"
+    },
+    {
+      "area": "component cohesion",
+      "limit": "one user-facing responsibility per shared component"
+    },
+    {
+      "area": "coupling",
+      "limit": "no page-specific imports inside shared components"
+    },
+    {
+      "area": "database queries",
+      "limit": "no per-device N+1 query and no external logistics call in workbench list loading"
+    },
+    {
+      "area": "frontend authority",
+      "limit": "no client-side authoritative availability, conflict, utilization or candidate calculation"
+    },
+    {
+      "area": "dependencies",
+      "limit": "reuse current Spring, Vue, Element Plus and date utilities without adding production dependencies"
+    }
+  ]
+}

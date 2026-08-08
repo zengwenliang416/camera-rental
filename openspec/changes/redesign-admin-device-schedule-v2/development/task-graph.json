@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "planning_status": "ready",
+  "tasks": [
+    {
+      "id": "001-workbench-read-model",
+      "depends_on": []
+    },
+    {
+      "id": "002-lock-and-allocation",
+      "depends_on": [
+        "001-workbench-read-model"
+      ]
+    },
+    {
+      "id": "003-admin-schedule-interface",
+      "depends_on": [
+        "001-workbench-read-model",
+        "002-lock-and-allocation"
+      ]
+    },
+    {
+      "id": "004-integration-verification",
+      "depends_on": [
+        "001-workbench-read-model",
+        "002-lock-and-allocation",
+        "003-admin-schedule-interface"
+      ]
+    }
+  ]
+}

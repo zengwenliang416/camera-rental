@@ -1,0 +1,40 @@
+{
+  "task_id": "001-workbench-read-model",
+  "goal": "Operators can load authoritative device lanes, capacity, pending orders and schedule exceptions.",
+  "must_read": [
+    "openspec/changes/redesign-admin-device-schedule-v2/development/tasks/001-workbench-read-model/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/requirements.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/acceptance.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/spec-map.json",
+    "openspec/changes/redesign-admin-device-schedule-v2/component-impact-map.json",
+    "openspec/changes/redesign-admin-device-schedule-v2/prototype/handoff.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/prototype/decision.json",
+    "openspec/changes/redesign-admin-device-schedule-v2/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java"
+  ],
+  "non_goals": [
+    "Do not implement classified lock writes or the admin UI in this slice.",
+    "Do not call external logistics providers during workbench list loading."
+  ],
+  "expected_evidence": [
+    "Focused Maven tests",
+    "Batch query review",
+    "Task report",
+    "Spec and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Existing Xianyu order responses are not the internal rental-order contract.",
+    "Planned occupy end is not actual inspection release."
+  ],
+  "stop_condition": "Stop if the implementation requires per-device external calls, frontend authority, or files outside the backend read-model scope."
+}

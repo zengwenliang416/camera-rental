@@ -1,0 +1,77 @@
+{
+  "touched_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "Element Plus management density",
+    "separate billable and occupied ranges",
+    "device paginated horizontal timeline",
+    "right-side detail drawers",
+    "text plus color status semantics"
+  ],
+  "architecture_modules": [
+    "camera-rental-admin/src/views/rental/schedule",
+    "camera-rental-admin/src/api/rental",
+    "camera-rental-server/yudao-module-rental"
+  ],
+  "api_contracts": [
+    "GET /admin-api/rental/schedule/workbench",
+    "GET /admin-api/rental/order/pending-allocation-page",
+    "GET /admin-api/rental/order/{id}",
+    "GET /admin-api/rental/order-item/{itemId}/device-candidates",
+    "GET /admin-api/rental/device/{id}",
+    "POST /admin-api/rental/device-lock",
+    "PUT /admin-api/rental/device-lock/{id}/release",
+    "POST /admin-api/rental/device/assign",
+    "POST /admin-api/rental/delivery/tracking-summary/batch",
+    "GET /admin-api/rental/delivery/{deliveryId}/tracking",
+    "POST /admin-api/rental/delivery/{deliveryId}/refresh"
+  ],
+  "database_entities": [
+    "rental_device",
+    "rental_order",
+    "rental_order_item",
+    "rental_schedule",
+    "rental_device_assignment",
+    "rental_device_lock",
+    "rental_delivery",
+    "rental_delivery_device_rel",
+    "rental_inspection",
+    "rental_maintenance"
+  ],
+  "permissions": [
+    "rental:schedule:query",
+    "rental:device:assign",
+    "rental:device-lock:update",
+    "rental:logistics:query",
+    "rental:logistics:refresh"
+  ],
+  "operational_constraints": [
+    "single tenant single warehouse",
+    "Asia/Shanghai dates",
+    "half-open occupied intervals",
+    "server-authoritative availability",
+    "no external logistics calls in list query",
+    "no warehouse execution actions"
+  ],
+  "data_flows": [
+    "FLOW-SCHEDULE-WORKBENCH-QUERY",
+    "FLOW-SCHEDULE-DETAIL",
+    "FLOW-SCHEDULE-CANDIDATES",
+    "FLOW-SCHEDULE-ASSIGN",
+    "FLOW-SCHEDULE-DEVICE-LOCK"
+  ],
+  "theme_modes": [
+    "light",
+    "dark"
+  ],
+  "locale_policy": [
+    "zh-CN default",
+    "en supported",
+    "reuse existing admin toggles"
+  ],
+  "unresolved_gaps": []
+}

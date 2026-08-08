@@ -1,0 +1,2070 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>相机租赁管理端设备排期 V2 原型</title>
+  <style>
+    :root {
+      --bg: oklch(96.8% 0.004 255);
+      --surface: oklch(100% 0 0);
+      --fg: oklch(22% 0.018 260);
+      --muted: oklch(55% 0.022 260);
+      --border: oklch(90.5% 0.008 260);
+      --accent: oklch(62% 0.19 255);
+      --accent-weak: oklch(95% 0.035 255);
+      --accent-border: oklch(82% 0.075 255);
+      --success: oklch(63% 0.15 150);
+      --success-weak: oklch(95% 0.04 150);
+      --warning: oklch(75% 0.15 78);
+      --warning-weak: oklch(96% 0.045 78);
+      --danger: oklch(63% 0.19 28);
+      --danger-weak: oklch(96% 0.04 28);
+      --font-display: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
+      --font-body: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif;
+      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --shadow-card: 0 1px 2px oklch(20% 0.02 260 / 0.04);
+      --radius: 4px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --bg: oklch(20% 0.015 260);
+        --surface: oklch(24% 0.015 260);
+        --fg: oklch(94% 0.008 255);
+        --muted: oklch(72% 0.018 255);
+        --border: oklch(34% 0.015 260);
+        --accent-weak: oklch(29% 0.055 255);
+        --accent-border: oklch(48% 0.09 255);
+        --success-weak: oklch(29% 0.045 150);
+        --warning-weak: oklch(30% 0.045 78);
+        --danger-weak: oklch(29% 0.05 28);
+        --shadow-card: 0 1px 2px oklch(5% 0.02 260 / 0.3);
+      }
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.72;
+    }
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+    button,
+    .clickable,
+    .calendar-cell {
+      cursor: pointer;
+    }
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    .clickable:focus-visible,
+    .calendar-cell:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .topbar {
+      height: 50px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 590;
+    }
+    .brand-mark {
+      width: 24px;
+      height: 24px;
+      border-radius: 5px;
+      background: var(--accent);
+      color: var(--surface);
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      line-height: 1;
+    }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .workspace {
+      width: min(1600px, 100%);
+      margin: 0 auto;
+      padding: 14px 16px 28px;
+    }
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 12px;
+    }
+    .breadcrumb {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      line-height: 1.35;
+      letter-spacing: 0;
+      margin: 0;
+      font-weight: 590;
+    }
+    .page-desc {
+      margin: 3px 0 0;
+      color: var(--muted);
+      max-width: 78ch;
+    }
+    .demo-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      border-radius: var(--radius);
+      background: var(--warning-weak);
+      border: 1px solid oklch(88% 0.07 78);
+      color: oklch(43% 0.1 72);
+      padding: 0 8px;
+      font-size: 12px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .content-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-card);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .content-body {
+      padding: 10px;
+    }
+    .filter-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-heading {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .filter-heading-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      background: var(--accent-weak);
+      border: 1px solid var(--accent-border);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .filter-title {
+      font-size: 14px;
+      line-height: 1.4;
+      font-weight: 590;
+    }
+    .filter-meta {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .quick-filters {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .quick-filter {
+      min-height: 28px;
+      padding: 0 10px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .quick-filter:hover,
+    .quick-filter.active {
+      color: var(--accent);
+      border-color: var(--accent-border);
+      background: var(--accent-weak);
+    }
+    .filter-grid {
+      display: grid;
+      grid-template-columns: minmax(140px, 0.85fr) minmax(150px, 0.95fr) minmax(220px, 1.25fr) minmax(190px, 1.1fr) auto;
+      gap: 10px;
+      align-items: end;
+    }
+    .field label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      margin-bottom: 4px;
+    }
+    .control {
+      width: 100%;
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--fg);
+      padding: 0 10px;
+    }
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--fg);
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: var(--radius);
+      letter-spacing: 0.02em;
+    }
+    .btn:hover {
+      background: oklch(97.5% 0.004 255);
+      border-color: oklch(82% 0.018 260);
+    }
+    .btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--surface);
+    }
+    .btn.primary:hover {
+      background: oklch(54% 0.19 255);
+      border-color: oklch(54% 0.19 255);
+      color: var(--surface);
+    }
+    .btn.danger {
+      color: var(--danger);
+      border-color: oklch(82% 0.08 28);
+      background: var(--surface);
+    }
+    .btn.danger:hover {
+      background: var(--danger-weak);
+      color: var(--danger);
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      min-height: 108px;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 2px;
+      background: var(--metric-color, var(--accent));
+      opacity: 0.72;
+    }
+    .metric-card.active {
+      border-color: var(--accent-border);
+      box-shadow: 0 0 0 1px var(--accent-weak), var(--shadow-card);
+    }
+    .metric-card.tone-success {
+      --metric-color: var(--success);
+    }
+    .metric-card.tone-warning {
+      --metric-color: var(--warning);
+    }
+    .metric-card.tone-danger {
+      --metric-color: var(--danger);
+    }
+    .metric-card.tone-neutral {
+      --metric-color: oklch(62% 0.03 260);
+    }
+    .metric-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .metric-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      color: var(--metric-color, var(--accent));
+      background: color-mix(in oklch, var(--metric-color, var(--accent)) 9%, white);
+      border: 1px solid color-mix(in oklch, var(--metric-color, var(--accent)) 22%, white);
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .metric-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .metric-demo {
+      color: var(--muted);
+      background: oklch(97.5% 0.004 255);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+    .metric-value {
+      font-size: 25px;
+      font-family: var(--font-display);
+      line-height: 1.2;
+      font-weight: 650;
+      margin-top: 10px;
+      letter-spacing: 0;
+    }
+    .metric-foot {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(760px, 1fr) 420px;
+      gap: 12px;
+      align-items: start;
+    }
+    .main-grid > *,
+    .split > * {
+      min-width: 0;
+    }
+    .section-head {
+      min-height: 40px;
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    h2 {
+      font-family: var(--font-display);
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.4;
+      letter-spacing: 0;
+      font-weight: 590;
+    }
+    .section-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .tab {
+      height: 28px;
+      padding: 0 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      color: var(--fg);
+      font-size: 12px;
+    }
+    .tab.active {
+      color: var(--accent);
+      border-color: var(--accent-border);
+      background: var(--accent-weak);
+    }
+    .timeline-toolbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .range-label {
+      min-width: 170px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .timeline-hint {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    .timeline-device-toolbar {
+      min-height: 42px;
+      margin-bottom: 8px;
+      padding: 7px 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: oklch(98.5% 0.003 255);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .device-window-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .device-window-info strong {
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .device-window-meta {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .device-search {
+      flex: 1 1 260px;
+      max-width: 390px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .device-search-input {
+      min-width: 0;
+      flex: 1;
+      height: 30px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--fg);
+      padding: 0 9px;
+      font-size: 12px;
+    }
+    .device-search-input:focus {
+      border-color: var(--accent);
+    }
+    .device-page-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .device-page-size {
+      width: 94px;
+      height: 28px;
+      padding: 0 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--fg);
+      font-size: 12px;
+    }
+    .device-page-label {
+      min-width: 52px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+    .btn:disabled,
+    .tab:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+      background: oklch(97% 0.004 255);
+    }
+    .timeline-shell {
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      max-height: 430px;
+      background: var(--surface);
+    }
+    .timeline-board {
+      --days: 30;
+      --cell-width: 30px;
+      --timeline-width: 900px;
+      min-width: calc(214px + var(--timeline-width));
+      position: relative;
+    }
+    .timeline-months,
+    .timeline-days,
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 214px var(--timeline-width);
+    }
+    .timeline-months,
+    .timeline-days {
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      background: oklch(98.2% 0.003 255);
+    }
+    .timeline-days {
+      top: 27px;
+      border-bottom: 1px solid var(--border);
+    }
+    .timeline-corner {
+      position: sticky;
+      left: 0;
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      border-right: 1px solid var(--border);
+      background: oklch(98.2% 0.003 255);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 510;
+    }
+    .timeline-month-track,
+    .timeline-day-track,
+    .timeline-track {
+      position: relative;
+      width: var(--timeline-width);
+    }
+    .timeline-month-track {
+      height: 27px;
+      border-bottom: 1px solid var(--border);
+    }
+    .timeline-day-track {
+      height: 31px;
+      background-image: repeating-linear-gradient(to right, transparent 0 calc(var(--cell-width) - 1px), var(--border) calc(var(--cell-width) - 1px) var(--cell-width));
+    }
+    .month-segment,
+    .day-marker {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding-left: 7px;
+      border-right: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .day-marker {
+      justify-content: center;
+      padding-left: 0;
+      border-right: 0;
+    }
+    .day-marker.today {
+      color: var(--accent);
+      background: var(--accent-weak);
+      font-weight: 590;
+    }
+    .timeline-row {
+      min-height: 62px;
+      border-bottom: 1px solid var(--border);
+    }
+    .timeline-row:last-child {
+      border-bottom: 0;
+    }
+    .timeline-device {
+      position: sticky;
+      left: 0;
+      z-index: 3;
+      border: 0;
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      padding: 8px 10px;
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      text-align: left;
+    }
+    .timeline-device:hover {
+      background: oklch(98% 0.012 255);
+    }
+    .device-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      background: var(--accent-weak);
+      border: 1px solid var(--accent-border);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .device-copy {
+      min-width: 0;
+      display: grid;
+      gap: 1px;
+    }
+    .device-copy strong {
+      font-size: 13px;
+      line-height: 1.35;
+      font-weight: 650;
+    }
+    .device-copy span {
+      color: var(--muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+    .device-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 3px var(--success-weak);
+    }
+    .device-status-dot.transit {
+      background: var(--warning);
+      box-shadow: 0 0 0 3px var(--warning-weak);
+    }
+    .device-status-dot.alert {
+      background: var(--danger);
+      box-shadow: 0 0 0 3px var(--danger-weak);
+    }
+    .device-status-dot.locked {
+      background: oklch(62% 0.03 260);
+      box-shadow: 0 0 0 3px oklch(94% 0.01 260);
+    }
+    .timeline-track {
+      min-height: 62px;
+      background-image: repeating-linear-gradient(to right, transparent 0 calc(var(--cell-width) - 1px), var(--border) calc(var(--cell-width) - 1px) var(--cell-width));
+    }
+    .timeline-bar {
+      position: absolute;
+      top: 16px;
+      height: 30px;
+      border-radius: 4px;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: 11px;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+    .timeline-bar.occupied {
+      color: oklch(32% 0.09 255);
+      background: oklch(86% 0.1 255);
+      border-color: oklch(78% 0.11 255);
+    }
+    .timeline-bar.transit {
+      color: oklch(42% 0.1 72);
+      background: oklch(91% 0.09 78);
+      border-color: oklch(82% 0.09 78);
+    }
+    .timeline-bar.locked {
+      color: var(--muted);
+      background: oklch(90% 0.025 260);
+      background-image: repeating-linear-gradient(135deg, transparent 0 7px, oklch(78% 0.02 260) 7px 9px);
+      border-color: oklch(80% 0.02 260);
+    }
+    .timeline-bar.long-rental {
+      color: oklch(32% 0.09 200);
+      background: oklch(88% 0.08 200);
+      border-color: oklch(75% 0.09 200);
+    }
+    .timeline-bar.continues-left {
+      border-left-style: dashed;
+      border-radius: 0 4px 4px 0;
+    }
+    .timeline-bar.continues-right {
+      border-right-style: dashed;
+      border-radius: 4px 0 0 4px;
+    }
+    .timeline-empty {
+      color: var(--muted);
+      font-size: 11px;
+      padding: 18px 8px;
+    }
+    .timeline-no-results {
+      min-height: 110px;
+      display: grid;
+      place-items: center;
+      gap: 2px;
+      padding: 24px;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px solid var(--border);
+      background: oklch(99% 0.002 255);
+    }
+    .timeline-no-results strong {
+      color: var(--fg);
+      font-size: 13px;
+      font-weight: 590;
+    }
+    .legend {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .legend i {
+      display: inline-block;
+      width: 18px;
+      height: 10px;
+      border-radius: 2px;
+      margin-right: 5px;
+      vertical-align: -1px;
+    }
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+      background: var(--surface);
+    }
+    th,
+    td {
+      border-bottom: 1px solid var(--border);
+      padding: 8px 9px;
+      text-align: left;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    th {
+      background: oklch(98.2% 0.003 255);
+      color: var(--muted);
+      font-weight: 510;
+      font-size: 12px;
+    }
+    tr:hover td {
+      background: oklch(98% 0.008 255);
+    }
+    tr.selected td {
+      background: var(--accent-weak);
+    }
+    .table-action {
+      color: var(--accent);
+      border: 0;
+      background: transparent;
+      padding: 3px 5px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .table-action:hover {
+      color: oklch(48% 0.18 255);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      border-radius: 3px;
+      padding: 0 7px;
+      border: 1px solid var(--border);
+      background: oklch(98.5% 0.003 255);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1;
+    }
+    .tag.blue {
+      color: var(--accent);
+      background: var(--accent-weak);
+      border-color: var(--accent-border);
+    }
+    .tag.green {
+      color: oklch(43% 0.13 150);
+      background: var(--success-weak);
+      border-color: oklch(82% 0.08 150);
+    }
+    .tag.orange {
+      color: oklch(45% 0.12 72);
+      background: var(--warning-weak);
+      border-color: oklch(86% 0.07 78);
+    }
+    .tag.red {
+      color: var(--danger);
+      background: var(--danger-weak);
+      border-color: oklch(84% 0.08 28);
+    }
+    .queue-list {
+      display: grid;
+      gap: 8px;
+    }
+    .queue-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 9px;
+    }
+    .queue-item:hover,
+    .queue-item.selected {
+      border-color: var(--accent-border);
+      background: var(--accent-weak);
+    }
+    .queue-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-weight: 590;
+      line-height: 1.5;
+    }
+    .queue-meta {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      display: grid;
+      gap: 2px;
+    }
+    .recommend {
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .recommend-head {
+      padding: 8px 9px;
+      background: oklch(98.2% 0.003 255);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .recommend-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      padding: 8px 9px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+    .recommend-row:last-child {
+      border-bottom: 0;
+    }
+    .recommend-row.selected {
+      background: var(--accent-weak);
+    }
+    .pagination {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      padding-top: 8px;
+    }
+    .state-panel {
+      display: none;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: oklch(99% 0.002 255);
+      text-align: center;
+      color: var(--muted);
+    }
+    .state-panel strong {
+      color: var(--fg);
+      display: block;
+      margin-bottom: 3px;
+    }
+    .skeleton {
+      height: 12px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, oklch(94% 0.006 255), oklch(98% 0.004 255), oklch(94% 0.006 255));
+      background-size: 180% 100%;
+      animation: pulse 1.2s linear infinite;
+      margin: 9px auto;
+      max-width: 620px;
+    }
+    @keyframes pulse {
+      from { background-position: 0 0; }
+      to { background-position: -180% 0; }
+    }
+    body[data-mode="loading"] .normal-data,
+    body[data-mode="error"] .normal-data,
+    body[data-mode="empty"] .normal-data {
+      display: none;
+    }
+    body[data-mode="loading"] .state-loading,
+    body[data-mode="error"] .state-error,
+    body[data-mode="empty"] .state-empty {
+      display: block;
+    }
+    .drawer-mask {
+      position: fixed;
+      inset: 0;
+      background: oklch(10% 0.01 260 / 0.24);
+      z-index: 20;
+      display: none;
+      justify-content: flex-end;
+    }
+    .drawer-mask.open {
+      display: flex;
+    }
+    .drawer {
+      width: min(560px, 100%);
+      height: 100%;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      box-shadow: -8px 0 20px oklch(20% 0.02 260 / 0.08);
+      display: flex;
+      flex-direction: column;
+    }
+    .drawer-head {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .drawer-title {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.4;
+      letter-spacing: 0;
+      font-family: var(--font-display);
+      font-weight: 590;
+    }
+    .drawer-body {
+      padding: 14px 16px;
+      overflow: auto;
+      display: grid;
+      gap: 12px;
+    }
+    .drawer-foot {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .desc-list {
+      display: grid;
+      grid-template-columns: 104px 1fr;
+      gap: 7px 10px;
+      font-size: 13px;
+    }
+    .desc-list dt {
+      color: var(--muted);
+      margin: 0;
+    }
+    .desc-list dd {
+      margin: 0;
+      color: var(--fg);
+    }
+    .drawer-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .summary-chip {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: oklch(98.5% 0.003 255);
+      padding: 9px 10px;
+      min-width: 0;
+    }
+    .summary-chip span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .summary-chip strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 650;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .drawer-section {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .drawer-section-head {
+      min-height: 36px;
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: oklch(98.2% 0.003 255);
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 590;
+    }
+    .drawer-section .desc-list {
+      padding: 10px;
+      margin: 0;
+    }
+    .drawer-callout {
+      border-left: 3px solid var(--warning);
+      background: var(--warning-weak);
+      padding: 9px 10px;
+      color: oklch(39% 0.08 72);
+      font-size: 12px;
+    }
+    .timeline {
+      display: grid;
+      gap: 8px;
+    }
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 16px 1fr;
+      gap: 8px;
+      align-items: start;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 7px;
+    }
+    .rule-box {
+      border: 1px solid var(--accent-border);
+      background: var(--accent-weak);
+      border-radius: var(--radius);
+      padding: 9px 10px;
+      color: oklch(33% 0.08 255);
+      font-size: 13px;
+    }
+    .logistics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .logistics-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px;
+      background: oklch(98.5% 0.003 255);
+    }
+    .logistics-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .logistics-head strong {
+      font-size: 13px;
+      font-weight: 590;
+    }
+    @media (max-width: 1180px) {
+      .main-grid,
+      .split {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 760px) {
+      .workspace {
+        padding: 12px 10px 24px;
+      }
+      .topbar,
+      .page-head,
+      .filter-panel-head,
+      .filter-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .metrics {
+        grid-template-columns: 1fr 1fr;
+      }
+      .filter-grid {
+        gap: 8px;
+      }
+      .btn-row {
+        flex-wrap: wrap;
+      }
+      .quick-filters {
+        justify-content: flex-start;
+      }
+      .timeline-device-toolbar,
+      .device-window-info {
+        align-items: flex-start;
+      }
+      .device-window-info {
+        display: grid;
+        gap: 2px;
+      }
+      .device-search {
+        max-width: none;
+        width: 100%;
+      }
+      .drawer-summary {
+        grid-template-columns: 1fr;
+      }
+      .drawer {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body data-mode="normal">
+  <div
+    class="app"
+    data-specnav-project-shell="camera-rental-admin-element-plus"
+    data-specnav-screen="admin-device-schedule-v2"
+    data-specnav-variant="device-search-v7"
+    data-specnav-state="populated"
+  >
+    <header class="topbar" data-od-id="admin-topbar">
+      <div class="brand" data-od-id="admin-brand"><span class="brand-mark">租</span>相机租赁管理后台</div>
+      <div class="top-actions" data-od-id="admin-context">
+        <span>RuoYi Pro / Element Plus 风格原型</span>
+        <span class="demo-badge">演示数据</span>
+      </div>
+    </header>
+    <main
+      class="workspace"
+      data-od-id="schedule-workspace"
+      data-specnav-component="schedule-workspace"
+    >
+      <section class="page-head" data-od-id="page-title-section">
+        <div>
+          <div class="breadcrumb">租赁业务 / 设备排期 / 管理监督台</div>
+          <h1 data-od-id="page-title">相机租赁管理端设备排期 V2</h1>
+          <p class="page-desc" data-od-id="page-description">面向管理者查看容量、物流状态、异常、待分配订单和设备占用，不重复员工扫码发货中心。冲突判断按设备占用周期：发货出库至退回检测完成。</p>
+        </div>
+        <div class="btn-row" data-od-id="state-controls">
+          <button class="btn" data-mode-btn="normal" data-od-id="state-normal">正常数据</button>
+          <button class="btn" data-mode-btn="loading" data-od-id="state-loading">加载态</button>
+          <button class="btn" data-mode-btn="empty" data-od-id="state-empty">空数据</button>
+          <button class="btn" data-mode-btn="error" data-od-id="state-error">错误态</button>
+        </div>
+      </section>
+      <section class="content-wrap" data-od-id="filter-content-wrap">
+        <div class="content-body">
+          <div class="filter-panel-head" data-od-id="filter-panel-head">
+            <div class="filter-heading">
+              <span class="filter-heading-mark">筛</span>
+              <div>
+                <div class="filter-title">筛选与视图</div>
+                <div class="filter-meta">按型号、物流状态和设备占用周期定位排期，演示数据</div>
+              </div>
+            </div>
+            <div class="quick-filters" data-od-id="quick-filter-list">
+              <button class="quick-filter active" data-quick-filter="all">全部设备</button>
+              <button class="quick-filter" data-quick-filter="occupied">当前占用</button>
+              <button class="quick-filter" data-quick-filter="logistics-alert">物流异常</button>
+              <button class="quick-filter" data-quick-filter="pending">待分配</button>
+              <button class="quick-filter" data-quick-filter="long-rental">长租设备</button>
+            </div>
+          </div>
+          <div class="filter-grid" data-od-id="compact-filter-form">
+            <div class="field">
+              <label for="model">设备型号</label>
+              <select class="control" id="model" data-od-id="filter-model">
+                <option>全部型号</option>
+                <option>DJI Mini 4 Pro</option>
+                <option>Osmo Pocket 3</option>
+                <option>Phantom 4 Pro</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="logistics">物流状态</label>
+              <select class="control" id="logistics" data-od-id="filter-logistics-status">
+                <option>全部物流状态</option>
+                <option>待发货</option>
+                <option>去程运输中</option>
+                <option>客户已签收</option>
+                <option>返程运输中</option>
+                <option>已回仓待检测</option>
+                <option>物流异常</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="range">占用日期范围</label>
+              <input class="control" id="range" value="2026年8月8日 - 2026年9月6日" data-od-id="filter-date-range" />
+            </div>
+            <div class="field">
+              <label for="keyword">订单 / 设备</label>
+              <input class="control" id="keyword" value="" placeholder="输入订单号、设备编号、型号" data-od-id="filter-keyword" />
+            </div>
+            <div class="btn-row">
+              <button class="btn primary" data-od-id="filter-submit">查询</button>
+              <button class="btn" data-od-id="filter-reset">重置</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="state-panel state-loading" data-od-id="loading-state">
+        <strong>正在加载排期容量</strong>
+        <div class="skeleton"></div>
+        <div class="skeleton" style="max-width: 520px"></div>
+        <span>演示数据加载态：保留页面结构，避免误判为空。</span>
+      </section>
+      <section class="state-panel state-empty" data-od-id="empty-state">
+        <strong>当前筛选条件下暂无设备占用</strong>
+        <span>演示数据空态：可放宽型号或占用日期范围后重新查询。</span>
+      </section>
+      <section class="state-panel state-error" data-od-id="error-state">
+        <strong>排期服务暂时不可用</strong>
+        <span>演示数据错误态：建议保留已加载缓存，并提示管理员稍后重试。</span>
+      </section>
+      <div class="normal-data" data-od-id="normal-data-region">
+        <section
+          class="metrics"
+          data-od-id="capacity-metrics"
+          data-specnav-component="schedule-metrics"
+        >
+          <article class="metric-card active" data-od-id="metric-total-capacity">
+            <div class="metric-top"><div class="metric-label"><span class="metric-icon">备</span><span>可排设备总量</span></div><span class="metric-demo">演示</span></div>
+            <div class="metric-value">328 台</div>
+            <div class="metric-foot">当前租户单仓，覆盖 12 个设备型号</div>
+          </article>
+          <article class="metric-card tone-success" data-od-id="metric-utilization">
+            <div class="metric-top"><div class="metric-label"><span class="metric-icon">率</span><span>14 日平均利用率</span></div><span class="metric-demo">演示</span></div>
+            <div class="metric-value">78.4%</div>
+            <div class="metric-foot">较上个窗口上升 6.2%</div>
+          </article>
+          <article class="metric-card tone-warning" data-od-id="metric-pending-orders">
+            <div class="metric-top"><div class="metric-label"><span class="metric-icon">单</span><span>待分配订单</span></div><span class="metric-demo">演示</span></div>
+            <div class="metric-value">12 单</div>
+            <div class="metric-foot">其中 4 单需今日处理</div>
+          </article>
+          <article class="metric-card tone-danger" data-od-id="metric-conflicts">
+            <div class="metric-top"><div class="metric-label"><span class="metric-icon">异</span><span>冲突与异常</span></div><span class="metric-demo">演示</span></div>
+            <div class="metric-value">5 项</div>
+            <div class="metric-foot">候选冲突 3 项，锁定 2 项</div>
+          </article>
+          <article class="metric-card tone-neutral" data-od-id="metric-locked-devices">
+            <div class="metric-top"><div class="metric-label"><span class="metric-icon">锁</span><span>锁定设备</span></div><span class="metric-demo">演示</span></div>
+            <div class="metric-value">7 台</div>
+            <div class="metric-foot">待检、保留、人工冻结</div>
+          </article>
+        </section>
+        <section
+          class="main-grid"
+          data-od-id="main-schedule-grid"
+          data-specnav-component="schedule-main-grid"
+        >
+          <div>
+            <section class="content-wrap" data-od-id="capacity-calendar-card">
+              <div class="section-head">
+                <div>
+                  <h2 data-od-id="capacity-calendar-title">设备排期时间轴</h2>
+                  <div class="section-note">仅展示已生效的设备状态：发货出库到退回检测完成。候选冲突不会写入有效排期。</div>
+                </div>
+                <div class="timeline-toolbar" data-od-id="timeline-toolbar">
+                  <div class="tabs">
+                    <button class="tab" id="timelinePrev" data-od-id="timeline-prev">上一段</button>
+                    <button class="tab" id="timelineToday" data-od-id="timeline-today">今天</button>
+                    <span class="range-label" id="timelineRangeLabel">2026年8月8日 - 2026年9月6日</span>
+                    <button class="tab" id="timelineNext" data-od-id="timeline-next">下一段</button>
+                  </div>
+                  <div class="tabs" data-od-id="timeline-zoom-switch">
+                    <button class="tab" data-zoom="14">14 天</button>
+                    <button class="tab active" data-zoom="30">30 天</button>
+                    <button class="tab" data-zoom="90">90 天</button>
+                  </div>
+                </div>
+              </div>
+              <div class="content-body">
+                <div class="timeline-device-toolbar" data-od-id="timeline-device-window">
+                  <div class="device-window-info">
+                    <strong>设备列表</strong>
+                    <span class="tag blue" id="timelineDeviceRange">第 1 - 50 台</span>
+                    <span class="device-window-meta" id="timelineDeviceMeta">共 328 台演示设备</span>
+                  </div>
+                  <div class="device-search" data-od-id="timeline-device-search">
+                    <input class="device-search-input" id="timelineDeviceSearch" placeholder="搜索设备编号、型号或状态" aria-label="搜索设备" />
+                    <button class="tab active" id="timelineDeviceSearchButton">搜索</button>
+                    <button class="tab" id="timelineDeviceSearchClear">清空</button>
+                  </div>
+                  <div class="device-page-controls">
+                    <label class="device-window-meta" for="timelineDevicePageSize">每页</label>
+                    <select class="device-page-size" id="timelineDevicePageSize" data-od-id="timeline-device-page-size">
+                      <option value="25">25 台</option>
+                      <option value="50" selected>50 台</option>
+                      <option value="100">100 台</option>
+                    </select>
+                    <button class="tab" id="timelineDevicePrev" data-od-id="timeline-device-prev">上一页</button>
+                    <span class="device-page-label" id="timelineDevicePageLabel">1 / 7</span>
+                    <button class="tab" id="timelineDeviceNext" data-od-id="timeline-device-next">下一页</button>
+                  </div>
+                </div>
+                <div class="timeline-hint">
+                  <span>设备方向按页纵向浏览，日期方向在时间轴内横向滚动；点击设备或占用条查看详情。</span>
+                  <span>每次只展示当前设备页，几百台设备不会一次性铺满页面。</span>
+                </div>
+                <div class="timeline-shell" data-od-id="capacity-timeline">
+                  <div class="timeline-board" id="scheduleBoard"></div>
+                </div>
+                <div class="legend" data-od-id="calendar-legend">
+                  <span><i style="background: var(--success-weak)"></i>可用</span>
+                  <span><i style="background: oklch(86% 0.1 255)"></i>已占用</span>
+                  <span><i style="background: oklch(91% 0.09 78)"></i>物流途中</span>
+                  <span><i style="background: oklch(90% 0.025 260)"></i>锁定</span>
+                  <span><i style="background: oklch(88% 0.08 200)"></i>跨月长租</span>
+                </div>
+              </div>
+            </section>
+            <section class="split" data-od-id="lower-workbench">
+              <div class="content-wrap" data-od-id="pending-orders-card">
+                <div class="section-head">
+                  <h2 data-od-id="pending-orders-title">待分配订单</h2>
+                  <span class="section-note">点击订单后查看推荐可用设备</span>
+                </div>
+                <div class="content-body">
+                  <div class="table-wrap">
+                    <table data-od-id="pending-orders-table">
+                      <thead>
+                        <tr><th>订单</th><th>型号</th><th>计租周期</th><th>占用周期</th><th>状态</th><th>操作</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr class="clickable selected" tabindex="0" data-order="CRD2026080801" data-od-id="pending-order-1"><td>CRD2026080801</td><td>Phantom 4 Pro</td><td>8月10日 - 8月13日</td><td>8月9日 - 8月15日</td><td data-order-status><span class="tag orange">待分配</span></td><td><button class="table-action" data-order-action="CRD2026080801">查看详情</button></td></tr>
+                        <tr class="clickable" tabindex="0" data-order="CRD2026080802" data-od-id="pending-order-2"><td>CRD2026080802</td><td>Osmo Pocket 3</td><td>8月14日 - 8月16日</td><td>8月13日 - 8月18日</td><td data-order-status><span class="tag orange">需确认</span></td><td><button class="table-action" data-order-action="CRD2026080802">查看详情</button></td></tr>
+                        <tr class="clickable" tabindex="0" data-order="CRD2026080803" data-od-id="pending-order-3"><td>CRD2026080803</td><td>DJI Mini 4 Pro</td><td>8月17日 - 8月19日</td><td>8月16日 - 8月21日</td><td data-order-status><span class="tag orange">待分配</span></td><td><button class="table-action" data-order-action="CRD2026080803">查看详情</button></td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="pagination" data-od-id="pending-pagination"><span>共 12 条</span><button class="btn">上一页</button><button class="btn primary">1</button><button class="btn">2</button><button class="btn">下一页</button></div>
+                </div>
+              </div>
+              <div class="content-wrap" data-od-id="conflict-queue-card">
+                <div class="section-head">
+                  <h2 data-od-id="conflict-queue-title">冲突与异常队列</h2>
+                  <span class="section-note">点击查看原因并处理</span>
+                </div>
+                <div class="content-body">
+                  <div class="queue-list" data-od-id="conflict-queue-list">
+                    <div class="queue-item clickable selected" tabindex="0" data-conflict="overlap" data-od-id="conflict-overlap">
+                      <div class="queue-title"><span>待分配订单候选冲突：P4-02</span><span class="tag red">已拦截</span></div>
+                      <div class="queue-meta"><span>新单需求：8月9日 - 8月15日，尚未分配</span><span>P4-02 已于 8月8日发货占用，系统已排除该候选，未写入有效排期</span></div>
+                    </div>
+                    <div class="queue-item clickable" tabindex="0" data-conflict="locked" data-od-id="conflict-locked">
+                      <div class="queue-title"><span>OP3-12 仍处于锁定</span><span class="tag orange">锁定</span></div>
+                      <div class="queue-meta"><span>锁定原因：待检测复核</span><span>影响订单：CRD2026080802</span></div>
+                    </div>
+                    <div class="queue-item clickable" tabindex="0" data-conflict="late-return" data-od-id="conflict-late-return">
+                      <div class="queue-title"><span>M4-07 退回延迟</span><span class="tag red">异常</span></div>
+                      <div class="queue-meta"><span>原计划检测完成：8月16日</span><span>当前预计完成：8月18日</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+          <aside class="content-wrap" data-od-id="recommendation-card">
+            <div class="section-head">
+              <div>
+                <h2 data-od-id="recommendation-title">推荐可用设备</h2>
+                <div class="section-note" id="recommend-subtitle">当前订单：CRD2026080801，演示数据</div>
+              </div>
+              <span class="tag blue">规则推荐</span>
+            </div>
+            <div class="content-body">
+              <div class="rule-box" data-od-id="business-rule-box">业务规则：计租周期仅用于租金核算；排期冲突按占用周期判断。页面不显示内部数组、逗号日期或右开区间语义。</div>
+              <div class="recommend" data-od-id="recommend-device-list">
+                <div class="recommend-head"><span>候选设备</span><span>匹配原因</span></div>
+                <div class="recommend-row selected clickable" tabindex="0" data-recommend="P4-06" data-od-id="recommend-device-1">
+                  <div><strong>P4-06</strong><br><span class="section-note">Phantom 4 Pro</span></div>
+                  <span class="tag green">全周期可用</span>
+                </div>
+                <div class="recommend-row clickable" tabindex="0" data-recommend="P4-09" data-od-id="recommend-device-2">
+                  <div><strong>P4-09</strong><br><span class="section-note">Phantom 4 Pro</span></div>
+                  <span class="tag blue">周转更优</span>
+                </div>
+                <div class="recommend-row clickable" tabindex="0" data-recommend="P4-01" data-od-id="recommend-device-3">
+                  <div><strong>P4-01</strong><br><span class="section-note">Phantom 4 Pro</span></div>
+                  <span class="tag orange">8月15日后可用</span>
+                </div>
+              </div>
+              <div class="btn-row" style="margin-top: 10px; justify-content: flex-end;">
+                <button class="btn" id="lockDeviceBtn" data-od-id="lock-device-button">锁定候选设备</button>
+                <button class="btn primary" id="assignBtn" data-od-id="confirm-assign-button">确认分配</button>
+              </div>
+            </div>
+          </aside>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="drawer-mask" id="drawerMask" data-od-id="detail-drawer-mask">
+    <aside
+      class="drawer"
+      data-od-id="detail-drawer"
+      data-specnav-component="schedule-detail-drawer"
+      data-specnav-state="closed"
+    >
+      <div class="drawer-head">
+        <div>
+          <h2 class="drawer-title" id="drawerTitle" data-od-id="drawer-title">订单与设备详情</h2>
+          <div class="section-note" id="drawerSubtitle">演示数据</div>
+        </div>
+        <button class="btn" id="closeDrawer" data-od-id="drawer-close">关闭</button>
+      </div>
+      <div class="drawer-body" id="drawerBody" data-od-id="drawer-body"></div>
+      <div class="drawer-foot" id="drawerFoot" data-od-id="drawer-actions"></div>
+    </aside>
+  </div>
+  <script>
+    const drawerMask = document.getElementById('drawerMask');
+    const drawerTitle = document.getElementById('drawerTitle');
+    const drawerSubtitle = document.getElementById('drawerSubtitle');
+    const drawerBody = document.getElementById('drawerBody');
+    const drawerFoot = document.getElementById('drawerFoot');
+    window.drawerMask = drawerMask;
+    let selectedOrder = 'CRD2026080801';
+    let selectedDevice = 'P4-06';
+    const DAY_MS = 24 * 60 * 60 * 1000;
+    const timelineState = {
+      days: 30,
+      start: new Date('2026-08-08T00:00:00+08:00')
+    };
+    const DEVICE_TOTAL = 328;
+    const deviceListState = {
+      page: 1,
+      pageSize: 50,
+      query: ''
+    };
+    const featuredScheduleRows = [
+      {
+        id: 'P4-02',
+        model: 'Phantom 4 Pro',
+        avatar: 'P4',
+        state: '去程运输中',
+        stateClass: 'transit',
+        periods: [
+          { start: '2026-08-08', end: '2026-08-08', type: 'transit', label: '去程运输' },
+          { start: '2026-08-09', end: '2026-08-13', type: 'occupied', label: 'CRD2026080706 · 已占用' },
+          { start: '2026-08-14', end: '2026-08-15', type: 'transit', label: '返程物流' },
+          { start: '2026-08-16', end: '2026-08-17', type: 'locked', label: '检测与保留' }
+        ]
+      },
+      {
+        id: 'M4-07',
+        model: 'DJI Mini 4 Pro',
+        avatar: 'M4',
+        state: '返程异常',
+        stateClass: 'alert',
+        periods: [
+          { start: '2026-08-08', end: '2026-08-09', type: 'transit', label: '返程延迟' },
+          { start: '2026-08-10', end: '2026-08-13', type: 'occupied', label: 'CRD2026080811' },
+          { start: '2026-08-17', end: '2026-08-19', type: 'occupied', label: 'CRD2026080818' }
+        ]
+      },
+      {
+        id: 'OP3-12',
+        model: 'Osmo Pocket 3',
+        avatar: 'OP3',
+        state: '回仓待检测',
+        stateClass: 'locked',
+        periods: [
+          { start: '2026-08-08', end: '2026-08-09', type: 'locked', label: '回仓待检测' },
+          { start: '2026-08-13', end: '2026-08-16', type: 'occupied', label: 'CRD2026080802' },
+          { start: '2026-08-20', end: '2026-08-20', type: 'occupied', label: '短租' },
+          { start: '2026-08-21', end: '2026-08-21', type: 'transit', label: '返程' }
+        ]
+      },
+      {
+        id: 'A3-03',
+        model: 'DJI Air 3S',
+        avatar: 'A3',
+        state: '可排',
+        stateClass: '',
+        periods: [
+          { start: '2026-08-12', end: '2026-08-15', type: 'occupied', label: 'CRD2026080815' }
+        ]
+      },
+      {
+        id: 'P4-10',
+        model: 'Phantom 4 Pro · 长租',
+        avatar: 'P4',
+        state: '长租占用',
+        stateClass: '',
+        periods: [
+          { start: '2026-08-05', end: '2026-10-20', type: 'long-rental', label: '长租订单 · 8月5日 - 10月20日' }
+        ]
+      }
+    ];
+    function dateFromIso(value) {
+      return new Date(`${value}T00:00:00+08:00`);
+    }
+    function addDays(date, days) {
+      return new Date(date.getTime() + days * DAY_MS);
+    }
+    function dateDiff(left, right) {
+      return Math.round((left.getTime() - right.getTime()) / DAY_MS);
+    }
+    function formatDate(date, withYear = false) {
+      const prefix = withYear ? `${date.getFullYear()}年` : '';
+      return `${prefix}${date.getMonth() + 1}月${date.getDate()}日`;
+    }
+    const generatedDeviceModels = [
+      { name: 'Phantom 4 Pro', avatar: 'P4', prefix: 'P4' },
+      { name: 'DJI Mini 4 Pro', avatar: 'M4', prefix: 'M4' },
+      { name: 'Osmo Pocket 3', avatar: 'OP3', prefix: 'OP3' },
+      { name: 'DJI Air 3S', avatar: 'A3', prefix: 'A3' },
+      { name: 'Sony A7M4', avatar: 'A7', prefix: 'A7' },
+      { name: 'Sony FX3', avatar: 'FX3', prefix: 'FX3' },
+      { name: 'Canon R6 Mark II', avatar: 'R6', prefix: 'R6' },
+      { name: 'Canon R5', avatar: 'R5', prefix: 'R5' },
+      { name: 'Nikon Z8', avatar: 'Z8', prefix: 'Z8' },
+      { name: 'DJI RS 4 Pro', avatar: 'RS4', prefix: 'RS4' },
+      { name: 'Insta360 X4', avatar: 'X4', prefix: 'X4' },
+      { name: 'GoPro HERO13', avatar: 'H13', prefix: 'H13' }
+    ];
+    function buildGeneratedDevice(absoluteIndex) {
+      if (absoluteIndex < featuredScheduleRows.length) return featuredScheduleRows[absoluteIndex];
+      const model = generatedDeviceModels[(absoluteIndex - featuredScheduleRows.length) % generatedDeviceModels.length];
+      const serial = String(100 + absoluteIndex).padStart(3, '0');
+      const mode = absoluteIndex % 18;
+      let state = '可排';
+      let stateClass = '';
+      let periods = [];
+      if (mode === 0) {
+        state = '去程运输中';
+        stateClass = 'transit';
+        periods = [{ start: '2026-08-08', end: '2026-08-09', type: 'transit', label: '去程物流' }];
+      } else if (mode === 1 || mode === 7) {
+        state = '订单占用';
+        periods = [{ start: '2026-08-12', end: '2026-08-16', type: 'occupied', label: `演示订单 ${absoluteIndex + 1}` }];
+      } else if (mode === 2) {
+        state = '回仓待检测';
+        stateClass = 'locked';
+        periods = [{ start: '2026-08-08', end: '2026-08-10', type: 'locked', label: '回仓待检测' }];
+      } else if (absoluteIndex % 47 === 0) {
+        state = '跨月长租';
+        periods = [{ start: '2026-08-05', end: '2026-10-20', type: 'long-rental', label: '跨月长租 · 演示数据' }];
+      }
+      return {
+        id: `${model.prefix}-${serial}`,
+        model: model.name,
+        avatar: model.avatar,
+        state,
+        stateClass,
+        periods,
+        generated: true
+      };
+    }
+    function getFilteredDeviceRows() {
+      const rows = Array.from({ length: DEVICE_TOTAL }, (_, index) => buildGeneratedDevice(index));
+      const query = deviceListState.query.trim().toLocaleLowerCase('zh-CN');
+      if (!query) return rows;
+      return rows.filter(row => `${row.id} ${row.model} ${row.state}`.toLocaleLowerCase('zh-CN').includes(query));
+    }
+    function getCurrentDeviceRows() {
+      const filteredRows = getFilteredDeviceRows();
+      const totalCount = filteredRows.length;
+      const totalPages = Math.max(1, Math.ceil(totalCount / deviceListState.pageSize));
+      deviceListState.page = Math.min(Math.max(deviceListState.page, 1), totalPages);
+      const start = (deviceListState.page - 1) * deviceListState.pageSize;
+      const end = Math.min(start + deviceListState.pageSize, totalCount);
+      return {
+        rows: filteredRows.slice(start, end),
+        totalCount
+      };
+    }
+    function updateDevicePageControls(rowCount, totalCount) {
+      const totalPages = Math.max(1, Math.ceil(totalCount / deviceListState.pageSize));
+      const start = totalCount ? (deviceListState.page - 1) * deviceListState.pageSize + 1 : 0;
+      const end = totalCount ? start + rowCount - 1 : 0;
+      document.getElementById('timelineDeviceRange').textContent = totalCount ? `第 ${start} - ${end} 台` : '未找到设备';
+      document.getElementById('timelineDeviceMeta').textContent = deviceListState.query
+        ? `找到 ${totalCount} 台，全部设备 ${DEVICE_TOTAL} 台，演示数据`
+        : `共 ${DEVICE_TOTAL} 台演示设备`;
+      document.getElementById('timelineDevicePageLabel').textContent = `${deviceListState.page} / ${totalPages}`;
+      document.getElementById('timelineDevicePrev').disabled = deviceListState.page === 1 || totalCount === 0;
+      document.getElementById('timelineDeviceNext').disabled = deviceListState.page === totalPages || totalCount === 0;
+    }
+    function renderSchedule() {
+      const board = document.getElementById('scheduleBoard');
+      const days = timelineState.days;
+      const deviceWindow = getCurrentDeviceRows();
+      const scheduleRows = deviceWindow.rows;
+      updateDevicePageControls(scheduleRows.length, deviceWindow.totalCount);
+      const cellWidth = days === 14 ? 52 : days === 30 ? 30 : 14;
+      const rangeEnd = addDays(timelineState.start, days - 1);
+      board.style.setProperty('--days', days);
+      board.style.setProperty('--cell-width', `${cellWidth}px`);
+      board.style.setProperty('--timeline-width', `${days * cellWidth}px`);
+      document.getElementById('timelineRangeLabel').textContent = `${formatDate(timelineState.start, true)} - ${formatDate(rangeEnd, true)}`;
+      const monthSegments = [];
+      let segmentStart = 0;
+      let monthKey = '';
+      for (let index = 0; index < days; index += 1) {
+        const date = addDays(timelineState.start, index);
+        const key = `${date.getFullYear()}-${date.getMonth()}`;
+        if (key !== monthKey) {
+          if (monthKey) {
+            const previous = addDays(timelineState.start, index - 1);
+            monthSegments.push({ start: segmentStart, span: index - segmentStart, label: `${previous.getFullYear()}年${previous.getMonth() + 1}月` });
+          }
+          monthKey = key;
+          segmentStart = index;
+        }
+      }
+      monthSegments.push({
+        start: segmentStart,
+        span: days - segmentStart,
+        label: `${rangeEnd.getFullYear()}年${rangeEnd.getMonth() + 1}月`
+      });
+      const monthsHtml = monthSegments.map(segment => `<span class="month-segment" style="left:${segment.start * cellWidth}px;width:${segment.span * cellWidth}px">${segment.label}</span>`).join('');
+      const dayMarkers = [];
+      for (let index = 0; index < days; index += 1) {
+        const date = addDays(timelineState.start, index);
+        const visible = days <= 30 || index % 7 === 0 || date.getDate() === 1;
+        if (!visible) continue;
+        const today = date.getTime() === dateFromIso('2026-08-08').getTime() ? ' today' : '';
+        const label = days === 90 ? `${date.getMonth() + 1}/${date.getDate()}` : `${date.getDate()}日`;
+        const markerSpan = days === 90 ? Math.min(7, days - index) : 1;
+        dayMarkers.push(`<span class="day-marker${today}" style="left:${index * cellWidth}px;width:${cellWidth * markerSpan}px">${label}</span>`);
+      }
+      const rowsHtml = scheduleRows.map(row => {
+        const bars = row.periods.map(period => {
+          const startOffset = dateDiff(dateFromIso(period.start), timelineState.start);
+          const endOffset = dateDiff(dateFromIso(period.end), timelineState.start);
+          if (endOffset < 0 || startOffset > days - 1) return '';
+          const visibleStart = Math.max(0, startOffset);
+          const visibleEnd = Math.min(days - 1, endOffset);
+          const continuesLeft = startOffset < 0 ? ' continues-left' : '';
+          const continuesRight = endOffset > days - 1 ? ' continues-right' : '';
+          const width = Math.max(cellWidth - 6, (visibleEnd - visibleStart + 1) * cellWidth - 6);
+          const title = `${period.label}，${formatDate(dateFromIso(period.start), true)} - ${formatDate(dateFromIso(period.end), true)}`;
+          return `<button class="timeline-bar ${period.type}${continuesLeft}${continuesRight}" style="left:${visibleStart * cellWidth + 3}px;width:${width}px" data-device="${row.id}" title="${title}">${continuesLeft ? '← ' : ''}${period.label}${continuesRight ? ' →' : ''}</button>`;
+        }).join('');
+        return `<div class="timeline-row"><button class="timeline-device clickable" data-device="${row.id}" title="${row.id} / ${row.model} / ${row.state}"><span class="device-avatar">${row.avatar}</span><span class="device-copy"><strong>${row.id}</strong><span>${row.model}</span></span><span class="device-status-dot ${row.stateClass}" aria-label="${row.state}"></span></button><div class="timeline-track">${bars || '<span class="timeline-empty">当前窗口无占用，可排</span>'}</div></div>`;
+      }).join('');
+      const rowContent = rowsHtml || `<div class="timeline-no-results"><div><strong>没有找到匹配设备</strong><br><span>请检查设备编号、型号或状态关键词，也可以清空搜索条件。</span></div></div>`;
+      board.innerHTML = `
+        <div class="timeline-months"><div class="timeline-corner">设备 / 时间轴</div><div class="timeline-month-track">${monthsHtml}</div></div>
+        <div class="timeline-days"><div class="timeline-corner">缩放：${days} 天</div><div class="timeline-day-track">${dayMarkers.join('')}</div></div>
+        ${rowContent}
+      `;
+    }
+    const details = {
+      devices: {
+        'P4-02': {
+          title: 'P4-02 占用明细',
+          subtitle: 'Phantom 4 Pro / 演示数据',
+          html: `
+            <dl class="desc-list">
+              <dt>设备状态</dt><dd><span class="tag blue">已发货占用</span></dd>
+              <dt>当前占用</dt><dd>8月8日 - 8月15日，订单 CRD2026080706</dd>
+              <dt>物流状态</dt><dd><span class="tag blue">去程运输中</span> 预计 8月9日送达</dd>
+              <dt>检测完成</dt><dd>预计 8月15日 18:00</dd>
+              <dt>锁定状态</dt><dd>8月16日 - 8月17日，原因：管理保留</dd>
+            </dl>
+            <div class="logistics-grid" data-od-id="device-logistics-process">
+              <section class="logistics-card">
+                <div class="logistics-head"><strong>去程物流</strong><span class="tag blue">运输中</span></div>
+                <dl class="desc-list"><dt>承运商</dt><dd>顺丰速运</dd><dt>物流单号</dt><dd>SF1460008201</dd><dt>最新轨迹</dt><dd>8月8日 16:20，已离开发件网点</dd></dl>
+              </section>
+              <section class="logistics-card">
+                <div class="logistics-head"><strong>返程物流</strong><span class="tag">未开始</span></div>
+                <dl class="desc-list"><dt>计划寄回</dt><dd>预计 8月14日</dd><dt>物流单号</dt><dd>客户寄回后生成</dd><dt>占用释放</dt><dd>回仓检测完成后释放</dd></dl>
+              </section>
+            </div>
+            <div class="timeline">
+              <div class="timeline-item"><span class="dot"></span><div><strong>发货出库</strong><br><span class="section-note">8月8日 10:30，去程物流开始，设备进入占用周期</span></div></div>
+              <div class="timeline-item"><span class="dot"></span><div><strong>客户签收</strong><br><span class="section-note">预计 8月9日 15:42，去程物流完成</span></div></div>
+              <div class="timeline-item"><span class="dot"></span><div><strong>计租结束</strong><br><span class="section-note">预计 8月13日 23:59，仅影响租金核算，不释放设备</span></div></div>
+              <div class="timeline-item"><span class="dot"></span><div><strong>客户寄回</strong><br><span class="section-note">预计 8月14日，返程物流开始</span></div></div>
+              <div class="timeline-item"><span class="dot"></span><div><strong>回仓签收</strong><br><span class="section-note">预计 8月15日 14:00，签收后进入检测</span></div></div>
+              <div class="timeline-item"><span class="dot"></span><div><strong>检测完成</strong><br><span class="section-note">预计 8月15日 18:00，占用周期结束</span></div></div>
+            </div>`
+        },
+        'M4-07': {
+          title: 'M4-07 占用明细',
+          subtitle: 'DJI Mini 4 Pro / 演示数据',
+          html: `<dl class="desc-list"><dt>设备状态</dt><dd><span class="tag red">返程延迟</span></dd><dt>物流状态</dt><dd>8月7日应回仓，当前仍在运输</dd><dt>后续占用</dt><dd>8月10日 - 8月13日，8月17日 - 8月19日</dd><dt>风险提示</dt><dd>若 8月9日未完成检测，8月10日订单必须改派</dd></dl><section class="logistics-card"><div class="logistics-head"><strong>返程物流过程</strong><span class="tag red">延迟</span></div><div class="timeline"><div class="timeline-item"><span class="dot"></span><div><strong>原计划回仓</strong><br><span class="section-note">8月7日 18:00，未按计划到达</span></div></div><div class="timeline-item"><span class="dot"></span><div><strong>最新轨迹</strong><br><span class="section-note">8月8日 09:30，到达转运中心，预计 8月9日送达</span></div></div></div></section>`
+        },
+        'OP3-12': {
+          title: 'OP3-12 占用明细',
+          subtitle: 'Osmo Pocket 3 / 演示数据',
+          html: `<dl class="desc-list"><dt>设备状态</dt><dd><span class="tag orange">锁定中</span></dd><dt>物流状态</dt><dd><span class="tag blue">返程运输中</span></dd><dt>锁定原因</dt><dd>等待回仓与检测复核，禁止自动推荐</dd><dt>预计释放</dt><dd>8月10日 14:00</dd></dl><section class="logistics-card"><div class="logistics-head"><strong>返程物流过程</strong><span class="tag blue">运输中</span></div><div class="timeline"><div class="timeline-item"><span class="dot"></span><div><strong>客户寄回</strong><br><span class="section-note">8月8日 09:12，圆通速递已揽收</span></div></div><div class="timeline-item"><span class="dot"></span><div><strong>回仓签收</strong><br><span class="section-note">预计 8月9日 16:35，签收后转入检测流程</span></div></div></div></section>`
+        },
+        'A3-03': {
+          title: 'A3-03 占用明细',
+          subtitle: 'DJI Air 3S / 演示数据',
+          html: `<dl class="desc-list"><dt>设备状态</dt><dd><span class="tag green">可排</span></dd><dt>物流状态</dt><dd>暂无进行中的物流</dd><dt>近期占用</dt><dd>8月12日 - 8月15日</dd><dt>推荐说明</dt><dd>当前租户库存内可直接分配</dd></dl>`
+        },
+        'P4-10': {
+          title: 'P4-10 长租占用明细',
+          subtitle: 'Phantom 4 Pro / 跨月长租 / 演示数据',
+          html: `<dl class="desc-list"><dt>设备状态</dt><dd><span class="tag green">长租占用</span></dd><dt>占用周期</dt><dd>2026年8月5日 - 2026年10月20日</dd><dt>计租周期</dt><dd>2026年8月7日 - 2026年10月18日</dd><dt>当前物流</dt><dd>客户已签收，设备持续占用</dd><dt>排期说明</dt><dd>14天、30天视图显示左右延续标记；90天视图可查看完整跨月周期。</dd></dl>`
+        }
+      },
+      conflicts: {
+        overlap: {
+          title: '候选冲突：已占用设备被排除',
+          subtitle: 'P4-02 / 演示数据',
+          html: `<dl class="desc-list"><dt>候选设备</dt><dd>P4-02</dd><dt>新订单需求</dt><dd>8月9日 - 8月15日，尚未分配</dd><dt>已有占用</dt><dd>8月8日 - 8月15日，已生效</dd><dt>当前物流</dt><dd>去程运输中，预计 8月9日送达客户</dd><dt>校验结果</dt><dd>P4-02 已被系统排除，新订单不会写入该设备排期。</dd></dl><div class="rule-box">处理建议：改派 P4-06。系统不能把两个有效占用同时写到同一设备。</div>`
+        },
+        locked: {
+          title: '异常原因：设备锁定',
+          subtitle: 'OP3-12 / 演示数据',
+          html: `<dl class="desc-list"><dt>锁定类型</dt><dd>等待回仓检测</dd><dt>物流状态</dt><dd>返程运输中，预计 8月9日签收</dd><dt>影响周期</dt><dd>8月8日 - 8月10日</dd><dt>影响订单</dt><dd>CRD2026080802</dd><dt>建议</dt><dd>等待物流与检测完成，或改用 OP3-18。</dd></dl>`
+        },
+        'late-return': {
+          title: '异常原因：退回延迟',
+          subtitle: 'M4-07 / 演示数据',
+          html: `<dl class="desc-list"><dt>物流状态</dt><dd>返程延迟，8月8日仍在运输</dd><dt>原计划回仓</dt><dd>8月7日 18:00</dd><dt>当前预计</dt><dd>8月9日 12:00</dd><dt>影响订单</dt><dd>8月10日开始的 CRD2026080811</dd><dt>建议</dt><dd>刷新物流后重新评估，若无法按时检测则改派同型号设备。</dd></dl>`
+        }
+      }
+    };
+    const orderDetails = {
+      CRD2026080801: {
+        model: 'Phantom 4 Pro',
+        externalOrder: 'XY20260807126001',
+        channel: '闲鱼 / 捷租达旗舰店',
+        customer: '张先生（演示数据）',
+        phone: '138 0000 1260（演示数据）',
+        address: '杭州市西湖区文三路 88 号（演示数据）',
+        status: '待分配',
+        amount: '¥1,260.00（演示数据）',
+        sellerRemark: '#8.9发货# #8.10-8.13租期# 顺丰优先（演示数据）',
+        shippingDate: '2026年8月9日（预计）',
+        rentalPeriod: '2026年8月10日 - 2026年8月13日',
+        occupancyPeriod: '2026年8月9日 - 2026年8月15日',
+        logistics: '待发货，物流单号尚未生成',
+        recommended: 'P4-06',
+        recommendation: '同型号且占用周期全程可用，周转缓冲 1 天',
+        exclusion: 'P4-02 已存在 8月8日 - 8月15日有效占用，已自动排除'
+      },
+      CRD2026080802: {
+        model: 'Osmo Pocket 3',
+        externalOrder: 'XY20260807126002',
+        channel: '闲鱼 / 捷租达旗舰店',
+        customer: '李女士（演示数据）',
+        phone: '139 0000 8842（演示数据）',
+        address: '上海市徐汇区漕溪北路 66 号（演示数据）',
+        status: '需确认',
+        amount: '¥680.00（演示数据）',
+        sellerRemark: '#8.13发货# 收货后次日起租，8.16发回（演示数据）',
+        shippingDate: '2026年8月13日（预计）',
+        rentalPeriod: '2026年8月14日 - 2026年8月16日',
+        occupancyPeriod: '2026年8月13日 - 2026年8月18日',
+        logistics: '待发货，物流单号尚未生成',
+        recommended: 'OP3-18',
+        recommendation: 'OP3-12 尚未完成回仓检测，建议改派 OP3-18',
+        exclusion: 'OP3-12 当前锁定至 8月10日 14:00，需主管确认后才能进入推荐'
+      },
+      CRD2026080803: {
+        model: 'DJI Mini 4 Pro',
+        externalOrder: 'XY20260807126003',
+        channel: '闲鱼 / 捷租达旗舰店',
+        customer: '王先生（演示数据）',
+        phone: '137 0000 3906（演示数据）',
+        address: '深圳市南山区科苑路 18 号（演示数据）',
+        status: '待分配',
+        amount: '¥920.00（演示数据）',
+        sellerRemark: '#8.16发货# #8.17-8.19租期#（演示数据）',
+        shippingDate: '2026年8月16日（预计）',
+        rentalPeriod: '2026年8月17日 - 2026年8月19日',
+        occupancyPeriod: '2026年8月16日 - 2026年8月21日',
+        logistics: '待发货，物流单号尚未生成',
+        recommended: 'M4-12',
+        recommendation: '当前窗口无占用，满足完整占用周期',
+        exclusion: 'M4-07 存在返程延迟风险，暂不作为首选候选'
+      }
+    };
+    function openDrawer(title, subtitle, html, actions) {
+      drawerTitle.textContent = title;
+      drawerSubtitle.textContent = subtitle;
+      drawerBody.innerHTML = html;
+      drawerFoot.innerHTML = actions;
+      drawerMask.classList.add('open');
+    }
+    function orderDrawer(orderId) {
+      const order = orderDetails[orderId];
+      if (!order) return;
+      openDrawer(
+        `订单 ${orderId}`,
+        '待分配订单详情 / 演示数据',
+        `<div class="drawer-summary">
+          <div class="summary-chip"><span>订单状态</span><strong>${order.status}</strong></div>
+          <div class="summary-chip"><span>订单金额</span><strong>${order.amount}</strong></div>
+          <div class="summary-chip"><span>推荐设备</span><strong>${order.recommended}</strong></div>
+        </div>
+        <section class="drawer-section">
+          <div class="drawer-section-head"><span>订单概览</span><span class="metric-demo">演示数据</span></div>
+          <dl class="desc-list">
+            <dt>内部订单号</dt><dd>${orderId}</dd>
+            <dt>外部订单号</dt><dd>${order.externalOrder}</dd>
+            <dt>渠道 / 店铺</dt><dd>${order.channel}</dd>
+            <dt>需求型号</dt><dd>${order.model}</dd>
+            <dt>订单状态</dt><dd><span class="tag orange">${order.status}</span></dd>
+          </dl>
+        </section>
+        <section class="drawer-section">
+          <div class="drawer-section-head"><span>客户与收货信息</span><span class="metric-demo">演示数据</span></div>
+          <dl class="desc-list">
+            <dt>收件人</dt><dd>${order.customer}</dd>
+            <dt>联系电话</dt><dd>${order.phone}</dd>
+            <dt>收货地址</dt><dd>${order.address}</dd>
+          </dl>
+        </section>
+        <section class="drawer-section">
+          <div class="drawer-section-head"><span>备注解析与周期</span><span class="tag blue">已解析</span></div>
+          <dl class="desc-list">
+            <dt>卖家备注</dt><dd>${order.sellerRemark}</dd>
+            <dt>解析发货日</dt><dd>${order.shippingDate}</dd>
+            <dt>计租周期</dt><dd>${order.rentalPeriod}</dd>
+            <dt>占用周期</dt><dd>${order.occupancyPeriod}</dd>
+            <dt>物流状态</dt><dd>${order.logistics}</dd>
+          </dl>
+        </section>
+        <section class="drawer-section">
+          <div class="drawer-section-head"><span>排期推荐</span><span class="tag green">可执行</span></div>
+          <dl class="desc-list">
+            <dt>推荐设备</dt><dd><strong>${order.recommended}</strong></dd>
+            <dt>推荐依据</dt><dd>${order.recommendation}</dd>
+            <dt>排除说明</dt><dd>${order.exclusion}</dd>
+          </dl>
+          <div class="drawer-callout">排期冲突按设备占用周期校验。此页面只完成管理端排期决策，不执行扫码发货、退回登记、入库检测或维修操作。</div>
+        </section>`,
+        `<button class="btn" onclick="drawerMask.classList.remove('open')">关闭</button><button class="btn" onclick="showRecommendedDevices()">查看推荐设备</button><button class="btn primary" onclick="confirmAssign()">确认分配</button>`
+      );
+    }
+    function confirmAssign() {
+      drawerMask.classList.remove('open');
+      document.querySelector('[data-od-id="recommendation-title"]').textContent = '推荐可用设备';
+      document.getElementById('recommend-subtitle').textContent = `已将 ${selectedDevice} 分配给 ${selectedOrder}，演示数据`;
+      document.querySelectorAll('[data-order]').forEach(row => {
+        if (row.dataset.order === selectedOrder) {
+          row.querySelector('[data-order-status]').innerHTML = '<span class="tag green">已分配</span>';
+        }
+      });
+    }
+    document.querySelectorAll('[data-mode-btn]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.body.dataset.mode = btn.dataset.modeBtn;
+      });
+    });
+    document.querySelectorAll('[data-order]').forEach(row => {
+      row.addEventListener('click', () => {
+        document.querySelectorAll('[data-order]').forEach(item => item.classList.remove('selected'));
+        row.classList.add('selected');
+        selectedOrder = row.dataset.order;
+        document.getElementById('recommend-subtitle').textContent = `当前订单：${selectedOrder}，演示数据`;
+        orderDrawer(selectedOrder);
+      });
+      row.addEventListener('keydown', event => {
+        if (event.key === 'Enter') row.click();
+      });
+    });
+    document.querySelectorAll('[data-order-action]').forEach(button => {
+      button.addEventListener('click', event => {
+        event.stopPropagation();
+        button.closest('[data-order]').click();
+      });
+    });
+    document.querySelectorAll('[data-quick-filter]').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('[data-quick-filter]').forEach(item => item.classList.toggle('active', item === button));
+      });
+    });
+    document.querySelectorAll('[data-recommend]').forEach(row => {
+      row.addEventListener('click', () => {
+        document.querySelectorAll('[data-recommend]').forEach(item => item.classList.remove('selected'));
+        row.classList.add('selected');
+        selectedDevice = row.dataset.recommend;
+      });
+      row.addEventListener('keydown', event => {
+        if (event.key === 'Enter') row.click();
+      });
+    });
+    document.querySelectorAll('[data-conflict]').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('[data-conflict]').forEach(row => row.classList.remove('selected'));
+        item.classList.add('selected');
+        const conflict = details.conflicts[item.dataset.conflict];
+        openDrawer(
+          conflict.title,
+          conflict.subtitle,
+          conflict.html,
+          `<button class="btn" onclick="openAdjustResult()">调整占用日期</button><button class="btn primary" onclick="openReassignResult()">重新分配</button>`
+        );
+      });
+      item.addEventListener('keydown', event => {
+        if (event.key === 'Enter') item.click();
+      });
+    });
+    function openDeviceDrawer(deviceId) {
+      const storedDevice = details.devices[deviceId];
+      const row = getCurrentDeviceRows().rows.find(item => item.id === deviceId);
+      const device = storedDevice || (row ? {
+        title: `${row.id} 设备排期`,
+        subtitle: `${row.model} / 演示数据`,
+        html: `<dl class="desc-list">
+          <dt>设备编号</dt><dd>${row.id}</dd>
+          <dt>设备型号</dt><dd>${row.model}</dd>
+          <dt>当前状态</dt><dd><span class="tag ${row.stateClass === 'transit' ? 'orange' : row.stateClass === 'locked' ? '' : 'green'}">${row.state}</span></dd>
+          <dt>当前设备页</dt><dd>第 ${deviceListState.page} 页，每页 ${deviceListState.pageSize} 台</dd>
+          <dt>排期记录</dt><dd>${row.periods.length ? row.periods.map(period => `${period.label}：${period.start} - ${period.end}`).join('；') : '当前可视周期内无有效占用'}</dd>
+          <dt>物流状态</dt><dd>${row.stateClass === 'transit' ? '存在进行中的物流节点' : '暂无需要跟踪的物流节点'}</dd>
+        </dl><div class="rule-box">这是用于验证几百台设备分页浏览能力的演示设备。正式页面由后端分页返回设备及其占用周期，不会一次加载全部设备。</div>`
+      } : null);
+      if (!device) return;
+      openDrawer(
+        device.title,
+        device.subtitle,
+        device.html,
+        storedDevice
+          ? `<button class="btn" onclick="refreshLogistics('${deviceId}')">刷新物流</button><button class="btn" onclick="lockCurrentDevice()">锁定设备</button><button class="btn primary" onclick="drawerMask.classList.remove('open')">知道了</button>`
+          : `<button class="btn" onclick="lockCurrentDevice()">锁定设备</button><button class="btn primary" onclick="drawerMask.classList.remove('open')">知道了</button>`
+      );
+    }
+    renderSchedule();
+    document.getElementById('scheduleBoard').addEventListener('click', event => {
+      const target = event.target.closest('[data-device]');
+      if (target) openDeviceDrawer(target.dataset.device);
+    });
+    document.getElementById('timelineDevicePageSize').addEventListener('change', event => {
+      deviceListState.pageSize = Number(event.target.value);
+      deviceListState.page = 1;
+      renderSchedule();
+      document.querySelector('.timeline-shell').scrollTop = 0;
+    });
+    function applyDeviceSearch() {
+      deviceListState.query = document.getElementById('timelineDeviceSearch').value;
+      deviceListState.page = 1;
+      renderSchedule();
+      document.querySelector('.timeline-shell').scrollTop = 0;
+    }
+    document.getElementById('timelineDeviceSearchButton').addEventListener('click', applyDeviceSearch);
+    document.getElementById('timelineDeviceSearch').addEventListener('keydown', event => {
+      if (event.key === 'Enter') applyDeviceSearch();
+    });
+    document.getElementById('timelineDeviceSearchClear').addEventListener('click', () => {
+      document.getElementById('timelineDeviceSearch').value = '';
+      deviceListState.query = '';
+      deviceListState.page = 1;
+      renderSchedule();
+      document.querySelector('.timeline-shell').scrollTop = 0;
+    });
+    document.getElementById('timelineDevicePrev').addEventListener('click', () => {
+      deviceListState.page -= 1;
+      renderSchedule();
+      document.querySelector('.timeline-shell').scrollTop = 0;
+    });
+    document.getElementById('timelineDeviceNext').addEventListener('click', () => {
+      deviceListState.page += 1;
+      renderSchedule();
+      document.querySelector('.timeline-shell').scrollTop = 0;
+    });
+    document.querySelectorAll('[data-zoom]').forEach(button => {
+      button.addEventListener('click', () => {
+        timelineState.days = Number(button.dataset.zoom);
+        document.querySelectorAll('[data-zoom]').forEach(item => item.classList.toggle('active', item === button));
+        renderSchedule();
+      });
+    });
+    document.getElementById('timelinePrev').addEventListener('click', () => {
+      timelineState.start = addDays(timelineState.start, -timelineState.days);
+      renderSchedule();
+    });
+    document.getElementById('timelineNext').addEventListener('click', () => {
+      timelineState.start = addDays(timelineState.start, timelineState.days);
+      renderSchedule();
+    });
+    document.getElementById('timelineToday').addEventListener('click', () => {
+      timelineState.start = dateFromIso('2026-08-08');
+      renderSchedule();
+    });
+    document.getElementById('assignBtn').addEventListener('click', () => orderDrawer(selectedOrder));
+    function showRecommendedDevices() {
+      drawerMask.classList.remove('open');
+      const recommendation = document.querySelector('[data-od-id="recommendation-card"]');
+      recommendation.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      recommendation.style.boxShadow = '0 0 0 2px var(--accent-border), var(--shadow-card)';
+      window.setTimeout(() => {
+        recommendation.style.boxShadow = '';
+      }, 1400);
+    }
+    document.getElementById('lockDeviceBtn').addEventListener('click', () => {
+      openDrawer('锁定候选设备', `${selectedDevice} / 演示数据`, `<dl class="desc-list"><dt>锁定设备</dt><dd>${selectedDevice}</dd><dt>锁定周期</dt><dd>8月9日 - 8月15日</dd><dt>锁定原因</dt><dd>为订单 ${selectedOrder} 预留，等待主管确认。</dd></dl>`, `<button class="btn" onclick="drawerMask.classList.remove('open')">取消</button><button class="btn primary" onclick="drawerMask.classList.remove('open')">确认锁定</button>`);
+    });
+    document.getElementById('closeDrawer').addEventListener('click', () => drawerMask.classList.remove('open'));
+    drawerMask.addEventListener('click', event => {
+      if (event.target === drawerMask) drawerMask.classList.remove('open');
+    });
+    function refreshLogistics(deviceId) {
+      const device = details.devices[deviceId];
+      if (!device) return;
+      openDrawer(
+        device.title,
+        device.subtitle,
+        `${device.html}<div class="rule-box">物流信息已刷新。最后同步：2026年8月8日 10:45，数据来源：快递100，演示数据。</div>`,
+        `<button class="btn" onclick="lockCurrentDevice()">锁定设备</button><button class="btn primary" onclick="drawerMask.classList.remove('open')">完成</button>`
+      );
+    }
+    function openAdjustResult() {
+      openDrawer('调整占用日期', '冲突处理 / 演示数据', `<dl class="desc-list"><dt>调整前</dt><dd>8月9日 - 8月15日</dd><dt>建议调整</dt><dd>8月15日 - 8月20日</dd><dt>影响</dt><dd>不改变计租周期计算口径，仅改变设备占用与发货准备窗口。</dd></dl>`, `<button class="btn" onclick="drawerMask.classList.remove('open')">放弃</button><button class="btn primary" onclick="drawerMask.classList.remove('open')">保存调整</button>`);
+    }
+    function openReassignResult() {
+      selectedDevice = 'P4-06';
+      openDrawer('重新选择设备', '候选冲突处理 / 演示数据', `<dl class="desc-list"><dt>已排除候选</dt><dd>P4-02</dd><dt>推荐设备</dt><dd>P4-06</dd><dt>原因</dt><dd>P4-02 已生效占用；P4-06 在当前租户库存内同型号且 8月9日 - 8月15日全周期可用。</dd></dl>`, `<button class="btn" onclick="drawerMask.classList.remove('open')">取消</button><button class="btn primary" onclick="confirmAssign()">确认分配</button>`);
+    }
+    function lockCurrentDevice() {
+      openDrawer('设备锁定已记录', '演示数据', `<dl class="desc-list"><dt>锁定周期</dt><dd>8月16日 - 8月17日</dd><dt>锁定原因</dt><dd>主管保留，暂不进入自动推荐。</dd><dt>后续动作</dt><dd>可在异常队列中解除锁定或重新分配关联订单。</dd></dl>`, `<button class="btn primary" onclick="drawerMask.classList.remove('open')">完成</button>`);
+    }
+  </script>
+</body>
+</html>

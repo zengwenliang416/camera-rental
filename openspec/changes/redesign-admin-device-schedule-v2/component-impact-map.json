@@ -1,0 +1,58 @@
+{
+  "new_components": [
+    "ScheduleMetrics",
+    "ScheduleFilters",
+    "ScheduleTimeline",
+    "PendingAllocationPanel",
+    "AllocationRecommendationPanel",
+    "ScheduleExceptionQueue",
+    "ScheduleOrderDrawer",
+    "ScheduleDeviceDrawer",
+    "ScheduleLogisticsDrawer"
+  ],
+  "reused_components": [
+    "ContentWrap",
+    "Pagination",
+    "Element Plus form/table/tag/drawer/skeleton/empty/result",
+    "rentalLabels",
+    "existing delivery tracking APIs",
+    "existing transactional device assignment API"
+  ],
+  "extraction_triggers": [
+    "schedule page currently combines metrics, filters, table and timeline concerns",
+    "date-window and clipping logic requires pure-model tests",
+    "order, device and logistics drawers have independent loading and error states"
+  ],
+  "forbidden_dependencies": [
+    "presentational component importing API clients",
+    "frontend authoritative availability or conflict calculation",
+    "schedule page importing backend DO or Mapper types",
+    "new UI framework",
+    "direct Kuaidi100 browser request"
+  ],
+  "hooks": [
+    "useScheduleWorkbench",
+    "useScheduleDrawerState"
+  ],
+  "utilities": [
+    "scheduleModel date window and clipping helpers",
+    "central rental status and date formatters"
+  ],
+  "services": [
+    "RentalScheduleWorkbenchService",
+    "RentalPendingAllocationQueryService",
+    "RentalDeviceCandidateQueryService",
+    "RentalScheduleDeviceDetailService",
+    "RentalDeviceLockService"
+  ],
+  "required_component_tests": [
+    "14/30/90 window navigation",
+    "device pagination and keyword query mapping",
+    "timeline continuation markers",
+    "pending order drawer",
+    "candidate conflict refresh",
+    "classified device lock create and release",
+    "device and logistics drawer states"
+  ],
+  "unresolved_gaps": []
+}

@@ -1,0 +1,42 @@
+{
+  "task_id": "004-integration-verification",
+  "goal": "The complete schedule V2 flow is verified with real backend data and repeatable evidence.",
+  "must_read": [
+    "openspec/changes/redesign-admin-device-schedule-v2/development/tasks/004-integration-verification/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/requirements.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/acceptance.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/spec-map.json",
+    "openspec/changes/redesign-admin-device-schedule-v2/component-impact-map.json",
+    "openspec/changes/redesign-admin-device-schedule-v2/prototype/handoff.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/prototype/decision.json",
+    "openspec/changes/redesign-admin-device-schedule-v2/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test",
+    "camera-rental-admin/tests",
+    "openspec/changes/redesign-admin-device-schedule-v2"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test",
+    "camera-rental-admin/tests"
+  ],
+  "non_goals": [
+    "Do not add new product behavior during verification.",
+    "Do not commit, push, deploy or execute production migrations without explicit user authorization."
+  ],
+  "expected_evidence": [
+    "Executed Maven and pnpm evidence",
+    "Browser real-data evidence",
+    "Migration validation and rollback evidence",
+    "Spec and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Build success alone does not prove schedule behavior.",
+    "Prototype fixtures do not prove production correctness."
+  ],
+  "stop_condition": "Stop if verification would require unauthorized production writes, deployment or widening the approved feature scope."
+}

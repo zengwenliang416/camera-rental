@@ -1,0 +1,58 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "artifact/index.html",
+  "project_fidelity": {
+    "status": "green",
+    "inventory": "visual-inventory.json",
+    "shell_checked": true,
+    "generic_shell_detected": false,
+    "notes": [
+      "Uses the approved camera-rental admin scheduling prototype rather than the SpecNav generic canvas.",
+      "Matches the management density, filter, data panel, timeline and right-drawer patterns required by the Element Plus admin."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [
+      "desktop",
+      "narrow desktop"
+    ],
+    "theme_modes": [
+      "light",
+      "dark"
+    ],
+    "locales": [
+      "zh-CN"
+    ],
+    "states": [
+      "populated",
+      "device search",
+      "14 day",
+      "30 day",
+      "90 day",
+      "pending allocation",
+      "candidate conflict",
+      "classified lock",
+      "device drawer",
+      "logistics drawer"
+    ]
+  },
+  "checks": [
+    "Standalone HTML entry is present and contains project-shell and screen review anchors.",
+    "Single-tenant single-warehouse behavior has no warehouse selector.",
+    "Device search and 25/50/100 server-page controls are represented.",
+    "14/30/90 day horizontal timeline and cross-month long rental are represented.",
+    "Pending orders, candidate recommendations and blocked conflicts are separate from effective occupancy.",
+    "Outbound, return transit, pending inspection and logistics tracking are represented.",
+    "Order, device, conflict and logistics details use a right-side drawer.",
+    "Classified lock states cover order reservation, pending inspection, maintenance isolation and supervisor hold."
+  ],
+  "evidence": [
+    "artifact/index.html",
+    "screen-map.json",
+    "visual-inventory.json",
+    "User approval: 原型没问题了 开始开发这个界面吧",
+    "User lock decision: option 1 classified persisted device locks"
+  ],
+  "blockers": []
+}

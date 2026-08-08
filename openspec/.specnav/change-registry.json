@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-03T10:45:06.595Z",
-  "current_focus": "add-customer-return-registration",
+  "generated_at": "2026-08-08T05:24:40.185Z",
+  "current_focus": "redesign-admin-device-schedule-v2",
   "changes": [
     {
       "id": "add-customer-return-registration",
@@ -37,6 +37,14 @@
     },
     {
       "id": "enable-yudao-ai-module",
+      "stage": "created",
+      "status": "active",
+      "branch": null,
+      "created_at": null,
+      "last_active_at": null
+    },
+    {
+      "id": "redesign-admin-device-schedule-v2",
       "stage": "created",
       "status": "active",
       "branch": null,

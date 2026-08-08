@@ -1,0 +1,43 @@
+{
+  "task_id": "003-admin-schedule-interface",
+  "goal": "Operators can use the approved scheduling V2 workbench in the existing admin application.",
+  "must_read": [
+    "openspec/changes/redesign-admin-device-schedule-v2/development/tasks/003-admin-schedule-interface/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/requirements.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/acceptance.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/spec-map.json",
+    "openspec/changes/redesign-admin-device-schedule-v2/component-impact-map.json",
+    "openspec/changes/redesign-admin-device-schedule-v2/prototype/handoff.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/prototype/decision.json",
+    "openspec/changes/redesign-admin-device-schedule-v2/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-admin/src/api/rental",
+    "camera-rental-admin/src/views/rental/schedule",
+    "camera-rental-admin/src/locales/zh-CN.ts",
+    "camera-rental-admin/src/locales/en.ts",
+    "camera-rental-admin/tests/scheduleModel.test.ts"
+  ],
+  "test_paths": [
+    "camera-rental-admin/tests/scheduleModel.test.ts"
+  ],
+  "non_goals": [
+    "Do not implement authoritative scheduling or candidate logic in Vue.",
+    "Do not redesign other rental pages or add another UI framework."
+  ],
+  "expected_evidence": [
+    "Schedule model tests",
+    "Type check and production build",
+    "Task report",
+    "Spec and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Prototype fixture data must not enter production source.",
+    "Existing schedule row pagination cannot represent device lanes."
+  ],
+  "stop_condition": "Stop if a required backend field is missing or a component would compute authoritative availability, conflict or utilization."
+}

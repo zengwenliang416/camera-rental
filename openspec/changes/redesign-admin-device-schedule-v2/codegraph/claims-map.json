@@ -1,0 +1,107 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-08-08T07:30:16.408Z",
+  "active_change": "redesign-admin-device-schedule-v2",
+  "claims": [
+    {
+      "id": "development:task-001-workbench-read-model",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-workbench-read-model",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/redesign-admin-device-schedule-v2/development/tasks/001-workbench-read-model/brief.md",
+        "openspec/changes/redesign-admin-device-schedule-v2/development/tasks/001-workbench-read-model/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-001-workbench-read-model:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-lock-and-allocation",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-lock-and-allocation",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/redesign-admin-device-schedule-v2/development/tasks/002-lock-and-allocation/brief.md",
+        "openspec/changes/redesign-admin-device-schedule-v2/development/tasks/002-lock-and-allocation/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-002-lock-and-allocation:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-admin-schedule-interface",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-admin-schedule-interface",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/redesign-admin-device-schedule-v2/development/tasks/003-admin-schedule-interface/brief.md",
+        "openspec/changes/redesign-admin-device-schedule-v2/development/tasks/003-admin-schedule-interface/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-003-admin-schedule-interface:evidence"
+      ]
+    },
+    {
+      "id": "development:task-004-integration-verification",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "004-integration-verification",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/redesign-admin-device-schedule-v2/development/tasks/004-integration-verification/brief.md",
+        "openspec/changes/redesign-admin-device-schedule-v2/development/tasks/004-integration-verification/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-004-integration-verification:evidence"
+      ]
+    }
+  ]
+}

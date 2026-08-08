@@ -1,0 +1,42 @@
+{
+  "task_id": "002-lock-and-allocation",
+  "goal": "Supervisors can create classified locks and operators can safely confirm a candidate assignment.",
+  "must_read": [
+    "openspec/changes/redesign-admin-device-schedule-v2/development/tasks/002-lock-and-allocation/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/requirements.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/acceptance.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/spec-map.json",
+    "openspec/changes/redesign-admin-device-schedule-v2/component-impact-map.json",
+    "openspec/changes/redesign-admin-device-schedule-v2/prototype/handoff.md",
+    "openspec/changes/redesign-admin-device-schedule-v2/prototype/decision.json",
+    "openspec/changes/redesign-admin-device-schedule-v2/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java",
+    "camera-rental-server/sql/mysql/migrations",
+    "openspec/changes/redesign-admin-device-schedule-v2/development/migrations"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java"
+  ],
+  "non_goals": [
+    "Do not add a persistent conflict-event table.",
+    "Do not allow manual release of system-managed inspection or maintenance locks."
+  ],
+  "expected_evidence": [
+    "Focused Maven tests",
+    "Executable migration and rollback evidence",
+    "Task report",
+    "Spec and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Database row locks do not replace business lock records.",
+    "Candidate eligibility can become stale before final assignment."
+  ],
+  "stop_condition": "Stop if lifecycle integration would permit manual bypass, cross-tenant locks, or non-transactional final assignment."
+}

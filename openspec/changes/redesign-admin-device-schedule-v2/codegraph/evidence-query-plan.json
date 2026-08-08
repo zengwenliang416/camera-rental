@@ -1,0 +1,67 @@
+{
+  "schema": "specnav.codegraph.evidence_query_plan.v1",
+  "generated_at": "2026-08-08T07:30:16.408Z",
+  "active_change": "redesign-admin-device-schedule-v2",
+  "queries": [
+    {
+      "id": "development:task-001-workbench-read-model:evidence",
+      "claim_id": "development:task-001-workbench-read-model",
+      "stage": "development",
+      "task_id": "001-workbench-read-model",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"redesign-admin-device-schedule-v2\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-001-workbench-read-model --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-002-lock-and-allocation:evidence",
+      "claim_id": "development:task-002-lock-and-allocation",
+      "stage": "development",
+      "task_id": "002-lock-and-allocation",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"redesign-admin-device-schedule-v2\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-002-lock-and-allocation --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-003-admin-schedule-interface:evidence",
+      "claim_id": "development:task-003-admin-schedule-interface",
+      "stage": "development",
+      "task_id": "003-admin-schedule-interface",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"redesign-admin-device-schedule-v2\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-003-admin-schedule-interface --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-004-integration-verification:evidence",
+      "claim_id": "development:task-004-integration-verification",
+      "stage": "development",
+      "task_id": "004-integration-verification",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"redesign-admin-device-schedule-v2\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-004-integration-verification --query \"<query>\" --write --json"
+    }
+  ]
+}

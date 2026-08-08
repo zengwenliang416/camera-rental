@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "component_rules": [
+    "Extract workbench aggregation into RentalScheduleWorkbenchService.",
+    "Extract pending allocation detail into RentalPendingAllocationQueryService.",
+    "Extract candidate eligibility into RentalDeviceCandidateQueryService.",
+    "Extract classified lock lifecycle into RentalDeviceLockService.",
+    "Extract ScheduleMetrics, ScheduleFilters and ScheduleTimeline from the page coordinator.",
+    "Extract PendingAllocationPanel, AllocationRecommendationPanel and ScheduleExceptionQueue.",
+    "Extract order, device and logistics drawers with independent loading and error state.",
+    "Keep scheduleModel.ts pure and limited to display windows, clipping and layout.",
+    "Split any new or refactored production file before it exceeds 600 physical lines."
+  ]
+}

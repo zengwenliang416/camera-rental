@@ -1,0 +1,95 @@
+{
+  "schema": "specnav.prototype.visualInventory.v1",
+  "version": "1",
+  "discovery_status": "complete",
+  "source_project": "camera-rental-admin",
+  "evidence": {
+    "screenshots": [
+      "Open Design revision device-search-v7 reviewed in the in-app browser"
+    ],
+    "routes": [
+      "camera-rental-admin/src/views/rental/schedule/index.vue",
+      "camera-rental-admin/src/views/rental/return-registration/index.vue"
+    ],
+    "design_specs": [
+      "openspec/specs/ui-design/design.md"
+    ],
+    "component_sources": [
+      "openspec/changes/redesign-admin-device-schedule-v2/component-impact-map.json",
+      "camera-rental-admin/src/components/ContentWrap/src/ContentWrap.vue",
+      "camera-rental-admin/src/components/Pagination/index.vue"
+    ],
+    "codegraph_claims": []
+  },
+  "project_shell": {
+    "source": "existing application shell",
+    "required_elements": [
+      "navigation",
+      "page title",
+      "filter region",
+      "Element Plus density",
+      "content region",
+      "right-side drawer"
+    ],
+    "omitted_elements": [],
+    "theme_policy": "match prototype-manifest.json ui_capabilities.theme",
+    "i18n_policy": "match prototype-manifest.json ui_capabilities.i18n"
+  },
+  "business_surface": {
+    "screens": [
+      "admin-device-schedule-v2"
+    ],
+    "fields": [
+      "device keyword",
+      "equipment model",
+      "device state",
+      "logistics state",
+      "occupied date window",
+      "device page size"
+    ],
+    "actions": [
+      "switch 14/30/90 day range",
+      "previous or next window",
+      "return to today",
+      "open pending order",
+      "request candidates",
+      "confirm assignment",
+      "create classified device lock",
+      "open device or logistics drawer",
+      "refresh logistics"
+    ],
+    "states": [
+      "loading",
+      "empty",
+      "error",
+      "disabled",
+      "permission",
+      "populated"
+    ]
+  },
+  "verification_matrix": {
+    "viewports": [
+      "desktop",
+      "mobile"
+    ],
+    "theme_modes": [
+      "light",
+      "dark"
+    ],
+    "locales": [
+      "zh-CN"
+    ],
+    "states": [
+      "loading",
+      "empty",
+      "error",
+      "disabled",
+      "permission",
+      "populated"
+    ]
+  },
+  "unsupported_capabilities": [
+    "Prototype does not execute production APIs or database writes.",
+    "Production dark mode and en locale use the existing admin runtime and are verification requirements rather than separate prototype controls."
+  ]
+}

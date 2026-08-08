@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "active_change": "redesign-admin-device-schedule-v2",
+  "status": "passed",
+  "ok": true,
+  "checked_at": "2026-08-08T07:35:00.000Z",
+  "blockers": []
+}

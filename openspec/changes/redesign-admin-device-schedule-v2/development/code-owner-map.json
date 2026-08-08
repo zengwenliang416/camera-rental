@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "camera-rental-server/yudao-module-rental",
+      "owner": "rental-backend"
+    },
+    {
+      "path": "camera-rental-server/sql/mysql/migrations",
+      "owner": "rental-database"
+    },
+    {
+      "path": "camera-rental-admin/src/views/rental/schedule",
+      "owner": "rental-admin-schedule"
+    },
+    {
+      "path": "camera-rental-admin/src/api/rental",
+      "owner": "rental-admin-contracts"
+    },
+    {
+      "path": "camera-rental-admin/src/locales",
+      "owner": "rental-admin-i18n"
+    },
+    {
+      "path": "openspec/changes/redesign-admin-device-schedule-v2",
+      "owner": "specnav-controller"
+    }
+  ]
+}

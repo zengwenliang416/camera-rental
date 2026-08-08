@@ -1,0 +1,4 @@
+{"task_id":"001-workbench-read-model","status":"task-ready","source":"specnav-vertical-slices","note":"Owns the authoritative device-lane workbench, pending-order read model, device detail and scheduling exception projections."}
+{"task_id":"002-lock-and-allocation","status":"task-ready","source":"specnav-vertical-slices","note":"Owns classified device locks, candidate eligibility, migration, permissions and transactional assignment integration."}
+{"task_id":"003-admin-schedule-interface","status":"task-ready","source":"specnav-vertical-slices","note":"Owns the Vue and Element Plus schedule V2 interface, typed APIs, timeline model, drawers, filters and localization."}
+{"task_id":"004-integration-verification","status":"task-ready","source":"specnav-vertical-slices","note":"Owns cross-layer validation, browser evidence, performance checks and verification handoff."}

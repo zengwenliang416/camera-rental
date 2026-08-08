@@ -39,7 +39,6 @@
 
       <ScheduleFilters
         v-model="filters"
-        :model-options="modelOptions"
         :device-status-options="deviceStatusOptions"
         :logistics-status-options="logisticsStatusOptions"
         @submit="query"
@@ -158,7 +157,10 @@ import {
   type RentalScheduleSegmentVO
 } from '@/api/rental/schedule'
 import { getRentalStatusValues } from '@/utils/rentalLabels'
-import { formatOccupyRange } from './scheduleModel'
+import {
+  formatOccupyRange,
+  getOrCreateAssignmentIdempotencyKey
+} from './scheduleModel'
 import { useScheduleWorkbench } from './useScheduleWorkbench'
 import ScheduleMetrics from './components/ScheduleMetrics.vue'
 import ScheduleFilters from './components/ScheduleFilters.vue'
@@ -253,12 +255,7 @@ const candidateDrawer = reactive<{
 })
 
 const selectedPendingItem = ref<RentalPendingAllocationOrderVO>()
-
-const modelOptions = computed(() => {
-  return Array.from(
-    new Set((workbench.value?.devicePage.list || []).map((row) => row.equipmentModelCode))
-  )
-})
+const assignmentIntentKeys = new Map<string, string>()
 
 const deviceStatusOptions = computed(() => [...getRentalStatusValues('device')])
 
@@ -388,6 +385,11 @@ const openCandidates = async (item: RentalScheduleOrderItemVO) => {
 const confirmAssignment = async (candidate: RentalScheduleCandidateVO) => {
   const result = candidateDrawer.result
   if (!result || !candidate.eligible) return
+  const idempotencyKey = getOrCreateAssignmentIdempotencyKey(
+    assignmentIntentKeys,
+    result.rentalOrderItemId,
+    candidate.id
+  )
   candidateDrawer.assigningDeviceId = candidate.id
   try {
     await assignRentalDevice({
@@ -395,8 +397,9 @@ const confirmAssignment = async (candidate: RentalScheduleCandidateVO) => {
       deviceId: candidate.id,
       occupyStartDate: result.occupyStartDate,
       occupyEndDateExclusive: result.occupyEndDateExclusive,
-      idempotencyKey: `schedule-v2-${result.rentalOrderItemId}-${candidate.id}-${Date.now()}`
+      idempotencyKey
     })
+    assignmentIntentKeys.delete(`${result.rentalOrderItemId}:${candidate.id}`)
     ElMessage.success(t('rental.schedule.assignmentSuccess'))
     await Promise.all([loadCandidates(), loadOrderDetail(), load()])
   } catch {

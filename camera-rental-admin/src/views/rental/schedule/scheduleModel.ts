@@ -45,6 +45,20 @@ export interface ScheduleFilterDraft {
   logisticsStatus?: string
 }
 
+export function getOrCreateAssignmentIdempotencyKey(
+  store: Map<string, string>,
+  rentalOrderItemId: number,
+  deviceId: number,
+  createToken: () => string = () => crypto.randomUUID()
+): string {
+  const intentKey = `${rentalOrderItemId}:${deviceId}`
+  const existing = store.get(intentKey)
+  if (existing) return existing
+  const idempotencyKey = `schedule-v2-${rentalOrderItemId}-${deviceId}-${createToken()}`
+  store.set(intentKey, idempotencyKey)
+  return idempotencyKey
+}
+
 const DATE_FORMAT = 'YYYY-MM-DD'
 const DISPLAY_DATE_FORMAT = 'YYYY.MM.DD'
 
@@ -190,7 +204,7 @@ export function toWorkbenchQuery(
     toDateExclusive: bounds.endExclusive,
     viewMode: `${windowDays}D`,
     keyword: filters.keyword.trim() || undefined,
-    equipmentModelCode: filters.equipmentModelCode || undefined,
+    equipmentModelCode: filters.equipmentModelCode?.trim() || undefined,
     deviceStatus: filters.deviceStatus || undefined,
     logisticsStatus: filters.logisticsStatus || undefined
   }

@@ -23,21 +23,14 @@
         </el-input>
       </el-form-item>
       <el-form-item :label="t('rental.schedule.equipmentModelCode')">
-        <el-select
+        <el-input
           :model-value="modelValue.equipmentModelCode"
           class="!w-190px"
           clearable
-          filterable
-          :placeholder="t('common.selectText')"
+          :placeholder="t('rental.schedule.equipmentModelPlaceholder')"
           @update:model-value="update('equipmentModelCode', $event)"
-        >
-          <el-option
-            v-for="option in modelOptions"
-            :key="option"
-            :label="option"
-            :value="option"
-          />
-        </el-select>
+          @keyup.enter="emit('submit')"
+        />
       </el-form-item>
       <el-form-item :label="t('rental.schedule.deviceStatus')">
         <el-select
@@ -88,7 +81,6 @@ import type { ScheduleFilterDraft } from '../scheduleModel'
 
 const props = defineProps<{
   modelValue: ScheduleFilterDraft
-  modelOptions: string[]
   deviceStatusOptions: string[]
   logisticsStatusOptions: string[]
 }>()

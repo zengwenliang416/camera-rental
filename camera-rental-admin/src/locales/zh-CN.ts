@@ -1141,6 +1141,9 @@ export default {
       lockTypes: {
         ORDER_HOLD: '订单锁定',
         MANUAL_HOLD: '人工锁定',
+        RETURN_INSPECTION: '回仓待检测',
+        MAINTENANCE: '维修隔离',
+        PENDING_ALLOCATION: '待分配锁定',
         UNKNOWN: '未知锁定'
       },
       deviceStates: {

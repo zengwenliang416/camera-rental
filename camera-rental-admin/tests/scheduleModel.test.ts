@@ -7,6 +7,7 @@ import {
   buildTimelineMonthGroups,
   closedRangeDays,
   formatOccupyRange,
+  getOrCreateAssignmentIdempotencyKey,
   getTimelineSegment,
   inclusiveEndFromExclusive,
   occupyDays,
@@ -86,7 +87,7 @@ test('workbench query maps filters and server pagination without client-side aut
     30,
     {
       keyword: '  A7M4-0001  ',
-      equipmentModelCode: 'A7M4',
+      equipmentModelCode: '  A7M4  ',
       deviceStatus: 'AVAILABLE',
       logisticsStatus: 'READY'
     },
@@ -117,6 +118,20 @@ test('workbench query maps filters and server pagination without client-side aut
   assert.equal(blankQuery.equipmentModelCode, undefined)
   assert.equal(blankQuery.deviceStatus, undefined)
   assert.equal(blankQuery.logisticsStatus, undefined)
+})
+
+test('assignment retries reuse one idempotency key until the intent succeeds', () => {
+  const store = new Map<string, string>()
+  let sequence = 0
+  const createToken = () => `token-${++sequence}`
+
+  const first = getOrCreateAssignmentIdempotencyKey(store, 501, 901, createToken)
+  const retry = getOrCreateAssignmentIdempotencyKey(store, 501, 901, createToken)
+  const anotherDevice = getOrCreateAssignmentIdempotencyKey(store, 501, 902, createToken)
+
+  assert.equal(first, 'schedule-v2-501-901-token-1')
+  assert.equal(retry, first)
+  assert.equal(anotherDevice, 'schedule-v2-501-902-token-2')
 })
 
 test('device page ranges support the allowed 25, 50, and 100 page sizes', () => {

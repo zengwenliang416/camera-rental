@@ -1176,6 +1176,9 @@ export default {
       lockTypes: {
         ORDER_HOLD: 'Order hold',
         MANUAL_HOLD: 'Manual hold',
+        RETURN_INSPECTION: 'Return inspection',
+        MAINTENANCE: 'Maintenance isolation',
+        PENDING_ALLOCATION: 'Pending allocation hold',
         UNKNOWN: 'Unknown lock'
       },
       deviceStates: {

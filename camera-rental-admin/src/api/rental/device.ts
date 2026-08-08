@@ -1,4 +1,8 @@
 import request from '@/config/axios'
+import type {
+  RentalScheduleDeviceLockVO,
+  RentalScheduleSegmentVO
+} from '@/api/rental/schedule'
 
 export interface RentalDeviceVO {
   id: number
@@ -9,6 +13,38 @@ export interface RentalDeviceVO {
   warehouseCode?: string
   purchaseAmount?: number
   enabled: boolean
+}
+
+export interface RentalDeviceScheduleDetailVO {
+  id: number
+  deviceNo: string
+  serialNumber?: string
+  equipmentModelCode: string
+  status: string
+  enabled: boolean
+  inspectionState?: string
+  maintenanceState?: string
+  expectedReleaseDate?: string
+  reasonCodes?: string[]
+  schedules: RentalScheduleSegmentVO[]
+  currentAssignment?: {
+    id: number
+    rentalOrderId: number
+    rentalOrderItemId: number
+    status: string
+    occupyStartDate: string
+    occupyEndDateExclusive: string
+  }
+  deliveries?: Array<{
+    id: number
+    direction: string
+    sourceCarrierName?: string
+    trackingStatus?: string
+    latestEventTime?: string
+    estimatedDeliveryAt?: string
+    stale?: boolean
+  }>
+  activeLocks?: RentalScheduleDeviceLockVO[]
 }
 
 export interface RentalDeviceCreateReqVO {
@@ -43,6 +79,12 @@ export interface RentalDeviceAssignmentResultVO {
 
 export const getRentalDevicePage = (params: RentalDevicePageReqVO) => {
   return request.get<PageResult<RentalDeviceVO[]>>({ url: '/rental/device/page', params })
+}
+
+export const getRentalDeviceDetail = (id: number) => {
+  return request.get<RentalDeviceScheduleDetailVO>({
+    url: `/rental/device/${id}/schedule-detail`
+  })
 }
 
 export const createRentalDevice = (data: RentalDeviceCreateReqVO) => {

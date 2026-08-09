@@ -7,6 +7,7 @@ import {
   buildTimelineMonthGroups,
   closedRangeDays,
   formatOccupyRange,
+  formatOptionalOccupyRange,
   getOrCreateAssignmentIdempotencyKey,
   getScheduleOrderDisplayNo,
   getTimelineSegment,
@@ -42,6 +43,16 @@ test('closed display dates and half-open occupancy dates keep their distinct sem
   assert.equal(occupyDays('2026-08-03', '2026-08-06'), 3)
   assert.equal(closedRangeDays('2026-08-03', '2026-08-05'), 3)
   assert.equal(formatOccupyRange('2026-08-03', '2026-08-06'), '2026.08.03 → 2026.08.05')
+})
+
+test('optional occupancy ranges reject missing or invalid dates', () => {
+  assert.equal(formatOptionalOccupyRange(undefined, undefined), undefined)
+  assert.equal(formatOptionalOccupyRange('invalid', '2026-08-14'), undefined)
+  assert.equal(formatOptionalOccupyRange('2026-08-14', '2026-08-14'), undefined)
+  assert.equal(
+    formatOptionalOccupyRange('2026-08-09', '2026-08-14'),
+    '2026.08.09 → 2026.08.13'
+  )
 })
 
 test('previous and next navigation shifts by the complete selected window', () => {

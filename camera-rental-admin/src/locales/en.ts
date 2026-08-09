@@ -1099,6 +1099,7 @@ export default {
       pendingCount: '{count} items',
       pendingEmpty: 'No pending allocations',
       pendingStatuses: {
+        PENDING_ALLOCATION: 'Pending allocation',
         PENDING: 'Pending',
         PARTIAL: 'Partially assigned',
         REVIEW_REQUIRED: 'Needs review',
@@ -1147,6 +1148,7 @@ export default {
       assignedDevices: 'Assigned devices',
       logisticsRisk: 'Logistics risks',
       orderStatuses: {
+        PENDING_ALLOCATION: 'Pending allocation',
         PENDING: 'Pending',
         PAID: 'Paid',
         CONFIRMED: 'Confirmed',

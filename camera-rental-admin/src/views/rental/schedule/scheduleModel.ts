@@ -108,6 +108,17 @@ export function formatOccupyRange(start: string, endExclusive: string): string {
   return `${formatDisplayDate(start)} → ${formatDisplayDate(inclusiveEndFromExclusive(endExclusive))}`
 }
 
+export function formatOptionalOccupyRange(
+  start?: string,
+  endExclusive?: string
+): string | undefined {
+  if (!start || !endExclusive) return undefined
+  const startDate = dayjs(start)
+  const endDate = dayjs(endExclusive)
+  if (!startDate.isValid() || !endDate.isValid() || !startDate.isBefore(endDate)) return undefined
+  return formatOccupyRange(start, endExclusive)
+}
+
 export function formatClosedRange(start: string, endInclusive: string): string {
   return `${formatDisplayDate(start)} → ${formatDisplayDate(endInclusive)}`
 }

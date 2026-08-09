@@ -40,7 +40,10 @@
       </el-table-column>
       <el-table-column :label="t('rental.schedule.occupyWindow')" min-width="165">
         <template #default="{ row }">
-          {{ formatOccupyRange(row.occupyStartDate, row.occupyEndDateExclusive) }}
+          {{
+            formatOptionalOccupyRange(row.occupyStartDate, row.occupyEndDateExclusive) ||
+            t('rental.schedule.notSet')
+          }}
         </template>
       </el-table-column>
       <el-table-column :label="t('rental.schedule.quantity')" width="116">
@@ -51,7 +54,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column :label="t('rental.schedule.status')" width="110">
+      <el-table-column :label="t('rental.schedule.status')" width="120">
         <template #default="{ row }">
           <el-tag type="warning" effect="light">{{ statusLabel(row.status) }}</el-tag>
         </template>
@@ -89,7 +92,7 @@ import { useI18n } from '@/hooks/web/useI18n'
 import type { RentalPendingAllocationOrderVO } from '@/api/rental/schedule'
 import {
   formatClosedRange,
-  formatOccupyRange,
+  formatOptionalOccupyRange,
   getScheduleOrderDisplayNo
 } from '../scheduleModel'
 

@@ -163,8 +163,8 @@ export interface RentalScheduleOrderItemVO {
   rentAmount?: number
   billableStartDate?: string
   billableEndDate?: string
-  occupyStartDate: string
-  occupyEndDateExclusive: string
+  occupyStartDate?: string
+  occupyEndDateExclusive?: string
   assignments: RentalScheduleAssignmentVO[]
 }
 
@@ -214,8 +214,8 @@ export interface RentalPendingAllocationOrderVO {
   refundAmount?: number
   billableStartDate?: string
   billableEndDate?: string
-  occupyStartDate: string
-  occupyEndDateExclusive: string
+  occupyStartDate?: string
+  occupyEndDateExclusive?: string
   requiredQuantity: number
   assignedQuantity: number
   remainingQuantity: number

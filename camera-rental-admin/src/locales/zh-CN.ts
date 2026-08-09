@@ -1064,6 +1064,7 @@ export default {
       pendingCount: '{count} 条',
       pendingEmpty: '暂无待分配订单',
       pendingStatuses: {
+        PENDING_ALLOCATION: '待分配',
         PENDING: '待分配',
         PARTIAL: '部分分配',
         REVIEW_REQUIRED: '待复核',
@@ -1112,6 +1113,7 @@ export default {
       assignedDevices: '已分配设备',
       logisticsRisk: '物流风险',
       orderStatuses: {
+        PENDING_ALLOCATION: '待分配',
         PENDING: '待处理',
         PAID: '已支付',
         CONFIRMED: '已确认',

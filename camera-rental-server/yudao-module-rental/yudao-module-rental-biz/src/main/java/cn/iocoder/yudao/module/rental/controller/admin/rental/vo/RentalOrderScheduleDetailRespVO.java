@@ -12,6 +12,7 @@ public class RentalOrderScheduleDetailRespVO {
 
     private Long id;
     private String orderNo;
+    private String externalOrderNo;
     private String sourceType;
     private String sourceOrderId;
     private String status;

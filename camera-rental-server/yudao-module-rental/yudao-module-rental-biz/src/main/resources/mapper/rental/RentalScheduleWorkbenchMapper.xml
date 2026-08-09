@@ -173,40 +173,31 @@
                         AND rda.status IN ('ASSIGNED', 'DISPATCHED')
                   )
             ) AS pending_allocation_items,
-            (
-                COALESCE(SUM(
-                    CASE WHEN EXISTS (
-                        SELECT 1
-                        FROM rental_delivery_device_rel dr3
-                        INNER JOIN rental_delivery dl3 ON dl3.id = dr3.delivery_id
-                            AND dl3.tenant_id = #{tenantId}
-                            AND dl3.deleted = b'0'
-                            AND dl3.lifecycle_status = 'ACTIVE'
-                        WHERE dr3.tenant_id = #{tenantId}
-                          AND dr3.deleted = b'0'
-                          AND dr3.device_id = d.id
-                          AND (
-                              dl3.tracking_status = 'EXCEPTION'
-                              OR (
-                                  dl3.tracking_status NOT IN ('DELIVERED', 'RETURNED')
-                                  AND dl3.last_synced_at &lt; DATE_SUB(NOW(), INTERVAL 24 HOUR)
-                              )
-                              OR (
-                                  d.status = 'RENTED'
-                                  AND dl3.direction = 'RETURN'
-                                  AND dl3.tracking_status = 'RETURNED'
-                              )
+            COALESCE(SUM(
+                CASE WHEN EXISTS (
+                    SELECT 1
+                    FROM rental_delivery_device_rel dr3
+                    INNER JOIN rental_delivery dl3 ON dl3.id = dr3.delivery_id
+                        AND dl3.tenant_id = #{tenantId}
+                        AND dl3.deleted = b'0'
+                        AND dl3.lifecycle_status = 'ACTIVE'
+                    WHERE dr3.tenant_id = #{tenantId}
+                      AND dr3.deleted = b'0'
+                      AND dr3.device_id = d.id
+                      AND (
+                          dl3.tracking_status = 'EXCEPTION'
+                          OR (
+                              dl3.tracking_status NOT IN ('DELIVERED', 'RETURNED')
+                              AND dl3.last_synced_at &lt; DATE_SUB(NOW(), INTERVAL 24 HOUR)
                           )
-                    ) THEN 1 ELSE 0 END
-                ), 0)
-                + (
-                    SELECT COUNT(1)
-                    FROM rental_manual_review mr
-                    WHERE mr.tenant_id = #{tenantId}
-                      AND mr.deleted = b'0'
-                      AND mr.status = 'OPEN'
-                )
-            ) AS exception_count
+                          OR (
+                              d.status = 'RENTED'
+                              AND dl3.direction = 'RETURN'
+                              AND dl3.tracking_status = 'RETURNED'
+                          )
+                      )
+                ) THEN 1 ELSE 0 END
+            ), 0) AS exception_count
         FROM rental_device d
         WHERE 1 = 1
         <include refid="DeviceFilters"/>

@@ -14,14 +14,12 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.logistics.RentalDeliveryDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.logistics.RentalDeliveryDeviceRelDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceAssignmentDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
-import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalManualReviewDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderItemDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalScheduleDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.logistics.RentalDeliveryDeviceRelMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.logistics.RentalDeliveryMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
-import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalManualReviewMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleMapper;
@@ -69,7 +67,6 @@ public class RentalScheduleWorkbenchService {
     private final RentalDeviceAssignmentMapper assignmentMapper;
     private final RentalDeliveryDeviceRelMapper deliveryRelationMapper;
     private final RentalDeliveryMapper deliveryMapper;
-    private final RentalManualReviewMapper manualReviewMapper;
     private final RentalOrderItemMapper orderItemMapper;
     private final RentalOrderMapper orderMapper;
     private final RentalScheduleMapper scheduleMapper;
@@ -80,11 +77,10 @@ public class RentalScheduleWorkbenchService {
                                           RentalDeviceAssignmentMapper assignmentMapper,
                                           RentalDeliveryDeviceRelMapper deliveryRelationMapper,
                                           RentalDeliveryMapper deliveryMapper,
-                                          RentalManualReviewMapper manualReviewMapper,
                                           RentalOrderItemMapper orderItemMapper,
                                           RentalOrderMapper orderMapper,
                                           RentalScheduleMapper scheduleMapper) {
-        this(workbenchMapper, assignmentMapper, deliveryRelationMapper, deliveryMapper, manualReviewMapper,
+        this(workbenchMapper, assignmentMapper, deliveryRelationMapper, deliveryMapper,
                 orderItemMapper, orderMapper, scheduleMapper, Clock.system(BUSINESS_ZONE));
     }
 
@@ -92,7 +88,6 @@ public class RentalScheduleWorkbenchService {
                                    RentalDeviceAssignmentMapper assignmentMapper,
                                    RentalDeliveryDeviceRelMapper deliveryRelationMapper,
                                    RentalDeliveryMapper deliveryMapper,
-                                   RentalManualReviewMapper manualReviewMapper,
                                    RentalOrderItemMapper orderItemMapper,
                                    RentalOrderMapper orderMapper,
                                    RentalScheduleMapper scheduleMapper,
@@ -101,7 +96,6 @@ public class RentalScheduleWorkbenchService {
         this.assignmentMapper = assignmentMapper;
         this.deliveryRelationMapper = deliveryRelationMapper;
         this.deliveryMapper = deliveryMapper;
-        this.manualReviewMapper = manualReviewMapper;
         this.orderItemMapper = orderItemMapper;
         this.orderMapper = orderMapper;
         this.scheduleMapper = scheduleMapper;
@@ -183,11 +177,6 @@ public class RentalScheduleWorkbenchService {
                         .eq(RentalDeliveryDO::getTenantId, tenantId)
                         .in(RentalDeliveryDO::getId, deliveryIds)
                         .eq(RentalDeliveryDO::getLifecycleStatus, "ACTIVE")));
-        List<RentalManualReviewDO> reviews = nullSafe(manualReviewMapper.selectList(
-                new LambdaQueryWrapper<RentalManualReviewDO>()
-                        .eq(RentalManualReviewDO::getTenantId, tenantId)
-                        .eq(RentalManualReviewDO::getStatus, "OPEN")
-                        .orderByAsc(RentalManualReviewDO::getId)));
 
         Map<Long, RentalOrderItemDO> orderItemsById = indexById(orderItems, RentalOrderItemDO::getId);
         Map<Long, RentalOrderDO> ordersById = indexById(scheduleOrders, RentalOrderDO::getId);
@@ -207,7 +196,7 @@ public class RentalScheduleWorkbenchService {
                         deliveriesByDeviceId.getOrDefault(device.getId(), List.of()), window))
                 .toList();
         List<RentalScheduleWorkbenchExceptionRespVO> exceptions =
-                toExceptions(devices, lanes, deliveriesByDeviceId, reviews);
+                toExceptions(devices, lanes, deliveriesByDeviceId);
 
         RentalScheduleWorkbenchMetricsRespVO metrics = workbenchMapper.selectDeviceMetrics(
                 tenantId, window.fromDate(), window.toDateExclusive(), keyword, equipmentModelCode,
@@ -285,7 +274,7 @@ public class RentalScheduleWorkbenchService {
 
     private List<RentalScheduleWorkbenchExceptionRespVO> toExceptions(
             List<RentalDeviceDO> devices, List<RentalScheduleWorkbenchDeviceLaneRespVO> lanes,
-            Map<Long, List<RentalDeliveryDO>> deliveriesByDeviceId, List<RentalManualReviewDO> reviews) {
+            Map<Long, List<RentalDeliveryDO>> deliveriesByDeviceId) {
         Map<Long, RentalScheduleWorkbenchDeviceLaneRespVO> lanesById = lanes.stream()
                 .collect(Collectors.toMap(RentalScheduleWorkbenchDeviceLaneRespVO::getDeviceId,
                         Function.identity(), (left, right) -> left, LinkedHashMap::new));
@@ -312,12 +301,6 @@ public class RentalScheduleWorkbenchService {
                             device, delivery.getRentalOrderId(), null, "DELIVERY", delivery.getId()));
                 }
             }
-        }
-        for (RentalManualReviewDO review : reviews) {
-            addException(result, dedup, exception("MANUAL_REVIEW_OPEN", "MEDIUM",
-                    review.getReasonMessage(), "处理待复核记录",
-                    null, null, null, "MANUAL_REVIEW",
-                    review.getId()));
         }
         return result;
     }

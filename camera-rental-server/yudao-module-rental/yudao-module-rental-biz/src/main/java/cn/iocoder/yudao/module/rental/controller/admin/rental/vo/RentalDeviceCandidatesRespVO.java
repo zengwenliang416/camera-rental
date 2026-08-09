@@ -13,6 +13,7 @@ public class RentalDeviceCandidatesRespVO {
     private Long rentalOrderId;
     private Long rentalOrderItemId;
     private String orderNo;
+    private String externalOrderNo;
     private String equipmentModelCode;
     private Integer requiredQuantity;
     private Integer assignedQuantity;

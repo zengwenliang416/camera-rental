@@ -22,6 +22,7 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceLockDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderItemDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalScheduleDO;
+import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.logistics.RentalDeliveryDeviceRelMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.logistics.RentalDeliveryMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
@@ -30,6 +31,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleAllocationMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleMapper;
+import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +73,7 @@ public class RentalScheduleAllocationService {
     private final RentalScheduleAllocationMapper allocationMapper;
     private final RentalOrderMapper orderMapper;
     private final RentalOrderItemMapper orderItemMapper;
+    private final XianyuOrderMapper xianyuOrderMapper;
     private final RentalDeviceMapper deviceMapper;
     private final RentalDeviceAssignmentMapper assignmentMapper;
     private final RentalScheduleMapper scheduleMapper;
@@ -80,6 +83,7 @@ public class RentalScheduleAllocationService {
     public RentalScheduleAllocationService(RentalScheduleAllocationMapper allocationMapper,
                                            RentalOrderMapper orderMapper,
                                            RentalOrderItemMapper orderItemMapper,
+                                           XianyuOrderMapper xianyuOrderMapper,
                                            RentalDeviceMapper deviceMapper,
                                            RentalDeviceAssignmentMapper assignmentMapper,
                                            RentalScheduleMapper scheduleMapper,
@@ -88,6 +92,7 @@ public class RentalScheduleAllocationService {
         this.allocationMapper = allocationMapper;
         this.orderMapper = orderMapper;
         this.orderItemMapper = orderItemMapper;
+        this.xianyuOrderMapper = xianyuOrderMapper;
         this.deviceMapper = deviceMapper;
         this.assignmentMapper = assignmentMapper;
         this.scheduleMapper = scheduleMapper;
@@ -116,6 +121,7 @@ public class RentalScheduleAllocationService {
         }
 
         List<Long> orderIds = ids(orders, RentalOrderDO::getId);
+        Map<Long, String> externalOrderNos = externalOrderNos(orders, tenantId);
         List<RentalOrderItemDO> items = tenantRows(orderItemMapper.selectListByRentalOrderIds(orderIds), tenantId);
         List<RentalDeviceAssignmentDO> assignments = tenantRows(
                 assignmentMapper.selectActiveListByRentalOrderIds(orderIds), tenantId);
@@ -125,7 +131,7 @@ public class RentalScheduleAllocationService {
 
         List<RentalPendingAllocationOrderRespVO> result = orders.stream()
                 .map(order -> toPendingOrder(order, itemsByOrder.getOrDefault(order.getId(), List.of()),
-                        assignmentsByItem))
+                        assignmentsByItem, externalOrderNos.get(order.getChannelOrderId())))
                 .filter(order -> !order.getItems().isEmpty())
                 .toList();
         return new PageResult<>(result, total);
@@ -142,6 +148,7 @@ public class RentalScheduleAllocationService {
         result.setRentalOrderId(item.getRentalOrderId());
         result.setRentalOrderItemId(item.getId());
         result.setOrderNo(order == null ? null : order.getOrderNo());
+        result.setExternalOrderNo(externalOrderNo(order, tenantId));
         result.setEquipmentModelCode(item.getEquipmentModelCode());
         result.setRequiredQuantity(quantity(item));
         int assignedQuantity = countActiveAssignments(
@@ -239,6 +246,7 @@ public class RentalScheduleAllocationService {
 
         RentalOrderScheduleDetailRespVO result = new RentalOrderScheduleDetailRespVO();
         copyOrder(result, order);
+        result.setExternalOrderNo(externalOrderNo(order, tenantId));
         List<RentalScheduleOrderItemRespVO> itemResults = items.stream()
                 .map(item -> toOrderItem(item, assignmentsByItem.getOrDefault(item.getId(), List.of()),
                         devicesById, schedulesById, tenantId))
@@ -304,10 +312,11 @@ public class RentalScheduleAllocationService {
 
     private RentalPendingAllocationOrderRespVO toPendingOrder(
             RentalOrderDO order, List<RentalOrderItemDO> items,
-            Map<Long, List<RentalDeviceAssignmentDO>> assignmentsByItem) {
+            Map<Long, List<RentalDeviceAssignmentDO>> assignmentsByItem, String externalOrderNo) {
         RentalPendingAllocationOrderRespVO result = new RentalPendingAllocationOrderRespVO();
         result.setId(order.getId());
         result.setOrderNo(order.getOrderNo());
+        result.setExternalOrderNo(externalOrderNo);
         result.setSourceType(order.getSourceType());
         result.setSourceOrderId(order.getSourceOrderId());
         result.setStatus(order.getStatus());
@@ -326,6 +335,26 @@ public class RentalScheduleAllocationService {
         result.setAssignedQuantity(itemResults.stream().mapToInt(RentalPendingAllocationItemRespVO::getAssignedQuantity).sum());
         result.setRemainingQuantity(itemResults.stream().mapToInt(RentalPendingAllocationItemRespVO::getRemainingQuantity).sum());
         return result;
+    }
+
+    private Map<Long, String> externalOrderNos(List<RentalOrderDO> orders, Long tenantId) {
+        List<Long> channelOrderIds = ids(orders, RentalOrderDO::getChannelOrderId);
+        if (channelOrderIds.isEmpty()) {
+            return Map.of();
+        }
+        return tenantRows(xianyuOrderMapper.selectByIds(channelOrderIds), tenantId).stream()
+                .filter(order -> order.getId() != null)
+                .filter(order -> order.getExternalOrderId() != null && !order.getExternalOrderId().isBlank())
+                .collect(Collectors.toMap(XianyuOrderDO::getId, XianyuOrderDO::getExternalOrderId,
+                        (left, right) -> left, LinkedHashMap::new));
+    }
+
+    private String externalOrderNo(RentalOrderDO order, Long tenantId) {
+        if (order == null || order.getChannelOrderId() == null) {
+            return null;
+        }
+        XianyuOrderDO channelOrder = tenantRow(xianyuOrderMapper.selectById(order.getChannelOrderId()), tenantId);
+        return channelOrder == null ? null : trimToNull(channelOrder.getExternalOrderId());
     }
 
     private RentalPendingAllocationItemRespVO toPendingItem(
@@ -725,6 +754,9 @@ public class RentalScheduleAllocationService {
         if (row instanceof RentalDeviceDO value) {
             return Objects.equals(tenantId, value.getTenantId()) ? row : null;
         }
+        if (row instanceof XianyuOrderDO value) {
+            return Objects.equals(tenantId, value.getTenantId()) ? row : null;
+        }
         return row;
     }
 
@@ -758,6 +790,9 @@ public class RentalScheduleAllocationService {
             return Objects.equals(tenantId, value.getTenantId());
         }
         if (row instanceof RentalDeviceLockDO value) {
+            return Objects.equals(tenantId, value.getTenantId());
+        }
+        if (row instanceof XianyuOrderDO value) {
             return Objects.equals(tenantId, value.getTenantId());
         }
         return false;

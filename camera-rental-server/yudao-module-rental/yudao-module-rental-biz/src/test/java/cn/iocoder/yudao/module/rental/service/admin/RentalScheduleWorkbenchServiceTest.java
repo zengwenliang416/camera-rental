@@ -8,14 +8,12 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.logistics.RentalDeliveryDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.logistics.RentalDeliveryDeviceRelDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceAssignmentDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
-import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalManualReviewDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderItemDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalScheduleDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.logistics.RentalDeliveryDeviceRelMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.logistics.RentalDeliveryMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
-import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalManualReviewMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleMapper;
@@ -45,7 +43,6 @@ class RentalScheduleWorkbenchServiceTest {
     private RentalDeviceAssignmentMapper assignmentMapper;
     private RentalDeliveryDeviceRelMapper deliveryRelationMapper;
     private RentalDeliveryMapper deliveryMapper;
-    private RentalManualReviewMapper manualReviewMapper;
     private RentalOrderItemMapper orderItemMapper;
     private RentalOrderMapper orderMapper;
     private RentalScheduleMapper scheduleMapper;
@@ -58,12 +55,11 @@ class RentalScheduleWorkbenchServiceTest {
         assignmentMapper = mock(RentalDeviceAssignmentMapper.class);
         deliveryRelationMapper = mock(RentalDeliveryDeviceRelMapper.class);
         deliveryMapper = mock(RentalDeliveryMapper.class);
-        manualReviewMapper = mock(RentalManualReviewMapper.class);
         orderItemMapper = mock(RentalOrderItemMapper.class);
         orderMapper = mock(RentalOrderMapper.class);
         scheduleMapper = mock(RentalScheduleMapper.class);
         service = new RentalScheduleWorkbenchService(workbenchMapper, assignmentMapper, deliveryRelationMapper,
-                deliveryMapper, manualReviewMapper, orderItemMapper, orderMapper, scheduleMapper,
+                deliveryMapper, orderItemMapper, orderMapper, scheduleMapper,
                 Clock.fixed(Instant.parse("2026-08-08T00:00:00Z"), ZoneId.of("Asia/Shanghai")));
         when(scheduleMapper.selectList(any())).thenReturn(List.of());
         when(orderMapper.selectList(any())).thenReturn(List.of());
@@ -71,7 +67,6 @@ class RentalScheduleWorkbenchServiceTest {
         when(assignmentMapper.selectList(any())).thenReturn(List.of());
         when(deliveryRelationMapper.selectList(any())).thenReturn(List.of());
         when(deliveryMapper.selectList(any())).thenReturn(List.of());
-        when(manualReviewMapper.selectList(any())).thenReturn(List.of());
     }
 
     @AfterEach

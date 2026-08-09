@@ -28,7 +28,17 @@ public interface RentalScheduleAllocationMapper {
                AND ro.deleted = b'0'
                AND ro.status = 'PENDING_ALLOCATION'
             <if test="orderNo != null and orderNo != ''">
-               AND ro.order_no LIKE CONCAT('%', #{orderNo}, '%')
+               AND (
+                   ro.order_no LIKE CONCAT('%', #{orderNo}, '%')
+                   OR EXISTS (
+                       SELECT 1
+                         FROM xianyu_order xo
+                        WHERE xo.id = ro.channel_order_id
+                          AND xo.tenant_id = ro.tenant_id
+                          AND xo.deleted = b'0'
+                          AND xo.external_order_id LIKE CONCAT('%', #{orderNo}, '%')
+                   )
+               )
             </if>
             <if test="equipmentModelCode != null and equipmentModelCode != ''">
                AND EXISTS (
@@ -73,7 +83,17 @@ public interface RentalScheduleAllocationMapper {
                AND ro.deleted = b'0'
                AND ro.status = 'PENDING_ALLOCATION'
             <if test="orderNo != null and orderNo != ''">
-               AND ro.order_no LIKE CONCAT('%', #{orderNo}, '%')
+               AND (
+                   ro.order_no LIKE CONCAT('%', #{orderNo}, '%')
+                   OR EXISTS (
+                       SELECT 1
+                         FROM xianyu_order xo
+                        WHERE xo.id = ro.channel_order_id
+                          AND xo.tenant_id = ro.tenant_id
+                          AND xo.deleted = b'0'
+                          AND xo.external_order_id LIKE CONCAT('%', #{orderNo}, '%')
+                   )
+               )
             </if>
             <if test="equipmentModelCode != null and equipmentModelCode != ''">
                AND EXISTS (

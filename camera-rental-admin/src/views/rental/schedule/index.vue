@@ -2,18 +2,6 @@
   <Error v-if="!canQuery || permissionDenied" type="403" />
   <ContentWrap v-else class="schedule-content-wrap">
     <div class="schedule-shell">
-      <header class="schedule-page-heading">
-        <div>
-          <span class="schedule-kicker">{{ t('rental.schedule.kicker') }}</span>
-          <h2>{{ t('rental.schedule.pageTitleV2') }}</h2>
-          <p>{{ t('rental.schedule.rangeHintV2') }}</p>
-        </div>
-        <div class="schedule-page-range">
-          <span>{{ t('rental.schedule.visibleRange') }}</span>
-          <strong>{{ formatOccupyRange(bounds.start, bounds.endExclusive) }}</strong>
-        </div>
-      </header>
-
       <el-alert
         v-if="loadError"
         class="schedule-alert"
@@ -67,25 +55,17 @@
         @select-segment="openSegment"
       />
 
-      <div class="schedule-lower-grid">
-        <PendingAllocationPanel
-          :items="pendingItems"
-          :total="pendingTotal"
-          :loading="pendingLoading"
-          :page-no="pendingPage.pageNo"
-          :page-size="pendingPage.pageSize"
-          @update:page-no="pendingPage.pageNo = $event"
-          @update:page-size="pendingPage.pageSize = $event"
-          @page-change="loadPendingPage"
-          @select="selectPending"
-          @open-order="openPendingOrder"
-        />
-        <ScheduleExceptionQueue
-          :exceptions="workbench?.exceptions || []"
-          :loading="loading && !workbench"
-          @select="openException"
-        />
-      </div>
+      <PendingAllocationPanel
+        :items="pendingItems"
+        :total="pendingTotal"
+        :loading="pendingLoading"
+        :page-no="pendingPage.pageNo"
+        :page-size="pendingPage.pageSize"
+        @update:page-no="pendingPage.pageNo = $event"
+        @update:page-size="pendingPage.pageSize = $event"
+        @page-change="loadPendingPage"
+        @open-order="openPendingOrder"
+      />
     </div>
 
     <ScheduleOrderDrawer
@@ -130,7 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useI18n } from '@/hooks/web/useI18n'
 import { hasPermission } from '@/directives/permission/hasPermi'
@@ -150,23 +130,18 @@ import {
   type RentalScheduleCandidateResponseVO,
   type RentalScheduleCandidateVO,
   type RentalScheduleDeviceLaneVO,
-  type RentalScheduleExceptionVO,
   type RentalScheduleOrderDetailVO,
   type RentalScheduleOrderItemVO,
   type RentalPendingAllocationOrderVO,
   type RentalScheduleSegmentVO
 } from '@/api/rental/schedule'
 import { getRentalStatusValues } from '@/utils/rentalLabels'
-import {
-  formatOccupyRange,
-  getOrCreateAssignmentIdempotencyKey
-} from './scheduleModel'
+import { getOrCreateAssignmentIdempotencyKey } from './scheduleModel'
 import { useScheduleWorkbench } from './useScheduleWorkbench'
 import ScheduleMetrics from './components/ScheduleMetrics.vue'
 import ScheduleFilters from './components/ScheduleFilters.vue'
 import ScheduleTimeline from './components/ScheduleTimeline.vue'
 import PendingAllocationPanel from './components/PendingAllocationPanel.vue'
-import ScheduleExceptionQueue from './components/ScheduleExceptionQueue.vue'
 import ScheduleOrderDrawer from './components/ScheduleOrderDrawer.vue'
 import ScheduleDeviceDrawer from './components/ScheduleDeviceDrawer.vue'
 import ScheduleLogisticsDrawer from './components/ScheduleLogisticsDrawer.vue'
@@ -254,7 +229,6 @@ const candidateDrawer = reactive<{
   error: false
 })
 
-const selectedPendingItem = ref<RentalPendingAllocationOrderVO>()
 const assignmentIntentKeys = new Map<string, string>()
 
 const deviceStatusOptions = computed(() => [...getRentalStatusValues('device')])
@@ -325,12 +299,7 @@ const openOrder = async (orderId: number) => {
 }
 
 const openPendingOrder = async (item: RentalPendingAllocationOrderVO) => {
-  selectedPendingItem.value = item
   await openOrder(item.id)
-}
-
-const selectPending = (item: RentalPendingAllocationOrderVO) => {
-  selectedPendingItem.value = item
 }
 
 const openDevice = async (row: RentalScheduleDeviceLaneVO) => {
@@ -347,23 +316,6 @@ const openSegment = async (row: RentalScheduleDeviceLaneVO, segment: RentalSched
     return
   }
   await openDevice(row)
-}
-
-const openException = async (exception: RentalScheduleExceptionVO) => {
-  if (exception.rentalOrderId) {
-    await openOrder(exception.rentalOrderId)
-    return
-  }
-  if (exception.deviceId) {
-    await openDevice({
-      deviceId: exception.deviceId,
-      deviceNo: `#${exception.deviceId}`,
-      equipmentModelCode: '-',
-      deviceStatus: 'UNKNOWN',
-      enabled: true,
-      segments: []
-    })
-  }
 }
 
 const openLogistics = async (deliveryId: number) => {
@@ -461,57 +413,6 @@ onMounted(async () => {
   gap: 16px;
 }
 
-.schedule-page-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 18px;
-}
-
-.schedule-kicker {
-  color: var(--el-color-primary);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-}
-
-.schedule-page-heading h2 {
-  margin: 3px 0 4px;
-  color: var(--el-text-color-primary);
-  font-size: 24px;
-}
-
-.schedule-page-heading p {
-  max-width: 840px;
-  margin: 0;
-  color: var(--schedule-muted);
-  font-size: 12px;
-  line-height: 1.7;
-}
-
-.schedule-page-range {
-  display: flex;
-  min-width: 185px;
-  padding: 10px 12px;
-  background: var(--el-fill-color-light);
-  border: 1px solid var(--el-border-color-lighter);
-  border-radius: 8px;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.schedule-page-range span {
-  color: var(--schedule-muted);
-  font-size: 11px;
-}
-
-.schedule-page-range strong {
-  color: var(--el-text-color-primary);
-  font-size: 13px;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
 .schedule-alert {
   border-radius: 8px;
 }
@@ -523,26 +424,4 @@ onMounted(async () => {
   border-radius: 12px;
 }
 
-.schedule-lower-grid {
-  display: grid;
-  min-width: 0;
-  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.8fr);
-  gap: 16px;
-}
-
-@media (width <= 1080px) {
-  .schedule-lower-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (width <= 720px) {
-  .schedule-page-heading {
-    flex-direction: column;
-  }
-
-  .schedule-page-range {
-    width: 100%;
-  }
-}
 </style>

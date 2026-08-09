@@ -8,6 +8,7 @@ import {
   closedRangeDays,
   formatOccupyRange,
   getOrCreateAssignmentIdempotencyKey,
+  getScheduleOrderDisplayNo,
   getTimelineSegment,
   inclusiveEndFromExclusive,
   occupyDays,
@@ -132,6 +133,22 @@ test('assignment retries reuse one idempotency key until the intent succeeds', (
   assert.equal(first, 'schedule-v2-501-901-token-1')
   assert.equal(retry, first)
   assert.equal(anotherDevice, 'schedule-v2-501-902-token-2')
+})
+
+test('schedule order labels prefer the real external order number', () => {
+  assert.equal(
+    getScheduleOrderDisplayNo({
+      id: 501,
+      orderNo: 'XY-0000000000000000501',
+      externalOrderNo: '  3892746501234567890  '
+    }),
+    '3892746501234567890'
+  )
+  assert.equal(
+    getScheduleOrderDisplayNo({ id: 502, orderNo: 'XY-0000000000000000502' }),
+    'XY-0000000000000000502'
+  )
+  assert.equal(getScheduleOrderDisplayNo({ rentalOrderId: 503 }), '#503')
 })
 
 test('device page ranges support the allowed 25, 50, and 100 page sizes', () => {

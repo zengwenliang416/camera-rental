@@ -22,7 +22,7 @@
       <div class="schedule-drawer-summary">
         <div>
           <span>{{ t('rental.schedule.orderNo') }}</span>
-          <strong class="schedule-data">{{ order.orderNo || `#${order.id}` }}</strong>
+          <strong class="schedule-data">{{ getScheduleOrderDisplayNo(order) }}</strong>
         </div>
         <el-tag type="warning" effect="light">{{ statusLabel(order.status) }}</el-tag>
       </div>
@@ -32,7 +32,7 @@
           <span class="schedule-data">#{{ order.id }}</span>
         </el-descriptions-item>
         <el-descriptions-item :label="t('rental.schedule.externalOrderNo')">
-          <span class="schedule-data">{{ order.sourceOrderId || '-' }}</span>
+          <span class="schedule-data">{{ order.externalOrderNo || '-' }}</span>
         </el-descriptions-item>
         <el-descriptions-item :label="t('rental.schedule.channel')">
           {{ order.sourceType || '-' }}
@@ -117,7 +117,11 @@ import type {
   RentalScheduleOrderDetailVO,
   RentalScheduleOrderItemVO
 } from '@/api/rental/schedule'
-import { formatClosedRange, formatOccupyRange } from '../scheduleModel'
+import {
+  formatClosedRange,
+  formatOccupyRange,
+  getScheduleOrderDisplayNo
+} from '../scheduleModel'
 
 const props = defineProps<{
   visible: boolean

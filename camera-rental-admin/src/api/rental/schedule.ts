@@ -171,6 +171,7 @@ export interface RentalScheduleOrderItemVO {
 export interface RentalScheduleOrderDetailVO {
   id: number
   orderNo?: string
+  externalOrderNo?: string
   sourceType?: string
   sourceOrderId?: string
   status: string
@@ -205,6 +206,7 @@ export interface RentalPendingAllocationItemVO {
 export interface RentalPendingAllocationOrderVO {
   id: number
   orderNo?: string
+  externalOrderNo?: string
   sourceType?: string
   sourceOrderId?: string
   status: string
@@ -256,6 +258,7 @@ export interface RentalScheduleCandidateResponseVO {
   rentalOrderId: number
   rentalOrderItemId: number
   orderNo?: string
+  externalOrderNo?: string
   equipmentModelCode: string
   requiredQuantity: number
   assignedQuantity: number

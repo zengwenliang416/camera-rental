@@ -20,13 +20,11 @@
       v-else
       :data="items"
       row-key="id"
-      highlight-current-row
-      @row-click="emit('select', $event)"
     >
       <el-table-column :label="t('rental.schedule.orderNo')" min-width="150">
         <template #default="{ row }">
           <button class="schedule-link schedule-data" type="button" @click.stop="emit('open-order', row)">
-            {{ row.orderNo || `#${row.rentalOrderId}` }}
+            {{ getScheduleOrderDisplayNo(row) }}
           </button>
         </template>
       </el-table-column>
@@ -89,7 +87,11 @@
 import { computed } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import type { RentalPendingAllocationOrderVO } from '@/api/rental/schedule'
-import { formatClosedRange, formatOccupyRange } from '../scheduleModel'
+import {
+  formatClosedRange,
+  formatOccupyRange,
+  getScheduleOrderDisplayNo
+} from '../scheduleModel'
 
 const props = defineProps<{
   items: RentalPendingAllocationOrderVO[]
@@ -101,7 +103,6 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  select: [item: RentalPendingAllocationOrderVO]
   'open-order': [item: RentalPendingAllocationOrderVO]
   'page-change': []
   'update:pageNo': [value: number]

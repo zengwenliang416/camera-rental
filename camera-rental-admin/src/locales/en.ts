@@ -1036,6 +1036,7 @@ export default {
       singleWarehouse: 'Current tenant warehouse',
       deviceKeyword: 'Device search',
       deviceKeywordPlaceholder: 'Device number or serial number',
+      equipmentModelPlaceholder: 'Enter equipment model',
       deviceStatus: 'Device status',
       logisticsStatus: 'Logistics status',
       metrics: {

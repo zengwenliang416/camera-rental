@@ -45,6 +45,22 @@ export interface ScheduleFilterDraft {
   logisticsStatus?: string
 }
 
+export interface ScheduleOrderNumberLike {
+  id?: number
+  rentalOrderId?: number
+  orderNo?: string
+  externalOrderNo?: string
+}
+
+export function getScheduleOrderDisplayNo(order: ScheduleOrderNumberLike): string {
+  const externalOrderNo = order.externalOrderNo?.trim()
+  if (externalOrderNo) return externalOrderNo
+  const internalOrderNo = order.orderNo?.trim()
+  if (internalOrderNo) return internalOrderNo
+  const id = order.id ?? order.rentalOrderId
+  return id ? `#${id}` : '-'
+}
+
 export function getOrCreateAssignmentIdempotencyKey(
   store: Map<string, string>,
   rentalOrderItemId: number,

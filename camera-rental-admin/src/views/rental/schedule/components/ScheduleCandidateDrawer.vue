@@ -21,7 +21,7 @@
     <div v-else class="candidate-body">
       <el-descriptions :column="2" border>
         <el-descriptions-item :label="t('rental.schedule.orderNo')">
-          {{ result.orderNo || `#${result.rentalOrderId}` }}
+          {{ getScheduleOrderDisplayNo(result) }}
         </el-descriptions-item>
         <el-descriptions-item :label="t('rental.schedule.equipmentModelCode')">
           {{ result.equipmentModelCode }}
@@ -91,7 +91,7 @@ import type {
   RentalScheduleCandidateResponseVO,
   RentalScheduleCandidateVO
 } from '@/api/rental/schedule'
-import { formatOccupyRange } from '../scheduleModel'
+import { formatOccupyRange, getScheduleOrderDisplayNo } from '../scheduleModel'
 
 defineProps<{
   visible: boolean

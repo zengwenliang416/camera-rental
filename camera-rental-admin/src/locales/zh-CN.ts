@@ -1001,6 +1001,7 @@ export default {
       singleWarehouse: '当前租户仓库',
       deviceKeyword: '设备搜索',
       deviceKeywordPlaceholder: '设备编号或序列号',
+      equipmentModelPlaceholder: '输入设备型号',
       deviceStatus: '设备状态',
       logisticsStatus: '物流状态',
       metrics: {

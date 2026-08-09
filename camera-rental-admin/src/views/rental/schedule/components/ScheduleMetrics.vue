@@ -70,14 +70,6 @@ const metricItems = computed(() => [
     tone: 'warning'
   },
   {
-    key: 'exceptions',
-    icon: 'ep:warning',
-    label: 'rental.schedule.metrics.exceptionCount',
-    value: props.metrics.exceptionCount,
-    hint: 'rental.schedule.metrics.exceptionCountHint',
-    tone: 'danger'
-  },
-  {
     key: 'utilization',
     icon: 'ep:data-analysis',
     label: 'rental.schedule.metrics.utilization',
@@ -91,7 +83,7 @@ const metricItems = computed(() => [
 <style scoped>
 .schedule-metrics {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 12px;
 }
 

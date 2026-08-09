@@ -102,5 +102,7 @@ class RentalScheduleAllocationServiceTest {
         assertEquals(1L, result.getTotal());
         assertEquals("3892746501234567890", result.getList().get(0).getExternalOrderNo());
         assertEquals("XY-0000000000000000501", result.getList().get(0).getOrderNo());
+        assertEquals(LocalDate.of(2026, 8, 9), result.getList().get(0).getOccupyStartDate());
+        assertEquals(LocalDate.of(2026, 8, 14), result.getList().get(0).getOccupyEndDateExclusive());
     }
 }

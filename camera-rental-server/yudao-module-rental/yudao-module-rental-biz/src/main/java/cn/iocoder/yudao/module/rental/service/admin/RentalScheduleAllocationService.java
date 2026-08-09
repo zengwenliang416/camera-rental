@@ -324,12 +324,18 @@ public class RentalScheduleAllocationService {
         result.setRefundAmount(order.getRefundAmount());
         result.setBillableStartDate(order.getBillableStartDate());
         result.setBillableEndDate(order.getBillableEndDate());
-        result.setOccupyStartDate(order.getOccupyStartDate());
-        result.setOccupyEndDateExclusive(order.getOccupyEndDateExclusive());
         List<RentalPendingAllocationItemRespVO> itemResults = items.stream()
                 .map(item -> toPendingItem(item, assignmentsByItem.getOrDefault(item.getId(), List.of())))
                 .filter(item -> item.getRemainingQuantity() > 0)
                 .toList();
+        result.setOccupyStartDate(order.getOccupyStartDate() != null
+                ? order.getOccupyStartDate()
+                : itemResults.stream().map(RentalPendingAllocationItemRespVO::getOccupyStartDate)
+                        .filter(Objects::nonNull).min(LocalDate::compareTo).orElse(null));
+        result.setOccupyEndDateExclusive(order.getOccupyEndDateExclusive() != null
+                ? order.getOccupyEndDateExclusive()
+                : itemResults.stream().map(RentalPendingAllocationItemRespVO::getOccupyEndDateExclusive)
+                        .filter(Objects::nonNull).max(LocalDate::compareTo).orElse(null));
         result.setItems(itemResults);
         result.setRequiredQuantity(itemResults.stream().mapToInt(RentalPendingAllocationItemRespVO::getRequiredQuantity).sum());
         result.setAssignedQuantity(itemResults.stream().mapToInt(RentalPendingAllocationItemRespVO::getAssignedQuantity).sum());

@@ -3,22 +3,30 @@ package cn.iocoder.yudao.module.rental.service.admin;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceDispatchReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceOpsRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceReturnReqVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceUnassignReqVO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceAssignmentDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
+import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalScheduleDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
+import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleMapper;
 import cn.iocoder.yudao.module.rental.enums.rental.RentalDeviceLockTypeEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_DISPATCH_FAILED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_NOT_EXISTS;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_RETURN_FAILED;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_UNASSIGN_FAILED;
 
 /**
- * Warehouse-facing device lifecycle: dispatch (出库) and return/inspect (回仓).
+ * Warehouse-facing device lifecycle: dispatch (出库), return/inspect (回仓), unassign (撤销分配).
  * ERP quantity stock is not updated here — instance state is the rental authority.
  */
 @Service
@@ -31,16 +39,25 @@ public class RentalDeviceOpsService {
     static final String ASSIGN_ASSIGNED = "ASSIGNED";
     static final String ASSIGN_DISPATCHED = "DISPATCHED";
     static final String ASSIGN_RETURNED = "RETURNED";
+    static final String ASSIGN_CANCELED = "CANCELED";
+
+    static final String SCHEDULE_EFFECTIVE = "EFFECTIVE";
+    static final String SCHEDULE_CANCELED = "CANCELED";
+
+    private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
 
     private final RentalDeviceMapper deviceMapper;
     private final RentalDeviceAssignmentMapper assignmentMapper;
+    private final RentalScheduleMapper scheduleMapper;
     private final RentalDeviceLockService lockService;
 
     public RentalDeviceOpsService(RentalDeviceMapper deviceMapper,
                                   RentalDeviceAssignmentMapper assignmentMapper,
+                                  RentalScheduleMapper scheduleMapper,
                                   RentalDeviceLockService lockService) {
         this.deviceMapper = deviceMapper;
         this.assignmentMapper = assignmentMapper;
+        this.scheduleMapper = scheduleMapper;
         this.lockService = lockService;
     }
 
@@ -79,10 +96,7 @@ public class RentalDeviceOpsService {
 
     @Transactional(rollbackFor = Exception.class)
     public RentalDeviceOpsRespVO returnDevice(RentalDeviceReturnReqVO reqVO) {
-        RentalDeviceDO device = deviceMapper.selectByIdForUpdate(reqVO.getDeviceId());
-        if (device == null) {
-            throw exception(RENTAL_DEVICE_NOT_EXISTS);
-        }
+        RentalDeviceDO device = resolveDeviceForReturn(reqVO);
         if (!DEVICE_RENTED.equals(device.getStatus())) {
             throw exception(RENTAL_DEVICE_RETURN_FAILED, "仅在租设备可回仓，当前：" + device.getStatus());
         }
@@ -107,14 +121,90 @@ public class RentalDeviceOpsService {
         device.setStatus(passed ? DEVICE_AVAILABLE : DEVICE_MAINTENANCE);
         deviceMapper.updateById(device);
 
-        assignment.setStatus(ASSIGN_RETURNED);
-        // Note is not persisted in V1 schema; keep API for staff remark forward-compat.
-        if (StringUtils.hasText(reqVO.getNote())) {
-            // no-op column yet
-        }
+        narrowScheduleForReturn(assignment);
+        assignment.setStatus(ASSIGN_RETURNED)
+                .setReturnedAt(LocalDateTime.now())
+                .setReturnNote(trimToNull(reqVO.getNote()));
         assignmentMapper.updateById(assignment);
 
         return toResp(device, assignment);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public RentalDeviceOpsRespVO unassign(RentalDeviceUnassignReqVO reqVO) {
+        RentalDeviceAssignmentDO assignment = assignmentMapper.selectByIdForUpdate(reqVO.getAssignmentId());
+        if (assignment == null) {
+            throw exception(RENTAL_DEVICE_NOT_EXISTS);
+        }
+        RentalDeviceDO device = deviceMapper.selectByIdForUpdate(assignment.getDeviceId());
+        if (device == null) {
+            throw exception(RENTAL_DEVICE_NOT_EXISTS);
+        }
+        if (ASSIGN_CANCELED.equals(assignment.getStatus())) {
+            return toResp(device, assignment);
+        }
+        if (!ASSIGN_ASSIGNED.equals(assignment.getStatus())) {
+            throw exception(RENTAL_DEVICE_UNASSIGN_FAILED,
+                    "仅未出库的分配可撤销，当前：" + assignment.getStatus());
+        }
+        cancelAssignmentSchedule(assignment);
+        assignment.setStatus(ASSIGN_CANCELED);
+        assignmentMapper.updateById(assignment);
+        return toResp(device, assignment);
+    }
+
+    /**
+     * Occupancy ends at warehouse check-in: narrow the half-open end to tomorrow (Asia/Shanghai)
+     * when the original plan extends further. Never extends or touches already-ended schedules.
+     */
+    private void narrowScheduleForReturn(RentalDeviceAssignmentDO assignment) {
+        if (assignment.getScheduleId() == null) {
+            return;
+        }
+        RentalScheduleDO schedule = scheduleMapper.selectByIdForUpdate(assignment.getScheduleId());
+        if (schedule == null || !SCHEDULE_EFFECTIVE.equals(schedule.getStatus())) {
+            return;
+        }
+        LocalDate newEndExclusive = LocalDate.now(BUSINESS_ZONE).plusDays(1);
+        if (newEndExclusive.isAfter(schedule.getOccupyStartDate())
+                && newEndExclusive.isBefore(schedule.getOccupyEndDateExclusive())) {
+            schedule.setOccupyEndDateExclusive(newEndExclusive);
+            scheduleMapper.updateById(schedule);
+        }
+    }
+
+    private void cancelAssignmentSchedule(RentalDeviceAssignmentDO assignment) {
+        if (assignment.getScheduleId() == null) {
+            return;
+        }
+        RentalScheduleDO schedule = scheduleMapper.selectByIdForUpdate(assignment.getScheduleId());
+        if (schedule == null || !SCHEDULE_EFFECTIVE.equals(schedule.getStatus())) {
+            return;
+        }
+        schedule.setStatus(SCHEDULE_CANCELED);
+        scheduleMapper.updateById(schedule);
+    }
+
+    private RentalDeviceDO resolveDeviceForReturn(RentalDeviceReturnReqVO reqVO) {
+        if (reqVO.getDeviceId() != null) {
+            RentalDeviceDO device = deviceMapper.selectByIdForUpdate(reqVO.getDeviceId());
+            if (device == null) {
+                throw exception(RENTAL_DEVICE_NOT_EXISTS);
+            }
+            return device;
+        }
+        if (StringUtils.hasText(reqVO.getDeviceNo())) {
+            RentalDeviceDO device = deviceMapper.selectByDeviceNoForUpdate(reqVO.getDeviceNo().trim());
+            if (device == null) {
+                throw exception(RENTAL_DEVICE_NOT_EXISTS);
+            }
+            return device;
+        }
+        throw exception(RENTAL_DEVICE_RETURN_FAILED, "缺少设备编号或设备 ID");
+    }
+
+    private static String trimToNull(String value) {
+        return StringUtils.hasText(value) ? value.trim() : null;
     }
 
     private RentalDeviceAssignmentDO resolveAssignmentForDispatch(RentalDeviceDispatchReqVO reqVO, Long deviceId) {

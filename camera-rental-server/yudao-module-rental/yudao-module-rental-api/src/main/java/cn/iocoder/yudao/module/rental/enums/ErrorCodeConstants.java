@@ -46,6 +46,9 @@ public interface ErrorCodeConstants {
     ErrorCode RENTAL_DEVICE_LOCK_NOT_EXISTS = new ErrorCode(1_040_002_008, "设备锁定记录不存在");
     ErrorCode RENTAL_DEVICE_LOCK_INVALID = new ErrorCode(1_040_002_009, "设备锁定操作无效：{}");
     ErrorCode RENTAL_DEVICE_LOCK_CONFLICT = new ErrorCode(1_040_002_010, "设备存在活动锁定：{}");
+    ErrorCode RENTAL_DEVICE_UNASSIGN_FAILED = new ErrorCode(1_040_002_011, "撤销设备分配失败：{}");
+    ErrorCode RENTAL_ORDER_NOT_EXISTS = new ErrorCode(1_040_002_012, "租赁订单不存在");
+    ErrorCode RENTAL_ORDER_CANCEL_FAILED = new ErrorCode(1_040_002_013, "租赁订单取消失败：{}");
 
     // ========== 人工复核 1-040-003-000 ==========
     ErrorCode RENTAL_MANUAL_REVIEW_NOT_EXISTS = new ErrorCode(1_040_003_000, "人工复核记录不存在");

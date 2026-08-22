@@ -11,6 +11,11 @@ import java.util.List;
 @Mapper
 public interface RentalScheduleMapper extends BaseMapperX<RentalScheduleDO> {
 
+    default RentalScheduleDO selectByIdForUpdate(Long id) {
+        return selectOneForUpdate(new LambdaQueryWrapper<RentalScheduleDO>()
+                .eq(RentalScheduleDO::getId, id));
+    }
+
     /**
      * Locks every effective schedule that overlaps the requested half-open period.
      * The caller must already hold the physical-device row lock before this query.

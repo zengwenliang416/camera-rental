@@ -36,5 +36,6 @@ public class RentalOrderDO extends TenantBaseDO {
     private LocalDate occupyStartDate;
     private LocalDate occupyEndDateExclusive;
     private String conversionVersion;
+    private String cancelReason;
 
 }

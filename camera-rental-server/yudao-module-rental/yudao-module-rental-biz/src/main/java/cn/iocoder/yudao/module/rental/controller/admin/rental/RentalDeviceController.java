@@ -13,6 +13,7 @@ import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceQrR
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceResolveQrReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceReturnReqVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceUnassignReqVO;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentCommand;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentResult;
 import cn.iocoder.yudao.module.rental.service.admin.RentalDeviceAdminService;
@@ -104,6 +105,13 @@ public class RentalDeviceController {
     @PreAuthorize("@ss.hasPermission('rental:device:assign')")
     public CommonResult<RentalDeviceOpsRespVO> returnDevice(@Valid @RequestBody RentalDeviceReturnReqVO reqVO) {
         return success(deviceOpsService.returnDevice(reqVO));
+    }
+
+    @PostMapping("/unassign")
+    @Operation(summary = "撤销设备分配（仅未出库，联动取消占用排期）")
+    @PreAuthorize("@ss.hasPermission('rental:device:assign')")
+    public CommonResult<RentalDeviceOpsRespVO> unassign(@Valid @RequestBody RentalDeviceUnassignReqVO reqVO) {
+        return success(deviceOpsService.unassign(reqVO));
     }
 
     @PostMapping("/generate-from-purchase-in")

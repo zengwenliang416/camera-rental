@@ -80,6 +80,27 @@ newStart < existingEndExclusive
 两个空窗口并发插入。重复使用同一幂等键时返回已有分配，不再创建第二条排期或
 分配。数据库的幂等唯一约束仍作为错误路径的最终保护。
 
+## V1 排期释放与收窄
+
+排期状态在 `EFFECTIVE` 之外引入 `CANCELED`；所有冲突判断与统计只认
+`EFFECTIVE`，`CANCELED` 记录仅作审计保留。分配状态在
+`ASSIGNED / DISPATCHED / RETURNED` 之外引入 `CANCELED`。三条释放路径：
+
+- **回仓收窄**：仓库回仓登记（`/rental/device/return`）在同一事务内把该分配
+  对应 `EFFECTIVE` 排期的 `occupy_end_date_exclusive` 收窄为
+  回仓日 + 1（`Asia/Shanghai`）。只在新区间严格变短且起点早于新终点时更新，
+  不会延长已结束的排期。检测备注与回仓时间落库到
+  `rental_device_assignment.returned_at / return_note`。
+- **撤销分配**：`/rental/device/unassign` 仅允许 `ASSIGNED` 分配，排期置
+  `CANCELED`、分配置 `CANCELED`；对已 `CANCELED` 的重复请求幂等返回。
+- **订单取消**：`/rental/order/cancel` 把订单置 `CANCELED`（原因存
+  `rental_order.cancel_reason`），并级联取消全部 `ASSIGNED` 分配与其排期；
+  存在 `DISPATCHED`（已出库）分配时拒绝取消，须先回仓。已 `RETURNED` 的
+  历史分配不受影响。取消后的订单不再出现在待分配读模型（查询按
+  `status = 'PENDING_ALLOCATION'` 过滤）。
+
+续租、换机仍无自动化处理：换机只能"旧机回仓 + 新机重新分配"两段人工操作。
+
 ## 分配流程
 
 ```text

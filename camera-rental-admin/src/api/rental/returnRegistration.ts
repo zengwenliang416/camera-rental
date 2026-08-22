@@ -8,6 +8,7 @@ export interface ReturnRegistrationRow {
   rentalOrderId: number
   orderNo: string
   status: string
+  returnMethod?: string
   carrierName?: string
   waybillNo?: string
   expiresAt: string

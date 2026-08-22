@@ -21,6 +21,15 @@ const STATUS_LABELS: Record<string, string> = {
 export const returnRegistrationStatusLabel = (status: string) =>
   STATUS_LABELS[status] || status
 
+const RETURN_METHOD_LABELS: Record<string, string> = {
+  EXPRESS: '快递寄回',
+  SELF_DELIVERY: '本人送回',
+  ERRAND: '跑腿送回'
+}
+
+export const returnMethodLabel = (method?: string) =>
+  method ? RETURN_METHOD_LABELS[method] || method : '快递寄回'
+
 export const canRevokeReturnRegistration = (status: string) => status === 'DRAFT'
 
 export const canReviewReturnRegistration = (status: string) =>

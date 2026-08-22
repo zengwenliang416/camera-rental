@@ -70,10 +70,17 @@
           <el-tag :type="tagType(row.status)">{{ statusLabel(row.status) }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="归还方式" width="110">
+        <template #default="{ row }">
+          <el-tag :type="row.returnMethod === 'EXPRESS' || !row.returnMethod ? 'info' : 'success'">
+            {{ returnMethodLabel(row.returnMethod) }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="寄回物流" min-width="190">
         <template #default="{ row }">
           <div>{{ row.carrierName || '—' }}</div>
-          <small class="muted">{{ row.waybillNo || '尚未提交' }}</small>
+          <small class="muted">{{ row.waybillNo || '无运单号' }}</small>
         </template>
       </el-table-column>
       <el-table-column prop="expiresAt" label="会话有效期" width="180" />
@@ -110,6 +117,9 @@
               statusLabel(detail.status)
             }}</el-descriptions-item>
             <el-descriptions-item label="订单号">{{ detail.orderNo }}</el-descriptions-item>
+            <el-descriptions-item label="归还方式">{{
+              returnMethodLabel(detail.returnMethod)
+            }}</el-descriptions-item>
             <el-descriptions-item label="运单号">{{
               detail.waybillNo || '—'
             }}</el-descriptions-item>
@@ -195,6 +205,7 @@ import {
   canReviewReturnRegistration,
   canRevokeReturnRegistration,
   formatReturnRegistrationDate,
+  returnMethodLabel,
   RETURN_REGISTRATION_STATUSES,
   returnRegistrationStatusLabel
 } from './returnRegistrationModel'

@@ -52,18 +52,26 @@
           <Icon icon="solar:delivery-bold-duotone" />
         </div>
         <div class="metric-content">
-          <span>当日发货金额 · {{ shipSummary?.shipOrderCount || 0 }} 单</span>
+          <span>当日发货金额</span>
           <strong>{{ shipSummary ? formatMoney(shipSummary.shipAmountFen) : '—' }}</strong>
-          <el-date-picker
-            v-model="shipDate"
-            class="ship-date-input"
-            type="date"
-            size="small"
-            :clearable="false"
-            value-format="YYYY-MM-DD"
-            placeholder="选择发货日期"
-            @change="onShipDateChange"
-          />
+          <div class="ship-date-row">
+            <small>{{ shipSummary?.shipOrderCount || 0 }} 单发货</small>
+            <div class="ship-date-control">
+              <button type="button" :disabled="loading" @click="shiftShipDate(-1)">
+                <Icon icon="ep:arrow-left" />
+              </button>
+              <input
+                v-model="shipDate"
+                type="date"
+                :max="todayIso"
+                aria-label="发货日期"
+                @change="onShipDateChange"
+              />
+              <button type="button" :disabled="loading" @click="shiftShipDate(1)">
+                <Icon icon="ep:arrow-right" />
+              </button>
+            </div>
+          </div>
         </div>
       </article>
     </div>
@@ -282,7 +290,8 @@ const syncRuns = ref<RentalSyncRunVO[]>([])
 const pendingShipCount = ref(0)
 const pendingReviewCount = ref(0)
 const pendingReturnCount = ref(0)
-const shipDate = ref(dayjs().format('YYYY-MM-DD'))
+const todayIso = dayjs().format('YYYY-MM-DD')
+const shipDate = ref(todayIso)
 const shipSummary = ref<RentalShipDateSummaryVO>()
 const failedSections = ref<string[]>([])
 const now = ref(dayjs())
@@ -610,11 +619,21 @@ const loadShipSummary = async () => {
 }
 
 const onShipDateChange = async () => {
+  if (!shipDate.value) {
+    shipDate.value = todayIso
+  }
   try {
     await loadShipSummary()
   } catch {
     shipSummary.value = undefined
   }
+}
+
+const shiftShipDate = (offset: number) => {
+  const next = dayjs(shipDate.value).add(offset, 'day')
+  if (next.isAfter(dayjs(), 'day')) return
+  shipDate.value = next.format('YYYY-MM-DD')
+  onShipDateChange()
 }
 
 const loadDashboard = async () => {
@@ -1001,23 +1020,61 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 
-.ship-date-input {
-  width: 100%;
+.ship-date-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
   margin-top: 4px;
 }
 
-.ship-date-input :deep(.el-input__wrapper) {
-  background: rgb(13 64 91 / 45%);
-  box-shadow: 0 0 0 1px rgb(60 163 200 / 30%) inset;
+.ship-date-control {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
 }
 
-.ship-date-input :deep(.el-input__inner) {
+.ship-date-control button {
+  display: grid;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  font-size: 11px;
+  color: var(--screen-cyan);
+  cursor: pointer;
+  background: rgb(18 76 106 / 28%);
+  border: 1px solid rgb(65 196 236 / 38%);
+  place-items: center;
+}
+
+.ship-date-control button:hover:not(:disabled) {
+  border-color: rgb(36 215 255 / 70%);
+  box-shadow: 0 0 8px rgb(36 215 255 / 30%);
+}
+
+.ship-date-control button:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+.ship-date-control input {
+  width: 106px;
+  height: 20px;
+  padding: 0 4px;
   font-size: 10px;
+  letter-spacing: 0.02em;
   color: #a8d5e7;
+  color-scheme: dark;
+  background: rgb(13 64 91 / 45%);
+  border: 1px solid rgb(60 163 200 / 30%);
+  font-variant-numeric: tabular-nums;
 }
 
-.ship-date-input :deep(.el-input__prefix) {
-  color: #63c9e9;
+.ship-date-control input:focus {
+  outline: none;
+  border-color: var(--screen-cyan);
+  box-shadow: 0 0 6px rgb(36 215 255 / 35%);
 }
 
 .command-layout {

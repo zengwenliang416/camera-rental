@@ -45,6 +45,27 @@
           <small>{{ metric.helper }}</small>
         </div>
       </article>
+
+      <article class="metric-card">
+        <div class="metric-index">05</div>
+        <div class="metric-icon is-purple">
+          <Icon icon="solar:delivery-bold-duotone" />
+        </div>
+        <div class="metric-content">
+          <span>当日发货金额 · {{ shipSummary?.shipOrderCount || 0 }} 单</span>
+          <strong>{{ shipSummary ? formatMoney(shipSummary.shipAmountFen) : '—' }}</strong>
+          <el-date-picker
+            v-model="shipDate"
+            class="ship-date-input"
+            type="date"
+            size="small"
+            :clearable="false"
+            value-format="YYYY-MM-DD"
+            placeholder="选择发货日期"
+            @change="onShipDateChange"
+          />
+        </div>
+      </article>
     </div>
 
     <div class="command-layout">
@@ -223,8 +244,10 @@ import { useRouter } from 'vue-router'
 import {
   getRentalDevicePerformanceReportPage,
   getRentalReportOverview,
+  getRentalReportShipDateSummary,
   type RentalDevicePerformanceReportVO,
-  type RentalReportOverviewVO
+  type RentalReportOverviewVO,
+  type RentalShipDateSummaryVO
 } from '@/api/rental/report'
 import { getManualReviewPage } from '@/api/rental/review'
 import {
@@ -237,7 +260,7 @@ import { useUserStore } from '@/store/modules/user'
 
 defineOptions({ name: 'Index' })
 
-type Tone = 'blue' | 'green' | 'orange' | 'red'
+type Tone = 'blue' | 'green' | 'orange' | 'red' | 'purple'
 type QueueItem = {
   label: string
   helper: string
@@ -259,6 +282,8 @@ const syncRuns = ref<RentalSyncRunVO[]>([])
 const pendingShipCount = ref(0)
 const pendingReviewCount = ref(0)
 const pendingReturnCount = ref(0)
+const shipDate = ref(dayjs().format('YYYY-MM-DD'))
+const shipSummary = ref<RentalShipDateSummaryVO>()
 const failedSections = ref<string[]>([])
 const now = ref(dayjs())
 let clockTimer: ReturnType<typeof setInterval> | undefined
@@ -580,6 +605,18 @@ const runSection = async (label: string, task: () => Promise<void>) => {
   }
 }
 
+const loadShipSummary = async () => {
+  shipSummary.value = await getRentalReportShipDateSummary({ date: shipDate.value })
+}
+
+const onShipDateChange = async () => {
+  try {
+    await loadShipSummary()
+  } catch {
+    shipSummary.value = undefined
+  }
+}
+
 const loadDashboard = async () => {
   loading.value = true
   failedSections.value = []
@@ -593,7 +630,8 @@ const loadDashboard = async () => {
       runSection('设备效能', async () => {
         const data = await getRentalDevicePerformanceReportPage(reportQuery)
         devicePerformance.value = data.list || []
-      })
+      }),
+      runSection('发货金额', loadShipSummary)
     )
   }
 
@@ -843,7 +881,7 @@ onBeforeUnmount(() => {
 
 .metric-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
   margin: 12px 0 10px;
 }
@@ -926,6 +964,10 @@ onBeforeUnmount(() => {
   color: var(--screen-red);
 }
 
+.is-purple {
+  color: #8ea2ff;
+}
+
 .metric-content {
   min-width: 0;
 }
@@ -957,6 +999,25 @@ onBeforeUnmount(() => {
   color: #4d7c91;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.ship-date-input {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.ship-date-input :deep(.el-input__wrapper) {
+  background: rgb(13 64 91 / 45%);
+  box-shadow: 0 0 0 1px rgb(60 163 200 / 30%) inset;
+}
+
+.ship-date-input :deep(.el-input__inner) {
+  font-size: 10px;
+  color: #a8d5e7;
+}
+
+.ship-date-input :deep(.el-input__prefix) {
+  color: #63c9e9;
 }
 
 .command-layout {

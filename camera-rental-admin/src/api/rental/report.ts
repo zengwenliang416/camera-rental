@@ -59,6 +59,14 @@ export interface RentalDevicePerformanceReportVO {
   latestRentalOrderId?: number
 }
 
+export interface RentalShipDateSummaryVO {
+  date: string
+  shipOrderCount: number
+  shipAmountFen: number
+  refundAmountFen: number
+  currency: string
+}
+
 export const getRevenueSummary = (params?: { shopId?: number }) => {
   return request.get<RentalRevenueSummaryVO>({
     url: '/rental/report/revenue-summary',
@@ -83,6 +91,13 @@ export const getRentalProductSkuReportPage = (params: RentalReportQuery) => {
 export const getRentalDevicePerformanceReportPage = (params: RentalReportQuery) => {
   return request.get<PageResult<RentalDevicePerformanceReportVO[]>>({
     url: '/rental/report/device-performance-page',
+    params
+  })
+}
+
+export const getRentalReportShipDateSummary = (params: { date: string }) => {
+  return request.get<RentalShipDateSummaryVO>({
+    url: '/rental/report/ship-date-summary',
     params
   })
 }

@@ -34,6 +34,15 @@ describe('customer return registration utilities', () => {
     expect(returnMessage('zh-CN', 'simpleReturnBody')).toContain('无需预先入库')
     expect(returnMessage('zh-CN', 'simpleReturnBody')).toContain('人工复核')
   })
+
+  test('labels all three return methods in both locales', () => {
+    expect(returnMessage('zh-CN', 'returnMethodExpress')).toBe('快递寄回')
+    expect(returnMessage('zh-CN', 'returnMethodSelf')).toBe('本人送回')
+    expect(returnMessage('zh-CN', 'returnMethodErrand')).toBe('跑腿送回')
+    expect(returnMessage('en', 'returnMethodExpress')).toBe('Express')
+    expect(returnMessage('en', 'returnMethodSelf')).toBe('Self drop-off')
+    expect(returnMessage('en', 'returnMethodErrand')).toBe('Errand courier')
+  })
 })
 
 function photo(id: number, category: 'DEVICE_EXTERIOR' | 'SERIAL_LABEL') {

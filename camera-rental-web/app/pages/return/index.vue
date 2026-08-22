@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import type { RegistrationStatus, ReturnContext, ReturnReceipt } from '~/types/return-registration'
+import type {
+  RegistrationStatus,
+  ReturnContext,
+  ReturnMethod,
+  ReturnReceipt
+} from '~/types/return-registration'
 import { normalizeReturnSerial, returnSerialPattern } from '~/utils/returnSerial'
 
 type SelectedPhotoStatus = 'PENDING' | 'UPLOADING' | 'UPLOADED' | 'FAILED'
@@ -30,8 +35,15 @@ const form = reactive({
   orderNo: '',
   mobileLast4: '',
   machineCode: '',
-  waybillNo: ''
+  waybillNo: '',
+  returnMethod: 'EXPRESS' as ReturnMethod
 })
+
+const methodOptions = computed(() => [
+  { value: 'EXPRESS' as const, label: t('returnMethodExpress') },
+  { value: 'SELF_DELIVERY' as const, label: t('returnMethodSelf') },
+  { value: 'ERRAND' as const, label: t('returnMethodErrand') }
+])
 
 useHead(() => ({ title: `${t('service')} · 捷租达` }))
 
@@ -66,7 +78,7 @@ function validate() {
     error.value = t('machineCodeRequired')
     return false
   }
-  if (!waybillNo) {
+  if (form.returnMethod === 'EXPRESS' && !waybillNo) {
     error.value = t('waybillRequired')
     return false
   }
@@ -241,13 +253,35 @@ const status = computed<RegistrationStatus | undefined>(() =>
           >
         </label>
 
-        <label>
-          <span>{{ t('waybill') }} <b>{{ t('required') }}</b></span>
+        <fieldset class="return-methods">
+          <legend>{{ t('returnMethod') }}</legend>
+          <div class="return-method-options">
+            <label v-for="option in methodOptions" :key="option.value" class="return-method-option">
+              <input
+                v-model="form.returnMethod"
+                type="radio"
+                name="returnMethod"
+                :value="option.value"
+                :disabled="submitting"
+              >
+              <span>{{ option.label }}</span>
+            </label>
+          </div>
+          <p v-if="form.returnMethod === 'SELF_DELIVERY'" class="return-method-hint">
+            {{ t('selfDeliveryHint') }}
+          </p>
+        </fieldset>
+
+        <label v-if="form.returnMethod !== 'SELF_DELIVERY'">
+          <span>
+            {{ form.returnMethod === 'ERRAND' ? t('errandWaybill') : t('waybill') }}
+            <b v-if="form.returnMethod === 'EXPRESS'">{{ t('required') }}</b>
+          </span>
           <input
             v-model="form.waybillNo"
             maxlength="128"
             autocomplete="off"
-            :placeholder="t('waybillPlaceholder')"
+            :placeholder="form.returnMethod === 'ERRAND' ? t('errandWaybillPlaceholder') : t('waybillPlaceholder')"
           >
         </label>
 
@@ -481,6 +515,74 @@ const status = computed<RegistrationStatus | undefined>(() =>
 .return-form input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.return-methods {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.return-methods legend {
+  font-weight: 700;
+}
+
+.return-method-options {
+  margin-top: 9px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.return-method-option {
+  position: relative;
+  display: block;
+}
+
+.return-method-option input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.return-method-option span {
+  min-height: 52px;
+  display: grid;
+  place-items: center;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  text-align: center;
+}
+
+.return-method-option input:checked + span {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.return-method-option input:focus-visible + span {
+  outline: 2px solid var(--accent);
+}
+
+.return-method-option input:disabled + span {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.return-method-hint {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .return-photos {

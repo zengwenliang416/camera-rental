@@ -2,6 +2,7 @@ import type {
   PhotoCategory,
   ReturnContext,
   ReturnDraft,
+  ReturnMethod,
   ReturnReceipt,
   UploadedPhoto
 } from '~/types/return-registration'
@@ -38,6 +39,7 @@ export function useReturnRegistration() {
     mobileLast4: string
     machineCode: string
     waybillNo: string
+    returnMethod: ReturnMethod
     attachmentIds?: number[]
   }) =>
     request<ReturnReceipt>('/simple-submit', {

@@ -6,6 +6,8 @@ export type RegistrationStatus =
   | 'EXPIRED'
   | 'REVOKED'
 
+export type ReturnMethod = 'EXPRESS' | 'SELF_DELIVERY' | 'ERRAND'
+
 export interface ReturnReceipt {
   formNo: string
   status: RegistrationStatus

@@ -7,6 +7,7 @@ import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalProductSk
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalReportOverviewRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalReportQueryReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalRevenueReportRespVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalShipDateSummaryRespVO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalReportMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -64,6 +65,20 @@ public class RentalReportAdminService {
         result.setCurrency("CNY");
         result.setSources(reportMapper.selectSourceBreakdown(
                 tenantId, reqVO.getStartDate(), endDateExclusive));
+        return result;
+    }
+
+    public RentalShipDateSummaryRespVO getShipDateSummary(LocalDate date) {
+        RentalShipDateSummaryRespVO result = reportMapper.selectShipDateSummary(
+                TenantContextHolder.getRequiredTenantId(), date);
+        if (result == null) {
+            result = new RentalShipDateSummaryRespVO();
+        }
+        result.setDate(date);
+        result.setShipOrderCount(defaultValue(result.getShipOrderCount()));
+        result.setShipAmountFen(defaultValue(result.getShipAmountFen()));
+        result.setRefundAmountFen(defaultValue(result.getRefundAmountFen()));
+        result.setCurrency("CNY");
         return result;
     }
 

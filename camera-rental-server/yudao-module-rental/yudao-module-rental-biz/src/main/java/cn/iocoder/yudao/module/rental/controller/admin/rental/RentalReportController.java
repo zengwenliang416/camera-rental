@@ -7,16 +7,21 @@ import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalProductSk
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalReportOverviewRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalReportQueryReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalRevenueReportRespVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalShipDateSummaryRespVO;
 import cn.iocoder.yudao.module.rental.service.admin.RentalReportAdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
@@ -46,6 +51,14 @@ public class RentalReportController {
     public CommonResult<RentalReportOverviewRespVO> getOverview(
             @Valid RentalReportQueryReqVO reqVO) {
         return success(reportAdminService.getOverview(reqVO));
+    }
+
+    @GetMapping("/ship-date-summary")
+    @Operation(summary = "按发货日统计金额（按 ship_date 过滤，单位分）")
+    @PreAuthorize("@ss.hasPermission('rental:report:query')")
+    public CommonResult<RentalShipDateSummaryRespVO> getShipDateSummary(
+            @RequestParam("date") @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return success(reportAdminService.getShipDateSummary(date));
     }
 
     @GetMapping("/product-sku-page")

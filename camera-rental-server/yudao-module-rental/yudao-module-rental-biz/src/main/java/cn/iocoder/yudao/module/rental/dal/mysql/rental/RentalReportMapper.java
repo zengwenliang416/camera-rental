@@ -4,6 +4,7 @@ import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDevicePer
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalProductSkuReportRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalReportOverviewRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalReportSourceRespVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalShipDateSummaryRespVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,6 +22,9 @@ public interface RentalReportMapper {
     List<RentalReportSourceRespVO> selectSourceBreakdown(@Param("tenantId") Long tenantId,
                                                         @Param("startDate") LocalDate startDate,
                                                         @Param("endDateExclusive") LocalDate endDateExclusive);
+
+    RentalShipDateSummaryRespVO selectShipDateSummary(@Param("tenantId") Long tenantId,
+                                                      @Param("date") LocalDate date);
 
     IPage<RentalProductSkuReportRespVO> selectProductSkuPage(
             IPage<RentalProductSkuReportRespVO> page,

@@ -188,4 +188,16 @@
         ORDER BY assigned_income_fen DESC, occupied_days DESC, d.id
     </select>
 
+    <select id="selectShipDateSummary"
+            resultType="cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalShipDateSummaryRespVO">
+        SELECT
+            COUNT(1) AS ship_order_count,
+            COALESCE(SUM(o.pay_amount), 0) AS ship_amount_fen,
+            COALESCE(SUM(o.refund_amount), 0) AS refund_amount_fen
+        FROM xianyu_order o
+        WHERE o.tenant_id = #{tenantId}
+          AND o.deleted = b'0'
+          AND o.ship_date = #{date}
+    </select>
+
 </mapper>

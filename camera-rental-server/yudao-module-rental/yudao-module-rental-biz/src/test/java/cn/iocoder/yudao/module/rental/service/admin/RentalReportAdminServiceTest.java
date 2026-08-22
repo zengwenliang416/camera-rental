@@ -8,6 +8,7 @@ import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalReportOve
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalReportQueryReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalReportSourceRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalRevenueReportRespVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalShipDateSummaryRespVO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalReportMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -131,6 +132,36 @@ class RentalReportAdminServiceTest {
         assertEquals(4000, result.getList().get(0).getUtilizationBasisPoints());
         verify(reportMapper).selectDevicePerformancePage(any(), eq(9L), eq(reqVO.getStartDate()),
                 eq(LocalDate.of(2026, 7, 11)));
+    }
+
+    @Test
+    void shipDateSummaryShouldAggregateByShipDate() {
+        RentalShipDateSummaryRespVO aggregate = new RentalShipDateSummaryRespVO();
+        aggregate.setShipOrderCount(4);
+        aggregate.setShipAmountFen(56_789L);
+        aggregate.setRefundAmountFen(1_234L);
+        LocalDate date = LocalDate.of(2026, 8, 22);
+        when(reportMapper.selectShipDateSummary(9L, date)).thenReturn(aggregate);
+
+        RentalShipDateSummaryRespVO result = service.getShipDateSummary(date);
+
+        assertEquals(4, result.getShipOrderCount());
+        assertEquals(56_789L, result.getShipAmountFen());
+        assertEquals(1_234L, result.getRefundAmountFen());
+        assertEquals(date, result.getDate());
+        assertEquals("CNY", result.getCurrency());
+    }
+
+    @Test
+    void shipDateSummaryShouldReturnZeroForEmptyResult() {
+        LocalDate date = LocalDate.of(2026, 8, 22);
+        when(reportMapper.selectShipDateSummary(9L, date)).thenReturn(null);
+
+        RentalShipDateSummaryRespVO result = service.getShipDateSummary(date);
+
+        assertEquals(0, result.getShipOrderCount());
+        assertEquals(0L, result.getShipAmountFen());
+        assertEquals(0L, result.getRefundAmountFen());
     }
 
     private RentalReportQueryReqVO query() {

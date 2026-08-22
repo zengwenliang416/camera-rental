@@ -2206,6 +2206,20 @@
               "permission": "rental:xianyu:ship"
             }
           ]
+        },
+        {
+          "key": "warehouse",
+          "name": "设备回仓",
+          "menus": [
+            {
+              "key": "rentalDeviceReturn",
+              "name": "扫码回仓",
+              "icon": "download",
+              "iconColor": "#52c41a",
+              "url": "/pages-rental/device-return/index",
+              "permission": "rental:device:assign"
+            }
+          ]
         }
       ]
     },

@@ -147,7 +147,7 @@ public class AppReturnRegistrationController {
         rateLimitService.checkSession(session, "submit", 10);
         Receipt result = submissionService.submit(session, new Submission(
                 req.orderNo(), req.carrierCode(), req.carrierName(), req.waybillNo(),
-                req.shippedDate(), req.serials(), req.attachmentIds(),
+                null, req.shippedDate(), req.serials(), req.attachmentIds(),
                 req.issueDescription(), req.idempotencyKey()));
         auditService.record("SUBMIT", session,
                 resolver.requireSession(session).getId(), result.status());
@@ -171,7 +171,7 @@ public class AppReturnRegistrationController {
         rateLimitService.checkSession(verified.sessionToken(), "simple-submit", 10);
         Receipt result = submissionService.submitSimple(
                 verified.sessionToken(), req.machineCode(), req.waybillNo(),
-                req.attachmentIds());
+                req.returnMethod(), req.attachmentIds());
         auditService.record("SIMPLE_SUBMIT", verified.sessionToken(),
                 verified.registrationId(), result.status());
         return success(result);
@@ -211,7 +211,8 @@ public class AppReturnRegistrationController {
             @Size(max = 128) String orderNo,
             @Size(max = 32) String mobileLast4,
             @NotBlank @Size(max = 128) String machineCode,
-            @NotBlank @Size(max = 128) String waybillNo,
+            @Size(max = 128) String waybillNo,
+            @Size(max = 32) String returnMethod,
             @Size(max = 10) List<Long> attachmentIds
     ) {
     }

@@ -10,6 +10,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.returnregistration.RentalReturnR
 import cn.iocoder.yudao.module.rental.dal.mysql.returnregistration.RentalReturnRegistrationMapper;
 import cn.iocoder.yudao.module.rental.enums.logistics.RentalDeliveryDirectionEnum;
 import cn.iocoder.yudao.module.rental.enums.returnregistration.ReturnDeviceMatchStatusEnum;
+import cn.iocoder.yudao.module.rental.enums.returnregistration.ReturnMethodEnum;
 import cn.iocoder.yudao.module.rental.enums.returnregistration.ReturnRegistrationStatusEnum;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryCreateCommand;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryDeviceCommand;
@@ -78,15 +79,18 @@ public class ReturnRegistrationSubmissionService {
 
     @Transactional(rollbackFor = Exception.class)
     public Receipt submitSimple(String token, String machineCode, String waybillNo,
-                                List<Long> attachmentIds) {
+                                String returnMethod, List<Long> attachmentIds) {
         RentalReturnRegistrationDO resolved = resolver.require(token);
         return resolver.execute(resolved, () -> {
-            String normalizedWaybill = normalizeWaybill(waybillNo);
+            ReturnMethodEnum method = resolveMethod(returnMethod);
+            String effectiveWaybill = method == ReturnMethodEnum.SELF_DELIVERY ? null : waybillNo;
+            String normalizedWaybill = normalizeWaybill(effectiveWaybill);
             Submission submission = new Submission(
                     resolved.getExternalOrderNo(),
-                    "UNSPECIFIED",
-                    "待仓库识别",
-                    waybillNo,
+                    simpleCarrierCode(method),
+                    simpleCarrierName(method),
+                    effectiveWaybill,
+                    method.name(),
                     LocalDate.now(ZoneId.of("Asia/Shanghai")),
                     List.of(machineCode),
                     attachmentIds == null ? List.of() : attachmentIds,
@@ -135,11 +139,13 @@ public class ReturnRegistrationSubmissionService {
                     registration, submission.attachmentIds());
         }
         MatchResult match = replaceDeviceMatches(registration, submission.serials());
+        String waybillNo = trimToNull(submission.waybillNo());
 
-        registration.setCarrierCode(normalizeCode(submission.carrierCode()))
+        registration.setReturnMethod(resolveMethod(submission.returnMethod()).name())
+                .setCarrierCode(normalizeCode(submission.carrierCode()))
                 .setCarrierName(submission.carrierName().trim())
-                .setWaybillNo(submission.waybillNo().trim())
-                .setNormalizedWaybillNo(normalizeWaybill(submission.waybillNo()))
+                .setWaybillNo(waybillNo)
+                .setNormalizedWaybillNo(waybillNo == null ? null : normalizeWaybill(waybillNo))
                 .setShippedDate(submission.shippedDate())
                 .setIssueDescription(trimToNull(submission.issueDescription()))
                 .setIdempotencyKey(submission.idempotencyKey().trim())
@@ -208,9 +214,12 @@ public class ReturnRegistrationSubmissionService {
         if (submission == null || !Objects.equals(registration.getExternalOrderNo(), submission.orderNo())
                 || !StringUtils.hasText(submission.carrierCode())
                 || !StringUtils.hasText(submission.carrierName())
-                || !StringUtils.hasText(submission.waybillNo())
                 || submission.shippedDate() == null
                 || !StringUtils.hasText(submission.idempotencyKey())) {
+            throw exception(RETURN_REGISTRATION_ORDER_INVALID);
+        }
+        if (resolveMethod(submission.returnMethod()) == ReturnMethodEnum.EXPRESS
+                && !StringUtils.hasText(submission.waybillNo())) {
             throw exception(RETURN_REGISTRATION_ORDER_INVALID);
         }
         if (submission.serials() == null || submission.serials().isEmpty()
@@ -221,6 +230,33 @@ public class ReturnRegistrationSubmissionService {
         }
     }
 
+    private ReturnMethodEnum resolveMethod(String returnMethod) {
+        if (!StringUtils.hasText(returnMethod)) {
+            return ReturnMethodEnum.EXPRESS;
+        }
+        try {
+            return ReturnMethodEnum.valueOf(returnMethod.trim().toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException cause) {
+            throw exception(RETURN_REGISTRATION_SUBMISSION_INVALID, "不支持的归还方式");
+        }
+    }
+
+    private String simpleCarrierCode(ReturnMethodEnum method) {
+        return switch (method) {
+            case EXPRESS -> "UNSPECIFIED";
+            case SELF_DELIVERY -> "SELF_DELIVERY";
+            case ERRAND -> "ERRAND";
+        };
+    }
+
+    private String simpleCarrierName(ReturnMethodEnum method) {
+        return switch (method) {
+            case EXPRESS -> "待仓库识别";
+            case SELF_DELIVERY -> "本人送回";
+            case ERRAND -> "跑腿送回";
+        };
+    }
+
     private Long createDelivery(RentalReturnRegistrationDO registration, List<MatchedDevice> devices) {
         List<RentalDeliveryDeviceCommand> commands = devices.stream()
                 .map(value -> new RentalDeliveryDeviceCommand(
@@ -228,6 +264,9 @@ public class ReturnRegistrationSubmissionService {
                         value.assignment().getId(),
                         value.device().getId()))
                 .toList();
+        String waybillNo = StringUtils.hasText(registration.getWaybillNo())
+                ? registration.getWaybillNo()
+                : deliveryPlaceholderWaybill(registration);
         RentalDeliveryResult result = deliveryService.createOrReuseLocalOnly(
                 new RentalDeliveryCreateCommand(
                         registration.getRentalOrderId(),
@@ -237,10 +276,17 @@ public class ReturnRegistrationSubmissionService {
                         registration.getFormNo(),
                         registration.getCarrierCode(),
                         registration.getCarrierName(),
-                        registration.getWaybillNo(),
+                        waybillNo,
                         null,
                         commands));
         return result.deliveryId();
+    }
+
+    private String deliveryPlaceholderWaybill(RentalReturnRegistrationDO registration) {
+        String method = registration.getReturnMethod() == null
+                ? ReturnMethodEnum.EXPRESS.name()
+                : registration.getReturnMethod();
+        return method + "-" + registration.getFormNo();
     }
 
     private void addCandidate(Map<String, MatchedDevice> target, String serial,
@@ -257,7 +303,7 @@ public class ReturnRegistrationSubmissionService {
     }
 
     private String normalizeWaybill(String value) {
-        return value.replaceAll("[\\s-]", "").toUpperCase(Locale.ROOT);
+        return value == null ? "" : value.replaceAll("[\\s-]", "").toUpperCase(Locale.ROOT);
     }
 
     private String normalizeCode(String value) {

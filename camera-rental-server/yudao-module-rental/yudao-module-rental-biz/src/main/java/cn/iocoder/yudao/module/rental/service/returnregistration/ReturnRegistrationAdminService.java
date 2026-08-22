@@ -54,9 +54,9 @@ public class ReturnRegistrationAdminService {
                         serial, submittedStart, submittedEnd);
         List<AdminRow> rows = values.getList().stream().map(value -> new AdminRow(
                 value.getId(), value.getFormNo(), value.getRentalOrderId(),
-                value.getExternalOrderNo(), value.getStatus(), value.getCarrierName(),
-                value.getWaybillNo(), value.getExpiresAt(), value.getSubmittedAt(),
-                value.getCreateTime())).toList();
+                value.getExternalOrderNo(), value.getStatus(), value.getReturnMethod(),
+                value.getCarrierName(), value.getWaybillNo(), value.getExpiresAt(),
+                value.getSubmittedAt(), value.getCreateTime())).toList();
         return new PageResult<>(rows, values.getTotal());
     }
 
@@ -71,7 +71,8 @@ public class ReturnRegistrationAdminService {
                 channelOrder.getReceiverAddress());
         return new AdminDetail(registration.getId(), registration.getFormNo(),
                 registration.getRentalOrderId(), registration.getExternalOrderNo(),
-                registration.getStatus(), registration.getCarrierCode(), registration.getCarrierName(),
+                registration.getStatus(), registration.getReturnMethod(),
+                registration.getCarrierCode(), registration.getCarrierName(),
                 registration.getWaybillNo(), registration.getShippedDate(),
                 registration.getIssueDescription(), registration.getDeliveryId(),
                 registration.getExpiresAt(), registration.getSubmittedAt(),

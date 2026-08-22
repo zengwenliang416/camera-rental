@@ -9,6 +9,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.returnregistration.RentalReturnRegistrationDeviceMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.returnregistration.RentalReturnRegistrationMapper;
 import cn.iocoder.yudao.module.rental.enums.returnregistration.ReturnRegistrationStatusEnum;
+import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryCreateCommand;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryResult;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryService;
 import org.junit.jupiter.api.BeforeEach;
@@ -111,7 +112,7 @@ class ReturnRegistrationSubmissionServiceTest {
         registration.setRentalOrderId(null);
 
         ReturnRegistrationModels.Receipt receipt =
-                service.submitSimple("token", "P4-01", "SF1000000001", List.of());
+                service.submitSimple("token", "P4-01", "SF1000000001", null, List.of());
 
         assertEquals(ReturnRegistrationStatusEnum.REVIEW_REQUIRED.name(), receipt.status());
         verify(assignmentMapper, never()).selectActiveListByRentalOrderId(any());
@@ -125,7 +126,7 @@ class ReturnRegistrationSubmissionServiceTest {
                 .setExternalOrderNo("");
 
         ReturnRegistrationModels.Receipt receipt =
-                service.submitSimple("token", "P4-18", "1234567567", List.of());
+                service.submitSimple("token", "P4-18", "1234567567", null, List.of());
 
         assertEquals(ReturnRegistrationStatusEnum.REVIEW_REQUIRED.name(), receipt.status());
         ArgumentCaptor<RentalReturnRegistrationDeviceDO> detailCaptor =
@@ -167,7 +168,7 @@ class ReturnRegistrationSubmissionServiceTest {
                         "READY", "SF1****0001", null, List.of()));
 
         ReturnRegistrationModels.Receipt receipt =
-                service.submitSimple("token", "p4 － 01", "SF1000000001", List.of());
+                service.submitSimple("token", "p4 － 01", "SF1000000001", null, List.of());
 
         assertEquals(ReturnRegistrationStatusEnum.ACCEPTED.name(), receipt.status());
         assertEquals(80L, receipt.deliveryId());
@@ -180,7 +181,7 @@ class ReturnRegistrationSubmissionServiceTest {
         registration.setRentalOrderId(null);
 
         ReturnRegistrationModels.Receipt receipt =
-                service.submitSimple("token", "P4-01", "SF1000000001",
+                service.submitSimple("token", "P4-01", "SF1000000001", null,
                         List.of(101L, 102L));
 
         assertEquals(ReturnRegistrationStatusEnum.REVIEW_REQUIRED.name(), receipt.status());
@@ -195,7 +196,7 @@ class ReturnRegistrationSubmissionServiceTest {
                 .validateOptionalForSubmission(registration, List.of(101L));
 
         assertThrows(RuntimeException.class, () ->
-                service.submitSimple("token", "P4-01", "SF1000000001",
+                service.submitSimple("token", "P4-01", "SF1000000001", null,
                         List.of(101L)));
 
         verify(registrationDeviceMapper, never()).deleteByRegistrationId(any());
@@ -245,10 +246,82 @@ class ReturnRegistrationSubmissionServiceTest {
         verify(registrationDeviceMapper, never()).deleteByRegistrationId(any());
     }
 
+    @Test
+    void selfDeliverySubmissionSkipsWaybillAndCreatesDeliveryWithPlaceholder() {
+        RentalDeviceAssignmentDO assignment = RentalDeviceAssignmentDO.builder()
+                .id(50L).rentalOrderId(30L).rentalOrderItemId(60L).deviceId(70L).build();
+        RentalDeviceDO device = RentalDeviceDO.builder()
+                .id(70L).deviceNo("P4-01").legacyDeviceNo("A6-08-4L5H")
+                .serialNumber("SN-A6-08-4L5H").build();
+        when(assignmentMapper.selectActiveListByRentalOrderId(30L)).thenReturn(List.of(assignment));
+        when(deviceMapper.selectById(70L)).thenReturn(device);
+        when(deliveryService.createOrReuseLocalOnly(any())).thenReturn(
+                new RentalDeliveryResult(80L, true, "READY", "DISABLED",
+                        "READY", null, null, List.of()));
+
+        ReturnRegistrationModels.Receipt receipt =
+                service.submitSimple("token", "P4-01", null, "SELF_DELIVERY", List.of());
+
+        assertEquals(ReturnRegistrationStatusEnum.ACCEPTED.name(), receipt.status());
+        assertEquals(80L, receipt.deliveryId());
+        ArgumentCaptor<RentalDeliveryCreateCommand> commandCaptor =
+                ArgumentCaptor.forClass(RentalDeliveryCreateCommand.class);
+        verify(deliveryService).createOrReuseLocalOnly(commandCaptor.capture());
+        assertEquals("SELF_DELIVERY-RR202608010001", commandCaptor.getValue().waybillNo());
+        assertEquals("SELF_DELIVERY", commandCaptor.getValue().sourceCarrierCode());
+        assertEquals("本人送回", commandCaptor.getValue().sourceCarrierName());
+        assertEquals("SELF_DELIVERY", registration.getReturnMethod());
+        assertNull(registration.getWaybillNo());
+    }
+
+    @Test
+    void errandSubmissionKeepsOptionalWaybill() {
+        RentalDeviceAssignmentDO assignment = RentalDeviceAssignmentDO.builder()
+                .id(50L).rentalOrderId(30L).rentalOrderItemId(60L).deviceId(70L).build();
+        RentalDeviceDO device = RentalDeviceDO.builder()
+                .id(70L).deviceNo("P4-01").legacyDeviceNo("A6-08-4L5H")
+                .serialNumber("SN-A6-08-4L5H").build();
+        when(assignmentMapper.selectActiveListByRentalOrderId(30L)).thenReturn(List.of(assignment));
+        when(deviceMapper.selectById(70L)).thenReturn(device);
+        when(deliveryService.createOrReuseLocalOnly(any())).thenReturn(
+                new RentalDeliveryResult(80L, true, "READY", "DISABLED",
+                        "READY", null, null, List.of()));
+
+        ReturnRegistrationModels.Receipt receipt =
+                service.submitSimple("token", "P4-01", "PD123456", "ERRAND", List.of());
+
+        assertEquals(ReturnRegistrationStatusEnum.ACCEPTED.name(), receipt.status());
+        ArgumentCaptor<RentalDeliveryCreateCommand> commandCaptor =
+                ArgumentCaptor.forClass(RentalDeliveryCreateCommand.class);
+        verify(deliveryService).createOrReuseLocalOnly(commandCaptor.capture());
+        assertEquals("PD123456", commandCaptor.getValue().waybillNo());
+        assertEquals("ERRAND", registration.getReturnMethod());
+        assertEquals("PD123456", registration.getWaybillNo());
+    }
+
+    @Test
+    void expressSubmissionStillRequiresWaybill() {
+        assertThrows(RuntimeException.class, () ->
+                service.submitSimple("token", "P4-01", null, "EXPRESS", List.of()));
+
+        verify(registrationDeviceMapper, never()).deleteByRegistrationId(any());
+        verify(registrationMapper, never()).updateById(any(RentalReturnRegistrationDO.class));
+        verify(deliveryService, never()).createOrReuseLocalOnly(any());
+    }
+
+    @Test
+    void unsupportedReturnMethodIsRejected() {
+        assertThrows(RuntimeException.class, () ->
+                service.submitSimple("token", "P4-01", "SF1000000001", "CARRIER_PIGEON", List.of()));
+
+        verify(registrationMapper, never()).updateById(any(RentalReturnRegistrationDO.class));
+        verify(deliveryService, never()).createOrReuseLocalOnly(any());
+    }
+
     private ReturnRegistrationModels.Submission validSubmission() {
         return new ReturnRegistrationModels.Submission(
                 "ORDER-001", "SHUNFENG", "顺丰速运", "SF1000000001",
-                LocalDate.of(2026, 8, 1), List.of("P4-01"),
+                null, LocalDate.of(2026, 8, 1), List.of("P4-01"),
                 List.of(), null, "submit-key-1");
     }
 

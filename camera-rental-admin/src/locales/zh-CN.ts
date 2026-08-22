@@ -1089,6 +1089,23 @@ export default {
         INFO: '提示'
       },
       orderDrawerTitle: '订单详情',
+      cancelOrder: '取消订单',
+      cancelOrderPrompt:
+        '取消后将释放该订单全部未出库的设备分配，并取消对应占用排期。已出库设备需先完成回仓。此操作不可恢复。',
+      cancelReasonPlaceholder: '取消原因（选填）',
+      cancelOrderSuccess: '订单已取消，未出库分配与排期已释放',
+      cancelOrderFailed: '取消订单失败，请重试',
+      unassign: '撤销分配',
+      unassignConfirm: '确认撤销设备',
+      unassignSuccess: '已撤销分配并取消占用排期',
+      unassignFailed: '撤销分配失败，请重试',
+      assignmentStatus: '分配状态',
+      assignmentStatuses: {
+        ASSIGNED: '已分配',
+        DISPATCHED: '已出库',
+        RETURNED: '已回仓',
+        CANCELED: '已撤销'
+      },
       deviceDrawerTitle: '设备详情',
       logisticsDrawerTitle: '物流详情',
       candidateDrawerTitle: '候选设备',

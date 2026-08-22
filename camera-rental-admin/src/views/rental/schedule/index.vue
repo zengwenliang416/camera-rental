@@ -76,6 +76,8 @@
       @update:visible="orderDrawer.visible = $event"
       @retry="loadOrderDetail"
       @allocate="openCandidates"
+      @unassign="confirmUnassignAssignment"
+      @cancel-order="confirmCancelOrder"
     />
     <ScheduleDeviceDrawer
       :visible="deviceDrawer.visible"
@@ -111,7 +113,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, reactive } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { useI18n } from '@/hooks/web/useI18n'
 import { hasPermission } from '@/directives/permission/hasPermi'
 import {
@@ -122,11 +124,14 @@ import {
 import {
   assignRentalDevice,
   getRentalDeviceDetail,
+  unassignRentalDevice,
   type RentalDeviceScheduleDetailVO
 } from '@/api/rental/device'
 import {
+  cancelRentalOrder,
   getRentalDeviceCandidates,
   getRentalOrderDetail,
+  type RentalScheduleAssignmentVO,
   type RentalScheduleCandidateResponseVO,
   type RentalScheduleCandidateVO,
   type RentalScheduleDeviceLaneVO,
@@ -359,6 +364,53 @@ const confirmAssignment = async (candidate: RentalScheduleCandidateVO) => {
     await loadCandidates()
   } finally {
     candidateDrawer.assigningDeviceId = undefined
+  }
+}
+
+const confirmUnassignAssignment = async (assignment: RentalScheduleAssignmentVO) => {
+  const deviceLabel = assignment.deviceNo || `#${assignment.deviceId}`
+  try {
+    await ElMessageBox.confirm(
+      `${t('rental.schedule.unassignConfirm')} ${deviceLabel}？`,
+      t('rental.schedule.unassign'),
+      { type: 'warning' }
+    )
+  } catch {
+    return
+  }
+  try {
+    await unassignRentalDevice({ assignmentId: assignment.id })
+    ElMessage.success(t('rental.schedule.unassignSuccess'))
+    await Promise.all([loadOrderDetail(), loadPendingPage(), load()])
+  } catch {
+    ElMessage.error(t('rental.schedule.unassignFailed'))
+  }
+}
+
+const confirmCancelOrder = async () => {
+  const detail = orderDrawer.detail
+  if (!detail) return
+  let reason = ''
+  try {
+    const result = await ElMessageBox.prompt(
+      t('rental.schedule.cancelOrderPrompt'),
+      t('rental.schedule.cancelOrder'),
+      {
+        type: 'warning',
+        inputType: 'textarea',
+        inputPlaceholder: t('rental.schedule.cancelReasonPlaceholder')
+      }
+    )
+    reason = (result.value || '').trim()
+  } catch {
+    return
+  }
+  try {
+    await cancelRentalOrder({ orderId: detail.id, reason: reason || undefined })
+    ElMessage.success(t('rental.schedule.cancelOrderSuccess'))
+    await Promise.all([loadOrderDetail(), loadPendingPage(), load()])
+  } catch {
+    ElMessage.error(t('rental.schedule.cancelOrderFailed'))
   }
 }
 

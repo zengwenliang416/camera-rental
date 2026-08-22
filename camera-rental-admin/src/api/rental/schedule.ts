@@ -304,6 +304,10 @@ export const getRentalOrderDetail = (id: number) => {
   })
 }
 
+export const cancelRentalOrder = (data: { orderId: number; reason?: string }) => {
+  return request.post<boolean>({ url: '/rental/order/cancel', data })
+}
+
 export const getRentalDeviceCandidates = (rentalOrderItemId: number) => {
   return request.get<RentalScheduleCandidateResponseVO>({
     url: `/rental/order-item/${rentalOrderItemId}/device-candidates`

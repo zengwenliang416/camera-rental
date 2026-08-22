@@ -132,6 +132,10 @@ export const returnRentalDevice = (data: {
   return request.post<RentalDeviceOpsResultVO>({ url: '/rental/device/return', data })
 }
 
+export const unassignRentalDevice = (data: { assignmentId: number }) => {
+  return request.post<RentalDeviceOpsResultVO>({ url: '/rental/device/unassign', data })
+}
+
 export interface RentalDeviceGenerateFromPurchaseReqVO {
   purchaseInId: number
   purchaseInItemId?: number

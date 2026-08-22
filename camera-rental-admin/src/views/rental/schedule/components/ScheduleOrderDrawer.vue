@@ -24,7 +24,19 @@
           <span>{{ t('rental.schedule.orderNo') }}</span>
           <strong class="schedule-data">{{ getScheduleOrderDisplayNo(order) }}</strong>
         </div>
-        <el-tag type="warning" effect="light">{{ statusLabel(order.status) }}</el-tag>
+        <div class="schedule-summary-actions">
+          <el-tag type="warning" effect="light">{{ statusLabel(order.status) }}</el-tag>
+          <el-button
+            v-if="order.status !== 'CANCELED'"
+            v-hasPermi="['rental:device:assign']"
+            size="small"
+            type="danger"
+            plain
+            @click="emit('cancel-order')"
+          >
+            {{ t('rental.schedule.cancelOrder') }}
+          </el-button>
+        </div>
       </div>
 
       <el-descriptions :column="2" border>
@@ -83,15 +95,38 @@
 
       <section v-if="order.items.some((item) => item.assignments?.length)" class="schedule-drawer-section">
         <h4>{{ t('rental.schedule.assignedDevices') }}</h4>
-        <div class="schedule-chip-list">
-          <el-tag
-            v-for="device in assignedDevices"
-            :key="`${device.deviceId}-${device.deviceNo}`"
-            effect="plain"
-          >
-            <span class="schedule-data">{{ device.deviceNo }}</span>
-          </el-tag>
-        </div>
+        <el-table :data="assignedDevices" size="small">
+          <el-table-column :label="t('rental.schedule.deviceNo')" min-width="120">
+            <template #default="{ row }">
+              <span class="schedule-data">{{ row.deviceNo || `#${row.deviceId}` }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="t('rental.schedule.assignmentStatus')" width="100">
+            <template #default="{ row }">
+              <el-tag :type="assignmentTagType(row.status)" effect="light">
+                {{ assignmentStatusLabel(row.status) }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column :label="t('rental.schedule.occupyWindow')" min-width="170">
+            <template #default="{ row }">
+              {{ formatOccupyRange(row.occupyStartDate, row.occupyEndDateExclusive) }}
+            </template>
+          </el-table-column>
+          <el-table-column :label="t('table.action')" width="100" fixed="right">
+            <template #default="{ row }">
+              <el-button
+                v-if="row.status === 'ASSIGNED'"
+                v-hasPermi="['rental:device:assign']"
+                link
+                type="danger"
+                @click="emit('unassign', row)"
+              >
+                {{ t('rental.schedule.unassign') }}
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </section>
 
       <section v-if="order.deliveries?.length" class="schedule-drawer-section">
@@ -114,6 +149,7 @@
 import { computed } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import type {
+  RentalScheduleAssignmentVO,
   RentalScheduleOrderDetailVO,
   RentalScheduleOrderItemVO
 } from '@/api/rental/schedule'
@@ -134,12 +170,14 @@ const emit = defineEmits<{
   'update:visible': [value: boolean]
   retry: []
   allocate: [item: RentalScheduleOrderItemVO]
+  unassign: [assignment: RentalScheduleAssignmentVO]
+  'cancel-order': []
 }>()
 
 const { t } = useI18n()
 const order = computed(() => props.order)
 
-const assignedDevices = computed(() =>
+const assignedDevices = computed<RentalScheduleAssignmentVO[]>(() =>
   props.order?.items.flatMap((item) => item.assignments || []) || []
 )
 
@@ -153,6 +191,21 @@ const statusLabel = (value: string) => {
   const translated = t(key)
   return translated === key ? value : translated
 }
+
+const assignmentStatusLabel = (value: string) => {
+  const key = `rental.schedule.assignmentStatuses.${value}`
+  const translated = t(key)
+  return translated === key ? value : translated
+}
+
+const assignmentTagType = (value: string) =>
+  value === 'ASSIGNED'
+    ? 'success'
+    : value === 'DISPATCHED'
+      ? 'warning'
+      : value === 'CANCELED'
+        ? 'info'
+        : 'primary'
 </script>
 
 <style scoped>
@@ -199,15 +252,15 @@ const statusLabel = (value: string) => {
   font-size: 14px;
 }
 
+.schedule-summary-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .schedule-data {
   font-family: var(--el-font-family);
   font-variant-numeric: tabular-nums;
-}
-
-.schedule-chip-list {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
 }
 
 .schedule-risk-alert + .schedule-risk-alert {

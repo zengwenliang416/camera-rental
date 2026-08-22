@@ -1124,6 +1124,23 @@ export default {
         INFO: 'Info'
       },
       orderDrawerTitle: 'Order details',
+      cancelOrder: 'Cancel order',
+      cancelOrderPrompt:
+        'Canceling releases every not-yet-dispatched allocation of this order and cancels their occupancy schedules. Dispatched devices must be returned first. This cannot be undone.',
+      cancelReasonPlaceholder: 'Reason (optional)',
+      cancelOrderSuccess: 'Order canceled; pending allocations and schedules released',
+      cancelOrderFailed: 'Failed to cancel the order. Retry.',
+      unassign: 'Unassign',
+      unassignConfirm: 'Unassign device',
+      unassignSuccess: 'Allocation revoked and schedule canceled',
+      unassignFailed: 'Failed to revoke the allocation. Retry.',
+      assignmentStatus: 'Assignment',
+      assignmentStatuses: {
+        ASSIGNED: 'Assigned',
+        DISPATCHED: 'Dispatched',
+        RETURNED: 'Returned',
+        CANCELED: 'Canceled'
+      },
       deviceDrawerTitle: 'Device details',
       logisticsDrawerTitle: 'Logistics details',
       candidateDrawerTitle: 'Device candidates',

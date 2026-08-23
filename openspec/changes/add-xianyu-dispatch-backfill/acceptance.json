@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "change_id": "add-xianyu-dispatch-backfill",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "Only uncancelled Xianyu orders with status 21 or 22 expose the Web-admin dispatch backfill action to users with rental:xianyu:ship.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A2",
+      "statement": "The dialog accepts device number, waybill, carrier code/name, actual ship time, and reason without requiring physical scanning hardware.",
+      "verify_via": "sensory",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A3",
+      "statement": "The dialog explicitly states that the operation restores local records and never calls the remote XianGuanJia shipment API.",
+      "verify_via": "sensory",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A4",
+      "statement": "POST /admin-api/rental/xianyu/order/dispatch-backfill is protected by rental:xianyu:ship and validates the complete typed request.",
+      "verify_via": "static",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A5",
+      "statement": "Pending, refunded, cancelled, and closed orders are rejected before device mutation, shipment persistence, delivery creation, or remote calls.",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A6",
+      "statement": "A successful backfill creates or reuses conversion, assignment, occupied schedule, DISPATCHED state, RENTED device state, ADMIN_BACKFILL shipment, and outbound delivery in one transaction.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A7",
+      "statement": "The backfill path never reads Xianyu write-enabled runtime configuration and never invokes XianyuWriteClient.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A8",
+      "statement": "The same normalized idempotency request replays the original result without duplicate writes, while conflicting reuse is rejected.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A9",
+      "statement": "A business-key collision that binds the same order and waybill to another device is rejected as a dispatch backfill conflict.",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A10",
+      "statement": "Cross-tenant order or shop references and non-shippable device states are rejected without partial local writes or remote calls.",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A11",
+      "statement": "Delivery or persistence failure rolls back assignment, schedule, device, shipment, and channel-order changes.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A12",
+      "statement": "The admin feature passes backend compilation/tests and frontend type, lint, format, and diff checks.",
+      "verify_via": "static",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A13",
+      "statement": "The complete flow works by Web keyboard input for an authorized administrator and refreshes the order list after success.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A14",
+      "statement": "Desktop and narrow layouts are usable in light and dark themes for zh-CN and en, including validation, loading, conflict, error, and success states.",
+      "verify_via": "sensory",
+      "status": "failing",
+      "evidence_ref": null
+    }
+  ]
+}

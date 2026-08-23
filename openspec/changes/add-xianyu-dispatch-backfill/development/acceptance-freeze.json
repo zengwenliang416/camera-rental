@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "change_id": "add-xianyu-dispatch-backfill",
+  "digest": "33868a0c83abdb4cdda33963398d997fae1f583a9f207f38e518ea626e22664c",
+  "assertion_count": 14,
+  "frozen_at": "2026-08-23T15:11:46.069Z"
+}

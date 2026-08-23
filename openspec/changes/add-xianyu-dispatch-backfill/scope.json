@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "change_id": "add-xianyu-dispatch-backfill",
+  "stage": "development",
+  "allowed_roots": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-api",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-admin/src/api/rental/xianyu.ts",
+    "camera-rental-admin/src/views/rental/order",
+    "camera-rental-admin/src/locales/en.ts",
+    "camera-rental-admin/src/locales/zh-CN.ts",
+    "openspec/changes/add-xianyu-dispatch-backfill"
+  ],
+  "denied_roots": [
+    ".git",
+    "camera-rental-admin/node_modules",
+    "camera-rental-admin/dist",
+    "camera-rental-server/target",
+    "camera-rental-staff",
+    "camera-rental-uniapp",
+    "camera-rental-web",
+    "openspec/changes/add-customer-return-registration",
+    "openspec/changes/redesign-admin-device-schedule-v2"
+  ],
+  "requires_review_on": [
+    "camera-rental-admin/package.json",
+    "camera-rental-admin/pnpm-lock.yaml",
+    "camera-rental-server/pom.xml",
+    "camera-rental-server/sql",
+    "openspec/changes/add-xianyu-dispatch-backfill/development/migrations"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": false,
+    "rename": false
+  },
+  "prototype_sources": [
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/artifact/index.html"
+  ],
+  "expires_when": "verification_started"
+}

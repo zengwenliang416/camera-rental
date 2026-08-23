@@ -1,0 +1,53 @@
+{
+  "new_components": [
+    "Admin XianyuDispatchBackfillDialog: bounded local-history form for actual device, logistics, ship time, reason, validation, submit state, warning, and completion event.",
+    "Backend XianyuOrderDispatchBackfillReqVO: validated typed request for the local-only backfill endpoint."
+  ],
+  "reused_components": [
+    "Admin order table, permission directive, Element Plus dialog/form/input/date/alert/description components, useI18n, and useMessage.",
+    "Admin src/api/rental/xianyu.ts typed request transport and XianyuOrderShipRespVO response.",
+    "XianyuOrderController and XianyuOrderShipService domain boundary.",
+    "XianyuRentalConversionService for unmapped orders.",
+    "RentalDeviceAssignmentService for assignment and occupied schedule creation.",
+    "RentalDeviceOpsService.dispatch for AVAILABLE/ASSIGNED to RENTED/DISPATCHED transition.",
+    "RentalDeliveryService.createOrReuse for outbound delivery evidence.",
+    "RentalDeviceShipmentDO and existing shipment persistence/schema.",
+    "Existing rental:xianyu:ship permission and tenant context."
+  ],
+  "extraction_triggers": [
+    "Do not extract a shared backfill hook or form for a single admin use site.",
+    "If a future staff or second admin surface reuses the same form/state machine, extract a same-client reusable form and idempotent submit guard in that future change.",
+    "If multi-item allocation is added, extract explicit order-item selection policy rather than extending first-item behavior implicitly."
+  ],
+  "forbidden_dependencies": [
+    "XianyuDispatchBackfillDialog must not call a raw HTTP client, XianGuanJia endpoint, backend Mapper, or implement device/schedule rules.",
+    "The backfill service path must not call XianyuWriteClient, XianyuWriteEndpoint, or XianyuRuntimeConfigService.getCurrent.",
+    "The backfill path must not require physical scanner, browser camera, uni-app, or staff-app code.",
+    "Frontend status visibility must not replace backend eligibility validation.",
+    "No new table, migration, role, permission code, or XianGuanJia write operation may be introduced."
+  ],
+  "hooks": [
+    "No new shared hook; the dialog owns its local form, loading state, and per-open idempotency key."
+  ],
+  "utilities": [
+    "Dialog-local date-time normalization formats existing or current local time as yyyy-MM-dd HH:mm:ss.",
+    "Existing WaybillPrivacy remains authoritative for masked waybill responses."
+  ],
+  "services": [
+    "XianyuOrderShipService.backfillDispatch orchestrates the local transaction.",
+    "XianyuRentalConversionService converts an unmapped channel order using the selected device model.",
+    "RentalDeviceAssignmentService creates/reuses assignment and occupied schedule.",
+    "RentalDeviceOpsService dispatches the selected device locally.",
+    "RentalDeliveryService creates/reuses outbound delivery evidence."
+  ],
+  "required_component_tests": [
+    "Backend: successful local backfill persists ADMIN_BACKFILL evidence, assignment/dispatch/delivery, updates consign fields, and calls neither runtime write config nor XianyuWriteClient.",
+    "Backend: pending, refunded, cancelled, and closed orders are rejected before mutation.",
+    "Backend: identical idempotent replay returns existing result; mismatched key reuse and same-waybill different-device cases return typed conflicts.",
+    "Backend: existing DISPATCHED plus RENTED assignment is reused without another dispatch.",
+    "Backend: unmapped order conversion, non-shippable device, cross-tenant shop, and transaction rollback paths are covered.",
+    "Admin: action visibility is limited to status 21/22 plus permission; dialog validation, loading, error preservation, success close, and list refresh are covered.",
+    "Admin: light/dark and zh-CN/en visual states are verified for desktop and narrow layouts."
+  ],
+  "unresolved_gaps": []
+}

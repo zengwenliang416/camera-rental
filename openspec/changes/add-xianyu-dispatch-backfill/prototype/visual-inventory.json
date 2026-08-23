@@ -1,0 +1,116 @@
+{
+  "schema": "specnav.prototype.visualInventory.v1",
+  "version": "1",
+  "discovery_status": "complete",
+  "source_project": "Camera Rental Platform - camera-rental-admin",
+  "evidence": {
+    "screenshots": [
+      "openspec/changes/add-xianyu-dispatch-backfill/prototype/evidence/live-admin-channel-order-20260823.png",
+      "openspec/changes/xian-guanjia-data-integration-v1/verify/e2e/artifacts/2026-07-25T00-44-37-775Z-order-zh-CN-light.png",
+      "openspec/changes/xian-guanjia-data-integration-v1/verify/e2e/artifacts/2026-07-25T00-44-37-775Z-xianyu-en-dark.png",
+      "openspec/changes/add-rental-logistics-tracking/prototype/evidence/desktop-light-zh-1440.png",
+      "openspec/changes/add-rental-logistics-tracking/prototype/evidence/mobile-light-zh-shipment-390.png"
+    ],
+    "routes": [
+      "camera-rental-admin/src/views/rental/order/index.vue",
+      "camera-rental-admin/src/layout/components/useRenderLayout.tsx",
+      "camera-rental-admin/src/layout/components/ToolHeader.vue"
+    ],
+    "design_specs": [
+      "openspec/specs/ui-design/design.md",
+      "camera-rental-admin/src/styles/var.css"
+    ],
+    "component_sources": [
+      "openspec/changes/add-xianyu-dispatch-backfill/component-impact-map.json",
+      "camera-rental-admin/src/views/rental/order/components/XianyuDispatchBackfillDialog.vue",
+      "camera-rental-admin/src/layout/components/Logo/src/Logo.vue",
+      "camera-rental-admin/src/layout/components/ThemeSwitch",
+      "camera-rental-admin/src/layout/components/LocaleDropdown"
+    ],
+    "codegraph_claims": [
+      "XianyuDispatchBackfillDialog is composed by the rental order page and calls the typed backfillXianyuOrderDispatch API.",
+      "The action is visible only for status 21/22 and rental:xianyu:ship permission."
+    ]
+  },
+  "project_shell": {
+    "source": "camera-rental-admin classic sidebar layout",
+    "required_elements": [
+      "dark #001529 left navigation with product title",
+      "50px top tool header with breadcrumb, locale, theme, notifications, and user",
+      "35px tags view",
+      "20px app content padding on #f5f7f9",
+      "dense Element Plus filter form and order table",
+      "bounded modal dialog over the order list"
+    ],
+    "omitted_elements": [
+      "live tenant selector behavior",
+      "real notification menu",
+      "real user menu",
+      "production API transport"
+    ],
+    "theme_policy": "match prototype-manifest.json ui_capabilities.theme",
+    "i18n_policy": "match prototype-manifest.json ui_capabilities.i18n"
+  },
+  "business_surface": {
+    "screens": [
+      "admin-channel-order-list",
+      "xianyu-dispatch-backfill-dialog"
+    ],
+    "fields": [
+      "externalOrderId",
+      "orderStatus",
+      "goodsTitle",
+      "deviceNo",
+      "waybillNo",
+      "expressCode",
+      "expressName",
+      "consignTime",
+      "reason"
+    ],
+    "actions": [
+      "query",
+      "reset",
+      "view details",
+      "backfill dispatched device",
+      "cancel",
+      "confirm backfill"
+    ],
+    "states": [
+      "default",
+      "validation",
+      "loading",
+      "permission",
+      "conflict",
+      "success",
+      "populated"
+    ]
+  },
+  "verification_matrix": {
+    "viewports": [
+      "desktop",
+      "mobile"
+    ],
+    "theme_modes": [
+      "light",
+      "dark"
+    ],
+    "locales": [
+      "zh-CN",
+      "en"
+    ],
+    "states": [
+      "default",
+      "validation",
+      "loading",
+      "permission",
+      "conflict",
+      "success",
+      "populated"
+    ]
+  },
+  "unsupported_capabilities": [
+    "No real backend request or database mutation.",
+    "No physical scanner or camera integration.",
+    "No XianGuanJia remote shipment request."
+  ]
+}

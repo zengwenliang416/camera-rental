@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>相机租赁管理后台 - 已发货订单补录出库设备</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main
+      class="app-shell"
+      data-theme="light"
+      data-locale="zh-CN"
+      data-review-state="default"
+      data-specnav-project-shell="camera-rental-admin-classic-sidebar"
+      data-specnav-screen="admin-xianyu-order-list"
+      data-specnav-variant="admin-dialog-v1"
+    >
+      <aside class="sidebar" data-specnav-component="admin-left-menu">
+        <div class="brand">
+          <img src="../../../../../camera-rental-admin/src/assets/imgs/logo.png" alt="">
+          <b data-i18n="appTitle">相机租赁管理后台</b>
+        </div>
+        <nav>
+          <a href="#"><i>⌂</i><span data-i18n="home">首页</span></a>
+          <a href="#"><i>♟</i><span data-i18n="authorNews">作者动态</span></a>
+          <a href="#"><i>▤</i><span>Boot 开发文档</span></a>
+          <a href="#"><i>▣</i><span>Cloud 开发文档</span></a>
+          <a href="#"><i>⚙</i><span data-i18n="system">系统管理</span><small>⌄</small></a>
+          <a href="#"><i>▱</i><span data-i18n="infrastructure">基础设施</span><small>⌄</small></a>
+          <a href="#"><i>▧</i><span data-i18n="payment">支付管理</span><small>⌄</small></a>
+          <a href="#"><i>◷</i><span data-i18n="reports">报表管理</span><small>⌄</small></a>
+          <a href="#"><i>◩</i><span data-i18n="workflow">工作流程</span><small>⌄</small></a>
+          <div class="nav-group">
+            <a href="#" class="group-title"><i>▣</i><span data-i18n="rentalOps">租赁运营</span><small>⌃</small></a>
+            <a href="#" class="sub"><i>⌁</i><span data-i18n="xianyuIntegration">闲管家集成</span></a>
+            <a href="#" class="sub active"><i>▤</i><span data-i18n="channelOrders">渠道订单</span></a>
+            <a href="#" class="sub"><i>▱</i><span data-i18n="rentalDevices">租赁设备</span></a>
+            <a href="#" class="sub"><i>!</i><span data-i18n="manualReview">人工复核</span></a>
+            <a href="#" class="sub"><i>▦</i><span data-i18n="deviceSchedule">设备排期</span></a>
+          </div>
+        </nav>
+      </aside>
+
+      <section class="main-column">
+        <header class="topbar" data-specnav-component="admin-tool-header">
+          <div class="breadcrumb">
+            <button aria-label="折叠菜单">☰</button>
+            <span>▣</span>
+            <b data-i18n="rentalOps">租赁运营</b>
+            <small>/</small>
+            <span data-i18n="channelOrders">渠道订单</span>
+          </div>
+          <div class="top-actions">
+            <span class="tenant-select" data-i18n="selectTenant">请选择租户</span>
+            <button aria-label="项目配置">⚙</button>
+            <button aria-label="全屏">⛶</button>
+            <button aria-label="搜索">⌕</button>
+            <button aria-label="字号">Tᵀ</button>
+            <button data-specnav-locale-control aria-label="切换语言"><span class="locale-label">文</span></button>
+            <button aria-label="通知">♧</button>
+            <button aria-label="更多">•••</button>
+            <button data-specnav-theme-control aria-label="切换主题"><span class="theme-icon">◐</span></button>
+            <span class="user"><i></i><span data-i18n="tenantName">捷租达</span></span>
+          </div>
+        </header>
+        <div class="tags-view" data-specnav-component="admin-tags-view">
+          <button aria-label="向左">≪</button>
+          <span><span data-i18n="home">首页</span></span>
+          <span class="active"><span data-i18n="channelOrders">渠道订单</span></span>
+          <div class="tag-spacer"></div>
+          <button aria-label="向右">≫</button>
+          <button aria-label="刷新">↻</button>
+          <button aria-label="标签菜单">▦</button>
+        </div>
+
+        <section class="content">
+          <div class="review-controls" data-specnav-component="prototype-review-controls">
+            <div>
+              <b data-i18n="reviewState">原型状态</b>
+              <span data-i18n="reviewNote">仅切换界面证据，不调用真实接口</span>
+              <span class="permission-note" data-i18n="permissionNote">当前账号无发货权限，补录入口不可见</span>
+            </div>
+            <div class="state-buttons">
+              <button data-set-state="default" aria-pressed="true">Default</button>
+              <button data-set-state="validation">Validation</button>
+              <button data-set-state="loading">Loading</button>
+              <button data-set-state="conflict">Conflict</button>
+              <button data-set-state="success">Success</button>
+              <button data-set-state="permission">Permission</button>
+            </div>
+          </div>
+
+          <section class="card" data-specnav-component="xianyu-order-page">
+            <form class="filters">
+              <label><span data-i18n="externalOrderId">外部订单号</span><input data-i18n-placeholder="externalOrderPlaceholder" placeholder="完整或部分订单号"></label>
+              <label><span data-i18n="shop">店铺</span><select><option data-i18n="selectShop">选择本地店铺</option></select></label>
+              <label><span data-i18n="status">订单状态</span><select><option data-i18n="pleaseSelect">请选择</option></select></label>
+              <label><span data-i18n="conversionStatus">转换状态</span><select><option data-i18n="pleaseSelect">请选择</option></select></label>
+              <label class="date-range">
+                <span data-i18n="orderDate">订单日期</span>
+                <span><input data-i18n-placeholder="startDate" placeholder="开始日期"><i>−</i><input data-i18n-placeholder="endDate" placeholder="结束日期"></span>
+              </label>
+              <label class="date-range">
+                <span data-i18n="rentalRange">租期范围</span>
+                <span><input data-i18n-placeholder="startDate" placeholder="开始日期"><i>−</i><input data-i18n-placeholder="endDate" placeholder="结束日期"></span>
+              </label>
+              <label><span data-i18n="shipDate">发货日期</span><input data-i18n-placeholder="selectShipDate" placeholder="选择发货日期"></label>
+            </form>
+            <div class="toolbar">
+              <button type="button" class="primary" data-i18n="query">⌕ 查询</button>
+              <button type="button" class="secondary" data-i18n="reset">重置</button>
+              <button type="button" class="link" data-i18n="moreFilters">更多筛选⌄</button>
+              <button type="button" class="secondary" data-i18n="syncAction">↻ 补同步</button>
+              <button type="button" class="secondary" data-i18n="reparseAction">✣ 重解析备注</button>
+              <button type="button" class="secondary" data-i18n="columnSettings">⚙ 列设置</button>
+            </div>
+            <p class="table-note" data-i18n="tableNote">列表读本地库并展示完整运营信息；同步后按明确租期、物流日期和确定性位置规则解析备注。无法唯一判断时进入复核。</p>
+            <div class="table-wrap" data-specnav-state="populated">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th data-i18n="shop">店铺</th>
+                    <th data-i18n="shopName">店铺名称</th>
+                    <th data-i18n="externalOrderId">外部订单号</th>
+                    <th data-i18n="status">订单状态</th>
+                    <th data-i18n="paidAmount">实付</th>
+                    <th data-i18n="shipDate">发货日期</th>
+                    <th data-i18n="express">快递</th>
+                    <th data-i18n="goodsTitle">商品标题</th>
+                    <th data-i18n="actions">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>18018</td><td>HZ-01</td><td>杭州影像租赁</td><td class="mono">XY202608230018</td>
+                    <td><span class="status success" data-i18n="shipped">已发货</span></td><td>¥760.00</td>
+                    <td>2026-08-23</td><td>顺丰速运 / SF5113560342626</td><td>Sony A7M4 单机身</td>
+                    <td class="actions"><button data-i18n="details">详情</button><button class="warning backfill-action" data-i18n="backfillAction">补录出库设备</button></td>
+                  </tr>
+                  <tr>
+                    <td>18017</td><td>HZ-01</td><td>杭州影像租赁</td><td class="mono">XY202608230017</td>
+                    <td><span class="status pending" data-i18n="pendingShipment">待发货</span></td><td>¥420.00</td>
+                    <td>—</td><td>—</td><td>DJI RS 4 Pro</td>
+                    <td class="actions"><button data-i18n="details">详情</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pager"><span data-i18n="totalRows">共 2 条</span><b>1</b></div>
+          </section>
+        </section>
+      </section>
+
+      <div class="toast conflict-toast" role="alert"><i>×</i><span data-i18n="conflictBody">同一运单已绑定其他设备，未修改任何本地记录。</span></div>
+      <div class="toast success-toast" role="status"><i>✓</i><span data-i18n="successBody">设备 A7M4-0007 已关联订单并补录出库。</span></div>
+
+      <div class="modal-layer" data-specnav-component="element-plus-dialog-overlay">
+        <section
+          class="dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="dialog-title"
+          data-specnav-component="XianyuDispatchBackfillDialog"
+          data-specnav-state="default validation loading conflict"
+        >
+          <header><h2 id="dialog-title" data-i18n="dialogTitle">已发货订单补录出库设备</h2><button aria-label="Close">×</button></header>
+          <div class="dialog-body">
+            <div class="alert" data-specnav-state="remote-write-warning"><i>!</i><p data-i18n="warningBody">仅补齐本地设备、排期和物流记录，不会再次调用闲管家发货接口。</p></div>
+            <dl class="summary">
+              <div><dt data-i18n="externalOrderId">外部订单号</dt><dd class="mono">XY202608230018</dd></div>
+              <div><dt data-i18n="status">订单状态</dt><dd>21</dd></div>
+              <div class="wide"><dt data-i18n="goodsTitle">商品标题</dt><dd>Sony A7M4 单机身</dd></div>
+            </dl>
+            <form class="backfill-form">
+              <label data-field="deviceNo"><span><b>*</b><span data-i18n="deviceNo">实际设备编号</span></span><input value="A7M4-0007" data-i18n-placeholder="devicePlaceholder"><small data-i18n="deviceError">请输入实际寄出的设备编号</small></label>
+              <label data-field="waybillNo"><span><b>*</b><span data-i18n="waybill">运单号</span></span><input value="SF5113560342626"><small data-i18n="waybillError">快递单号至少 10 位字母或数字</small></label>
+              <label><span><b>*</b><span data-i18n="carrierCode">快递公司编码</span></span><input value="shunfeng"></label>
+              <label><span><b>*</b><span data-i18n="carrierName">快递公司名称</span></span><input value="顺丰速运" data-localized-value="carrier"></label>
+              <label><span><b>*</b><span data-i18n="consignTime">实际发货时间</span></span><input value="2026-08-23 14:30:00"></label>
+              <label data-field="reason"><span><b>*</b><span data-i18n="reason">补录原因</span></span><textarea rows="3" maxlength="480" data-localized-value="reason">订单已在闲鱼后台发货，补录实际出库设备</textarea><small data-i18n="reasonError">请输入补录原因</small></label>
+            </form>
+          </div>
+          <footer>
+            <button class="secondary" data-i18n="cancel">取消</button>
+            <button class="primary submit"><i></i><span data-i18n="submit">确认补录并出库</span></button>
+          </footer>
+        </section>
+      </div>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>

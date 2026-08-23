@@ -1,0 +1,62 @@
+{
+  "touched_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "Show the dispatch backfill action only for uncancelled Xianyu status 21 or 22 orders.",
+    "Use an Element Plus dialog with visible labels for actual device, existing waybill, carrier, actual ship time, and reason.",
+    "Display explicit warning copy that the action only restores local device, schedule, shipment, and delivery records and never calls the remote shipment API.",
+    "Keep the dialog open and preserve form values after server failure; close and refresh only after an accepted response.",
+    "Support desktop and narrow layouts with non-color status/error communication."
+  ],
+  "architecture_modules": [
+    "camera-rental-server/yudao-module-rental-api: dispatch backfill error codes.",
+    "camera-rental-server/yudao-module-rental-biz: XianyuOrderController, XianyuOrderDispatchBackfillReqVO, XianyuOrderShipService.backfillDispatch, RentalDeviceShipmentMapper, and service tests.",
+    "camera-rental-admin: typed Xianyu API, order page action, XianyuDispatchBackfillDialog, and zh-CN/en locale dictionaries."
+  ],
+  "api_contracts": [
+    "POST /admin-api/rental/xianyu/order/dispatch-backfill with channelOrderId, deviceId or deviceNo, idempotencyKey, expressCode, expressName, waybillNo, consignTime, and reason.",
+    "Response reuses XianyuOrderShipRespVO and returns local shipment, delivery, device, source, and assignment status.",
+    "The endpoint is a local-only mutation and must not emit XianGuanJia HTTP requests."
+  ],
+  "database_entities": [
+    "xianyu_order: lock eligible channel order and update local waybill, carrier, consignTime, and missing shipDate.",
+    "rental_order and rental_order_item: create through existing conversion when needed; current scope selects the first rental order item.",
+    "rental_device, rental_device_assignment, and rental_schedule: create/reuse assignment and occupied schedule, then persist RENTED/DISPATCHED states.",
+    "rental_device_shipment: create ADMIN_BACKFILL evidence with idempotency and business-key conflict checks.",
+    "rental_delivery: create/reuse outbound delivery with shipment-backfill source identifier."
+  ],
+  "permissions": [
+    "rental:xianyu:ship: existing backend permission reused by the admin action and dispatch-backfill endpoint.",
+    "Existing tenant isolation applies; no new role, permission code, menu migration, or user-to-shop data-scope policy is introduced."
+  ],
+  "operational_constraints": [
+    "No physical scanner, camera, or staff mobile app is required.",
+    "Eligible channel statuses are exactly 21 and 22; cancelled, refunded, closed, or pending orders are rejected.",
+    "Do not read Xianyu write-enabled configuration and do not invoke XianyuWriteClient.",
+    "All local mutations execute transactionally and use existing row-lock, assignment, scheduling, and delivery idempotency mechanisms.",
+    "Business dates are interpreted in Asia/Shanghai.",
+    "No database migration or configuration change.",
+    "Accepted limitation: authorization is tenant-level rather than user-to-shop data-level.",
+    "Accepted limitation: one waybill cannot bind multiple devices under the existing shipment business key.",
+    "Accepted limitation: multi-item orders use the first rental order item."
+  ],
+  "data_flows": [
+    "FLOW-XIANYU-DISPATCH-BACKFILL: eligible order row -> Web dialog -> typed local API -> tenant/order/device/idempotency validation -> optional conversion -> assignment/schedule -> local dispatch -> ADMIN_BACKFILL shipment -> outbound delivery -> channel order logistics update -> refreshed list.",
+    "No external-channel request exists in this flow."
+  ],
+  "theme_modes": [
+    "light-dark",
+    "theme-toggle:user"
+  ],
+  "locale_policy": [
+    "i18n:enabled",
+    "locales:zh-CN,en",
+    "default-locale:zh-CN",
+    "locale-toggle:user"
+  ],
+  "unresolved_gaps": []
+}

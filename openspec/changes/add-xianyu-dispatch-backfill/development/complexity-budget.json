@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "component cohesion",
+      "limit": "one user-facing responsibility per shared component"
+    },
+    {
+      "area": "coupling",
+      "limit": "no page-specific imports inside shared components"
+    },
+    {
+      "area": "backend orchestration",
+      "limit": "one explicit backfillDispatch entry reusing existing aggregate services; no parallel remote-write path"
+    },
+    {
+      "area": "admin state",
+      "limit": "dialog-local form, validation, loading, and idempotency state; no new shared store or hook"
+    },
+    {
+      "area": "persistence",
+      "limit": "reuse existing tables and transaction boundaries; zero migrations and zero new configuration"
+    }
+  ]
+}

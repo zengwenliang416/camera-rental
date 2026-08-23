@@ -1,0 +1,59 @@
+{
+  "screens": [
+    {
+      "id": "admin-xianyu-order-list",
+      "label": "渠道订单列表与补录出库设备弹窗",
+      "requirements": [
+        "requirements.md#In Scope",
+        "specs/xianyu-dispatch-backfill/spec.md"
+      ],
+      "acceptance": [
+        "acceptance.md#User-Visible Criteria",
+        "acceptance.json#A1",
+        "acceptance.json#A2",
+        "acceptance.json#A3",
+        "acceptance.json#A13",
+        "acceptance.json#A14"
+      ],
+      "components": [
+        "Admin order table",
+        "XianyuDispatchBackfillDialog",
+        "Element Plus form and alert",
+        "ThemeSwitch",
+        "LocaleDropdown"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#project_shell",
+        "visual-inventory.json#business_surface"
+      ],
+      "data_flows": [
+        "FLOW-XIANYU-DISPATCH-BACKFILL"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-admin/src/views/rental/order/index.vue",
+        "camera-rental-admin/src/views/rental/order/components/XianyuDispatchBackfillDialog.vue",
+        "camera-rental-admin/src/api/rental/xianyu.ts",
+        "camera-rental-admin/src/locales/zh-CN.ts",
+        "camera-rental-admin/src/locales/en.ts"
+      ]
+    }
+  ],
+  "variants": [
+    "admin-dialog-v1",
+    "default-populated",
+    "validation",
+    "loading",
+    "conflict",
+    "success",
+    "permission",
+    "narrow"
+  ]
+}

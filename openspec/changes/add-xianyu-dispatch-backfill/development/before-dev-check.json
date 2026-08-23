@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "active_change": "add-xianyu-dispatch-backfill",
+  "status": "blocked",
+  "ok": false,
+  "checked_at": "2026-08-23T15:14:20Z",
+  "blockers": [
+    "git-baseline:tasks-not-tracked",
+    "vertical-slice-task-packets-pending"
+  ]
+}

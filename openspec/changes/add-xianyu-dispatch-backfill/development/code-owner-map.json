@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "openspec/changes/add-xianyu-dispatch-backfill",
+      "owner": "specnav"
+    },
+    {
+      "path": "camera-rental-server/yudao-module-rental",
+      "owner": "rental-backend"
+    },
+    {
+      "path": "camera-rental-admin/src/views/rental/order",
+      "owner": "rental-admin"
+    },
+    {
+      "path": "camera-rental-admin/src/api/rental/xianyu.ts",
+      "owner": "rental-admin"
+    },
+    {
+      "path": "camera-rental-admin/src/locales",
+      "owner": "rental-admin"
+    }
+  ]
+}

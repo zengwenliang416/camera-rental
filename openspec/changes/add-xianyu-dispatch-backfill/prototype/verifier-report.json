@@ -1,0 +1,65 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "artifact/index.html",
+  "project_fidelity": {
+    "status": "green",
+    "inventory": "visual-inventory.json",
+    "shell_checked": true,
+    "generic_shell_detected": false,
+    "notes": [
+      "Opened the real camera-rental-admin /rental/order route in the Codex in-app browser on August 23, 2026 and captured evidence before refining the prototype.",
+      "The prototype now mirrors the live product title and logo, #001529 200px sidebar, current rental operations menu hierarchy, 50px tool header, 35px tags view, 20px content padding, channel-order filters, toolbar, dense table, and Element Plus-style 620px dialog.",
+      "The dialog mirrors the production XianyuDispatchBackfillDialog structure: one warning title, bordered order descriptions, 118px form labels, separate carrier code and name rows, and standard cancel/primary footer buttons.",
+      "The permission state matches v-hasPermi behavior by removing the backfill action instead of inventing an unauthorized dialog. Conflict and success use global toast-like feedback; success closes the dialog, matching the production completion flow.",
+      "The artifact uses static fixtures only and performs no backend, database, device, or XianGuanJia request."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [
+      "desktop 1440x1000",
+      "narrow 390x844"
+    ],
+    "theme_modes": [
+      "light",
+      "dark"
+    ],
+    "locales": [
+      "zh-CN",
+      "en"
+    ],
+    "states": [
+      "default",
+      "validation",
+      "loading",
+      "conflict",
+      "success",
+      "permission",
+      "populated"
+    ]
+  },
+  "checks": [
+    "Started the real Vue admin without reinstalling dependencies by invoking the existing local Vite binary.",
+    "Claimed the already-open Codex in-app browser tab, navigated from /index to /rental/order, inspected the DOM, and captured the current live shell. The local API at 127.0.0.1:48080 was unavailable, so no real order data or write path was exercised.",
+    "Opened artifact/index.html in the same Codex in-app browser with deterministic state, theme, locale, and viewport query parameters.",
+    "Verified required data-specnav-screen, data-specnav-project-shell, component, state, variant, theme-control, and locale-control anchors.",
+    "Verified desktop light zh-CN default dialog with populated channel-order context and the exact local-only warning.",
+    "Verified desktop dark en conflict state keeps the form open and presents non-mutating error feedback.",
+    "Verified narrow light en validation state exposes field-level errors and requires only web keyboard input.",
+    "Verified narrow dark zh-CN loading state disables the form visually and shows submit progress.",
+    "Verified desktop light en permission state hides the backfill action and does not render the dialog.",
+    "Verified narrow dark en success state closes the dialog and presents success feedback.",
+    "Empty order-list state is not applicable to the selected-order correction dialog; populated context is required to review the action.",
+    "A generic disabled state is represented by the loading submit guard; the permission state separately covers missing rental:xianyu:ship access."
+  ],
+  "evidence": [
+    "evidence/live-admin-channel-order-20260823.png",
+    "evidence/desktop-light-zh-default.png",
+    "evidence/desktop-dark-en-conflict.png",
+    "evidence/mobile-light-en-validation.png",
+    "evidence/mobile-dark-zh-loading.png",
+    "evidence/desktop-light-en-permission.png",
+    "evidence/mobile-dark-en-success.png"
+  ],
+  "blockers": []
+}

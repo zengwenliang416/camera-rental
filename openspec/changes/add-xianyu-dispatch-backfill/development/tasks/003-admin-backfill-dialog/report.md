@@ -18,6 +18,9 @@ DONE
 - Added a `rental:xianyu:ship` permission-gated action for uncancelled status `21`/`22` orders.
 - Added the approved keyboard-operated dialog with device, waybill, carrier, actual ship time, reason, local-only warning, validation, loading, error-preserving behavior, success feedback, close, and list refresh.
 - Added complete Simplified Chinese and English copy for the flow.
+- Reused the existing `rental.xianyu.expressCode` and
+  `rental.xianyu.expressName` locale keys so carrier labels resolve in both
+  locales.
 
 ## TDD Evidence
 
@@ -26,9 +29,11 @@ DONE
 
 ## Verification Commands
 
-- `node --max_old_space_size=8192 ./node_modules/vue-tsc/bin/vue-tsc.js --noEmit --incremental --tsBuildInfoFile node_modules/.cache/vue-tsc/tsconfig.tsbuildinfo` passed.
-- `./node_modules/.bin/eslint src/api/rental/xianyu.ts src/views/rental/order/index.vue src/views/rental/order/components/XianyuDispatchBackfillDialog.vue src/locales/zh-CN.ts src/locales/en.ts` passed.
-- `./node_modules/.bin/prettier --check src/api/rental/xianyu.ts src/views/rental/order/index.vue src/views/rental/order/components/XianyuDispatchBackfillDialog.vue src/locales/zh-CN.ts src/locales/en.ts` passed.
+- Managed `node --max_old_space_size=8192 ./node_modules/vue-tsc/bin/vue-tsc.js --noEmit --incremental --tsBuildInfoFile node_modules/.cache/vue-tsc/tsconfig.tsbuildinfo` passed.
+- Managed `./node_modules/.bin/eslint src/api/rental/xianyu.ts src/views/rental/order/index.vue src/views/rental/order/components/XianyuDispatchBackfillDialog.vue src/locales/zh-CN.ts src/locales/en.ts` passed.
+- Managed `./node_modules/.bin/prettier --check src/api/rental/xianyu.ts src/views/rental/order/index.vue src/views/rental/order/components/XianyuDispatchBackfillDialog.vue src/locales/zh-CN.ts src/locales/en.ts` passed.
+- The receipts are system-executed, signed, and bound to Git HEAD
+  `1ac3c96ecedaaff8671694d7ff8681c7c6e9911e`.
 
 ## Concerns
 

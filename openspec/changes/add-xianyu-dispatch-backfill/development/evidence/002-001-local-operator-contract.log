@@ -1,0 +1,168 @@
+# command: SPECNAV_CHANGE=add-xianyu-dispatch-backfill node /Users/wenliang_zeng/.codex/plugins/cache/specnav-marketplace/specnav-prototype/0.3.0/scripts/prototype-contract.js --json
+# exit_status: 0
+# duration_ms: 67
+
+## stdout
+{
+  "ok": true,
+  "project_root": "/private/tmp/camera-rental-dispatch-evidence.2TJOZk",
+  "active_change": "add-xianyu-dispatch-backfill",
+  "prototype_dir": "/private/tmp/camera-rental-dispatch-evidence.2TJOZk/openspec/changes/add-xianyu-dispatch-backfill/prototype",
+  "blockers": [],
+  "requirements": {
+    "ok": true,
+    "project_root": "/private/tmp/camera-rental-dispatch-evidence.2TJOZk",
+    "active_change": "add-xianyu-dispatch-backfill",
+    "lane": "standard",
+    "foundation_required": true,
+    "blockers": [],
+    "foundation": {
+      "ok": true,
+      "project_root": "/private/tmp/camera-rental-dispatch-evidence.2TJOZk",
+      "blockers": [],
+      "specs": [
+        {
+          "id": "ui-design",
+          "path": "openspec/specs/ui-design/design.md",
+          "ok": true,
+          "blockers": [],
+          "missing_sections": [],
+          "missing_frontmatter_keys": []
+        },
+        {
+          "id": "system-architecture",
+          "path": "openspec/specs/system-architecture/design.md",
+          "ok": true,
+          "blockers": [],
+          "missing_sections": [],
+          "missing_frontmatter_keys": []
+        },
+        {
+          "id": "frontend-backend-data-flow",
+          "path": "openspec/specs/frontend-backend-data-flow/design.md",
+          "ok": true,
+          "blockers": [],
+          "missing_sections": [],
+          "missing_frontmatter_keys": []
+        },
+        {
+          "id": "component-architecture",
+          "path": "openspec/specs/component-architecture/design.md",
+          "ok": true,
+          "blockers": [],
+          "missing_sections": [],
+          "missing_frontmatter_keys": []
+        }
+      ]
+    },
+    "annotation_policy": {
+      "present": false,
+      "ok": true,
+      "enforcement": null,
+      "anchor_pattern": "@ai-anchor",
+      "path": "openspec/specs/ai-annotation-policy/design.md",
+      "missing_sections": [],
+      "blockers": []
+    },
+    "artifacts": [
+      {
+        "name": "requirements.md",
+        "path": "openspec/changes/add-xianyu-dispatch-backfill/requirements.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "acceptance.md",
+        "path": "openspec/changes/add-xianyu-dispatch-backfill/acceptance.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "spec-map.json",
+        "path": "openspec/changes/add-xianyu-dispatch-backfill/spec-map.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "component-impact-map.json",
+        "path": "openspec/changes/add-xianyu-dispatch-backfill/component-impact-map.json",
+        "ok": true,
+        "blockers": []
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "name": "question.md",
+      "path": "openspec/changes/add-xianyu-dispatch-backfill/prototype/question.md",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "prototype-manifest.json",
+      "path": "openspec/changes/add-xianyu-dispatch-backfill/prototype/prototype-manifest.json",
+      "ok": true,
+      "blockers": [],
+      "prototype_type": "ui-html",
+      "entry": "artifact/index.html"
+    },
+    {
+      "name": "artifact/index.html",
+      "path": "openspec/changes/add-xianyu-dispatch-backfill/prototype/artifact/index.html",
+      "ok": true,
+      "blockers": [],
+      "expected_kind": "file"
+    },
+    {
+      "name": "screen-map.json",
+      "path": "openspec/changes/add-xianyu-dispatch-backfill/prototype/screen-map.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "visual-inventory.json",
+      "path": "openspec/changes/add-xianyu-dispatch-backfill/prototype/visual-inventory.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "handoff.md",
+      "path": "openspec/changes/add-xianyu-dispatch-backfill/prototype/handoff.md",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "verifier-report.json",
+      "path": "openspec/changes/add-xianyu-dispatch-backfill/prototype/verifier-report.json",
+      "ok": true,
+      "blockers": [],
+      "status": "green",
+      "checked_entry": "artifact/index.html"
+    },
+    {
+      "name": "decision.json",
+      "path": "openspec/changes/add-xianyu-dispatch-backfill/prototype/decision.json",
+      "ok": true,
+      "blockers": [],
+      "status": "approved"
+    }
+  ],
+  "manifest": {
+    "schema": "specnav.prototype.manifest.v1",
+    "version": "1",
+    "type": "ui-html",
+    "entry": "artifact/index.html"
+  },
+  "verifier": {
+    "schema": "specnav.prototype.verifier.v1",
+    "status": "green"
+  },
+  "decision": {
+    "status": "approved",
+    "prototype_type": "ui-html"
+  }
+}
+
+
+## stderr
+(empty)

@@ -1,0 +1,346 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "004-regression-evidence",
+  "generated_at": "2026-08-24T08:11:19.443Z",
+  "recorded_at": "2026-08-24T07:50:15.448Z",
+  "status": "approved",
+  "reviewed_git_head": "1ac3c96ecedaaff8671694d7ff8681c7c6e9911e",
+  "reviewed_git_tree": "46d8ae8c9ed6e6c8d78844c5d45fddb60f3d8455",
+  "implementation_scope": {
+    "included_patterns": [
+      "camera-rental-admin/src/api/rental/xianyu.ts",
+      "camera-rental-admin/src/locales/en.ts",
+      "camera-rental-admin/src/locales/zh-CN.ts",
+      "camera-rental-admin/src/views/rental/order/components/XianyuDispatchBackfillDialog.vue",
+      "camera-rental-admin/src/views/rental/order/index.vue",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderController.java",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderDispatchBackfillReqVO.java",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceShipmentMapper.java",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java",
+      "openspec/changes/add-xianyu-dispatch-backfill/development"
+    ],
+    "entries": [
+      {
+        "path": "camera-rental-admin/src/api/rental/xianyu.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8c258eea51ea12d58123bc26e020f43e9b867d5c"
+      },
+      {
+        "path": "camera-rental-admin/src/locales/en.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c06aee446f6efd77a9e557745e2ede899244c732"
+      },
+      {
+        "path": "camera-rental-admin/src/locales/zh-CN.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "613e11bff363dc5ff73e6d21f3ab3e7b41662d2a"
+      },
+      {
+        "path": "camera-rental-admin/src/views/rental/order/components/XianyuDispatchBackfillDialog.vue",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ed2fafba3234c91190bc5033c7b2fa18090722ab"
+      },
+      {
+        "path": "camera-rental-admin/src/views/rental/order/index.vue",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "072d8c49f8169ef7a8a182398db40ba81589bedf"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "32d2403213535a22b5b41ee91b88c846ea773d83"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderDispatchBackfillReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ae287d41337a97b98aa62f951f5f62e1a616c904"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5e42ad0169636187def8d12a522ef9cb977d6f68"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceShipmentMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "890e565f6b8bf95a47022693e04c63750d3d9675"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ea3bbc6c3be7b5b20a0f10414e6b04f0120328b9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fc8b2fe08f4009f3507c74f0c4cd77c66e1ac0de"
+      }
+    ],
+    "sha256": "737cf135810f847acb3543715c4ef4b722a9f1a02176c3f6b8b3d362329da7f9"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/004-regression-evidence/context.json",
+      "sha256": "49af09985bb3bd6c983fb21258f2e12b6b338eada2492fb36506001dda5cbe61"
+    },
+    "report": {
+      "path": "development/tasks/004-regression-evidence/report.md",
+      "sha256": "cd5ae3af8febf6fb78c38a1cc235efd9531d334bc7488210c896d83c45ab9a98",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/004-regression-evidence/spec-review.md",
+      "sha256": "cbe9f9e77dfd87e204cc83aa7a62e4c71a241ce86ec87359733f2eb1655c0d67",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/004-regression-evidence/quality-review.md",
+      "sha256": "6c3558de27cee5dcda645217e234b68502aabbfc34d71f239fe35fcaaf3b858f",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-28c4100d25ac2d1537ea1a8282104bd765cb4ec578721ba91abfd478a6607550",
+      "command": "cd camera-rental-admin && ./node_modules/.bin/eslint src/api/rental/xianyu.ts src/views/rental/order/index.vue src/views/rental/order/components/XianyuDispatchBackfillDialog.vue src/locales/zh-CN.ts src/locales/en.ts",
+      "assertion_ids": [
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10",
+        "A11",
+        "A12"
+      ],
+      "recorded_at": "2026-08-24T07:50:14.934Z",
+      "validation_receipt_sha256": "9581cd6b6b61720741207645ed8812593071fceede7c6ed3453c4c18f65e3692",
+      "evidence_log": {
+        "path": "development/evidence/009-004-regression-evidence.log",
+        "sha256": "1b08a9b8cf8e17834ec5bcb9505c222be6cac4b65bb5acb999df7a50d3effbf7",
+        "size": 303
+      }
+    },
+    {
+      "id": "receipt-5a0ab8c997a019fd57001747a23f2596aaf392a18bf6c2409aee519e225a9ab8",
+      "command": "git diff --check",
+      "assertion_ids": [
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10",
+        "A11",
+        "A12"
+      ],
+      "recorded_at": "2026-08-24T07:50:15.448Z",
+      "validation_receipt_sha256": "0e83e497cfe71ad0227c3f20127ffe22b74d7345455126ea88c84afcb242c886",
+      "evidence_log": {
+        "path": "development/evidence/011-004-regression-evidence.log",
+        "sha256": "28e89b85c56fae702493f83de5e2bf68f983a590cb1d0cff6c5e662587419d06",
+        "size": 101
+      }
+    },
+    {
+      "id": "receipt-9a25bf1b35d6c5ecebe31987c1bd29128d6d4c969b5ddc8ac7486e0c3dee5d17",
+      "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=XianyuOrderShipServiceTest -Dsurefire.failIfNoSpecifiedTests=false test",
+      "assertion_ids": [
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10",
+        "A11",
+        "A12"
+      ],
+      "recorded_at": "2026-08-24T07:49:52.352Z",
+      "validation_receipt_sha256": "ba4ce868fa9a5e94d908c53a704a9d7709dfc873f4bda370553d1cd9a189e52f",
+      "evidence_log": {
+        "path": "development/evidence/007-004-regression-evidence.log",
+        "sha256": "05153e2be32bb3ee20310dc37fcedfb077aa1caf7f2a98b91f65e4a889d01fb6",
+        "size": 48097
+      }
+    },
+    {
+      "id": "receipt-a70a0b2027ef5b4591b5d8a72f40c041ec4f872af077d4a6c4d41931f9bf1330",
+      "command": "cd camera-rental-admin && ./node_modules/.bin/prettier --check src/api/rental/xianyu.ts src/views/rental/order/index.vue src/views/rental/order/components/XianyuDispatchBackfillDialog.vue src/locales/zh-CN.ts src/locales/en.ts",
+      "assertion_ids": [
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10",
+        "A11",
+        "A12"
+      ],
+      "recorded_at": "2026-08-24T07:50:15.369Z",
+      "validation_receipt_sha256": "b5877a34af13c9af0b5f79404907ccb61a8062c892e3406027760154360089c1",
+      "evidence_log": {
+        "path": "development/evidence/010-004-regression-evidence.log",
+        "sha256": "8167882e8fc6faaa82a5018aa96ef7fd3637cf5315f5789b771052bf628fc8e1",
+        "size": 371
+      }
+    },
+    {
+      "id": "receipt-b756e2496d38b268d82b2726938e4f24e91a550c9b03e6c01de7cd014f30aee5",
+      "command": "cd camera-rental-admin && node --max_old_space_size=8192 ./node_modules/vue-tsc/bin/vue-tsc.js --noEmit --incremental --tsBuildInfoFile node_modules/.cache/vue-tsc/tsconfig.tsbuildinfo",
+      "assertion_ids": [
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10",
+        "A11",
+        "A12"
+      ],
+      "recorded_at": "2026-08-24T07:50:13.714Z",
+      "validation_receipt_sha256": "e03a9631b14beecc3de994c44860f232e025108aaf597662c5a415ccd92237a1",
+      "evidence_log": {
+        "path": "development/evidence/008-004-regression-evidence.log",
+        "sha256": "a8dac0c75a3dade6ce4987da8900a1759bf82e04d5fb4ef23c81da966a96e9e7",
+        "size": 272
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A5",
+      "parent_id": "A5",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-28c4100d25ac2d1537ea1a8282104bd765cb4ec578721ba91abfd478a6607550",
+        "receipt-5a0ab8c997a019fd57001747a23f2596aaf392a18bf6c2409aee519e225a9ab8",
+        "receipt-9a25bf1b35d6c5ecebe31987c1bd29128d6d4c969b5ddc8ac7486e0c3dee5d17",
+        "receipt-a70a0b2027ef5b4591b5d8a72f40c041ec4f872af077d4a6c4d41931f9bf1330",
+        "receipt-b756e2496d38b268d82b2726938e4f24e91a550c9b03e6c01de7cd014f30aee5"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Pending, refunded, cancelled, and closed orders are rejected before device mutation, shipment persistence, delivery creation, or remote calls."
+    },
+    {
+      "id": "A6",
+      "parent_id": "A6",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-28c4100d25ac2d1537ea1a8282104bd765cb4ec578721ba91abfd478a6607550",
+        "receipt-5a0ab8c997a019fd57001747a23f2596aaf392a18bf6c2409aee519e225a9ab8",
+        "receipt-9a25bf1b35d6c5ecebe31987c1bd29128d6d4c969b5ddc8ac7486e0c3dee5d17",
+        "receipt-a70a0b2027ef5b4591b5d8a72f40c041ec4f872af077d4a6c4d41931f9bf1330",
+        "receipt-b756e2496d38b268d82b2726938e4f24e91a550c9b03e6c01de7cd014f30aee5"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "A successful backfill creates or reuses conversion, assignment, occupied schedule, DISPATCHED state, RENTED device state, ADMIN_BACKFILL shipment, and outbound delivery in one transaction."
+    },
+    {
+      "id": "A7",
+      "parent_id": "A7",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-28c4100d25ac2d1537ea1a8282104bd765cb4ec578721ba91abfd478a6607550",
+        "receipt-5a0ab8c997a019fd57001747a23f2596aaf392a18bf6c2409aee519e225a9ab8",
+        "receipt-9a25bf1b35d6c5ecebe31987c1bd29128d6d4c969b5ddc8ac7486e0c3dee5d17",
+        "receipt-a70a0b2027ef5b4591b5d8a72f40c041ec4f872af077d4a6c4d41931f9bf1330",
+        "receipt-b756e2496d38b268d82b2726938e4f24e91a550c9b03e6c01de7cd014f30aee5"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The backfill path never reads Xianyu write-enabled runtime configuration and never invokes XianyuWriteClient."
+    },
+    {
+      "id": "A8",
+      "parent_id": "A8",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-28c4100d25ac2d1537ea1a8282104bd765cb4ec578721ba91abfd478a6607550",
+        "receipt-5a0ab8c997a019fd57001747a23f2596aaf392a18bf6c2409aee519e225a9ab8",
+        "receipt-9a25bf1b35d6c5ecebe31987c1bd29128d6d4c969b5ddc8ac7486e0c3dee5d17",
+        "receipt-a70a0b2027ef5b4591b5d8a72f40c041ec4f872af077d4a6c4d41931f9bf1330",
+        "receipt-b756e2496d38b268d82b2726938e4f24e91a550c9b03e6c01de7cd014f30aee5"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The same normalized idempotency request replays the original result without duplicate writes, while conflicting reuse is rejected."
+    },
+    {
+      "id": "A9",
+      "parent_id": "A9",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-28c4100d25ac2d1537ea1a8282104bd765cb4ec578721ba91abfd478a6607550",
+        "receipt-5a0ab8c997a019fd57001747a23f2596aaf392a18bf6c2409aee519e225a9ab8",
+        "receipt-9a25bf1b35d6c5ecebe31987c1bd29128d6d4c969b5ddc8ac7486e0c3dee5d17",
+        "receipt-a70a0b2027ef5b4591b5d8a72f40c041ec4f872af077d4a6c4d41931f9bf1330",
+        "receipt-b756e2496d38b268d82b2726938e4f24e91a550c9b03e6c01de7cd014f30aee5"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "A business-key collision that binds the same order and waybill to another device is rejected as a dispatch backfill conflict."
+    },
+    {
+      "id": "A10",
+      "parent_id": "A10",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-28c4100d25ac2d1537ea1a8282104bd765cb4ec578721ba91abfd478a6607550",
+        "receipt-5a0ab8c997a019fd57001747a23f2596aaf392a18bf6c2409aee519e225a9ab8",
+        "receipt-9a25bf1b35d6c5ecebe31987c1bd29128d6d4c969b5ddc8ac7486e0c3dee5d17",
+        "receipt-a70a0b2027ef5b4591b5d8a72f40c041ec4f872af077d4a6c4d41931f9bf1330",
+        "receipt-b756e2496d38b268d82b2726938e4f24e91a550c9b03e6c01de7cd014f30aee5"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Cross-tenant order or shop references and non-shippable device states are rejected without partial local writes or remote calls."
+    },
+    {
+      "id": "A11",
+      "parent_id": "A11",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-28c4100d25ac2d1537ea1a8282104bd765cb4ec578721ba91abfd478a6607550",
+        "receipt-5a0ab8c997a019fd57001747a23f2596aaf392a18bf6c2409aee519e225a9ab8",
+        "receipt-9a25bf1b35d6c5ecebe31987c1bd29128d6d4c969b5ddc8ac7486e0c3dee5d17",
+        "receipt-a70a0b2027ef5b4591b5d8a72f40c041ec4f872af077d4a6c4d41931f9bf1330",
+        "receipt-b756e2496d38b268d82b2726938e4f24e91a550c9b03e6c01de7cd014f30aee5"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Delivery or persistence failure rolls back assignment, schedule, device, shipment, and channel-order changes."
+    },
+    {
+      "id": "A12",
+      "parent_id": "A12",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-28c4100d25ac2d1537ea1a8282104bd765cb4ec578721ba91abfd478a6607550",
+        "receipt-5a0ab8c997a019fd57001747a23f2596aaf392a18bf6c2409aee519e225a9ab8",
+        "receipt-9a25bf1b35d6c5ecebe31987c1bd29128d6d4c969b5ddc8ac7486e0c3dee5d17",
+        "receipt-a70a0b2027ef5b4591b5d8a72f40c041ec4f872af077d4a6c4d41931f9bf1330",
+        "receipt-b756e2496d38b268d82b2726938e4f24e91a550c9b03e6c01de7cd014f30aee5"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The admin feature passes backend compilation/tests and frontend type, lint, format, and diff checks."
+    }
+  ],
+  "fallback_used": false
+}

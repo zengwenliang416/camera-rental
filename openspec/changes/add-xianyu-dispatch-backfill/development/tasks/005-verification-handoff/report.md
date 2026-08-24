@@ -2,7 +2,7 @@
 
 ## Status
 
-IN_PROGRESS
+DONE
 
 ## Files Changed
 
@@ -25,19 +25,27 @@ IN_PROGRESS
 ## TDD Evidence
 
 - Development entry returned `ok:true`.
-- The focused backend suite passed with 35 tests; managed receipts require the authorized production commit.
-- Project Runtime `2.0.0-alpha.2` was selected, installed, and repaired before verification planning.
+- The focused backend suite passed with 35 tests through the managed evidence runner.
+- Admin Vue TypeScript, targeted ESLint, targeted Prettier, strict OpenSpec,
+  prototype contract, development entry, and `git diff --check` all have
+  current-head system-executed receipts.
+- User Runtime `2.0.0-alpha.2` is selected and ready with authority mode `0600`
+  and `fallback_used=false`.
 
 ## Verification Commands
 
 - `SPECNAV_CHANGE=add-xianyu-dispatch-backfill node /Users/wenliang_zeng/.codex/plugins/cache/specnav-marketplace/specnav-development/0.3.0/scripts/development-contract.js --mode entry --json` returned `ok:true`.
 - `openspec validate add-xianyu-dispatch-backfill --strict` passed.
-- Development handoff remains pending current-baseline receipts, independent reviews, task acceptance artifacts, and ledger closure.
+- The managed evidence runner executed 13/13 declared commands successfully
+  against Git HEAD `1ac3c96ecedaaff8671694d7ff8681c7c6e9911e`.
+- Development handoff remains pending final independent review verdicts, task
+  acceptance artifacts, ledger closure, and completion of task 5.3.
 
 ## Concerns
 
-- SpecNav task acceptance requires the reviewed production implementation in Git `HEAD`; the user has authorized the local commit without push.
-- Final admin type/lint/format checks require safe restoration of the project dependency tree without rewriting `pnpm-lock.yaml`.
+- SpecNav task acceptance must remain bound to reviewed Git HEAD
+  `1ac3c96ecedaaff8671694d7ff8681c7c6e9911e`; lifecycle-only closure files may
+  be added afterward without changing the implementation scope.
 - Database-backed rollback remains a Verification 2.0 oracle rather than a claim derived from Mockito call order.
 
 ## Scope Deviations
@@ -46,10 +54,10 @@ IN_PROGRESS
 
 ## Follow-up Needed
 
-- Create the authorized local production baseline.
-- Generate signed validation receipts and task acceptance artifacts.
-- Complete independent spec and quality reviews, close the ledger, and rerun the handoff contract.
+- Use this completed task packet as the input for independent reviews, task
+  acceptance materialization, ledger closure, and the final handoff contract.
 
 ## Adjudication
 
-- Keep this task open until the development handoff contract returns `ok:true`.
+- Verification execution remains blocked until the immutable case snapshot is
+  explicitly approved by the human reviewer.

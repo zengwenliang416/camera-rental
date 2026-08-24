@@ -1,0 +1,153 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "001-local-operator-contract",
+  "generated_at": "2026-08-24T08:11:19.211Z",
+  "recorded_at": "2026-08-24T07:46:45.730Z",
+  "status": "approved",
+  "reviewed_git_head": "1ac3c96ecedaaff8671694d7ff8681c7c6e9911e",
+  "reviewed_git_tree": "46d8ae8c9ed6e6c8d78844c5d45fddb60f3d8455",
+  "implementation_scope": {
+    "included_patterns": [
+      "openspec/changes/add-xianyu-dispatch-backfill/acceptance.md",
+      "openspec/changes/add-xianyu-dispatch-backfill/component-impact-map.json",
+      "openspec/changes/add-xianyu-dispatch-backfill/design.md",
+      "openspec/changes/add-xianyu-dispatch-backfill/requirements.md",
+      "openspec/changes/add-xianyu-dispatch-backfill/scope.json",
+      "openspec/changes/add-xianyu-dispatch-backfill/spec-map.json"
+    ],
+    "entries": [
+      {
+        "path": "openspec/changes/add-xianyu-dispatch-backfill/acceptance.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5a048f8576166f10c0445d317ebc0abf574ece1e"
+      },
+      {
+        "path": "openspec/changes/add-xianyu-dispatch-backfill/component-impact-map.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c3e429512cefc1854b2919203ddc18b692bb6a1e"
+      },
+      {
+        "path": "openspec/changes/add-xianyu-dispatch-backfill/design.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "844af951e84ffb91eb5721c26eda1c96aee95e12"
+      },
+      {
+        "path": "openspec/changes/add-xianyu-dispatch-backfill/requirements.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5a8c6fca950ca1e1dc3139778ac78a4e296007ed"
+      },
+      {
+        "path": "openspec/changes/add-xianyu-dispatch-backfill/scope.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "399085daebf4da70de8ccafb187ccc552673f76d"
+      },
+      {
+        "path": "openspec/changes/add-xianyu-dispatch-backfill/spec-map.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c692fd9a2c9f5a343d20cdb9e9806d125cf3d399"
+      }
+    ],
+    "sha256": "382d8d347f8bf0362ced7729c7efab12fea92b6b7b8b8e912227bf68da3bce55"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/001-local-operator-contract/context.json",
+      "sha256": "cf77e3d403232878b2701026b2745a2c382ab84b7bade0642a7a187d1e2c2790"
+    },
+    "report": {
+      "path": "development/tasks/001-local-operator-contract/report.md",
+      "sha256": "4514a839c55da347de0277c8770ce2127f40c3b24f4d4be1e37f7b7564858af6",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/001-local-operator-contract/spec-review.md",
+      "sha256": "5ae2bb08275a815cc74e02fe383c81b332dd31303f1457ae6bb5ec78115acece",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/001-local-operator-contract/quality-review.md",
+      "sha256": "f5bbd40081aa77945cc17b33ea023ddc1a4f9398a5934cbd2e1125e974a616d2",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-0cce07c42785f0ad5ee4c8435dc4fe5383694078f2d82edf326d969ea6140808",
+      "command": "SPECNAV_CHANGE=add-xianyu-dispatch-backfill node /Users/wenliang_zeng/.codex/plugins/cache/specnav-marketplace/specnav-prototype/0.3.0/scripts/prototype-contract.js --json",
+      "assertion_ids": [
+        "A3",
+        "A2",
+        "A4"
+      ],
+      "recorded_at": "2026-08-24T07:46:45.730Z",
+      "validation_receipt_sha256": "29b17aa07d93825523df5c4d6364595542d62afc0b11511b6e150810f2e980ff",
+      "evidence_log": {
+        "path": "development/evidence/002-001-local-operator-contract.log",
+        "sha256": "03531cb5bc88ba3e9e0a93a20c1b40a19ac7ca82d94de650724e72bb8ecafbd6",
+        "size": 4898
+      }
+    },
+    {
+      "id": "receipt-c157c64e7306274eea6deb03f2786b885cca18d7ea93e9ca66c1cdf59fe016d0",
+      "command": "openspec validate add-xianyu-dispatch-backfill --strict",
+      "assertion_ids": [
+        "A3",
+        "A2",
+        "A4"
+      ],
+      "recorded_at": "2026-08-24T07:46:45.651Z",
+      "validation_receipt_sha256": "f7a13913b18490b41167338c058f9362be7c9984dec69ceeca85a0922a7e96a8",
+      "evidence_log": {
+        "path": "development/evidence/001-001-local-operator-contract.log",
+        "sha256": "47c6228e2e608eb63a296b7dabb24a3ccd298d63e0c84360d2bfa98742584039",
+        "size": 182
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A3",
+      "parent_id": "A3",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-0cce07c42785f0ad5ee4c8435dc4fe5383694078f2d82edf326d969ea6140808",
+        "receipt-c157c64e7306274eea6deb03f2786b885cca18d7ea93e9ca66c1cdf59fe016d0"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The dialog explicitly states that the operation restores local records and never calls the remote XianGuanJia shipment API."
+    },
+    {
+      "id": "A2",
+      "parent_id": "A2",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-0cce07c42785f0ad5ee4c8435dc4fe5383694078f2d82edf326d969ea6140808",
+        "receipt-c157c64e7306274eea6deb03f2786b885cca18d7ea93e9ca66c1cdf59fe016d0"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The dialog accepts device number, waybill, carrier code/name, actual ship time, and reason without requiring physical scanning hardware."
+    },
+    {
+      "id": "A4",
+      "parent_id": "A4",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-0cce07c42785f0ad5ee4c8435dc4fe5383694078f2d82edf326d969ea6140808",
+        "receipt-c157c64e7306274eea6deb03f2786b885cca18d7ea93e9ca66c1cdf59fe016d0"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "POST /admin-api/rental/xianyu/order/dispatch-backfill is protected by rental:xianyu:ship and validates the complete typed request."
+    }
+  ],
+  "fallback_used": false
+}

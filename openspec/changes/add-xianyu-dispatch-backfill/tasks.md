@@ -40,7 +40,7 @@
 
 - [x] 5.1 Create and verify the approved prototype branch covering the Web dialog states, themes, locales, and narrow layout.
 - [x] 5.2 Obtain explicit human approval for the verified prototype and create the prototype-to-development handoff.
-- [ ] 5.3 Complete SpecNav development entry, task evidence, independent reviews, and development handoff without bypassing the tracked-baseline requirement.
+- [x] 5.3 Complete SpecNav development entry, task evidence, independent reviews, and development handoff without bypassing the tracked-baseline requirement.
 
 ## Verification 2.0 Follow-On
 

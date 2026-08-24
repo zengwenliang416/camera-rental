@@ -1,0 +1,97 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "005-verification-handoff",
+  "generated_at": "2026-08-24T08:11:19.503Z",
+  "recorded_at": "2026-08-24T07:50:17.407Z",
+  "status": "approved",
+  "reviewed_git_head": "1ac3c96ecedaaff8671694d7ff8681c7c6e9911e",
+  "reviewed_git_tree": "46d8ae8c9ed6e6c8d78844c5d45fddb60f3d8455",
+  "implementation_scope": {
+    "included_patterns": [
+      "openspec/changes/add-xianyu-dispatch-backfill/prototype/decision.json",
+      "openspec/changes/add-xianyu-dispatch-backfill/prototype/handoff.md"
+    ],
+    "entries": [
+      {
+        "path": "openspec/changes/add-xianyu-dispatch-backfill/prototype/decision.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "79943f1b55e44f354f59cc96fa0ace9009ee262c"
+      },
+      {
+        "path": "openspec/changes/add-xianyu-dispatch-backfill/prototype/handoff.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "09525c0a95a79f4b39827f64ac362dfd1f95d6db"
+      }
+    ],
+    "sha256": "7aad7ff4e6513a0d4cac4918a1f7f77ac18f696719b6c9a790a496a7236e44fa"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/005-verification-handoff/context.json",
+      "sha256": "fd2a9747b4451fc12671380088dd5cb3e9b13f10edbb69c6d2c6278c21a99513"
+    },
+    "report": {
+      "path": "development/tasks/005-verification-handoff/report.md",
+      "sha256": "d0993fc03095baed5cba4930f24de42f2403afc2f5b41b16871f1b77f7bc5686",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/005-verification-handoff/spec-review.md",
+      "sha256": "d77c7d63d1b85da75faaa6e61c1a8d69851b5073b124247b8365f1d562ad691a",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/005-verification-handoff/quality-review.md",
+      "sha256": "a5b2ea444277049d0828e1281c9bb7ee8b94fa933b2cb20fa2ce01e62be2cd65",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-2663f0f64e15fc733e54b0ebb40d2e39ba78aa8af1c7ff8e64b0f51a4f0f9eac",
+      "command": "openspec validate add-xianyu-dispatch-backfill --strict",
+      "assertion_ids": [
+        "A12"
+      ],
+      "recorded_at": "2026-08-24T07:50:17.407Z",
+      "validation_receipt_sha256": "3a0c304bbd11b576e501faa49ccb80840629621bfbcf48659cf24652839e7e8f",
+      "evidence_log": {
+        "path": "development/evidence/013-005-verification-handoff.log",
+        "sha256": "dd99ffd551efc160329dfb38c94449c7e27cd6a33426cd1a1a46c9e0caec36c6",
+        "size": 182
+      }
+    },
+    {
+      "id": "receipt-a456b2b45ed97ae5541a01bc6d30799e2c60091c4cd10d62ba3058e7bf10eac5",
+      "command": "SPECNAV_CHANGE=add-xianyu-dispatch-backfill node /Users/wenliang_zeng/.codex/plugins/cache/specnav-marketplace/specnav-development/0.3.0/scripts/development-contract.js --mode entry --json",
+      "assertion_ids": [
+        "A12"
+      ],
+      "recorded_at": "2026-08-24T07:50:15.899Z",
+      "validation_receipt_sha256": "1d3160ab9f919adba72c097cbb8fc8384288c5d7eb7ffe017a354f93ba21574c",
+      "evidence_log": {
+        "path": "development/evidence/012-005-verification-handoff.log",
+        "sha256": "f72b31f9e047722279d4dabcd0ae7834a116d9ab1d2c876bb1dc9271f28dbeb3",
+        "size": 816
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A12",
+      "parent_id": "A12",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-2663f0f64e15fc733e54b0ebb40d2e39ba78aa8af1c7ff8e64b0f51a4f0f9eac",
+        "receipt-a456b2b45ed97ae5541a01bc6d30799e2c60091c4cd10d62ba3058e7bf10eac5"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The admin feature passes backend compilation/tests and frontend type, lint, format, and diff checks."
+    }
+  ],
+  "fallback_used": false
+}

@@ -1,0 +1,11 @@
+# command: cd camera-rental-admin && ./node_modules/.bin/prettier --check src/api/rental/xianyu.ts src/views/rental/order/index.vue src/views/rental/order/components/XianyuDispatchBackfillDialog.vue src/locales/zh-CN.ts src/locales/en.ts
+# exit_status: 0
+# duration_ms: 428
+
+## stdout
+Checking formatting...
+All matched files use Prettier code style!
+
+
+## stderr
+(empty)

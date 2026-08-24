@@ -1,0 +1,194 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "002-transactional-dispatch-backfill",
+  "generated_at": "2026-08-24T08:11:19.308Z",
+  "recorded_at": "2026-08-24T07:48:05.840Z",
+  "status": "approved",
+  "reviewed_git_head": "1ac3c96ecedaaff8671694d7ff8681c7c6e9911e",
+  "reviewed_git_tree": "46d8ae8c9ed6e6c8d78844c5d45fddb60f3d8455",
+  "implementation_scope": {
+    "included_patterns": [
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderController.java",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderDispatchBackfillReqVO.java",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceShipmentMapper.java",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java"
+    ],
+    "entries": [
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "32d2403213535a22b5b41ee91b88c846ea773d83"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderDispatchBackfillReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ae287d41337a97b98aa62f951f5f62e1a616c904"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5e42ad0169636187def8d12a522ef9cb977d6f68"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceShipmentMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "890e565f6b8bf95a47022693e04c63750d3d9675"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ea3bbc6c3be7b5b20a0f10414e6b04f0120328b9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fc8b2fe08f4009f3507c74f0c4cd77c66e1ac0de"
+      }
+    ],
+    "sha256": "56897ef2ea32d91ecd46446d9a6fcf8f37c3f81f40d2cacaef9d72bc38e70e35"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/002-transactional-dispatch-backfill/context.json",
+      "sha256": "57cbd8de3461774a7bce1ce9abdaddac4c028baffd8df52f9be91c0d018c3b64"
+    },
+    "report": {
+      "path": "development/tasks/002-transactional-dispatch-backfill/report.md",
+      "sha256": "961d082c31009df7a18239fbdf895df0176ac8048408058a0db4d88d6d589718",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/002-transactional-dispatch-backfill/spec-review.md",
+      "sha256": "72fa32a7ec7f8df2a2b7c768444b119db9a4dd18667ee6e6f98bee057d2d4a09",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/002-transactional-dispatch-backfill/quality-review.md",
+      "sha256": "a1c4711b2324a9af7b96c498ec58af6bcdec1b494354b41157a54f011fd2b61f",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-eb6606d97f04ea56c05d739801212e5cf575d96a4efbbd24e5bb783ce2caa171",
+      "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=XianyuOrderShipServiceTest -Dsurefire.failIfNoSpecifiedTests=false test",
+      "assertion_ids": [
+        "A4",
+        "A6",
+        "A7",
+        "A8",
+        "A11",
+        "A5",
+        "A9",
+        "A10"
+      ],
+      "recorded_at": "2026-08-24T07:48:05.840Z",
+      "validation_receipt_sha256": "1bc14b5be643306b002ddc3499f88585e5cb17e80dcff5d3ff932505a1a9cab2",
+      "evidence_log": {
+        "path": "development/evidence/003-002-transactional-dispatch-backfill.log",
+        "sha256": "6c2a51eea354bbcd5d97eb2984d1130841d90ae4f843c179114a980e09e628b3",
+        "size": 61621
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A4",
+      "parent_id": "A4",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-eb6606d97f04ea56c05d739801212e5cf575d96a4efbbd24e5bb783ce2caa171"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "POST /admin-api/rental/xianyu/order/dispatch-backfill is protected by rental:xianyu:ship and validates the complete typed request."
+    },
+    {
+      "id": "A6",
+      "parent_id": "A6",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-eb6606d97f04ea56c05d739801212e5cf575d96a4efbbd24e5bb783ce2caa171"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "A successful backfill creates or reuses conversion, assignment, occupied schedule, DISPATCHED state, RENTED device state, ADMIN_BACKFILL shipment, and outbound delivery in one transaction."
+    },
+    {
+      "id": "A7",
+      "parent_id": "A7",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-eb6606d97f04ea56c05d739801212e5cf575d96a4efbbd24e5bb783ce2caa171"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The backfill path never reads Xianyu write-enabled runtime configuration and never invokes XianyuWriteClient."
+    },
+    {
+      "id": "A8",
+      "parent_id": "A8",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-eb6606d97f04ea56c05d739801212e5cf575d96a4efbbd24e5bb783ce2caa171"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The same normalized idempotency request replays the original result without duplicate writes, while conflicting reuse is rejected."
+    },
+    {
+      "id": "A11",
+      "parent_id": "A11",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-eb6606d97f04ea56c05d739801212e5cf575d96a4efbbd24e5bb783ce2caa171"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Delivery or persistence failure rolls back assignment, schedule, device, shipment, and channel-order changes."
+    },
+    {
+      "id": "A5",
+      "parent_id": "A5",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-eb6606d97f04ea56c05d739801212e5cf575d96a4efbbd24e5bb783ce2caa171"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Pending, refunded, cancelled, and closed orders are rejected before device mutation, shipment persistence, delivery creation, or remote calls."
+    },
+    {
+      "id": "A9",
+      "parent_id": "A9",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-eb6606d97f04ea56c05d739801212e5cf575d96a4efbbd24e5bb783ce2caa171"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "A business-key collision that binds the same order and waybill to another device is rejected as a dispatch backfill conflict."
+    },
+    {
+      "id": "A10",
+      "parent_id": "A10",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-eb6606d97f04ea56c05d739801212e5cf575d96a4efbbd24e5bb783ce2caa171"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Cross-tenant order or shop references and non-shippable device states are rejected without partial local writes or remote calls."
+    }
+  ],
+  "fallback_used": false
+}

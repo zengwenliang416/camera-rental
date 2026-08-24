@@ -1,14 +1,14 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-24T07:23:46.869Z",
+  "generated_at": "2026-08-24T08:11:53.032Z",
   "active_change": "add-xianyu-dispatch-backfill",
   "stage": "development",
   "ok": true,
   "status": {
     "policy": {
       "enabled": true,
-      "profile": "active_dev",
-      "mode": "advisory",
+      "profile": "bootstrap",
+      "mode": "observe",
       "stage": "development",
       "required_for_stage": false,
       "disabled_reason": null
@@ -31,13 +31,13 @@
       ]
     },
     "index": {
-      "initialized": true,
-      "projectPath": "/Volumes/zwl/camera-rental-github",
-      "indexPath": "/Volumes/zwl/camera-rental-github/.codegraph",
-      "lastIndexed": "2026-08-23T16:14:43.229Z",
-      "fileCount": 10871,
-      "nodeCount": 253806,
-      "edgeCount": 586706,
+      "initialized": false,
+      "projectPath": "/private/tmp/camera-rental-dispatch-evidence.2TJOZk",
+      "indexPath": null,
+      "lastIndexed": null,
+      "fileCount": 0,
+      "nodeCount": 0,
+      "edgeCount": 0,
       "pendingChanges": {
         "added": 0,
         "modified": 0,
@@ -50,18 +50,20 @@
   "decision": {
     "schema": "specnav.codegraph.decision.v1",
     "stage": "development",
-    "profile": "active_dev",
-    "effective_mode": "advisory",
+    "profile": "bootstrap",
+    "effective_mode": "observe",
     "required_for_stage": false,
     "execution_surface": "cli",
-    "result": "pass",
+    "result": "warn",
     "blockers": [],
-    "warnings": [],
-    "explanation": "CodeGraph policy satisfied for development."
+    "warnings": [
+      "codegraph:not-indexed"
+    ],
+    "explanation": "CodeGraph policy has advisory warnings for development."
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-24T07:23:46.868Z",
+    "generated_at": "2026-08-24T08:11:53.032Z",
     "active_change": "add-xianyu-dispatch-backfill",
     "source_raw": "openspec/changes/add-xianyu-dispatch-backfill/codegraph/evidence.jsonl",
     "by_claim": {},
@@ -72,7 +74,7 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-24T07:23:46.869Z",
+    "generated_at": "2026-08-24T08:11:53.032Z",
     "active_change": "add-xianyu-dispatch-backfill",
     "claims_file": "openspec/changes/add-xianyu-dispatch-backfill/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/add-xianyu-dispatch-backfill/codegraph/evidence-index.json",
@@ -102,6 +104,7 @@
   },
   "blockers": [],
   "warnings": [
+    "codegraph:not-indexed",
     "codegraph:claim-unverified:development:task-001-local-operator-contract",
     "codegraph:claim-unverified:development:task-002-transactional-dispatch-backfill",
     "codegraph:claim-unverified:development:task-003-admin-backfill-dialog",

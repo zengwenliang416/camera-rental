@@ -46,8 +46,12 @@
 ## Local Validation
 
 - Backend focused Maven test passed: 35 tests, 0 failures, 0 errors, 0 skipped.
-- Admin Vue TypeScript, targeted ESLint, and targeted Prettier had earlier interactive passes; final managed reruns remain pending safe dependency recovery.
-- `git diff --check` and strict OpenSpec validation passed.
+- Admin Vue TypeScript, targeted ESLint, and targeted Prettier passed through the
+  managed evidence runner.
+- `git diff --check`, strict OpenSpec validation, the approved prototype
+  contract, and development entry passed through the managed evidence runner.
+- The 13 signed receipts bind to Git HEAD
+  `1ac3c96ecedaaff8671694d7ff8681c7c6e9911e` with `fallback_used=false`.
 - Real `/rental/order` page rendering was inspected with the built-in browser; the unavailable local backend limited that check to static rendering and network-error handling, not full E2E.
 
 ## Known Risks
@@ -56,13 +60,16 @@
 - User-to-shop authorization is not added; this approved change uses tenant-level shop isolation plus `rental:xianyu:ship`.
 - One waybill maps to one device and an unconverted multi-item order uses the first rental item, as explicitly accepted.
 - The user authorized a local production commit without push; managed task acceptance receipts will bind to that implementation `HEAD`.
-- Project Verification Runtime `2.0.0-alpha.2` is selected, installed, and repaired.
+- User Verification Runtime `2.0.0-alpha.2` is explicitly selected and ready;
+  project scope was rejected because the ExFAT volume cannot satisfy the
+  authority key's required POSIX `0600` mode.
 
 ## Items Requiring Six-Domain Verification
 
 - Facticity: bind requirements, acceptance, approved prototype, actual API/VO/Service/UI code, and the no-remote-write claim.
-- Static: rerun backend/admin checks through managed signed receipts and verify all changed files are mapped.
-- Unit: preserve the 28-test result and add a deterministic database-backed rollback oracle if the approved case plan requires it.
+- Static: verify all changed files are mapped and preserve the current-head
+  signed backend/Admin development receipts.
+- Unit: preserve the 35-test result and add a deterministic database-backed rollback oracle if the approved case plan requires it.
 - Redteam: probe pending/refunded/closed/cancelled, cross-tenant, non-shippable device, idempotency tampering, and waybill/device conflict paths with no partial writes or remote calls.
 - E2E: use an authorized status `21`/`22` fixture to open the Web dialog, submit keyboard-entered data, observe success, and confirm list refresh; verify hidden/denied states.
 - Sensory: verify default, validation, loading, conflict, error, and success states across light/dark, `zh-CN`/`en`, desktop, and narrow layouts.

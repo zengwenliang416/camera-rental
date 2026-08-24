@@ -1,13 +1,13 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-08-24T07:23:46.868Z",
-  "project_root": "/Volumes/zwl/camera-rental-github",
+  "generated_at": "2026-08-24T08:11:53.032Z",
+  "project_root": "/private/tmp/camera-rental-dispatch-evidence.2TJOZk",
   "active_change": "add-xianyu-dispatch-backfill",
   "policy": {
     "enabled": true,
-    "profile": "active_dev",
-    "mode": "advisory",
+    "profile": "bootstrap",
+    "mode": "observe",
     "stage": "development",
     "required_for_stage": false,
     "disabled_reason": null
@@ -15,8 +15,8 @@
   "execution_surface": "cli",
   "decision": {
     "stage": "development",
-    "result": "pass",
-    "reason": "CodeGraph policy satisfied for development."
+    "result": "warn",
+    "reason": "CodeGraph policy has advisory warnings for development."
   },
   "cli": {
     "available": true,
@@ -35,13 +35,13 @@
     ]
   },
   "index": {
-    "initialized": true,
-    "projectPath": "/Volumes/zwl/camera-rental-github",
-    "indexPath": "/Volumes/zwl/camera-rental-github/.codegraph",
-    "lastIndexed": "2026-08-23T16:14:43.229Z",
-    "fileCount": 10871,
-    "nodeCount": 253806,
-    "edgeCount": 586706,
+    "initialized": false,
+    "projectPath": "/private/tmp/camera-rental-dispatch-evidence.2TJOZk",
+    "indexPath": null,
+    "lastIndexed": null,
+    "fileCount": 0,
+    "nodeCount": 0,
+    "edgeCount": 0,
     "pendingChanges": {
       "added": 0,
       "modified": 0,
@@ -51,60 +51,14 @@
     "worktreeMismatch": null
   },
   "blockers": [],
-  "warnings": [],
+  "warnings": [
+    "codegraph:not-indexed"
+  ],
   "raw_codegraph_status": {
-    "initialized": true,
+    "initialized": false,
     "version": "1.3.1",
-    "projectPath": "/Volumes/zwl/camera-rental-github",
-    "indexPath": "/Volumes/zwl/camera-rental-github/.codegraph",
-    "lastIndexed": "2026-08-23T16:14:43.229Z",
-    "fileCount": 10871,
-    "nodeCount": 253806,
-    "edgeCount": 586706,
-    "dbSizeBytes": 736329728,
-    "backend": "node-sqlite",
-    "journalMode": "wal",
-    "nodesByKind": {
-      "class": 4696,
-      "component": 3114,
-      "constant": 25421,
-      "enum": 349,
-      "enum_member": 1854,
-      "field": 23673,
-      "file": 10816,
-      "function": 25438,
-      "import": 80578,
-      "interface": 3019,
-      "method": 64439,
-      "namespace": 5988,
-      "property": 672,
-      "route": 2616,
-      "type_alias": 447,
-      "variable": 686
-    },
-    "languages": [
-      "java",
-      "javascript",
-      "python",
-      "tsx",
-      "typescript",
-      "vue",
-      "xml",
-      "yaml"
-    ],
-    "pendingChanges": {
-      "added": 0,
-      "modified": 0,
-      "removed": 0
-    },
-    "worktreeMismatch": null,
-    "index": {
-      "builtWithVersion": "1.3.1",
-      "builtWithExtractionVersion": 24,
-      "currentExtractionVersion": 24,
-      "reindexRecommended": false,
-      "state": "complete",
-      "pendingRefs": 0
-    }
+    "projectPath": "/private/tmp/camera-rental-dispatch-evidence.2TJOZk",
+    "indexPath": "/private/tmp/camera-rental-dispatch-evidence.2TJOZk/.codegraph",
+    "lastIndexed": null
   }
 }

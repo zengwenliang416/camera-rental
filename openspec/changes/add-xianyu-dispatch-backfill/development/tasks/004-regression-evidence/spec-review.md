@@ -2,70 +2,65 @@
 
 ## Verdict
 
-needs-fix
+approved
 
 ## Missing Requirements
 
-- The regression suite does not exercise the persisted successful-refund
-  (`refundStatus`) rejection, non-shippable/locked/busy device states,
-  persistence failure after local writes, or a database-backed rollback oracle.
-  The test named `backfillRejectsRefundedClosedOrCancelledOrder` covers order
-  statuses `23`/`24` and cancellation, not the documented refund field
-  (`XianyuOrderShipServiceTest.java:247-270`).
-- The Delivery rollback test verifies exception propagation, mock call order,
-  and the `@Transactional` annotation only; it does not verify that assignment,
-  schedule, device, Shipment, Delivery, conversion, and channel-order rows are
-  absent or restored after rollback (`XianyuOrderShipServiceTest.java:352-384`).
-- The task requires exact system-executed validation evidence, but the current
-  `validation-log.jsonl` entries are marked `attestation: self-reported`.
-  The report's claim that all admin checks passed is not supported by a current
-  authoritative receipt.
+- No development evidence requirement is missing from the scoped regression
+  task. The focused service class contains the requested eligibility, refund,
+  tenant, device, business-key, conversion, idempotency, persistence-failure,
+  Delivery-failure, assignment-reuse, and no-remote-write cases.
+- Persisted database rollback/concurrency, red-team, browser E2E, and sensory
+  execution are not provided by this task's unit/static commands and are
+  explicitly handed to Verification 2.0.
 
 ## Extra Behavior
 
-- The regression changes remain test/evidence scoped and do not add a parallel
-  production abstraction or external write. No unrelated runtime behavior is
-  attributable to this task.
+- The regression diff remains bounded to the focused service tests and declared
+  development evidence. It adds no production abstraction, external
+  credential, remote write, migration, or unrelated formatting.
 
 ## Misunderstood Requirements
 
-- A passing Mockito class and a reflection check for `@Transactional` are not
-  equivalent to proving transaction rollback or database concurrency behavior.
-- Recording a command as passed in a self-reported log is not the same as an
-  exact system-executed receipt from the managed development runner.
+- The earlier 28-test self-reported records are historical log entries. The
+  authoritative current evidence is the appended signed receipt set bound to
+  HEAD `1ac3c96ecedaaff8671694d7ff8681c7c6e9911e` and tree
+  `46d8ae8c9ed6e6c8d78844c5d45fddb60f3d8455`; it records 35 passing backend
+  tests and current admin checks.
+- The 35-test interaction suite and `@Transactional` reflection assertion are
+  not persisted rollback or concurrency proof. The handoff does not claim that
+  they are.
 
 ## Cannot Verify From Diff
 
-- The backend focused Maven command is reproducibly reported as
-  `BUILD SUCCESS` with 28 tests, 0 failures, 0 errors, and 0 skipped. That is
-  useful unit evidence, but it does not establish A6/A10/A11 at the database
-  or runtime boundary.
-- `git diff --check` passed, but the admin type/lint/format results cannot be
-  accepted as current green evidence: the attempted `pnpm` setup was blocked
-  by the repository's `npmmirror` tarball supply-chain policy, and the local
-  `vue-tsc`, ESLint, and Prettier binaries were unavailable afterward.
-- No authoritative red-team, browser, sensory, or managed SpecNav receipt
-  exists for the required final baseline.
+- Signed receipts `receipt-9a25bf1b...5d17`,
+  `receipt-b756e249...aee5`, `receipt-28c4100d...7550`,
+  `receipt-a70a0b20...1330`, and `receipt-5a0ab8c9...9ab8` are
+  current-head `system-executed` passes for Maven, Vue type checking,
+  targeted ESLint, targeted Prettier, and `git diff --check`.
+- The current evidence does not observe persisted post-failure database state,
+  concurrent device allocation, red-team execution, production E2E, or sensory
+  states. Those are verification-surface limitations, not an unimplemented
+  development test command.
 
 ## Acceptance Assertions Verified
 
-- A4 and A7 have partial support from the backend source and the 28-test
-  Mockito run; A8 and A9 have focused interaction coverage for replay/conflict
-  cases.
-- A5, A6, A10, and A11 are not fully verified because refund-state,
-  non-shippable, persistence-failure, and real rollback/red-team evidence are
-  incomplete.
-- A12 is only partially verified: backend compilation/tests and
-  `git diff --check` are supported, while the admin checks lack a trusted
-  receipt.
+- A5: focused tests reject pending/refunded/closed/cancelled and non-shippable
+  paths before local mutation or remote calls.
+- A6: the success and conversion tests cover the local aggregate wiring at the
+  service boundary.
+- A7: focused tests assert zero `XianyuWriteClient` calls and zero write-config
+  reads on backfill paths.
+- A8: matching replay and conflicting idempotency requests are covered.
+- A9: same-waybill/different-device business-key conflict is covered.
+- A10: cross-tenant shop and non-shippable-device rejection paths are covered.
+- A11: Delivery/persistence failure propagation and transaction metadata are
+  covered; persisted rollback remains unverified.
+- A12: current backend Maven, admin type/lint/format, and diff checks all have
+  passing signed receipts.
 
 ## Required Fixes
 
-- Add focused refund-state, non-shippable, persistence-failure, and
-  database-backed rollback/concurrency tests; assert post-failure persisted
-  state, not only Mockito interactions.
-- Re-run the declared backend/admin checks after final edits through the
-  approved managed evidence path and replace self-reported entries with exact
-  system-executed receipts.
-- Reconcile the task report with the actual checks and keep unverified
-  assertions explicitly open for Verification 2.0.
+- None for this development regression slice. Preserve the signed receipts as
+  Verification 2.0 inputs and run the database rollback/concurrency, red-team,
+  E2E, and sensory cases there.

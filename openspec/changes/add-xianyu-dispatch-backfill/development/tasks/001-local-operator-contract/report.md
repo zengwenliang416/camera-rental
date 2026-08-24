@@ -25,11 +25,17 @@ DONE
 
 - The 14 acceptance assertions were frozen before production implementation.
 - The approved `ui-html / admin-dialog-v1` prototype binds the operator warning, fields, states, locales, themes, and narrow layout.
+- The contract artifacts were introduced in the tracked baseline commit
+  `9dad9e89bfd1354d6b635a1235fac8baa0417f33`; the complete active change is
+  reviewed from `origin/main` through implementation HEAD
+  `1ac3c96ecedaaff8671694d7ff8681c7c6e9911e`.
 
 ## Verification Commands
 
-- `openspec validate add-xianyu-dispatch-backfill --strict` passed.
-- `SPECNAV_CHANGE=add-xianyu-dispatch-backfill node /Users/wenliang_zeng/.codex/plugins/cache/specnav-marketplace/specnav-prototype/0.3.0/scripts/prototype-contract.js --json` returned `ok:true`.
+- Managed `openspec validate add-xianyu-dispatch-backfill --strict` passed.
+- Managed `SPECNAV_CHANGE=add-xianyu-dispatch-backfill node /Users/wenliang_zeng/.codex/plugins/cache/specnav-marketplace/specnav-prototype/0.3.0/scripts/prototype-contract.js --json` returned `ok:true`.
+- Both receipts are system-executed, signed, and bound to implementation HEAD
+  `1ac3c96ecedaaff8671694d7ff8681c7c6e9911e`.
 
 ## Concerns
 

@@ -25,14 +25,18 @@ DONE
 
 ## Verification Commands
 
-- Backend focused Maven test: passed, 35 tests, 0 failures, 0 errors, 0 skipped.
-- Admin Vue TypeScript, ESLint, and Prettier had earlier interactive passes, but final-baseline managed reruns remain pending because the local admin dependency tree is currently unavailable.
-- `git diff --check`: passed.
+- Managed backend focused Maven test: passed, 35 tests, 0 failures, 0 errors, 0 skipped.
+- Managed Admin Vue TypeScript, targeted ESLint, and targeted Prettier checks: passed.
+- Managed `git diff --check`: passed.
+- All 13 development commands were system-executed against Git HEAD
+  `1ac3c96ecedaaff8671694d7ff8681c7c6e9911e` with signed receipts and
+  `fallback_used=false`.
 
 ## Concerns
 
-- The backend and diff results are current but not yet signed managed receipts because the authorized production Git baseline has not been created.
-- The project Runtime is selected and installed; admin dependency recovery remains a separate local toolchain blocker.
+- Mockito and transaction metadata do not prove persisted database rollback or
+  concurrent allocation behavior; those remain deterministic Verification 2.0
+  runtime oracles.
 
 ## Scope Deviations
 
@@ -40,4 +44,5 @@ DONE
 
 ## Follow-up Needed
 
-- Create the authorized local production commit, recover the admin toolchain without changing the lockfile, and replay the declared commands through the SpecNav evidence runner.
+- Preserve the signed development evidence as input to the immutable
+  Verification 2.0 case snapshot.

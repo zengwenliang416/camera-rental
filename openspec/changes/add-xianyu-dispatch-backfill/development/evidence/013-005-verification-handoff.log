@@ -1,0 +1,10 @@
+# command: openspec validate add-xianyu-dispatch-backfill --strict
+# exit_status: 0
+# duration_ms: 1502
+
+## stdout
+Change 'add-xianyu-dispatch-backfill' is valid
+
+
+## stderr
+(empty)

@@ -1,0 +1,10 @@
+# command: SPECNAV_CHANGE=add-xianyu-dispatch-backfill node /Users/wenliang_zeng/.codex/plugins/cache/specnav-marketplace/specnav-development/0.3.0/scripts/development-contract.js --mode entry --json
+# exit_status: 0
+# duration_ms: 447
+
+## stdout
+{"ok":true,"mode":"entry","lane":"standard","active_change":"add-xianyu-dispatch-backfill","blockers":[],"warnings":["codegraph:not-indexed","codegraph:claim-unverified:development:task-001-local-operator-contract","codegraph:claim-unverified:development:task-002-transactional-dispatch-backfill","codegraph:claim-unverified:development:task-003-admin-backfill-dialog","codegraph:claim-unverified:development:task-004-regression-evidence","codegraph:claim-unverified:development:task-005-verification-handoff"],"task_count":5,"repair_incidents":[]}
+
+
+## stderr
+(empty)

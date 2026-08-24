@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-23T15:18:01.645Z",
+  "generated_at": "2026-08-24T07:23:46.869Z",
   "active_change": "add-xianyu-dispatch-backfill",
   "stage": "development",
   "ok": true,
@@ -34,10 +34,10 @@
       "initialized": true,
       "projectPath": "/Volumes/zwl/camera-rental-github",
       "indexPath": "/Volumes/zwl/camera-rental-github/.codegraph",
-      "lastIndexed": "2026-08-23T13:44:14.450Z",
+      "lastIndexed": "2026-08-23T16:14:43.229Z",
       "fileCount": 10871,
-      "nodeCount": 253786,
-      "edgeCount": 586429,
+      "nodeCount": 253806,
+      "edgeCount": 586706,
       "pendingChanges": {
         "added": 0,
         "modified": 0,
@@ -61,7 +61,7 @@
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-23T15:18:01.639Z",
+    "generated_at": "2026-08-24T07:23:46.868Z",
     "active_change": "add-xianyu-dispatch-backfill",
     "source_raw": "openspec/changes/add-xianyu-dispatch-backfill/codegraph/evidence.jsonl",
     "by_claim": {},
@@ -72,15 +72,27 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-23T15:18:01.645Z",
+    "generated_at": "2026-08-24T07:23:46.869Z",
     "active_change": "add-xianyu-dispatch-backfill",
     "claims_file": "openspec/changes/add-xianyu-dispatch-backfill/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/add-xianyu-dispatch-backfill/codegraph/evidence-index.json",
-    "claims_count": 0,
+    "claims_count": 5,
     "verified_claims": [],
-    "unverified_claims": [],
+    "unverified_claims": [
+      "development:task-001-local-operator-contract",
+      "development:task-002-transactional-dispatch-backfill",
+      "development:task-003-admin-backfill-dialog",
+      "development:task-004-regression-evidence",
+      "development:task-005-verification-handoff"
+    ],
     "blockers": [],
-    "warnings": []
+    "warnings": [
+      "codegraph:claim-unverified:development:task-001-local-operator-contract",
+      "codegraph:claim-unverified:development:task-002-transactional-dispatch-backfill",
+      "codegraph:claim-unverified:development:task-003-admin-backfill-dialog",
+      "codegraph:claim-unverified:development:task-004-regression-evidence",
+      "codegraph:claim-unverified:development:task-005-verification-handoff"
+    ]
   },
   "drift": {
     "schema": "specnav.codegraph.drift.v1",
@@ -89,5 +101,11 @@
     "blockers": []
   },
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "codegraph:claim-unverified:development:task-001-local-operator-contract",
+    "codegraph:claim-unverified:development:task-002-transactional-dispatch-backfill",
+    "codegraph:claim-unverified:development:task-003-admin-backfill-dialog",
+    "codegraph:claim-unverified:development:task-004-regression-evidence",
+    "codegraph:claim-unverified:development:task-005-verification-handoff"
+  ]
 }

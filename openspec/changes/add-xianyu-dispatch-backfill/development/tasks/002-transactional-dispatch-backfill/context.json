@@ -1,0 +1,66 @@
+{
+  "task_id": "002-transactional-dispatch-backfill",
+  "task_items": [
+    "2.1",
+    "2.2",
+    "2.3",
+    "2.4",
+    "2.5"
+  ],
+  "acceptance_primary": [
+    "A4",
+    "A6",
+    "A7",
+    "A8",
+    "A11"
+  ],
+  "acceptance_subclaims": [
+    "A5",
+    "A9",
+    "A10"
+  ],
+  "goal": "Commit the approved device, schedule, Shipment, Delivery, and channel logistics repair in one local transaction.",
+  "must_read": [
+    "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/002-transactional-dispatch-backfill/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/requirements.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/acceptance.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/spec-map.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/component-impact-map.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/handoff.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/decision.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderController.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderDispatchBackfillReqVO.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceShipmentMapper.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java"
+  ],
+  "test_paths": [
+    "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=XianyuOrderShipServiceTest -Dsurefire.failIfNoSpecifiedTests=false test"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java"
+  ],
+  "non_goals": [
+    "Do not call XianGuanJia write APIs or read write-enabled runtime configuration.",
+    "Do not add migrations, tables, permissions, or multi-device waybill behavior."
+  ],
+  "expected_evidence": [
+    "Focused XianyuOrderShipServiceTest output",
+    "Typed eligibility, idempotency, conflict, and rollback assertions",
+    "Proof that XianyuWriteClient and write configuration are unused",
+    "Approved task report, spec review, and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Existing service method names do not prove transaction or rollback behavior.",
+    "An unmapped channel order must use the existing conversion boundary."
+  ],
+  "stop_condition": "Stop if local consistency cannot be guaranteed without external mutation, a migration, or scope outside the approved backend files."
+}

@@ -263,6 +263,18 @@ export interface XianyuOrderShipReqVO {
   ocrConfirmed?: boolean
 }
 
+export interface XianyuOrderDispatchBackfillReqVO {
+  channelOrderId: number
+  deviceId?: number
+  deviceNo?: string
+  idempotencyKey: string
+  expressCode: string
+  expressName: string
+  waybillNo: string
+  consignTime: string
+  reason: string
+}
+
 export interface XianyuOrderShipRespVO {
   shipmentId: number
   channelOrderId: number
@@ -276,6 +288,12 @@ export interface XianyuOrderShipRespVO {
   remoteMsg?: string
   assignmentStatus?: string
   source: string
+  deliveryId?: number
+  trackingMappingStatus?: string
+  trackingSubscribeStatus?: string
+  trackingQueryStatus?: string
+  trackingReason?: string
+  trackingPendingEvents?: string[]
 }
 
 export const getXianyuConfig = () => {
@@ -354,6 +372,13 @@ export const recognizeXianyuShipmentImage = async (file: File) => {
 
 export const shipXianyuOrder = (data: XianyuOrderShipReqVO) => {
   return request.post<XianyuOrderShipRespVO>({ url: '/rental/xianyu/order/ship', data })
+}
+
+export const backfillXianyuOrderDispatch = (data: XianyuOrderDispatchBackfillReqVO) => {
+  return request.post<XianyuOrderShipRespVO>({
+    url: '/rental/xianyu/order/dispatch-backfill',
+    data
+  })
 }
 
 export const getXianyuAfterSalePage = (

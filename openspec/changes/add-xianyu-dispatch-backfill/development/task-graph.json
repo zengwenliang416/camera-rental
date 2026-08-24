@@ -1,5 +1,88 @@
 {
   "schema_version": 1,
-  "planning_status": "pending-vertical-slices",
-  "tasks": []
+  "planning_status": "ready",
+  "tasks": [
+    {
+      "task_id": "001-local-operator-contract",
+      "depends_on": [],
+      "outcome": "The approved local-only correction contract is frozen without scanner or remote-write scope."
+    },
+    {
+      "task_id": "002-transactional-dispatch-backfill",
+      "depends_on": [
+        "001-local-operator-contract"
+      ],
+      "outcome": "An eligible shipped channel order can be repaired transactionally with one physical device and waybill."
+    },
+    {
+      "task_id": "003-admin-backfill-dialog",
+      "depends_on": [
+        "001-local-operator-contract",
+        "002-transactional-dispatch-backfill"
+      ],
+      "outcome": "An authorized shop administrator can complete the correction from the existing Web order page."
+    },
+    {
+      "task_id": "004-regression-evidence",
+      "depends_on": [
+        "002-transactional-dispatch-backfill",
+        "003-admin-backfill-dialog"
+      ],
+      "outcome": "Eligibility, isolation, idempotency, rollback, UI typing, and formatting have repeatable evidence."
+    },
+    {
+      "task_id": "005-verification-handoff",
+      "depends_on": [
+        "004-regression-evidence"
+      ],
+      "outcome": "Development evidence is complete and can enter the independently approved Verification 2.0 snapshot."
+    }
+  ],
+  "nodes": [
+    {
+      "id": "001-local-operator-contract",
+      "task_items": [
+        "1.1",
+        "1.2",
+        "1.3"
+      ]
+    },
+    {
+      "id": "002-transactional-dispatch-backfill",
+      "task_items": [
+        "2.1",
+        "2.2",
+        "2.3",
+        "2.4",
+        "2.5"
+      ]
+    },
+    {
+      "id": "003-admin-backfill-dialog",
+      "task_items": [
+        "3.1",
+        "3.2",
+        "3.3",
+        "3.4"
+      ]
+    },
+    {
+      "id": "004-regression-evidence",
+      "task_items": [
+        "4.1",
+        "4.2",
+        "4.3",
+        "4.4"
+      ]
+    },
+    {
+      "id": "005-verification-handoff",
+      "task_items": [
+        "5.1",
+        "5.2",
+        "5.3"
+      ]
+    }
+  ],
+  "edges": []
 }

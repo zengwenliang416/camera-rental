@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.rental.controller.admin.xianyu;
 
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderDispatchBackfillReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderPageReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderShipReqVO;
@@ -83,6 +84,14 @@ public class XianyuOrderController {
     @PreAuthorize("@ss.hasPermission('rental:xianyu:ship')")
     public CommonResult<XianyuOrderShipRespVO> ship(@Valid @RequestBody XianyuOrderShipReqVO reqVO) {
         return success(orderShipService.ship(reqVO));
+    }
+
+    @PostMapping("/dispatch-backfill")
+    @Operation(summary = "为已在闲鱼发货的订单补录设备出库，不重复调用闲管家")
+    @PreAuthorize("@ss.hasPermission('rental:xianyu:ship')")
+    public CommonResult<XianyuOrderShipRespVO> backfillDispatch(
+            @Valid @RequestBody XianyuOrderDispatchBackfillReqVO reqVO) {
+        return success(orderShipService.backfillDispatch(reqVO));
     }
 
     @PostMapping("/sync-page")

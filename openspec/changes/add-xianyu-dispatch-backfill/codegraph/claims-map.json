@@ -1,0 +1,161 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-08-23T15:57:59.870Z",
+  "active_change": "add-xianyu-dispatch-backfill",
+  "claims": [
+    {
+      "id": "development:task-001-local-operator-contract",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-local-operator-contract",
+      "text": "The order page exposes one bounded local correction flow for status `21` or",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/001-local-operator-contract/brief.md",
+        "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/001-local-operator-contract/context.json"
+      ],
+      "expected_evidence": [
+        "Strict OpenSpec validation output",
+        "Green approved prototype contract",
+        "Task report with requirement and acceptance references",
+        "Approved spec and quality reviews"
+      ],
+      "allowed_files": [
+        "openspec/changes/add-xianyu-dispatch-backfill/requirements.md",
+        "openspec/changes/add-xianyu-dispatch-backfill/acceptance.md",
+        "openspec/changes/add-xianyu-dispatch-backfill/design.md",
+        "openspec/changes/add-xianyu-dispatch-backfill/spec-map.json",
+        "openspec/changes/add-xianyu-dispatch-backfill/component-impact-map.json",
+        "openspec/changes/add-xianyu-dispatch-backfill/scope.json",
+        "openspec/changes/add-xianyu-dispatch-backfill/tasks.md"
+      ],
+      "query_ids": [
+        "development:task-001-local-operator-contract:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-transactional-dispatch-backfill",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-transactional-dispatch-backfill",
+      "text": "`POST /admin-api/rental/xianyu/order/dispatch-backfill` accepts keyboard-entered",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/002-transactional-dispatch-backfill/brief.md",
+        "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/002-transactional-dispatch-backfill/context.json"
+      ],
+      "expected_evidence": [
+        "Focused XianyuOrderShipServiceTest output",
+        "Typed eligibility, idempotency, conflict, and rollback assertions",
+        "Proof that XianyuWriteClient and write configuration are unused",
+        "Approved task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderController.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderDispatchBackfillReqVO.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceShipmentMapper.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java"
+      ],
+      "query_ids": [
+        "development:task-002-transactional-dispatch-backfill:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-admin-backfill-dialog",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-admin-backfill-dialog",
+      "text": "For eligible status `21` or `22`, the row action opens the approved",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/003-admin-backfill-dialog/brief.md",
+        "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/003-admin-backfill-dialog/context.json"
+      ],
+      "expected_evidence": [
+        "Vue TypeScript check output",
+        "Targeted ESLint and Prettier output",
+        "Browser evidence for approved states, themes, locales, and narrow layout",
+        "Approved task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-admin/src/api/rental/xianyu.ts",
+        "camera-rental-admin/src/views/rental/order/index.vue",
+        "camera-rental-admin/src/views/rental/order/components/XianyuDispatchBackfillDialog.vue",
+        "camera-rental-admin/src/locales/zh-CN.ts",
+        "camera-rental-admin/src/locales/en.ts"
+      ],
+      "query_ids": [
+        "development:task-003-admin-backfill-dialog:evidence"
+      ]
+    },
+    {
+      "id": "development:task-004-regression-evidence",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "004-regression-evidence",
+      "text": "The focused backend suite covers success and all approved negative paths, while",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/004-regression-evidence/brief.md",
+        "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/004-regression-evidence/context.json"
+      ],
+      "expected_evidence": [
+        "Current Maven test output for XianyuOrderShipServiceTest",
+        "Current admin type, ESLint, and Prettier output",
+        "Current git diff check output",
+        "Approved task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderController.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderDispatchBackfillReqVO.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceShipmentMapper.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java",
+        "camera-rental-admin/src/api/rental/xianyu.ts",
+        "camera-rental-admin/src/views/rental/order/index.vue",
+        "camera-rental-admin/src/views/rental/order/components/XianyuDispatchBackfillDialog.vue",
+        "camera-rental-admin/src/locales/zh-CN.ts",
+        "camera-rental-admin/src/locales/en.ts",
+        "openspec/changes/add-xianyu-dispatch-backfill/development",
+        "openspec/changes/add-xianyu-dispatch-backfill/tasks.md"
+      ],
+      "query_ids": [
+        "development:task-004-regression-evidence:evidence"
+      ]
+    },
+    {
+      "id": "development:task-005-verification-handoff",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "005-verification-handoff",
+      "text": "Every baseline task has ownership, implementation evidence, independent spec",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/005-verification-handoff/brief.md",
+        "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/005-verification-handoff/context.json"
+      ],
+      "expected_evidence": [
+        "Passing development entry and handoff contracts",
+        "Complete task reports, acceptance receipts, reviews, ledgers, and validation logs",
+        "Immutable Verification 2.0 case snapshot ID and SHA-256 with explicit human approval",
+        "Complete six-domain machine-authoritative verification report"
+      ],
+      "allowed_files": [
+        "openspec/changes/add-xianyu-dispatch-backfill/tasks.md",
+        "openspec/changes/add-xianyu-dispatch-backfill/prototype/decision.json",
+        "openspec/changes/add-xianyu-dispatch-backfill/prototype/handoff.md"
+      ],
+      "query_ids": [
+        "development:task-005-verification-handoff:evidence"
+      ]
+    }
+  ]
+}

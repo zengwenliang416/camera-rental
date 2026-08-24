@@ -223,7 +223,7 @@
           <span v-else>{{ formatOrderColumnValue(row, column) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="t('table.action')" width="220" fixed="right">
+      <el-table-column :label="t('table.action')" width="320" fixed="right">
         <template #default="{ row }">
           <el-button link type="primary" @click="openOrderDetail(row)">
             {{ t('rental.order.viewDetail') }}
@@ -246,6 +246,15 @@
             @click="handleConvert(row.id)"
           >
             {{ t('rental.order.convert') }}
+          </el-button>
+          <el-button
+            v-if="canBackfillDispatch(row)"
+            v-hasPermi="['rental:xianyu:ship']"
+            link
+            type="warning"
+            @click="openBackfillDialog(row)"
+          >
+            {{ t('rental.order.backfillAction') }}
           </el-button>
         </template>
       </el-table-column>
@@ -271,6 +280,12 @@
     >
       <XianyuOrderDetailPanel v-if="detailOrder" :order="detailOrder" />
     </el-drawer>
+
+    <XianyuDispatchBackfillDialog
+      v-model="backfillVisible"
+      :order="backfillOrder"
+      @completed="handleBackfillCompleted"
+    />
 
     <el-drawer
       v-model="shipDrawerVisible"
@@ -371,6 +386,7 @@ import {
   type RentalLabelGroup
 } from '@/utils/rentalLabels'
 import XianyuShipWorkbench from './components/XianyuShipWorkbench.vue'
+import XianyuDispatchBackfillDialog from './components/XianyuDispatchBackfillDialog.vue'
 import XianyuOrderDetailPanel from './components/XianyuOrderDetailPanel.vue'
 import XianyuOrderColumnSettings from './components/XianyuOrderColumnSettings.vue'
 import {
@@ -395,8 +411,10 @@ const showAdvanced = ref(false)
 const syncVisible = ref(false)
 const detailVisible = ref(false)
 const shipDrawerVisible = ref(false)
+const backfillVisible = ref(false)
 const detailOrder = ref<XianyuOrderVO>()
 const shipDrawerOrder = ref<XianyuOrderVO>()
+const backfillOrder = ref<XianyuOrderVO>()
 const list = ref<XianyuOrderVO[]>([])
 const shops = ref<XianyuShopVO[]>([])
 const total = ref(0)
@@ -535,9 +553,24 @@ const canShipOrder = (order: XianyuOrderVO) => {
   return pendingShipStatuses.has(order.orderStatus)
 }
 
+const backfillableStatuses = new Set(['21', '22'])
+
+const canBackfillDispatch = (order: XianyuOrderVO) => {
+  return backfillableStatuses.has(order.orderStatus) && !order.cancelTime
+}
+
 const openShipWorkbench = (order: XianyuOrderVO) => {
   shipDrawerOrder.value = order
   shipDrawerVisible.value = true
+}
+
+const openBackfillDialog = (order: XianyuOrderVO) => {
+  backfillOrder.value = order
+  backfillVisible.value = true
+}
+
+const handleBackfillCompleted = async () => {
+  await getList()
 }
 
 const handleOrderShipped = async () => {

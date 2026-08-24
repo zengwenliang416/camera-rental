@@ -1,0 +1,58 @@
+{
+  "task_id": "003-admin-backfill-dialog",
+  "task_items": [
+    "3.1",
+    "3.2",
+    "3.3",
+    "3.4"
+  ],
+  "acceptance_primary": [
+    "A1",
+    "A2",
+    "A3",
+    "A13",
+    "A14"
+  ],
+  "goal": "Deliver the approved keyboard-first Web dialog for authorized administrators on eligible shipped orders.",
+  "must_read": [
+    "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/003-admin-backfill-dialog/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/requirements.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/acceptance.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/spec-map.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/component-impact-map.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/handoff.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/decision.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-admin/src/api/rental/xianyu.ts",
+    "camera-rental-admin/src/views/rental/order/index.vue",
+    "camera-rental-admin/src/views/rental/order/components/XianyuDispatchBackfillDialog.vue",
+    "camera-rental-admin/src/locales/zh-CN.ts",
+    "camera-rental-admin/src/locales/en.ts"
+  ],
+  "test_paths": [
+    "cd camera-rental-admin && node --max_old_space_size=8192 ./node_modules/vue-tsc/bin/vue-tsc.js --noEmit --incremental --tsBuildInfoFile node_modules/.cache/vue-tsc/tsconfig.tsbuildinfo",
+    "cd camera-rental-admin && ./node_modules/.bin/eslint src/api/rental/xianyu.ts src/views/rental/order/index.vue src/views/rental/order/components/XianyuDispatchBackfillDialog.vue src/locales/zh-CN.ts src/locales/en.ts",
+    "cd camera-rental-admin && ./node_modules/.bin/prettier --check src/api/rental/xianyu.ts src/views/rental/order/index.vue src/views/rental/order/components/XianyuDispatchBackfillDialog.vue src/locales/zh-CN.ts src/locales/en.ts"
+  ],
+  "non_goals": [
+    "Do not add scanner or browser-camera behavior.",
+    "Do not move authoritative inventory, schedule, or transaction rules into the frontend."
+  ],
+  "expected_evidence": [
+    "Vue TypeScript check output",
+    "Targeted ESLint and Prettier output",
+    "Browser evidence for approved states, themes, locales, and narrow layout",
+    "Approved task report, spec review, and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Frontend action hiding is not backend authorization.",
+    "Existing logistics defaults may be absent and cannot be assumed valid."
+  ],
+  "stop_condition": "Stop if the dialog diverges from admin-dialog-v1, exposes ineligible actions, or requires frontend-owned business rules."
+}

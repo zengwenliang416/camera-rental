@@ -896,6 +896,20 @@ export default {
       viewDetail: 'View details',
       shipAction: 'Ship',
       shipDrawerTitle: 'Ship order',
+      backfillAction: 'Backfill device',
+      backfillTitle: 'Backfill dispatched device',
+      backfillHint:
+        'This only restores local device, schedule, and logistics records. It will not call the remote shipment API again.',
+      backfillDeviceNo: 'Actual device no.',
+      backfillDevicePlaceholder: 'Enter the device that was actually shipped',
+      backfillDeviceRequired: 'Enter the device that was actually shipped',
+      backfillWaybillRequired: 'Enter the existing waybill number',
+      backfillConsignTime: 'Actual ship time',
+      backfillReason: 'Backfill reason',
+      backfillReasonRequired: 'Enter a backfill reason',
+      backfillDefaultReason: 'The order was shipped externally; restore the actual device dispatch',
+      backfillSubmit: 'Confirm backfill',
+      backfillSuccess: 'Device {deviceNo} is now linked and dispatched',
       shipDrawerHint:
         'This order is locked. Confirm the waybill and scan the device before shipping; the backend rechecks device status, schedule, tenant, and write access.',
       detailTitle: 'Channel order details',
@@ -1027,7 +1041,8 @@ export default {
       pageTitleV2: 'Device schedules V2',
       rangeHintV2:
         'Review 14, 30, or 90 days of device-instance occupancy. The UI only maps backend occupancy, billable, logistics, and exception results; it does not calculate availability or conflicts.',
-      pendingLoadError: 'Failed to load pending allocations. Check permissions or the network and retry.',
+      pendingLoadError:
+        'Failed to load pending allocations. Check permissions or the network and retry.',
       trackingRefreshAccepted: 'Tracking refresh submitted. The latest trace will appear shortly.',
       trackingRefreshRejected: 'Tracking refresh is not currently allowed.',
       trackingRefreshFailed: 'Tracking refresh failed. Please try again later.',

@@ -30,9 +30,9 @@
 用户结果：关键资格、租户隔离、幂等、冲突、回滚和无远端写调用都具备可重复执行的自动化证据。
 
 - [x] 4.1 Cover successful local backfill, pending-order rejection, idempotency-key conflict, matching replay, and existing-dispatched-assignment reuse in `XianyuOrderShipServiceTest`.
-- [ ] 4.2 Add focused tests for refunded/closed order rejection, cross-tenant shop rejection, same-waybill different-device conflict, unmapped-order conversion, and Delivery-failure rollback.
-- [ ] 4.3 Run the targeted rental backend test set and record the exact system-executed result in SpecNav development evidence.
-- [ ] 4.4 Run admin type check, targeted ESLint, targeted Prettier, and `git diff --check`, then record exact system-executed results.
+- [x] 4.2 Add focused tests for refunded/closed order rejection, cross-tenant shop rejection, same-waybill different-device conflict, unmapped-order conversion, and Delivery-failure rollback.
+- [x] 4.3 Run the targeted rental backend test set and record the exact system-executed result in SpecNav development evidence.
+- [x] 4.4 Run admin type check, targeted ESLint, targeted Prettier, and `git diff --check`, then record exact system-executed results.
 
 ## 5. Approved Delivery Gates
 
@@ -41,5 +41,13 @@
 - [x] 5.1 Create and verify the approved prototype branch covering the Web dialog states, themes, locales, and narrow layout.
 - [x] 5.2 Obtain explicit human approval for the verified prototype and create the prototype-to-development handoff.
 - [ ] 5.3 Complete SpecNav development entry, task evidence, independent reviews, and development handoff without bypassing the tracked-baseline requirement.
-- [ ] 5.4 Create the immutable Verification 2.0 six-domain case snapshot and obtain explicit human approval for its ID and SHA-256.
-- [ ] 5.5 Execute all six Verification 2.0 domains and generate the machine-authoritative report only after approval.
+
+## Verification 2.0 Follow-On
+
+用户结果：正式测试仍需通过不可变用例快照审批、六域执行和机器权威报告，且这些义务不阻塞开发交接本身。
+
+Verification obligation: create the immutable six-domain case snapshot and
+obtain explicit human approval for its ID and SHA-256.
+
+Verification obligation: execute all six domains and generate the
+machine-authoritative report only after snapshot approval.

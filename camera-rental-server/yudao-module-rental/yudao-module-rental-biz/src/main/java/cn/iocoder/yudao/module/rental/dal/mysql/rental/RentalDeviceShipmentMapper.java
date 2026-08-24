@@ -13,4 +13,14 @@ public interface RentalDeviceShipmentMapper extends BaseMapperX<RentalDeviceShip
                 .eq(RentalDeviceShipmentDO::getIdempotencyKey, idempotencyKey));
     }
 
+    default RentalDeviceShipmentDO selectByBusinessKeyForUpdate(Long channelOrderId, String waybillNo,
+                                                                 String expressCode) {
+        return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceShipmentDO>()
+                .eq(RentalDeviceShipmentDO::getChannelOrderId, channelOrderId)
+                .eq(RentalDeviceShipmentDO::getWaybillNo, waybillNo)
+                .eq(RentalDeviceShipmentDO::getExpressCode, expressCode)
+                .orderByDesc(RentalDeviceShipmentDO::getId)
+                .last("LIMIT 1"));
+    }
+
 }

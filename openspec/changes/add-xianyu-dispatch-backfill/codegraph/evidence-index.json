@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-23T15:18:01.639Z",
+  "generated_at": "2026-08-24T07:23:46.868Z",
   "active_change": "add-xianyu-dispatch-backfill",
   "source_raw": "openspec/changes/add-xianyu-dispatch-backfill/codegraph/evidence.jsonl",
   "by_claim": {},

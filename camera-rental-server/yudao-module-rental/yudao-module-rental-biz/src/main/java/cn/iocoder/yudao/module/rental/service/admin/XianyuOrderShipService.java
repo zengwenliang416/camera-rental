@@ -4,6 +4,7 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceDispatchReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceOpsRespVO;
+import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderDispatchBackfillReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderShipReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderShipRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuPendingShipOrderPageReqVO;
@@ -51,11 +52,15 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_NOT_EXISTS;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_DISPATCH_BACKFILL_CONFLICT;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_DISPATCH_BACKFILL_ORDER_CLOSED;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_DISPATCH_BACKFILL_ORDER_NOT_SHIPPED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_ORDER_NOT_EXISTS;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_DEVICE_NOT_SHIPPABLE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_IDEMPOTENT_KEY_REUSED;
@@ -71,6 +76,10 @@ public class XianyuOrderShipService {
 
     private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
     private static final Set<String> PENDING_STATUSES = Set.of("12", "WAIT_SHIP", "WAIT_SEND", "WAIT_SELLER_SEND_GOODS");
+    private static final Set<String> BACKFILL_SHIPPED_STATUSES = Set.of("21", "22");
+    private static final Set<String> BACKFILL_CLOSED_STATUSES = Set.of("23", "24");
+    private static final Integer BACKFILL_REFUND_SUCCESS_STATUS = 5;
+    private static final String BACKFILL_SOURCE = "ADMIN_BACKFILL";
 
     private final XianyuOrderMapper orderMapper;
     private final XianyuShopMapper shopMapper;
@@ -171,8 +180,11 @@ public class XianyuOrderShipService {
                 .build();
         shipmentMapper.insert(shipment);
 
+        String sourceIdentifier = "shipment:"
+                + DigestUtils.md5DigestAsHex(reqVO.getIdempotencyKey().getBytes(StandardCharsets.UTF_8));
         RentalDeliveryResult delivery = deliveryService.createOrReuse(buildDeliveryCommand(
-                reqVO, order, item, assignment, device));
+                sourceIdentifier, reqVO.getExpressCode(), reqVO.getExpressName(), reqVO.getWaybillNo(),
+                order, item, assignment, device));
         shipment.setDeliveryId(delivery.deliveryId());
         shipmentMapper.updateById(shipment);
 
@@ -185,6 +197,83 @@ public class XianyuOrderShipService {
         XianyuOrderShipRespVO resp = toShipResp(shipment, device, dispatched.getAssignmentStatus(), delivery);
         resp.setRemoteMsg(shipment.getShipResponseMsg());
         return resp;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public XianyuOrderShipRespVO backfillDispatch(XianyuOrderDispatchBackfillReqVO reqVO) {
+        String idempotencyKey = reqVO.getIdempotencyKey().trim();
+        String waybillNo = reqVO.getWaybillNo().trim();
+        String expressCode = reqVO.getExpressCode().trim();
+        String expressName = reqVO.getExpressName().trim();
+        RentalDeviceShipmentDO replay = shipmentMapper.selectByIdempotencyKeyForUpdate(idempotencyKey);
+        if (replay != null) {
+            requireBackfillReplayMatches(replay, reqVO, waybillNo, expressCode);
+            RentalDeviceDO replayDevice = requireBackfillReplayDeviceMatches(replay, reqVO);
+            if (!Objects.equals(replay.getShipRequestHash(),
+                    backfillRequestHash(reqVO, replay.getDeviceId(), waybillNo, expressCode, expressName))) {
+                throw exception(XIANYU_SHIP_IDEMPOTENT_KEY_REUSED);
+            }
+            return replayResponse(replay, replayDevice);
+        }
+
+        XianyuOrderDO order = orderMapper.selectByIdForUpdate(reqVO.getChannelOrderId());
+        if (order == null) {
+            throw exception(XIANYU_ORDER_NOT_EXISTS);
+        }
+        requireBackfillEligible(order);
+        requireTenantShop(order.getShopId());
+
+        RentalDeviceDO device = resolveDevice(reqVO.getDeviceId(), reqVO.getDeviceNo());
+        RentalDeviceShipmentDO existing = shipmentMapper.selectByBusinessKeyForUpdate(
+                order.getId(), waybillNo, expressCode);
+        if (existing != null) {
+            String requestHash = backfillRequestHash(
+                    reqVO, device.getId(), waybillNo, expressCode, expressName);
+            if (!BACKFILL_SOURCE.equals(existing.getSource())
+                    || !Objects.equals(existing.getDeviceId(), device.getId())
+                    || !Objects.equals(existing.getShipRequestHash(), requestHash)
+                    || existing.getDeliveryId() == null) {
+                throw exception(XIANYU_DISPATCH_BACKFILL_CONFLICT, "同一运单已存在不兼容的出库记录");
+            }
+            return replayResponse(existing);
+        }
+
+        RentalOrderItemDO item = requireConvertedFirstItem(order, device);
+        BackfillDispatchResult local = ensureBackfillDispatched(idempotencyKey, device, item);
+        RentalDeviceShipmentDO shipment = RentalDeviceShipmentDO.builder()
+                .channelOrderId(order.getId())
+                .assignmentId(local.assignment().assignmentId())
+                .deviceId(device.getId())
+                .idempotencyKey(idempotencyKey)
+                .waybillNo(waybillNo)
+                .expressCode(expressCode)
+                .expressName(expressName)
+                .shipRequestHash(backfillRequestHash(
+                        reqVO, device.getId(), waybillNo, expressCode, expressName))
+                .shipResponseMsg("已发货补录：" + reqVO.getReason().trim())
+                .ocrConfirmed(false)
+                .source(BACKFILL_SOURCE)
+                .build();
+        shipmentMapper.insert(shipment);
+
+        String sourceIdentifier = "shipment-backfill:"
+                + DigestUtils.md5DigestAsHex(idempotencyKey.getBytes(StandardCharsets.UTF_8));
+        RentalDeliveryResult delivery = deliveryService.createOrReuse(buildDeliveryCommand(
+                sourceIdentifier, expressCode, expressName, waybillNo,
+                order, item, local.assignment(), device));
+        shipment.setDeliveryId(delivery.deliveryId());
+        shipmentMapper.updateById(shipment);
+
+        order.setWaybillNo(waybillNo);
+        order.setExpressCode(expressCode);
+        order.setExpressName(expressName);
+        order.setConsignTime(reqVO.getConsignTime());
+        if (order.getShipDate() == null) {
+            order.setShipDate(reqVO.getConsignTime().toLocalDate());
+        }
+        orderMapper.updateById(order);
+
+        return toShipResp(shipment, device, local.assignmentStatus(), delivery);
     }
 
     private XianyuPendingShipOrderRespVO toPendingVo(XianyuOrderDO order) {
@@ -228,14 +317,35 @@ public class XianyuOrderShipService {
         return shop;
     }
 
+    private void requireTenantShop(Long shopId) {
+        if (shopMapper.selectByTenantIdAndId(TenantContextHolder.getRequiredTenantId(), shopId) == null) {
+            throw exception(XIANYU_SHOP_NOT_EXISTS);
+        }
+    }
+
     private RentalDeviceDO resolveDevice(XianyuOrderShipReqVO reqVO) {
-        RentalDeviceDO device = reqVO.getDeviceId() != null
-                ? deviceMapper.selectByIdForUpdate(reqVO.getDeviceId())
-                : deviceMapper.selectByDeviceNoForUpdate(reqVO.getDeviceNo());
+        return resolveDevice(reqVO.getDeviceId(), reqVO.getDeviceNo());
+    }
+
+    private RentalDeviceDO resolveDevice(Long deviceId, String deviceNo) {
+        RentalDeviceDO device = deviceId != null
+                ? deviceMapper.selectByIdForUpdate(deviceId)
+                : deviceMapper.selectByDeviceNoForUpdate(deviceNo.trim());
         if (device == null) {
             throw exception(RENTAL_DEVICE_NOT_EXISTS);
         }
         return device;
+    }
+
+    private void requireBackfillEligible(XianyuOrderDO order) {
+        if (order.getCancelTime() != null
+                || BACKFILL_CLOSED_STATUSES.contains(order.getOrderStatus())
+                || Objects.equals(order.getRefundStatus(), BACKFILL_REFUND_SUCCESS_STATUS)) {
+            throw exception(XIANYU_DISPATCH_BACKFILL_ORDER_CLOSED);
+        }
+        if (!BACKFILL_SHIPPED_STATUSES.contains(order.getOrderStatus())) {
+            throw exception(XIANYU_DISPATCH_BACKFILL_ORDER_NOT_SHIPPED);
+        }
     }
 
     private void requireDeviceShippable(RentalDeviceDO device) {
@@ -290,6 +400,49 @@ public class XianyuOrderShipService {
         }
     }
 
+    private BackfillDispatchResult ensureBackfillDispatched(String idempotencyKey,
+                                                            RentalDeviceDO device, RentalOrderItemDO item) {
+        RentalDeviceAssignmentDO existing =
+                assignmentMapper.selectActiveByOrderItemAndDeviceForUpdate(item.getId(), device.getId());
+        if (existing != null) {
+            RentalDeviceAssignmentResult assignment = new RentalDeviceAssignmentResult(
+                    existing.getId(), existing.getScheduleId(), device.getId(),
+                    item.getOccupyStartDate(), item.getOccupyEndDateExclusive());
+            if ("DISPATCHED".equals(existing.getStatus())) {
+                if (!"RENTED".equals(device.getStatus())) {
+                    throw exception(XIANYU_DISPATCH_BACKFILL_CONFLICT, "已出库分配与设备状态不一致");
+                }
+                return new BackfillDispatchResult(assignment, "DISPATCHED");
+            }
+            if (!"ASSIGNED".equals(existing.getStatus())) {
+                throw exception(XIANYU_DISPATCH_BACKFILL_CONFLICT, "当前设备分配状态不可补录出库");
+            }
+            requireDeviceShippable(device);
+            RentalDeviceOpsRespVO dispatched = dispatch(device.getId(), existing.getId());
+            return new BackfillDispatchResult(assignment, dispatched.getAssignmentStatus());
+        }
+
+        requireDeviceShippable(device);
+        RentalDeviceAssignmentResult assignment = assignDevice(
+                idempotencyKey, device, item, "backfill:");
+        RentalDeviceOpsRespVO dispatched = dispatch(device.getId(), assignment.assignmentId());
+        return new BackfillDispatchResult(assignment, dispatched.getAssignmentStatus());
+    }
+
+    private RentalDeviceAssignmentResult assignDevice(String idempotencyKey, RentalDeviceDO device,
+                                                       RentalOrderItemDO item, String prefix) {
+        try {
+            return assignmentService.assign(new RentalDeviceAssignmentCommand(
+                    item.getId(), device.getId(), item.getOccupyStartDate(), item.getOccupyEndDateExclusive(),
+                    prefix + idempotencyKey));
+        } catch (RentalDeviceAssignmentException ex) {
+            if (ex.getCode() == RentalDeviceAssignmentException.Code.IDEMPOTENCY_KEY_REUSED) {
+                throw exception(XIANYU_SHIP_IDEMPOTENT_KEY_REUSED);
+            }
+            throw exception(XIANYU_DISPATCH_BACKFILL_CONFLICT, ex.getCode().name());
+        }
+    }
+
     private ObjectNode buildShipBody(XianyuOrderDO order, XianyuOrderShipReqVO reqVO) {
         ObjectNode body = objectMapper.createObjectNode();
         body.put("order_no", order.getExternalOrderId());
@@ -314,17 +467,58 @@ public class XianyuOrderShipService {
         return deviceOpsService.dispatch(reqVO);
     }
 
-    private RentalDeliveryCreateCommand buildDeliveryCommand(XianyuOrderShipReqVO reqVO, XianyuOrderDO order,
-                                                              RentalOrderItemDO item,
+    private RentalDeliveryCreateCommand buildDeliveryCommand(String sourceIdentifier, String expressCode,
+                                                              String expressName, String waybillNo,
+                                                              XianyuOrderDO order, RentalOrderItemDO item,
                                                               RentalDeviceAssignmentResult assignment,
                                                               RentalDeviceDO device) {
-        String sourceIdentifier = "shipment:"
-                + DigestUtils.md5DigestAsHex(reqVO.getIdempotencyKey().getBytes(StandardCharsets.UTF_8));
         return new RentalDeliveryCreateCommand(item.getRentalOrderId(), order.getId(),
                 RentalDeliveryDirectionEnum.OUTBOUND,
-                "XIANYU", sourceIdentifier, reqVO.getExpressCode(), reqVO.getExpressName(),
-                reqVO.getWaybillNo(), order.getReceiverMobile(),
+                "XIANYU", sourceIdentifier, expressCode, expressName,
+                waybillNo, order.getReceiverMobile(),
                 List.of(new RentalDeliveryDeviceCommand(item.getId(), assignment.assignmentId(), device.getId())));
+    }
+
+    private void requireBackfillReplayMatches(RentalDeviceShipmentDO replay,
+                                              XianyuOrderDispatchBackfillReqVO reqVO,
+                                              String waybillNo, String expressCode) {
+        if (!BACKFILL_SOURCE.equals(replay.getSource())
+                || !Objects.equals(replay.getChannelOrderId(), reqVO.getChannelOrderId())
+                || !Objects.equals(replay.getWaybillNo(), waybillNo)
+                || !Objects.equals(replay.getExpressCode(), expressCode)) {
+            throw exception(XIANYU_SHIP_IDEMPOTENT_KEY_REUSED);
+        }
+    }
+
+    private RentalDeviceDO requireBackfillReplayDeviceMatches(
+            RentalDeviceShipmentDO replay, XianyuOrderDispatchBackfillReqVO reqVO) {
+        RentalDeviceDO replayDevice = deviceMapper.selectById(replay.getDeviceId());
+        boolean sameDevice = reqVO.getDeviceId() != null
+                ? Objects.equals(reqVO.getDeviceId(), replay.getDeviceId())
+                : replayDevice != null && StringUtils.hasText(reqVO.getDeviceNo())
+                && Objects.equals(reqVO.getDeviceNo().trim(), replayDevice.getDeviceNo());
+        if (!sameDevice) {
+            throw exception(XIANYU_SHIP_IDEMPOTENT_KEY_REUSED);
+        }
+        return replayDevice;
+    }
+
+    private String backfillRequestHash(XianyuOrderDispatchBackfillReqVO reqVO, Long deviceId,
+                                       String waybillNo, String expressCode, String expressName) {
+        String auditPayload = reqVO.getChannelOrderId() + "|" + deviceId + "|"
+                + waybillNo + "|" + expressCode + "|" + expressName + "|"
+                + reqVO.getConsignTime() + "|" + reqVO.getReason().trim();
+        return DigestUtils.md5DigestAsHex(auditPayload.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private XianyuOrderShipRespVO replayResponse(RentalDeviceShipmentDO shipment) {
+        return replayResponse(shipment, deviceMapper.selectById(shipment.getDeviceId()));
+    }
+
+    private XianyuOrderShipRespVO replayResponse(RentalDeviceShipmentDO shipment, RentalDeviceDO device) {
+        RentalDeliveryResult tracking = shipment.getDeliveryId() == null
+                ? null : deliveryService.getResult(shipment.getDeliveryId());
+        return toShipResp(shipment, device, "DISPATCHED", tracking);
     }
 
     private XianyuOrderShipRespVO toShipResp(RentalDeviceShipmentDO shipment, RentalDeviceDO device,
@@ -355,6 +549,12 @@ public class XianyuOrderShipService {
             resp.setTrackingPendingEvents(tracking.pendingEventTypes());
         }
         return resp;
+    }
+
+    private record BackfillDispatchResult(
+            RentalDeviceAssignmentResult assignment,
+            String assignmentStatus
+    ) {
     }
 
 }

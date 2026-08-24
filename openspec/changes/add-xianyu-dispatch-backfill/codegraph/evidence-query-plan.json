@@ -1,0 +1,82 @@
+{
+  "schema": "specnav.codegraph.evidence_query_plan.v1",
+  "generated_at": "2026-08-23T15:57:59.872Z",
+  "active_change": "add-xianyu-dispatch-backfill",
+  "queries": [
+    {
+      "id": "development:task-001-local-operator-contract:evidence",
+      "claim_id": "development:task-001-local-operator-contract",
+      "stage": "development",
+      "task_id": "001-local-operator-contract",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"The order page exposes one bounded local correction flow for status `21` or\" in change \"add-xianyu-dispatch-backfill\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-001-local-operator-contract --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-002-transactional-dispatch-backfill:evidence",
+      "claim_id": "development:task-002-transactional-dispatch-backfill",
+      "stage": "development",
+      "task_id": "002-transactional-dispatch-backfill",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"`POST /admin-api/rental/xianyu/order/dispatch-backfill` accepts keyboard-entered\" in change \"add-xianyu-dispatch-backfill\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-002-transactional-dispatch-backfill --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-003-admin-backfill-dialog:evidence",
+      "claim_id": "development:task-003-admin-backfill-dialog",
+      "stage": "development",
+      "task_id": "003-admin-backfill-dialog",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"For eligible status `21` or `22`, the row action opens the approved\" in change \"add-xianyu-dispatch-backfill\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-003-admin-backfill-dialog --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-004-regression-evidence:evidence",
+      "claim_id": "development:task-004-regression-evidence",
+      "stage": "development",
+      "task_id": "004-regression-evidence",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"The focused backend suite covers success and all approved negative paths, while\" in change \"add-xianyu-dispatch-backfill\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-004-regression-evidence --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-005-verification-handoff:evidence",
+      "claim_id": "development:task-005-verification-handoff",
+      "stage": "development",
+      "task_id": "005-verification-handoff",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Every baseline task has ownership, implementation evidence, independent spec\" in change \"add-xianyu-dispatch-backfill\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-005-verification-handoff --query \"<query>\" --write --json"
+    }
+  ]
+}

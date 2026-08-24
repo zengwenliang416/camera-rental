@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "approved_by": "user",
+  "approved_at": "2026-08-24T07:20:00Z",
+  "reason": "The user explicitly approved moving baseline items 5.4 and 5.5 out of the development-completion gate and into the Verification 2.0 case plan to remove the lifecycle cycle without changing product scope.",
+  "removed_task_ids": [
+    "5.4",
+    "5.5"
+  ]
+}

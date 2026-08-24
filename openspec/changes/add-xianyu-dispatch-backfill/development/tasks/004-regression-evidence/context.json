@@ -1,0 +1,71 @@
+{
+  "task_id": "004-regression-evidence",
+  "task_items": [
+    "4.1",
+    "4.2",
+    "4.3",
+    "4.4"
+  ],
+  "acceptance_primary": [
+    "A5",
+    "A6",
+    "A7",
+    "A8",
+    "A9",
+    "A10",
+    "A11",
+    "A12"
+  ],
+  "goal": "Produce current repeatable backend and admin evidence for success, negative paths, rollback, typing, and formatting.",
+  "must_read": [
+    "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/004-regression-evidence/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/requirements.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/acceptance.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/spec-map.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/component-impact-map.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/handoff.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/decision.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderController.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderDispatchBackfillReqVO.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceShipmentMapper.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java",
+    "camera-rental-admin/src/api/rental/xianyu.ts",
+    "camera-rental-admin/src/views/rental/order/index.vue",
+    "camera-rental-admin/src/views/rental/order/components/XianyuDispatchBackfillDialog.vue",
+    "camera-rental-admin/src/locales/zh-CN.ts",
+    "camera-rental-admin/src/locales/en.ts",
+    "openspec/changes/add-xianyu-dispatch-backfill/development",
+    "openspec/changes/add-xianyu-dispatch-backfill/tasks.md"
+  ],
+  "test_paths": [
+    "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=XianyuOrderShipServiceTest -Dsurefire.failIfNoSpecifiedTests=false test",
+    "cd camera-rental-admin && node --max_old_space_size=8192 ./node_modules/vue-tsc/bin/vue-tsc.js --noEmit --incremental --tsBuildInfoFile node_modules/.cache/vue-tsc/tsconfig.tsbuildinfo",
+    "cd camera-rental-admin && ./node_modules/.bin/eslint src/api/rental/xianyu.ts src/views/rental/order/index.vue src/views/rental/order/components/XianyuDispatchBackfillDialog.vue src/locales/zh-CN.ts src/locales/en.ts",
+    "cd camera-rental-admin && ./node_modules/.bin/prettier --check src/api/rental/xianyu.ts src/views/rental/order/index.vue src/views/rental/order/components/XianyuDispatchBackfillDialog.vue src/locales/zh-CN.ts src/locales/en.ts",
+    "git diff --check"
+  ],
+  "non_goals": [
+    "Do not use real external credentials, production tenant data, or remote writes.",
+    "Do not repair unrelated repository failures or broadly reformat files."
+  ],
+  "expected_evidence": [
+    "Current Maven test output for XianyuOrderShipServiceTest",
+    "Current admin type, ESLint, and Prettier output",
+    "Current git diff check output",
+    "Approved task report, spec review, and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Previously reported passing tests are stale until rerun after final edits.",
+    "Controller success does not prove transaction rollback or remote-write absence."
+  ],
+  "stop_condition": "Stop if a failure requires production access, external mutation, or edits outside the approved files."
+}

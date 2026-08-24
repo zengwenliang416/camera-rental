@@ -32,6 +32,12 @@ public interface ErrorCodeConstants {
     ErrorCode XIANYU_SHIP_ORDER_NOT_CONVERTED = new ErrorCode(1_040_001_024, "闲鱼订单尚未转换为租赁订单");
     ErrorCode XIANYU_SHIP_DEVICE_NOT_SHIPPABLE = new ErrorCode(1_040_001_025, "设备当前不可发货：{}");
     ErrorCode XIANYU_SHIP_OCR_FAILED = new ErrorCode(1_040_001_026, "未识别到有效快递单号");
+    ErrorCode XIANYU_DISPATCH_BACKFILL_ORDER_NOT_SHIPPED =
+            new ErrorCode(1_040_001_027, "闲鱼订单尚未发货，不能补录设备出库");
+    ErrorCode XIANYU_DISPATCH_BACKFILL_ORDER_CLOSED =
+            new ErrorCode(1_040_001_028, "闲鱼订单已退款或关闭，不能补录设备出库");
+    ErrorCode XIANYU_DISPATCH_BACKFILL_CONFLICT =
+            new ErrorCode(1_040_001_029, "已发货补录冲突：{}");
 
     // ========== 设备分配 / 设备二维码 1-040-002-000 ==========
     ErrorCode RENTAL_DEVICE_ASSIGN_FAILED = new ErrorCode(1_040_002_000, "设备分配失败：{}");

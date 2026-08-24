@@ -1,0 +1,49 @@
+{
+  "task_id": "005-verification-handoff",
+  "task_items": [
+    "5.1",
+    "5.2",
+    "5.3"
+  ],
+  "acceptance_primary": [
+    "A12"
+  ],
+  "goal": "Close development evidence and enter Verification 2.0 only through an explicitly approved immutable case snapshot.",
+  "must_read": [
+    "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/005-verification-handoff/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/requirements.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/acceptance.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/spec-map.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/component-impact-map.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/handoff.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/decision.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "openspec/changes/add-xianyu-dispatch-backfill/tasks.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/decision.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/handoff.md"
+  ],
+  "test_paths": [
+    "SPECNAV_CHANGE=add-xianyu-dispatch-backfill node /Users/wenliang_zeng/.codex/plugins/cache/specnav-marketplace/specnav-development/0.3.0/scripts/development-contract.js --mode entry --json",
+    "openspec validate add-xianyu-dispatch-backfill --strict"
+  ],
+  "non_goals": [
+    "Do not change approved scope, prototype variant, or baseline task identities.",
+    "Do not claim Verification 2.0 success without snapshot approval and a complete machine-authoritative report."
+  ],
+  "expected_evidence": [
+    "Passing development entry and handoff contracts",
+    "Complete task reports, acceptance receipts, reviews, ledgers, and validation logs",
+    "Verification handoff that preserves immutable snapshot approval and six-domain execution as post-development obligations"
+  ],
+  "unsafe_assumptions": [
+    "Prototype approval does not approve the later Verification 2.0 case snapshot.",
+    "Development validation is not a substitute for six-domain verification."
+  ],
+  "stop_condition": "Stop if development handoff is not green, snapshot approval is absent, or any verification domain is incomplete or stale."
+}

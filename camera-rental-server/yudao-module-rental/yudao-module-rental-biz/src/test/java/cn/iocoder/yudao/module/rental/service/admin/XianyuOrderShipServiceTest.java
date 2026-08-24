@@ -4,6 +4,7 @@ import cn.iocoder.yudao.framework.common.exception.ServiceException;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceOpsRespVO;
+import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderDispatchBackfillReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuPendingShipOrderPageReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuPendingShipOrderRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderShipReqVO;
@@ -45,13 +46,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.DigestUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_DISPATCH_BACKFILL_CONFLICT;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_DISPATCH_BACKFILL_ORDER_CLOSED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_WRITE_DISABLED;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_DISPATCH_BACKFILL_ORDER_NOT_SHIPPED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_DEVICE_NOT_SHIPPABLE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_IDEMPOTENT_KEY_REUSED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_PENDING;
@@ -177,6 +184,463 @@ class XianyuOrderShipServiceTest {
         assertEquals(XIANYU_SHIP_ORDER_NOT_PENDING.getCode(), ex.getCode());
         verify(shopMapper, never()).selectByTenantIdAndId(any(), any());
         verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void backfillDispatchedOrderCreatesLocalEvidenceWithoutRemoteWrite() {
+        XianyuOrderDO order = shippedOrder();
+        RentalOrderItemDO item = convertedOrderItem();
+        RentalDeviceOpsRespVO dispatched = new RentalDeviceOpsRespVO();
+        dispatched.setAssignmentStatus("DISPATCHED");
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(RentalOrderDO.builder().id(30L).build());
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(item);
+        when(assignmentService.assign(any())).thenReturn(new RentalDeviceAssignmentResult(
+                60L, 70L, 40L, item.getOccupyStartDate(), item.getOccupyEndDateExclusive()));
+        when(deviceOpsService.dispatch(any())).thenReturn(dispatched);
+
+        XianyuOrderShipRespVO resp = service().backfillDispatch(backfillReq());
+
+        assertEquals("ADMIN_BACKFILL", resp.getSource());
+        assertEquals("DISPATCHED", resp.getAssignmentStatus());
+        assertEquals(99L, resp.getDeliveryId());
+        verify(writeClient, never()).execute(any(), any());
+        verify(runtimeConfigService, never()).getCurrent();
+        ArgumentCaptor<RentalDeviceShipmentDO> shipmentCaptor =
+                ArgumentCaptor.forClass(RentalDeviceShipmentDO.class);
+        ArgumentCaptor<RentalDeliveryCreateCommand> deliveryCaptor =
+                ArgumentCaptor.forClass(RentalDeliveryCreateCommand.class);
+        verify(shipmentMapper).insert(shipmentCaptor.capture());
+        verify(deliveryService).createOrReuse(deliveryCaptor.capture());
+        assertEquals("ADMIN_BACKFILL", shipmentCaptor.getValue().getSource());
+        assertEquals("已发货补录：订单已在闲鱼后台发货，补录实际设备",
+                shipmentCaptor.getValue().getShipResponseMsg());
+        assertNotNull(shipmentCaptor.getValue().getShipRequestHash());
+        assertEquals("OUTBOUND", deliveryCaptor.getValue().direction().name());
+        assertEquals("shipment-backfill:99b4b469ec7a865972b32631d1da4108",
+                deliveryCaptor.getValue().sourceIdentifier());
+        assertEquals(40L, deliveryCaptor.getValue().devices().get(0).deviceId());
+        assertEquals(LocalDateTime.of(2026, 8, 23, 14, 30), order.getConsignTime());
+        assertEquals(LocalDate.of(2026, 8, 23), order.getShipDate());
+        verify(orderMapper).updateById(order);
+    }
+
+    @Test
+    void backfillRejectsOrderThatIsStillPendingShipment() {
+        XianyuOrderDO order = pendingOrder();
+        order.setWaybillNo("SF5113560342626");
+        order.setConsignTime(LocalDateTime.of(2026, 8, 23, 14, 30));
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
+
+        ServiceException ex = assertThrows(
+                ServiceException.class, () -> service().backfillDispatch(backfillReq()));
+
+        assertEquals(XIANYU_DISPATCH_BACKFILL_ORDER_NOT_SHIPPED.getCode(), ex.getCode());
+        verify(shopMapper, never()).selectByTenantIdAndId(any(), any());
+        verify(deviceMapper, never()).selectByDeviceNoForUpdate(any());
+        verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void backfillRejectsRefundedClosedOrCancelledOrderBeforeMutation() {
+        for (String status : List.of("23", "24")) {
+            XianyuOrderDO order = shippedOrder();
+            order.setOrderStatus(status);
+            when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
+
+            ServiceException ex = assertThrows(
+                    ServiceException.class, () -> service().backfillDispatch(backfillReq()));
+
+            assertEquals(XIANYU_DISPATCH_BACKFILL_ORDER_CLOSED.getCode(), ex.getCode());
+        }
+        XianyuOrderDO refunded = shippedOrder();
+        refunded.setRefundStatus(5);
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(refunded);
+
+        ServiceException refundedEx = assertThrows(
+                ServiceException.class, () -> service().backfillDispatch(backfillReq()));
+
+        assertEquals(XIANYU_DISPATCH_BACKFILL_ORDER_CLOSED.getCode(), refundedEx.getCode());
+        XianyuOrderDO cancelled = shippedOrder();
+        cancelled.setCancelTime(LocalDateTime.of(2026, 8, 23, 15, 0));
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(cancelled);
+
+        ServiceException cancelledEx = assertThrows(
+                ServiceException.class, () -> service().backfillDispatch(backfillReq()));
+
+        assertEquals(XIANYU_DISPATCH_BACKFILL_ORDER_CLOSED.getCode(), cancelledEx.getCode());
+        verify(shopMapper, never()).selectByTenantIdAndId(any(), any());
+        verify(deviceMapper, never()).selectByDeviceNoForUpdate(any());
+        verify(assignmentService, never()).assign(any());
+        verify(shipmentMapper, never()).insert(any(RentalDeviceShipmentDO.class));
+        verify(deliveryService, never()).createOrReuse(any());
+        verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void backfillRejectsNonShippableDeviceBeforeAssignment() {
+        RentalDeviceDO disabledDevice = shippableDevice();
+        disabledDevice.setEnabled(false);
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(shippedOrder());
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(disabledDevice);
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(RentalOrderDO.builder().id(30L).build());
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(convertedOrderItem());
+
+        ServiceException ex = assertThrows(
+                ServiceException.class, () -> service().backfillDispatch(backfillReq()));
+
+        assertEquals(XIANYU_SHIP_DEVICE_NOT_SHIPPABLE.getCode(), ex.getCode());
+        verify(assignmentService, never()).assign(any());
+        verify(deviceOpsService, never()).dispatch(any());
+        verify(shipmentMapper, never()).insert(any(RentalDeviceShipmentDO.class));
+    }
+
+    @Test
+    void backfillRejectsCrossTenantShopBeforeDeviceLookup() {
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(shippedOrder());
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(null);
+
+        ServiceException ex = assertThrows(
+                ServiceException.class, () -> service().backfillDispatch(backfillReq()));
+
+        assertEquals(XIANYU_SHOP_NOT_EXISTS.getCode(), ex.getCode());
+        verify(deviceMapper, never()).selectByDeviceNoForUpdate(any());
+        verify(assignmentService, never()).assign(any());
+        verify(deviceOpsService, never()).dispatch(any());
+        verify(shipmentMapper, never()).insert(any(RentalDeviceShipmentDO.class));
+        verify(deliveryService, never()).createOrReuse(any());
+        verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void backfillRejectsFormalShipmentWithSameBusinessKey() {
+        RentalDeviceShipmentDO existing = RentalDeviceShipmentDO.builder()
+                .id(80L)
+                .channelOrderId(10L)
+                .deviceId(40L)
+                .deliveryId(99L)
+                .waybillNo("SF5113560342626")
+                .expressCode("shunfeng")
+                .source("ADMIN")
+                .build();
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(shippedOrder());
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
+        when(shipmentMapper.selectByBusinessKeyForUpdate(
+                10L, "SF5113560342626", "shunfeng")).thenReturn(existing);
+
+        ServiceException ex = assertThrows(
+                ServiceException.class, () -> service().backfillDispatch(backfillReq()));
+
+        assertEquals(XIANYU_DISPATCH_BACKFILL_CONFLICT.getCode(), ex.getCode());
+        verify(rentalOrderMapper, never()).selectByIdForUpdate(any());
+        verify(shipmentMapper, never()).insert(any(RentalDeviceShipmentDO.class));
+    }
+
+    @Test
+    void backfillRejectsSameWaybillAlreadyBoundToDifferentDevice() {
+        RentalDeviceShipmentDO existing = RentalDeviceShipmentDO.builder()
+                .id(80L)
+                .channelOrderId(10L)
+                .deviceId(41L)
+                .waybillNo("SF5113560342626")
+                .expressCode("shunfeng")
+                .source("ADMIN_BACKFILL")
+                .build();
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(shippedOrder());
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
+        when(shipmentMapper.selectByBusinessKeyForUpdate(
+                10L, "SF5113560342626", "shunfeng")).thenReturn(existing);
+
+        ServiceException ex = assertThrows(
+                ServiceException.class, () -> service().backfillDispatch(backfillReq()));
+
+        assertEquals(XIANYU_DISPATCH_BACKFILL_CONFLICT.getCode(), ex.getCode());
+        verify(rentalOrderMapper, never()).selectByIdForUpdate(any());
+        verify(assignmentService, never()).assign(any());
+        verify(deviceOpsService, never()).dispatch(any());
+        verify(shipmentMapper, never()).insert(any(RentalDeviceShipmentDO.class));
+        verify(deliveryService, never()).createOrReuse(any());
+        verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void backfillConvertsUnmappedOrderBeforeAssignment() {
+        XianyuOrderDO order = shippedOrder();
+        order.setRentalOrderId(null);
+        order.setConversionStatus("PENDING");
+        RentalOrderItemDO item = convertedOrderItem();
+        RentalDeviceOpsRespVO dispatched = new RentalDeviceOpsRespVO();
+        dispatched.setAssignmentStatus("DISPATCHED");
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
+        when(conversionService.convertForShipment(10L, "DJI-P4P"))
+                .thenReturn(RentalConversionResult.converted(30L));
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(RentalOrderDO.builder().id(30L).build());
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(item);
+        when(assignmentService.assign(any())).thenReturn(new RentalDeviceAssignmentResult(
+                60L, 70L, 40L, item.getOccupyStartDate(), item.getOccupyEndDateExclusive()));
+        when(deviceOpsService.dispatch(any())).thenReturn(dispatched);
+
+        XianyuOrderShipRespVO resp = service().backfillDispatch(backfillReq());
+
+        assertEquals("DISPATCHED", resp.getAssignmentStatus());
+        assertEquals(30L, order.getRentalOrderId());
+        assertEquals("CONVERTED", order.getConversionStatus());
+        verify(conversionService).convertForShipment(10L, "DJI-P4P");
+        verify(assignmentService).assign(any());
+        verify(shipmentMapper).insert(any(RentalDeviceShipmentDO.class));
+        verify(deliveryService).createOrReuse(any());
+        verify(orderMapper).updateById(order);
+        verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void backfillDeliveryFailurePropagatesInsideRollbackForExceptionTransaction() throws NoSuchMethodException {
+        XianyuOrderDO order = shippedOrder();
+        RentalOrderItemDO item = convertedOrderItem();
+        RentalDeviceOpsRespVO dispatched = new RentalDeviceOpsRespVO();
+        dispatched.setAssignmentStatus("DISPATCHED");
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(RentalOrderDO.builder().id(30L).build());
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(item);
+        when(assignmentService.assign(any())).thenReturn(new RentalDeviceAssignmentResult(
+                60L, 70L, 40L, item.getOccupyStartDate(), item.getOccupyEndDateExclusive()));
+        when(deviceOpsService.dispatch(any())).thenReturn(dispatched);
+        when(deliveryService.createOrReuse(any())).thenThrow(
+                new RentalLogisticsException("DELIVERY_WRITE_FAILED"));
+
+        RentalLogisticsException ex = assertThrows(
+                RentalLogisticsException.class, () -> service().backfillDispatch(backfillReq()));
+
+        assertEquals("DELIVERY_WRITE_FAILED", ex.getCode());
+        Transactional transactional = XianyuOrderShipService.class
+                .getMethod("backfillDispatch", XianyuOrderDispatchBackfillReqVO.class)
+                .getAnnotation(Transactional.class);
+        assertNotNull(transactional);
+        assertEquals(Exception.class, transactional.rollbackFor()[0]);
+        verify(assignmentService).assign(any());
+        verify(deviceOpsService).dispatch(any());
+        verify(shipmentMapper).insert(any(RentalDeviceShipmentDO.class));
+        verify(shipmentMapper, never()).updateById(any(RentalDeviceShipmentDO.class));
+        verify(orderMapper, never()).updateById(order);
+        verify(writeClient, never()).execute(any(), any());
+        verify(runtimeConfigService, never()).getCurrent();
+    }
+
+    @Test
+    void backfillShipmentPersistenceFailureStopsOrderUpdate() {
+        XianyuOrderDO order = shippedOrder();
+        RentalOrderItemDO item = convertedOrderItem();
+        RentalDeviceOpsRespVO dispatched = new RentalDeviceOpsRespVO();
+        dispatched.setAssignmentStatus("DISPATCHED");
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(RentalOrderDO.builder().id(30L).build());
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(item);
+        when(assignmentService.assign(any())).thenReturn(new RentalDeviceAssignmentResult(
+                60L, 70L, 40L, item.getOccupyStartDate(), item.getOccupyEndDateExclusive()));
+        when(deviceOpsService.dispatch(any())).thenReturn(dispatched);
+        when(shipmentMapper.updateById(any(RentalDeviceShipmentDO.class)))
+                .thenThrow(new IllegalStateException("SHIPMENT_UPDATE_FAILED"));
+
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class, () -> service().backfillDispatch(backfillReq()));
+
+        assertEquals("SHIPMENT_UPDATE_FAILED", ex.getMessage());
+        verify(deliveryService).createOrReuse(any());
+        verify(orderMapper, never()).updateById(order);
+        verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void backfillRejectsIdempotencyKeyReusedForDifferentOrder() {
+        RentalDeviceShipmentDO replay = RentalDeviceShipmentDO.builder()
+                .channelOrderId(11L)
+                .deviceId(40L)
+                .idempotencyKey("ship-key")
+                .waybillNo("SF5113560342626")
+                .expressCode("shunfeng")
+                .source("ADMIN_BACKFILL")
+                .build();
+        when(shipmentMapper.selectByIdempotencyKeyForUpdate("ship-key")).thenReturn(replay);
+
+        ServiceException ex = assertThrows(
+                ServiceException.class, () -> service().backfillDispatch(backfillReq()));
+
+        assertEquals(XIANYU_SHIP_IDEMPOTENT_KEY_REUSED.getCode(), ex.getCode());
+        verify(orderMapper, never()).selectByIdForUpdate(any());
+        verify(deviceMapper, never()).selectByDeviceNoForUpdate(any());
+        verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void backfillReplaysMatchingIdempotentRequest() {
+        RentalDeviceDO device = shippableDevice();
+        String auditPayload = "10|40|SF5113560342626|shunfeng|顺丰速运|"
+                + "2026-08-23T14:30|订单已在闲鱼后台发货，补录实际设备";
+        RentalDeviceShipmentDO replay = RentalDeviceShipmentDO.builder()
+                .id(80L)
+                .channelOrderId(10L)
+                .assignmentId(60L)
+                .deviceId(40L)
+                .idempotencyKey("ship-key")
+                .waybillNo("SF5113560342626")
+                .expressCode("shunfeng")
+                .expressName("顺丰速运")
+                .shipRequestHash(DigestUtils.md5DigestAsHex(
+                        auditPayload.getBytes(StandardCharsets.UTF_8)))
+                .source("ADMIN_BACKFILL")
+                .build();
+        when(shipmentMapper.selectByIdempotencyKeyForUpdate("ship-key")).thenReturn(replay);
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(device);
+        when(deviceMapper.selectById(40L)).thenReturn(device);
+
+        XianyuOrderShipRespVO resp = service().backfillDispatch(backfillReq());
+
+        assertEquals(80L, resp.getShipmentId());
+        assertEquals("P4P-01-2JCW", resp.getDeviceNo());
+        assertEquals("DISPATCHED", resp.getAssignmentStatus());
+        verify(orderMapper, never()).selectByIdForUpdate(any());
+        verify(shipmentMapper, never()).insert(any(RentalDeviceShipmentDO.class));
+        verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void backfillRejectsChangedIdempotentRequestBeforeReplacementDeviceLookup() {
+        XianyuOrderDispatchBackfillReqVO req = backfillReq();
+        req.setDeviceNo("UNKNOWN-DEVICE");
+        RentalDeviceShipmentDO replay = RentalDeviceShipmentDO.builder()
+                .id(80L)
+                .channelOrderId(10L)
+                .assignmentId(60L)
+                .deviceId(40L)
+                .idempotencyKey("ship-key")
+                .waybillNo("SF5113560342626")
+                .expressCode("shunfeng")
+                .source("ADMIN_BACKFILL")
+                .build();
+        when(shipmentMapper.selectByIdempotencyKeyForUpdate("ship-key")).thenReturn(replay);
+        when(deviceMapper.selectById(40L)).thenReturn(shippableDevice());
+
+        ServiceException ex = assertThrows(
+                ServiceException.class, () -> service().backfillDispatch(req));
+
+        assertEquals(XIANYU_SHIP_IDEMPOTENT_KEY_REUSED.getCode(), ex.getCode());
+        verify(deviceMapper, never()).selectByDeviceNoForUpdate(any());
+        verify(orderMapper, never()).selectByIdForUpdate(any());
+    }
+
+    @Test
+    void backfillRejectsChangedReasonForExistingIdempotencyKey() {
+        XianyuOrderDispatchBackfillReqVO req = backfillReq();
+        req.setReason("修改后的补录原因");
+        RentalDeviceShipmentDO replay = RentalDeviceShipmentDO.builder()
+                .id(80L)
+                .channelOrderId(10L)
+                .assignmentId(60L)
+                .deviceId(40L)
+                .idempotencyKey("ship-key")
+                .waybillNo("SF5113560342626")
+                .expressCode("shunfeng")
+                .shipRequestHash("original-request-hash")
+                .source("ADMIN_BACKFILL")
+                .build();
+        when(shipmentMapper.selectByIdempotencyKeyForUpdate("ship-key")).thenReturn(replay);
+        when(deviceMapper.selectById(40L)).thenReturn(shippableDevice());
+
+        ServiceException ex = assertThrows(
+                ServiceException.class, () -> service().backfillDispatch(req));
+
+        assertEquals(XIANYU_SHIP_IDEMPOTENT_KEY_REUSED.getCode(), ex.getCode());
+        verify(orderMapper, never()).selectByIdForUpdate(any());
+        verify(shipmentMapper, never()).insert(any(RentalDeviceShipmentDO.class));
+    }
+
+    @Test
+    void backfillMapsAssignmentScheduleConflictToBackfillConflict() {
+        RentalOrderItemDO item = convertedOrderItem();
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(shippedOrder());
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(RentalOrderDO.builder().id(30L).build());
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(item);
+        when(assignmentService.assign(any())).thenThrow(new RentalDeviceAssignmentException(
+                RentalDeviceAssignmentException.Code.SCHEDULE_CONFLICT, "conflict"));
+
+        ServiceException ex = assertThrows(
+                ServiceException.class, () -> service().backfillDispatch(backfillReq()));
+
+        assertEquals(XIANYU_DISPATCH_BACKFILL_CONFLICT.getCode(), ex.getCode());
+        verify(deviceOpsService, never()).dispatch(any());
+        verify(shipmentMapper, never()).insert(any(RentalDeviceShipmentDO.class));
+    }
+
+    @Test
+    void backfillDispatchesExistingAssignedDevice() {
+        RentalOrderItemDO item = convertedOrderItem();
+        RentalDeviceAssignmentDO existing = RentalDeviceAssignmentDO.builder()
+                .id(60L)
+                .scheduleId(70L)
+                .rentalOrderId(30L)
+                .rentalOrderItemId(50L)
+                .deviceId(40L)
+                .status("ASSIGNED")
+                .build();
+        RentalDeviceOpsRespVO dispatched = new RentalDeviceOpsRespVO();
+        dispatched.setAssignmentStatus("DISPATCHED");
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(shippedOrder());
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(RentalOrderDO.builder().id(30L).build());
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(item);
+        when(assignmentMapper.selectActiveByOrderItemAndDeviceForUpdate(50L, 40L)).thenReturn(existing);
+        when(deviceOpsService.dispatch(any())).thenReturn(dispatched);
+
+        XianyuOrderShipRespVO resp = service().backfillDispatch(backfillReq());
+
+        assertEquals("DISPATCHED", resp.getAssignmentStatus());
+        verify(assignmentService, never()).assign(any());
+        verify(deviceOpsService).dispatch(any());
+        verify(shipmentMapper).insert(any(RentalDeviceShipmentDO.class));
+    }
+
+    @Test
+    void backfillReusesExistingDispatchedAssignmentWithoutDispatchingAgain() {
+        XianyuOrderDO order = shippedOrder();
+        RentalOrderItemDO item = convertedOrderItem();
+        RentalDeviceDO rentedDevice = shippableDevice();
+        rentedDevice.setStatus("RENTED");
+        RentalDeviceAssignmentDO existing = RentalDeviceAssignmentDO.builder()
+                .id(60L)
+                .scheduleId(70L)
+                .rentalOrderId(30L)
+                .rentalOrderItemId(50L)
+                .deviceId(40L)
+                .status("DISPATCHED")
+                .build();
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(rentedDevice);
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(RentalOrderDO.builder().id(30L).build());
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(item);
+        when(assignmentMapper.selectActiveByOrderItemAndDeviceForUpdate(50L, 40L)).thenReturn(existing);
+
+        XianyuOrderShipRespVO resp = service().backfillDispatch(backfillReq());
+
+        assertEquals("DISPATCHED", resp.getAssignmentStatus());
+        verify(assignmentService, never()).assign(any());
+        verify(deviceOpsService, never()).dispatch(any());
+        verify(shipmentMapper).insert(any(RentalDeviceShipmentDO.class));
+        verify(deliveryService).createOrReuse(any());
     }
 
     @Test
@@ -592,6 +1056,19 @@ class XianyuOrderShipServiceTest {
         return req;
     }
 
+    private XianyuOrderDispatchBackfillReqVO backfillReq() {
+        XianyuOrderDispatchBackfillReqVO req = new XianyuOrderDispatchBackfillReqVO();
+        req.setChannelOrderId(10L);
+        req.setDeviceNo("P4P-01-2JCW");
+        req.setIdempotencyKey("ship-key");
+        req.setExpressCode("shunfeng");
+        req.setExpressName("顺丰速运");
+        req.setWaybillNo("SF5113560342626");
+        req.setConsignTime(LocalDateTime.of(2026, 8, 23, 14, 30));
+        req.setReason("订单已在闲鱼后台发货，补录实际设备");
+        return req;
+    }
+
     private XianyuOrderDO pendingOrder() {
         return XianyuOrderDO.builder()
                 .id(10L)
@@ -601,6 +1078,15 @@ class XianyuOrderShipServiceTest {
                 .rentalOrderId(30L)
                 .receiverMobile("13800000000")
                 .build();
+    }
+
+    private XianyuOrderDO shippedOrder() {
+        XianyuOrderDO order = pendingOrder();
+        order.setOrderStatus("21");
+        order.setWaybillNo("SF5113560342626");
+        order.setExpressCode("shunfeng");
+        order.setExpressName("顺丰速运");
+        return order;
     }
 
     private XianyuShopDO validShop() {

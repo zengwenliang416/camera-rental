@@ -1,0 +1,58 @@
+{
+  "task_id": "001-local-operator-contract",
+  "task_items": [
+    "1.1",
+    "1.2",
+    "1.3"
+  ],
+  "acceptance_primary": [
+    "A3"
+  ],
+  "acceptance_subclaims": [
+    "A2",
+    "A4"
+  ],
+  "goal": "Freeze the approved local-only Web correction contract, exclusions, and limitations.",
+  "must_read": [
+    "openspec/changes/add-xianyu-dispatch-backfill/development/tasks/001-local-operator-contract/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/requirements.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/acceptance.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/spec-map.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/component-impact-map.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/handoff.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/decision.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "openspec/changes/add-xianyu-dispatch-backfill/requirements.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/acceptance.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/design.md",
+    "openspec/changes/add-xianyu-dispatch-backfill/spec-map.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/component-impact-map.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/scope.json",
+    "openspec/changes/add-xianyu-dispatch-backfill/tasks.md"
+  ],
+  "test_paths": [
+    "openspec validate add-xianyu-dispatch-backfill --strict",
+    "SPECNAV_CHANGE=add-xianyu-dispatch-backfill node /Users/wenliang_zeng/.codex/plugins/cache/specnav-marketplace/specnav-prototype/0.3.0/scripts/prototype-contract.js --json"
+  ],
+  "non_goals": [
+    "Do not edit production Java or Vue files in this slice.",
+    "Do not add scanner, remote write, migration, configuration, or permission scope."
+  ],
+  "expected_evidence": [
+    "Strict OpenSpec validation output",
+    "Green approved prototype contract",
+    "Task report with requirement and acceptance references",
+    "Approved spec and quality reviews"
+  ],
+  "unsafe_assumptions": [
+    "Tenant isolation is not user-to-shop authorization.",
+    "The approved one-device and first-item limitations cannot be expanded implicitly."
+  ],
+  "stop_condition": "Stop if the contract requires remote shipment, scanner hardware, a new migration, configuration, permission, or data-scope decision."
+}

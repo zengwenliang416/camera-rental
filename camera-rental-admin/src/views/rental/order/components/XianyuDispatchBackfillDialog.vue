@@ -35,10 +35,10 @@
       <el-form-item :label="t('rental.xianyu.waybillNo')" prop="waybillNo">
         <el-input v-model.trim="form.waybillNo" />
       </el-form-item>
-      <el-form-item :label="t('rental.order.expressCode')" prop="expressCode">
+      <el-form-item :label="t('rental.xianyu.expressCode')" prop="expressCode">
         <el-input v-model.trim="form.expressCode" />
       </el-form-item>
-      <el-form-item :label="t('rental.order.expressName')" prop="expressName">
+      <el-form-item :label="t('rental.xianyu.expressName')" prop="expressName">
         <el-input v-model.trim="form.expressName" />
       </el-form-item>
       <el-form-item :label="t('rental.order.backfillConsignTime')" prop="consignTime">

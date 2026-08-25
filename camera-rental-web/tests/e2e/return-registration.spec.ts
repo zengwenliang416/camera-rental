@@ -127,6 +127,26 @@ test('order and mobile can both stay empty while machine and waybill remain requ
   await expect(page.getByText('请填写快递单号')).toBeVisible()
 })
 
+test('current ASCII and stand machine codes pass the return-entry validation', async ({ page }) => {
+  const submittedCodes: string[] = []
+  await mockReturnApi(page, {
+    onSubmit: (request) => {
+      submittedCodes.push((request.postDataJSON() as { machineCode: string }).machineCode)
+      return acceptedReceipt()
+    }
+  })
+
+  for (const machineCode of ['X300U-01', '支架-01']) {
+    await page.goto('/return')
+    await page.getByPlaceholder('例如 P4-01').fill(machineCode)
+    await page.getByPlaceholder('输入或粘贴物流单号').fill('SF1000000001')
+    await page.getByRole('button', { name: '提交退回信息' }).click()
+    await expect(page.getByRole('heading', { name: '退回信息已登记' })).toBeVisible()
+  }
+
+  expect(submittedCodes).toEqual(['X300U-01', '支架-01'])
+})
+
 test('failed single submission shows the server verification error', async ({ page }) => {
   await mockReturnApi(page, { submitFailure: true })
   await page.goto('/return')

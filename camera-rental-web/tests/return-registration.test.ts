@@ -18,6 +18,23 @@ describe('customer return registration utilities', () => {
     expect(returnSerialPattern.test('A6-08-4L5H')).toBe(false)
   })
 
+  test('accepts every current return model prefix and the explicit stand code', () => {
+    const prefixes = [
+      '360', 'NANO', 'A5', 'A6', 'P3', 'P4', 'P4P',
+      'ACE', 'X5', 'GT', 'G3',
+      'X300P', 'X200U', 'X300U',
+      'XT5', 'XT50', 'XS20', 'X100VI',
+      'R50', 'G12', 'G7X2',
+      'GR3X', 'GR4',
+      '支架'
+    ]
+
+    for (const prefix of prefixes) {
+      expect(returnSerialPattern.test(`${prefix}-01`)).toBe(true)
+    }
+    expect(returnSerialPattern.test('相机-01')).toBe(false)
+  })
+
   test('allows submission without an optional packaging photo', () => {
     expect(hasRequiredReturnPhotos([
       photo(1, 'DEVICE_EXTERIOR'),

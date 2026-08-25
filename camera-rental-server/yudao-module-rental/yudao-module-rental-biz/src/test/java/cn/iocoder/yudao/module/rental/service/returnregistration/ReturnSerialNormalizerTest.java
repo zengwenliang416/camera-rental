@@ -23,6 +23,23 @@ class ReturnSerialNormalizerTest {
     }
 
     @Test
+    void acceptsCurrentReturnModelPrefixesAndExplicitStandCode() {
+        String[] prefixes = {
+                "360", "NANO", "A5", "A6", "P3", "P4", "P4P",
+                "ACE", "X5", "GT", "G3",
+                "X300P", "X200U", "X300U",
+                "XT5", "XT50", "XS20", "X100VI",
+                "R50", "G12", "G7X2",
+                "GR3X", "GR4",
+                "支架"
+        };
+        for (String prefix : prefixes) {
+            assertTrue(normalizer.isValid(prefix + "-01"), prefix);
+        }
+        assertFalse(normalizer.isValid("相机-01"));
+    }
+
+    @Test
     void rejectsLegacyLongOrNonTwoDigitCodes() {
         assertFalse(normalizer.isValid("A6-08-4L5H"));
         assertFalse(normalizer.isValid("P4-1"));

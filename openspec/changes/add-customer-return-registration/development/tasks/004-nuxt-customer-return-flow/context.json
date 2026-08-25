@@ -1,5 +1,18 @@
 {
   "task_id": "004-nuxt-customer-return-flow",
+  "task_items": [
+    "4.1",
+    "4.2",
+    "4.3",
+    "4.4",
+    "7.3",
+    "8.3",
+    "9.3",
+    "9.4",
+    "9.5",
+    "10.3",
+    "12.2"
+  ],
   "goal": "Deliver the approved five-step return experience in production Nuxt.",
   "must_read": [
     "openspec/changes/add-customer-return-registration/development/tasks/004-nuxt-customer-return-flow/brief.md",

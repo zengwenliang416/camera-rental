@@ -1,5 +1,12 @@
 {
   "task_id": "005-admin-return-operations",
+  "task_items": [
+    "5.1",
+    "5.2",
+    "5.3",
+    "5.4",
+    "7.4"
+  ],
   "goal": "Manage return registration links and review submissions with tenant-safe permissions.",
   "must_read": [
     "openspec/changes/add-customer-return-registration/development/tasks/005-admin-return-operations/brief.md",

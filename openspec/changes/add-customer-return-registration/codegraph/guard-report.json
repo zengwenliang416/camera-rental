@@ -1,14 +1,14 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-03T10:49:42.806Z",
+  "generated_at": "2026-08-25T14:46:14.538Z",
   "active_change": "add-customer-return-registration",
   "stage": "development",
   "ok": true,
   "status": {
     "policy": {
       "enabled": true,
-      "profile": "bootstrap",
-      "mode": "observe",
+      "profile": "active_dev",
+      "mode": "advisory",
       "stage": "development",
       "required_for_stage": false,
       "disabled_reason": null
@@ -31,9 +31,9 @@
       ]
     },
     "index": {
-      "initialized": false,
+      "initialized": true,
       "projectPath": "/Volumes/zwl/camera-rental-github",
-      "indexPath": null,
+      "indexPath": "/Volumes/zwl/camera-rental-github/.codegraph",
       "lastIndexed": null,
       "fileCount": 0,
       "nodeCount": 0,
@@ -50,20 +50,18 @@
   "decision": {
     "schema": "specnav.codegraph.decision.v1",
     "stage": "development",
-    "profile": "bootstrap",
-    "effective_mode": "observe",
+    "profile": "active_dev",
+    "effective_mode": "advisory",
     "required_for_stage": false,
     "execution_surface": "cli",
-    "result": "warn",
+    "result": "pass",
     "blockers": [],
-    "warnings": [
-      "codegraph:not-indexed"
-    ],
-    "explanation": "CodeGraph policy has advisory warnings for development."
+    "warnings": [],
+    "explanation": "CodeGraph policy satisfied for development."
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-03T10:49:42.803Z",
+    "generated_at": "2026-08-25T14:46:14.534Z",
     "active_change": "add-customer-return-registration",
     "source_raw": "openspec/changes/add-customer-return-registration/codegraph/evidence.jsonl",
     "by_claim": {},
@@ -74,7 +72,7 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-03T10:49:42.806Z",
+    "generated_at": "2026-08-25T14:46:14.538Z",
     "active_change": "add-customer-return-registration",
     "claims_file": "openspec/changes/add-customer-return-registration/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/add-customer-return-registration/codegraph/evidence-index.json",
@@ -106,7 +104,6 @@
   },
   "blockers": [],
   "warnings": [
-    "codegraph:not-indexed",
     "codegraph:claim-unverified:development:task-001-secure-registration-foundation",
     "codegraph:claim-unverified:development:task-002-private-rustfs-upload",
     "codegraph:claim-unverified:development:task-003-idempotent-return-submission",

@@ -1,5 +1,14 @@
 {
   "task_id": "001-secure-registration-foundation",
+  "task_items": [
+    "1.1",
+    "1.2",
+    "1.3",
+    "7.1",
+    "7.2",
+    "11.2",
+    "11.3"
+  ],
   "goal": "Issue and persist a secure order-bound return registration link.",
   "must_read": [
     "openspec/changes/add-customer-return-registration/development/tasks/001-secure-registration-foundation/brief.md",

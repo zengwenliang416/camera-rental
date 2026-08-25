@@ -1,14 +1,12 @@
 {
   "schema": "specnav.codegraph.decision.v1",
   "stage": "development",
-  "profile": "bootstrap",
-  "effective_mode": "observe",
+  "profile": "active_dev",
+  "effective_mode": "advisory",
   "required_for_stage": false,
   "execution_surface": "cli",
-  "result": "warn",
+  "result": "pass",
   "blockers": [],
-  "warnings": [
-    "codegraph:not-indexed"
-  ],
-  "explanation": "CodeGraph policy has advisory warnings for development."
+  "warnings": [],
+  "explanation": "CodeGraph policy satisfied for development."
 }

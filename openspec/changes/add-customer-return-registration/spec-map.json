@@ -10,6 +10,7 @@
     "five-step-order-logistics-devices-photos-review-flow",
     "required-exterior-and-serial-photos-optional-packaging",
     "fixed-return-entry-with-order-and-mobile-last4-verification",
+    "current-return-machine-prefixes-including-explicit-chinese-stand-code",
     "verification-loading-failure-submitted-review-and-success-states",
     "minimum-44px-touch-targets-and-visible-focus",
     "no-page-horizontal-overflow-from-360px",
@@ -68,7 +69,8 @@
     "no-device-order-inspection-or-schedule-auto-transition",
     "additive-migration-only",
     "github-main-auto-deploy-to-154.9.235.80",
-    "production-upload-database-and-admin-e2e-verification"
+    "production-upload-database-and-admin-e2e-verification",
+    "return-machine-prefix-matrix-covered-by-frontend-and-backend-tests"
   ],
   "data_flows": [
     "FLOW-PUBLIC-RETURN-VERIFY",

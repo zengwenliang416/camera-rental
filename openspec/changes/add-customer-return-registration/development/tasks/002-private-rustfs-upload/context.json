@@ -1,5 +1,13 @@
 {
   "task_id": "002-private-rustfs-upload",
+  "task_items": [
+    "2.1",
+    "2.2",
+    "2.3",
+    "2.4",
+    "9.1",
+    "9.2"
+  ],
   "goal": "Upload return photos privately through token-scoped authorization and existing file metadata.",
   "must_read": [
     "openspec/changes/add-customer-return-registration/development/tasks/002-private-rustfs-upload/brief.md",

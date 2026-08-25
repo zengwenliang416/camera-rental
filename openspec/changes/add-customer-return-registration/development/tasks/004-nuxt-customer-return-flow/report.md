@@ -8,6 +8,7 @@ DONE
 
 - Nuxt `/return/[token]` route, step components, API/draft/preferences composables, types, validation utilities and styles.
 - `camera-rental-web/tests/return-registration.test.ts`.
+- Return-entry machine-code validator for the current business prefix matrix.
 
 ## What Changed
 
@@ -15,18 +16,26 @@ DONE
 - Added required exterior and serial-label photos; packaging and damage photos remain optional.
 - Added upload progress, retained failed tasks with retry, draft persistence, idempotency key persistence and status receipts.
 - Added `zh-CN`/`en`, light/dark preferences, mobile/desktop layouts and SSR-safe browser-global usage.
+- Aligned client validation with the backend so `X300U-01`, `支架-01` and the
+  remaining approved model prefixes are accepted without making the client
+  authoritative for device matching.
 
 ## TDD Evidence
 
-- Bun tests cover serial normalization, optional packaging omission and both locales.
+- Bun tests cover serial normalization, all 24 approved prefixes, arbitrary
+  Chinese-prefix rejection, optional packaging omission and both locales.
+- A focused mobile Playwright case proves `X300U-01` and `支架-01` both pass
+  the actual one-page validator and reach the mocked submission boundary.
 - Browser verification covered the complete Chinese light flow, 360 px light layout, 430 px dark English layout and terminal states.
 - The complete flow submitted two required photos and omitted packaging successfully.
 
 ## Verification Commands
 
 - `bun test`
+- `bun test tests/return-registration.test.ts`
 - `bunx nuxi typecheck`
 - `bun run build`
+- `bunx playwright test tests/e2e/return-registration.spec.ts --grep "current ASCII and stand machine codes"`
 - Local browser sensory matrix with synthetic API data.
 
 ## Concerns

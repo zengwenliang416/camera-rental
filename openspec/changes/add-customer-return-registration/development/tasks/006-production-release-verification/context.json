@@ -1,5 +1,16 @@
 {
   "task_id": "006-production-release-verification",
+  "task_items": [
+    "6.1",
+    "6.2",
+    "6.3",
+    "6.4",
+    "7.5",
+    "8.5",
+    "9.6",
+    "11.4",
+    "12.3"
+  ],
   "goal": "Prepare and verify the complete return registration release path for the 154.9.235.80 production host.",
   "must_read": [
     "openspec/changes/add-customer-return-registration/development/tasks/006-production-release-verification/brief.md",

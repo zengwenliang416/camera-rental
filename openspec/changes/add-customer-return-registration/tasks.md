@@ -136,3 +136,17 @@ an internal serial-style identifier.
   codes while preserving the prior device number as a compatibility alias.
 - [x] 11.4 Cover the short-code rule in backend, admin and Nuxt tests and deploy
   it directly to production-80.
+
+## 12. Current model prefixes at the return entry
+
+User outcome: A customer can enter the current DJI, Insta360, phone, Fujifilm,
+Canon, Ricoh and stand machine codes without a false format rejection.
+
+- [x] 12.1 Extend backend return-code validation for the current business prefix
+  matrix, including `X300U-01` and the explicit Chinese code `支架-01`, while
+  preserving existing valid ASCII prefixes, rejecting arbitrary Chinese
+  prefixes and keeping order/device matching unchanged.
+- [x] 12.2 Align the Nuxt return-entry validation with the backend and add
+  focused frontend regression cases for every approved prefix.
+- [x] 12.3 Run focused Nuxt utility tests, rental backend tests and production
+  build/static checks for the return entry.

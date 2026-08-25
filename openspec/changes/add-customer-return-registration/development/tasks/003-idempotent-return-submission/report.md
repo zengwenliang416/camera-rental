@@ -10,6 +10,8 @@ DONE
 - Serial normalization and device matching persistence.
 - Delivery channel-order compatibility changes and migration 034.
 - Submission, attachment and serial tests.
+- Return-specific machine-code validation and regression coverage for the
+  current business prefix matrix.
 
 ## What Changed
 
@@ -18,16 +20,25 @@ DONE
 - Creates or reuses one local-only `RETURN` Delivery only when all devices and attachments are safe.
 - Persists `REVIEW_REQUIRED` without Delivery or device/order/inspection/schedule lifecycle changes when matching or issue review is needed.
 - Repeated submissions return the original receipt without duplicate writes.
+- Accepts all current ASCII model prefixes and the explicit `支架-01` code at
+  the return boundary while continuing to reject arbitrary Chinese prefixes.
 
 ## TDD Evidence
 
 - `ReturnRegistrationSubmissionServiceTest` covers safe Delivery creation, mismatch review, duplicate submission and required-photo rejection.
-- `ReturnSerialNormalizerTest` covers the physical short serial format.
+- `ReturnSerialNormalizerTest` covers the physical short serial format, all 24
+  approved prefixes, the explicit stand code and an arbitrary-Chinese-prefix
+  rejection.
+- The wider return-registration regression suite ran 61 tests across public
+  verification, submission, attachments, admin review, sessions and rate
+  limits with no failures.
 - Attachment revalidation tests prevent cross-object replacement before submission.
 
 ## Verification Commands
 
 - Focused Maven command in task 001.
+- `/Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=ReturnSerialNormalizerTest -Dsurefire.failIfNoSpecifiedTests=false test`
+- `/Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest='ReturnRegistration*Test,RentalReturnRegistrationControllerTest' -Dsurefire.failIfNoSpecifiedTests=false test`
 - `git diff --check`
 
 ## Concerns

@@ -27,6 +27,10 @@ DONE
 - Migration runner test proves first apply, replay skip and checksum-change rejection.
 - Incremental build helper regression passed.
 - Backend, Nuxt and admin validation commands passed.
+- The current model-prefix follow-up passed the 61-test backend return suite,
+  the project-defined Nuxt utility suite, Nuxt typecheck and production build,
+  a focused mobile Playwright submission case, JSON parsing and scoped
+  whitespace checks.
 
 ## Verification Commands
 
@@ -34,6 +38,10 @@ DONE
 - `bash ops/github-deploy/tests/incremental-build-lib-test.sh`
 - `bash -n ops/rustfs/*.sh ops/github-deploy/*.sh ops/github-deploy/tests/*.sh`
 - Backend, Nuxt and admin commands recorded in `development/validation-log.jsonl`.
+- `bun test tests/return-registration.test.ts`
+- `/Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=ReturnSerialNormalizerTest -Dsurefire.failIfNoSpecifiedTests=false test`
+- `bun run build`
+- Scoped `git diff --check` and `jq empty` for the active change artifacts.
 
 ## Concerns
 

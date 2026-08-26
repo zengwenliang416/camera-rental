@@ -8,6 +8,7 @@ export interface RentalDeviceVO {
   id: number
   deviceNo: string
   serialNumber?: string
+  categoryCode?: string
   equipmentModelCode: string
   status: string
   warehouseCode?: string
@@ -48,8 +49,8 @@ export interface RentalDeviceScheduleDetailVO {
 }
 
 export interface RentalDeviceCreateReqVO {
-  deviceNo: string
   serialNumber?: string
+  categoryCode: string
   equipmentModelCode: string
   status?: string
   warehouseCode?: string
@@ -66,7 +67,36 @@ export interface RentalDeviceAssignReqVO {
 }
 
 export interface RentalDevicePageReqVO extends PageParam {
+  categoryCode?: string
   equipmentModelCode?: string
+}
+
+export interface RentalDeviceCategoryVO {
+  id: number
+  categoryCode: string
+  categoryName: string
+  models: RentalDeviceModelVO[]
+}
+
+export interface RentalDeviceModelVO {
+  id: number
+  modelCode: string
+  modelName: string
+  deviceNoPrefix: string
+}
+
+export interface RentalDeviceCategoryCreateReqVO {
+  categoryCode: string
+  categoryName: string
+  sortOrder?: number
+}
+
+export interface RentalDeviceModelCreateReqVO {
+  categoryId: number
+  modelCode: string
+  modelName: string
+  deviceNoPrefix: string
+  sortOrder?: number
 }
 
 export interface RentalDeviceAssignmentResultVO {
@@ -79,6 +109,18 @@ export interface RentalDeviceAssignmentResultVO {
 
 export const getRentalDevicePage = (params: RentalDevicePageReqVO) => {
   return request.get<PageResult<RentalDeviceVO[]>>({ url: '/rental/device/page', params })
+}
+
+export const getRentalDeviceCatalog = () => {
+  return request.get<RentalDeviceCategoryVO[]>({ url: '/rental/device/catalog' })
+}
+
+export const createRentalDeviceCategory = (data: RentalDeviceCategoryCreateReqVO) => {
+  return request.post<number>({ url: '/rental/device/catalog/category/create', data })
+}
+
+export const createRentalDeviceModel = (data: RentalDeviceModelCreateReqVO) => {
+  return request.post<number>({ url: '/rental/device/catalog/model/create', data })
 }
 
 export const getRentalDeviceDetail = (id: number) => {

@@ -85,9 +85,12 @@ Admin review
   frontend or Java hard-coded runtime catalog.
 - The existing device page owns two small quick-create dialogs exposed through
   the category and model select footers. No route or menu is added.
-- Device creation locks the selected enabled model row, formats the configured
-  prefix with the current two-digit sequence, increments the sequence and then
-  inserts the physical device in one transaction.
+- Manual device creation validates the selected enabled category/model pair,
+  normalizes the administrator-entered `1-999` number to the canonical
+  `01-999` form, combines it
+  with the configured prefix and relies on the tenant device-number unique
+  constraint for concurrent duplicate protection. ERP bulk inbound retains the
+  row-locked sequence allocator.
 - Existing order, assignment, schedule, dispatch, return and inspection
   services remain unchanged.
 

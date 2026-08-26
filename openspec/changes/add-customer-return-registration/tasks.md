@@ -130,8 +130,8 @@ an internal serial-style identifier.
 
 - [x] 11.1 Standardize customer machine-code validation and copy as
   `MODEL-01`, including lowercase and full-width-dash normalization.
-- [x] 11.2 Generate future ERP-inbound device numbers with two-digit sequences
-  and reject a model prefix after sequence `99`.
+- [x] 11.2 Generate future ERP-inbound device numbers with canonical
+  `01-999` sequences and reject a model prefix after sequence `999`.
 - [x] 11.3 Add an incremental migration that assigns stable per-model short
   codes while preserving the prior device number as a compatibility alias.
 - [x] 11.4 Cover the short-code rule in backend, admin and Nuxt tests and deploy
@@ -170,15 +170,17 @@ and create a device by selecting a valid model from that category.
 
 User outcome: An authorized store administrator can add a device category or
 model with its numbering prefix directly from the existing device-create
-dialog, then create a device with a server-generated unique short code.
+dialog, then enter the device number that the server combines with the model
+prefix into a unique short code.
 
 - [x] 14.1 Add tenant-aware device-category and device-model tables, seed the
   current catalog for existing tenants and retain `rental_device` as the
   physical-instance authority.
 - [x] 14.2 Replace the static catalog authority with tenant-aware query and
   create services, including normalized unique category/model/prefix checks.
-- [x] 14.3 Generate device numbers transactionally from the selected model's
-  configured prefix while preserving two-digit `01-99` validation.
+- [x] 14.3 Accept an administrator-entered `1-999` number for manual creation,
+  normalize it to canonical `01-999` form, combine it with the selected model's configured
+  prefix and reject duplicates without consuming the ERP sequence allocator.
 - [x] 14.4 Add category/model quick-create dialogs to the existing admin device
   page, refresh the catalog after save and automatically select the new record.
 - [x] 14.5 Add focused backend/frontend tests, type-check, build, migration

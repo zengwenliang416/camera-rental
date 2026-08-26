@@ -36,9 +36,10 @@
 - Duplicate submissions return the original receipt without duplicate business writes.
 - Admin operations are backend-permissioned and show authorized full customer details.
 - Migrations block release activation on failure or checksum drift.
-- Device creation accepts only a catalog-valid category/model pair and allocates
-  the final device number from the model's configured prefix; unknown historical
-  and ERP models remain unclassified rather than being deleted or guessed.
+- Device creation accepts only a catalog-valid category/model pair and combines
+  the model's configured prefix with the administrator-entered `01-999`
+  number; unknown historical and ERP models remain unclassified rather than
+  being deleted or guessed.
 
 ## Prototype Decisions Implemented
 
@@ -95,11 +96,15 @@
 - Backend: 12 tests passed with zero failures/errors.
 - Nuxt: 3 tests, typecheck and production build passed.
 - Admin: TypeScript check and production build passed.
-- Admin device catalog: 3 frontend model tests, TypeScript check and local build
-  passed; same-origin browser interaction covered all seven categories,
-  category/model linking, prefix defaults and category/model filtering.
-- Backend device catalog: 7 focused tests passed for catalog membership, direct
-  create validation, explicit stand codes and ERP known/unknown model handling.
+- Admin device catalog: frontend model tests cover category/model linking,
+  administrator number normalization and full-number preview. The 3 focused
+  tests, TypeScript check and local build passed for the current
+  manual-numbering change.
+- Backend device catalog: focused tests cover catalog membership, manual number
+  composition, duplicate rejection, explicit stand codes and ERP known/unknown
+  model handling; 27 focused tests passed.
+- Customer return: 7 focused Nuxt tests and the production build passed for
+  canonical `01-999` machine-code validation.
 - Shell/Compose: migration runner, incremental helper, Bash syntax and RustFS Compose validation passed.
 - Browser: complete synthetic flow and required terminal/theme/locale/responsive states passed with zero application console errors.
 - Fixed entry regression: 12 focused backend tests and 4 Playwright mobile flows passed for last-four-only verification, ambiguity rejection and historical-route redirect.

@@ -10,7 +10,7 @@ existing device-create dialog.
 
 - Additive tenant-aware category/model tables and current-catalog seed data.
 - Backend catalog query and category/model create endpoints.
-- Transactional device-number allocation from a model prefix.
+- Manual device-number composition from a model prefix and administrator input.
 - Existing-page quick-create dialogs with refresh and auto-selection.
 - Focused backend/frontend tests, type-check and build.
 
@@ -26,13 +26,13 @@ existing device-create dialog.
 
 - Existing `Dialog`, Element Plus `el-select` footer slots and
   `open('create')`/`success` form pattern.
-- Existing `TenantBaseDO`, MyBatis Plus mapper and row-lock patterns.
-- Existing `RentalDeviceCode` normalization and two-digit formatting.
+- Existing `TenantBaseDO`, MyBatis Plus mapper and tenant unique constraints.
+- Existing `RentalDeviceCode` normalization and canonical `01-999` formatting.
 - Existing `rental:device:create` permission.
 
 ## Verification
 
 - Focused Maven tests for catalog normalization, uniqueness, tenant ownership,
-  automatic numbering and ERP inbound classification.
+  manual number composition, duplicate rejection and ERP inbound classification.
 - Admin catalog model tests, `pnpm ts:check` and `pnpm build:local`.
 - Scoped `git diff --check`.

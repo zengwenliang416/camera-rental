@@ -10,11 +10,14 @@ describe('customer return registration utilities', () => {
     expect(returnSerialPattern.test(value)).toBe(true)
   })
 
-  test('requires a model prefix and two-digit sequence', () => {
+  test('requires a model prefix and canonical 01-999 sequence', () => {
     expect(returnSerialPattern.test('P4P-01')).toBe(true)
     expect(returnSerialPattern.test('DJI-P4P-09')).toBe(true)
+    expect(returnSerialPattern.test('P4P-100')).toBe(true)
+    expect(returnSerialPattern.test('支架-999')).toBe(true)
     expect(returnSerialPattern.test('P4-1')).toBe(false)
     expect(returnSerialPattern.test('P4-001')).toBe(false)
+    expect(returnSerialPattern.test('P4-1000')).toBe(false)
     expect(returnSerialPattern.test('A6-08-4L5H')).toBe(false)
   })
 

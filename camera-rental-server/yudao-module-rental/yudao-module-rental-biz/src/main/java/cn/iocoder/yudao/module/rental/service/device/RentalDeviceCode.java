@@ -4,14 +4,15 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
- * Customer-facing machine code, for example {@code P4-01}.
+ * Customer-facing machine code, for example {@code P4-01} or {@code P4-100}.
  */
 public final class RentalDeviceCode {
 
     private static final Pattern DASHES = Pattern.compile("[‐‑‒–—―−﹘﹣－]");
     private static final Pattern WHITESPACE = Pattern.compile("\\s+");
     private static final Pattern VALID =
-            Pattern.compile("^(?=.{4,64}$)(?:[A-Z0-9]+(?:-[A-Z0-9]+)*|支架)-\\d{2}$");
+            Pattern.compile("^(?=.{4,64}$)(?:[A-Z0-9]+(?:-[A-Z0-9]+)*|支架)"
+                    + "-(?:0[1-9]|[1-9][0-9]|[1-9][0-9]{2})$");
 
     private RentalDeviceCode() {
     }
@@ -30,8 +31,8 @@ public final class RentalDeviceCode {
     }
 
     public static String format(String prefix, int sequence) {
-        if (sequence < 1 || sequence > 99) {
-            throw new IllegalArgumentException("设备短码序号必须在 01-99 之间");
+        if (sequence < 1 || sequence > 999) {
+            throw new IllegalArgumentException("设备短码序号必须在 01-999 之间");
         }
         String normalizedPrefix = normalizePrefix(prefix);
         if (normalizedPrefix.isBlank()) {

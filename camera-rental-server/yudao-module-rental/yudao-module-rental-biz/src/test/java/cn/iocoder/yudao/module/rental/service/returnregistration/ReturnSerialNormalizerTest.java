@@ -17,9 +17,11 @@ class ReturnSerialNormalizerTest {
     }
 
     @Test
-    void acceptsModelPrefixesWithTwoDigitSequence() {
+    void acceptsCanonicalTwoAndThreeDigitSequences() {
         assertTrue(normalizer.isValid("P4P-01"));
         assertTrue(normalizer.isValid("DJI-P4P-09"));
+        assertTrue(normalizer.isValid("P4P-100"));
+        assertTrue(normalizer.isValid("支架-999"));
     }
 
     @Test
@@ -40,10 +42,11 @@ class ReturnSerialNormalizerTest {
     }
 
     @Test
-    void rejectsLegacyLongOrNonTwoDigitCodes() {
+    void rejectsLegacyLongOrNonCanonicalCodes() {
         assertFalse(normalizer.isValid("A6-08-4L5H"));
         assertFalse(normalizer.isValid("P4-1"));
         assertFalse(normalizer.isValid("P4-001"));
+        assertFalse(normalizer.isValid("P4-1000"));
         assertFalse(normalizer.isValid("P4/01"));
     }
 }

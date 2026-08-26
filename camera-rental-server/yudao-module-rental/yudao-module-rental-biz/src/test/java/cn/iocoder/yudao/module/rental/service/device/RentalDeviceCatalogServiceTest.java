@@ -21,6 +21,7 @@ import java.util.List;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_CATALOG_CODE_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_CATEGORY_DUPLICATE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_CATEGORY_NOT_EXISTS;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_CODE_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_MODEL_DUPLICATE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_PREFIX_DUPLICATE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_SEQUENCE_EXHAUSTED;
@@ -150,6 +151,48 @@ class RentalDeviceCatalogServiceTest {
     }
 
     @Test
+    void composesAdministratorSelectedNumberWithModelPrefix() {
+        RentalDeviceCategoryDO category = category(1L, "DJI", "大疆");
+        RentalDeviceModelDO model = model(2L, 1L, "P4P", "P4P", 1);
+        when(categoryMapper.selectByCode("DJI")).thenReturn(category);
+        when(modelMapper.selectByCategoryAndCode(1L, "P4P")).thenReturn(model);
+
+        var selection = service.composeDeviceNumber(" dji ", " p4p ", "2");
+
+        assertEquals("P4P-02", selection.deviceNo());
+        assertEquals("DJI", selection.model().categoryCode());
+        assertEquals("P4P", selection.model().modelCode());
+    }
+
+    @Test
+    void rejectsInvalidAdministratorSelectedNumber() {
+        RentalDeviceCategoryDO category = category(1L, "STAND", "支架");
+        RentalDeviceModelDO model = model(2L, 1L, "支架", "支架", 1);
+        when(categoryMapper.selectByCode("STAND")).thenReturn(category);
+        when(modelMapper.selectByCategoryAndCode(1L, "支架")).thenReturn(model);
+
+        ServiceException zero = assertThrows(ServiceException.class,
+                () -> service.composeDeviceNumber("STAND", "支架", "0"));
+        ServiceException tooLarge = assertThrows(ServiceException.class,
+                () -> service.composeDeviceNumber("STAND", "支架", "1000"));
+
+        assertEquals(RENTAL_DEVICE_CODE_INVALID.getCode(), zero.getCode());
+        assertEquals(RENTAL_DEVICE_CODE_INVALID.getCode(), tooLarge.getCode());
+    }
+
+    @Test
+    void composesThreeDigitAdministratorSelectedNumber() {
+        RentalDeviceCategoryDO category = category(1L, "DJI", "大疆");
+        RentalDeviceModelDO model = model(2L, 1L, "P4P", "P4P", 1);
+        when(categoryMapper.selectByCode("DJI")).thenReturn(category);
+        when(modelMapper.selectByCategoryAndCode(1L, "P4P")).thenReturn(model);
+
+        var selection = service.composeDeviceNumber("DJI", "P4P", "999");
+
+        assertEquals("P4P-999", selection.deviceNo());
+    }
+
+    @Test
     void reservesConsecutiveNumbersUnderModelRowLock() {
         RentalDeviceCategoryDO category = category(1L, "DJI", "大疆");
         RentalDeviceModelDO model = model(2L, 1L, "P4P", "P4P", 1);
@@ -165,11 +208,16 @@ class RentalDeviceCatalogServiceTest {
     }
 
     @Test
-    void rejectsSequenceBeyondTwoDigitRangeWithoutOverflow() {
+    void reservesAcrossThreeDigitBoundaryAndRejectsOverflow() {
         RentalDeviceCategoryDO category = category(1L, "DJI", "大疆");
         when(categoryMapper.selectByCode("DJI")).thenReturn(category);
         when(modelMapper.selectByCategoryAndCodeForUpdate(1L, "P4P"))
-                .thenReturn(model(2L, 1L, "P4P", "P4P", 99));
+                .thenReturn(model(2L, 1L, "P4P", "P4P", 99))
+                .thenReturn(model(2L, 1L, "P4P", "P4P", 999))
+                .thenReturn(model(2L, 1L, "P4P", "P4P", 999));
+
+        DeviceNumberReservation reservation = service.reserveDeviceNumbers("DJI", "P4P", 2);
+        assertEquals(List.of("P4P-99", "P4P-100"), reservation.deviceNos());
 
         ServiceException exhausted = assertThrows(ServiceException.class,
                 () -> service.reserveDeviceNumbers("DJI", "P4P", 2));

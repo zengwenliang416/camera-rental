@@ -47,8 +47,7 @@ public interface RentalDeviceMapper extends BaseMapperX<RentalDeviceDO> {
     default RentalDeviceDO selectLatestByDeviceNoPrefix(String prefix) {
         return selectOne(new LambdaQueryWrapper<RentalDeviceDO>()
                 .likeRight(RentalDeviceDO::getDeviceNo, prefix)
-                .orderByDesc(RentalDeviceDO::getDeviceNo)
-                .last("LIMIT 1"));
+                .last("ORDER BY CAST(SUBSTRING_INDEX(device_no, '-', -1) AS UNSIGNED) DESC, id DESC LIMIT 1"));
     }
 
 }

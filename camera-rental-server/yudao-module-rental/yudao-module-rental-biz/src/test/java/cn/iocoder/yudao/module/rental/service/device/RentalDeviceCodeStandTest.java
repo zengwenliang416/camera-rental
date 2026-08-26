@@ -11,6 +11,8 @@ class RentalDeviceCodeStandTest {
     void supportsTheExplicitStandPrefix() {
         assertEquals("支架-01", RentalDeviceCode.format("支架", 1));
         assertTrue(RentalDeviceCode.isValid("支架-99"));
+        assertEquals("支架-100", RentalDeviceCode.format("支架", 100));
+        assertTrue(RentalDeviceCode.isValid("支架-999"));
     }
 
 }

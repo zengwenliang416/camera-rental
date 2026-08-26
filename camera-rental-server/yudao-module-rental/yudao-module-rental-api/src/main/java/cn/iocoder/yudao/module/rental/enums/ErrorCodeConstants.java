@@ -68,7 +68,9 @@ public interface ErrorCodeConstants {
     ErrorCode RENTAL_DEVICE_CATALOG_CODE_INVALID = new ErrorCode(1_040_002_020,
             "设备目录编码格式无效：{}");
     ErrorCode RENTAL_DEVICE_SEQUENCE_EXHAUSTED = new ErrorCode(1_040_002_021,
-            "设备型号 {} 的两位编号已用完");
+            "设备型号 {} 的 01-999 编号已用完");
+    ErrorCode RENTAL_DEVICE_NO_DUPLICATE = new ErrorCode(1_040_002_022,
+            "设备编号已存在：{}");
 
     // ========== 人工复核 1-040-003-000 ==========
     ErrorCode RENTAL_MANUAL_REVIEW_NOT_EXISTS = new ErrorCode(1_040_003_000, "人工复核记录不存在");

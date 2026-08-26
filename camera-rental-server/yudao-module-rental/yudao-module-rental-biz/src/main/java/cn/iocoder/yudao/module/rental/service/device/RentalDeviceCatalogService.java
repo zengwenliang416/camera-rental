@@ -26,6 +26,7 @@ import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionU
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_CATALOG_CODE_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_CATEGORY_DUPLICATE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_CATEGORY_NOT_EXISTS;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_CODE_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_MODEL_DUPLICATE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_MODEL_NOT_EXISTS;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_PREFIX_DUPLICATE;
@@ -135,6 +136,25 @@ public class RentalDeviceCatalogService {
         return Optional.of(toCatalogModel(category, model));
     }
 
+    public DeviceNumberSelection composeDeviceNumber(String categoryCode, String modelCode,
+                                                     String deviceNoSuffix) {
+        String normalizedCategoryCode = normalizeCategoryCode(categoryCode);
+        String normalizedModelCode = normalizeCatalogToken(modelCode, "型号编码");
+        RentalDeviceCategoryDO category = categoryMapper.selectByCode(normalizedCategoryCode);
+        if (category == null || !Boolean.TRUE.equals(category.getEnabled())) {
+            throw exception(RENTAL_DEVICE_CATEGORY_NOT_EXISTS);
+        }
+        RentalDeviceModelDO model =
+                modelMapper.selectByCategoryAndCode(category.getId(), normalizedModelCode);
+        if (model == null || !Boolean.TRUE.equals(model.getEnabled())) {
+            throw exception(RENTAL_DEVICE_MODEL_NOT_EXISTS);
+        }
+        int sequence = parseDeviceNoSuffix(deviceNoSuffix);
+        return new DeviceNumberSelection(
+                toCatalogModel(category, model),
+                RentalDeviceCode.format(model.getDeviceNoPrefix(), sequence));
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public DeviceNumberReservation reserveDeviceNumbers(String categoryCode, String modelCode, int count) {
         if (count < 1) {
@@ -153,7 +173,7 @@ public class RentalDeviceCatalogService {
         }
         int firstSequence = model.getNextSequence() == null ? 1 : model.getNextSequence();
         long lastSequenceValue = (long) firstSequence + count - 1;
-        if (firstSequence < 1 || lastSequenceValue > 99) {
+        if (firstSequence < 1 || lastSequenceValue > 999) {
             throw exception(RENTAL_DEVICE_SEQUENCE_EXHAUSTED, model.getModelCode());
         }
         int lastSequence = (int) lastSequenceValue;
@@ -214,6 +234,14 @@ public class RentalDeviceCatalogService {
         return sortOrder == null ? DEFAULT_SORT_ORDER : sortOrder;
     }
 
+    private static int parseDeviceNoSuffix(String deviceNoSuffix) {
+        String normalized = deviceNoSuffix == null ? "" : deviceNoSuffix.trim();
+        if (!normalized.matches("^(?:0?[1-9]|[1-9][0-9]{1,2})$")) {
+            throw exception(RENTAL_DEVICE_CODE_INVALID);
+        }
+        return Integer.parseInt(normalized);
+    }
+
     public record CatalogModel(Long categoryId,
                                String categoryCode,
                                String categoryName,
@@ -224,6 +252,9 @@ public class RentalDeviceCatalogService {
     }
 
     public record DeviceNumberReservation(CatalogModel model, List<String> deviceNos) {
+    }
+
+    public record DeviceNumberSelection(CatalogModel model, String deviceNo) {
     }
 
 }

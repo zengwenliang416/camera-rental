@@ -29,6 +29,13 @@ public interface RentalDeviceModelMapper extends BaseMapperX<RentalDeviceModelDO
                 .last("LIMIT 1"));
     }
 
+    default RentalDeviceModelDO selectByCategoryAndCode(Long categoryId, String modelCode) {
+        return selectOne(new LambdaQueryWrapper<RentalDeviceModelDO>()
+                .eq(RentalDeviceModelDO::getCategoryId, categoryId)
+                .eq(RentalDeviceModelDO::getModelCode, modelCode)
+                .last("LIMIT 1"));
+    }
+
     default RentalDeviceModelDO selectByCategoryAndCodeForUpdate(Long categoryId, String modelCode) {
         return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceModelDO>()
                 .eq(RentalDeviceModelDO::getCategoryId, categoryId)

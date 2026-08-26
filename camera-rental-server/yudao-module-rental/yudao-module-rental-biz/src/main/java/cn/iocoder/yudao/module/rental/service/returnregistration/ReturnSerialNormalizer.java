@@ -9,7 +9,8 @@ import java.util.regex.Pattern;
 public class ReturnSerialNormalizer {
 
     private static final Pattern RETURN_CODE =
-            Pattern.compile("^(?=.{4,64}$)(?:[A-Z0-9]+(?:-[A-Z0-9]+)*|支架)-\\d{2}$");
+            Pattern.compile("^(?=.{4,64}$)(?:[A-Z0-9]+(?:-[A-Z0-9]+)*|支架)"
+                    + "-(?:0[1-9]|[1-9][0-9]|[1-9][0-9]{2})$");
 
     public String normalize(String value) {
         return RentalDeviceCode.normalize(value);

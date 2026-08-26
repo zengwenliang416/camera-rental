@@ -14,8 +14,9 @@ import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentException;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentResult;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentService;
 import cn.iocoder.yudao.module.rental.service.device.RentalDeviceCatalogService;
-import cn.iocoder.yudao.module.rental.service.device.RentalDeviceCatalogService.DeviceNumberReservation;
+import cn.iocoder.yudao.module.rental.service.device.RentalDeviceCatalogService.DeviceNumberSelection;
 import cn.iocoder.yudao.module.rental.service.device.RentalDeviceQrCodec;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_ASSIGN_FAILED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_NOT_EXISTS;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_NO_DUPLICATE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_QR_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_QR_MODEL_MISMATCH;
 
@@ -63,20 +65,30 @@ public class RentalDeviceAdminService {
 
     @Transactional(rollbackFor = Exception.class)
     public Long createDevice(RentalDeviceCreateReqVO reqVO) {
-        DeviceNumberReservation reservation = deviceCatalogService.reserveDeviceNumbers(
-                reqVO.getCategoryCode(), reqVO.getEquipmentModelCode(), 1);
-        String deviceNo = reservation.deviceNos().get(0);
+        DeviceNumberSelection selection = deviceCatalogService.composeDeviceNumber(
+                reqVO.getCategoryCode(), reqVO.getEquipmentModelCode(), reqVO.getDeviceNoSuffix());
+        String deviceNo = selection.deviceNo();
+        if (deviceMapper.selectByDeviceNo(deviceNo) != null) {
+            throw exception(RENTAL_DEVICE_NO_DUPLICATE, deviceNo);
+        }
         RentalDeviceDO device = RentalDeviceDO.builder()
                 .deviceNo(deviceNo)
                 .serialNumber(reqVO.getSerialNumber())
-                .categoryCode(reservation.model().categoryCode())
-                .equipmentModelCode(reservation.model().modelCode())
+                .categoryCode(selection.model().categoryCode())
+                .equipmentModelCode(selection.model().modelCode())
                 .status(reqVO.getStatus() == null ? "AVAILABLE" : reqVO.getStatus())
                 .warehouseCode(reqVO.getWarehouseCode())
                 .purchaseAmount(reqVO.getPurchaseAmount())
                 .enabled(reqVO.getEnabled() == null || reqVO.getEnabled())
                 .build();
-        deviceMapper.insert(device);
+        try {
+            deviceMapper.insert(device);
+        } catch (DuplicateKeyException ex) {
+            if (deviceMapper.selectByDeviceNo(deviceNo) != null) {
+                throw exception(RENTAL_DEVICE_NO_DUPLICATE, deviceNo);
+            }
+            throw ex;
+        }
         return device.getId();
     }
 

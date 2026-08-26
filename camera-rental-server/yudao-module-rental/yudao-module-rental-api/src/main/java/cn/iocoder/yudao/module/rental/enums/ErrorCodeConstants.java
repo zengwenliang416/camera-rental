@@ -55,6 +55,20 @@ public interface ErrorCodeConstants {
     ErrorCode RENTAL_DEVICE_UNASSIGN_FAILED = new ErrorCode(1_040_002_011, "撤销设备分配失败：{}");
     ErrorCode RENTAL_ORDER_NOT_EXISTS = new ErrorCode(1_040_002_012, "租赁订单不存在");
     ErrorCode RENTAL_ORDER_CANCEL_FAILED = new ErrorCode(1_040_002_013, "租赁订单取消失败：{}");
+    ErrorCode RENTAL_DEVICE_CATEGORY_DUPLICATE = new ErrorCode(1_040_002_015,
+            "设备大类编码已存在");
+    ErrorCode RENTAL_DEVICE_MODEL_DUPLICATE = new ErrorCode(1_040_002_016,
+            "设备型号编码已存在");
+    ErrorCode RENTAL_DEVICE_PREFIX_DUPLICATE = new ErrorCode(1_040_002_017,
+            "设备编号前缀已存在");
+    ErrorCode RENTAL_DEVICE_CATEGORY_NOT_EXISTS = new ErrorCode(1_040_002_018,
+            "设备大类不存在或已停用");
+    ErrorCode RENTAL_DEVICE_MODEL_NOT_EXISTS = new ErrorCode(1_040_002_019,
+            "设备型号不存在或已停用");
+    ErrorCode RENTAL_DEVICE_CATALOG_CODE_INVALID = new ErrorCode(1_040_002_020,
+            "设备目录编码格式无效：{}");
+    ErrorCode RENTAL_DEVICE_SEQUENCE_EXHAUSTED = new ErrorCode(1_040_002_021,
+            "设备型号 {} 的两位编号已用完");
 
     // ========== 人工复核 1-040-003-000 ==========
     ErrorCode RENTAL_MANUAL_REVIEW_NOT_EXISTS = new ErrorCode(1_040_003_000, "人工复核记录不存在");

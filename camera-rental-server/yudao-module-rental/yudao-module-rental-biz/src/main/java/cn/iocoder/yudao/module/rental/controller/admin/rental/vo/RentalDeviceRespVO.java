@@ -10,6 +10,7 @@ public class RentalDeviceRespVO {
     private Long id;
     private String deviceNo;
     private String serialNumber;
+    private String categoryCode;
     private String equipmentModelCode;
     private String status;
     private String warehouseCode;

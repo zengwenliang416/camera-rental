@@ -9,31 +9,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Individually traceable rental equipment.
- */
-@TableName("rental_device")
-@KeySequence("rental_device_seq")
+@TableName("rental_device_category")
+@KeySequence("rental_device_category_seq")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RentalDeviceDO extends TenantBaseDO {
+public class RentalDeviceCategoryDO extends TenantBaseDO {
 
     @TableId
     private Long id;
-    private String deviceNo;
-    private String legacyDeviceNo;
-    private String serialNumber;
     private String categoryCode;
-    private String equipmentModelCode;
-    private String status;
-    private String warehouseCode;
-    private Integer purchaseAmount;
+    private String categoryName;
+    private Integer sortOrder;
     private Boolean enabled;
-    /** e.g. ERP_PURCHASE_IN */
-    private String sourceType;
-    private Long sourceBizId;
-    private Long sourceItemId;
 
 }

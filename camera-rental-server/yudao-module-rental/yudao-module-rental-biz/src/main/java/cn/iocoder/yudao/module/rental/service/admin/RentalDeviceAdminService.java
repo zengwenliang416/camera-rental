@@ -13,9 +13,11 @@ import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentCommand;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentException;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentResult;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentService;
-import cn.iocoder.yudao.module.rental.service.device.RentalDeviceCode;
+import cn.iocoder.yudao.module.rental.service.device.RentalDeviceCatalogService;
+import cn.iocoder.yudao.module.rental.service.device.RentalDeviceCatalogService.DeviceNumberReservation;
 import cn.iocoder.yudao.module.rental.service.device.RentalDeviceQrCodec;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +25,6 @@ import java.util.stream.Collectors;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_ASSIGN_FAILED;
-import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_CODE_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_NOT_EXISTS;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_QR_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_QR_MODEL_MISMATCH;
@@ -35,35 +36,41 @@ public class RentalDeviceAdminService {
     private final RentalDeviceAssignmentService assignmentService;
     private final RentalDeviceQrCodec qrCodec;
     private final RentalDeviceProperties deviceProperties;
+    private final RentalDeviceCatalogService deviceCatalogService;
 
     public RentalDeviceAdminService(RentalDeviceMapper deviceMapper,
                                     RentalDeviceAssignmentService assignmentService,
                                     RentalDeviceQrCodec qrCodec,
-                                    RentalDeviceProperties deviceProperties) {
+                                    RentalDeviceProperties deviceProperties,
+                                    RentalDeviceCatalogService deviceCatalogService) {
         this.deviceMapper = deviceMapper;
         this.assignmentService = assignmentService;
         this.qrCodec = qrCodec;
         this.deviceProperties = deviceProperties;
+        this.deviceCatalogService = deviceCatalogService;
     }
 
-    public PageResult<RentalDeviceRespVO> getDevicePage(String equipmentModelCode, PageParam pageParam) {
+    public PageResult<RentalDeviceRespVO> getDevicePage(String categoryCode, String equipmentModelCode,
+                                                        PageParam pageParam) {
         PageResult<RentalDeviceDO> page = deviceMapper.selectPage(pageParam,
                 new LambdaQueryWrapperX<RentalDeviceDO>()
+                        .eqIfPresent(RentalDeviceDO::getCategoryCode, categoryCode)
                         .eqIfPresent(RentalDeviceDO::getEquipmentModelCode, equipmentModelCode)
                         .orderByDesc(RentalDeviceDO::getId));
         List<RentalDeviceRespVO> list = page.getList().stream().map(this::toVo).collect(Collectors.toList());
         return new PageResult<>(list, page.getTotal());
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public Long createDevice(RentalDeviceCreateReqVO reqVO) {
-        String deviceNo = RentalDeviceCode.normalize(reqVO.getDeviceNo());
-        if (!RentalDeviceCode.isValid(deviceNo)) {
-            throw exception(RENTAL_DEVICE_CODE_INVALID);
-        }
+        DeviceNumberReservation reservation = deviceCatalogService.reserveDeviceNumbers(
+                reqVO.getCategoryCode(), reqVO.getEquipmentModelCode(), 1);
+        String deviceNo = reservation.deviceNos().get(0);
         RentalDeviceDO device = RentalDeviceDO.builder()
                 .deviceNo(deviceNo)
                 .serialNumber(reqVO.getSerialNumber())
-                .equipmentModelCode(reqVO.getEquipmentModelCode())
+                .categoryCode(reservation.model().categoryCode())
+                .equipmentModelCode(reservation.model().modelCode())
                 .status(reqVO.getStatus() == null ? "AVAILABLE" : reqVO.getStatus())
                 .warehouseCode(reqVO.getWarehouseCode())
                 .purchaseAmount(reqVO.getPurchaseAmount())
@@ -129,6 +136,7 @@ public class RentalDeviceAdminService {
         vo.setId(device.getId());
         vo.setDeviceNo(device.getDeviceNo());
         vo.setSerialNumber(device.getSerialNumber());
+        vo.setCategoryCode(device.getCategoryCode());
         vo.setEquipmentModelCode(device.getEquipmentModelCode());
         vo.setStatus(device.getStatus());
         vo.setWarehouseCode(device.getWarehouseCode());

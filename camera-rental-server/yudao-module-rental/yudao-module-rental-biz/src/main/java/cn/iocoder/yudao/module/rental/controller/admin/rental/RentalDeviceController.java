@@ -4,6 +4,8 @@ import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceAssignReqVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceCategoryCreateReqVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceCategoryRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceCreateReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceDispatchReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceGenerateFromPurchaseReqVO;
@@ -14,11 +16,13 @@ import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceRes
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceReturnReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceUnassignReqVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceModelCreateReqVO;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentCommand;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentResult;
 import cn.iocoder.yudao.module.rental.service.admin.RentalDeviceAdminService;
 import cn.iocoder.yudao.module.rental.service.admin.RentalDeviceInboundService;
 import cn.iocoder.yudao.module.rental.service.admin.RentalDeviceOpsService;
+import cn.iocoder.yudao.module.rental.service.device.RentalDeviceCatalogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -31,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 @Tag(name = "管理后台 - 租赁设备")
@@ -42,22 +48,49 @@ public class RentalDeviceController {
     private final RentalDeviceAdminService deviceAdminService;
     private final RentalDeviceOpsService deviceOpsService;
     private final RentalDeviceInboundService deviceInboundService;
+    private final RentalDeviceCatalogService deviceCatalogService;
 
     public RentalDeviceController(RentalDeviceAdminService deviceAdminService,
                                   RentalDeviceOpsService deviceOpsService,
-                                  RentalDeviceInboundService deviceInboundService) {
+                                  RentalDeviceInboundService deviceInboundService,
+                                  RentalDeviceCatalogService deviceCatalogService) {
         this.deviceAdminService = deviceAdminService;
         this.deviceOpsService = deviceOpsService;
         this.deviceInboundService = deviceInboundService;
+        this.deviceCatalogService = deviceCatalogService;
     }
 
     @GetMapping("/page")
     @Operation(summary = "分页查询设备")
     @PreAuthorize("@ss.hasPermission('rental:device:query')")
     public CommonResult<PageResult<RentalDeviceRespVO>> getDevicePage(
+            @RequestParam(value = "categoryCode", required = false) String categoryCode,
             @RequestParam(value = "equipmentModelCode", required = false) String equipmentModelCode,
             @Validated PageParam pageParam) {
-        return success(deviceAdminService.getDevicePage(equipmentModelCode, pageParam));
+        return success(deviceAdminService.getDevicePage(categoryCode, equipmentModelCode, pageParam));
+    }
+
+    @GetMapping("/catalog")
+    @Operation(summary = "获取设备大类和型号目录")
+    @PreAuthorize("@ss.hasPermission('rental:device:query')")
+    public CommonResult<List<RentalDeviceCategoryRespVO>> getDeviceCatalog() {
+        return success(deviceCatalogService.getCatalog());
+    }
+
+    @PostMapping("/catalog/category/create")
+    @Operation(summary = "新增当前租户设备大类")
+    @PreAuthorize("@ss.hasPermission('rental:device:create')")
+    public CommonResult<Long> createDeviceCategory(
+            @Valid @RequestBody RentalDeviceCategoryCreateReqVO reqVO) {
+        return success(deviceCatalogService.createCategory(reqVO));
+    }
+
+    @PostMapping("/catalog/model/create")
+    @Operation(summary = "新增当前租户设备型号和编号前缀")
+    @PreAuthorize("@ss.hasPermission('rental:device:create')")
+    public CommonResult<Long> createDeviceModel(
+            @Valid @RequestBody RentalDeviceModelCreateReqVO reqVO) {
+        return success(deviceCatalogService.createModel(reqVO));
     }
 
     @PostMapping("/create")

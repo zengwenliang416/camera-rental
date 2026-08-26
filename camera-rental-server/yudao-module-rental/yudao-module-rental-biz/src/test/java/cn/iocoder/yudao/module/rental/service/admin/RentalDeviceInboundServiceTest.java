@@ -12,11 +12,13 @@ import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceGen
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceGenerateFromPurchaseRespVO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
+import cn.iocoder.yudao.module.rental.service.device.RentalDeviceCatalogService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_INBOUND_FAILED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,8 +37,9 @@ class RentalDeviceInboundServiceTest {
         ErpProductService productService = mock(ErpProductService.class);
         ErpWarehouseService warehouseService = mock(ErpWarehouseService.class);
         RentalDeviceMapper deviceMapper = mock(RentalDeviceMapper.class);
+        RentalDeviceCatalogService catalogService = mock(RentalDeviceCatalogService.class);
         RentalDeviceInboundService service = new RentalDeviceInboundService(
-                purchaseInService, productService, warehouseService, deviceMapper);
+                purchaseInService, productService, warehouseService, deviceMapper, catalogService);
 
         when(purchaseInService.getPurchaseIn(10L)).thenReturn(ErpPurchaseInDO.builder()
                 .id(10L).no("PI2026").status(ErpAuditStatus.APPROVE.getStatus()).build());
@@ -45,6 +48,7 @@ class RentalDeviceInboundServiceTest {
                         .productPrice(new BigDecimal("1999.50")).build()));
         when(productService.getProduct(7L)).thenReturn(ErpProductDO.builder()
                 .id(7L).barCode("A7M4").name("索尼A7M4").build());
+        when(catalogService.findEnabledModel("A7M4")).thenReturn(Optional.empty());
         when(deviceMapper.countBySourceItem("ERP_PURCHASE_IN", 10L, 100L)).thenReturn(1L);
         when(deviceMapper.selectLatestByDeviceNoPrefix("A7M4-")).thenReturn(
                 RentalDeviceDO.builder().deviceNo("A7M4-01").build());
@@ -75,7 +79,7 @@ class RentalDeviceInboundServiceTest {
         ErpPurchaseInService purchaseInService = mock(ErpPurchaseInService.class);
         RentalDeviceInboundService service = new RentalDeviceInboundService(
                 purchaseInService, mock(ErpProductService.class), mock(ErpWarehouseService.class),
-                mock(RentalDeviceMapper.class));
+                mock(RentalDeviceMapper.class), mock(RentalDeviceCatalogService.class));
         when(purchaseInService.getPurchaseIn(1L)).thenReturn(ErpPurchaseInDO.builder()
                 .id(1L).status(ErpAuditStatus.PROCESS.getStatus()).build());
 

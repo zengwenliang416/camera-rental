@@ -8,9 +8,9 @@ import lombok.Data;
 @Data
 public class RentalDeviceCreateReqVO {
 
-    @NotBlank
-    private String deviceNo;
     private String serialNumber;
+    @NotBlank
+    private String categoryCode;
     @NotBlank
     private String equipmentModelCode;
     private String status;

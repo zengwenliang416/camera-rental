@@ -13,6 +13,9 @@ import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceGen
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
 import cn.iocoder.yudao.module.rental.service.device.RentalDeviceCode;
+import cn.iocoder.yudao.module.rental.service.device.RentalDeviceCatalogService;
+import cn.iocoder.yudao.module.rental.service.device.RentalDeviceCatalogService.CatalogModel;
+import cn.iocoder.yudao.module.rental.service.device.RentalDeviceCatalogService.DeviceNumberReservation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -20,6 +23,7 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,15 +44,18 @@ public class RentalDeviceInboundService {
     private final ErpProductService productService;
     private final ErpWarehouseService warehouseService;
     private final RentalDeviceMapper deviceMapper;
+    private final RentalDeviceCatalogService deviceCatalogService;
 
     public RentalDeviceInboundService(ErpPurchaseInService purchaseInService,
                                       ErpProductService productService,
                                       ErpWarehouseService warehouseService,
-                                      RentalDeviceMapper deviceMapper) {
+                                      RentalDeviceMapper deviceMapper,
+                                      RentalDeviceCatalogService deviceCatalogService) {
         this.purchaseInService = purchaseInService;
         this.productService = productService;
         this.warehouseService = warehouseService;
         this.deviceMapper = deviceMapper;
+        this.deviceCatalogService = deviceCatalogService;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -111,19 +118,34 @@ public class RentalDeviceInboundService {
         modelCode = sanitizeToken(modelCode);
 
         String warehouseCode = firstNonBlank(reqVO.getWarehouseCode(), resolveWarehouseName(item.getWarehouseId()));
-        String prefix = firstNonBlank(reqVO.getDeviceNoPrefix(), product.getBarCode(), modelCode);
-        prefix = sanitizeToken(prefix);
-        if (!StringUtils.hasText(prefix)) {
-            prefix = "DEV";
+        Optional<CatalogModel> catalogModel = deviceCatalogService.findEnabledModel(modelCode);
+        String categoryCode = catalogModel.map(CatalogModel::categoryCode).orElse(null);
+        List<String> reservedDeviceNos = null;
+        String prefix = null;
+        int nextSeq = 1;
+        if (catalogModel.isPresent()) {
+            DeviceNumberReservation reservation = deviceCatalogService.reserveDeviceNumbers(
+                    catalogModel.get().categoryCode(), catalogModel.get().modelCode(), toCreate);
+            modelCode = reservation.model().modelCode();
+            categoryCode = reservation.model().categoryCode();
+            reservedDeviceNos = reservation.deviceNos();
+        } else {
+            prefix = firstNonBlank(reqVO.getDeviceNoPrefix(), product.getBarCode(), modelCode);
+            prefix = sanitizeToken(prefix);
+            if (!StringUtils.hasText(prefix)) {
+                prefix = "DEV";
+            }
+            nextSeq = nextSequence(prefix);
         }
-
-        int nextSeq = nextSequence(prefix);
         Integer purchaseAmountFen = toFen(item.getProductPrice());
 
         for (int i = 0; i < toCreate; i++) {
-            String deviceNo = formatDeviceNo(prefix, nextSeq++);
+            String deviceNo = reservedDeviceNos != null
+                    ? reservedDeviceNos.get(i)
+                    : formatDeviceNo(prefix, nextSeq++);
             RentalDeviceDO device = RentalDeviceDO.builder()
                     .deviceNo(deviceNo)
+                    .categoryCode(categoryCode)
                     .equipmentModelCode(modelCode)
                     .status("AVAILABLE")
                     .warehouseCode(warehouseCode)
@@ -135,7 +157,10 @@ public class RentalDeviceInboundService {
                     .build();
             try {
                 deviceMapper.insert(device);
-            } catch (Exception ex) {
+            } catch (RuntimeException ex) {
+                if (reservedDeviceNos != null) {
+                    throw ex;
+                }
                 // device_no unique conflict: bump seq once more
                 deviceNo = formatDeviceNo(prefix, nextSeq++);
                 device.setDeviceNo(deviceNo);

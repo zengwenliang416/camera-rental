@@ -11,7 +11,7 @@ public final class RentalDeviceCode {
     private static final Pattern DASHES = Pattern.compile("[‐‑‒–—―−﹘﹣－]");
     private static final Pattern WHITESPACE = Pattern.compile("\\s+");
     private static final Pattern VALID =
-            Pattern.compile("^(?=.{4,64}$)[A-Z0-9]+(?:-[A-Z0-9]+)*-\\d{2}$");
+            Pattern.compile("^(?=.{4,64}$)(?:[A-Z0-9]+(?:-[A-Z0-9]+)*|支架)-\\d{2}$");
 
     private RentalDeviceCode() {
     }
@@ -44,8 +44,12 @@ public final class RentalDeviceCode {
         return code;
     }
 
-    private static String normalizePrefix(String value) {
-        String normalized = normalize(value).replaceAll("[^A-Z0-9-]", "-");
+    public static String normalizePrefix(String value) {
+        String normalized = normalize(value);
+        if ("支架".equals(normalized)) {
+            return normalized;
+        }
+        normalized = normalized.replaceAll("[^A-Z0-9-]", "-");
         normalized = normalized.replaceAll("-+", "-");
         return normalized.replaceAll("^-|-$", "");
     }

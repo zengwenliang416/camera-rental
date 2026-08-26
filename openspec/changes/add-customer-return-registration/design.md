@@ -76,6 +76,21 @@ Admin review
   match result and force `REVIEW_REQUIRED`.
 - Matching never changes device or assignment state.
 
+### Tenant Device Catalog
+
+- `rental_device_category` and `rental_device_model` are tenant-aware rental
+  domain tables; ERP, Mall and IoT category tables are not reused as business
+  authority.
+- The current seven categories and 24 models are migration seed data, not a
+  frontend or Java hard-coded runtime catalog.
+- The existing device page owns two small quick-create dialogs exposed through
+  the category and model select footers. No route or menu is added.
+- Device creation locks the selected enabled model row, formats the configured
+  prefix with the current two-digit sequence, increments the sequence and then
+  inserts the physical device in one transaction.
+- Existing order, assignment, schedule, dispatch, return and inspection
+  services remain unchanged.
+
 ### Attachment Boundary
 
 - Reuse the current default S3 file client through an infra module API instead

@@ -150,3 +150,36 @@ Canon, Ricoh and stand machine codes without a false format rejection.
   focused frontend regression cases for every approved prefix.
 - [x] 12.3 Run focused Nuxt utility tests, rental backend tests and production
   build/static checks for the return entry.
+
+## 13. Admin device category and model catalog
+
+User outcome: An administrator can classify rental devices by major category
+and create a device by selecting a valid model from that category.
+
+- [x] 13.1 Add the authoritative backend category/model catalog, catalog API,
+  create validation and page filtering without moving authority into the
+  management frontend.
+- [x] 13.2 Add an incremental `rental_device.category_code` migration that
+  backfills known models and preserves unknown historical rows.
+- [x] 13.3 Add the admin category filter, category list column and linked
+  category/model selects with device-number prefix guidance.
+- [x] 13.4 Add focused backend catalog/create/inbound tests, admin model tests,
+  type-check/build validation and browser verification.
+
+## 14. Tenant-managed device catalog
+
+User outcome: An authorized store administrator can add a device category or
+model with its numbering prefix directly from the existing device-create
+dialog, then create a device with a server-generated unique short code.
+
+- [x] 14.1 Add tenant-aware device-category and device-model tables, seed the
+  current catalog for existing tenants and retain `rental_device` as the
+  physical-instance authority.
+- [x] 14.2 Replace the static catalog authority with tenant-aware query and
+  create services, including normalized unique category/model/prefix checks.
+- [x] 14.3 Generate device numbers transactionally from the selected model's
+  configured prefix while preserving two-digit `01-99` validation.
+- [x] 14.4 Add category/model quick-create dialogs to the existing admin device
+  page, refresh the catalog after save and automatically select the new record.
+- [x] 14.5 Add focused backend/frontend tests, type-check, build, migration
+  validation and scoped diff review.

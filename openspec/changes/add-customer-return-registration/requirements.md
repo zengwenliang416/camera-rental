@@ -79,6 +79,30 @@
 - 未入库机器编码不得自动创建 `rental_device`、`rental_device_assignment` 或
   `rental_delivery`，不得触发回仓、检测、排期释放或订单完成。
 
+### Device Category and Model Catalog
+
+- 管理后台租赁设备页必须把设备大类作为设备实例的独立字段展示和筛选，并在新增
+  设备时先选择大类、再从该大类下选择设备型号，不再允许自由输入任意型号。
+- 后端数据库提供租户隔离的权威设备大类与型号目录；管理端不得维护一份可独立
+  漂移的型号矩阵。初始大类代码为 `DJI`、`INSTA360`、`PHONE`、
+  `FUJIFILM`、`CANON`、`RICOH` 和 `STAND`，中文展示分别为大疆、影石、
+  手机、富士、佳能、理光和支架。
+- 权威型号组合为：大疆 `360/NANO/A5/A6/P3/P4/P4P`，影石
+  `ACE/X5/GT/G3`，手机 `X300P/X200U/X300U`，富士
+  `XT5/XT50/XS20/X100VI`，佳能 `R50/G12/G7X2`，理光 `GR3X/GR4`，
+  支架 `支架`。
+- 具有 `rental:device:create` 权限的店铺管理员可在现有设备创建弹窗内新增大类
+  或型号，不新增独立页面或菜单。新增型号必须选择所属大类并填写型号编码、显示
+  名称和设备编号前缀。
+- 同一租户下大类编码、型号编码和设备编号前缀分别唯一；大类编码、型号编码和
+  ASCII 编号前缀统一去空格并转为大写。仅内置支架型号允许 `支架` 中文前缀。
+- 新增设备时服务端必须校验大类与型号组合，并在事务内锁定型号记录，使用配置的
+  编号前缀生成 `01-99` 两位设备编号。前端不得自行决定最终设备编号。
+- `rental_device.category_code` 通过增量 migration 新增。既有已知型号按权威目录
+  回填；未知历史型号允许暂时为空并继续展示，不得因本次迁移删除或错误归类。
+- ERP 入库生成设备时，租户目录中的已知型号自动写入对应大类并使用配置前缀；
+  未知型号保持现有生成能力且大类为空，避免本次管理端改造破坏既有采购入库链路。
+
 ### File Upload and RustFS
 
 - 复用 `yudao-module-infra` 的 `infra_file`、`FileService` 和 S3 客户端，不建立
@@ -163,6 +187,8 @@
 - 新增 `rental_return_registration`、`rental_return_registration_device`、
   `rental_return_registration_attachment` 三张表。
 - `rental_device` 增加可空的旧编号兼容字段，并将当前设备编号迁移为型号两位短码。
+- `rental_device` 增加可空的 `category_code`，已知型号按权威目录回填；新增管理端
+  设备必须提交合法的大类与型号组合。
 - 自动签发的公共会话 hash 继续使用现有 `token_hash` 全局唯一索引；订单、状态、
   到期时间、运单、设备和附件查询建立租户范围索引。
 - 后端 Controller、Service、Mapper、VO 分层；Controller 不直接访问 Mapper。
@@ -180,6 +206,10 @@
   -> 返回 fileId”，最终提交只接受当前会话登记已确认的 fileId。
 - 管理端使用 `/admin-api/rental/return-registration/**`，客户页面使用
   `/app-api/rental/return-registration/**`。
+- 租赁设备管理页通过 `GET /admin-api/rental/device/catalog` 获取权威大类和型号
+  目录，通过 `/admin-api/rental/device/page` 按大类/型号筛选；具有设备创建权限
+  的管理员可调用目录大类/型号创建接口，并在 `/admin-api/rental/device/create`
+  只提交大类与型号，由后端生成最终设备编号。
 
 ## Component Architecture Impact
 

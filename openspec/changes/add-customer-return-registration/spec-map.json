@@ -36,7 +36,12 @@
     "POST /app-api/rental/return-registration/upload-authorizations",
     "POST /app-api/rental/return-registration/attachments/confirm",
     "DELETE /app-api/rental/return-registration/attachments/{fileId}",
-    "POST /app-api/rental/return-registration/submit"
+    "POST /app-api/rental/return-registration/submit",
+    "GET /admin-api/rental/device/catalog",
+    "POST /admin-api/rental/device/catalog/category/create",
+    "POST /admin-api/rental/device/catalog/model/create",
+    "GET /admin-api/rental/device/page",
+    "POST /admin-api/rental/device/create"
   ],
   "database_entities": [
     "rental_return_registration",
@@ -44,7 +49,10 @@
     "rental_return_registration_attachment",
     "infra_file",
     "rental_delivery",
-    "rental_delivery_device_rel"
+    "rental_delivery_device_rel",
+    "rental_device.category_code",
+    "rental_device_category",
+    "rental_device_model"
   ],
   "permissions": [
     "rental:return-registration:query",
@@ -70,7 +78,9 @@
     "additive-migration-only",
     "github-main-auto-deploy-to-154.9.235.80",
     "production-upload-database-and-admin-e2e-verification",
-    "return-machine-prefix-matrix-covered-by-frontend-and-backend-tests"
+    "return-machine-prefix-matrix-covered-by-frontend-and-backend-tests",
+    "backend-authoritative-device-category-model-catalog",
+    "known-model-category-backfill-preserves-unknown-history"
   ],
   "data_flows": [
     "FLOW-PUBLIC-RETURN-VERIFY",

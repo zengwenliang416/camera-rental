@@ -15,12 +15,15 @@
 - Channel-order review fallback that preserves machine and waybill evidence when no internal rental order or safe device assignment exists.
 - Two-digit customer machine codes such as `P4-01`, with normalized input,
   stable per-model migration and legacy device-number lookup compatibility.
+- Backend-authoritative device categories and models with admin filtering,
+  linked create selects, create-time validation and known-model ERP
+  classification.
 
 ## Files Changed
 
 - Backend rental return-registration controllers, services, DOs, Mappers, enums, tests and Delivery compatibility changes.
 - Infra file presigned-upload confirmation, preview and deletion APIs.
-- MySQL migrations 034, 036 and 041 plus exact SpecNav audit copies.
+- MySQL migrations 034, 036, 041, 049 and 050 plus exact SpecNav audit copies.
 - Nuxt customer form route, components, composables, styles, types and tests.
 - Admin typed API and return-registration operations page.
 - GitHub deployment migration runner and RustFS Compose/install/bootstrap/backup assets.
@@ -33,6 +36,9 @@
 - Duplicate submissions return the original receipt without duplicate business writes.
 - Admin operations are backend-permissioned and show authorized full customer details.
 - Migrations block release activation on failure or checksum drift.
+- Device creation accepts only a catalog-valid category/model pair and allocates
+  the final device number from the model's configured prefix; unknown historical
+  and ERP models remain unclassified rather than being deleted or guessed.
 
 ## Prototype Decisions Implemented
 
@@ -89,6 +95,11 @@
 - Backend: 12 tests passed with zero failures/errors.
 - Nuxt: 3 tests, typecheck and production build passed.
 - Admin: TypeScript check and production build passed.
+- Admin device catalog: 3 frontend model tests, TypeScript check and local build
+  passed; same-origin browser interaction covered all seven categories,
+  category/model linking, prefix defaults and category/model filtering.
+- Backend device catalog: 7 focused tests passed for catalog membership, direct
+  create validation, explicit stand codes and ERP known/unknown model handling.
 - Shell/Compose: migration runner, incremental helper, Bash syntax and RustFS Compose validation passed.
 - Browser: complete synthetic flow and required terminal/theme/locale/responsive states passed with zero application console errors.
 - Fixed entry regression: 12 focused backend tests and 4 Playwright mobile flows passed for last-four-only verification, ambiguity rejection and historical-route redirect.
@@ -147,6 +158,10 @@
 
 - Prove the same committed SHA on GitHub and `/release-info.json`.
 - Prove migrations 034, 036 and 041 and their checksums in the production schema migration table.
+- Prove migrations 049 and 050 and their checksums in the production schema
+  migration table.
+- Execute authenticated admin device catalog/page/create E2E against the real
+  backend; the development browser evidence used a same-origin Mock API.
 - Prove RustFS health, private bucket policy, application service account and non-public console.
 - Configure the private S3 file configuration in the management application.
 - Execute a synthetic public upload-to-database-to-admin review flow and verify `infra_file`, all return-registration tables and `rental_delivery.direction=RETURN`.

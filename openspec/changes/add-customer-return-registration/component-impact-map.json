@@ -18,7 +18,9 @@
     "ReturnReviewStep",
     "ReturnStatusPanel",
     "ReturnRegistrationAdminPage",
-    "ReturnRegistrationDetailDrawer"
+    "ReturnRegistrationDetailDrawer",
+    "RentalDeviceCatalogService",
+    "RentalDeviceCategoryRespVO"
   ],
   "reused_components": [
     "RentalOrderMapper",
@@ -35,7 +37,8 @@
     "approved customer-return-intake prototype",
     "existing GitHub incremental deployment scripts",
     "existing Nuxt SSR runtime",
-    "ReturnSerialNormalizer"
+    "ReturnSerialNormalizer",
+    "existing rental device page and create dialog"
   ],
   "extraction_triggers": [
     "session-hashing-cookie-extraction-and-constant-time-comparison-repeat-across-public-endpoints",
@@ -92,6 +95,7 @@
     "session generation hashing expiry cookie flags rotation and non-disclosure tests",
     "serial normalization format duplicate cross-order and cross-tenant tests",
     "current DJI Insta360 phone Fujifilm Canon Ricoh and stand prefix matrix tests",
+    "rental device category model catalog combination and device-number prefix tests",
     "explicit Chinese stand prefix acceptance and arbitrary Chinese prefix rejection tests",
     "required optional attachment count size type ownership and removal tests",
     "idempotent submit and concurrent replay tests",

@@ -180,6 +180,7 @@
             class="!w-100%"
             :disabled="!createForm.categoryCode"
             filterable
+            @change="handleCreateModelChange"
           >
             <el-option
               v-for="model in createModelOptions"
@@ -201,18 +202,24 @@
             </template>
           </el-select>
         </el-form-item>
-        <el-form-item :label="t('rental.device.deviceNo')">
+        <el-form-item :label="t('rental.device.deviceNo')" prop="deviceNoSuffix">
           <el-input
-            :model-value="createDeviceNoHint"
-            :placeholder="t('rental.device.deviceNoAutoPlaceholder')"
-            readonly
+            v-model="createForm.deviceNoSuffix"
+            maxlength="3"
+            :disabled="!selectedCreateModel"
+            :placeholder="t('rental.device.deviceNoSuffixPlaceholder')"
+            @blur="normalizeCreateDeviceNoSuffix"
           >
-            <template #suffix>
-              <Icon icon="ep:lock" />
+            <template #prepend>
+              {{ selectedCreateModel ? `${selectedCreateModel.deviceNoPrefix}-` : '--' }}
             </template>
           </el-input>
           <div class="text-12px text-[var(--el-text-color-secondary)]">
-            {{ t('rental.device.deviceNoAutoHint') }}
+            {{
+              createDeviceNoPreview
+                ? t('rental.device.deviceNoComposeHint', { deviceNo: createDeviceNoPreview })
+                : t('rental.device.deviceNoSuffixHint')
+            }}
           </div>
         </el-form-item>
         <el-form-item :label="t('rental.device.serialNumber')">
@@ -344,10 +351,11 @@ import {
 } from '@/api/rental/device'
 import { getRentalLabelKey, getRentalTagType } from '@/utils/rentalLabels'
 import {
-  buildDeviceNoHint,
+  buildDeviceNoPreview,
   findModel,
   getModelsForCategory,
-  isModelInCategory
+  isModelInCategory,
+  normalizeDeviceNoSuffix
 } from './deviceCatalogModel'
 import DeviceCategoryCreateDialog from './DeviceCategoryCreateDialog.vue'
 import DeviceModelCreateDialog from './DeviceModelCreateDialog.vue'
@@ -374,7 +382,8 @@ const createVisible = ref(false)
 const createForm = reactive({
   serialNumber: '',
   categoryCode: '',
-  equipmentModelCode: ''
+  equipmentModelCode: '',
+  deviceNoSuffix: ''
 })
 const createFormRef = ref<FormInstance>()
 const createRules = computed<FormRules>(() => ({
@@ -383,6 +392,14 @@ const createRules = computed<FormRules>(() => ({
   ],
   equipmentModelCode: [
     { required: true, message: t('rental.device.modelCodeRequired'), trigger: 'change' }
+  ],
+  deviceNoSuffix: [
+    { required: true, message: t('rental.device.deviceNoSuffixRequired'), trigger: 'blur' },
+    {
+      pattern: /^(?:0?[1-9]|[1-9][0-9]{1,2})$/,
+      message: t('rental.device.deviceNoSuffixFormat'),
+      trigger: 'blur'
+    }
   ]
 }))
 const queryModelOptions = computed(() =>
@@ -394,8 +411,11 @@ const createModelOptions = computed(() =>
 const selectedCreateModel = computed(() =>
   findModel(deviceCatalog.value, createForm.categoryCode, createForm.equipmentModelCode)
 )
-const createDeviceNoHint = computed(() =>
-  buildDeviceNoHint(selectedCreateModel.value?.deviceNoPrefix)
+const createDeviceNoPreview = computed(() =>
+  buildDeviceNoPreview(
+    selectedCreateModel.value?.deviceNoPrefix,
+    createForm.deviceNoSuffix
+  )
 )
 
 const categoryLabel = (categoryCode: string) =>
@@ -432,6 +452,11 @@ const handleQueryCategoryChange = () => {
 
 const handleCreateCategoryChange = () => {
   createForm.equipmentModelCode = ''
+  createForm.deviceNoSuffix = ''
+}
+
+const handleCreateModelChange = () => {
+  createForm.deviceNoSuffix = ''
 }
 
 const categoryCreateDialogRef = ref<InstanceType<typeof DeviceCategoryCreateDialog>>()
@@ -456,6 +481,7 @@ const handleCategoryCreated = async (created: { id: number; categoryCode: string
   if (!category) return
   createForm.categoryCode = category.categoryCode
   createForm.equipmentModelCode = ''
+  createForm.deviceNoSuffix = ''
 }
 
 const handleModelCreated = async (created: {
@@ -471,6 +497,12 @@ const handleModelCreated = async (created: {
   if (!category || !model) return
   createForm.categoryCode = category.categoryCode
   createForm.equipmentModelCode = model.modelCode
+  createForm.deviceNoSuffix = ''
+}
+
+const normalizeCreateDeviceNoSuffix = () => {
+  const normalized = normalizeDeviceNoSuffix(createForm.deviceNoSuffix)
+  if (normalized) createForm.deviceNoSuffix = normalized
 }
 const assignVisible = ref(false)
 const assignForm = reactive({
@@ -603,6 +635,7 @@ const openCreate = () => {
   createForm.serialNumber = ''
   createForm.categoryCode = ''
   createForm.equipmentModelCode = ''
+  createForm.deviceNoSuffix = ''
   createVisible.value = true
 }
 
@@ -615,6 +648,7 @@ const submitCreate = async () => {
       ...createForm,
       categoryCode: createForm.categoryCode,
       equipmentModelCode: createForm.equipmentModelCode.trim(),
+      deviceNoSuffix: normalizeDeviceNoSuffix(createForm.deviceNoSuffix),
       serialNumber: createForm.serialNumber.trim() || undefined
     })
     message.success(t('common.createSuccess'))

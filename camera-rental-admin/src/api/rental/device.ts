@@ -52,6 +52,7 @@ export interface RentalDeviceCreateReqVO {
   serialNumber?: string
   categoryCode: string
   equipmentModelCode: string
+  deviceNoSuffix: string
   status?: string
   warehouseCode?: string
   purchaseAmount?: number

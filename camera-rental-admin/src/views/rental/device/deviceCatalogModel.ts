@@ -35,5 +35,13 @@ export const findModel = (
 ) =>
   getModelsForCategory(catalog, categoryCode).find((model) => model.modelCode === modelCode)
 
-export const buildDeviceNoHint = (deviceNoPrefix?: string) =>
-  deviceNoPrefix ? `${deviceNoPrefix}-01 ~ ${deviceNoPrefix}-99` : ''
+export const normalizeDeviceNoSuffix = (deviceNoSuffix: string) => {
+  const normalized = deviceNoSuffix.trim()
+  if (!/^(?:0?[1-9]|[1-9][0-9]{1,2})$/.test(normalized)) return ''
+  return normalized.padStart(2, '0')
+}
+
+export const buildDeviceNoPreview = (deviceNoPrefix?: string, deviceNoSuffix = '') => {
+  const normalizedSuffix = normalizeDeviceNoSuffix(deviceNoSuffix)
+  return deviceNoPrefix && normalizedSuffix ? `${deviceNoPrefix}-${normalizedSuffix}` : ''
+}

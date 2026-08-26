@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
-  buildDeviceNoHint,
+  buildDeviceNoPreview,
   findModel,
   getModelsForCategory,
-  isModelInCategory
+  isModelInCategory,
+  normalizeDeviceNoSuffix
 } from '../src/views/rental/device/deviceCatalogModel.ts'
 
 const catalog = [
@@ -49,8 +50,16 @@ test('model membership follows the selected category', () => {
   assert.equal(isModelInCategory(catalog, 'INSTA360', 'P4P'), false)
 })
 
-test('device number hint uses the backend-provided prefix', () => {
+test('device number preview combines the backend prefix and administrator suffix', () => {
   assert.equal(findModel(catalog, 'DJI', 'P4P')?.deviceNoPrefix, 'P4P')
-  assert.equal(buildDeviceNoHint('P4P'), 'P4P-01 ~ P4P-99')
-  assert.equal(buildDeviceNoHint('支架'), '支架-01 ~ 支架-99')
+  assert.equal(normalizeDeviceNoSuffix('1'), '01')
+  assert.equal(normalizeDeviceNoSuffix('99'), '99')
+  assert.equal(normalizeDeviceNoSuffix('100'), '100')
+  assert.equal(normalizeDeviceNoSuffix('999'), '999')
+  assert.equal(normalizeDeviceNoSuffix('0'), '')
+  assert.equal(normalizeDeviceNoSuffix('001'), '')
+  assert.equal(normalizeDeviceNoSuffix('1000'), '')
+  assert.equal(buildDeviceNoPreview('P4P', '2'), 'P4P-02')
+  assert.equal(buildDeviceNoPreview('P4P', '100'), 'P4P-100')
+  assert.equal(buildDeviceNoPreview('支架', '08'), '支架-08')
 })

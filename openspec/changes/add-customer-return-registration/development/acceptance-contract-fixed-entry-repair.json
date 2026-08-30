@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "change_id": "add-customer-return-registration",
+  "kind": "structured-acceptance-alignment-repair",
+  "repaired_at": "2026-08-30T07:25:00.000Z",
+  "source_contracts": [
+    "requirements.md",
+    "acceptance.md"
+  ],
+  "updated_assertion_ids": [
+    "A1",
+    "A2"
+  ],
+  "reason": "The approved requirements.md and acceptance.md replaced manually issued order-bound links and mandatory photo categories with a fixed /return entry, automatic short-lived session handling, required machine code and waybill fields, optional order/mobile evidence, and zero-to-ten optional photos. The structured acceptance.json still contained the superseded link and mandatory-photo wording.",
+  "preserved_assertion_ids": [
+    "A3",
+    "A4",
+    "A5",
+    "A6",
+    "A7",
+    "A8"
+  ],
+  "validation_required": [
+    "Refresh Development evidence against a Git HEAD containing this alignment.",
+    "Regenerate every task acceptance evidence file.",
+    "Re-run Development handoff before creating the Verification case snapshot."
+  ],
+  "fallback_used": false
+}

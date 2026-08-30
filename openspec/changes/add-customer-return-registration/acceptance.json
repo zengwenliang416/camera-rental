@@ -4,14 +4,14 @@
   "assertions": [
     {
       "id": "A1",
-      "statement": "An operator can issue and revoke an order-bound customer return link.",
+      "statement": "The fixed /return entry verifies or safely falls back using the required machine code plus optional order and mobile evidence, issues an automatic short-lived HttpOnly session when needed, and exposes neither a manual link token nor order-enumeration detail.",
       "verify_via": "e2e",
       "status": "failing",
       "evidence_ref": null
     },
     {
       "id": "A2",
-      "statement": "A customer can submit return logistics, assigned device serials, required photos, and optional packaging photos through the public link.",
+      "statement": "A customer can submit a required machine code and waybill through the one-page return form, optionally upload up to ten private photos, and receive an ACCEPTED or REVIEW_REQUIRED receipt without duplicate business writes.",
       "verify_via": "e2e",
       "status": "failing",
       "evidence_ref": null

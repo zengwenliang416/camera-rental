@@ -1,0 +1,64 @@
+{
+  "task_id": "008-tenant-device-catalog",
+  "task_items": [
+    "14.1",
+    "14.2",
+    "14.3",
+    "14.4",
+    "14.5"
+  ],
+  "acceptance_primary": [
+    "A8"
+  ],
+  "goal": "Allow authorized tenant administrators to manage device catalog entries from the existing device-create flow and create canonical tenant-scoped physical-device numbers.",
+  "must_read": [
+    "openspec/changes/add-customer-return-registration/development/tasks/008-tenant-device-catalog/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-customer-return-registration/requirements.md",
+    "openspec/changes/add-customer-return-registration/acceptance.md",
+    "openspec/changes/add-customer-return-registration/spec-map.json",
+    "openspec/changes/add-customer-return-registration/component-impact-map.json",
+    "openspec/changes/add-customer-return-registration/prototype/handoff.md",
+    "openspec/changes/add-customer-return-registration/prototype/decision.json",
+    "openspec/changes/add-customer-return-registration/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-server/sql/mysql/migrations/20260826_050_rental_device_catalog_management.sql",
+    "camera-rental-admin/src/api/rental/device.ts",
+    "camera-rental-admin/src/views/rental/device",
+    "camera-rental-admin/src/locales/zh-CN.ts",
+    "camera-rental-admin/src/locales/en.ts",
+    "camera-rental-admin/tests/deviceCatalogModel.test.ts",
+    "ops/github-deploy/migrations.txt",
+    "openspec/changes/add-customer-return-registration"
+  ],
+  "test_paths": [
+    "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalDeviceCatalogServiceTest,RentalDeviceAdminServiceTest,RentalDeviceInboundServiceTest,RentalDeviceInboundCategoryTest,RentalDeviceCodeStandTest,RentalDeviceCodeTest,ReturnSerialNormalizerTest -Dsurefire.failIfNoSpecifiedTests=false test",
+    "cd camera-rental-admin && node --test --experimental-strip-types tests/deviceCatalogModel.test.ts && pnpm ts:check",
+    "bash ops/github-deploy/tests/migration-runner-test.sh && bash -n ops/github-deploy/apply-migrations.sh && cmp -s camera-rental-server/sql/mysql/migrations/20260826_050_rental_device_catalog_management.sql openspec/changes/add-customer-return-registration/development/migrations/20260826_050_rental_device_catalog_management.sql"
+  ],
+  "non_goals": [
+    "Do not apply migration 050 to any database.",
+    "Do not edit or delete existing catalog rows.",
+    "Do not change order, assignment, schedule, dispatch, return or inspection behavior.",
+    "Do not commit, push or deploy."
+  ],
+  "expected_evidence": [
+    "Focused backend catalog, uniqueness, device-number and ERP inbound tests",
+    "Focused frontend catalog model tests",
+    "Admin TypeScript check and local build",
+    "Migration checksum, validation and rollback documentation",
+    "Scoped diff review"
+  ],
+  "unsafe_assumptions": [
+    "Frontend validation does not replace backend tenant and catalog validation.",
+    "Unknown ERP models cannot be silently classified.",
+    "A generated device number is not available until uniqueness is confirmed by the database."
+  ],
+  "stop_condition": "Stop if tenant isolation, normalized uniqueness or server-authoritative numbering cannot be preserved, or if database application or deployment would be required."
+}

@@ -36,6 +36,20 @@
       "verify_via": "e2e",
       "status": "failing",
       "evidence_ref": null
+    },
+    {
+      "id": "A6",
+      "statement": "An authorized administrator can edit only mutable device metadata while immutable identity and lifecycle fields remain server-controlled.",
+      "verify_via": "unit",
+      "status": "passing",
+      "evidence_ref": "development/tasks/009-admin-device-maintenance/report.md"
+    },
+    {
+      "id": "A7",
+      "statement": "An authorized administrator can logically delete only an available device with no source or business-history references, with permission-controlled UI and server-side confirmation rules.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "development/tasks/009-admin-device-maintenance/e2e.md"
     }
   ]
 }

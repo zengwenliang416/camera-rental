@@ -7,6 +7,7 @@
 3. `20260803_041_rental_device_short_codes.sql`
 4. `20260825_049_rental_device_category.sql`
 5. `20260826_050_rental_device_catalog_management.sql`
+6. `20260830_051_rental_device_maintenance_permissions.sql`
 
 The files in this directory are exact audit copies of the production migrations
 listed by `production_path` and pinned by SHA-256 in `manifest.json`.
@@ -34,3 +35,6 @@ listed by `production_path` and pinned by SHA-256 in `manifest.json`.
 - Migration 050 is additive. Application rollback may leave the tenant catalog
   tables and seed rows in place. Removing either table or reusing an allocated
   sequence requires a separately reviewed destructive/data migration.
+- Migration 051 adds only menu and role-menu rows. Application rollback can
+  disable menu IDs `7024` and `7025` or mark the corresponding role grants
+  deleted; physical removal requires a separately reviewed cleanup migration.

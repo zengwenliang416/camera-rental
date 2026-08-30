@@ -43,6 +43,14 @@
       "path": "development/migrations/20260826_050_rental_device_catalog_management.sql",
       "production_path": "camera-rental-server/sql/mysql/migrations/20260826_050_rental_device_catalog_management.sql",
       "sha256": "9ff67ccf71938b093fa6f7601381a3adbd00e1a50738a847f1aba0b3784a14fc"
+    },
+    {
+      "id": "20260830_051_rental_device_maintenance_permissions",
+      "kind": "seed",
+      "order": 6,
+      "path": "development/migrations/20260830_051_rental_device_maintenance_permissions.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260830_051_rental_device_maintenance_permissions.sql",
+      "sha256": "a5b41f65114631f5d453ba1af4250bac59de5d33d08417e6579c14fa228acbf7"
     }
   ],
   "rollback": [],
@@ -57,7 +65,8 @@
       "The release applies the listed migrations in order and blocks activation on failure.",
       "Migration 041 preserves the previous device number in legacy_device_no before assigning short codes.",
       "Migration 049 adds nullable category_code, backfills only known models and preserves unknown historical rows.",
-      "Migration 050 adds tenant-scoped categories/models, seeds the current catalog and initializes the next two-digit sequence from existing devices."
+      "Migration 050 adds tenant-scoped categories/models, seeds the current catalog and initializes the next two-digit sequence from existing devices.",
+      "Migration 051 adds device update/delete button permissions and grants them only to roles that already own the device-create permission."
     ]
   },
   "notes": [

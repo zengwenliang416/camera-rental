@@ -185,3 +185,21 @@ prefix into a unique short code.
   page, refresh the catalog after save and automatically select the new record.
 - [x] 14.5 Add focused backend/frontend tests, type-check, build, migration
   validation and scoped diff review.
+
+## 15. Admin device instance maintenance
+
+User outcome: An authorized administrator can correct mutable device metadata
+and remove an unused device created by mistake without bypassing lifecycle or
+historical-data protections.
+
+- [x] 15.1 Add the device update request, controller and transactional service
+  for serial number, warehouse, purchase amount and enabled state, including
+  tenant-scoped serial uniqueness and active-device disable protection.
+- [x] 15.2 Add a locked deletion guard and logical-delete service that rejects
+  non-available, purchase-sourced or historically referenced devices.
+- [x] 15.3 Add incremental update/delete permissions, role grants, migration
+  manifest entries, validation and rollback documentation.
+- [x] 15.4 Add admin API methods, permission-controlled edit/delete actions,
+  the edit dialog, deletion confirmation and localized feedback.
+- [x] 15.5 Add focused backend/frontend tests, type-check, build, migration
+  checks and scoped diff review.

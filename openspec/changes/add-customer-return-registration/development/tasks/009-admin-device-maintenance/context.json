@@ -1,0 +1,66 @@
+{
+  "task_id": "009-admin-device-maintenance",
+  "task_items": [
+    "15.1",
+    "15.2",
+    "15.3",
+    "15.4",
+    "15.5"
+  ],
+  "goal": "Allow authorized administrators to edit mutable rental-device metadata and safely logically delete only unused, unreferenced devices.",
+  "must_read": [
+    "openspec/changes/add-customer-return-registration/development/tasks/009-admin-device-maintenance/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-customer-return-registration/requirements.md",
+    "openspec/changes/add-customer-return-registration/acceptance.md",
+    "openspec/changes/add-customer-return-registration/acceptance.json",
+    "openspec/changes/add-customer-return-registration/spec-map.json",
+    "openspec/changes/add-customer-return-registration/component-impact-map.json",
+    "openspec/changes/add-customer-return-registration/prototype/handoff.md",
+    "openspec/changes/add-customer-return-registration/prototype/decision.json",
+    "openspec/changes/add-customer-return-registration/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-server/sql/mysql/migrations/20260830_051_rental_device_maintenance_permissions.sql",
+    "camera-rental-admin/src/api/rental/device.ts",
+    "camera-rental-admin/src/views/rental/device",
+    "camera-rental-admin/src/locales/zh-CN.ts",
+    "camera-rental-admin/src/locales/en.ts",
+    "camera-rental-admin/tests/deviceMaintenanceModel.test.ts",
+    "ops/github-deploy/migrations.txt",
+    "openspec/changes/add-customer-return-registration"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceAdminServiceTest.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceDeletionGuardTest.java",
+    "camera-rental-admin/tests/deviceMaintenanceModel.test.ts"
+  ],
+  "non_goals": [
+    "Do not edit device number, category, model or lifecycle status.",
+    "Do not edit or delete catalog rows.",
+    "Do not cascade or physically delete business history.",
+    "Do not apply migrations, commit, push or deploy."
+  ],
+  "expected_evidence": [
+    "Focused backend update and deletion-guard tests",
+    "Focused frontend edit-payload model tests",
+    "Admin TypeScript check and local build",
+    "Backend compile",
+    "Migration runner and SQL validation",
+    "Task report",
+    "Spec review",
+    "Quality review"
+  ],
+  "unsafe_assumptions": [
+    "Frontend permissions do not replace backend permissions.",
+    "AVAILABLE status does not prove the absence of historical references.",
+    "Logical deletion does not permit serial reuse.",
+    "Deletion and assignment must serialize on the device row."
+  ],
+  "stop_condition": "Stop if safe deletion requires cascading or deleting history, if lifecycle fields would become directly editable, or if migration application, commit, push or deployment would be required."
+}

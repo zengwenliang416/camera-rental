@@ -1,0 +1,1344 @@
+{
+  "schema": "specnav.verification.case-snapshot.v1",
+  "id": "snapshot-91f7c61e1b566778a52b97f5",
+  "change_id": "add-customer-return-registration",
+  "snapshot_hash": "91f7c61e1b566778a52b97f5c2c77a777f61ded11bfeea2c5b8c1b28d20c578a",
+  "cases": [
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "admin-return-operations",
+      "change_id": "add-customer-return-registration",
+      "requirement_ids": [
+        "REQ-RETURN-05"
+      ],
+      "acceptance_ids": [
+        "A5"
+      ],
+      "title": "管理端登记分页、详情、审核与租户权限",
+      "goal": "管理端只允许授权租户人员检索、查看和审核退回登记。",
+      "actor": "客服、订单运营与仓库运营",
+      "priority": "P0",
+      "preconditions": [
+        "后端管理端服务测试可离线执行",
+        "管理后台退回登记模型测试可执行"
+      ],
+      "steps": [
+        {
+          "id": "admin-return-operations:step-1",
+          "action": "执行管理端 Service、Controller 和前端登记模型测试。",
+          "expected": "分页、详情、审核、权限和租户隔离行为全部通过。",
+          "assertion_ids": [
+            "admin-return-operations:assert-1"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "admin-return-operations:assert-1",
+          "statement": "管理端登记分页、详情、审核、权限和租户隔离测试全部通过。",
+          "expected": true,
+          "oracle": {
+            "type": "structured_comparison",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "admin-return-operations:assert-1"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "admin-return-operations:assert-1"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "admin-return-operations:assert-1"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "admin-return-operations:assert-1"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "admin-return-operations:assert-1"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "admin-return-operations:assert-1"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 900000,
+        "entrypoint": "/Users/wenliang_zeng/.nvm/versions/node/v22.19.0/bin/node",
+        "args": [
+          "tests/specnav/verification-command.js",
+          "admin-return-operations"
+        ],
+        "cwd": ".",
+        "env_keys": [
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE",
+          "SPECNAV_REPORT_ARTIFACT_ROOT",
+          "SPECNAV_REPORT_ARTIFACT_RUN_ID",
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "assertion_result",
+          "command_output",
+          "log",
+          "structured_comparison"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-30T07:35:12Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "device-catalog-numbering",
+      "change_id": "add-customer-return-registration",
+      "requirement_ids": [
+        "REQ-RETURN-06"
+      ],
+      "acceptance_ids": [
+        "A8"
+      ],
+      "title": "租户设备目录与 1-999 编号",
+      "goal": "租户管理员从权威大类、型号和编号前缀创建设备，后端规范化编号并拒绝重复或跨租户组合。",
+      "actor": "具有设备创建权限的租户管理员",
+      "priority": "P0",
+      "preconditions": [
+        "管理后台目录模型测试可执行",
+        "设备目录与入库后端测试可离线执行"
+      ],
+      "steps": [
+        {
+          "id": "device-catalog-numbering:step-1",
+          "action": "执行设备目录、管理员创建、ERP 入库、短码和前端目录模型测试。",
+          "expected": "目录隔离、组合校验、1-999 规范化、重复阻断和 ERP sequence 保持全部通过。",
+          "assertion_ids": [
+            "device-catalog-numbering:assert-1"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "device-catalog-numbering:assert-1",
+          "statement": "设备目录、编号规范化、租户隔离、重复阻断和 ERP sequence 测试全部通过。",
+          "expected": true,
+          "oracle": {
+            "type": "structured_comparison",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-catalog-numbering:assert-1"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-catalog-numbering:assert-1"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-catalog-numbering:assert-1"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-catalog-numbering:assert-1"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-catalog-numbering:assert-1"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-catalog-numbering:assert-1"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 900000,
+        "entrypoint": "/Users/wenliang_zeng/.nvm/versions/node/v22.19.0/bin/node",
+        "args": [
+          "tests/specnav/verification-command.js",
+          "device-catalog"
+        ],
+        "cwd": ".",
+        "env_keys": [
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE",
+          "SPECNAV_REPORT_ARTIFACT_ROOT",
+          "SPECNAV_REPORT_ARTIFACT_RUN_ID",
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "assertion_result",
+          "command_output",
+          "log",
+          "structured_comparison"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-30T07:35:12Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "device-delete",
+      "change_id": "add-customer-return-registration",
+      "requirement_ids": [
+        "REQ-RETURN-08"
+      ],
+      "acceptance_ids": [
+        "A7"
+      ],
+      "title": "设备安全逻辑删除与历史引用阻断",
+      "goal": "授权管理员只能删除 AVAILABLE 且无任何业务历史引用的误建设备。",
+      "actor": "具有设备删除权限的管理员",
+      "priority": "P0",
+      "preconditions": [
+        "管理后台设备维护模型测试可执行",
+        "设备删除 guard 后端测试可离线执行"
+      ],
+      "steps": [
+        {
+          "id": "device-delete:step-1",
+          "action": "执行设备删除 guard、设备管理 Service 和前端模型测试。",
+          "expected": "逻辑删除成功路径、权限展示和全部历史引用阻断路径通过。",
+          "assertion_ids": [
+            "device-delete:assert-1"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "device-delete:assert-1",
+          "statement": "设备逻辑删除、权限控制、状态限制和业务历史引用阻断测试全部通过。",
+          "expected": true,
+          "oracle": {
+            "type": "structured_comparison",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-delete:assert-1"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-delete:assert-1"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-delete:assert-1"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-delete:assert-1"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-delete:assert-1"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-delete:assert-1"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 900000,
+        "entrypoint": "/Users/wenliang_zeng/.nvm/versions/node/v22.19.0/bin/node",
+        "args": [
+          "tests/specnav/verification-command.js",
+          "device-delete"
+        ],
+        "cwd": ".",
+        "env_keys": [
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE",
+          "SPECNAV_REPORT_ARTIFACT_ROOT",
+          "SPECNAV_REPORT_ARTIFACT_RUN_ID",
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "assertion_result",
+          "command_output",
+          "log",
+          "structured_comparison"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-30T07:35:12Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "device-edit",
+      "change_id": "add-customer-return-registration",
+      "requirement_ids": [
+        "REQ-RETURN-07"
+      ],
+      "acceptance_ids": [
+        "A6"
+      ],
+      "title": "设备可变字段编辑",
+      "goal": "授权管理员只能修改序列号、仓库、采购金额和启用状态，身份与生命周期字段保持服务端控制。",
+      "actor": "具有设备编辑权限的管理员",
+      "priority": "P0",
+      "preconditions": [
+        "管理后台设备维护模型测试可执行",
+        "设备管理后端测试可离线执行"
+      ],
+      "steps": [
+        {
+          "id": "device-edit:step-1",
+          "action": "执行设备编辑 Service 和前端模型测试。",
+          "expected": "允许字段可保存，重复序列号、非法停用和不可变字段修改被拒绝。",
+          "assertion_ids": [
+            "device-edit:assert-1"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "device-edit:assert-1",
+          "statement": "设备可变字段编辑、重复序列号、停用限制和不可变字段保护测试全部通过。",
+          "expected": true,
+          "oracle": {
+            "type": "structured_comparison",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-edit:assert-1"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-edit:assert-1"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-edit:assert-1"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-edit:assert-1"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-edit:assert-1"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "device-edit:assert-1"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 900000,
+        "entrypoint": "/Users/wenliang_zeng/.nvm/versions/node/v22.19.0/bin/node",
+        "args": [
+          "tests/specnav/verification-command.js",
+          "device-edit"
+        ],
+        "cwd": ".",
+        "env_keys": [
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE",
+          "SPECNAV_REPORT_ARTIFACT_ROOT",
+          "SPECNAV_REPORT_ARTIFACT_RUN_ID",
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "assertion_result",
+          "command_output",
+          "log",
+          "structured_comparison"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-30T07:35:12Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "migration-integrity",
+      "change_id": "add-customer-return-registration",
+      "requirement_ids": [
+        "REQ-RETURN-09"
+      ],
+      "acceptance_ids": [
+        "A1",
+        "A3",
+        "A8"
+      ],
+      "title": "Migration checksum、顺序与 runner 完整性",
+      "goal": "所有 required migration 与生产路径字节一致，checksum 固定，部署 runner 拒绝内容漂移。",
+      "actor": "发布与数据库运维人员",
+      "priority": "P0",
+      "preconditions": [
+        "migration manifest 标记 required=true",
+        "部署 migration runner 测试可在本地执行"
+      ],
+      "steps": [
+        {
+          "id": "migration-integrity:step-1",
+          "action": "执行 migration runner 测试、shell 语法检查和 manifest 双路径 SHA-256 校验。",
+          "expected": "六个 migration 的审计副本、生产副本和 manifest checksum 完全一致。",
+          "assertion_ids": [
+            "migration-integrity:assert-1"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "migration-integrity:assert-1",
+          "statement": "Migration runner、脚本语法、顺序和全部 SHA-256 完整性检查通过。",
+          "expected": true,
+          "oracle": {
+            "type": "structured_comparison",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "migration-integrity:assert-1"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "migration-integrity:assert-1"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "migration-integrity:assert-1"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "migration-integrity:assert-1"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "migration-integrity:assert-1"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "migration-integrity:assert-1"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 900000,
+        "entrypoint": "/Users/wenliang_zeng/.nvm/versions/node/v22.19.0/bin/node",
+        "args": [
+          "tests/specnav/verification-command.js",
+          "migration-integrity"
+        ],
+        "cwd": ".",
+        "env_keys": [
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE",
+          "SPECNAV_REPORT_ARTIFACT_ROOT",
+          "SPECNAV_REPORT_ARTIFACT_RUN_ID",
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "log",
+          "structured_comparison"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-30T07:35:12Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "return-entry-session-security",
+      "change_id": "add-customer-return-registration",
+      "requirement_ids": [
+        "REQ-RETURN-01"
+      ],
+      "acceptance_ids": [
+        "A1"
+      ],
+      "title": "固定入口、自动会话与枚举防护",
+      "goal": "公共入口只使用允许的订单证据，自动签发安全会话，并对枚举、重放和限流场景失败关闭。",
+      "actor": "客户与恶意请求者",
+      "priority": "P0",
+      "preconditions": [
+        "公共入口固定为 /return",
+        "退回登记后端安全测试可离线执行"
+      ],
+      "steps": [
+        {
+          "id": "return-entry-session-security:step-1",
+          "action": "执行会话 token、订单定位、Cookie 和限流安全测试。",
+          "expected": "会话只通过安全 HttpOnly Cookie 传输，数据库只保存 hash，验证失败不泄露枚举细节。",
+          "assertion_ids": [
+            "return-entry-session-security:assert-1"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "return-entry-session-security:assert-1",
+          "statement": "固定入口、自动会话、订单证据校验和枚举防护的后端安全测试全部通过。",
+          "expected": true,
+          "oracle": {
+            "type": "structured_comparison",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "return-entry-session-security:assert-1"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "return-entry-session-security:assert-1"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "return-entry-session-security:assert-1"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "return-entry-session-security:assert-1"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "return-entry-session-security:assert-1"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "return-entry-session-security:assert-1"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 900000,
+        "entrypoint": "/Users/wenliang_zeng/.nvm/versions/node/v22.19.0/bin/node",
+        "args": [
+          "tests/specnav/verification-command.js",
+          "return-backend-security"
+        ],
+        "cwd": ".",
+        "env_keys": [
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE",
+          "SPECNAV_REPORT_ARTIFACT_ROOT",
+          "SPECNAV_REPORT_ARTIFACT_RUN_ID",
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "assertion_result",
+          "command_output",
+          "log",
+          "structured_comparison"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-30T07:35:12Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "return-private-upload",
+      "change_id": "add-customer-return-registration",
+      "requirement_ids": [
+        "REQ-RETURN-03"
+      ],
+      "acceptance_ids": [
+        "A2",
+        "A3"
+      ],
+      "title": "私有照片授权、直传、确认与提交",
+      "goal": "可选照片严格按照 verify、authorize、PUT、confirm、submit 顺序完成并只绑定已确认附件。",
+      "actor": "上传退回照片的客户",
+      "priority": "P0",
+      "preconditions": [
+        "Nuxt 退回页面可在本地 4190 端口启动",
+        "私有对象存储请求由确定性测试路由接管"
+      ],
+      "steps": [
+        {
+          "id": "return-private-upload:step-1",
+          "action": "选择 JPEG 照片并提交退回登记。",
+          "expected": "浏览器按安全顺序完成上传，并将确认后的附件 ID 放入最终提交。",
+          "assertion_ids": [
+            "vc03-private-upload-order",
+            "vc03-confirmed-file-bound",
+            "vc03-upload-success-visible"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "vc03-private-upload-order",
+          "statement": "上传调用顺序严格为 verify、authorize、put、confirm、submit。",
+          "expected": [
+            "verify",
+            "authorize",
+            "put",
+            "confirm",
+            "submit"
+          ],
+          "oracle": {
+            "type": "playwright_assertion",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "trace",
+            "video"
+          ]
+        },
+        {
+          "id": "vc03-confirmed-file-bound",
+          "statement": "最终提交只包含已确认附件 ID 1。",
+          "expected": [
+            1
+          ],
+          "oracle": {
+            "type": "playwright_assertion",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "trace"
+          ]
+        },
+        {
+          "id": "vc03-upload-success-visible",
+          "statement": "照片上传并提交后显示成功结果。",
+          "expected": true,
+          "oracle": {
+            "type": "playwright_assertion",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "screenshot",
+            "trace",
+            "video"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc03-confirmed-file-bound",
+            "vc03-private-upload-order",
+            "vc03-upload-success-visible"
+          ],
+          "runner": "playwright"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc03-confirmed-file-bound",
+            "vc03-private-upload-order",
+            "vc03-upload-success-visible"
+          ],
+          "runner": "playwright"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc03-confirmed-file-bound",
+            "vc03-private-upload-order",
+            "vc03-upload-success-visible"
+          ],
+          "runner": "playwright"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc03-confirmed-file-bound",
+            "vc03-private-upload-order",
+            "vc03-upload-success-visible"
+          ],
+          "runner": "playwright"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc03-confirmed-file-bound",
+            "vc03-private-upload-order",
+            "vc03-upload-success-visible"
+          ],
+          "runner": "playwright"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc03-confirmed-file-bound",
+            "vc03-private-upload-order",
+            "vc03-upload-success-visible"
+          ],
+          "runner": "playwright"
+        }
+      },
+      "runner": {
+        "kind": "playwright",
+        "timeout_ms": 240000,
+        "entrypoint": "tests/specnav/customer-return-registration.js",
+        "args": [],
+        "cwd": ".",
+        "env_keys": [
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
+        "scenario_id": "return-private-upload",
+        "scenario_hash": "62ca1214f0702c1faa817acff2428cc425e22970c87b1b919d118fa0aa073e8f",
+        "browser_project": "chromium",
+        "allowed_origins": [
+          "http://127.0.0.1:4190",
+          "https://storage.test"
+        ],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "assertion_result",
+          "log",
+          "screenshot",
+          "structured_comparison",
+          "trace",
+          "video"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "screenshot",
+          "trace",
+          "video"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-30T07:35:12Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "return-review-required",
+      "change_id": "add-customer-return-registration",
+      "requirement_ids": [
+        "REQ-RETURN-02",
+        "REQ-RETURN-04"
+      ],
+      "acceptance_ids": [
+        "A1",
+        "A2",
+        "A4"
+      ],
+      "title": "未匹配设备人工复核与统一错误",
+      "goal": "未入库机器编码仍保存 REVIEW_REQUIRED 登记，不产生权威生命周期副作用，错误信息不泄露订单细节。",
+      "actor": "使用未入库设备编码的客户",
+      "priority": "P0",
+      "preconditions": [
+        "Nuxt 退回页面可在本地 4190 端口启动",
+        "浏览器请求由确定性测试路由接管"
+      ],
+      "steps": [
+        {
+          "id": "return-review-required:step-1",
+          "action": "提交 UNKNOWN-01 和有效快递单号。",
+          "expected": "页面显示等待人工核对，且未调用设备、分配或 Delivery 权威写接口。",
+          "assertion_ids": [
+            "vc02-review-required-visible",
+            "vc02-no-authoritative-side-effect"
+          ]
+        },
+        {
+          "id": "return-review-required:step-2",
+          "action": "提交不匹配的订单号和机器编码。",
+          "expected": "页面只显示统一错误，两个场景共发出两次明确提交。",
+          "assertion_ids": [
+            "vc02-unified-error-visible",
+            "vc02-submit-count"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "vc02-review-required-visible",
+          "statement": "未匹配设备提交后显示等待人工核对结果。",
+          "expected": true,
+          "oracle": {
+            "type": "playwright_assertion",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "screenshot",
+            "trace",
+            "video"
+          ]
+        },
+        {
+          "id": "vc02-no-authoritative-side-effect",
+          "statement": "未匹配设备场景不产生设备、分配或 Delivery 权威写调用。",
+          "expected": 0,
+          "oracle": {
+            "type": "playwright_assertion",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "trace"
+          ]
+        },
+        {
+          "id": "vc02-unified-error-visible",
+          "statement": "不匹配订单证据只显示统一错误。",
+          "expected": true,
+          "oracle": {
+            "type": "playwright_assertion",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "screenshot",
+            "trace",
+            "video"
+          ]
+        },
+        {
+          "id": "vc02-submit-count",
+          "statement": "人工复核和统一错误两个场景各提交一次。",
+          "expected": 2,
+          "oracle": {
+            "type": "playwright_assertion",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "trace"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc02-no-authoritative-side-effect",
+            "vc02-review-required-visible",
+            "vc02-submit-count",
+            "vc02-unified-error-visible"
+          ],
+          "runner": "playwright"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc02-no-authoritative-side-effect",
+            "vc02-review-required-visible",
+            "vc02-submit-count",
+            "vc02-unified-error-visible"
+          ],
+          "runner": "playwright"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc02-no-authoritative-side-effect",
+            "vc02-review-required-visible",
+            "vc02-submit-count",
+            "vc02-unified-error-visible"
+          ],
+          "runner": "playwright"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc02-no-authoritative-side-effect",
+            "vc02-review-required-visible",
+            "vc02-submit-count",
+            "vc02-unified-error-visible"
+          ],
+          "runner": "playwright"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc02-no-authoritative-side-effect",
+            "vc02-review-required-visible",
+            "vc02-submit-count",
+            "vc02-unified-error-visible"
+          ],
+          "runner": "playwright"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc02-no-authoritative-side-effect",
+            "vc02-review-required-visible",
+            "vc02-submit-count",
+            "vc02-unified-error-visible"
+          ],
+          "runner": "playwright"
+        }
+      },
+      "runner": {
+        "kind": "playwright",
+        "timeout_ms": 240000,
+        "entrypoint": "tests/specnav/customer-return-registration.js",
+        "args": [],
+        "cwd": ".",
+        "env_keys": [
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
+        "scenario_id": "return-review-and-security",
+        "scenario_hash": "65192712e914415cb6023eb880ac42f93e7e3776a6dfb7874c8eef0538aca726",
+        "browser_project": "chromium",
+        "allowed_origins": [
+          "http://127.0.0.1:4190"
+        ],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "assertion_result",
+          "log",
+          "screenshot",
+          "structured_comparison",
+          "trace",
+          "video"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "screenshot",
+          "trace",
+          "video"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-30T07:35:12Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "return-success-idempotent",
+      "change_id": "add-customer-return-registration",
+      "requirement_ids": [
+        "REQ-RETURN-02",
+        "REQ-RETURN-04"
+      ],
+      "acceptance_ids": [
+        "A2",
+        "A4"
+      ],
+      "title": "成功提交、规范化与双击幂等",
+      "goal": "客户从固定入口一次填写并双击提交时，只产生一次规范化请求和一个 ACCEPTED 回执。",
+      "actor": "退回设备的客户",
+      "priority": "P0",
+      "preconditions": [
+        "Nuxt 退回页面可在本地 4190 端口启动",
+        "浏览器请求由确定性测试路由接管"
+      ],
+      "steps": [
+        {
+          "id": "return-success-idempotent:step-1",
+          "action": "打开 /return，输入带全角连字符的机器编码和快递单号后双击提交。",
+          "expected": "页面显示固定入口并将机器编码规范化为 P4-01。",
+          "assertion_ids": [
+            "vc01-fixed-entry-visible",
+            "vc01-normalized-machine-code"
+          ]
+        },
+        {
+          "id": "return-success-idempotent:step-2",
+          "action": "等待提交完成并检查网络请求与结果面板。",
+          "expected": "只发出一次业务提交并显示 ACCEPTED 回执。",
+          "assertion_ids": [
+            "vc01-receipt-accepted",
+            "vc01-submit-count"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "vc01-fixed-entry-visible",
+          "statement": "固定 /return 页面主标题可见。",
+          "expected": true,
+          "oracle": {
+            "type": "playwright_assertion",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "screenshot",
+            "trace",
+            "video"
+          ]
+        },
+        {
+          "id": "vc01-normalized-machine-code",
+          "statement": "提交请求中的机器编码被规范化为 P4-01。",
+          "expected": "P4-01",
+          "oracle": {
+            "type": "playwright_assertion",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "trace"
+          ]
+        },
+        {
+          "id": "vc01-receipt-accepted",
+          "statement": "页面显示退回信息已登记的 ACCEPTED 结果。",
+          "expected": true,
+          "oracle": {
+            "type": "playwright_assertion",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "screenshot",
+            "trace",
+            "video"
+          ]
+        },
+        {
+          "id": "vc01-submit-count",
+          "statement": "双击提交只触发一次业务请求。",
+          "expected": 1,
+          "oracle": {
+            "type": "playwright_assertion",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "trace"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc01-fixed-entry-visible",
+            "vc01-normalized-machine-code",
+            "vc01-receipt-accepted",
+            "vc01-submit-count"
+          ],
+          "runner": "playwright"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc01-fixed-entry-visible",
+            "vc01-normalized-machine-code",
+            "vc01-receipt-accepted",
+            "vc01-submit-count"
+          ],
+          "runner": "playwright"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc01-fixed-entry-visible",
+            "vc01-normalized-machine-code",
+            "vc01-receipt-accepted",
+            "vc01-submit-count"
+          ],
+          "runner": "playwright"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc01-fixed-entry-visible",
+            "vc01-normalized-machine-code",
+            "vc01-receipt-accepted",
+            "vc01-submit-count"
+          ],
+          "runner": "playwright"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc01-fixed-entry-visible",
+            "vc01-normalized-machine-code",
+            "vc01-receipt-accepted",
+            "vc01-submit-count"
+          ],
+          "runner": "playwright"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "vc01-fixed-entry-visible",
+            "vc01-normalized-machine-code",
+            "vc01-receipt-accepted",
+            "vc01-submit-count"
+          ],
+          "runner": "playwright"
+        }
+      },
+      "runner": {
+        "kind": "playwright",
+        "timeout_ms": 240000,
+        "entrypoint": "tests/specnav/customer-return-registration.js",
+        "args": [],
+        "cwd": ".",
+        "env_keys": [
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
+        "scenario_id": "return-success-idempotent",
+        "scenario_hash": "47398d0a5375717039ec2ccc0a1b75e7e5e60b41cc737d0a4afba43897b76d75",
+        "browser_project": "chromium",
+        "allowed_origins": [
+          "http://127.0.0.1:4190"
+        ],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "assertion_result",
+          "log",
+          "screenshot",
+          "structured_comparison",
+          "trace",
+          "video"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "screenshot",
+          "trace",
+          "video"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-30T07:35:12Z"
+    }
+  ],
+  "created_at": "2026-08-30T09:47:06Z",
+  "created_by": {
+    "id": "codex-specnav",
+    "kind": "service",
+    "display_name": "Codex SpecNav"
+  },
+  "requirements_hash": "5a3f78798df2275995ee4312fc3e015732e0f1019556141716d81ef9e0693c6d",
+  "acceptance_hash": "ce69d92c3b4b79902e2240747cf065b60d6d2358e70fbdef90203034aea8fcc0"
+}

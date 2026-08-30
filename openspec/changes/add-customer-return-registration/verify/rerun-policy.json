@@ -1,0 +1,11 @@
+{
+  "schema": "specnav.verification.rerun-policy.v1",
+  "change_id": "add-customer-return-registration",
+  "mandatory_baseline_case_ids": [
+    "migration-integrity"
+  ],
+  "policy_refs": [
+    "development/migrations/manifest.json",
+    "verify/traceability-matrix.json"
+  ]
+}

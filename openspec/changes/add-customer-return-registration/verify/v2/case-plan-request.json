@@ -1,6 +1,6 @@
 {
   "changeId": "add-customer-return-registration",
-  "createdAt": "2026-08-30T09:30:02Z",
+  "createdAt": "2026-08-30T09:47:06Z",
   "createdBy": {
     "id": "codex-specnav",
     "kind": "service",
@@ -383,6 +383,14 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 240000,
+        "entrypoint": "tests/specnav/customer-return-registration.js",
+        "args": [],
+        "cwd": ".",
+        "env_keys": [
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
         "scenario_id": "return-success-idempotent",
         "scenario_hash": "47398d0a5375717039ec2ccc0a1b75e7e5e60b41cc737d0a4afba43897b76d75",
         "browser_project": "chromium",
@@ -576,6 +584,14 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 240000,
+        "entrypoint": "tests/specnav/customer-return-registration.js",
+        "args": [],
+        "cwd": ".",
+        "env_keys": [
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
         "scenario_id": "return-review-and-security",
         "scenario_hash": "65192712e914415cb6023eb880ac42f93e7e3776a6dfb7874c8eef0538aca726",
         "browser_project": "chromium",
@@ -747,6 +763,14 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 240000,
+        "entrypoint": "tests/specnav/customer-return-registration.js",
+        "args": [],
+        "cwd": ".",
+        "env_keys": [
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
         "scenario_id": "return-private-upload",
         "scenario_hash": "62ca1214f0702c1faa817acff2428cc425e22970c87b1b919d118fa0aa073e8f",
         "browser_project": "chromium",

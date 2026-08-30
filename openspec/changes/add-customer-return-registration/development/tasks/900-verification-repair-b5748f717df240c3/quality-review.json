@@ -1,0 +1,16 @@
+{
+  "schema": "specnav.verification.repair-review.v1",
+  "id": "repair-review-private-upload-quality-e98897fd54db",
+  "kind": "quality-review",
+  "verdict": "approved",
+  "reviewer_id": "pascal-quality-reviewer",
+  "reviewer_kind": "human",
+  "reviewed_at": "2026-08-30T09:22:02Z",
+  "evidence_id": "evidence-private-upload-quality-e98897fd54db",
+  "task_id": "900-verification-repair-b5748f717df240c3",
+  "failure_id": "failure-3848d4827986b74c39c71a08502710ad7ea006f66845326dab174638a3c35f20",
+  "repair_link_id": "repair-05ca4dc30bca7d690487ee947f360aef794b60f9da6e485b094efe8a48bf308f",
+  "repair_link_digest": "5dc7dd3c06b3deb754c7ee8d89cdead835d38fd6bc2344b98865bda19cd66fc6",
+  "scope_digest": "553e9c1a2f01e2302b825932bfe647fa312d5abcf8c1ea5abe0f55782fc5e72c",
+  "after_identity_digest": "4c872e139b9ec9a8c0f9dfb1b15b58c4a1454dfe8fd1eb62e5f36d329b634b14"
+}

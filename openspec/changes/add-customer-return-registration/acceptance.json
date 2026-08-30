@@ -50,6 +50,13 @@
       "verify_via": "e2e",
       "status": "passing",
       "evidence_ref": "development/tasks/009-admin-device-maintenance/e2e.md"
+    },
+    {
+      "id": "A8",
+      "statement": "An authorized tenant administrator can manage the tenant-scoped device category and model catalog, create devices from a valid category-model-prefix combination, and receive a normalized unique device number without affecting ERP sequence allocation.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "development/tasks/008-tenant-device-catalog/report.md"
     }
   ]
 }

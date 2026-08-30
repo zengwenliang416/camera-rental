@@ -1,0 +1,5 @@
+Camera Rental production deployment trigger
+
+Requested date: 2026-08-30
+Requested baseline: 0c4200945f3fce712ad8bbd7d25018fef5ff244f
+Reason: deploy the committed customer return upload verification and SpecNav evidence through the production Woodpecker pipeline.

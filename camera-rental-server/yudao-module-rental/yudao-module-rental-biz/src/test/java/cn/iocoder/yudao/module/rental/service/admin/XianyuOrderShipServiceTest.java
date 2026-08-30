@@ -55,6 +55,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_NOT_EXISTS;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_DISPATCH_BACKFILL_CONFLICT;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_DISPATCH_BACKFILL_ORDER_CLOSED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_WRITE_DISABLED;
@@ -804,6 +805,89 @@ class XianyuOrderShipServiceTest {
         verify(writeClient, never()).execute(any(), any());
         verify(deviceOpsService, never()).dispatch(any());
         verify(shipmentMapper, never()).insert(any(RentalDeviceShipmentDO.class));
+    }
+
+    @Test
+    void shipResolvesScannedSerialNumberAfterDeviceNoMiss() {
+        properties.setWriteEnabled(true);
+        XianyuOrderShipReqVO req = req();
+        req.setDeviceNo("SERIAL-P4P-001");
+        RentalDeviceDO disabledDevice = shippableDevice();
+        disabledDevice.setSerialNumber("SERIAL-P4P-001");
+        disabledDevice.setEnabled(false);
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(pendingOrder());
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectBySerialNumberForUpdate("SERIAL-P4P-001")).thenReturn(disabledDevice);
+
+        ServiceException ex = assertThrows(ServiceException.class, () -> service().ship(req));
+
+        assertEquals(XIANYU_SHIP_DEVICE_NOT_SHIPPABLE.getCode(), ex.getCode());
+        InOrder lookupOrder = inOrder(deviceMapper);
+        lookupOrder.verify(deviceMapper).selectByDeviceNoForUpdate("SERIAL-P4P-001");
+        lookupOrder.verify(deviceMapper).selectBySerialNumberForUpdate("SERIAL-P4P-001");
+        verify(deviceMapper, never()).selectByLegacyDeviceNoForUpdate(any());
+    }
+
+    @Test
+    void backfillResolvesScannedLegacyDeviceNoAfterCurrentIdentifiersMiss() {
+        XianyuOrderDispatchBackfillReqVO req = backfillReq();
+        req.setDeviceNo("LEGACY-P4P-001");
+        RentalDeviceDO disabledDevice = shippableDevice();
+        disabledDevice.setLegacyDeviceNo("LEGACY-P4P-001");
+        disabledDevice.setEnabled(false);
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(shippedOrder());
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByLegacyDeviceNoForUpdate("LEGACY-P4P-001")).thenReturn(disabledDevice);
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(RentalOrderDO.builder().id(30L).build());
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(convertedOrderItem());
+
+        ServiceException ex = assertThrows(ServiceException.class, () -> service().backfillDispatch(req));
+
+        assertEquals(XIANYU_SHIP_DEVICE_NOT_SHIPPABLE.getCode(), ex.getCode());
+        InOrder lookupOrder = inOrder(deviceMapper);
+        lookupOrder.verify(deviceMapper).selectByDeviceNoForUpdate("LEGACY-P4P-001");
+        lookupOrder.verify(deviceMapper).selectBySerialNumberForUpdate("LEGACY-P4P-001");
+        lookupOrder.verify(deviceMapper).selectByLegacyDeviceNoForUpdate("LEGACY-P4P-001");
+    }
+
+    @Test
+    void shipRejectsUnknownScannedDeviceIdentifier() {
+        properties.setWriteEnabled(true);
+        XianyuOrderShipReqVO req = req();
+        req.setDeviceNo("UNKNOWN-DEVICE");
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(pendingOrder());
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+
+        ServiceException ex = assertThrows(ServiceException.class, () -> service().ship(req));
+
+        assertEquals(RENTAL_DEVICE_NOT_EXISTS.getCode(), ex.getCode());
+        InOrder lookupOrder = inOrder(deviceMapper);
+        lookupOrder.verify(deviceMapper).selectByDeviceNoForUpdate("UNKNOWN-DEVICE");
+        lookupOrder.verify(deviceMapper).selectBySerialNumberForUpdate("UNKNOWN-DEVICE");
+        lookupOrder.verify(deviceMapper).selectByLegacyDeviceNoForUpdate("UNKNOWN-DEVICE");
+        verify(assignmentService, never()).assign(any());
+        verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void shipPrefersDeviceIdWhenBothDeviceIdAndScannedValueAreProvided() {
+        properties.setWriteEnabled(true);
+        XianyuOrderShipReqVO req = req();
+        req.setDeviceId(40L);
+        req.setDeviceNo("SERIAL-IGNORED");
+        RentalDeviceDO disabledDevice = shippableDevice();
+        disabledDevice.setEnabled(false);
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(pendingOrder());
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByIdForUpdate(40L)).thenReturn(disabledDevice);
+
+        ServiceException ex = assertThrows(ServiceException.class, () -> service().ship(req));
+
+        assertEquals(XIANYU_SHIP_DEVICE_NOT_SHIPPABLE.getCode(), ex.getCode());
+        verify(deviceMapper).selectByIdForUpdate(40L);
+        verify(deviceMapper, never()).selectByDeviceNoForUpdate(any());
+        verify(deviceMapper, never()).selectBySerialNumberForUpdate(any());
+        verify(deviceMapper, never()).selectByLegacyDeviceNoForUpdate(any());
     }
 
     @Test

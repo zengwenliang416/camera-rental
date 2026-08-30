@@ -23,6 +23,18 @@ public interface RentalDeviceMapper extends BaseMapperX<RentalDeviceDO> {
                 .last("LIMIT 1"));
     }
 
+    default RentalDeviceDO selectBySerialNumberForUpdate(String serialNumber) {
+        return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceDO>()
+                .eq(RentalDeviceDO::getSerialNumber, serialNumber)
+                .last("LIMIT 1"));
+    }
+
+    default RentalDeviceDO selectByLegacyDeviceNoForUpdate(String legacyDeviceNo) {
+        return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceDO>()
+                .eq(RentalDeviceDO::getLegacyDeviceNo, legacyDeviceNo)
+                .last("LIMIT 1"));
+    }
+
     default RentalDeviceDO selectByDeviceNo(String deviceNo) {
         return selectOne(new LambdaQueryWrapper<RentalDeviceDO>()
                 .eq(RentalDeviceDO::getDeviceNo, deviceNo)

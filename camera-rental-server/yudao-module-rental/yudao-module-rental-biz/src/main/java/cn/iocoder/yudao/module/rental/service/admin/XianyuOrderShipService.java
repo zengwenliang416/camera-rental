@@ -328,9 +328,19 @@ public class XianyuOrderShipService {
     }
 
     private RentalDeviceDO resolveDevice(Long deviceId, String deviceNo) {
-        RentalDeviceDO device = deviceId != null
-                ? deviceMapper.selectByIdForUpdate(deviceId)
-                : deviceMapper.selectByDeviceNoForUpdate(deviceNo.trim());
+        RentalDeviceDO device;
+        if (deviceId != null) {
+            device = deviceMapper.selectByIdForUpdate(deviceId);
+        } else {
+            String identifier = deviceNo.trim();
+            device = deviceMapper.selectByDeviceNoForUpdate(identifier);
+            if (device == null) {
+                device = deviceMapper.selectBySerialNumberForUpdate(identifier);
+            }
+            if (device == null) {
+                device = deviceMapper.selectByLegacyDeviceNoForUpdate(identifier);
+            }
+        }
         if (device == null) {
             throw exception(RENTAL_DEVICE_NOT_EXISTS);
         }

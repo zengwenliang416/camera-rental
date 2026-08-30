@@ -2,8 +2,11 @@ package cn.iocoder.yudao.module.rental.dal.mysql.rental;
 
 import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceShipmentDO;
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface RentalDeviceShipmentMapper extends BaseMapperX<RentalDeviceShipmentDO> {
@@ -22,5 +25,10 @@ public interface RentalDeviceShipmentMapper extends BaseMapperX<RentalDeviceShip
                 .orderByDesc(RentalDeviceShipmentDO::getId)
                 .last("LIMIT 1"));
     }
+
+    @Select("SELECT COUNT(*) FROM rental_device_shipment"
+            + " WHERE tenant_id = #{tenantId} AND device_id = #{deviceId}")
+    @InterceptorIgnore(tenantLine = "true")
+    long countAllByDeviceId(@Param("tenantId") Long tenantId, @Param("deviceId") Long deviceId);
 
 }

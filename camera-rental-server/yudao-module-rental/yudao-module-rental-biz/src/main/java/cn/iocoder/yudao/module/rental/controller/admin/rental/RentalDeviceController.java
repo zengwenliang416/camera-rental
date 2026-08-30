@@ -16,6 +16,7 @@ import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceRes
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceReturnReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceUnassignReqVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceUpdateReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceModelCreateReqVO;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentCommand;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentResult;
@@ -29,7 +30,9 @@ import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -98,6 +101,22 @@ public class RentalDeviceController {
     @PreAuthorize("@ss.hasPermission('rental:device:create')")
     public CommonResult<Long> createDevice(@Valid @RequestBody RentalDeviceCreateReqVO reqVO) {
         return success(deviceAdminService.createDevice(reqVO));
+    }
+
+    @PutMapping("/update")
+    @Operation(summary = "更新设备可变信息")
+    @PreAuthorize("@ss.hasPermission('rental:device:update')")
+    public CommonResult<Boolean> updateDevice(@Valid @RequestBody RentalDeviceUpdateReqVO reqVO) {
+        deviceAdminService.updateDevice(reqVO);
+        return success(true);
+    }
+
+    @DeleteMapping("/delete")
+    @Operation(summary = "逻辑删除无业务引用的设备")
+    @PreAuthorize("@ss.hasPermission('rental:device:delete')")
+    public CommonResult<Boolean> deleteDevice(@RequestParam("id") Long id) {
+        deviceAdminService.deleteDevice(id);
+        return success(true);
     }
 
     @PostMapping("/assign")

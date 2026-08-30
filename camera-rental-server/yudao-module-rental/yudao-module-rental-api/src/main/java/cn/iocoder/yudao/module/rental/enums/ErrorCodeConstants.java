@@ -71,6 +71,12 @@ public interface ErrorCodeConstants {
             "设备型号 {} 的 01-999 编号已用完");
     ErrorCode RENTAL_DEVICE_NO_DUPLICATE = new ErrorCode(1_040_002_022,
             "设备编号已存在：{}");
+    ErrorCode RENTAL_DEVICE_SERIAL_DUPLICATE = new ErrorCode(1_040_002_023,
+            "设备序列号已存在：{}");
+    ErrorCode RENTAL_DEVICE_DISABLE_BLOCKED = new ErrorCode(1_040_002_024,
+            "设备当前不能停用：{}");
+    ErrorCode RENTAL_DEVICE_DELETE_BLOCKED = new ErrorCode(1_040_002_025,
+            "设备不能删除：{}");
 
     // ========== 人工复核 1-040-003-000 ==========
     ErrorCode RENTAL_MANUAL_REVIEW_NOT_EXISTS = new ErrorCode(1_040_003_000, "人工复核记录不存在");

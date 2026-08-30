@@ -2,8 +2,11 @@ package cn.iocoder.yudao.module.rental.dal.mysql.rental;
 
 import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceAssignmentDO;
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,6 +25,11 @@ public interface RentalDeviceAssignmentMapper extends BaseMapperX<RentalDeviceAs
                 .eq(RentalDeviceAssignmentDO::getRentalOrderItemId, rentalOrderItemId)
                 .in(RentalDeviceAssignmentDO::getStatus, "ASSIGNED", "DISPATCHED"));
     }
+
+    @Select("SELECT COUNT(*) FROM rental_device_assignment"
+            + " WHERE tenant_id = #{tenantId} AND device_id = #{deviceId}")
+    @InterceptorIgnore(tenantLine = "true")
+    long countAllByDeviceId(@Param("tenantId") Long tenantId, @Param("deviceId") Long deviceId);
 
     default RentalDeviceAssignmentDO selectActiveByDeviceIdForUpdate(Long deviceId) {
         return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()

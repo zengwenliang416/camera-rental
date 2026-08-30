@@ -14,3 +14,4 @@ camera-rental-server/sql/mysql/migrations/20260822_047_return_registration_metho
 camera-rental-server/sql/mysql/migrations/20260822_048_device_lifecycle_completion.sql
 camera-rental-server/sql/mysql/migrations/20260825_049_rental_device_category.sql
 camera-rental-server/sql/mysql/migrations/20260826_050_rental_device_catalog_management.sql
+camera-rental-server/sql/mysql/migrations/20260830_051_rental_device_maintenance_permissions.sql

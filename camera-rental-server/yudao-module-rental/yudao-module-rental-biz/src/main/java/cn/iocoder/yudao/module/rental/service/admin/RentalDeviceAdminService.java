@@ -7,7 +7,9 @@ import cn.iocoder.yudao.module.rental.config.RentalDeviceProperties;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceCreateReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceQrRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceRespVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceUpdateReqVO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
+import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentCommand;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentException;
@@ -26,26 +28,34 @@ import java.util.stream.Collectors;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_ASSIGN_FAILED;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_DISABLE_BLOCKED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_NOT_EXISTS;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_NO_DUPLICATE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_QR_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_QR_MODEL_MISMATCH;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_SERIAL_DUPLICATE;
 
 @Service
 public class RentalDeviceAdminService {
 
     private final RentalDeviceMapper deviceMapper;
+    private final RentalDeviceAssignmentMapper assignmentMapper;
+    private final RentalDeviceDeletionGuard deletionGuard;
     private final RentalDeviceAssignmentService assignmentService;
     private final RentalDeviceQrCodec qrCodec;
     private final RentalDeviceProperties deviceProperties;
     private final RentalDeviceCatalogService deviceCatalogService;
 
     public RentalDeviceAdminService(RentalDeviceMapper deviceMapper,
+                                    RentalDeviceAssignmentMapper assignmentMapper,
+                                    RentalDeviceDeletionGuard deletionGuard,
                                     RentalDeviceAssignmentService assignmentService,
                                     RentalDeviceQrCodec qrCodec,
                                     RentalDeviceProperties deviceProperties,
                                     RentalDeviceCatalogService deviceCatalogService) {
         this.deviceMapper = deviceMapper;
+        this.assignmentMapper = assignmentMapper;
+        this.deletionGuard = deletionGuard;
         this.assignmentService = assignmentService;
         this.qrCodec = qrCodec;
         this.deviceProperties = deviceProperties;
@@ -90,6 +100,38 @@ public class RentalDeviceAdminService {
             throw ex;
         }
         return device.getId();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateDevice(RentalDeviceUpdateReqVO reqVO) {
+        RentalDeviceDO device = requireDeviceForUpdate(reqVO.getId());
+        String serialNumber = normalizeOptional(reqVO.getSerialNumber());
+        String warehouseCode = normalizeOptional(reqVO.getWarehouseCode());
+        validateSerialNumberUnique(serialNumber, device);
+        if (Boolean.FALSE.equals(reqVO.getEnabled())) {
+            if (!"AVAILABLE".equals(device.getStatus())) {
+                throw exception(RENTAL_DEVICE_DISABLE_BLOCKED, "设备状态不是 AVAILABLE");
+            }
+            if (assignmentMapper.selectActiveByDeviceIdForUpdate(device.getId()) != null) {
+                throw exception(RENTAL_DEVICE_DISABLE_BLOCKED, "设备存在活动分配");
+            }
+        }
+        try {
+            deviceMapper.updateMutableFields(device.getId(), serialNumber, warehouseCode,
+                    reqVO.getPurchaseAmount(), reqVO.getEnabled());
+        } catch (DuplicateKeyException ex) {
+            if (serialNumber != null && isSerialNumberOwnedByOtherDevice(serialNumber, device)) {
+                throw exception(RENTAL_DEVICE_SERIAL_DUPLICATE, serialNumber);
+            }
+            throw ex;
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteDevice(Long id) {
+        RentalDeviceDO device = requireDeviceForUpdate(id);
+        deletionGuard.validateDeletable(device);
+        deviceMapper.deleteById(id);
     }
 
     public RentalDeviceAssignmentResult assign(RentalDeviceAssignmentCommand command) {
@@ -141,6 +183,33 @@ public class RentalDeviceAdminService {
             throw exception(RENTAL_DEVICE_NOT_EXISTS);
         }
         return device;
+    }
+
+    private RentalDeviceDO requireDeviceForUpdate(Long id) {
+        RentalDeviceDO device = deviceMapper.selectByIdForUpdate(id);
+        if (device == null) {
+            throw exception(RENTAL_DEVICE_NOT_EXISTS);
+        }
+        return device;
+    }
+
+    private void validateSerialNumberUnique(String serialNumber, RentalDeviceDO device) {
+        if (serialNumber != null && isSerialNumberOwnedByOtherDevice(serialNumber, device)) {
+            throw exception(RENTAL_DEVICE_SERIAL_DUPLICATE, serialNumber);
+        }
+    }
+
+    private boolean isSerialNumberOwnedByOtherDevice(String serialNumber, RentalDeviceDO device) {
+        return deviceMapper.countAllBySerialNumberExcludingId(
+                device.getTenantId(), serialNumber, device.getId()) > 0;
+    }
+
+    private static String normalizeOptional(String value) {
+        if (value == null) {
+            return null;
+        }
+        String normalized = value.trim();
+        return normalized.isEmpty() ? null : normalized;
     }
 
     private RentalDeviceRespVO toVo(RentalDeviceDO device) {

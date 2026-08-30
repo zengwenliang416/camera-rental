@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-30T07:11:47.339Z",
+  "generated_at": "2026-08-30T07:19:43.000Z",
   "active_change": "add-customer-return-registration",
   "stage": "development",
   "ok": true,
@@ -63,18 +63,66 @@
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-30T07:11:47.338Z",
+    "generated_at": "2026-08-30T07:19:42.999Z",
     "active_change": "add-customer-return-registration",
     "source_raw": "openspec/changes/add-customer-return-registration/codegraph/evidence.jsonl",
-    "by_claim": {},
-    "by_stage": {},
+    "by_claim": {
+      "development:task-007-admin-device-category-catalog": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-mt8vqulk"
+        ],
+        "files": [
+          "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/device/RentalDeviceModelCatalog.java",
+          "camera-rental-admin/src/views/rental/device/deviceCatalogModel.ts",
+          "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceCategoryRespVO.java",
+          "camera-rental-server/yudao-module-mall/yudao-module-product/src/main/java/cn/iocoder/yudao/module/product/api/category/ProductCategoryApi.java",
+          "camera-rental-server/yudao-module-iot/yudao-module-iot-biz/src/main/java/cn/iocoder/yudao/module/iot/controller/admin/device/vo/device/IotDevicePageReqVO.java",
+          "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceAdminService.java",
+          "camera-rental-server/yudao-module-iot/yudao-module-iot-biz/src/main/java/cn/iocoder/yudao/module/iot/controller/admin/device/IotDeviceController.java",
+          "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/RentalDeviceController.java",
+          "camera-rental-server/yudao-module-iot/yudao-module-iot-biz/src/main/java/cn/iocoder/yudao/module/iot/dal/mysql/device/IotDeviceMapper.java",
+          "camera-rental-server/yudao-module-mall/yudao-module-promotion/src/main/java/cn/iocoder/yudao/module/promotion/service/coupon/CouponTemplateServiceImpl.java",
+          "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceInboundService.java"
+        ],
+        "symbols": [],
+        "blockers": []
+      },
+      "development:task-009-admin-device-maintenance": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-mtfa4o3o"
+        ],
+        "files": [
+          "camera-rental-server/yudao-module-iot/yudao-module-iot-core/src/main/java/cn/iocoder/yudao/module/iot/core/topic/topo/IotDeviceTopoDeleteReqDTO.java",
+          "camera-rental-server/yudao-module-mall/yudao-module-product/src/main/java/cn/iocoder/yudao/module/product/controller/app/history/vo/AppProductBrowseHistoryDeleteReqVO.java",
+          "sql/mysql/migrations/20260807_045_xianyu_ship_permissions_under_orders.sql",
+          "../../sql/mysql/migrations/20260807_045_xianyu_ship_permissions_under_orders.sql",
+          "camera-rental-server/sql/mysql/migrations/20260807_045_xianyu_ship_permissions_under_orders.sql",
+          "sql/mysql/migrations/20260731_032_rental_delivery_tracking.sql",
+          "../../sql/mysql/migrations/20260731_032_rental_delivery_tracking.sql",
+          "camera-rental-server/sql/mysql/migrations/20260731_032_rental_delivery_tracking.sql"
+        ],
+        "symbols": [],
+        "blockers": []
+      }
+    },
+    "by_stage": {
+      "development": {
+        "verified": 2,
+        "partial": 0,
+        "missing": 0,
+        "stale": 0,
+        "blocking": 0
+      }
+    },
     "blockers": [],
-    "raw_exists": false,
-    "record_count": 0
+    "raw_exists": true,
+    "record_count": 2
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-30T07:11:47.338Z",
+    "generated_at": "2026-08-30T07:19:43.000Z",
     "active_change": "add-customer-return-registration",
     "claims_file": "openspec/changes/add-customer-return-registration/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/add-customer-return-registration/codegraph/evidence-index.json",

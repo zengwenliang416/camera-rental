@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-08-30T06:52:41.495Z",
+  "generated_at": "2026-08-30T07:20:12.448Z",
   "active_change": "add-customer-return-registration",
   "claims": [
     {
@@ -304,6 +304,7 @@
       "allowed_files": [
         "ops/github-deploy/**",
         "ops/rustfs/**",
+        "tests/specnav/**",
         "openspec/changes/add-customer-return-registration"
       ],
       "query_ids": [

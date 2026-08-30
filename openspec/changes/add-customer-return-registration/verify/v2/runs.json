@@ -223,5 +223,30 @@
     "parent_run_id": null,
     "parent_attempt_id": null,
     "failure_id": null
+  },
+  {
+    "schema": "specnav.verification.run.v1",
+    "id": "run-20260830094257-01e3d1fe88a417c2",
+    "change_id": "add-customer-return-registration",
+    "case_snapshot_id": "snapshot-dbf7bc7f47c8dda97ed34a69",
+    "case_snapshot_hash": "dbf7bc7f47c8dda97ed34a690e5a43531f4626057adf3634aca199b1f92938d0",
+    "case_ids": [
+      "migration-integrity"
+    ],
+    "code_sha": "c317f7144bfe5d64a3f3c3229bb0a410191c0572",
+    "test_sha": "3d395bfad7deee5649646be937485cee2ceb38cef3e9f47594c645ba5ede26d5",
+    "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2",
+    "generation_id": "generation-51289d69cf934cd33ccbf7b9",
+    "status": "passed",
+    "created_at": "2026-08-30T09:42:57.176Z",
+    "started_at": "2026-08-30T09:42:57.184Z",
+    "completed_at": "2026-08-30T09:42:57.441Z",
+    "kind": "initial",
+    "origin_run_id": null,
+    "parent_run_id": null,
+    "parent_attempt_id": null,
+    "failure_id": null
   }
 ]

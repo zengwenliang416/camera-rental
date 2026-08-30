@@ -154,5 +154,23 @@
       }
     ],
     "recorded_at": "2026-08-30T08:15:01.331Z"
+  },
+  {
+    "id": "execution-attempt-20260830094257-01e3d1fe88a417c2",
+    "run_id": "run-20260830094257-01e3d1fe88a417c2",
+    "attempt_id": "attempt-20260830094257-01e3d1fe88a417c2",
+    "case_id": "migration-integrity",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "migration-integrity:assert-1",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-30T09:42:57.580Z"
   }
 ]

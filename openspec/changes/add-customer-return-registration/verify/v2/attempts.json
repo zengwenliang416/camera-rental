@@ -205,5 +205,28 @@
     "started_at": "2026-08-30T08:14:58.928Z",
     "completed_at": "2026-08-30T08:15:00.931Z",
     "exit_status": 1
+  },
+  {
+    "schema": "specnav.verification.attempt.v1",
+    "id": "attempt-20260830094257-01e3d1fe88a417c2",
+    "run_id": "run-20260830094257-01e3d1fe88a417c2",
+    "change_id": "add-customer-return-registration",
+    "case_id": "migration-integrity",
+    "case_snapshot_hash": "dbf7bc7f47c8dda97ed34a690e5a43531f4626057adf3634aca199b1f92938d0",
+    "kind": "initial",
+    "sequence": 1,
+    "runner": "command",
+    "code_sha": "c317f7144bfe5d64a3f3c3229bb0a410191c0572",
+    "test_sha": "3d395bfad7deee5649646be937485cee2ceb38cef3e9f47594c645ba5ede26d5",
+    "scenario_hash": "7b95e173ab521e09e5b1195ed7b3ee7156686c97643fc6a0750ec80c4513a142",
+    "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+    "browser_project": "none",
+    "test_data_snapshot": "faaacc9af54aa1b126879049a158c28a43dcd257cf7fec0cefe14ef9b9c3493d",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2",
+    "status": "passed",
+    "started_at": "2026-08-30T09:42:57.184Z",
+    "completed_at": "2026-08-30T09:42:57.441Z",
+    "exit_status": 0
   }
 ]

@@ -1,11 +1,11 @@
 {
   "schema": "specnav.verification.evidence-index.v1",
-  "index_version": 45,
+  "index_version": 47,
   "change_id": "add-customer-return-registration",
-  "generated_at": "2026-08-30T08:15:00.971Z",
+  "generated_at": "2026-08-30T09:42:57.473Z",
   "source_raw": "raw.jsonl",
-  "source_digest": "5048e6fcc2c1f2765f6cb1eb4caa4f5cd4deae425ee84fe8133a1bcc678aea2f",
-  "record_count": 45,
+  "source_digest": "b2bdcccc6759eff39148461c94abe09679e540389821b74f3a734d04566af25a",
+  "record_count": 47,
   "entries": [
     {
       "schema": "specnav.verification.evidence.v1",
@@ -1221,6 +1221,60 @@
       "path": "objects/37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570.json",
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
       "size": 3
+    },
+    {
+      "schema": "specnav.verification.evidence.v1",
+      "id": "evidence-1485c3ceb3864c7e7eddaa75b31a155a6eea15e064f4f87abd225ffb111fde1b",
+      "kind": "command_output",
+      "producer": "command-runner",
+      "captured_at": "2026-08-30T09:42:57.473Z",
+      "change_id": "add-customer-return-registration",
+      "run_id": "run-20260830094257-01e3d1fe88a417c2",
+      "case_id": "migration-integrity",
+      "attempt_id": "attempt-20260830094257-01e3d1fe88a417c2",
+      "step_id": "migration-integrity:step-1",
+      "assertion_id": "migration-integrity:assert-1",
+      "code_sha": "c317f7144bfe5d64a3f3c3229bb0a410191c0572",
+      "test_sha": "3d395bfad7deee5649646be937485cee2ceb38cef3e9f47594c645ba5ede26d5",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "redaction": {
+        "status": "not_required",
+        "redacted_fields": []
+      },
+      "content_type": "text/plain",
+      "result": "pass",
+      "path": "objects/ecab47d04665364a7736616621dcd128e5c87fcc92ef4c453b6e405230e21b96.txt",
+      "sha256": "ecab47d04665364a7736616621dcd128e5c87fcc92ef4c453b6e405230e21b96",
+      "size": 161
+    },
+    {
+      "schema": "specnav.verification.evidence.v1",
+      "id": "evidence-748d7eaf98de3539f8fdc2836618aaf324a23de9c6e396e959c82ac65c288df4",
+      "kind": "assertion_result",
+      "producer": "command-runner",
+      "captured_at": "2026-08-30T09:42:57.473Z",
+      "change_id": "add-customer-return-registration",
+      "run_id": "run-20260830094257-01e3d1fe88a417c2",
+      "case_id": "migration-integrity",
+      "attempt_id": "attempt-20260830094257-01e3d1fe88a417c2",
+      "step_id": "migration-integrity:step-1",
+      "assertion_id": "migration-integrity:assert-1",
+      "code_sha": "c317f7144bfe5d64a3f3c3229bb0a410191c0572",
+      "test_sha": "3d395bfad7deee5649646be937485cee2ceb38cef3e9f47594c645ba5ede26d5",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "redaction": {
+        "status": "not_required",
+        "redacted_fields": []
+      },
+      "content_type": "application/json",
+      "result": "pass",
+      "path": "objects/516b82ff49bf6cf9654deda105d03468fda5786fa41052a080ddac70554b2acd.json",
+      "sha256": "516b82ff49bf6cf9654deda105d03468fda5786fa41052a080ddac70554b2acd",
+      "size": 134
     }
   ]
 }

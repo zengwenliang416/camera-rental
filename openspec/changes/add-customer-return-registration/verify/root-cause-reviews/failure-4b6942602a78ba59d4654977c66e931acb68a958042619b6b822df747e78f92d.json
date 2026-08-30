@@ -1,0 +1,25 @@
+{
+  "schema": "specnav.verification.root-cause-review.v1",
+  "id": "root-cause-review-4b6942602a78ba59d4654977c66e931ac",
+  "failure_id": "failure-4b6942602a78ba59d4654977c66e931acb68a958042619b6b822df747e78f92d",
+  "root_failure_digest": "3abcc214e703c259b22888da8a02f76ce6d7f7b1e77499ff7deef257e780ae7f",
+  "change_id": "add-customer-return-registration",
+  "run_id": "run-20260830081458-316899b22249fd11",
+  "case_id": "return-success-idempotent",
+  "attempt_id": "attempt-20260830081458-316899b22249fd11",
+  "classification": "test_defect",
+  "summary": "The project-owned browser scenario was stopped by the managed Playwright API guard before its assertions could run.",
+  "root_cause": "The approved project scenario invokes page.route, which the managed Verification Kernel explicitly denies before assertions can run.",
+  "failed_assertion_ids": [
+    "vc01-fixed-entry-visible",
+    "vc01-normalized-machine-code",
+    "vc01-receipt-accepted",
+    "vc01-submit-count"
+  ],
+  "reviewer": {
+    "id": "user",
+    "kind": "human"
+  },
+  "decision": "approved",
+  "reviewed_at": "2026-08-30T08:35:46.640Z"
+}

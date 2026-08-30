@@ -2,11 +2,11 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "004-nuxt-customer-return-flow",
-  "generated_at": "2026-08-30T06:45:32.193Z",
-  "recorded_at": "2026-08-30T06:35:42.710Z",
+  "generated_at": "2026-08-30T07:31:22.127Z",
+  "recorded_at": "2026-08-30T07:25:22.513Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "13d3c3661bf66e20a6ba4921e6fcb3376e2bdaa7",
+  "reviewed_git_tree": "d36cdbdb705a162146204b1059c3754e6764cd12",
   "implementation_scope": {
     "included_patterns": [
       "camera-rental-web/**",
@@ -195,17 +195,17 @@
   },
   "test_runs": [
     {
-      "id": "receipt-af6e02208634f2cc909fcb6dde55cca01f6dca9d7ec922b611ba79b2dc7f2a9e",
+      "id": "receipt-c4d0d71b72f58d5e03297d4142264132b934873451accd3b08b31b65d9591456",
       "command": "cd camera-rental-web && bun test tests/return-registration.test.ts && bunx nuxi typecheck && bun run build",
       "assertion_ids": [
         "A2"
       ],
-      "recorded_at": "2026-08-30T06:35:42.710Z",
-      "validation_receipt_sha256": "cd6484fe5d0af47a3bd15631d4288a12767ed1df721a3124c2322c2dd9d66a42",
+      "recorded_at": "2026-08-30T07:25:22.513Z",
+      "validation_receipt_sha256": "294763586ef29d37d846200be913c342ce76f550ecf173ec8b98ee6c120563bc",
       "evidence_log": {
-        "path": "development/evidence/005-004-nuxt-customer-return-flow.log",
-        "sha256": "211a08b4b167e53576560c0ed30b0002182de698c8fb2411ad5d65dcf64bd0d4",
-        "size": 7984
+        "path": "development/evidence/056-004-nuxt-customer-return-flow.log",
+        "sha256": "949232de9c9a4cdec5df02daf25e0c0a6cf248793fc99072e74a0e372ee23829",
+        "size": 7985
       }
     }
   ],
@@ -215,11 +215,11 @@
       "parent_id": "A2",
       "status": "passing",
       "test_run_ids": [
-        "receipt-af6e02208634f2cc909fcb6dde55cca01f6dca9d7ec922b611ba79b2dc7f2a9e"
+        "receipt-c4d0d71b72f58d5e03297d4142264132b934873451accd3b08b31b65d9591456"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
-      "claim": "A customer can submit return logistics, assigned device serials, required photos, and optional packaging photos through the public link."
+      "claim": "A customer can submit a required machine code and waybill through the one-page return form, optionally upload up to ten private photos, and receive an ACCEPTED or REVIEW_REQUIRED receipt without duplicate business writes."
     }
   ],
   "fallback_used": false

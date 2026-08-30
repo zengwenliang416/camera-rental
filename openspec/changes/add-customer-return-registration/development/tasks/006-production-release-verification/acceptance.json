@@ -2,16 +2,17 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "006-production-release-verification",
-  "generated_at": "2026-08-30T06:45:32.313Z",
-  "recorded_at": "2026-08-30T06:36:16.209Z",
+  "generated_at": "2026-08-30T07:31:22.254Z",
+  "recorded_at": "2026-08-30T07:26:17.889Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "13d3c3661bf66e20a6ba4921e6fcb3376e2bdaa7",
+  "reviewed_git_tree": "d36cdbdb705a162146204b1059c3754e6764cd12",
   "implementation_scope": {
     "included_patterns": [
       "openspec/changes/add-customer-return-registration",
       "ops/github-deploy/**",
-      "ops/rustfs/**"
+      "ops/rustfs/**",
+      "tests/specnav/**"
     ],
     "entries": [
       {
@@ -205,14 +206,26 @@
         "mode": "100644",
         "type": "blob",
         "object_id": "928de12845cf36beed324e6bc44c6fb82ec69ae0"
+      },
+      {
+        "path": "tests/specnav/customer-return-registration.js",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b245649bdc3f771122b4f033ebf8b826227dbb68"
+      },
+      {
+        "path": "tests/specnav/verification-command.js",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2e0c7a24d57c67f5b42043e588bc19af64acb6f9"
       }
     ],
-    "sha256": "5e4ef34809031af82cf98f2074cba8ea7a4e592f2140037890b57f8b8e2e9873"
+    "sha256": "f71f37b2b6d7bf93777c54423489423e01d0da1e75615a94c682928789c4652d"
   },
   "artifacts": {
     "context": {
       "path": "development/tasks/006-production-release-verification/context.json",
-      "sha256": "8a98d67898a24af8234b9dddb7513d9f0ccc4325fe58fa519c65ee7f46401794"
+      "sha256": "5a1af698c29d90b598a97bd558462703d228269385db7c3d8350677b8996390d"
     },
     "report": {
       "path": "development/tasks/006-production-release-verification/report.md",
@@ -232,28 +245,7 @@
   },
   "test_runs": [
     {
-      "id": "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-      "command": "bash ops/github-deploy/tests/migration-runner-test.sh && bash ops/github-deploy/tests/incremental-build-lib-test.sh && bash ops/github-deploy/tests/prepare-production-80-test.sh",
-      "assertion_ids": [
-        "A1",
-        "A2",
-        "A3",
-        "A4",
-        "A5",
-        "A6",
-        "A7",
-        "A8"
-      ],
-      "recorded_at": "2026-08-30T06:36:16.190Z",
-      "validation_receipt_sha256": "875e759dbdf7cad0c73fc6e302ac74bcf19607943abcc3c237bb40c164f8c373",
-      "evidence_log": {
-        "path": "development/evidence/008-006-production-release-verification.log",
-        "sha256": "aeabcbe8d5da4d7cd64c30a9b5006d3be75cdf4e4e5d0bca0891b8ffd92cda38",
-        "size": 611
-      }
-    },
-    {
-      "id": "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1",
+      "id": "receipt-58e6fdc1bd7c0837619be1efa1f3d95c54910e64bff7304aaa61eec648d7da7f",
       "command": "bash -n ops/rustfs/*.sh ops/github-deploy/*.sh ops/github-deploy/tests/*.sh",
       "assertion_ids": [
         "A1",
@@ -265,12 +257,33 @@
         "A7",
         "A8"
       ],
-      "recorded_at": "2026-08-30T06:36:16.209Z",
-      "validation_receipt_sha256": "3bae85f1efa5914b49cabcb7321be82fabbacfe2fcde90b7f91d9af0c609f4fe",
+      "recorded_at": "2026-08-30T07:26:17.889Z",
+      "validation_receipt_sha256": "fcb1d849e6aa5bfd90ed75f56b19d6bfb327c607fe6c8773e446036df61066d8",
       "evidence_log": {
-        "path": "development/evidence/009-006-production-release-verification.log",
-        "sha256": "c893932342544285c1cff84f839d76b999e1e90b7ddc33e493d92d41765cbcb4",
+        "path": "development/evidence/060-006-production-release-verification.log",
+        "sha256": "5bb27a7abcb0c1f879dc99aa096cc8ccc74a982328f0bd83abd6640fd419b157",
         "size": 159
+      }
+    },
+    {
+      "id": "receipt-c4264986acb5668ceedb49e8584ed9900b9e9c0f8dffa49a7871d3efb017ab76",
+      "command": "bash ops/github-deploy/tests/migration-runner-test.sh && bash ops/github-deploy/tests/incremental-build-lib-test.sh && bash ops/github-deploy/tests/prepare-production-80-test.sh",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8"
+      ],
+      "recorded_at": "2026-08-30T07:26:17.869Z",
+      "validation_receipt_sha256": "891b2740b6d7298375564c92400c48434d1ffdf220f85276b1b4d02a96ab5595",
+      "evidence_log": {
+        "path": "development/evidence/059-006-production-release-verification.log",
+        "sha256": "efe9604bfa8cbc1888c72f852a65988a91469f5619a17daf3613c78e2308e43b",
+        "size": 612
       }
     }
   ],
@@ -280,32 +293,32 @@
       "parent_id": "A1",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-58e6fdc1bd7c0837619be1efa1f3d95c54910e64bff7304aaa61eec648d7da7f",
+        "receipt-c4264986acb5668ceedb49e8584ed9900b9e9c0f8dffa49a7871d3efb017ab76"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
-      "claim": "An operator can issue and revoke an order-bound customer return link."
+      "claim": "The fixed /return entry verifies or safely falls back using the required machine code plus optional order and mobile evidence, issues an automatic short-lived HttpOnly session when needed, and exposes neither a manual link token nor order-enumeration detail."
     },
     {
       "id": "A2",
       "parent_id": "A2",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-58e6fdc1bd7c0837619be1efa1f3d95c54910e64bff7304aaa61eec648d7da7f",
+        "receipt-c4264986acb5668ceedb49e8584ed9900b9e9c0f8dffa49a7871d3efb017ab76"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
-      "claim": "A customer can submit return logistics, assigned device serials, required photos, and optional packaging photos through the public link."
+      "claim": "A customer can submit a required machine code and waybill through the one-page return form, optionally upload up to ten private photos, and receive an ACCEPTED or REVIEW_REQUIRED receipt without duplicate business writes."
     },
     {
       "id": "A3",
       "parent_id": "A3",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-58e6fdc1bd7c0837619be1efa1f3d95c54910e64bff7304aaa61eec648d7da7f",
+        "receipt-c4264986acb5668ceedb49e8584ed9900b9e9c0f8dffa49a7871d3efb017ab76"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -316,8 +329,8 @@
       "parent_id": "A4",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-58e6fdc1bd7c0837619be1efa1f3d95c54910e64bff7304aaa61eec648d7da7f",
+        "receipt-c4264986acb5668ceedb49e8584ed9900b9e9c0f8dffa49a7871d3efb017ab76"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -328,8 +341,8 @@
       "parent_id": "A5",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-58e6fdc1bd7c0837619be1efa1f3d95c54910e64bff7304aaa61eec648d7da7f",
+        "receipt-c4264986acb5668ceedb49e8584ed9900b9e9c0f8dffa49a7871d3efb017ab76"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -340,8 +353,8 @@
       "parent_id": "A6",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-58e6fdc1bd7c0837619be1efa1f3d95c54910e64bff7304aaa61eec648d7da7f",
+        "receipt-c4264986acb5668ceedb49e8584ed9900b9e9c0f8dffa49a7871d3efb017ab76"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -352,8 +365,8 @@
       "parent_id": "A7",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-58e6fdc1bd7c0837619be1efa1f3d95c54910e64bff7304aaa61eec648d7da7f",
+        "receipt-c4264986acb5668ceedb49e8584ed9900b9e9c0f8dffa49a7871d3efb017ab76"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -364,12 +377,12 @@
       "parent_id": "A8",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-58e6fdc1bd7c0837619be1efa1f3d95c54910e64bff7304aaa61eec648d7da7f",
+        "receipt-c4264986acb5668ceedb49e8584ed9900b9e9c0f8dffa49a7871d3efb017ab76"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
-      "claim": "Prepare and verify the complete return registration release path for the 154.9.235.80 production host. (A8)"
+      "claim": "An authorized tenant administrator can manage the tenant-scoped device category and model catalog, create devices from a valid category-model-prefix combination, and receive a normalized unique device number without affecting ERP sequence allocation."
     }
   ],
   "fallback_used": false

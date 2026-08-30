@@ -1,0 +1,8 @@
+status=passed
+exit_status=0
+--- stdout ---
+[migration] apply 001_test.sql
+[migration] already applied 001_test.sql
+migration runner tests passed
+
+--- stderr ---

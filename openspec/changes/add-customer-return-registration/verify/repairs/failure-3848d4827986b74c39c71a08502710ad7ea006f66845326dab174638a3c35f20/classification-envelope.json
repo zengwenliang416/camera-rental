@@ -1,0 +1,77 @@
+{
+  "schema": "specnav.verification.trusted-fact-envelope.v1",
+  "id": "trusted-fact-084211f4ba92bed27507bcb2d9c5c179e077c66f3ff9ac21b01d03fe8c725f8d",
+  "kind": "classification_result",
+  "producer": "specnav-failure-classifier",
+  "payload": {
+    "ok": true,
+    "status": "classified",
+    "packet": {
+      "schema": "specnav.verification.failure-packet.v1",
+      "change_id": "add-customer-return-registration",
+      "run_id": "run-20260830081452-c8d8b4d614d2e613",
+      "case_id": "return-private-upload",
+      "attempt_id": "attempt-20260830081452-c8d8b4d614d2e613",
+      "reading_ids": [
+        "reading-071925ddf7f8d74caf3060a4bacaa729b7bca14aae9b44f45b25dbda4372ccb8",
+        "reading-0b546355497cec3fbad83503e081594435b199494002ee82e560c44d098270a4",
+        "reading-0ed0b1ee03c723036728b526728500052628bebcb37130551e70633a534172a6",
+        "reading-17d5bc3201cd809c048422c127ab92e6996afd4c2c7a98cb5a4ff835b0e30225",
+        "reading-388b5db9c794ad9a9485b34c38efbe1098efaf87b9e8a766a8eb43668a857be2",
+        "reading-4518ccda36a4a65c28b6567b85df63ef16d8f53dc0274740095458de5daae412",
+        "reading-4fb849bbbfffabb0d1e711342ff02d49dddc8e5cc494fabb56bc4f21da1788d6",
+        "reading-4fffada1823e698740c1b3d4fb3f440027f06ed5f7e76cc56045ca44e806b6c3",
+        "reading-6bb33ad24a51c121317610f83a54262ea909db7fe33409978a39fcb2777454e4",
+        "reading-a826fbbbf6e48df81ad5f9c0a0312b14d69bb04c1ab47a00983e1348b9dc8f3a",
+        "reading-b5a96cc9c88cc7d5ad056acfb7ebeb710efba38696c45e567c81ea9a4512ed95",
+        "reading-bda1cc74829c5a5c24d29797f05a14d8e271fed9cad747d75f32e02e40fe8c54",
+        "reading-d059063cd70b06f7436e934ca34320ac334834d0e2be4e21d5ee59d75598d55d",
+        "reading-d183adb4f7067de79518066a34f2bccfc852fbcd58d2a5b1ee65c7be74bef2d6",
+        "reading-e8bc464a293fb74b0198d734dabbd5f572d9b7c9529a3abd7c512ab2ee597d17",
+        "reading-e9d2afbddd37fdf671f533e05fbb2a2edfd7ba05185dcf11a658c418d6dc1230",
+        "reading-f3a6681864d98d164a4e63f72891547682e7bd2b26f4ec5dba73bda4f7addced",
+        "reading-fe5c460c1c01a8b09257647c16d4942b15c57cdb8a56975c8fb2e03a858b315a"
+      ],
+      "evidence_ids": [
+        "evidence-008e0d94aff439e7ff8036206ba188a36f45811f3f3f1517ace01837d89b33f7",
+        "evidence-0be82a2d47f47db5c34cf805516afe28b07437bb069154b646037e19ce47e99f",
+        "evidence-1b9bcd3c1c7397235983f23d8cf53b81b582a535b654f817554f44eddb500104",
+        "evidence-3389e55491cf88f2ce1173d7ccbd3c7b01fcabe102eda2c4c8474e1945c6e65b",
+        "evidence-5883a12b1a33ee9ef40bc8e7965fab54a1621c625315131beec1242c24db3a4b",
+        "evidence-6eff77d52d5b9365fe1a43dfcc65b350cfe89600f7f72d308e127074687ea7d3",
+        "evidence-ae4982b9f671779f9b9abfb814f9a361b081ca9bd3c66b284e5596b8992dfb55",
+        "evidence-bba5d56aaca786be0b8ea199790184628e1ad26e881694114a6a05dd77c4df23",
+        "evidence-f989faf63b2f54853195b45553321aa314b52f7da2c2fc29ed410ff0b6b23bd7"
+      ],
+      "classification": "test_defect",
+      "status": "repair_required",
+      "next_action": "repair_required",
+      "summary": "The project-owned browser scenario was stopped by the managed Playwright API guard before its assertions could run.",
+      "root_cause": "The approved project scenario invokes page.route, which the managed Verification Kernel explicitly denies before assertions can run.",
+      "failed_assertion_ids": [
+        "vc03-confirmed-file-bound",
+        "vc03-private-upload-order",
+        "vc03-upload-success-visible"
+      ],
+      "owner": "development",
+      "created_at": "2026-08-30T08:14:56.433Z",
+      "frozen_at": "2026-08-30T08:14:56.433Z",
+      "id": "failure-3848d4827986b74c39c71a08502710ad7ea006f66845326dab174638a3c35f20"
+    },
+    "signals": [],
+    "blockers": []
+  },
+  "payload_digest": "fa4fc60eef6ab19ed3c26506f2dcef4e05aff1650e3ce22f6c23f0105ac6f890",
+  "issued_at": "2026-08-30T08:38:59.178Z",
+  "bindings": {
+    "failure_id": "failure-3848d4827986b74c39c71a08502710ad7ea006f66845326dab174638a3c35f20",
+    "change_id": "add-customer-return-registration",
+    "run_id": "run-20260830081452-c8d8b4d614d2e613",
+    "case_id": "return-private-upload"
+  },
+  "claims": [
+    "failure-classification:verified"
+  ],
+  "signature_algorithm": "hmac-sha256",
+  "signature": "c47e1e7fc3741cfabaaf54f71c3907b03901a343107a3e2fe354330f7d7f59ef"
+}

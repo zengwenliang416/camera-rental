@@ -20,8 +20,37 @@
     "ops/rustfs",
     "openspec/changes/add-customer-return-registration"
   ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/**",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+    "camera-rental-server/yudao-module-infra/yudao-module-infra-api/**",
+    "camera-rental-server/yudao-module-infra/src/main/java/**",
+    "camera-rental-server/sql/mysql/migrations/**",
+    "camera-rental-web/**",
+    "camera-rental-admin/src/api/rental/returnRegistration.ts",
+    "camera-rental-admin/src/api/rental/device.ts",
+    "camera-rental-admin/src/views/rental/return-registration/**",
+    "camera-rental-admin/src/views/rental/device/**",
+    "camera-rental-admin/src/locales/zh-CN.ts",
+    "camera-rental-admin/src/locales/en.ts",
+    "camera-rental-admin/tests/deviceCatalogModel.test.ts",
+    "ops/github-deploy/**",
+    "ops/rustfs/**",
+    "openspec/changes/add-customer-return-registration/**",
+    "tests/specnav/customer-return-registration.js"
+  ],
   "denied_roots": [
     ".git",
+    "node_modules",
+    "dist",
+    "coverage",
+    "camera-rental-schedule-center",
+    "camera-rental-staff",
+    "camera-rental-uniapp",
+    "camera-rental-server/yudao-module-system",
+    "camera-rental-server/yudao-server/src/main/resources/application-prod.yaml"
+  ],
+  "denied_files": [
     "node_modules",
     "dist",
     "coverage",

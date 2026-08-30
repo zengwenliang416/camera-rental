@@ -2,11 +2,11 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "003-idempotent-return-submission",
-  "generated_at": "2026-08-30T06:45:32.135Z",
-  "recorded_at": "2026-08-30T06:35:28.324Z",
+  "generated_at": "2026-08-30T07:31:22.065Z",
+  "recorded_at": "2026-08-30T07:25:04.352Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "13d3c3661bf66e20a6ba4921e6fcb3376e2bdaa7",
+  "reviewed_git_tree": "d36cdbdb705a162146204b1059c3754e6764cd12",
   "implementation_scope": {
     "included_patterns": [
       "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/**",
@@ -3177,18 +3177,18 @@
   },
   "test_runs": [
     {
-      "id": "receipt-fd1c9c4675813413214b072a0d18c9b80dc73a0b24bab002caeb10cadd8a55cb",
+      "id": "receipt-a511ba8488efa4c9dd42f8d787887f0e1720aaf138cc922bdfaf239a7c09cd8f",
       "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest='ReturnRegistration*Test,RentalReturnRegistrationControllerTest' -Dsurefire.failIfNoSpecifiedTests=false test",
       "assertion_ids": [
         "A4",
         "A2"
       ],
-      "recorded_at": "2026-08-30T06:35:28.324Z",
-      "validation_receipt_sha256": "9c467d28ab7cb7d701a9676294d29fe13bcddb4bcb63c632d4ef1dba1ee4a959",
+      "recorded_at": "2026-08-30T07:25:04.352Z",
+      "validation_receipt_sha256": "5402e6fa901805d17eda5a06d7f7779cffb8fbebd727d8e87c8a762fc789d2f6",
       "evidence_log": {
-        "path": "development/evidence/004-003-idempotent-return-submission.log",
-        "sha256": "f1345e7859a4de42361c78485764bd553b8654239d4444ba1bc0c017a6b572f7",
-        "size": 40236
+        "path": "development/evidence/055-003-idempotent-return-submission.log",
+        "sha256": "5e749b635134e0b4c8f97a1f8efdd12c572cb8ebc9cf500f3d593efd6184bcfa",
+        "size": 40238
       }
     }
   ],
@@ -3198,7 +3198,7 @@
       "parent_id": "A4",
       "status": "passing",
       "test_run_ids": [
-        "receipt-fd1c9c4675813413214b072a0d18c9b80dc73a0b24bab002caeb10cadd8a55cb"
+        "receipt-a511ba8488efa4c9dd42f8d787887f0e1720aaf138cc922bdfaf239a7c09cd8f"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -3209,11 +3209,11 @@
       "parent_id": "A2",
       "status": "passing",
       "test_run_ids": [
-        "receipt-fd1c9c4675813413214b072a0d18c9b80dc73a0b24bab002caeb10cadd8a55cb"
+        "receipt-a511ba8488efa4c9dd42f8d787887f0e1720aaf138cc922bdfaf239a7c09cd8f"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
-      "claim": "A customer can submit return logistics, assigned device serials, required photos, and optional packaging photos through the public link."
+      "claim": "A customer can submit a required machine code and waybill through the one-page return form, optionally upload up to ten private photos, and receive an ACCEPTED or REVIEW_REQUIRED receipt without duplicate business writes."
     }
   ],
   "fallback_used": false

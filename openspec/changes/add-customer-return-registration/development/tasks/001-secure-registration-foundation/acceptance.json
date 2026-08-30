@@ -2,11 +2,11 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "001-secure-registration-foundation",
-  "generated_at": "2026-08-30T06:45:32.007Z",
-  "recorded_at": "2026-08-30T06:35:07.750Z",
+  "generated_at": "2026-08-30T07:31:21.933Z",
+  "recorded_at": "2026-08-30T07:24:26.321Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "13d3c3661bf66e20a6ba4921e6fcb3376e2bdaa7",
+  "reviewed_git_tree": "d36cdbdb705a162146204b1059c3754e6764cd12",
   "implementation_scope": {
     "included_patterns": [
       "camera-rental-server/sql/mysql/migrations/**",
@@ -3484,17 +3484,17 @@
   },
   "test_runs": [
     {
-      "id": "receipt-7494df985c2ed0d09ca6004800af835a3ff333c0b26e4c67dce3feefb83e9590",
+      "id": "receipt-ca23c57044d9055212179386caf5f0b8e496eaceffe169d5ddbf01726fc5005c",
       "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=ReturnRegistrationTokenServiceTest,ReturnRegistrationOrderVerificationServiceTest,ReturnRegistrationSessionCookieServiceTest,ReturnRegistrationRateLimitServiceTest -Dsurefire.failIfNoSpecifiedTests=false test",
       "assertion_ids": [
         "A1"
       ],
-      "recorded_at": "2026-08-30T06:35:07.750Z",
-      "validation_receipt_sha256": "aa56093a3d5bd1151113fe92fb73b77111e0d73636dfca571f58f21136c17ede",
+      "recorded_at": "2026-08-30T07:24:26.321Z",
+      "validation_receipt_sha256": "24f8490e705a35f81032d036a1b2a622f23fc3d9e083d95f3d4957a2905a452e",
       "evidence_log": {
-        "path": "development/evidence/001-001-secure-registration-foundation.log",
-        "sha256": "527e19e0b484fd7607c9c084acb77f897835fd19a8b9ee265d4459ac4ec16aab",
-        "size": 54269
+        "path": "development/evidence/052-001-secure-registration-foundation.log",
+        "sha256": "6ba8f80cdfd08942003299faaa886a4a04e1fcf8cda6b1876a3c8cb0d6da7885",
+        "size": 38305
       }
     }
   ],
@@ -3504,11 +3504,11 @@
       "parent_id": "A1",
       "status": "passing",
       "test_run_ids": [
-        "receipt-7494df985c2ed0d09ca6004800af835a3ff333c0b26e4c67dce3feefb83e9590"
+        "receipt-ca23c57044d9055212179386caf5f0b8e496eaceffe169d5ddbf01726fc5005c"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
-      "claim": "An operator can issue and revoke an order-bound customer return link."
+      "claim": "The fixed /return entry verifies or safely falls back using the required machine code plus optional order and mobile evidence, issues an automatic short-lived HttpOnly session when needed, and exposes neither a manual link token nor order-enumeration detail."
     }
   ],
   "fallback_used": false

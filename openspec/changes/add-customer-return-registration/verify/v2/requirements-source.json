@@ -1,0 +1,47 @@
+[
+  {
+    "id": "REQ-RETURN-01",
+    "path": "requirements.md",
+    "statement": "固定 /return 入口使用机器编码和可选订单证据定位，并自动签发安全短时会话。"
+  },
+  {
+    "id": "REQ-RETURN-02",
+    "path": "requirements.md",
+    "statement": "客户一次提交机器编码和快递单号，成功或人工复核结果保持幂等。"
+  },
+  {
+    "id": "REQ-RETURN-03",
+    "path": "requirements.md",
+    "statement": "可选照片通过私有对象存储授权、直传、确认后绑定当前登记。"
+  },
+  {
+    "id": "REQ-RETURN-04",
+    "path": "requirements.md",
+    "statement": "自动匹配只创建或复用 RETURN Delivery，不改变设备、订单、检测或排期生命周期。"
+  },
+  {
+    "id": "REQ-RETURN-05",
+    "path": "requirements.md",
+    "statement": "管理端登记分页、详情和审核遵循权限与租户隔离。"
+  },
+  {
+    "id": "REQ-RETURN-06",
+    "path": "requirements.md",
+    "statement": "租户设备大类和型号目录权威管理设备编号，并支持 1-999 管理员编号。"
+  },
+  {
+    "id": "REQ-RETURN-07",
+    "path": "requirements.md",
+    "statement": "设备普通编辑只允许修改可变元数据并保护身份与生命周期字段。"
+  },
+  {
+    "id": "REQ-RETURN-08",
+    "path": "requirements.md",
+    "statement": "设备删除使用安全逻辑删除并阻断所有业务历史引用。"
+  },
+  {
+    "id": "REQ-RETURN-09",
+    "path": "requirements.md",
+    "statement": "增量 migration 内容、顺序和 checksum 与部署 runner 保持一致且可验证。"
+  }
+]

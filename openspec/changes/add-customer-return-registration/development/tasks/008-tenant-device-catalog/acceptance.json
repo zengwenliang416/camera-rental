@@ -2,11 +2,11 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "008-tenant-device-catalog",
-  "generated_at": "2026-08-30T06:45:32.432Z",
-  "recorded_at": "2026-08-30T06:37:16.015Z",
+  "generated_at": "2026-08-30T07:31:22.429Z",
+  "recorded_at": "2026-08-30T07:29:03.552Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "13d3c3661bf66e20a6ba4921e6fcb3376e2bdaa7",
+  "reviewed_git_tree": "d36cdbdb705a162146204b1059c3754e6764cd12",
   "implementation_scope": {
     "included_patterns": [
       "camera-rental-admin/src/api/rental/device.ts",
@@ -3263,45 +3263,45 @@
   },
   "test_runs": [
     {
-      "id": "receipt-2e4627d9b28e7d49aea8988681b18d6921e2b7dac259061bc4e125c01104a363",
+      "id": "receipt-0146cbccaacb6f93b2b4dd82990908bf8936a4ee2a17e455132eb50b65c36c11",
+      "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalDeviceCatalogServiceTest,RentalDeviceAdminServiceTest,RentalDeviceInboundServiceTest,RentalDeviceInboundCategoryTest,RentalDeviceCodeStandTest,RentalDeviceCodeTest,ReturnSerialNormalizerTest -Dsurefire.failIfNoSpecifiedTests=false test",
+      "assertion_ids": [
+        "A8"
+      ],
+      "recorded_at": "2026-08-30T07:28:41.847Z",
+      "validation_receipt_sha256": "7cd2971dd80535fccd1b725d00c361b6cbb8e34fe060b12135f6d0a6d891e4d0",
+      "evidence_log": {
+        "path": "development/evidence/063-008-tenant-device-catalog.log",
+        "sha256": "e81d1b42197af55705721d9e9126a093a0915a23d4ddbe09c302d85be7c12885",
+        "size": 38903
+      }
+    },
+    {
+      "id": "receipt-33b4272bed747f40cb70a62bbc87fa844fbf98c0f165ee8a3025998ce33859df",
       "command": "bash ops/github-deploy/tests/migration-runner-test.sh && bash -n ops/github-deploy/apply-migrations.sh && cmp -s camera-rental-server/sql/mysql/migrations/20260826_050_rental_device_catalog_management.sql openspec/changes/add-customer-return-registration/development/migrations/20260826_050_rental_device_catalog_management.sql",
       "assertion_ids": [
         "A8"
       ],
-      "recorded_at": "2026-08-30T06:37:16.015Z",
-      "validation_receipt_sha256": "8e25d83b04e87a7d6865ff36968e97e4889d5440dd544850947ecfdb56696941",
+      "recorded_at": "2026-08-30T07:29:03.552Z",
+      "validation_receipt_sha256": "de55ad7f25bea7c370d53a54523cded21d2db86fa46cece669d24b52e3980c27",
       "evidence_log": {
-        "path": "development/evidence/014-008-tenant-device-catalog.log",
+        "path": "development/evidence/065-008-tenant-device-catalog.log",
         "sha256": "a1fc4230243bcf49895f4394822a911eac72e25f1e6def75fcb4e1dd17603c74",
         "size": 508
       }
     },
     {
-      "id": "receipt-4c6bd4a5177eb06c769ade97439b053ec6fec75adc163d68e1b401209f928674",
+      "id": "receipt-61769015dbb5ae4bfa3f4194bf92de5ab1a6ad400423a9511249c3095aeccce9",
       "command": "cd camera-rental-admin && node --test --experimental-strip-types tests/deviceCatalogModel.test.ts && pnpm ts:check",
       "assertion_ids": [
         "A8"
       ],
-      "recorded_at": "2026-08-30T06:37:15.873Z",
-      "validation_receipt_sha256": "74b4b483228edb5ae3c351d0ec34918c91318d52abe04abcacf8bcdb14ca3e3e",
+      "recorded_at": "2026-08-30T07:29:03.419Z",
+      "validation_receipt_sha256": "a44ec31169fb2621796b8541ddf103566a264d7f814026074f783f546dfb2c38",
       "evidence_log": {
-        "path": "development/evidence/013-008-tenant-device-catalog.log",
-        "sha256": "126edb103df574baf29cb767df7c9eb542f478b8494c9e4141ed7d996cf4a676",
-        "size": 1595
-      }
-    },
-    {
-      "id": "receipt-c47b5bfe02e8e6c709af9accd824a04b1ffefcb917617be6a3a5f336c5166790",
-      "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalDeviceCatalogServiceTest,RentalDeviceAdminServiceTest,RentalDeviceInboundServiceTest,RentalDeviceInboundCategoryTest,RentalDeviceCodeStandTest,RentalDeviceCodeTest,ReturnSerialNormalizerTest -Dsurefire.failIfNoSpecifiedTests=false test",
-      "assertion_ids": [
-        "A8"
-      ],
-      "recorded_at": "2026-08-30T06:36:57.302Z",
-      "validation_receipt_sha256": "b5a7fbce25c5dee585dfdcb3cfadca72a019aab67f4c86406174c397f1343070",
-      "evidence_log": {
-        "path": "development/evidence/012-008-tenant-device-catalog.log",
-        "sha256": "1be7a6a03c3ab2c49472e0ef10d7f097b5bb691feda56bea3c6e8a25e979b27a",
-        "size": 38902
+        "path": "development/evidence/064-008-tenant-device-catalog.log",
+        "sha256": "d4c22145f347e25501769739a659de1032c58927031bf1a3556a2b984ca59ea4",
+        "size": 1598
       }
     }
   ],
@@ -3311,13 +3311,13 @@
       "parent_id": "A8",
       "status": "passing",
       "test_run_ids": [
-        "receipt-2e4627d9b28e7d49aea8988681b18d6921e2b7dac259061bc4e125c01104a363",
-        "receipt-4c6bd4a5177eb06c769ade97439b053ec6fec75adc163d68e1b401209f928674",
-        "receipt-c47b5bfe02e8e6c709af9accd824a04b1ffefcb917617be6a3a5f336c5166790"
+        "receipt-0146cbccaacb6f93b2b4dd82990908bf8936a4ee2a17e455132eb50b65c36c11",
+        "receipt-33b4272bed747f40cb70a62bbc87fa844fbf98c0f165ee8a3025998ce33859df",
+        "receipt-61769015dbb5ae4bfa3f4194bf92de5ab1a6ad400423a9511249c3095aeccce9"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
-      "claim": "Allow authorized tenant administrators to manage device catalog entries from the existing device-create flow and create canonical tenant-scoped physical-device numbers. (A8)"
+      "claim": "An authorized tenant administrator can manage the tenant-scoped device category and model catalog, create devices from a valid category-model-prefix combination, and receive a normalized unique device number without affecting ERP sequence allocation."
     }
   ],
   "fallback_used": false

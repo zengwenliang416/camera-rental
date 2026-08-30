@@ -1,0 +1,187 @@
+{
+  "schema": "specnav.development.repair-task.v1",
+  "id": "900-verification-repair-6b9e8e2d1262081d",
+  "change_id": "add-customer-return-registration",
+  "goal": "Repair test_defect for return-review-required.",
+  "classification": "test_defect",
+  "owner": "development",
+  "status": "requested",
+  "requested_at": "2026-08-30T08:43:18.010Z",
+  "packet_path": "development/tasks/900-verification-repair-6b9e8e2d1262081d",
+  "scope": {
+    "owner": "development",
+    "source": "approved-development-scope-lock",
+    "allowed_files": [
+      "camera-rental-admin/src/api/rental/device.ts",
+      "camera-rental-admin/src/api/rental/returnRegistration.ts",
+      "camera-rental-admin/src/locales/en.ts",
+      "camera-rental-admin/src/locales/zh-CN.ts",
+      "camera-rental-admin/src/views/rental/device/**",
+      "camera-rental-admin/src/views/rental/return-registration/**",
+      "camera-rental-admin/tests/deviceCatalogModel.test.ts",
+      "camera-rental-server/sql/mysql/migrations/**",
+      "camera-rental-server/yudao-module-infra/src/main/java/**",
+      "camera-rental-server/yudao-module-infra/yudao-module-infra-api/**",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/**",
+      "camera-rental-web/**",
+      "openspec/changes/add-customer-return-registration/**",
+      "ops/github-deploy/**",
+      "ops/rustfs/**",
+      "tests/specnav/customer-return-registration.js"
+    ],
+    "denied_files": [
+      "camera-rental-schedule-center",
+      "camera-rental-server/yudao-module-system",
+      "camera-rental-server/yudao-server/src/main/resources/application-prod.yaml",
+      "camera-rental-staff",
+      "camera-rental-uniapp",
+      "coverage",
+      "dist",
+      "node_modules"
+    ],
+    "requires_review_on": [
+      "camera-rental-server/sql/mysql/migrations",
+      "camera-rental-server/yudao-module-infra/src/main/java",
+      "camera-rental-server/yudao-module-infra/yudao-module-infra-api",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/pom.xml",
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics",
+      "camera-rental-web/bun.lock",
+      "camera-rental-web/package.json",
+      "ops/github-deploy",
+      "ops/rustfs"
+    ],
+    "allowed_operations": {
+      "create": true,
+      "modify": true,
+      "delete": false,
+      "rename": false
+    },
+    "digest": "1c896edf9b6171978ccdeb4cb4de7be88658aff1596bb64300fba5c0df5d8d53"
+  },
+  "packet_artifacts": [
+    "brief.md",
+    "context.json",
+    "report.md",
+    "spec-review.md",
+    "quality-review.md"
+  ],
+  "required_reviews": [
+    "spec-review",
+    "quality-review"
+  ],
+  "ownership": {
+    "evidence": "verification",
+    "closure": "verification",
+    "repair": "development",
+    "reviews": "development",
+    "transitions": "core",
+    "break_loop": "core"
+  },
+  "frozen_failure": {
+    "failure_packet_id": "failure-d9b88068b367e2faa72177ffe4cefd3b8cb589305396664505bb8721f796b3c2",
+    "failure_packet_digest": "2a66a7251e91f5c1fc7594c84f88d8fe7074dfc2a0ff8182fbb3a71c88db3e9b",
+    "run_id": "run-20260830081456-7a02d16941bb2ab6",
+    "case_id": "return-review-required",
+    "attempt_id": "attempt-20260830081456-7a02d16941bb2ab6",
+    "evidence_ids": [
+      "evidence-19e7f103e482692e37ad41093304d988ffba616f8163c267ef0df4f52b98f6e9",
+      "evidence-47eee37981dabeaee07729b32bc399510adac084b1a32aad6a330f305552b619",
+      "evidence-51bbf00f07b109e7ba771cf7032104ad5643529ca848c972de933f9aac219889",
+      "evidence-71f4b54579053e887b6231cf548c60337197e8cc0812125ef40aa9fabb8ab79d",
+      "evidence-76d51c322b016c7988cb2188ec05f22660307a7c351f5715be186274325d358b",
+      "evidence-7abed56fdb2eec601c68929d2cc4fe3dc010fdd9d766979ad54b52ed70e9a6f1",
+      "evidence-9b995a6a7c5d140da6fab4069fa4535550121e17d49952dec24b4270df8905fc",
+      "evidence-b957400b39cb2cf93ec4cc534addbe0580bddb45dfda35e117127aafa5616e51",
+      "evidence-df60ec68fb5d743a41650bf234a99737c90956528f88af4f5be0e91039f19cde",
+      "evidence-e028cf6c42cac700340df0de7b9e16c9c8f5b93d1943ae021a08fcc1b64104dc",
+      "evidence-efceef19c222a8dd2c0760c85f46f6f15010828dca2875e70ec89a386c57316a",
+      "evidence-eff2576ea1d4bcc8b06ede2ab92aa8d75522402eb2e88003b6f25e6952b4d146"
+    ],
+    "evidence_content": [
+      {
+        "id": "evidence-19e7f103e482692e37ad41093304d988ffba616f8163c267ef0df4f52b98f6e9",
+        "digest": "fbada6aefeb6d1b296913e6c2657e60ea3380c48ce7354a651a932453e729612"
+      },
+      {
+        "id": "evidence-47eee37981dabeaee07729b32bc399510adac084b1a32aad6a330f305552b619",
+        "digest": "71b7af59a3f37d350b7853aeaf96bddab5bba1cbb88b55584364307e600cb3dd"
+      },
+      {
+        "id": "evidence-51bbf00f07b109e7ba771cf7032104ad5643529ca848c972de933f9aac219889",
+        "digest": "cac6adb204a001e77815dd79bef988a67c918285ae977e47ee26c9b3a2a8cf7c"
+      },
+      {
+        "id": "evidence-71f4b54579053e887b6231cf548c60337197e8cc0812125ef40aa9fabb8ab79d",
+        "digest": "a77097a3af5d3ab906587e1c1e3a94bf72f61844465c41f676fe921163a077a0"
+      },
+      {
+        "id": "evidence-76d51c322b016c7988cb2188ec05f22660307a7c351f5715be186274325d358b",
+        "digest": "e6f0feecfe94cb08650d53d2cc5ad4b04804a256279c31fc2f1a18a691e56339"
+      },
+      {
+        "id": "evidence-7abed56fdb2eec601c68929d2cc4fe3dc010fdd9d766979ad54b52ed70e9a6f1",
+        "digest": "d47f4670eec46a98526edf6957e04af32e61e109448361d1a6f1514fade31ec6"
+      },
+      {
+        "id": "evidence-9b995a6a7c5d140da6fab4069fa4535550121e17d49952dec24b4270df8905fc",
+        "digest": "c1fefa7b0dc94ac4b3df41b32e1430b77d1dc718eab84b4446c1bc0531432f51"
+      },
+      {
+        "id": "evidence-b957400b39cb2cf93ec4cc534addbe0580bddb45dfda35e117127aafa5616e51",
+        "digest": "356d8b18dcb6a050a016cc82d0ea45d1002dac8cd6676ca2302473eaf5419fe1"
+      },
+      {
+        "id": "evidence-df60ec68fb5d743a41650bf234a99737c90956528f88af4f5be0e91039f19cde",
+        "digest": "d34615c124edfc3727b836a171e9f9b56b1f2f81babcd5dec3e9cecc163d4455"
+      },
+      {
+        "id": "evidence-e028cf6c42cac700340df0de7b9e16c9c8f5b93d1943ae021a08fcc1b64104dc",
+        "digest": "cf12886f2665696710abb3be6a0661f3852246b8f8860e2659e3319337f6a1b9"
+      },
+      {
+        "id": "evidence-efceef19c222a8dd2c0760c85f46f6f15010828dca2875e70ec89a386c57316a",
+        "digest": "ffa7e385f371ec9d17a931f01eb481fdf3c943899c5062894e9b51af73bccdb9"
+      },
+      {
+        "id": "evidence-eff2576ea1d4bcc8b06ede2ab92aa8d75522402eb2e88003b6f25e6952b4d146",
+        "digest": "7ec38f3ac82472ee0c146caf76eb04420c8b18422d34a82d973560ee3ecfba01"
+      }
+    ],
+    "reading_ids": [
+      "reading-0159c4c53c375266b599e3ab103407d1addd0f657ac244ca363b1ba4d5c6526f",
+      "reading-074bf0e11d49198444216908630674a5f4231e1f62feac0fcd76b1f2475fdc56",
+      "reading-1013a876dbfb4f59aec3fa51c553e633c18056b0340d97d45ece9bf67153bbae",
+      "reading-2015f74fe2dee66de648dcbc10bd1c9e93135d481046f99fc55a73aac0e250f5",
+      "reading-34385a367b0f7614521fd0db01cdd11829be58f0d654e759e1b5992cd22ee1a9",
+      "reading-3c7760ddf800dea09cc4d509dd31ded2801aaf202c5428db203e6d8521277c26",
+      "reading-4ca313f65378f3c3d778abfb5990e7ba02699f23369d109cecd9d669ffd74ce1",
+      "reading-66d80e2b7c922c87f35125522e7cdb2aeee34b309ceb1a1439944ee2a64194bd",
+      "reading-6dc473612139800c29aa85e7186222189ca1de4bd8cf4384466d7a05f384edfd",
+      "reading-7135ea25dbb4395ce814a5f134f430989553d373389e144536bf64cffc056884",
+      "reading-743158d87e15f8e5428ee9b21aa1856fc70b8ac9982018a088541c24bfd89c94",
+      "reading-7f44fb97811f007374538988ffe498c6474c6019821f28d681c6db168c73f03e",
+      "reading-9f98844c4abbc810be181f2ed948079ddf07f47058778916fcd76c65f9c1da9f",
+      "reading-a2f985612f6d55842a5b6aa7f0c72af72eb6c4cb0fb707860f9e9d47970dfc99",
+      "reading-acaa6d50481fdc69a93bb5691050f090c18d629b40c61f42c9f0797099dd3a5a",
+      "reading-b511fa6f291343e805016a092ce1184baa8605bc3416e1512f5151cc8b6e0522",
+      "reading-baa8bc23e6bce10314e1a596d95ec3834ffc26bc3b06501e3af36fcba2de4920",
+      "reading-bb750ef8369b78ac984fadf165e84ddce1137566556b19b3df9b7f04bc7ad4e1",
+      "reading-bca93a04f1a69f9545bc5e98569e4f51c25a6877ebec87cc0f1c7fb8153e1017",
+      "reading-c9a7608c71c21e67c0c5d7bf78d4f4ac49884e429be42ec82430757a84ebd065",
+      "reading-d0018cd7c529c92e12b21f121ece308a70899de7ca47ea1e9b89522a3a79460e",
+      "reading-dd48aebbd120bbdc35499c22cc1287f839c2b5cf3933892ad31873bf0233013d",
+      "reading-e0a74dd80456dcfe1f0819bc056ff4a7110b51eb0c91c6ba5c7eceaa6c6c450b",
+      "reading-ff4a985113f038537664fa2b9a4e26e6ac2498d4e15ebcca57e4687d17b5547a"
+    ],
+    "failed_assertion_ids": [
+      "vc02-no-authoritative-side-effect",
+      "vc02-review-required-visible",
+      "vc02-submit-count",
+      "vc02-unified-error-visible"
+    ],
+    "summary": "The project-owned browser scenario was stopped by the managed Playwright API guard before its assertions could run.",
+    "root_cause": "The approved project scenario invokes page.route, which the managed Verification Kernel explicitly denies before assertions can run.",
+    "frozen_at": "2026-08-30T08:14:58.896Z"
+  }
+}

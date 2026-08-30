@@ -2,11 +2,11 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "009-admin-device-maintenance",
-  "generated_at": "2026-08-30T06:45:32.493Z",
-  "recorded_at": "2026-08-30T06:37:47.370Z",
+  "generated_at": "2026-08-30T07:31:22.493Z",
+  "recorded_at": "2026-08-30T07:29:37.302Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "13d3c3661bf66e20a6ba4921e6fcb3376e2bdaa7",
+  "reviewed_git_tree": "d36cdbdb705a162146204b1059c3754e6764cd12",
   "implementation_scope": {
     "included_patterns": [
       "camera-rental-admin/src/api/rental/device.ts",
@@ -3263,48 +3263,48 @@
   },
   "test_runs": [
     {
-      "id": "receipt-11fc472418f2ce92ed16e918a09ac83f25891f3197fe038bffe01bf3250237be",
-      "command": "cd camera-rental-admin && node --test --experimental-strip-types tests/deviceMaintenanceModel.test.ts && pnpm ts:check",
-      "assertion_ids": [
-        "A6",
-        "A7"
-      ],
-      "recorded_at": "2026-08-30T06:37:47.248Z",
-      "validation_receipt_sha256": "66fd0691d072750017ae3b7314a20b0f53db8e7361363d25335ef7ac8cf91f5e",
-      "evidence_log": {
-        "path": "development/evidence/016-009-admin-device-maintenance.log",
-        "sha256": "f650fae9b1cf28b2eb47c501b8cb3577982ac533ef015546bef7457b7802a7c9",
-        "size": 1815
-      }
-    },
-    {
-      "id": "receipt-36a18c9c20b34d2c4ffff8721c966f74377658f831f1fb5b29cbccf9903aba40",
-      "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalDeviceAdminServiceTest,RentalDeviceDeletionGuardTest -Dsurefire.failIfNoSpecifiedTests=false test",
-      "assertion_ids": [
-        "A6",
-        "A7"
-      ],
-      "recorded_at": "2026-08-30T06:37:26.790Z",
-      "validation_receipt_sha256": "07dda834a8461d539c9876b4603e136e353ef1908fa697317e0c191c6834ed9d",
-      "evidence_log": {
-        "path": "development/evidence/015-009-admin-device-maintenance.log",
-        "sha256": "3f1c10b40c6b372ba37bf15bdb47433545e02d75287f41d8ec7e7a5cb650c83b",
-        "size": 37506
-      }
-    },
-    {
-      "id": "receipt-8bc4c4297ebd9e3e60df57da2bb2925df5971c8d0d4c9f52a386a6704334471e",
+      "id": "receipt-55fbf8fbfa12bc5516883b54b49ac86050a3d1d09e02db18d8b9fbf7626cfad3",
       "command": "bash ops/github-deploy/tests/migration-runner-test.sh && bash -n ops/github-deploy/apply-migrations.sh",
       "assertion_ids": [
         "A6",
         "A7"
       ],
-      "recorded_at": "2026-08-30T06:37:47.370Z",
-      "validation_receipt_sha256": "d98279fe332a7b06d7bbfb733fbdc6de80379e2dc65f7ac72ff9b2fb36327f12",
+      "recorded_at": "2026-08-30T07:29:37.302Z",
+      "validation_receipt_sha256": "bf116bdcec0ffdd58ea911dd0c1fb52de2e80654842e1971d2eb846f1ab648b1",
       "evidence_log": {
-        "path": "development/evidence/017-009-admin-device-maintenance.log",
-        "sha256": "7b14b933f6a72060940dc678fc84a14b23f9ab97b273e49efd54b2cf9bffb45e",
+        "path": "development/evidence/068-009-admin-device-maintenance.log",
+        "sha256": "607cfbf67bddd8679300689d136ce173a5bfcec733343f25e430a076a18f3df5",
         "size": 283
+      }
+    },
+    {
+      "id": "receipt-b1ca9f16b330dbd237ecdb8926ef52be91fd2607e5d3dd5df72b8dfd59682798",
+      "command": "cd camera-rental-admin && node --test --experimental-strip-types tests/deviceMaintenanceModel.test.ts && pnpm ts:check",
+      "assertion_ids": [
+        "A6",
+        "A7"
+      ],
+      "recorded_at": "2026-08-30T07:29:37.167Z",
+      "validation_receipt_sha256": "8e21ae8226cbfe5e02272ec300f291d8ae598fde2889a33dcb1f1c81ad776d91",
+      "evidence_log": {
+        "path": "development/evidence/067-009-admin-device-maintenance.log",
+        "sha256": "20eb4c628315797629eee6085298fc220e42ee12fc04b50c0c7c929a0e966889",
+        "size": 1816
+      }
+    },
+    {
+      "id": "receipt-c086c86a2888ab69f92c3fd55518b81d42dd751798aaf5cb2caf678d40640750",
+      "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalDeviceAdminServiceTest,RentalDeviceDeletionGuardTest -Dsurefire.failIfNoSpecifiedTests=false test",
+      "assertion_ids": [
+        "A6",
+        "A7"
+      ],
+      "recorded_at": "2026-08-30T07:29:14.831Z",
+      "validation_receipt_sha256": "efcd8d9aa1857684b12902efb98a7d5f218c0ee6c7366699ca9d244d4ea43451",
+      "evidence_log": {
+        "path": "development/evidence/066-009-admin-device-maintenance.log",
+        "sha256": "ba588873501415531d4faebecd28e869230dfa5c698866ac2bb30c02e859dd4a",
+        "size": 37507
       }
     }
   ],
@@ -3314,9 +3314,9 @@
       "parent_id": "A6",
       "status": "passing",
       "test_run_ids": [
-        "receipt-11fc472418f2ce92ed16e918a09ac83f25891f3197fe038bffe01bf3250237be",
-        "receipt-36a18c9c20b34d2c4ffff8721c966f74377658f831f1fb5b29cbccf9903aba40",
-        "receipt-8bc4c4297ebd9e3e60df57da2bb2925df5971c8d0d4c9f52a386a6704334471e"
+        "receipt-55fbf8fbfa12bc5516883b54b49ac86050a3d1d09e02db18d8b9fbf7626cfad3",
+        "receipt-b1ca9f16b330dbd237ecdb8926ef52be91fd2607e5d3dd5df72b8dfd59682798",
+        "receipt-c086c86a2888ab69f92c3fd55518b81d42dd751798aaf5cb2caf678d40640750"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -3327,9 +3327,9 @@
       "parent_id": "A7",
       "status": "passing",
       "test_run_ids": [
-        "receipt-11fc472418f2ce92ed16e918a09ac83f25891f3197fe038bffe01bf3250237be",
-        "receipt-36a18c9c20b34d2c4ffff8721c966f74377658f831f1fb5b29cbccf9903aba40",
-        "receipt-8bc4c4297ebd9e3e60df57da2bb2925df5971c8d0d4c9f52a386a6704334471e"
+        "receipt-55fbf8fbfa12bc5516883b54b49ac86050a3d1d09e02db18d8b9fbf7626cfad3",
+        "receipt-b1ca9f16b330dbd237ecdb8926ef52be91fd2607e5d3dd5df72b8dfd59682798",
+        "receipt-c086c86a2888ab69f92c3fd55518b81d42dd751798aaf5cb2caf678d40640750"
       ],
       "direct_evidence": [],
       "reused_evidence": [],

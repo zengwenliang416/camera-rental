@@ -1,0 +1,7 @@
+{
+  "actual": true,
+  "assertion_id": "device-catalog-numbering:assert-1",
+  "expected": true,
+  "method": "equal",
+  "status": "passed"
+}

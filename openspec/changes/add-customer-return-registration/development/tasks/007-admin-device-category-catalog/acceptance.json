@@ -2,11 +2,11 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "007-admin-device-category-catalog",
-  "generated_at": "2026-08-30T06:45:32.371Z",
-  "recorded_at": "2026-08-30T06:36:47.251Z",
+  "generated_at": "2026-08-30T07:31:22.323Z",
+  "recorded_at": "2026-08-30T07:27:46.818Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "13d3c3661bf66e20a6ba4921e6fcb3376e2bdaa7",
+  "reviewed_git_tree": "d36cdbdb705a162146204b1059c3754e6764cd12",
   "implementation_scope": {
     "included_patterns": [
       "camera-rental-admin/src/api/rental/device.ts",
@@ -3263,31 +3263,31 @@
   },
   "test_runs": [
     {
-      "id": "receipt-1e6cd1809aef60a1a3627c40a40fd4ed87b6e1591ac8ff93ea0df80319dc310d",
+      "id": "receipt-4549fd587a8d82a46336d5f6a43aa06b46ac52315779708af94c9466d3705211",
       "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalDeviceCatalogServiceTest,RentalDeviceAdminServiceTest,RentalDeviceInboundCategoryTest,RentalDeviceCodeStandTest -Dsurefire.failIfNoSpecifiedTests=false test",
       "assertion_ids": [
         "A8"
       ],
-      "recorded_at": "2026-08-30T06:36:27.240Z",
-      "validation_receipt_sha256": "0acaa297ca56ec7d3a69e398532c05881580aa103430ad040b0080b7e2dccd5b",
+      "recorded_at": "2026-08-30T07:26:43.763Z",
+      "validation_receipt_sha256": "b5d8de35d2e197b6360ed58b1e7be60ff9c61bb2f152dbd4ad4141dfd220bfdb",
       "evidence_log": {
-        "path": "development/evidence/010-007-admin-device-category-catalog.log",
-        "sha256": "3b6f348ce3fab17d6bd89ec590926c24c54c73c4a79b607cda3fa32aa4e7f9c7",
+        "path": "development/evidence/061-007-admin-device-category-catalog.log",
+        "sha256": "e8e5b6a2e85a36b054ca40e376a72d75cf0746d8fe9f97c32a7281f6e4fa3d93",
         "size": 38068
       }
     },
     {
-      "id": "receipt-c26437aea043090957b7f0d7106402583869778c957073b7c5e78dfcf5c8383a",
+      "id": "receipt-a5cce408a90edc991290b8116bfc2d0354485e5542ffdc402fcc21a9336daca1",
       "command": "cd camera-rental-admin && node --test --experimental-strip-types tests/deviceCatalogModel.test.ts && pnpm ts:check",
       "assertion_ids": [
         "A8"
       ],
-      "recorded_at": "2026-08-30T06:36:47.251Z",
-      "validation_receipt_sha256": "44113c824b419308332ba33ea7eb513c6576ea518e0fbefdaced3ef810a1b0b2",
+      "recorded_at": "2026-08-30T07:27:46.818Z",
+      "validation_receipt_sha256": "034008285d6568d59148a3fdd827265e7a3a6cd2e716158535dc7a58094c806f",
       "evidence_log": {
-        "path": "development/evidence/011-007-admin-device-category-catalog.log",
-        "sha256": "677bf96c9350dfca4f0ef2279310e9477cda640ec34622f7c206214a512b1f7c",
-        "size": 1599
+        "path": "development/evidence/062-007-admin-device-category-catalog.log",
+        "sha256": "5eb894454d2ba9841a01c87897cae86f1912cec800d4976a6cb32749f0ff52a5",
+        "size": 1600
       }
     }
   ],
@@ -3297,12 +3297,12 @@
       "parent_id": "A8",
       "status": "passing",
       "test_run_ids": [
-        "receipt-1e6cd1809aef60a1a3627c40a40fd4ed87b6e1591ac8ff93ea0df80319dc310d",
-        "receipt-c26437aea043090957b7f0d7106402583869778c957073b7c5e78dfcf5c8383a"
+        "receipt-4549fd587a8d82a46336d5f6a43aa06b46ac52315779708af94c9466d3705211",
+        "receipt-a5cce408a90edc991290b8116bfc2d0354485e5542ffdc402fcc21a9336daca1"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
-      "claim": "Classify rental devices and create them through a backend-authoritative category/model catalog. (A8)"
+      "claim": "An authorized tenant administrator can manage the tenant-scoped device category and model catalog, create devices from a valid category-model-prefix combination, and receive a normalized unique device number without affecting ERP sequence allocation."
     }
   ],
   "fallback_used": false

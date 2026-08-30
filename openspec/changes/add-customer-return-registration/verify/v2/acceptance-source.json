@@ -1,0 +1,42 @@
+[
+  {
+    "id": "A1",
+    "path": "acceptance.json",
+    "statement": "The fixed /return entry verifies or safely falls back using the required machine code plus optional order and mobile evidence, issues an automatic short-lived HttpOnly session when needed, and exposes neither a manual link token nor order-enumeration detail."
+  },
+  {
+    "id": "A2",
+    "path": "acceptance.json",
+    "statement": "A customer can submit a required machine code and waybill through the one-page return form, optionally upload up to ten private photos, and receive an ACCEPTED or REVIEW_REQUIRED receipt without duplicate business writes."
+  },
+  {
+    "id": "A3",
+    "path": "acceptance.json",
+    "statement": "Files are stored in private RustFS through the existing infra_file boundary and cannot be attached across registrations or tenants."
+  },
+  {
+    "id": "A4",
+    "path": "acceptance.json",
+    "statement": "A valid submission creates or reuses one RETURN delivery without changing device, order, inspection, or schedule lifecycle state."
+  },
+  {
+    "id": "A5",
+    "path": "acceptance.json",
+    "statement": "The admin can page, inspect, and review return registrations with permission and tenant isolation."
+  },
+  {
+    "id": "A6",
+    "path": "acceptance.json",
+    "statement": "An authorized administrator can edit only mutable device metadata while immutable identity and lifecycle fields remain server-controlled."
+  },
+  {
+    "id": "A7",
+    "path": "acceptance.json",
+    "statement": "An authorized administrator can logically delete only an available device with no source or business-history references, with permission-controlled UI and server-side confirmation rules."
+  },
+  {
+    "id": "A8",
+    "path": "acceptance.json",
+    "statement": "An authorized tenant administrator can manage the tenant-scoped device category and model catalog, create devices from a valid category-model-prefix combination, and receive a normalized unique device number without affecting ERP sequence allocation."
+  }
+]

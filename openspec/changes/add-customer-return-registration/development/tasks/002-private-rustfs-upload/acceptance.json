@@ -2,11 +2,11 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "002-private-rustfs-upload",
-  "generated_at": "2026-08-30T06:45:32.073Z",
-  "recorded_at": "2026-08-30T06:35:19.269Z",
+  "generated_at": "2026-08-30T07:31:22.002Z",
+  "recorded_at": "2026-08-30T07:24:45.350Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "13d3c3661bf66e20a6ba4921e6fcb3376e2bdaa7",
+  "reviewed_git_tree": "d36cdbdb705a162146204b1059c3754e6764cd12",
   "implementation_scope": {
     "included_patterns": [
       "camera-rental-server/yudao-module-infra/src/main/java/**",
@@ -4536,31 +4536,31 @@
   },
   "test_runs": [
     {
-      "id": "receipt-75a1daad40e980abc2f444cbf827a5e0d3bff5794353dbd63a5eeae54dbee09f",
+      "id": "receipt-b1b733e0ab461f548df5c6c60bae8886b044dfc1cdfaacc3561e1ebc4a78af8e",
       "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-infra,yudao-module-rental/yudao-module-rental-biz -am -Dtest=FileApiImplTest,ReturnRegistrationAttachmentServiceTest -Dsurefire.failIfNoSpecifiedTests=false test",
       "assertion_ids": [
         "A3"
       ],
-      "recorded_at": "2026-08-30T06:35:19.251Z",
-      "validation_receipt_sha256": "29c2f4f71b6f28859e34ec67e88891fe9c71fe0268b5e454677fe834edffe1b4",
+      "recorded_at": "2026-08-30T07:24:45.325Z",
+      "validation_receipt_sha256": "c54dea5b34670429e277e6b00f7a2a1182ea11a4f96fb30c327d728813ef9ba0",
       "evidence_log": {
-        "path": "development/evidence/002-002-private-rustfs-upload.log",
-        "sha256": "347ef4b90b319f337c60179843d72818158da43eb2fb949da14a5b3d82f87277",
+        "path": "development/evidence/053-002-private-rustfs-upload.log",
+        "sha256": "08e62308bff7f5eed0180133fea67e2bf9dc6d75b219fc3f6d046cbe296e17f9",
         "size": 38773
       }
     },
     {
-      "id": "receipt-ebea04629b30f6372553f2ff56d573dd98bbbe113973d0a103f64f6c117dc301",
+      "id": "receipt-c42ca515f7cbfd65e0e93cd8b3429ca85a5425c6ceb84b17b0b8e944917fd740",
       "command": "bash -n ops/rustfs/*.sh",
       "assertion_ids": [
         "A3"
       ],
-      "recorded_at": "2026-08-30T06:35:19.269Z",
-      "validation_receipt_sha256": "72ff972e990386e5509ba8782441977bc42744cab02d3b2f4ab504ccec340117",
+      "recorded_at": "2026-08-30T07:24:45.350Z",
+      "validation_receipt_sha256": "24dc6d6ecc41b6bc12376e326cbffb2f62adc76ba6965943b2357394801e3aeb",
       "evidence_log": {
-        "path": "development/evidence/003-002-private-rustfs-upload.log",
-        "sha256": "5d43cfbbc516ad7b424e75d762121cc9f02f05f5655980a603fe83d979756d19",
-        "size": 107
+        "path": "development/evidence/054-002-private-rustfs-upload.log",
+        "sha256": "c79f676206483b3d117b189a228cd903d21587fd409e0a719ea90f5586a7a5e0",
+        "size": 108
       }
     }
   ],
@@ -4570,8 +4570,8 @@
       "parent_id": "A3",
       "status": "passing",
       "test_run_ids": [
-        "receipt-75a1daad40e980abc2f444cbf827a5e0d3bff5794353dbd63a5eeae54dbee09f",
-        "receipt-ebea04629b30f6372553f2ff56d573dd98bbbe113973d0a103f64f6c117dc301"
+        "receipt-b1b733e0ab461f548df5c6c60bae8886b044dfc1cdfaacc3561e1ebc4a78af8e",
+        "receipt-c42ca515f7cbfd65e0e93cd8b3429ca85a5425c6ceb84b17b0b8e944917fd740"
       ],
       "direct_evidence": [],
       "reused_evidence": [],

@@ -1,0 +1,7 @@
+{
+  "actual": true,
+  "assertion_id": "return-entry-session-security:assert-1",
+  "expected": true,
+  "method": "equal",
+  "status": "passed"
+}

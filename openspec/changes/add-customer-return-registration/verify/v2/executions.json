@@ -1,0 +1,158 @@
+[
+  {
+    "id": "execution-attempt-20260830081344-54932de18e1d83db",
+    "run_id": "run-20260830081344-54932de18e1d83db",
+    "attempt_id": "attempt-20260830081344-54932de18e1d83db",
+    "case_id": "admin-return-operations",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "admin-return-operations:assert-1",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-30T08:14:02.042Z"
+  },
+  {
+    "id": "execution-attempt-20260830081402-e6b222520ebb9be5",
+    "run_id": "run-20260830081402-e6b222520ebb9be5",
+    "attempt_id": "attempt-20260830081402-e6b222520ebb9be5",
+    "case_id": "device-catalog-numbering",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "device-catalog-numbering:assert-1",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-30T08:14:14.790Z"
+  },
+  {
+    "id": "execution-attempt-20260830081414-0da9c6c5c67fe54d",
+    "run_id": "run-20260830081414-0da9c6c5c67fe54d",
+    "attempt_id": "attempt-20260830081414-0da9c6c5c67fe54d",
+    "case_id": "device-delete",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "device-delete:assert-1",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-30T08:14:29.730Z"
+  },
+  {
+    "id": "execution-attempt-20260830081429-3e33c7614e4ee05b",
+    "run_id": "run-20260830081429-3e33c7614e4ee05b",
+    "attempt_id": "attempt-20260830081429-3e33c7614e4ee05b",
+    "case_id": "device-edit",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "device-edit:assert-1",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-30T08:14:40.437Z"
+  },
+  {
+    "id": "execution-attempt-20260830081440-612dfa8c6f59d81c",
+    "run_id": "run-20260830081440-612dfa8c6f59d81c",
+    "attempt_id": "attempt-20260830081440-612dfa8c6f59d81c",
+    "case_id": "return-entry-session-security",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "return-entry-session-security:assert-1",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-30T08:14:52.013Z"
+  },
+  {
+    "id": "execution-attempt-20260830081440-f3e04faa3bf492ba",
+    "run_id": "run-20260830081440-f3e04faa3bf492ba",
+    "attempt_id": "attempt-20260830081440-f3e04faa3bf492ba",
+    "case_id": "migration-integrity",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "migration-integrity:assert-1",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-30T08:14:40.784Z"
+  },
+  {
+    "id": "execution-attempt-20260830081452-c8d8b4d614d2e613",
+    "run_id": "run-20260830081452-c8d8b4d614d2e613",
+    "attempt_id": "attempt-20260830081452-c8d8b4d614d2e613",
+    "case_id": "return-private-upload",
+    "status": "blocked",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-execution:playwright-access-denied",
+        "artifact": "return-private-upload",
+        "detail": "page.route"
+      }
+    ],
+    "recorded_at": "2026-08-30T08:14:56.454Z"
+  },
+  {
+    "id": "execution-attempt-20260830081456-7a02d16941bb2ab6",
+    "run_id": "run-20260830081456-7a02d16941bb2ab6",
+    "attempt_id": "attempt-20260830081456-7a02d16941bb2ab6",
+    "case_id": "return-review-required",
+    "status": "blocked",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-execution:playwright-access-denied",
+        "artifact": "return-review-and-security",
+        "detail": "page.route"
+      }
+    ],
+    "recorded_at": "2026-08-30T08:14:58.915Z"
+  },
+  {
+    "id": "execution-attempt-20260830081458-316899b22249fd11",
+    "run_id": "run-20260830081458-316899b22249fd11",
+    "attempt_id": "attempt-20260830081458-316899b22249fd11",
+    "case_id": "return-success-idempotent",
+    "status": "blocked",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-execution:playwright-access-denied",
+        "artifact": "return-success-idempotent",
+        "detail": "page.route"
+      }
+    ],
+    "recorded_at": "2026-08-30T08:15:01.331Z"
+  }
+]

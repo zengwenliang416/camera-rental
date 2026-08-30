@@ -11,14 +11,16 @@ READY FOR REVIEW
   `fetch` shim installed through `page.addInitScript`.
 - Preserved the fixed entry, normalized machine code, accepted receipt, and
   single-submit assertions.
-- Repair commit: `1ffb55fc8169325a9c0cd42e629f4642271a6258`.
+- Repair commit: `71907485e097840539ec2a3b82d355689fde6d38`.
 
 ## Validation
 
 - `node --check tests/specnav/customer-return-registration.js`
-- Direct Chromium execution through the installed Verification Kernel
-  Playwright API guard: four assertions passed and the denied-method list was
-  empty for `return-success-idempotent`.
+- The official `scenario-registry-loader.js` isolated the registry, serialized
+  and revived the scenario in a VM, and then direct Chromium execution through
+  the installed Verification Kernel Playwright API guard passed all four
+  assertions with an empty denied-method list for
+  `return-success-idempotent`.
 - Formal Verification retest and regression remain owned by Verification and
   have not been claimed by this Development report.
 

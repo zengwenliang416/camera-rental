@@ -1,0 +1,36 @@
+{
+  "ok": true,
+  "status": "repair_in_progress",
+  "label": "failed",
+  "history": [
+    {
+      "kind": "initial",
+      "attempt_id": "attempt-20260830081452-c8d8b4d614d2e613",
+      "case_id": "return-private-upload",
+      "label": "BLOCKED",
+      "verdict": "blocked",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-008e0d94aff439e7ff8036206ba188a36f45811f3f3f1517ace01837d89b33f7",
+        "evidence-0be82a2d47f47db5c34cf805516afe28b07437bb069154b646037e19ce47e99f",
+        "evidence-1b9bcd3c1c7397235983f23d8cf53b81b582a535b654f817554f44eddb500104",
+        "evidence-3389e55491cf88f2ce1173d7ccbd3c7b01fcabe102eda2c4c8474e1945c6e65b",
+        "evidence-5883a12b1a33ee9ef40bc8e7965fab54a1621c625315131beec1242c24db3a4b",
+        "evidence-6eff77d52d5b9365fe1a43dfcc65b350cfe89600f7f72d308e127074687ea7d3",
+        "evidence-ae4982b9f671779f9b9abfb814f9a361b081ca9bd3c66b284e5596b8992dfb55",
+        "evidence-bba5d56aaca786be0b8ea199790184628e1ad26e881694114a6a05dd77c4df23",
+        "evidence-f989faf63b2f54853195b45553321aa314b52f7da2c2fc29ed410ff0b6b23bd7"
+      ],
+      "recorded_at": "2026-08-30T08:14:56.136Z"
+    },
+    {
+      "kind": "repair",
+      "repair_link_id": "repair-05ca4dc30bca7d690487ee947f360aef794b60f9da6e485b094efe8a48bf308f",
+      "label": "REPAIR IN PROGRESS",
+      "recorded_at": "2026-08-30T08:42:53.572Z"
+    }
+  ],
+  "transition_proposal": null,
+  "blockers": []
+}

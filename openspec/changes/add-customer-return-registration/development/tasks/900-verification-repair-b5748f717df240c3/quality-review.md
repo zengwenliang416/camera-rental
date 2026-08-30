@@ -2,70 +2,67 @@
 
 ## Verdict
 
-needs-fix
+approved
 
 ## Separation Of Concerns
 
-- 上传场景的 fetch mock、上传 XHR 替身和记录状态集中在
-  `installReturnRegistrationMock`，比原先在场景中散布多个 `page.route` 更易读取。
-- 但是 `return-private-upload` 在
-  `tests/specnav/customer-return-registration.js:309-310` 引用了场景函数外的
-  helper。SpecNav Kernel 只序列化单个 `scenario` 函数，模块级定义不会进入执行
-  sandbox，导致职责分离跨越了不可用的运行时边界。
+- 上传 API mock、XHR 上传替身和事件状态集中在
+  `returnRegistrationMockBootstrap`；场景仅安装脚本、选择文件、提交并断言
+  (`tests/specnav/customer-return-registration.js:3-214`,
+  `tests/specnav/customer-return-registration.js:309-352`)。
+- bootstrap 在 registry 加载阶段被编译为 `scenario_data.mock_script`，scenario
+  本身不再调用模块级 helper，消除了上一轮 Kernel VM 无法解析自由变量的问题。
 
 ## Component Cohesion / Coupling
 
-- 上传事件 `verify -> authorize -> put -> confirm -> submit` 与 attachment binding
-  由一个状态对象收集，内部语义是内聚的。
-- 场景对模块闭包存在强耦合。Kernel 的 `serializePlaywrightScenario` 保存的源码
-  包含 helper 调用却不包含 helper 定义，worker 的隔离 `vm` 无法解析该名称。
+- upload mode 统一记录 `verify -> authorize -> put -> confirm -> submit`，并在提交时
+  保存 confirmed attachment ids；fetch 与 XHR 两种 transport stub 共享同一个
+  页面内状态。
+- scenario 的运行时依赖仅为 Kernel 参数和普通字符串数据。XHR 替身没有耦合 Node
+  对象或 Playwright route API，符合浏览器 realm 与 Kernel guard 边界。
 
 ## Test Quality
 
 - 独立执行 `node --check tests/specnav/customer-return-registration.js` 通过。
-- 使用已安装 Verification Kernel 的 managed Chromium 和
-  `createPlaywrightApiGuard` 直接调用模块导出的上传场景时，三个 vc03 断言通过，
-  事件顺序为 `verify, authorize, put, confirm, submit`，denied-method 列表为空。
-- 上述 probe 继承了 CommonJS 模块闭包。使用 Kernel serializer 的真实场景源码
-  重新编译并调用时得到
-  `ReferenceError: installReturnRegistrationMock is not defined`，因此正式执行不会
-  安装 fetch/XHR shim，也不会到达任何 vc03 断言。
+- 官方 `scenario-registry-loader.js` 在独立进程中成功输出 upload mock script、
+  scenario data 和序列化函数源码。
+- 将 loader 输出在 worker 等价 VM 中 revive 后，使用 managed Chromium 与
+  `createPlaywrightApiGuard` 重跑：三个 vc03 断言全部通过，事件顺序为
+  `verify, authorize, put, confirm, submit`，denied-method 列表为空。
+- `state.events` 和 `state.submitAttachments` 先转为 JSON 字符串再断言，避免浏览器
+  realm、scenario VM 与 Node assertion realm 的数组原型差异制造假失败，同时仍
+  保持严格的值和顺序比较。
 
 ## Error Handling
 
-- XHR 替身对非 PUT、错误 URL 和非 Blob 请求显式走 `onerror`，成功路径提供 progress
-  与 `onload`，足以覆盖当前上传实现。
-- 场景本身没有处理 Kernel sandbox 中缺失 helper 的错误。该错误发生在导航和文件
-  选择之前，属于确定性的场景装载缺陷而非可接受的环境波动。
+- XHR 替身对错误 method、URL 或非 Blob body 显式设置失败状态并触发 `onerror`；
+  成功路径提供 progress、HTTP 200 与 `onload`。
+- upload authorization、PUT、confirm 和 submit 均产生独立事件；缺失或乱序会使
+  vc03 顺序断言失败，而不是被宽松集合比较掩盖。
 
 ## Reuse / Duplication
 
-- 共享 helper 移除了三组重复的 API response 构造，并让上传 mock 复用同一状态
-  管道。
-- 复用边界选择错误。可维护的复用必须同时满足 Kernel 的可序列化约束；应将 helper
-  置于场景函数内部或通过受支持的场景输入传递。
+- fetch response、持久状态和 upload XHR 行为由一个 bootstrap 复用，没有复制三套
+  route handler 或另建第二个 mock 框架。
+- `createReturnRegistrationMockScript` 只负责把固定 mode 安全序列化进函数调用，
+  没有引入运行时 eval 依赖或外部输入拼接。
 
 ## Complexity Delta
 
-- 文件由 348 行变为 351 行；新增 XHR class 和状态持久化后，单个共享 helper 达
-  210 行，复杂度集中但尚可跟踪。
-- 当前抽取减少源码重复，却引入了阻断全部场景的隐式运行时依赖，整体质量 delta
-  为负。
+- 相对 `1ffb55fc`，文件为 18 行新增、13 行删除，总长度 356 行；新增复杂度限于
+  test fixture 的脚本生成和跨 realm 断言规范化。
+- XHR class 仍是有意的最小上传协议替身。它覆盖当前应用使用的 open、header、
+  progress、load 和 error 表面，没有扩展成通用 XHR 重实现。
 
 ## Acceptance Assertions Verified
 
-- `vc03-confirmed-file-bound`: managed Chromium 直接模块 probe 通过；正式 Kernel
-  序列化执行未到达断言。
-- `vc03-private-upload-order`: managed Chromium 直接模块 probe 通过；正式 Kernel
-  序列化执行未到达断言。
-- `vc03-upload-success-visible`: managed Chromium 直接模块 probe 通过；正式
-  Kernel 序列化执行未到达断言。
+- `vc03-confirmed-file-bound`
+- `vc03-private-upload-order`
+- `vc03-upload-success-visible`
+
+以上为 frozen failure 的完整断言集合，均在官方 registry 隔离输出、VM revive、
+managed Chromium 与同一 Kernel guard 的独立 probe 中通过。
 
 ## Required Fixes
 
-- 使 `return-private-upload` 的序列化源码自包含，确保 fetch mock 与 XHR 上传替身
-  的定义随场景进入 Kernel sandbox；不得引用模块级
-  `installReturnRegistrationMock`。
-- 修复后通过 Kernel serializer 和 worker 等价的隔离 `vm` 编译路径重跑，再用
-  同一 guard 的 managed Chromium 验证三个 vc03 断言、完整事件顺序和空
-  denied-method 列表。
+- No blocking quality fixes identified.

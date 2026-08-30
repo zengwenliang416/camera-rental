@@ -11,15 +11,16 @@ READY FOR REVIEW
   deterministic API mocks and an `XMLHttpRequest` upload shim.
 - Preserved the private upload order, confirmed attachment binding, and
   visible success assertions.
-- Repair commit: `1ffb55fc8169325a9c0cd42e629f4642271a6258`.
+- Repair commit: `71907485e097840539ec2a3b82d355689fde6d38`.
 
 ## Validation
 
 - `node --check tests/specnav/customer-return-registration.js`
-- Direct Chromium execution through the installed Verification Kernel
-  Playwright API guard: three assertions passed, the event order was
-  `verify`, `authorize`, `put`, `confirm`, `submit`, and the denied-method list
-  was empty for `return-private-upload`.
+- The official `scenario-registry-loader.js` isolated the registry, serialized
+  and revived the scenario in a VM, and then direct Chromium execution through
+  the installed Verification Kernel Playwright API guard passed all three
+  assertions. The event order was `verify`, `authorize`, `put`, `confirm`,
+  `submit`, and the denied-method list was empty for `return-private-upload`.
 - Formal Verification retest and regression remain owned by Verification and
   have not been claimed by this Development report.
 

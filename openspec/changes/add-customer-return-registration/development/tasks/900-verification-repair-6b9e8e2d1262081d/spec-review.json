@@ -1,0 +1,16 @@
+{
+  "schema": "specnav.verification.repair-review.v1",
+  "id": "repair-review-review-required-spec-acf4a5578d36",
+  "kind": "spec-review",
+  "verdict": "approved",
+  "reviewer_id": "carson-spec-reviewer",
+  "reviewer_kind": "human",
+  "reviewed_at": "2026-08-30T09:22:02Z",
+  "evidence_id": "evidence-review-required-spec-acf4a5578d36",
+  "task_id": "900-verification-repair-6b9e8e2d1262081d",
+  "failure_id": "failure-d9b88068b367e2faa72177ffe4cefd3b8cb589305396664505bb8721f796b3c2",
+  "repair_link_id": "repair-5f91e6643734ddf62593a10a05f15317f392fac850d52f702fb07f985c6c95e6",
+  "repair_link_digest": "d8660093625543620b3deae03d6de9c921aad54e5b118716bd6bb3047a61ad6e",
+  "scope_digest": "553e9c1a2f01e2302b825932bfe647fa312d5abcf8c1ea5abe0f55782fc5e72c",
+  "after_identity_digest": "4c872e139b9ec9a8c0f9dfb1b15b58c4a1454dfe8fd1eb62e5f36d329b634b14"
+}

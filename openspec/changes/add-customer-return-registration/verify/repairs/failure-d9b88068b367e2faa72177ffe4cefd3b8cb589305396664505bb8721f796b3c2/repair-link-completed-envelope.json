@@ -1,0 +1,53 @@
+{
+  "schema": "specnav.verification.trusted-fact-envelope.v1",
+  "id": "trusted-fact-5a57d8d7c523095b344d3d80f93b5c8bc3d77f9eab36765a1dead8945e1831bb",
+  "kind": "repair_link",
+  "producer": "specnav-development-repair-bridge",
+  "payload": {
+    "schema": "specnav.verification.repair-link.v1",
+    "failure_id": "failure-d9b88068b367e2faa72177ffe4cefd3b8cb589305396664505bb8721f796b3c2",
+    "change_id": "add-customer-return-registration",
+    "development_task_id": "900-verification-repair-6b9e8e2d1262081d",
+    "repair_kind": "test_code",
+    "status": "completed",
+    "requested_at": "2026-08-30T08:43:18.010Z",
+    "before_identity": {
+      "case_snapshot_hash": "66ff81d82808980da4fb8d5127f151fbce17b77ccebaaa245f7418311aa9cf9c",
+      "code_sha": "8fe52b0322da28e832af75dc34bea88c958f5095",
+      "test_sha": "42b5f07ae0fc69f0918df3d1d4f7494e428949921a53c738063ae06646544d69",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "scope_digest": "553e9c1a2f01e2302b825932bfe647fa312d5abcf8c1ea5abe0f55782fc5e72c",
+    "id": "repair-5f91e6643734ddf62593a10a05f15317f392fac850d52f702fb07f985c6c95e6",
+    "completed_at": "2026-08-30T09:24:30.396Z",
+    "after_identity": {
+      "case_snapshot_hash": "66ff81d82808980da4fb8d5127f151fbce17b77ccebaaa245f7418311aa9cf9c",
+      "code_sha": "c317f7144bfe5d64a3f3c3229bb0a410191c0572",
+      "test_sha": "2f81ebce711eb47a763b11029e43eecae6020fcd0ef701a2db9197bef03510bb",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "review_evidence_ids": [
+      "evidence-review-required-quality-0462437acf05",
+      "evidence-review-required-spec-acf4a5578d36"
+    ]
+  },
+  "payload_digest": "23b61d12eadd74de237d1d8204589de9ecef3bbbe08e11a80099087d8adcc4b4",
+  "issued_at": "2026-08-30T09:24:30.397Z",
+  "bindings": {
+    "failure_id": "failure-d9b88068b367e2faa72177ffe4cefd3b8cb589305396664505bb8721f796b3c2",
+    "change_id": "add-customer-return-registration",
+    "run_id": "run-20260830081456-7a02d16941bb2ab6",
+    "case_id": "return-review-required"
+  },
+  "claims": [
+    "repair-review:spec-approved",
+    "repair-review:quality-approved",
+    "repair-evidence:verified"
+  ],
+  "signature_algorithm": "hmac-sha256",
+  "signature": "30ce946955414fca15ce0c592749dd4bcaa503c8ffb732112f106fe99d8b6c16"
+}

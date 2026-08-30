@@ -1,8 +1,8 @@
 {
   "schema": "specnav.verification.case-snapshot.v1",
-  "id": "snapshot-dbf7bc7f47c8dda97ed34a69",
+  "id": "snapshot-91f7c61e1b566778a52b97f5",
   "change_id": "add-customer-return-registration",
-  "snapshot_hash": "dbf7bc7f47c8dda97ed34a690e5a43531f4626057adf3634aca199b1f92938d0",
+  "snapshot_hash": "91f7c61e1b566778a52b97f5c2c77a777f61ded11bfeea2c5b8c1b28d20c578a",
   "cases": [
     {
       "schema": "specnav.verification.test-case.v1",
@@ -893,6 +893,14 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 240000,
+        "entrypoint": "tests/specnav/customer-return-registration.js",
+        "args": [],
+        "cwd": ".",
+        "env_keys": [
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
         "scenario_id": "return-private-upload",
         "scenario_hash": "62ca1214f0702c1faa817acff2428cc425e22970c87b1b919d118fa0aa073e8f",
         "browser_project": "chromium",
@@ -1087,6 +1095,14 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 240000,
+        "entrypoint": "tests/specnav/customer-return-registration.js",
+        "args": [],
+        "cwd": ".",
+        "env_keys": [
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
         "scenario_id": "return-review-and-security",
         "scenario_hash": "65192712e914415cb6023eb880ac42f93e7e3776a6dfb7874c8eef0538aca726",
         "browser_project": "chromium",
@@ -1279,6 +1295,14 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 240000,
+        "entrypoint": "tests/specnav/customer-return-registration.js",
+        "args": [],
+        "cwd": ".",
+        "env_keys": [
+          "PATH",
+          "HOME",
+          "TMPDIR"
+        ],
         "scenario_id": "return-success-idempotent",
         "scenario_hash": "47398d0a5375717039ec2ccc0a1b75e7e5e60b41cc737d0a4afba43897b76d75",
         "browser_project": "chromium",
@@ -1309,7 +1333,7 @@
       "created_at": "2026-08-30T07:35:12Z"
     }
   ],
-  "created_at": "2026-08-30T09:30:02Z",
+  "created_at": "2026-08-30T09:47:06Z",
   "created_by": {
     "id": "codex-specnav",
     "kind": "service",

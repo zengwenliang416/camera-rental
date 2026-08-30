@@ -1,15 +1,15 @@
 {
   "schema": "specnav.verification.case-approval.v1",
-  "id": "approval-snapshot-dbf7bc7f47c8dda97ed34a69",
+  "id": "approval-snapshot-91f7c61e1b566778a52b97f5",
   "change_id": "add-customer-return-registration",
-  "snapshot_id": "snapshot-dbf7bc7f47c8dda97ed34a69",
-  "snapshot_hash": "dbf7bc7f47c8dda97ed34a690e5a43531f4626057adf3634aca199b1f92938d0",
+  "snapshot_id": "snapshot-91f7c61e1b566778a52b97f5",
+  "snapshot_hash": "91f7c61e1b566778a52b97f5c2c77a777f61ded11bfeea2c5b8c1b28d20c578a",
   "decision": "approved",
   "reviewer": {
     "id": "user",
     "kind": "human",
     "display_name": "user"
   },
-  "decided_at": "2026-08-30T09:35:20Z",
-  "comment": "用户明确批准 snapshot-dbf7bc7f47c8dda97ed34a69，SHA-256 dbf7bc7f47c8dda97ed34a690e5a43531f4626057adf3634aca199b1f92938d0。"
+  "decided_at": "2026-08-30T09:53:22Z",
+  "comment": "用户明确批准 snapshot-91f7c61e1b566778a52b97f5，SHA-256 91f7c61e1b566778a52b97f5c2c77a777f61ded11bfeea2c5b8c1b28d20c578a。"
 }

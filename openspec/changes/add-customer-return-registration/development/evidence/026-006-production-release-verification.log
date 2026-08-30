@@ -1,0 +1,9 @@
+# command: bash -n ops/rustfs/*.sh ops/github-deploy/*.sh ops/github-deploy/tests/*.sh
+# exit_status: 0
+# duration_ms: 11
+
+## stdout
+(empty)
+
+## stderr
+(empty)

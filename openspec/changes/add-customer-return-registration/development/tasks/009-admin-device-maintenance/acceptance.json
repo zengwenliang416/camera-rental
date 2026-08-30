@@ -2,11 +2,11 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "009-admin-device-maintenance",
-  "generated_at": "2026-08-30T06:45:32.493Z",
-  "recorded_at": "2026-08-30T06:37:47.370Z",
+  "generated_at": "2026-08-30T10:48:31.872Z",
+  "recorded_at": "2026-08-30T10:44:44.541Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "4f9dc69a3610f50ef67ec1a3033016f9ad8a062b",
+  "reviewed_git_tree": "bd2ec3530fd9a0915e8d54fe709abf1ff67864f1",
   "implementation_scope": {
     "included_patterns": [
       "camera-rental-admin/src/api/rental/device.ts",
@@ -3263,48 +3263,48 @@
   },
   "test_runs": [
     {
-      "id": "receipt-11fc472418f2ce92ed16e918a09ac83f25891f3197fe038bffe01bf3250237be",
+      "id": "receipt-58a9a12c5d88472ba9369cc588e711ced932ef5aa6ad557342b62dc339b6a4af",
       "command": "cd camera-rental-admin && node --test --experimental-strip-types tests/deviceMaintenanceModel.test.ts && pnpm ts:check",
       "assertion_ids": [
         "A6",
         "A7"
       ],
-      "recorded_at": "2026-08-30T06:37:47.248Z",
-      "validation_receipt_sha256": "66fd0691d072750017ae3b7314a20b0f53db8e7361363d25335ef7ac8cf91f5e",
+      "recorded_at": "2026-08-30T10:44:44.400Z",
+      "validation_receipt_sha256": "601c9b990590a17c4942248b465e1b9f294fc71c6381972287d0b9c3c5fb21e8",
       "evidence_log": {
-        "path": "development/evidence/016-009-admin-device-maintenance.log",
-        "sha256": "f650fae9b1cf28b2eb47c501b8cb3577982ac533ef015546bef7457b7802a7c9",
-        "size": 1815
+        "path": "development/evidence/033-009-admin-device-maintenance.log",
+        "sha256": "7765210bfcc922f328f5b6513cfba42c6673123814fa7c80b6a6385830689678",
+        "size": 1754
       }
     },
     {
-      "id": "receipt-36a18c9c20b34d2c4ffff8721c966f74377658f831f1fb5b29cbccf9903aba40",
-      "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalDeviceAdminServiceTest,RentalDeviceDeletionGuardTest -Dsurefire.failIfNoSpecifiedTests=false test",
-      "assertion_ids": [
-        "A6",
-        "A7"
-      ],
-      "recorded_at": "2026-08-30T06:37:26.790Z",
-      "validation_receipt_sha256": "07dda834a8461d539c9876b4603e136e353ef1908fa697317e0c191c6834ed9d",
-      "evidence_log": {
-        "path": "development/evidence/015-009-admin-device-maintenance.log",
-        "sha256": "3f1c10b40c6b372ba37bf15bdb47433545e02d75287f41d8ec7e7a5cb650c83b",
-        "size": 37506
-      }
-    },
-    {
-      "id": "receipt-8bc4c4297ebd9e3e60df57da2bb2925df5971c8d0d4c9f52a386a6704334471e",
+      "id": "receipt-8d7a92bb85a97276e206c20b7a63804f1fafc08aa4d7f51e9956f3fc57c30188",
       "command": "bash ops/github-deploy/tests/migration-runner-test.sh && bash -n ops/github-deploy/apply-migrations.sh",
       "assertion_ids": [
         "A6",
         "A7"
       ],
-      "recorded_at": "2026-08-30T06:37:47.370Z",
-      "validation_receipt_sha256": "d98279fe332a7b06d7bbfb733fbdc6de80379e2dc65f7ac72ff9b2fb36327f12",
+      "recorded_at": "2026-08-30T10:44:44.541Z",
+      "validation_receipt_sha256": "35267984e7aa1957a58135c38542badec3ebe1cd55642af87ba5441f6d1b57c4",
       "evidence_log": {
-        "path": "development/evidence/017-009-admin-device-maintenance.log",
-        "sha256": "7b14b933f6a72060940dc678fc84a14b23f9ab97b273e49efd54b2cf9bffb45e",
+        "path": "development/evidence/034-009-admin-device-maintenance.log",
+        "sha256": "990a1e325040515546edb552e43f068b5acfd62c5f325ff14397f0c276b0926b",
         "size": 283
+      }
+    },
+    {
+      "id": "receipt-d319467044c10982d0458beb40726fc2b7a73c885c6d6a66f3af196efb1f6404",
+      "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalDeviceAdminServiceTest,RentalDeviceDeletionGuardTest -Dsurefire.failIfNoSpecifiedTests=false test",
+      "assertion_ids": [
+        "A6",
+        "A7"
+      ],
+      "recorded_at": "2026-08-30T10:44:22.579Z",
+      "validation_receipt_sha256": "75ac06dd5482c381b01bf4ec02d03d347ece60ff148da0378306dfc308aa0653",
+      "evidence_log": {
+        "path": "development/evidence/032-009-admin-device-maintenance.log",
+        "sha256": "d7720bacd22ab77298b547e2aa5beb5bde41ea85d1a76d3ea4e70288a036bed1",
+        "size": 35811
       }
     }
   ],
@@ -3314,9 +3314,9 @@
       "parent_id": "A6",
       "status": "passing",
       "test_run_ids": [
-        "receipt-11fc472418f2ce92ed16e918a09ac83f25891f3197fe038bffe01bf3250237be",
-        "receipt-36a18c9c20b34d2c4ffff8721c966f74377658f831f1fb5b29cbccf9903aba40",
-        "receipt-8bc4c4297ebd9e3e60df57da2bb2925df5971c8d0d4c9f52a386a6704334471e"
+        "receipt-58a9a12c5d88472ba9369cc588e711ced932ef5aa6ad557342b62dc339b6a4af",
+        "receipt-8d7a92bb85a97276e206c20b7a63804f1fafc08aa4d7f51e9956f3fc57c30188",
+        "receipt-d319467044c10982d0458beb40726fc2b7a73c885c6d6a66f3af196efb1f6404"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -3327,9 +3327,9 @@
       "parent_id": "A7",
       "status": "passing",
       "test_run_ids": [
-        "receipt-11fc472418f2ce92ed16e918a09ac83f25891f3197fe038bffe01bf3250237be",
-        "receipt-36a18c9c20b34d2c4ffff8721c966f74377658f831f1fb5b29cbccf9903aba40",
-        "receipt-8bc4c4297ebd9e3e60df57da2bb2925df5971c8d0d4c9f52a386a6704334471e"
+        "receipt-58a9a12c5d88472ba9369cc588e711ced932ef5aa6ad557342b62dc339b6a4af",
+        "receipt-8d7a92bb85a97276e206c20b7a63804f1fafc08aa4d7f51e9956f3fc57c30188",
+        "receipt-d319467044c10982d0458beb40726fc2b7a73c885c6d6a66f3af196efb1f6404"
       ],
       "direct_evidence": [],
       "reused_evidence": [],

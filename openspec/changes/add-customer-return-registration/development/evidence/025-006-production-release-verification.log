@@ -1,0 +1,17 @@
+# command: bash ops/github-deploy/tests/migration-runner-test.sh && bash ops/github-deploy/tests/incremental-build-lib-test.sh && bash ops/github-deploy/tests/prepare-production-80-test.sh
+# exit_status: 0
+# duration_ms: 793
+
+## stdout
+[migration] apply 001_test.sql
+[migration] already applied 001_test.sql
+migration runner tests passed
+incremental build helper tests passed
+[production-80] runtime configuration prepared
+[production-80] PC Web port=3102
+[production-80] nginx config=/private/tmp/camera-rental-production-80.LBKTCP/camera-rental.conf
+production-80 preparation tests passed
+
+
+## stderr
+(empty)

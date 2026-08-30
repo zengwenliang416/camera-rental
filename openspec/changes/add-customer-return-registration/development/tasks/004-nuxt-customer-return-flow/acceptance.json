@@ -2,11 +2,11 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "004-nuxt-customer-return-flow",
-  "generated_at": "2026-08-30T06:45:32.193Z",
-  "recorded_at": "2026-08-30T06:35:42.710Z",
+  "generated_at": "2026-08-30T10:48:31.701Z",
+  "recorded_at": "2026-08-30T10:41:56.859Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "4f9dc69a3610f50ef67ec1a3033016f9ad8a062b",
+  "reviewed_git_tree": "bd2ec3530fd9a0915e8d54fe709abf1ff67864f1",
   "implementation_scope": {
     "included_patterns": [
       "camera-rental-web/**",
@@ -195,17 +195,17 @@
   },
   "test_runs": [
     {
-      "id": "receipt-af6e02208634f2cc909fcb6dde55cca01f6dca9d7ec922b611ba79b2dc7f2a9e",
+      "id": "receipt-173d2002bebc812790171c50077c719629d7cae8293667580410f4640c72c709",
       "command": "cd camera-rental-web && bun test tests/return-registration.test.ts && bunx nuxi typecheck && bun run build",
       "assertion_ids": [
         "A2"
       ],
-      "recorded_at": "2026-08-30T06:35:42.710Z",
-      "validation_receipt_sha256": "cd6484fe5d0af47a3bd15631d4288a12767ed1df721a3124c2322c2dd9d66a42",
+      "recorded_at": "2026-08-30T10:41:56.859Z",
+      "validation_receipt_sha256": "9d26009fd8fe5cd861acd3e56a52db1463f7d00bb68ad943b6e1da21c10c397a",
       "evidence_log": {
-        "path": "development/evidence/005-004-nuxt-customer-return-flow.log",
-        "sha256": "211a08b4b167e53576560c0ed30b0002182de698c8fb2411ad5d65dcf64bd0d4",
-        "size": 7984
+        "path": "development/evidence/022-004-nuxt-customer-return-flow.log",
+        "sha256": "4d2f8f5113775daae9b09c09c72c9b2a4552d9003b9bd4c874d942bb5497d89a",
+        "size": 8057
       }
     }
   ],
@@ -215,7 +215,7 @@
       "parent_id": "A2",
       "status": "passing",
       "test_run_ids": [
-        "receipt-af6e02208634f2cc909fcb6dde55cca01f6dca9d7ec922b611ba79b2dc7f2a9e"
+        "receipt-173d2002bebc812790171c50077c719629d7cae8293667580410f4640c72c709"
       ],
       "direct_evidence": [],
       "reused_evidence": [],

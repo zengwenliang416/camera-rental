@@ -1,0 +1,12 @@
+# command: bash ops/github-deploy/tests/migration-runner-test.sh && bash -n ops/github-deploy/apply-migrations.sh && cmp -s camera-rental-server/sql/mysql/migrations/20260826_050_rental_device_catalog_management.sql openspec/changes/add-customer-return-registration/development/migrations/20260826_050_rental_device_catalog_management.sql
+# exit_status: 0
+# duration_ms: 128
+
+## stdout
+[migration] apply 001_test.sql
+[migration] already applied 001_test.sql
+migration runner tests passed
+
+
+## stderr
+(empty)

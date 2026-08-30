@@ -2,11 +2,11 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "008-tenant-device-catalog",
-  "generated_at": "2026-08-30T06:45:32.432Z",
-  "recorded_at": "2026-08-30T06:37:16.015Z",
+  "generated_at": "2026-08-30T10:48:31.836Z",
+  "recorded_at": "2026-08-30T10:44:07.947Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "4f9dc69a3610f50ef67ec1a3033016f9ad8a062b",
+  "reviewed_git_tree": "bd2ec3530fd9a0915e8d54fe709abf1ff67864f1",
   "implementation_scope": {
     "included_patterns": [
       "camera-rental-admin/src/api/rental/device.ts",
@@ -3263,45 +3263,45 @@
   },
   "test_runs": [
     {
-      "id": "receipt-2e4627d9b28e7d49aea8988681b18d6921e2b7dac259061bc4e125c01104a363",
-      "command": "bash ops/github-deploy/tests/migration-runner-test.sh && bash -n ops/github-deploy/apply-migrations.sh && cmp -s camera-rental-server/sql/mysql/migrations/20260826_050_rental_device_catalog_management.sql openspec/changes/add-customer-return-registration/development/migrations/20260826_050_rental_device_catalog_management.sql",
-      "assertion_ids": [
-        "A8"
-      ],
-      "recorded_at": "2026-08-30T06:37:16.015Z",
-      "validation_receipt_sha256": "8e25d83b04e87a7d6865ff36968e97e4889d5440dd544850947ecfdb56696941",
-      "evidence_log": {
-        "path": "development/evidence/014-008-tenant-device-catalog.log",
-        "sha256": "a1fc4230243bcf49895f4394822a911eac72e25f1e6def75fcb4e1dd17603c74",
-        "size": 508
-      }
-    },
-    {
-      "id": "receipt-4c6bd4a5177eb06c769ade97439b053ec6fec75adc163d68e1b401209f928674",
-      "command": "cd camera-rental-admin && node --test --experimental-strip-types tests/deviceCatalogModel.test.ts && pnpm ts:check",
-      "assertion_ids": [
-        "A8"
-      ],
-      "recorded_at": "2026-08-30T06:37:15.873Z",
-      "validation_receipt_sha256": "74b4b483228edb5ae3c351d0ec34918c91318d52abe04abcacf8bcdb14ca3e3e",
-      "evidence_log": {
-        "path": "development/evidence/013-008-tenant-device-catalog.log",
-        "sha256": "126edb103df574baf29cb767df7c9eb542f478b8494c9e4141ed7d996cf4a676",
-        "size": 1595
-      }
-    },
-    {
-      "id": "receipt-c47b5bfe02e8e6c709af9accd824a04b1ffefcb917617be6a3a5f336c5166790",
+      "id": "receipt-6d577f9f9e64cbe86ffaadff15beb4864a443d7dfbb3e8fd271ff3143d47662a",
       "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalDeviceCatalogServiceTest,RentalDeviceAdminServiceTest,RentalDeviceInboundServiceTest,RentalDeviceInboundCategoryTest,RentalDeviceCodeStandTest,RentalDeviceCodeTest,ReturnSerialNormalizerTest -Dsurefire.failIfNoSpecifiedTests=false test",
       "assertion_ids": [
         "A8"
       ],
-      "recorded_at": "2026-08-30T06:36:57.302Z",
-      "validation_receipt_sha256": "b5a7fbce25c5dee585dfdcb3cfadca72a019aab67f4c86406174c397f1343070",
+      "recorded_at": "2026-08-30T10:43:44.152Z",
+      "validation_receipt_sha256": "0398d86ed60c426e2f591c8211389f442105a1023aa1c3d8dcd678d406e053cb",
       "evidence_log": {
-        "path": "development/evidence/012-008-tenant-device-catalog.log",
-        "sha256": "1be7a6a03c3ab2c49472e0ef10d7f097b5bb691feda56bea3c6e8a25e979b27a",
-        "size": 38902
+        "path": "development/evidence/029-008-tenant-device-catalog.log",
+        "sha256": "2dbf871ca4ee31bcad1e4364ae0ab5a54d4e544ea80597f5bd2dd7ddb8e28458",
+        "size": 37207
+      }
+    },
+    {
+      "id": "receipt-8a65c3bca22fe48d1c28dee40ad908820bc9dd878ec3ee44fed0ad5ec75f9bab",
+      "command": "cd camera-rental-admin && node --test --experimental-strip-types tests/deviceCatalogModel.test.ts && pnpm ts:check",
+      "assertion_ids": [
+        "A8"
+      ],
+      "recorded_at": "2026-08-30T10:44:07.816Z",
+      "validation_receipt_sha256": "64931f1bdb4c2800683495d9d53d42af1e341fe802fe967390d874ad9af0d4a3",
+      "evidence_log": {
+        "path": "development/evidence/030-008-tenant-device-catalog.log",
+        "sha256": "1304e21c5d53b796d6f240b5347e99256b26ef4e56950c3fbe74bff0e104c5a2",
+        "size": 1535
+      }
+    },
+    {
+      "id": "receipt-b162dacecbbf884b6d6180f96fb23087add0e017415d2c03578b1b4720c99554",
+      "command": "bash ops/github-deploy/tests/migration-runner-test.sh && bash -n ops/github-deploy/apply-migrations.sh && cmp -s camera-rental-server/sql/mysql/migrations/20260826_050_rental_device_catalog_management.sql openspec/changes/add-customer-return-registration/development/migrations/20260826_050_rental_device_catalog_management.sql",
+      "assertion_ids": [
+        "A8"
+      ],
+      "recorded_at": "2026-08-30T10:44:07.947Z",
+      "validation_receipt_sha256": "cc80375e63b1ce0242bd43b50dbcaffffb18ab57ad32633930c4a8cee22953d6",
+      "evidence_log": {
+        "path": "development/evidence/031-008-tenant-device-catalog.log",
+        "sha256": "fa03a75a3922576d3d9699af2b10505d4ad44e0529c3cc59da94bfced95887fb",
+        "size": 508
       }
     }
   ],
@@ -3311,9 +3311,9 @@
       "parent_id": "A8",
       "status": "passing",
       "test_run_ids": [
-        "receipt-2e4627d9b28e7d49aea8988681b18d6921e2b7dac259061bc4e125c01104a363",
-        "receipt-4c6bd4a5177eb06c769ade97439b053ec6fec75adc163d68e1b401209f928674",
-        "receipt-c47b5bfe02e8e6c709af9accd824a04b1ffefcb917617be6a3a5f336c5166790"
+        "receipt-6d577f9f9e64cbe86ffaadff15beb4864a443d7dfbb3e8fd271ff3143d47662a",
+        "receipt-8a65c3bca22fe48d1c28dee40ad908820bc9dd878ec3ee44fed0ad5ec75f9bab",
+        "receipt-b162dacecbbf884b6d6180f96fb23087add0e017415d2c03578b1b4720c99554"
       ],
       "direct_evidence": [],
       "reused_evidence": [],

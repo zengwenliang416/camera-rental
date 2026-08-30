@@ -1,0 +1,55 @@
+# command: cd camera-rental-admin && pnpm test:return-registration && pnpm ts:check
+# exit_status: 0
+# duration_ms: 28315
+
+## stdout
+TAP version 13
+# (node:21318) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Volumes/zwl/camera-rental-github/camera-rental-admin/tests/returnRegistrationModel.test.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Volumes/zwl/camera-rental-github/camera-rental-admin/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: draft rows expose only revoke before customer submission
+ok 1 - draft rows expose only revoke before customer submission
+  ---
+  duration_ms: 0.439833
+  type: 'test'
+  ...
+# Subtest: expired and revoked registrations cannot be revoked again
+ok 2 - expired and revoked registrations cannot be revoked again
+  ---
+  duration_ms: 0.064792
+  type: 'test'
+  ...
+# Subtest: review action is limited to review-required registrations
+ok 3 - review action is limited to review-required registrations
+  ---
+  duration_ms: 0.114125
+  type: 'test'
+  ...
+# Subtest: pagination query preserves page and submitted time range
+ok 4 - pagination query preserves page and submitted time range
+  ---
+  duration_ms: 0.071625
+  type: 'test'
+  ...
+# Subtest: return registration dates accept legacy arrays and ISO strings
+ok 5 - return registration dates accept legacy arrays and ISO strings
+  ---
+  duration_ms: 0.080958
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 125.866875
+
+
+## stderr
+$ node --test --experimental-strip-types tests/returnRegistrationModel.test.ts
+$ node --max_old_space_size=8192 ./node_modules/vue-tsc/bin/vue-tsc.js --noEmit --incremental --tsBuildInfoFile node_modules/.cache/vue-tsc/tsconfig.tsbuildinfo
+

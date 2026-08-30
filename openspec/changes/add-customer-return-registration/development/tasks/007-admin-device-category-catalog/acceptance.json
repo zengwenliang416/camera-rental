@@ -2,11 +2,11 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "007-admin-device-category-catalog",
-  "generated_at": "2026-08-30T06:45:32.371Z",
-  "recorded_at": "2026-08-30T06:36:47.251Z",
+  "generated_at": "2026-08-30T10:48:31.802Z",
+  "recorded_at": "2026-08-30T10:43:24.969Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "4f9dc69a3610f50ef67ec1a3033016f9ad8a062b",
+  "reviewed_git_tree": "bd2ec3530fd9a0915e8d54fe709abf1ff67864f1",
   "implementation_scope": {
     "included_patterns": [
       "camera-rental-admin/src/api/rental/device.ts",
@@ -3263,31 +3263,31 @@
   },
   "test_runs": [
     {
-      "id": "receipt-1e6cd1809aef60a1a3627c40a40fd4ed87b6e1591ac8ff93ea0df80319dc310d",
-      "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalDeviceCatalogServiceTest,RentalDeviceAdminServiceTest,RentalDeviceInboundCategoryTest,RentalDeviceCodeStandTest -Dsurefire.failIfNoSpecifiedTests=false test",
-      "assertion_ids": [
-        "A8"
-      ],
-      "recorded_at": "2026-08-30T06:36:27.240Z",
-      "validation_receipt_sha256": "0acaa297ca56ec7d3a69e398532c05881580aa103430ad040b0080b7e2dccd5b",
-      "evidence_log": {
-        "path": "development/evidence/010-007-admin-device-category-catalog.log",
-        "sha256": "3b6f348ce3fab17d6bd89ec590926c24c54c73c4a79b607cda3fa32aa4e7f9c7",
-        "size": 38068
-      }
-    },
-    {
-      "id": "receipt-c26437aea043090957b7f0d7106402583869778c957073b7c5e78dfcf5c8383a",
+      "id": "receipt-a38d99135c02435c1ea99f8ec1f27141e52b2203be15ecdc5a42f4e797f79dcc",
       "command": "cd camera-rental-admin && node --test --experimental-strip-types tests/deviceCatalogModel.test.ts && pnpm ts:check",
       "assertion_ids": [
         "A8"
       ],
-      "recorded_at": "2026-08-30T06:36:47.251Z",
-      "validation_receipt_sha256": "44113c824b419308332ba33ea7eb513c6576ea518e0fbefdaced3ef810a1b0b2",
+      "recorded_at": "2026-08-30T10:43:24.969Z",
+      "validation_receipt_sha256": "c694174ee13860a4f7af8126b25f00a2007ef8b5d9285fb13e23670f069178fd",
       "evidence_log": {
-        "path": "development/evidence/011-007-admin-device-category-catalog.log",
-        "sha256": "677bf96c9350dfca4f0ef2279310e9477cda640ec34622f7c206214a512b1f7c",
-        "size": 1599
+        "path": "development/evidence/028-007-admin-device-category-catalog.log",
+        "sha256": "90d0d21e5213aa76752e9fe7b50eedb373230b06c3e00177861a0a8f323206d1",
+        "size": 1532
+      }
+    },
+    {
+      "id": "receipt-fa2bf9bde774bcd82c0d1be2d456e45bf30ae3785cee0b34276da3c56a547e3e",
+      "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalDeviceCatalogServiceTest,RentalDeviceAdminServiceTest,RentalDeviceInboundCategoryTest,RentalDeviceCodeStandTest -Dsurefire.failIfNoSpecifiedTests=false test",
+      "assertion_ids": [
+        "A8"
+      ],
+      "recorded_at": "2026-08-30T10:42:59.065Z",
+      "validation_receipt_sha256": "8f570335908d1a8c10bd1ad11645fc1763d3cb34b94545a4f601fa1c083817fb",
+      "evidence_log": {
+        "path": "development/evidence/027-007-admin-device-category-catalog.log",
+        "sha256": "be986cd3258d267ded1e9a0e020336fac868406823ca63c6a5c6d1994ad649f6",
+        "size": 36372
       }
     }
   ],
@@ -3297,8 +3297,8 @@
       "parent_id": "A8",
       "status": "passing",
       "test_run_ids": [
-        "receipt-1e6cd1809aef60a1a3627c40a40fd4ed87b6e1591ac8ff93ea0df80319dc310d",
-        "receipt-c26437aea043090957b7f0d7106402583869778c957073b7c5e78dfcf5c8383a"
+        "receipt-a38d99135c02435c1ea99f8ec1f27141e52b2203be15ecdc5a42f4e797f79dcc",
+        "receipt-fa2bf9bde774bcd82c0d1be2d456e45bf30ae3785cee0b34276da3c56a547e3e"
       ],
       "direct_evidence": [],
       "reused_evidence": [],

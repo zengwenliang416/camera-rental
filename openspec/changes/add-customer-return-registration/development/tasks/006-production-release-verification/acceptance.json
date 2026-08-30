@@ -2,11 +2,11 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "006-production-release-verification",
-  "generated_at": "2026-08-30T06:45:32.313Z",
-  "recorded_at": "2026-08-30T06:36:16.209Z",
+  "generated_at": "2026-08-30T10:48:31.767Z",
+  "recorded_at": "2026-08-30T10:42:41.862Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "4f9dc69a3610f50ef67ec1a3033016f9ad8a062b",
+  "reviewed_git_tree": "bd2ec3530fd9a0915e8d54fe709abf1ff67864f1",
   "implementation_scope": {
     "included_patterns": [
       "openspec/changes/add-customer-return-registration",
@@ -232,28 +232,7 @@
   },
   "test_runs": [
     {
-      "id": "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-      "command": "bash ops/github-deploy/tests/migration-runner-test.sh && bash ops/github-deploy/tests/incremental-build-lib-test.sh && bash ops/github-deploy/tests/prepare-production-80-test.sh",
-      "assertion_ids": [
-        "A1",
-        "A2",
-        "A3",
-        "A4",
-        "A5",
-        "A6",
-        "A7",
-        "A8"
-      ],
-      "recorded_at": "2026-08-30T06:36:16.190Z",
-      "validation_receipt_sha256": "875e759dbdf7cad0c73fc6e302ac74bcf19607943abcc3c237bb40c164f8c373",
-      "evidence_log": {
-        "path": "development/evidence/008-006-production-release-verification.log",
-        "sha256": "aeabcbe8d5da4d7cd64c30a9b5006d3be75cdf4e4e5d0bca0891b8ffd92cda38",
-        "size": 611
-      }
-    },
-    {
-      "id": "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1",
+      "id": "receipt-62686abc267cd70b4833a2f884d91d2db59d3d108756a7ef12df71e8d1ab0e84",
       "command": "bash -n ops/rustfs/*.sh ops/github-deploy/*.sh ops/github-deploy/tests/*.sh",
       "assertion_ids": [
         "A1",
@@ -265,12 +244,33 @@
         "A7",
         "A8"
       ],
-      "recorded_at": "2026-08-30T06:36:16.209Z",
-      "validation_receipt_sha256": "3bae85f1efa5914b49cabcb7321be82fabbacfe2fcde90b7f91d9af0c609f4fe",
+      "recorded_at": "2026-08-30T10:42:41.862Z",
+      "validation_receipt_sha256": "e9f01f2550ce640ac7840ad694c0b780877a4e64e8e47520892afef0197242fa",
       "evidence_log": {
-        "path": "development/evidence/009-006-production-release-verification.log",
-        "sha256": "c893932342544285c1cff84f839d76b999e1e90b7ddc33e493d92d41765cbcb4",
-        "size": 159
+        "path": "development/evidence/026-006-production-release-verification.log",
+        "sha256": "ee390423150bd8d3a5fcb1ffb99b94f21993ff73e46547afe0cf1cb9bf42be91",
+        "size": 160
+      }
+    },
+    {
+      "id": "receipt-7124f340202413c9ab442b81fa36f5ee694d551d6701f93e5406d30186d6763d",
+      "command": "bash ops/github-deploy/tests/migration-runner-test.sh && bash ops/github-deploy/tests/incremental-build-lib-test.sh && bash ops/github-deploy/tests/prepare-production-80-test.sh",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8"
+      ],
+      "recorded_at": "2026-08-30T10:42:41.848Z",
+      "validation_receipt_sha256": "d9c58d6dde72894c584e0bfa9db6fddf5f7c9421822aa8de3a0badb9d9d2002b",
+      "evidence_log": {
+        "path": "development/evidence/025-006-production-release-verification.log",
+        "sha256": "7a1360313cdc53e5720d4a3ead4b433774c0018226a6248097b501cd2fd77458",
+        "size": 611
       }
     }
   ],
@@ -280,8 +280,8 @@
       "parent_id": "A1",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-62686abc267cd70b4833a2f884d91d2db59d3d108756a7ef12df71e8d1ab0e84",
+        "receipt-7124f340202413c9ab442b81fa36f5ee694d551d6701f93e5406d30186d6763d"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -292,8 +292,8 @@
       "parent_id": "A2",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-62686abc267cd70b4833a2f884d91d2db59d3d108756a7ef12df71e8d1ab0e84",
+        "receipt-7124f340202413c9ab442b81fa36f5ee694d551d6701f93e5406d30186d6763d"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -304,8 +304,8 @@
       "parent_id": "A3",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-62686abc267cd70b4833a2f884d91d2db59d3d108756a7ef12df71e8d1ab0e84",
+        "receipt-7124f340202413c9ab442b81fa36f5ee694d551d6701f93e5406d30186d6763d"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -316,8 +316,8 @@
       "parent_id": "A4",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-62686abc267cd70b4833a2f884d91d2db59d3d108756a7ef12df71e8d1ab0e84",
+        "receipt-7124f340202413c9ab442b81fa36f5ee694d551d6701f93e5406d30186d6763d"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -328,8 +328,8 @@
       "parent_id": "A5",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-62686abc267cd70b4833a2f884d91d2db59d3d108756a7ef12df71e8d1ab0e84",
+        "receipt-7124f340202413c9ab442b81fa36f5ee694d551d6701f93e5406d30186d6763d"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -340,8 +340,8 @@
       "parent_id": "A6",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-62686abc267cd70b4833a2f884d91d2db59d3d108756a7ef12df71e8d1ab0e84",
+        "receipt-7124f340202413c9ab442b81fa36f5ee694d551d6701f93e5406d30186d6763d"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -352,8 +352,8 @@
       "parent_id": "A7",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-62686abc267cd70b4833a2f884d91d2db59d3d108756a7ef12df71e8d1ab0e84",
+        "receipt-7124f340202413c9ab442b81fa36f5ee694d551d6701f93e5406d30186d6763d"
       ],
       "direct_evidence": [],
       "reused_evidence": [],
@@ -364,8 +364,8 @@
       "parent_id": "A8",
       "status": "passing",
       "test_run_ids": [
-        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
-        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+        "receipt-62686abc267cd70b4833a2f884d91d2db59d3d108756a7ef12df71e8d1ab0e84",
+        "receipt-7124f340202413c9ab442b81fa36f5ee694d551d6701f93e5406d30186d6763d"
       ],
       "direct_evidence": [],
       "reused_evidence": [],

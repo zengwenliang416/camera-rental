@@ -2,11 +2,11 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "005-admin-return-operations",
-  "generated_at": "2026-08-30T06:45:32.253Z",
-  "recorded_at": "2026-08-30T06:36:15.583Z",
+  "generated_at": "2026-08-30T10:48:31.733Z",
+  "recorded_at": "2026-08-30T10:42:41.052Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "4f9dc69a3610f50ef67ec1a3033016f9ad8a062b",
+  "reviewed_git_tree": "bd2ec3530fd9a0915e8d54fe709abf1ff67864f1",
   "implementation_scope": {
     "included_patterns": [
       "camera-rental-admin/src/api/rental/returnRegistration.ts",
@@ -3197,31 +3197,31 @@
   },
   "test_runs": [
     {
-      "id": "receipt-6f1a749cbe706eb8b5011709991545af2a48cb2a10163ce75035cb0817b93ef6",
+      "id": "receipt-62a61864b34bbf35209c7b4ec0f3f2d38912011ef54e9db8c056f5b628f416e1",
       "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=ReturnRegistrationAdminServiceTest,RentalReturnRegistrationControllerTest -Dsurefire.failIfNoSpecifiedTests=false test",
       "assertion_ids": [
         "A5"
       ],
-      "recorded_at": "2026-08-30T06:35:52.813Z",
-      "validation_receipt_sha256": "d52c3a61a434d2e1a4e3b7fc7e80290a922281de9306e69a58abdac07e6aab3c",
+      "recorded_at": "2026-08-30T10:42:12.733Z",
+      "validation_receipt_sha256": "e973629cdbe277f7467319187f1c179d4615d1183c8b634476c73910a912c702",
       "evidence_log": {
-        "path": "development/evidence/006-005-admin-return-operations.log",
-        "sha256": "b062ab64f8b1c908da4edf5f2586efb98b419e107abdf8eee1d21ba1b6404a04",
-        "size": 37618
+        "path": "development/evidence/023-005-admin-return-operations.log",
+        "sha256": "f52627364584644fa46085d4d3f71d77489c543fda1ab0a89c3aa2a5a0c6a7c8",
+        "size": 35923
       }
     },
     {
-      "id": "receipt-90f15fd0d226823a06bfef7b3c254620e179e7490aabf2ade4a1825529830c9d",
+      "id": "receipt-65533066d3642b1c359e3c55b19b92bfdda8a4f59076b2e0b2af97628d1341c6",
       "command": "cd camera-rental-admin && pnpm test:return-registration && pnpm ts:check",
       "assertion_ids": [
         "A5"
       ],
-      "recorded_at": "2026-08-30T06:36:15.583Z",
-      "validation_receipt_sha256": "fe05f4b78ff0f3f45dc370ec36d83d0e5941276f1cd55d491d4d6967cfdf8d61",
+      "recorded_at": "2026-08-30T10:42:41.052Z",
+      "validation_receipt_sha256": "2d92efb00b08e4c62c61747f723e6ab1faeb12780020f2847c10a806064e93fa",
       "evidence_log": {
-        "path": "development/evidence/007-005-admin-return-operations.log",
-        "sha256": "739f6b59b2f2c0cf3b1a0253319d3cff30142a5dff945d0d2a587b5a9d68f1c0",
-        "size": 2009
+        "path": "development/evidence/024-005-admin-return-operations.log",
+        "sha256": "53727f6947f56d55392c292d726746f853243834675bc39b9626080c2af439a0",
+        "size": 1948
       }
     }
   ],
@@ -3231,8 +3231,8 @@
       "parent_id": "A5",
       "status": "passing",
       "test_run_ids": [
-        "receipt-6f1a749cbe706eb8b5011709991545af2a48cb2a10163ce75035cb0817b93ef6",
-        "receipt-90f15fd0d226823a06bfef7b3c254620e179e7490aabf2ade4a1825529830c9d"
+        "receipt-62a61864b34bbf35209c7b4ec0f3f2d38912011ef54e9db8c056f5b628f416e1",
+        "receipt-65533066d3642b1c359e3c55b19b92bfdda8a4f59076b2e0b2af97628d1341c6"
       ],
       "direct_evidence": [],
       "reused_evidence": [],

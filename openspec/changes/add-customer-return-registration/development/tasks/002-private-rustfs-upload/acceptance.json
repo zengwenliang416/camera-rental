@@ -2,11 +2,11 @@
   "schema": "specnav.task-acceptance-evidence.v2",
   "generated_by": "specnav-development/task-acceptance-evidence",
   "task_id": "002-private-rustfs-upload",
-  "generated_at": "2026-08-30T06:45:32.073Z",
-  "recorded_at": "2026-08-30T06:35:19.269Z",
+  "generated_at": "2026-08-30T10:48:31.635Z",
+  "recorded_at": "2026-08-30T10:41:31.312Z",
   "status": "approved",
-  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
-  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "reviewed_git_head": "4f9dc69a3610f50ef67ec1a3033016f9ad8a062b",
+  "reviewed_git_tree": "bd2ec3530fd9a0915e8d54fe709abf1ff67864f1",
   "implementation_scope": {
     "included_patterns": [
       "camera-rental-server/yudao-module-infra/src/main/java/**",
@@ -4536,31 +4536,31 @@
   },
   "test_runs": [
     {
-      "id": "receipt-75a1daad40e980abc2f444cbf827a5e0d3bff5794353dbd63a5eeae54dbee09f",
-      "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-infra,yudao-module-rental/yudao-module-rental-biz -am -Dtest=FileApiImplTest,ReturnRegistrationAttachmentServiceTest -Dsurefire.failIfNoSpecifiedTests=false test",
-      "assertion_ids": [
-        "A3"
-      ],
-      "recorded_at": "2026-08-30T06:35:19.251Z",
-      "validation_receipt_sha256": "29c2f4f71b6f28859e34ec67e88891fe9c71fe0268b5e454677fe834edffe1b4",
-      "evidence_log": {
-        "path": "development/evidence/002-002-private-rustfs-upload.log",
-        "sha256": "347ef4b90b319f337c60179843d72818158da43eb2fb949da14a5b3d82f87277",
-        "size": 38773
-      }
-    },
-    {
-      "id": "receipt-ebea04629b30f6372553f2ff56d573dd98bbbe113973d0a103f64f6c117dc301",
+      "id": "receipt-7362f3dcd09066550c010bb1ba58f0364a51402d82f45673a0211c24112e135b",
       "command": "bash -n ops/rustfs/*.sh",
       "assertion_ids": [
         "A3"
       ],
-      "recorded_at": "2026-08-30T06:35:19.269Z",
-      "validation_receipt_sha256": "72ff972e990386e5509ba8782441977bc42744cab02d3b2f4ab504ccec340117",
+      "recorded_at": "2026-08-30T10:41:31.312Z",
+      "validation_receipt_sha256": "bee0e92d79467c6564483b377f3bdca64c6a8896df7d3e4c24f3eacab57efbb4",
       "evidence_log": {
-        "path": "development/evidence/003-002-private-rustfs-upload.log",
-        "sha256": "5d43cfbbc516ad7b424e75d762121cc9f02f05f5655980a603fe83d979756d19",
-        "size": 107
+        "path": "development/evidence/020-002-private-rustfs-upload.log",
+        "sha256": "22ac747250f351593c6350bc72a3f87e649b8aa4093e7fb79bbe473d4f4e20f6",
+        "size": 108
+      }
+    },
+    {
+      "id": "receipt-90fe2c5dd068378a7a6d829998539cfd9a427143721bff9b79e1d639a426ba7a",
+      "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-infra,yudao-module-rental/yudao-module-rental-biz -am -Dtest=FileApiImplTest,ReturnRegistrationAttachmentServiceTest -Dsurefire.failIfNoSpecifiedTests=false test",
+      "assertion_ids": [
+        "A3"
+      ],
+      "recorded_at": "2026-08-30T10:41:31.299Z",
+      "validation_receipt_sha256": "aa46fbb92d9f97d0c80c6af6ed5f052f48e9214adca55b278006cf8a3b512444",
+      "evidence_log": {
+        "path": "development/evidence/019-002-private-rustfs-upload.log",
+        "sha256": "35ba6e15fc425961a7ef0957213600efdfe538ba1487b6b7a9cfd27c94c2b725",
+        "size": 36310
       }
     }
   ],
@@ -4570,8 +4570,8 @@
       "parent_id": "A3",
       "status": "passing",
       "test_run_ids": [
-        "receipt-75a1daad40e980abc2f444cbf827a5e0d3bff5794353dbd63a5eeae54dbee09f",
-        "receipt-ebea04629b30f6372553f2ff56d573dd98bbbe113973d0a103f64f6c117dc301"
+        "receipt-7362f3dcd09066550c010bb1ba58f0364a51402d82f45673a0211c24112e135b",
+        "receipt-90fe2c5dd068378a7a6d829998539cfd9a427143721bff9b79e1d639a426ba7a"
       ],
       "direct_evidence": [],
       "reused_evidence": [],

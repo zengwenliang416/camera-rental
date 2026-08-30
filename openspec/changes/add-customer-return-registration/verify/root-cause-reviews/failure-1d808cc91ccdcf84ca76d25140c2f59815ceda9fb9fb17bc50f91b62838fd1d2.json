@@ -1,0 +1,23 @@
+{
+  "schema": "specnav.verification.root-cause-review.v1",
+  "id": "root-cause-review-1d808cc91ccdcf84ca76d25140c2f598",
+  "failure_id": "failure-1d808cc91ccdcf84ca76d25140c2f59815ceda9fb9fb17bc50f91b62838fd1d2",
+  "root_failure_digest": "dda7616197264b4ee1ef0d5e3da415621297606ab82351c4bd1041bad5fb3e09",
+  "change_id": "add-customer-return-registration",
+  "run_id": "run-20260830100548-c84f79b0b95e7cbc",
+  "case_id": "return-private-upload",
+  "attempt_id": "attempt-20260830100548-c84f79b0b95e7cbc",
+  "classification": "test_defect",
+  "summary": "The project-owned browser scenario produced string assertion values for two array-valued approved oracles.",
+  "root_cause": "The scenario JSON-stringified the upload event sequence and confirmed attachment identifiers before recording them, so the runner observed strings while the approved case contract requires arrays.",
+  "failed_assertion_ids": [
+    "vc03-confirmed-file-bound",
+    "vc03-private-upload-order"
+  ],
+  "reviewer": {
+    "id": "user",
+    "kind": "human"
+  },
+  "decision": "approved",
+  "reviewed_at": "2026-08-30T10:16:59Z"
+}

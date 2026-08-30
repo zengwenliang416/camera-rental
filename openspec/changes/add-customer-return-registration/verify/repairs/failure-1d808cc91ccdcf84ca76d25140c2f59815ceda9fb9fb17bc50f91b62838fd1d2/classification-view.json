@@ -1,0 +1,41 @@
+{
+  "schema": "specnav.verification.failure-packet.v1",
+  "change_id": "add-customer-return-registration",
+  "run_id": "run-20260830100548-c84f79b0b95e7cbc",
+  "case_id": "return-private-upload",
+  "attempt_id": "attempt-20260830100548-c84f79b0b95e7cbc",
+  "reading_ids": [
+    "reading-1a94a28c351a06a525176e0d4b21abf22124bb445ea5b2e516bb2bc0581449d6",
+    "reading-1ea981bc15dceb542849c5ccf597483c391327521f431dae18446df19c4911c8",
+    "reading-26acd90fe75612982594578b2ff5219b7c7b2205fce310ee604c63874a8e3aff",
+    "reading-376d9949a23f5a9dbc1e94b93df8bc0c7dbea020c869ab3c4051e7d8c6a69994",
+    "reading-42940036d664aa31e854e2cd2c0c0240c4194e5c8657a7c59fcb28a091dc5659",
+    "reading-449eec0546703aa5301f9e874498a939cd2296d3a0669ae8b43c9f6b8ba253f9",
+    "reading-56db5674972214dbf24f78d2898569f6c0ab18e896c1530c478098c607199c23",
+    "reading-95af0d1982c39982ea96b4f02fdfc3f7b59869f9a6ca1f8ffb00f29118253f74",
+    "reading-a9445ac2d73868a19db2d401fd2e3d246ddad12012a9919a35b3f5d01c857a9e",
+    "reading-ba46faabbec4bbcf78cfc18e72d26e36be9638b2404deff20fdefb05760b8bce",
+    "reading-c01bcdf95343c912017148e598db4065974f70ab4c5d37835f617d15a3645949",
+    "reading-ceb142f67a268c2521e76f6cc85f7aaa1d877b5d4c08b6e8082fac72cf332eeb"
+  ],
+  "evidence_ids": [
+    "evidence-5d32f20c0434d5615d110bd59b1b2da815d32cf54a320c11e2b30c764cd47762",
+    "evidence-75a776dc29d71d30974ab63a5755f9bd46607ce6ef8ebbbfc0dfbe36627020fd",
+    "evidence-a3b24cb20b4cde8a4334b50a1f84e7b0284c7ecfc89e87a3907ad25ccccaaf87",
+    "evidence-cebe2ee7b6a0d8735aa47d779bcae504d02500171c0fea215b63c792b4c392fb",
+    "evidence-d18360dfafb6d236a4fbe4be0ba0ee9c5fe129e730163fb8a24a8b77b5a4a51b"
+  ],
+  "classification": "test_defect",
+  "status": "repair_required",
+  "next_action": "repair_required",
+  "summary": "The project-owned browser scenario produced string assertion values for two array-valued approved oracles.",
+  "root_cause": "The scenario JSON-stringified the upload event sequence and confirmed attachment identifiers before recording them, so the runner observed strings while the approved case contract requires arrays.",
+  "failed_assertion_ids": [
+    "vc03-confirmed-file-bound",
+    "vc03-private-upload-order"
+  ],
+  "owner": "development",
+  "created_at": "2026-08-30T10:05:56.161Z",
+  "frozen_at": "2026-08-30T10:05:56.161Z",
+  "id": "failure-1d808cc91ccdcf84ca76d25140c2f59815ceda9fb9fb17bc50f91b62838fd1d2"
+}

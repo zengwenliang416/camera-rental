@@ -1,15 +1,15 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-30T10:51:35.641Z",
+  "generated_at": "2026-08-30T10:53:52.570Z",
   "active_change": "add-customer-return-registration",
-  "stage": "operations",
+  "stage": "development",
   "ok": true,
   "status": {
     "policy": {
       "enabled": true,
       "profile": "active_dev",
       "mode": "advisory",
-      "stage": "operations",
+      "stage": "development",
       "required_for_stage": false,
       "disabled_reason": null
     },
@@ -49,7 +49,7 @@
   },
   "decision": {
     "schema": "specnav.codegraph.decision.v1",
-    "stage": "operations",
+    "stage": "development",
     "profile": "active_dev",
     "effective_mode": "advisory",
     "required_for_stage": false,
@@ -57,7 +57,7 @@
     "result": "pass",
     "blockers": [],
     "warnings": [],
-    "explanation": "CodeGraph policy satisfied for operations."
+    "explanation": "CodeGraph policy satisfied for development."
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
@@ -120,7 +120,7 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-30T10:51:35.641Z",
+    "generated_at": "2026-08-30T10:53:52.569Z",
     "active_change": "add-customer-return-registration",
     "claims_file": "openspec/changes/add-customer-return-registration/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/add-customer-return-registration/codegraph/evidence-index.json",

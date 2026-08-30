@@ -43,7 +43,7 @@
     "change_id": "add-customer-return-registration",
     "development_task_id": "900-verification-repair-6b9e8e2d1262081d",
     "repair_kind": "test_code",
-    "status": "requested",
+    "status": "in_progress",
     "requested_at": "2026-08-30T08:43:18.010Z",
     "before_identity": {
       "case_snapshot_hash": "66ff81d82808980da4fb8d5127f151fbce17b77ccebaaa245f7418311aa9cf9c",

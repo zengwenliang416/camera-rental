@@ -336,12 +336,12 @@ const scenarios = {
 
       assertion.equal(
         'vc03-private-upload-order',
-        state.events,
+        Array.from(state.events),
         ['verify', 'authorize', 'put', 'confirm', 'submit']
       );
       assertion.equal(
         'vc03-confirmed-file-bound',
-        state.submitAttachments,
+        Array.from(state.submitAttachments),
         [1]
       );
       assertion.equal(

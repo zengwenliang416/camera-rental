@@ -80,6 +80,16 @@
         :label="t('rental.device.modelCode')"
         min-width="140"
       />
+      <el-table-column
+        prop="warehouseCode"
+        :label="t('rental.device.warehouseCode')"
+        min-width="120"
+      />
+      <el-table-column :label="t('rental.device.purchaseAmount')" min-width="130">
+        <template #default="{ row }">
+          {{ formatPurchaseAmount(row.purchaseAmount) }}
+        </template>
+      </el-table-column>
       <el-table-column :label="t('rental.device.status')" width="120">
         <template #default="{ row }">
           <el-tag :type="getRentalTagType('device', row.status)">
@@ -94,8 +104,25 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="t('table.action')" width="280" fixed="right">
+      <el-table-column :label="t('table.action')" width="390" fixed="right">
         <template #default="{ row }">
+          <el-button
+            link
+            type="primary"
+            v-hasPermi="['rental:device:update']"
+            @click="openEdit(row)"
+          >
+            {{ t('action.edit') }}
+          </el-button>
+          <el-button
+            link
+            type="danger"
+            v-hasPermi="['rental:device:delete']"
+            :loading="deletingDeviceId === row.id"
+            @click="handleDelete(row)"
+          >
+            {{ t('action.del') }}
+          </el-button>
           <el-button
             link
             type="primary"
@@ -327,6 +354,7 @@
       :categories="deviceCatalog"
       @success="handleModelCreated"
     />
+    <DeviceEditDialog ref="deviceEditDialogRef" @success="getList" />
   </ContentWrap>
 </template>
 
@@ -339,6 +367,7 @@ import { Qrcode } from '@/components/Qrcode'
 import {
   assignRentalDevice,
   createRentalDevice,
+  deleteRentalDevice,
   dispatchRentalDevice,
   getRentalDeviceCatalog,
   getRentalDevicePage,
@@ -357,7 +386,9 @@ import {
   isModelInCategory,
   normalizeDeviceNoSuffix
 } from './deviceCatalogModel'
+import { formatPurchaseAmount } from './deviceMaintenanceModel'
 import DeviceCategoryCreateDialog from './DeviceCategoryCreateDialog.vue'
+import DeviceEditDialog from './DeviceEditDialog.vue'
 import DeviceModelCreateDialog from './DeviceModelCreateDialog.vue'
 
 defineOptions({ name: 'RentalDevice' })
@@ -461,6 +492,8 @@ const handleCreateModelChange = () => {
 
 const categoryCreateDialogRef = ref<InstanceType<typeof DeviceCategoryCreateDialog>>()
 const modelCreateDialogRef = ref<InstanceType<typeof DeviceModelCreateDialog>>()
+const deviceEditDialogRef = ref<InstanceType<typeof DeviceEditDialog>>()
+const deletingDeviceId = ref<number>()
 
 const openCategoryCreate = () => {
   categoryCreateDialogRef.value?.open()
@@ -471,6 +504,24 @@ const openModelCreate = () => {
     (item) => item.categoryCode === createForm.categoryCode
   )
   modelCreateDialogRef.value?.open(category?.id)
+}
+
+const openEdit = (row: RentalDeviceVO) => {
+  deviceEditDialogRef.value?.open(row)
+}
+
+const handleDelete = async (row: RentalDeviceVO) => {
+  try {
+    await message.delConfirm(t('rental.device.deleteConfirm', { deviceNo: row.deviceNo }))
+    deletingDeviceId.value = row.id
+    await deleteRentalDevice(row.id)
+    message.success(t('rental.device.deleteSuccess'))
+    await getList()
+  } catch {
+    // Confirmation cancellation and request errors are already surfaced by shared UI services.
+  } finally {
+    deletingDeviceId.value = undefined
+  }
 }
 
 const handleCategoryCreated = async (created: { id: number; categoryCode: string }) => {

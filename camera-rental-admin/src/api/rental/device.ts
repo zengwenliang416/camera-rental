@@ -59,6 +59,14 @@ export interface RentalDeviceCreateReqVO {
   enabled?: boolean
 }
 
+export interface RentalDeviceUpdateReqVO {
+  id: number
+  serialNumber: string
+  warehouseCode: string
+  purchaseAmount?: number
+  enabled: boolean
+}
+
 export interface RentalDeviceAssignReqVO {
   rentalOrderItemId: number
   deviceId: number
@@ -132,6 +140,14 @@ export const getRentalDeviceDetail = (id: number) => {
 
 export const createRentalDevice = (data: RentalDeviceCreateReqVO) => {
   return request.post<number>({ url: '/rental/device/create', data })
+}
+
+export const updateRentalDevice = (data: RentalDeviceUpdateReqVO) => {
+  return request.put<boolean>({ url: '/rental/device/update', data })
+}
+
+export const deleteRentalDevice = (id: number) => {
+  return request.delete<boolean>({ url: '/rental/device/delete', params: { id } })
 }
 
 export const assignRentalDevice = (data: RentalDeviceAssignReqVO) => {

@@ -8,6 +8,9 @@
     "9.1",
     "9.2"
   ],
+  "acceptance_primary": [
+    "A3"
+  ],
   "goal": "Upload return photos privately through token-scoped authorization and existing file metadata.",
   "must_read": [
     "openspec/changes/add-customer-return-registration/development/tasks/002-private-rustfs-upload/brief.md",
@@ -24,16 +27,15 @@
     "openspec/changes/add-customer-return-registration/prototype/artifact/index.html"
   ],
   "allowed_files": [
-    "camera-rental-server/yudao-module-infra/yudao-module-infra-api",
-    "camera-rental-server/yudao-module-infra/src/main/java",
-    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
-    "ops/rustfs",
+    "camera-rental-server/yudao-module-infra/yudao-module-infra-api/**",
+    "camera-rental-server/yudao-module-infra/src/main/java/**",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/**",
+    "ops/rustfs/**",
     "openspec/changes/add-customer-return-registration"
   ],
   "test_paths": [
-    "camera-rental-server/yudao-module-infra/src/test",
-    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test",
-    "ops/rustfs"
+    "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-infra,yudao-module-rental/yudao-module-rental-biz -am -Dtest=FileApiImplTest,ReturnRegistrationAttachmentServiceTest -Dsurefire.failIfNoSpecifiedTests=false test",
+    "bash -n ops/rustfs/*.sh"
   ],
   "non_goals": [
     "Do not expose the RustFS console.",

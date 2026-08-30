@@ -1,10 +1,10 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-25T14:46:14.538Z",
+  "generated_at": "2026-08-30T07:11:47.338Z",
   "active_change": "add-customer-return-registration",
   "claims_file": "openspec/changes/add-customer-return-registration/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/add-customer-return-registration/codegraph/evidence-index.json",
-  "claims_count": 6,
+  "claims_count": 15,
   "verified_claims": [],
   "unverified_claims": [
     "development:task-001-secure-registration-foundation",
@@ -12,7 +12,16 @@
     "development:task-003-idempotent-return-submission",
     "development:task-004-nuxt-customer-return-flow",
     "development:task-005-admin-return-operations",
-    "development:task-006-production-release-verification"
+    "development:task-006-production-release-verification",
+    "verification:task-001-secure-registration-foundation",
+    "verification:task-002-private-rustfs-upload",
+    "verification:task-003-idempotent-return-submission",
+    "verification:task-004-nuxt-customer-return-flow",
+    "verification:task-005-admin-return-operations",
+    "verification:task-006-production-release-verification",
+    "verification:task-007-admin-device-category-catalog",
+    "verification:task-008-tenant-device-catalog",
+    "verification:task-009-admin-device-maintenance"
   ],
   "blockers": [],
   "warnings": [
@@ -21,6 +30,15 @@
     "codegraph:claim-unverified:development:task-003-idempotent-return-submission",
     "codegraph:claim-unverified:development:task-004-nuxt-customer-return-flow",
     "codegraph:claim-unverified:development:task-005-admin-return-operations",
-    "codegraph:claim-unverified:development:task-006-production-release-verification"
+    "codegraph:claim-unverified:development:task-006-production-release-verification",
+    "codegraph:claim-unverified:verification:task-001-secure-registration-foundation",
+    "codegraph:claim-unverified:verification:task-002-private-rustfs-upload",
+    "codegraph:claim-unverified:verification:task-003-idempotent-return-submission",
+    "codegraph:claim-unverified:verification:task-004-nuxt-customer-return-flow",
+    "codegraph:claim-unverified:verification:task-005-admin-return-operations",
+    "codegraph:claim-unverified:verification:task-006-production-release-verification",
+    "codegraph:claim-unverified:verification:task-007-admin-device-category-catalog",
+    "codegraph:claim-unverified:verification:task-008-tenant-device-catalog",
+    "codegraph:claim-unverified:verification:task-009-admin-device-maintenance"
   ]
 }

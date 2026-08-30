@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "change_id": "add-customer-return-registration",
+  "kind": "structured-acceptance-omission-repair",
+  "repaired_at": "2026-08-30T07:02:02.000Z",
+  "source_contract": "acceptance.md",
+  "added_assertion_id": "A8",
+  "reason": "The approved acceptance.md already required tenant-scoped device category and model catalog management, linked device numbering, and ERP sequence preservation. Tasks 007 and 008 were implemented and reviewed against A8, but the root structured acceptance.json omitted that assertion.",
+  "old_assertion_count": 7,
+  "new_assertion_count": 8,
+  "old_digest": "9fd1032419e708da74365037be252224237eab5e3dc83ae3d924ded03cb47aee",
+  "new_digest": "d9e468a2a75a0953545345d44c644dd8e6d4caf3fca54f072ee0b051adeb24a0",
+  "validation_required": [
+    "Refresh all Development evidence against the new reviewed HEAD.",
+    "Regenerate every task acceptance evidence file.",
+    "Re-run Development handoff before creating the Verification case snapshot."
+  ],
+  "fallback_used": false
+}

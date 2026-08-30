@@ -1,0 +1,376 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "006-production-release-verification",
+  "generated_at": "2026-08-30T06:45:32.313Z",
+  "recorded_at": "2026-08-30T06:36:16.209Z",
+  "status": "approved",
+  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
+  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "implementation_scope": {
+    "included_patterns": [
+      "openspec/changes/add-customer-return-registration",
+      "ops/github-deploy/**",
+      "ops/rustfs/**"
+    ],
+    "entries": [
+      {
+        "path": "ops/github-deploy/apply-migrations.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1cf4a36c79aac17f935ca2e619a8d5f564396e12"
+      },
+      {
+        "path": "ops/github-deploy/backend.env.example",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "05d197d8258f35466227010a3cef9b4c2e238f0e"
+      },
+      {
+        "path": "ops/github-deploy/camera-rental-server.service.example",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7a721b49c38f80e7bf99027ee8f5194f2fd3b897"
+      },
+      {
+        "path": "ops/github-deploy/camera-rental-web.service.example",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1dc769748155bca992c6dc7ca48a9d550b7971cf"
+      },
+      {
+        "path": "ops/github-deploy/create-source-bundle.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9a2471e3055fba0e8090e2155409cbc11d2be2d7"
+      },
+      {
+        "path": "ops/github-deploy/deployment-runtime-lib.sh",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "2b4accc901a7bed50788174a7398b041eedce6af"
+      },
+      {
+        "path": "ops/github-deploy/incremental-build-lib.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b67e96327e25297e00269f8b193f04142adb3a22"
+      },
+      {
+        "path": "ops/github-deploy/migrations.txt",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "859508041c03660bc2caaee14f7feec4bf032497"
+      },
+      {
+        "path": "ops/github-deploy/nginx.camera-rental.conf.example",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4c7d926f3b3605c419c46fb7261f2ca5d4beb9e2"
+      },
+      {
+        "path": "ops/github-deploy/prepare-production-80.sh",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "8dbfe185a7d71dd741c8c9c4de709c72d4394995"
+      },
+      {
+        "path": "ops/github-deploy/server-build-deploy.sh",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "cfcbe24fbf3ccdee0ccad840b8347d59d63bd7ff"
+      },
+      {
+        "path": "ops/github-deploy/server-deploy.sh",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "ceea912bc91caef53e962f15ad10baaa16c7c705"
+      },
+      {
+        "path": "ops/github-deploy/server-pull-artifacts.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b4c547bfdfdf21887f98dd52fe4a3efb46727c1e"
+      },
+      {
+        "path": "ops/github-deploy/tests/deployment-runtime-lib-test.sh",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "c19e90abb4b8ead6f4d2502c89748dffefe77daf"
+      },
+      {
+        "path": "ops/github-deploy/tests/incremental-build-lib-test.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "413ce0b211e92277db30abf3453c3785c3ae3bce"
+      },
+      {
+        "path": "ops/github-deploy/tests/migration-runner-test.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e5573c3c2fd172c8f173e73a9d84088ae5bcd3c4"
+      },
+      {
+        "path": "ops/github-deploy/tests/prepare-production-80-test.sh",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "2619c4f34b893100f1fcf6c97ca55d7befb4d2e2"
+      },
+      {
+        "path": "ops/github-deploy/tests/source-bundle-test.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "94cb74a54afae5b3fd78b183d6b56fc97fbb9dcf"
+      },
+      {
+        "path": "ops/github-deploy/web.env.example",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b676ad0e6adc21d4388bb6e6c4a890758c26362e"
+      },
+      {
+        "path": "ops/rustfs/.env.example",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "023cf79c92cf7339731d4deac6e28d122aee55d4"
+      },
+      {
+        "path": "ops/rustfs/backup.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1b65b279fbabd1550e431bddaf6d28fcf87ba293"
+      },
+      {
+        "path": "ops/rustfs/bootstrap.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8276689bd0ae429ee2f26973e7f09d991d5f7299"
+      },
+      {
+        "path": "ops/rustfs/docker-compose.yml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0619ce0c58cf54fae423536d09912334c43cce20"
+      },
+      {
+        "path": "ops/rustfs/docker-runtime.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "689d4a146f37ffd4b06e526efe387762d5cf462c"
+      },
+      {
+        "path": "ops/rustfs/install.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8c9902c9a91f963bffedec74f8229466f63d3ce4"
+      },
+      {
+        "path": "ops/rustfs/nginx-storage.conf.example",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2f24d83cea4b621772f1cb6bc132620e60e5e80a"
+      },
+      {
+        "path": "ops/rustfs/provision.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0b482edb8c398c231b9266d54ed5b33c7bac0a25"
+      },
+      {
+        "path": "ops/rustfs/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4d7c55bacb01f8a49a1304e97c6f4e666f934df5"
+      },
+      {
+        "path": "ops/rustfs/tests/bootstrap-test.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "13d33505cbddad0d58da3701f11a9e16dd29de35"
+      },
+      {
+        "path": "ops/rustfs/tests/docker-runtime-test.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7de2f3dfe7424255aea9224d8f8d7942eddde801"
+      },
+      {
+        "path": "ops/rustfs/tests/provision-test.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1bcb57244f1c91d2759a9a7bc04670472b6d7753"
+      },
+      {
+        "path": "ops/rustfs/verify.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "928de12845cf36beed324e6bc44c6fb82ec69ae0"
+      }
+    ],
+    "sha256": "5e4ef34809031af82cf98f2074cba8ea7a4e592f2140037890b57f8b8e2e9873"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/006-production-release-verification/context.json",
+      "sha256": "8a98d67898a24af8234b9dddb7513d9f0ccc4325fe58fa519c65ee7f46401794"
+    },
+    "report": {
+      "path": "development/tasks/006-production-release-verification/report.md",
+      "sha256": "62a6988896c95be393b6f1d60df6d3b66c8702bda899b96023da20ba9453bbc1",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/006-production-release-verification/spec-review.md",
+      "sha256": "ffed192da0cb8c9b52b3faaf10e87b5089a8aafae8029cd94917fe7ab61c6ea4",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/006-production-release-verification/quality-review.md",
+      "sha256": "9e0a5d323a5e2754c59e3599fc81c62811a684561b23cce9e723a5607311fb38",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
+      "command": "bash ops/github-deploy/tests/migration-runner-test.sh && bash ops/github-deploy/tests/incremental-build-lib-test.sh && bash ops/github-deploy/tests/prepare-production-80-test.sh",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8"
+      ],
+      "recorded_at": "2026-08-30T06:36:16.190Z",
+      "validation_receipt_sha256": "875e759dbdf7cad0c73fc6e302ac74bcf19607943abcc3c237bb40c164f8c373",
+      "evidence_log": {
+        "path": "development/evidence/008-006-production-release-verification.log",
+        "sha256": "aeabcbe8d5da4d7cd64c30a9b5006d3be75cdf4e4e5d0bca0891b8ffd92cda38",
+        "size": 611
+      }
+    },
+    {
+      "id": "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1",
+      "command": "bash -n ops/rustfs/*.sh ops/github-deploy/*.sh ops/github-deploy/tests/*.sh",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8"
+      ],
+      "recorded_at": "2026-08-30T06:36:16.209Z",
+      "validation_receipt_sha256": "3bae85f1efa5914b49cabcb7321be82fabbacfe2fcde90b7f91d9af0c609f4fe",
+      "evidence_log": {
+        "path": "development/evidence/009-006-production-release-verification.log",
+        "sha256": "c893932342544285c1cff84f839d76b999e1e90b7ddc33e493d92d41765cbcb4",
+        "size": 159
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A1",
+      "parent_id": "A1",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
+        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "An operator can issue and revoke an order-bound customer return link."
+    },
+    {
+      "id": "A2",
+      "parent_id": "A2",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
+        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "A customer can submit return logistics, assigned device serials, required photos, and optional packaging photos through the public link."
+    },
+    {
+      "id": "A3",
+      "parent_id": "A3",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
+        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Files are stored in private RustFS through the existing infra_file boundary and cannot be attached across registrations or tenants."
+    },
+    {
+      "id": "A4",
+      "parent_id": "A4",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
+        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "A valid submission creates or reuses one RETURN delivery without changing device, order, inspection, or schedule lifecycle state."
+    },
+    {
+      "id": "A5",
+      "parent_id": "A5",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
+        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The admin can page, inspect, and review return registrations with permission and tenant isolation."
+    },
+    {
+      "id": "A6",
+      "parent_id": "A6",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
+        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "An authorized administrator can edit only mutable device metadata while immutable identity and lifecycle fields remain server-controlled."
+    },
+    {
+      "id": "A7",
+      "parent_id": "A7",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
+        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "An authorized administrator can logically delete only an available device with no source or business-history references, with permission-controlled UI and server-side confirmation rules."
+    },
+    {
+      "id": "A8",
+      "parent_id": "A8",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-13c8a8ed2c00c571c3d1ab69ba6122db3f78980c21bcd6db7fa8c8a0503e2066",
+        "receipt-f6d67c641943dfccaf66488ccfb4b7cee16923398c621af2e5ac6baff9af01f1"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Prepare and verify the complete return registration release path for the 154.9.235.80 production host. (A8)"
+    }
+  ],
+  "fallback_used": false
+}

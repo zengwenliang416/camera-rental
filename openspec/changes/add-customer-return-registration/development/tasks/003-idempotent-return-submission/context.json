@@ -13,6 +13,12 @@
     "11.1",
     "12.1"
   ],
+  "acceptance_primary": [
+    "A4"
+  ],
+  "acceptance_subclaims": [
+    "A2"
+  ],
   "goal": "Submit one validated return registration and safely create or reuse its Return Delivery.",
   "must_read": [
     "openspec/changes/add-customer-return-registration/development/tasks/003-idempotent-return-submission/brief.md",
@@ -29,11 +35,11 @@
     "openspec/changes/add-customer-return-registration/prototype/artifact/index.html"
   ],
   "allowed_files": [
-    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/**",
     "openspec/changes/add-customer-return-registration"
   ],
   "test_paths": [
-    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test"
+    "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest='ReturnRegistration*Test,RentalReturnRegistrationControllerTest' -Dsurefire.failIfNoSpecifiedTests=false test"
   ],
   "non_goals": [
     "Do not complete warehouse return or inspection.",

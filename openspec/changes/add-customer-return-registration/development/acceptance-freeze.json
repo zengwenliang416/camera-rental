@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "change_id": "add-customer-return-registration",
-  "digest": "7781dafbe2f860768ff3461073c631ff4ccfb3d1e695d0e336fcd88d1ec0f902",
-  "assertion_count": 5,
-  "frozen_at": "2026-08-01T06:54:35.230Z"
+  "digest": "d9e468a2a75a0953545345d44c644dd8e6d4caf3fca54f072ee0b051adeb24a0",
+  "assertion_count": 8,
+  "frozen_at": "2026-08-30T07:02:02.000Z"
 }

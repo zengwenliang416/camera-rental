@@ -27,10 +27,10 @@
   ],
   "allowed_files": [
     "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
-    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/**",
     "camera-rental-server/sql/mysql/migrations/20260826_050_rental_device_catalog_management.sql",
     "camera-rental-admin/src/api/rental/device.ts",
-    "camera-rental-admin/src/views/rental/device",
+    "camera-rental-admin/src/views/rental/device/**",
     "camera-rental-admin/src/locales/zh-CN.ts",
     "camera-rental-admin/src/locales/en.ts",
     "camera-rental-admin/tests/deviceCatalogModel.test.ts",

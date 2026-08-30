@@ -55,6 +55,8 @@ DONE
 - `VITE_BASE_URL=http://127.0.0.1:5173 pnpm build:local`: passed.
 - `bash ops/github-deploy/tests/migration-runner-test.sh`: passed.
 - `bash -n ops/github-deploy/*.sh ops/github-deploy/tests/*.sh`: passed.
+- Authenticated Playwright video replay: 6 assertions passed; the 27.08-second
+  1440 x 900 WebM is registered in `e2e.md`.
 - Migration production/audit copies match SHA-256
   `a5b41f65114631f5d453ba1af4250bac59de5d33d08417e6579c14fa228acbf7`.
 - Scoped `git diff --check`: passed before report finalization.
@@ -65,6 +67,8 @@ DONE
   production or any shared environment.
 - The admin build retains existing unrelated Lightning CSS `*zoom`, dynamic
   import and large-chunk warnings.
+- The video replay observed one HTTP 503 for a non-core remote demo avatar
+  image; all task-owned API requests and browser assertions passed.
 - The global SpecNav handoff remains blocked by incomplete review artifacts for
   the earlier task `008-tenant-device-catalog`; no task 009 review-format or
   evidence blocker was reported.

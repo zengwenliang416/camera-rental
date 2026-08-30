@@ -13,6 +13,9 @@
     "10.3",
     "12.2"
   ],
+  "acceptance_primary": [
+    "A2"
+  ],
   "goal": "Deliver the approved five-step return experience in production Nuxt.",
   "must_read": [
     "openspec/changes/add-customer-return-registration/development/tasks/004-nuxt-customer-return-flow/brief.md",
@@ -29,11 +32,11 @@
     "openspec/changes/add-customer-return-registration/prototype/artifact/index.html"
   ],
   "allowed_files": [
-    "camera-rental-web",
+    "camera-rental-web/**",
     "openspec/changes/add-customer-return-registration"
   ],
   "test_paths": [
-    "camera-rental-web"
+    "cd camera-rental-web && bun test tests/return-registration.test.ts && bunx nuxi typecheck && bun run build"
   ],
   "non_goals": [
     "Do not add commerce checkout behavior.",

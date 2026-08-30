@@ -33,6 +33,10 @@ approved
 - The added services and queries are bounded; no broad framework changes were
   introduced.
 
+## Acceptance Assertions Verified
+
+- A1.
+
 ## Required Fixes
 
 - No required fixes.

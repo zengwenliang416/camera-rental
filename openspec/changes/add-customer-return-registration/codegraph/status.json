@@ -1,13 +1,13 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-08-25T14:46:14.534Z",
-  "project_root": "/Volumes/zwl/camera-rental-github",
+  "generated_at": "2026-08-30T07:11:47.338Z",
+  "project_root": "/private/tmp/camera-rental-specnav-verification-current-20260830",
   "active_change": "add-customer-return-registration",
   "policy": {
     "enabled": true,
-    "profile": "active_dev",
-    "mode": "advisory",
+    "profile": "bootstrap",
+    "mode": "observe",
     "stage": "development",
     "required_for_stage": false,
     "disabled_reason": null
@@ -15,8 +15,8 @@
   "execution_surface": "cli",
   "decision": {
     "stage": "development",
-    "result": "pass",
-    "reason": "CodeGraph policy satisfied for development."
+    "result": "warn",
+    "reason": "CodeGraph policy has advisory warnings for development."
   },
   "cli": {
     "available": true,
@@ -35,9 +35,9 @@
     ]
   },
   "index": {
-    "initialized": true,
-    "projectPath": "/Volumes/zwl/camera-rental-github",
-    "indexPath": "/Volumes/zwl/camera-rental-github/.codegraph",
+    "initialized": false,
+    "projectPath": "/private/tmp/camera-rental-specnav-verification-current-20260830",
+    "indexPath": null,
     "lastIndexed": null,
     "fileCount": 0,
     "nodeCount": 0,
@@ -51,6 +51,14 @@
     "worktreeMismatch": null
   },
   "blockers": [],
-  "warnings": [],
-  "raw_codegraph_status": null
+  "warnings": [
+    "codegraph:not-indexed"
+  ],
+  "raw_codegraph_status": {
+    "initialized": false,
+    "version": "1.3.1",
+    "projectPath": "/private/tmp/camera-rental-specnav-verification-current-20260830",
+    "indexPath": "/private/tmp/camera-rental-specnav-verification-current-20260830/.codegraph",
+    "lastIndexed": null
+  }
 }

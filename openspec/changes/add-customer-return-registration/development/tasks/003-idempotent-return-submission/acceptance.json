@@ -1,0 +1,3220 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "003-idempotent-return-submission",
+  "generated_at": "2026-08-30T06:45:32.135Z",
+  "recorded_at": "2026-08-30T06:35:28.324Z",
+  "status": "approved",
+  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
+  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "implementation_scope": {
+    "included_patterns": [
+      "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/**",
+      "openspec/changes/add-customer-return-registration"
+    ],
+    "entries": [
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/pom.xml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6e05dd65c2a45c333a64ac6b46e0a3b342cf6aa1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/config/RentalDeviceConfiguration.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "73049f25f1e3b7897fdb0fccf5a690c1a1e18220"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/config/RentalDeviceProperties.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3f267cc13a7bdb4982e8daf9b72e8766f74fa169"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/logistics/operations/RentalLogisticsOperationsController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0b97551fd761628ee5cf48e6f9168c53aaba3f41"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/logistics/operations/vo/RentalLogisticsOperationsReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c09ada1357b050295071907f0eb045043548c4c3"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/logistics/RentalDeliveryTrackingController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e88fcf5547829c598f4e655ac694eabe7b1e06d7"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/logistics/vo/RentalDeliveryRefreshRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "95567519f0df64448d8b76810be8c6cf57d4de98"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/logistics/vo/RentalDeliveryTrackingBatchReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1ff4df818b9422eea258a68dd3f2e553e566f653"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/logistics/vo/RentalDeliveryTrackingDetailRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "60f5afeb07e78e024a6a9b2465e73c1b1b1b9883"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/logistics/vo/RentalDeliveryTrackingDeviceRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5d545391c580336af6b2e78099789faca51013e1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/logistics/vo/RentalDeliveryTrackingOrderSummaryRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "84db5768532177e2e2ad20dfd1879029e90cf4e5"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/logistics/vo/RentalDeliveryTrackingPackageSummaryRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3089bde576c25c13edd098459e2ab26cd04ccf6d"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/logistics/vo/RentalDeliveryTrackingRiskRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7bef8e4338be497196ec4eaa0245d5510988d52b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/logistics/vo/RentalDeliveryTrackingTraceRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f51e178dd00acf40f35b03296fa7d5515893eb4f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/RentalDeviceController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "55e28727be870404b99dd5dbfef4276fc112a7ef"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/RentalDeviceLockController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0eb64e76addd6d800b8fdb4d2f05b982b40889c7"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/RentalManualReviewController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4d7dbf09114f95d4524f3dcf5c9ca17c473b0c50"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/RentalOrderLifecycleController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "86b7fb7abd7605aab4ca644af9e168eedc365a0d"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/RentalReportController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "74180e7da531f238baa5444c09a7db1800e619f8"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/RentalScheduleAllocationController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7d77708998e5a775d39e4fcd64fbd76a3e157881"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/RentalScheduleController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f73908fa6995f1421450b1dc72dd45f1ce7ae6dd"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceAssignReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4e20ef85d3c6b3a711d90d81098f9fa20fee3ef3"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceCandidateRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6cad0b05f63c31cd53dc76ddba057f024f05572f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceCandidatesRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a8fe75b3fba3f0cb2237e58722fecde26b6c70fa"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceCategoryCreateReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1638af5541772d21d5cc9571e573b223eafe35d2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceCategoryRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f6e5f7a78dd7a48aea5b4ccdaf05d288da43a00a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceCreateReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5fbe2089881bf91e0640d5c70d3c9e14e8d7d1e9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceDispatchReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2a8c8f3229edd2b05303b4d7046d6d182472937f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceGenerateFromPurchaseReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a0ccb87167dfe7f44a6a19107b27b947edf81fad"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceGenerateFromPurchaseRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ebffdc5b775521777225d341bd953570d4075d72"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceLockCreateReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "089cb051eee852f5235ca00b72453e7be394b40e"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceLockReleaseReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4d09cc48c3216b9dec3b33a9dd9de0c97d051cc8"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceLockRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "59e13a40a8d04a0b2ee8cc4e02c2db60c2d0083a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceModelCreateReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7f940679257470dc1d7a41faf362e64792788fed"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceModelRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e9e4b77645b0618c4f3ebe5ef3a10041b02f5416"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceOpsRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "97ba83e6d7d33bc19939669fbce904b179d87b47"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDevicePerformanceReportRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "236790271a340be6338390ddcec7cd350705a34c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceQrRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bf40af35ef0facd88e44d8604689b28aeae462d3"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceResolveQrReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bcd00e9448cad04a94b29c6a92c47c638542003f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "655b224029b6eac2a5e55e52f55c9c3ff372a8b2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceReturnReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f76c42476b7a2205573772a7148763793306da4a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceScheduleDetailRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3b501c15e79c15937c3e93276e32c682708cf1f6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceUnassignReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d14ccf32d410631b7bb9b53d88f5eb95dd3c8f44"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceUpdateReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "52a4c132ea5ff46cca3e53230180364b039a6eb7"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalManualReviewHandleReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "766ca54cf6b59d349bb54080fbd814e023222533"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalManualReviewRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d4f83faec2bb6739b8665d94fea849bc75d2c253"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalOrderCancelReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2aa942724d99fe5b6329c52d4984ad56c6ce28ee"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalOrderScheduleDetailRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4fedea2bb3c198c27c40661bd9a2f5179bea00c9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalPendingAllocationItemRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "888c491e2c3ae8cbe79658ee8167ac22407cabd1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalPendingAllocationOrderRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "90c39cf34083707f39b7960527b0c99970bda67a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalPendingAllocationPageReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "380314d8930cc010a5865b66e2ce0b544308800e"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalProductSkuReportRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3ae30e966f8c3d7c5417775d03443f7b2eb44bfd"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalReportOverviewRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "24f4b63aac8b3c60596f18fd9e7c62cdb9a92d19"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalReportQueryReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e3c5958adb691a83f02bf04543be9e53538b349b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalReportSourceRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "44f3946a9fbdc3a858dd9b818e6481e23288c861"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalRevenueReportRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "855fcc2f79bfaa9bc991587abe64598f5c93c2f6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalScheduleAssignmentRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f185c4bb7a7e159cb5dcb5a1c20dd2a3d23e2bb4"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalScheduleDeliveryRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a80686baced6c0885f78bed44c543b8a429211c8"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalScheduleLockRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "be93b0bd96d18772dcedc31b844684e26866a7c4"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalScheduleOrderItemRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "01d75c4d9cc9714ba606c036fceae767ee22c796"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalSchedulePageReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b9e6cde6722812d0adb5815ad33b36c3b7934066"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalScheduleRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bc71445b6fa19b80fc8bd0db470cb5326fbc70f8"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalScheduleSegmentRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "25817f6526e987e5d18e508e4c542a381cbbe63f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalScheduleWorkbenchDeviceLaneRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6a072e7d6bbf7288bf161b754818bb917392d94f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalScheduleWorkbenchExceptionRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "08c1a2489a742df3c16ff646ca653e500ba74a85"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalScheduleWorkbenchMetricsRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b26b9bd77c12f2c2fb66ab95bf25a2e288f9c696"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalScheduleWorkbenchPendingAllocationRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b9b762afdba65cd64ed112c8b005c03783bc5d10"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalScheduleWorkbenchReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "187ba4704e4de763271535dd8a8458b32d5d07ae"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalScheduleWorkbenchRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c13292fdeec6dae2f83f004b83aa73cc73aa0cbc"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalScheduleWorkbenchSegmentRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "82b6b301e4a1d27dada79e5eacee8f750b433892"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalScheduleWorkbenchWindowRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d1beaf459b3b58d55d74137eaadabac0f84aab66"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalShipDateSummaryRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "04878eede4f0fb769dabe56556307c83c821dc18"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/returnregistration/RentalReturnRegistrationController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1cb58828decd7ccde175e66e5144762f1fe2114c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuAfterSalePageReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6c7ef5b5ac07572a91291526c66399ce874cf506"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuAfterSaleRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "70a86eec427f06aec7b1a3cafd7e7939ec2b9b8d"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuAfterSaleSyncReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e0a87b20f3ed2d6554c202c59fe8e56025f562a8"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuAfterSaleSyncRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "28698a738e17ca4728026316c7dd089a5e4545a8"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuAlertPageReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "cc51b9636e3001ce10990c9927d02bb884d37624"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuAlertResolveReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f6375db555ba32195236d15ce6950f45f69e3d83"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuAlertRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "05f6d600733a092329104d603d6dc338105fe293"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuConfigRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4dbda0c1080e694912cc38d217088d9d01a178ad"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuConfigUpdateReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8131bb278bfbf4d9f56b3302a9b565d28826ebb4"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuExpressCompanyRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9903852d54883afc280a18661c97e133287ab3ca"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderDispatchBackfillReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ae287d41337a97b98aa62f951f5f62e1a616c904"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderPageReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5989ebf5ab7044c0fe501a3b150216be223be5eb"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c21f75669f52431696de9563e550931c0759c825"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderShipReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3c9df05dd004e439e98b565128d8a581f22a7a05"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderShipRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7ab255c776aab86860c8afd5fea098b19b07ae31"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderSyncReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d7f6aae27a1e5243edb183bcd0d6ca227b56ce58"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderSyncRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "91f2aa985c949727a00ecf2349843b9ba0603af4"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuPendingShipOrderPageReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a3468d6c6d7f7785d5d06dd9713deef735558b4d"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuPendingShipOrderRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "363f31b81487a9c614bd8eb5d45e7f30513e7e33"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuProductSyncReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9db9e8388ae574c13cf35a2fd206ae5ace8f0326"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuProductSyncRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "37a158c5daf8d17053a958115d6fed47ddba8e55"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuPushReplayReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5c704b4c34fea001ba8c1c2ab69faed38219715c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuPushReplayRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bcca9c917f26a0d9a6b3bb4e6df7964e47f5391a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuRawPayloadPageReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "81b85dcd5ac41c69cbff9f95677f75d5aca03dac"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuRawPayloadReplayReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b067918213b23211a7b49bcfe5589527c5ef5411"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuRawPayloadReplayRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3c5e33dcc23c8e47ccb68bcb3d473e740e08a5e0"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuRawPayloadRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b8b6c50180ddb3f809df8f9e34b992f22538a4d2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuShipmentOcrRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7ca47f89a8e2cdc5e74b909178a57cddc47d1be2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuShopRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "244eb348c9a55e9f0ee9310f00b1d261a090b986"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuSyncRunPageReqVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1c583b68515303229e5c970704db63640831fbb1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuSyncRunRespVO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "dae6451a8a6e051176af2646c90d78e6623bc5c4"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuAfterSaleController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ae08f0b6a0bf122b5daf7e999b3e7bffa2267545"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuAlertController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4d4f983d0ad8247ecefaa056ccf945bef2642127"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuConfigController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fb70f6c878aa69870806ab62e714a95b86a3dbba"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuExpressCompanyController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "64fdb5ca52898b3dc0736242f1be14bb2f0facc6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5e42ad0169636187def8d12a522ef9cb977d6f68"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuProductController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f580672e10dcefd3668394a536f3e7d3bde22063"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuRawPayloadController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3c5caa8800f4fc80178a441161e2c3e6ec4cb5b7"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuReplayController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6b34c6891d0ffa840bbae7146a0f5ce63f102477"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuShopController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1626619c0e822f6680ae4cf1e4e6cf35787e1ac6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuSyncRunController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9846e1dcd310a9baa31e4a2123b950c265e13614"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/app/returnregistration/AppReturnRegistrationController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1ebf6bedfdb3e2c85a4f899b404859cfa9c2ce68"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/webhook/logistics/Kuaidi100TrackingWebhookController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4747a6d04b81556a894440198d9641ec05ab3d44"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/controller/webhook/xianyu/XianyuOrderWebhookController.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4efde305a2fe27d3101d88e50cd19655dbfe1e16"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/logistics/RentalDeliveryCallbackInboxDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2ff2037b94831efb13f59653fcae0b9955bb1fe4"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/logistics/RentalDeliveryDeviceRelDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d85f75ba0f60a6425c789534a1fa615385d27d99"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/logistics/RentalDeliveryDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "40b0019efa84f38ffa0376aa1dff4af01f4fc884"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/logistics/RentalDeliveryOutboxDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "76f1115b2deb84cbb48b4bed92a652d7412cbda4"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/logistics/RentalDeliveryTraceDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6ec3842569c8498462571edd8ee92e7110cffb91"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/logistics/RentalLogisticsCarrierMappingDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "16f2a2062062cbc7dce481bd029a8c2d82cd1deb"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/logistics/RentalLogisticsProviderConfigDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7c1b0b7d4514354e40f34486aa313ee5d1117189"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/logistics/RentalLogisticsProviderCredentialDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4e17397bcd97ddd80f2aa30b72ac1ffd46e5e4f7"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/rental/RentalDeviceAssignmentDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1cb9fc4bc21b91283ea5488718e18fdcb9e9252a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/rental/RentalDeviceCategoryDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0ff68ed804ba84df81963900d51e016dc0ddc63e"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/rental/RentalDeviceDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2c01ef47b19be3c0c231899d68dfb17a114a45d6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/rental/RentalDeviceLockDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "283f8691337b551cdd2fce770619d24be5925bc1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/rental/RentalDeviceModelDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "830921317bbdbfc22a449f65c41e1bfbfdf17cfb"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/rental/RentalDeviceShipmentDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c3f2c0f4aaf460dec885e2cfe83306d95b780198"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/rental/RentalManualReviewDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e530f419639a1447e140967d285995d931f4de85"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/rental/RentalOrderDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ddb972dcd0cbed550f845d519928f9bee3205fe7"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/rental/RentalOrderItemDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "97a9ba4a01f2f080938540007f11973d10537418"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/rental/RentalScheduleDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "927ea2796bb61d777a6f886d02401f12d5ba219b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/returnregistration/RentalReturnRegistrationAttachmentDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e3e91025b289414ee1e676574e5a968685a355bb"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/returnregistration/RentalReturnRegistrationDeviceDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5bce717150089b710532beedfe8faded3d0e86ef"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/returnregistration/RentalReturnRegistrationDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "820ceb04079929200a55c0c67eff4e3b59007b55"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuAfterSaleDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "12d1aacf334f08f22a6295e0b922f4a7c2cc61f8"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuAlertDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8453b009f982cd40b392bd0379bcf5ec06fad543"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuApplicationDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b61c12fc976bb02ef3696f1454403fb33b75adad"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuOrderDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "14b6eccee40642ebf269508b86086a8b7b74c086"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuProductDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "47e54eaa3f285943e7246baf721a434381fb14be"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuProductMappingDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9f43498d051118058e7fdd98b4feca91485ce2d1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuProductSkuDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6761b0830b33677fc97f2d459ac4d87f8b12acdd"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuPushEventDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7e73df88f86051fc38657d12315cf510b6061cc9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuRawPayloadDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bd609527d223a26b04ab7cdc9c1e973e94a98c17"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuShopDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b32c35b570649ac0cdb8819e593666cfd6619f3f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuSyncCursorDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "62fb6babaa996aa8f35904e09180f9c4c9967d04"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/dataobject/xianyu/XianyuSyncRunDO.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4ef8e0116dba193f3033e48c8ceabb8ad745f4d1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/logistics/RentalDeliveryCallbackInboxMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f0faa782232c4841cab0b481a921ad4a8a2d1550"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/logistics/RentalDeliveryDeviceRelMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d449de4391943815f296b2b406e3b58d978806be"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/logistics/RentalDeliveryMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "641b610655fe8160f8dc9b98d268e899c13b227d"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/logistics/RentalDeliveryOutboxMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b93f556023813165983bcf145e0f17fbddafa5cd"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/logistics/RentalDeliveryTraceMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fa78dc107c50653b6be5bcc993120c56befa24d9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/logistics/RentalLogisticsCarrierMappingMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "19c86f37c47eff07c3c5b10a9d246e5700738ca2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/logistics/RentalLogisticsOperationsMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ac1e334aa3c0989ca93402d5de5b18de20448a4e"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/logistics/RentalLogisticsProviderConfigMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "826eca9e01871f8931f74e0377327f9f866bc02f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/logistics/RentalLogisticsProviderCredentialMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "76b29d572e4fcc6a7e88f754459b876ae6cd4983"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceAssignmentMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "52c64bc8b64f29dd7e112ff29d344b2705646c70"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceCategoryMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d2521bef31fd8c82331667053db0c0b2dd1070aa"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceLockMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "69989be654cf3871c4c75582b25e56d7f3a02094"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "75f5ecc1f03b4f6574fe0755f0e586698359ee80"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceModelMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "59046f7e556e4c14fb6e74a1fab16e4356618f28"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalDeviceShipmentMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c146cc3496a8cc9e121fc54bad14119c75389262"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalManualReviewMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5d0595534e987da4bfd18560727deebef7c451dc"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalOrderItemMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c3aa117bb279b4c33f4e26c261f94160c502c576"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalOrderMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d5e2df54995d27d303c0b4269e34b5a4a1b34090"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalReportMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "374073b3987cd933607fa155deddedfe095842ce"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalScheduleAllocationMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "05cec712d06f340777ba050f4461a07de0906f9f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalScheduleMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6c2ff5712c94b0d5910bba157e82bd25ff2773cf"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/rental/RentalScheduleWorkbenchMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "09e02e93ac5448f5afcef28c6ab9477adab078bc"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/returnregistration/RentalReturnRegistrationAttachmentMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "35a81266bbb0bba491b8542d6c94e4a92effe67b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/returnregistration/RentalReturnRegistrationDeviceMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e29f7be97ffff47bcc593260610ec2ca349df30b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/returnregistration/RentalReturnRegistrationMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c97a0be8181fe2cf1259ce417efd1f98b9d51d07"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuAfterSaleMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "38745781d581c5dcbd0e927e951268f4cf78cf9a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuAlertMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "16f46b157b797fa3fbf04c1ba93a07eee17401bb"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuApplicationMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5c73029993916999079651ecf3f862e17cb0888e"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuOrderMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "04768199c62fa57bc999cd6af16a4825ac379a0b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuProductMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6c5f5fb113bca01889110eb71ff69222c4c92308"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuProductMappingMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "718b59df8abe806e55a1d94ebc820df75a985810"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuProductSkuMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d80f9d9ca5a5b644124199e8d4fc562e39ec9d71"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuPushEventMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "03033a2c8b932af7b575482e2c3a4e08cf71c337"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuRawPayloadMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "60e25d5188923f55b4b14c8cff8808eba651d447"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuShopMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "189b4e956e08ca2c71c9859b78d74d8a9e7bafec"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuSyncCursorMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fc2abc38797e5aaf8aa20e38cc07eb60fe3d9211"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuSyncRunMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "76d7564968a8d8e1d2dd9447f090f45fda5d98a2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/logistics/RentalAsyncProcessingStatusEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "90dbee20fb2464804631677e78bd9aa904c055c2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/logistics/RentalCarrierMappingStatusEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f5bbb3029932cb8806caff588be3ab9ee2650226"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/logistics/RentalDeliveryDirectionEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2fa9e46922132aebe47b49dac2313e66cadf6a73"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/logistics/RentalDeliveryLifecycleStatusEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6a48c3853bcdd3a553de5e9944c114be50da9c54"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/logistics/RentalDeliveryOutboxEventTypeEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "383890852e67a6743ddd458b27c4d7fe212453bf"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/logistics/RentalDeliveryQueryStatusEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e43fd632bb5e65afde3b5644453da6569e48fadb"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/logistics/RentalDeliverySubscribeStatusEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "118a86e76ddf0017e2c193fc6f8913159b4195f1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/logistics/RentalLogisticsPhoneRequirementEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f9e89ce456fbc8316786edb499eed20071135a04"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/logistics/RentalTrackingStatusEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d57d6ee46875f41c5f2ad548203ac17b095969a1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/rental/RentalDeviceLockStatusEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0d270c2f4a769ad70326b5b18c8fb0f5473de45f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/rental/RentalDeviceLockTypeEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9fa094df7bc5ec374716fea7402f0a579e1fc861"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/returnregistration/ReturnAttachmentCategoryEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "23e422d66e0244131cfea8fffdd0bc9ef3470eba"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/returnregistration/ReturnDeviceMatchStatusEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "383dcac8b76c6dc3e696e8757f5235fa8cccdb61"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/returnregistration/ReturnMethodEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "be040b9f01c35f86d89fe1282cc68a82ca4521dc"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/enums/returnregistration/ReturnRegistrationStatusEnum.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bf4fd73a7f748b52dcd2edd603f871ce9818ff79"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/kuaidi100/Kuaidi100CallbackReceipt.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f550a4581f4c63fd13711acebcbe320357a1b0c2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/kuaidi100/Kuaidi100CallbackService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a832044801a8858baedb1d357c8b3b37b230e377"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/kuaidi100/Kuaidi100Configuration.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d6cd7fd5772f65cb94706055796194d1aa12a81b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/kuaidi100/Kuaidi100Converter.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8d2a147888b4135031ad730383be0a4521354262"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/kuaidi100/Kuaidi100Gateway.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1b41544360b85046c8b6320eef22d2ebae8dd815"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/kuaidi100/Kuaidi100HttpGateway.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1cd87a5f007f9398e71b3000874de41b224e2e7a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/kuaidi100/Kuaidi100LogisticsProvider.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a100ae7d0fe529dadf28593f1157d7bfad8ac199"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/kuaidi100/Kuaidi100Signer.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2a81bcaead7f07762d70c4aa97a1db064ea06cd6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/kuaidi100/Kuaidi100StatusMapper.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c3a3bb48e9ceae300dab94099260562f12a090a9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/LogisticsCallbackCommand.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "012c462f2595449b86f1b276cf56cdf21a2f6ac0"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/LogisticsOperationResult.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a6dadfb21145f11343e8d53608e27dbe43862185"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/LogisticsProvider.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1b0dc7c08d6d5e8434c3c691023fabdd4ec52d89"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/LogisticsQueryCommand.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bb588c5d486d16c232303c25626bd61145d01547"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/LogisticsSubscribeCommand.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "231342b85b307ee3dad323ac7c5adcdc1c919754"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/LogisticsTrackingEvent.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d7e0da4ce07c1c098623e75c0824a29feb7fd560"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/logistics/LogisticsTrackingSnapshot.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a01dbd0506355b2f6dabdd3d3b2b775ad0ff981f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/ocr/config/ShipmentOcrConfiguration.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "276224b3abf50ceda350c1760b9fa3b973155b38"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/ocr/config/ShipmentOcrProperties.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1c18358da4a17904dfd18834992c17a3a1196ff7"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/ocr/OpenAiCompatibleShipmentOcrClient.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "aafe8d9df40373089ebc83817c00c53d3d79b7f8"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/ocr/ShipmentOcrClient.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a575d85e673540246806971314538dcc697e6679"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/ocr/ShipmentOcrResult.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1d90be1ae73504d6cfc71e9d55a51c593264c99c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuCanonicalJson.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "cd78f90d7d9dff7482027ca140c9d05ed2c3cbd5"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuClientException.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5e2d8c1a540e95113a3116887d93b0dd93428d71"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuReadClient.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b1dae53f469bc413f0deff4f453813d680597f81"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuReadEndpoint.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4fdd5c7297d1cade9350f414adaa18141c91f6b8"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuReadResponse.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1f0c41d33e34c58df76f7588b72a39ae9f269450"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuRequestSigner.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "89adecb22b1ca33182fd02380600fe7af241371c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuWriteClient.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "70fe8ec94227cbc70de145900539125c7d1f21c5"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuWriteEndpoint.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "25538aed130082addd44b7b05a74be936d2e05a7"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/config/XianyuConfiguration.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "35b4a295020e6eb8d89f1897d46d0d0cdffbe32d"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/config/XianyuProperties.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "80dbddc9b3716e357a9c5b7ad67afa012e708933"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/config/XianyuRuntimeConfigService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d176442ef7a2035ed8b6cceacfe492c93caad888"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/security/XianyuLogRedactor.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "20ce3842a01829761c1120923bfc9fcda40a1506"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/security/XianyuSafeErrorCode.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "cbe9e40a56aa5561aa1c0060d313f3bc6ec0c116"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/security/XianyuWebhookSignatureVerifier.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8ac8bf5643f50099c7dabce57d1765233d147c78"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuAfterSalePage.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f8aa575e10c795d79e093f7999998cd97768dc78"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuAfterSalePageParser.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4560f74fe02da9bac23f4f03aa383bea092d0499"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuAfterSaleSnapshot.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6e3a409c2d8f9602cf1d5437ed54c9756bd0a623"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuAuthorizedShop.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8702a58fe8a101991d470d678b31c7779676ac00"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuAuthorizedShopListParser.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "dfac2ff6a711046124acd014dfa1ede3ed929cef"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderListEntry.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "df4f762348e3b9cb1fd496edaa9e753b140f5148"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderListPage.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c13cbe38541f024895a9b3547a0c0ce4656f9172"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderListPageParser.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "79a937e100aa160b2bd41158c741f6cf5003bf83"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderPageSyncResult.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2abc7d711184b0e5ab2bb5cd938da4014a2967bf"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderPayloadParser.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d8f9a6bea1db5436fdb0f2946e89857be3c6db3c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderPersistenceService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6d7ca3cf4e4338e7d8906c5a10836e077a86fd55"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderPersistenceServiceImpl.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "336ddbabbe42718c0b9f668aa12d72fdd45898bf"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderSnapshot.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "91d551f3025b37a1566524d5f504c935622d65d5"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderSyncService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e15ad44de30c278854ca50edd217c3cb8bd708ce"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderSyncWindow.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ccc95baa97664c690b1444d7a0aa64a0fd349b71"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuPayloadHasher.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ad7c23f50d37d52009c1010f62d6c72ed3e1bab5"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductDetailPayloadParser.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8e20bf37f6ca460a11f7b24d803a99eadf5390b6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductListEntry.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7684b366f1b21e906eb916e97f32382df1673d7d"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductListPage.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "89bcb83c18ff666fddbb61928e869c8a3d77bdd2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductListPageParser.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f92960da25744010045164c450bf92bd5ac35a04"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductPageSyncResult.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "18c16ed36ff2c221a095c679fc2418d2dbf3d1c9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductPersistenceService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b343df2c595828f6e06cdd0e992e683a4e613936"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductSkuGroup.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2de8999eac9101dc4028564cab4bc5052fbec45a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductSkuPayloadParser.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a822a926d6e090e416fca5a1d28296e8f6d1243e"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductSkuPersistenceService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e6715cbe4768a679d810c3a8d0f4ce6fa0a3be3b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductSkuSnapshot.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ef0f89a39f96a1bb218e9666dcb00743b24dc236"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductSnapshot.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d8b444a8e3c51166e06c3ef649023300049820a4"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductSyncService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4b88ce3b16e41c25eb1230458fc5c1ef1b0f9d5e"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductSyncWindow.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "943c28995743ceac064a04e04203dcbcd72d5023"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuSyncCursorAdvancer.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8d4db7e9aa71cbb31b2ee19db69d174058ed048c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuOrderPushConsumer.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8f5bccbfe0b1b1e70fca2e0057f61a265369c1ec"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuOrderPushPayload.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "dbdba5a342e74cccdffb751ca17de63e189a782a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuOrderPushPayloadParser.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9053cf5ecf9c07f7926ec59e8022c3b74abda595"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuOrderPushReceivedEvent.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bdf8bad79e640339a004e173355aaf70a5f8d291"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuOrderPushShopResolver.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ec8763c41e78fdf8a49f0088ea00c974a8f5ef59"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuOrderWebhookPersistenceService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5f68be91fd4eeb3ebb434d0a0f16bad318575d89"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuOrderWebhookService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "34c2f51db8fbed82c0d0af88e3a7aab5314b4246"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuProductPushConsumer.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7916a41db7b0380a325de864b9faf882dd3f4f00"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuProductPushPayload.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c581bf28f6eec15c3cda4dec9b2b5a447bbdb9e1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuProductPushPayloadParser.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1c2abd80d89b8c39562f6b5f39b90a37a867397f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuProductPushReceivedEvent.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "99e2d6219d8b81d12411c95cca37014af655d8a0"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuProductPushShopResolver.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ad13bd0ccdb38b702cdfcd6f934c29c3f163ef4b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuProductWebhookPersistenceService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d05ed07f2b23507567badd68a677406c4ac7e058"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuProductWebhookService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d2245f99820e6729b45fcaa71de1ce968de271d6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuPushEventPublisher.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9172c490ce41f178e05dab98583df08a00d4b465"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuPushEventStateService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fc5f7c64a03e168f3a0c56b0e83c95ac4be512da"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuPushReplayOutcome.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2da61fe96fc55ce01c29444f9bbdb0850b114b96"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuPushRetryService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5a5a28f34e754e4f9057ad557dbfa02dc9f613a7"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuWebhookReceipt.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5535e0ab1ff7778f6a825012d0c749d5b0b152d0"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/logistics/RentalDeliveryInboxJob.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8f9f703cf06b04beee759aa1241bf20a6e30a8c6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/logistics/RentalDeliveryOutboxJob.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f8054a817481378f3f43aec4cf8ed1c6ca1ac872"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/logistics/RentalLogisticsCompensationJob.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bc1ab3c6d59bbccf392bb983ae44dfb1640df8aa"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuAfterSaleSyncJob.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5dd504e9f1578bec54b3d5cc52b1df2cb400b454"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuInfraJobRegistrar.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a64dd0c85a575332148b767c1d4ace97c76be818"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuOrderSyncJob.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "011a81417c4162f37dba63b519e0f7510081e270"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuProductSyncJob.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9e703e2c294a28140d26cf9bdf2e561b6fa25841"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuPushRetryJob.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4f202089ae87f1bf5ea8f3bd3983fb34ff510c19"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuShopSyncJob.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "20fefbe482fc20a95878eb6822e7a1f0e7e33b49"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuTenantJobGuard.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b2ff8f9692c2917d12c13fbb22e0ba1feb18ca0f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/package-info.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "31fd14c9719af327a86eeb682052fb7d4c36c702"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2967a9965d516f8fb23ab8ffd29ca61954a137b2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceDeletionGuard.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c15ea490fbc295a86de8c3aace5b84e07972dd0d"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceInboundService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b78afa95c9a0c25e7801a86fc3a17dc7fc2497c5"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceLockService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2b67e3aea888ccdb94267504a62e14d1162621c3"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceOpsService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "16479259b8cf0f86b85669528a497623b13215eb"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/RentalManualReviewAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5d1ba4167fd36a17521e4a2875a2c82c34f36516"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/RentalOrderLifecycleService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e07ac056cf97bff0e0c10f0cae0c0ccfbaf4d423"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/RentalReportAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "66d118ee2658e4c918caefbc80d8efd1adff8480"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/RentalScheduleAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0b5e9ba10870168dd5711bf5df7387678695ff5c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/RentalScheduleAllocationService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9a67389c10884d8637eabb5e58297ed842d37df2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/RentalScheduleWorkbenchService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a51f39afd8bd7fd9264dabfc66afac1a72b22af6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/ShipmentOcrService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9d34e0338094415edec710d53702dce37d699a17"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuAdminPrivacyMasker.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "83d8618fdf728bac42beef3acb9aa47d5f379301"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuAfterSaleAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a823aea41135110e7f6bbb994220cdfd4204fd7e"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuAlertAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f2114bdf5396dfe656c098c11ff1d46e6148e1c5"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuConfigAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f767c8641f4e1c622fd16886355ef531247e0c39"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuExpressCompanyAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "018f7dc60c027307955a5e141f6e7b6a51a4f1bd"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ac8589a86243fafe28b2dfebcf5d5b20c54501c7"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderRemarkReparseService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ab31ed891f12fe319aed7d082f3fd93e21b1847c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ea3bbc6c3be7b5b20a0f10414e6b04f0120328b9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuProductAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b5fc80413c90b67cbcbbd79662e2480e92233a58"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuRawPayloadAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8fe1e52ad3a199b9ea731e1a7211067c6e4b3d18"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuReplayAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9ceaad7fb756d1112296f68eb47c495155c1ecf4"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuShopAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "35c6d584c729b40e1ce431231b3335d16b63f397"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/admin/XianyuSyncRunAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5bc37c6bdd526e7242929926e6903bf29f19d784"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/device/RentalDeviceCatalogService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "48773c3e5c24a007ea24524a61ce6b4fdd2e9975"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/device/RentalDeviceCode.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0974f2f39b0044cd49eb0d9e2e22d25ac2a16291"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/device/RentalDeviceQrCodec.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ab0b86f7b8f42b3a71bf3467928a2d555a1b6c1b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/LogisticsHashing.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a56baadae0bead2e8998fb3ecf28cbdf5a84e469"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/NormalizedTrackingEvent.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "661195bfc73951c054614657bd872140a0062ce6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/NormalizedTrackingSnapshot.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2dcd6598720154ac90fc67a0e324246e770f2b47"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsBackfillService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4acb66c163ed99d8c87db93875fb818c1ba31f69"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsBackfillTransactionService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "65fff7ab920287a235da8cd93b3f7e129e73bcc2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsCleanupService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "52a53a70899e607eda2aa163a0a26e7aeb633b7f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsConfigurationOperationsService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "161024477662044ffec3bdc5bfbaa93bf777c9ad"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsMetricsService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2e557de92081416b3f4088a5d9372aa0d162f1a4"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsOperationsModels.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "628d66c941d48cc9f98adf465cde3b161ab9b1f3"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsTaskOperationsService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c4d55046c001d8b996cc08e8ec353e66d4b9b236"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalAsyncRetryPolicy.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ae67cd205efd1f3a67307709761a8bf0861fda52"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalCarrierMappingService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ee4b0c5453d514f63eae2f81bb3330cfe4f103f7"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalCarrierResolution.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "efa416bb6c5e83731ebc2209bf01c0e1d25d3683"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryCreateCommand.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ffe329f0accdb84e777e7b875bf18dda246a807c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryDeviceCommand.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2288b684b061569b542b8b7960d83ea01222a508"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryInboxCompletionService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f366ef557d4ca816a09d823d909f01c74d2b7874"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryInboxLeaseService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6b987a236bbe13c1496ce23f1feee16ed9bdc052"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryInboxService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a7c8b1711b59dcb1481a077dd6dc48a11212dfae"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryInboxServiceImpl.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "030e85b7a672d34a7df0719b4dc3b07a8b9c29d5"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryInboxWorker.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ee60b2d789454f8929caac781d5d1b64023cf02f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryOutboxCompletionService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "643e637259b1d754ea66c804f94d3e4e9aacc56a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryOutboxLeaseService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ab131e8630be10a10bdfda2307261e345cb0f6c0"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryOutboxService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "41c026262b50b02240409bf6eac60a1f81dbc5b5"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryOutboxServiceImpl.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ff39d45b513e707ec866df099a8a199dc36bfff9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryOutboxWorker.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "065b46243c9c3f2606b905721612b832c4e39e22"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryRefreshResult.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "adb54acdb85b5ff9701f31b58d8340d7882c6c98"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryResult.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a8d8346977f44d9a31c7d47323e12726f538d280"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ddc3ca22ba81793f34cfbbf323e348db42c57a51"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryServiceImpl.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fb3c339a819043cbdd07e96780f43f62a26953ba"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryTrackingQueryService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5fb852196fa88f2f30aa34bcdf6088dd827149da"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryTrackingRefreshService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9d8f4f24efa2873115fb5c8b3e605a67555c274e"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalInboxWorkItem.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "17a6388612d8837cf8397b6b289195ed2f44122c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalLogisticsCompensationService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "119ebcdd326a308439f7c11566356ef21c231ddd"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalLogisticsException.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2e26e5c3de6fcaf45805894f6374d2a7fb115ef2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalLogisticsProviderConfigService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ec47df2acf4c9a30d6037fb22bfc1b624418b60d"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalLogisticsProviderCredentialService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c928101d7edb9a089a3b5fef1089cbe50dfccadc"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalLogisticsProviderRegistry.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9517eff397ed526063eaf4c0fa27d8bbcd752c50"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalLogisticsRisk.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "74f51e771223eaa0f51d8b53bfaadbee7cad90cd"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalLogisticsRiskService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "55695e321a725826be085e1f1fcfdc299fb63d06"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalOutboxWorkItem.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fe8cd75d6a92e0e1262bb0f7ad8903808e917fe8"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalTrackingSnapshotService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "44d4a5034ef7519b357b18a14712edfe61c13589"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/RentalTrackingSnapshotServiceImpl.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6110720591374ccef30cc70500421f09cd2a49b3"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/SensitiveValueRedactor.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8cea4da5ea7b768b625f5f74470418cfc5d9b367"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/TrackingSnapshotNormalizer.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e7612befad74324aeb3d60e76119f1925af01c6a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/WaybillPrivacy.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8aaee962843a982d64a1c1ba233fcf5e42b07d8b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/logistics/XianyuOrderDeliverySyncService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c4a76d69265606da830e618ec048a9038dac8ac6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/RentalConversionResult.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0f35d956af1664aab09fa05a24e0853cea1cd30c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/RentalDeviceAssignmentCommand.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "afdddb2cff273692566e214f9c2d8f889ffca987"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/RentalDeviceAssignmentException.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b73191104ef1ecf2b74f263b5929063c839951d8"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/RentalDeviceAssignmentResult.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8cbf11b8c88b9c5c6d7d67810656650280253566"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/RentalDeviceAssignmentService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ac042e2a9c883f512181902afc750c0380237fe9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/RentalDeviceAssignmentServiceImpl.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "23141ee8f75c34ea84e4f7c7f12731e9b63fa93f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationAdminService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3bf24e08391622e49e6d65d0189562ec91add4d1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationAttachmentService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d4bf2dd7961e2b07606d0e5804f6de80716918ed"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationModels.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "17f4399987b37e59fd891492f36eeb92a743e168"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationOrderVerificationService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f18f54101ddb7a1c347829dbb2536471ca78637b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationPublicService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "96ee650544bb549447924cdafc8e73fde20880b6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationRateLimitService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a701a79f93f66e1e03f0d1b034306930400315fa"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationResolver.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "869d950eb400388d8da449eed675308703c12aaa"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationSecurityAuditService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "34f28cd84598c99f42c3d6a31d7ac72cf8cf02a2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationSessionCookieService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2bc286e1c63a3709daf322476fad9aa5c4f0bfb9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationSubmissionService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "066ffa641ad3e478bce9683fa56557d98a0c89e8"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationTokenService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "dc1404ab5b46d45d8d2fb949c8b1f0c4602b2da4"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnSerialNormalizer.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e7bab0e30279a3a18f31cc64e67d407bb9d2464e"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/SellerRemarkAiFallbackService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "770f5ae37c3cc605fce0f3d78c2297e16842d577"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/SellerRemarkRentalPeriod.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "74696606a7a0573408678ec5882c4c1d535857ee"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/SellerRemarkRentalPeriodParser.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d88e174e452a94a24fef41ccd1b62bf0980742cc"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/SellerRemarkRentalPeriodResolver.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e1f97e3e15c5e32f0939cd27a3461d80ee55a1d2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/SellerRemarkResolution.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4d0289aff31c00f37d2a237eabe228ef7761e681"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/xianyu/XianyuChannelSyncService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "219bcabde0226afeebefd399b0018b688dc6d5f2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/xianyu/XianyuSyncLockKey.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a6a12e1cdfbe5a2a4866559627ec2615f8c6f19c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/XianyuRentalConversionService.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "66e263bce02497a293553523aa5d90693e9262c4"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/XianyuRentalConversionServiceImpl.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d4e1c52db3be9b7a3408988aa451162acc36199a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/resources/mapper/rental/RentalReportMapper.xml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "51fc70c81f78282c618ef45b509b14cb4ac0cd74"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/resources/mapper/rental/RentalScheduleWorkbenchMapper.xml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4c862e7a10d959940eaadf50708f2cbbeaa51cd0"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/controller/admin/logistics/operations/RentalLogisticsOperationsControllerTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "edf5be2555f3d22a6d5e571f15cc7ca406cf1756"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/controller/admin/logistics/operations/RentalLogisticsOperationsPermissionMigrationTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0629822eb5130210e9a2e3b9e5916132132dbbbc"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/controller/admin/logistics/RentalDeliveryTrackingControllerTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7a5f5f981a9080bcf4a262962b4051edbcaa8ccc"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/controller/admin/rental/vo/RentalDeviceAssignReqVOTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "580d6c48701b5d51cf07e0cca6bb5e4cd92f9037"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/controller/admin/RentalAdminOnlyConfigurationMigrationTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b3804a58f819c4290ba15c2d91f59ec1793cf6e1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/controller/admin/RentalShipmentPermissionHierarchyMigrationTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "232bc2a333c9624b6a1db36aed1f672cf7afd74c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/controller/admin/returnregistration/RentalReturnRegistrationControllerTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5c998b51a8335b4b4e73e07fe82d9cf8d0e8378d"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/vo/XianyuOrderRespVOTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4e03897fe89e76f54876e48375f29f4cba74bcf2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuConfigControllerSecurityTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "cb07d2eeb505dd60aa6db51cb05d34595a07cdd9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/controller/admin/xianyu/XianyuOrderSyncReqVOJacksonTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0971989c9191660900b4fbf5beefad12ebfec859"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/controller/webhook/logistics/Kuaidi100TrackingWebhookControllerTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "577030e3000892e2a0ffc08380695109b53fe29f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/controller/webhook/xianyu/XianyuOrderWebhookControllerTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "619404140fd64a5f248f12456f8a9bb7ccc994da"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/dal/mysql/xianyu/XianyuOrderMapperTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3c63c28527ebfe543c821e7401d1ee4bf60950a8"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/logistics/kuaidi100/Kuaidi100CallbackServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a40516b191c458fbeac5dbc7eb083c51619a28e5"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/logistics/kuaidi100/Kuaidi100LogisticsProviderTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7b6d063a47f1a81928fa7076cd744f9555357470"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/logistics/kuaidi100/Kuaidi100SignerTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "24cb9b3dc92f458639b86f0d3ea4081c99dda590"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/ocr/OpenAiCompatibleShipmentOcrClientTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bc0a78bf021f9f24ccf53b39333f0e11d114e844"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuReadClientTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2aa6a9e742f38fa0e7c47be2e99607956dcb732b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/client/XianyuWriteClientTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b240e57a3da0c2ce3c385772dac455a50611fd37"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/config/XianyuPropertiesTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f2dd56f7728e94f506c87b92a0c63fc246f07719"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/security/XianyuSafeErrorCodeTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7a2b2df05ddf6f45187cd7f446a76e7f69286510"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuAfterSalePageParserTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8fba3127af4a7cddfff58db3a2952f1ca38f0dff"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuAuthorizedShopListParserTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "890852e035643043cb078973ed7bce8396bb6c41"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderListPageParserTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7e3c44455f09f16690140be4e16fb4fc9352db03"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderPayloadParserTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "36e300c52ceb5f8989a15c7fa66c3702e9893df5"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderPersistenceServiceImplTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6c3866e9ee5db2eb1360317ccfa9e9487ed4981b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderSyncServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fc78e0b47b7b84d411cc4117e8926c409dbd947b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuOrderSyncWindowTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1c5eae876628d8936ce5c54153e626dc21c4642e"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductDetailPayloadParserTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4bbd1fa3b43b54a945fea7d022e4b2fc630915b1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductListPageParserTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "df3bcbfc7ee37e01d369b923fa6dbc9bb8be4244"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductPersistenceServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f5e031ec91c09e4c82d3221b379807bcc807c1e1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductSkuPayloadParserTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bc5585da978a3562420d356301415be0804d9398"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductSkuPersistenceServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f512cd057f1a463213f1ca36787ab4dcfc985017"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuProductSyncServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a75824f839be6d59d9f414611c9d23002ab72605"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/service/XianyuSyncCursorAdvancerTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a908d4bb29c94f20dafaeb029f9a40a0de4d8ffd"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuOrderPushConsumerTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4a1d081087588f729145650f257111c462f47706"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuOrderPushPayloadParserTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3363b600324b963757fbcdca77d6159f271bb243"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuOrderPushShopResolverTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "13c80e4d873e4b95f02480021fe13ed02be20929"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuOrderWebhookPersistenceServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5f534ad39c7361c0a93eedd895c993b5055d4f1f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuOrderWebhookServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8130121d598d32adb23ee5ccc4324b57d32c2130"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuProductPushConsumerTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a582790dd15a0feb8141d918114295bd53ed10d0"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuProductPushPayloadParserTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2ca8cfdde1ccaf088d7e9a055709e35e9c651db8"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuProductPushShopResolverTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d6552c5c0fdf6f63ba8cfd1ecdd00759e8f6f47a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuProductWebhookPersistenceServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "10e117ad37d8b06d8ef91e0b7005a877cea6f926"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuPushEventPublisherTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "cdba5ed8e4d1f88ca7af8e9709cd923d97c0c15f"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuPushEventStateServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "97048effa5ddf521452deda42cc88d0f1aa40f94"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/integration/xianyu/webhook/XianyuPushRetryServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c3b7780053fb4842d8ed1d7f3501e560c1a4ae57"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/job/xianyu/XianyuScheduledJobTenantIsolationTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8bc779696d7b7df1493e6ca78496ba8bea38c2a6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b0e01f7ecb04c90093f5b97c16c6fe8350d5489b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceDeletionGuardTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "710e9b157b1c5a193c786a4e199e9e70b0c22357"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceInboundCategoryTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "66b4293e64de6397d2d44f3d3db5d46c527eabb6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceInboundServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f6d7c2451e84b2022e69d2b70ac1622ee832439a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceLockServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "17c185f7b8a89d1907de86f710cefbc91a0ffe18"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalDeviceOpsServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "68e669ec80ae2197e295a495e942f6b4a6e51a51"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalManualReviewAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "cdf7c5d88f5677bd6ea8c0e758fb29b3009219ed"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalOrderLifecycleServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ab54c8756ba09344fb8c079a37255a5060af92c5"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalReportAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1c665f42f47ae7b0d606976b219fcb3f8b8e0df9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalScheduleAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8b705f60cbe33104c40103ed2d667803503af006"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalScheduleAllocationServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a879cf63275b422f286862e3545e61d19f6e2fc6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalScheduleWorkbenchServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f2aa5b064798dae954949a123fe6bb2ee98dea1c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/ShipmentOcrServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a485f1af8f948e20895d824fc2c4be698e019938"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuAfterSaleAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "264e1a86ed510ff3ca564a2bc951baa7fe74ea45"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuAlertAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "73eb2b2efa58fab44faf11c627f3bcdf7b28a5c1"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuConfigAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0b83393610bc65bc94993b50a7175fe092453b57"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuExpressCompanyAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4cf4f1974a0cfa2de09ccfc63eced62ef43fba18"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3faecf0e61b98d8373946590ff0b1cacebc5fab4"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderRemarkReparseServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "89de18242a9759d1ce0cf415c10e6365a0d564fd"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fc8b2fe08f4009f3507c74f0c4cd77c66e1ac0de"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuProductAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "23ed5b7735306d0a6f4313eb74f39fce86cb319d"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuRawPayloadAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b4efb40b66661d44cbc043c48211ac6f2e4c2a2b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuReplayAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3ebe7bfd40deadaba2023faee4d8d38716da9810"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuShopAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b37000375975c4ce44170c4a91fbb320f4ea6899"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuSyncRunAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e52e4734b95eeed6297e4bc2bbeeb3723b229ea2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/device/RentalDeviceCatalogServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1fe75050c884a07852913c4574ca31abbc5f833d"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/device/RentalDeviceCodeStandTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7328d691377584a8887b7da7dbb7286637144674"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/device/RentalDeviceCodeTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b14f8bcb43304fe731599f8b4143d5ef93624da0"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/device/RentalDeviceQrCodecTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3187c801d72945a6a981ec1961330f2819f1b5f9"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsBackfillMapperContractTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ba831e3ecf0fdc852bca1fa82cece76371e7d365"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsBackfillServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9d9d393565065c0b30f5a5fcd9c7763fd386dc85"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsBackfillTransactionServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4165b1c210607951790698f34de8c08cd039a677"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsCleanupMapperContractTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "722d5827bb8fd3352dfa5cf66c3ceb9dba1884ca"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsCleanupServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "05e5386be3e0dbdce39e1f69decf40c34323b01d"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsOperationsConfigurationServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6cefcf9bf5e8926af90ef44fe7ff282d0623ad83"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsOperationsMetricsServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7adbb651553c86070bbfa6a068aa7ac314e9b18c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/operations/RentalLogisticsOperationsTaskServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e06944e37c128dc55a6723282ac75a599dc32d6d"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalAsyncRetryPolicyTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3fad657092dad5e30c26d6307eae446ba02724b2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalCarrierMappingServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5d9dd7fa20be3e88e9268d0ced07b40187bd6f86"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryInboxCompletionServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "202b55794016ab5a8aec4f619af5a46acbb0c576"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryInboxLeaseServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c8dec5a3a564ab8ef39f0946b41b737b3c81e47b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryInboxServiceImplTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "66403213d86e576c3d633187c11295fee35960fe"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryInboxWorkerTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f60af8e965fc776c3090f48a7ef92a20840e3cae"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryOutboxCompletionServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "599ccca04784e8586710d9215e0c67a85338b95a"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryOutboxLeaseServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1382f1933c9ff95a88b137e7a1053cb2b20a12f4"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryOutboxServiceImplTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5f3a8fe7fd2ed9f668e8ac4d878c37a510051e50"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryOutboxWorkerTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2f858a411fad129deda9f76ea87ad880e24ae2ba"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryServiceImplTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ce2b509c03fe204fa735d5a861ceddb19a62de0c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryTrackingQueryServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "484ced639013151000669fde3877790b0ea61f3b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalDeliveryTrackingRefreshServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e4f51201e28597090e13496c9cb8e9e6c07b1a3c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalLogisticsMysqlConcurrencyTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e39ab60308bbe147f88bb4e43693b95d741a2e64"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalLogisticsProviderConfigServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3fd3f1ecf8aca21e7ab99d7317ab7c070554f16b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalLogisticsProviderCredentialServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fa739b56bf77178f94ece077900c32746be34588"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalLogisticsRiskServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1a98597156a59a3b08cc81e738376f1b73e76dde"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalLogisticsSensitiveFieldTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "eaecc52dca05c229bcfd7469cfe4676abab6815c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/RentalTrackingSnapshotServiceImplTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3fb99a88ac6c3330bd0e71a661b577f915e5e9bb"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/TrackingSnapshotNormalizerTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d24ac9a3bf4e9929cf6cba387c1a37ffec2d084e"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/WaybillPrivacyTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "333b4545f130bb4a7c340c366364b5079afb2695"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/logistics/XianyuOrderDeliverySyncServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "adbd405111a3e8ca3025548fa355025c08bc5488"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/RentalDeviceAssignmentServiceImplTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "aba859e27d9a24f4fbc1b9a043d7d338411fe533"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationAdminServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bd49f0e788a3774ed7a0484b67826a2954015e6c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationAttachmentServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2e90c1470a2f8ae1257693bbd7512c45fb9ec0b7"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationModelsTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c90f5a4b6849d3239850c45b53ecf0a9380806b2"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationOrderVerificationServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6a1495e34d6f68953860054288f7e3761ad6cecb"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationPublicServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "72d205907ffe4c40139475d4f489bc240c8d52c6"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationRateLimitServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b3d5412163a10b9e6022adc80f8d1f893e491f8b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationResolverTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "144c5be0f43ac8b6c908a37788e48f5f0d1e3287"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationSessionCookieServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fe63b89e574ca5f04f904cc44e277ceb28962494"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationSubmissionServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9f2cbab9da4fc26dba336d908d21fa8e6349c69c"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnRegistrationTokenServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e804f0105894aca5c92eebd988383a184f642125"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnSerialNormalizerTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3ce6fc289fba5bac6d8249c229a78cb87d9dd132"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/SellerRemarkAiFallbackServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b3fe4b18544bf7b1bddd475d8544643a1fc63f79"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/SellerRemarkRentalPeriodParserTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e3a3c879c2b10ca7c138dbe8273e1371c4f801fc"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/xianyu/XianyuChannelSyncServiceTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fefdaea56bdcb4bd3f101001c16cfa81e9da758b"
+      },
+      {
+        "path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/XianyuRentalConversionServiceImplTest.java",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9cb5a5ab8986c7b790b2c7681d3b31407be9916f"
+      }
+    ],
+    "sha256": "316c0ffaaf0ba31d35447ff575d242bde8258cbab6159311379950155f3715ca"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/003-idempotent-return-submission/context.json",
+      "sha256": "d67462e145837c51680099a9332691bae647698d9848c52740b4c7f369dacd29"
+    },
+    "report": {
+      "path": "development/tasks/003-idempotent-return-submission/report.md",
+      "sha256": "5782766f98de63419138c949df7a5ad3ac9b39a75932b32b75183d91cbbf70fd",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/003-idempotent-return-submission/spec-review.md",
+      "sha256": "e60cfa3ca09b2eff818a1c18ef3c3fe3bc922c9bee80f37fb97be0db36b00b48",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/003-idempotent-return-submission/quality-review.md",
+      "sha256": "ccfb2195d1e5ad1f70d3a4c8073b86514f0e9bfab82319146c428fc2409ea7a7",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-fd1c9c4675813413214b072a0d18c9b80dc73a0b24bab002caeb10cadd8a55cb",
+      "command": "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest='ReturnRegistration*Test,RentalReturnRegistrationControllerTest' -Dsurefire.failIfNoSpecifiedTests=false test",
+      "assertion_ids": [
+        "A4",
+        "A2"
+      ],
+      "recorded_at": "2026-08-30T06:35:28.324Z",
+      "validation_receipt_sha256": "9c467d28ab7cb7d701a9676294d29fe13bcddb4bcb63c632d4ef1dba1ee4a959",
+      "evidence_log": {
+        "path": "development/evidence/004-003-idempotent-return-submission.log",
+        "sha256": "f1345e7859a4de42361c78485764bd553b8654239d4444ba1bc0c017a6b572f7",
+        "size": 40236
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A4",
+      "parent_id": "A4",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-fd1c9c4675813413214b072a0d18c9b80dc73a0b24bab002caeb10cadd8a55cb"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "A valid submission creates or reuses one RETURN delivery without changing device, order, inspection, or schedule lifecycle state."
+    },
+    {
+      "id": "A2",
+      "parent_id": "A2",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-fd1c9c4675813413214b072a0d18c9b80dc73a0b24bab002caeb10cadd8a55cb"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "A customer can submit return logistics, assigned device serials, required photos, and optional packaging photos through the public link."
+    }
+  ],
+  "fallback_used": false
+}

@@ -172,5 +172,143 @@
     ],
     "blockers": [],
     "recorded_at": "2026-08-30T09:42:57.580Z"
+  },
+  {
+    "id": "execution-attempt-20260830100434-17ce522d3e167ea3",
+    "run_id": "run-20260830100434-17ce522d3e167ea3",
+    "attempt_id": "attempt-20260830100434-17ce522d3e167ea3",
+    "case_id": "admin-return-operations",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "admin-return-operations:assert-1",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-30T10:04:57.465Z"
+  },
+  {
+    "id": "execution-attempt-20260830100457-af904888579528e1",
+    "run_id": "run-20260830100457-af904888579528e1",
+    "attempt_id": "attempt-20260830100457-af904888579528e1",
+    "case_id": "device-catalog-numbering",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "device-catalog-numbering:assert-1",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-30T10:05:09.450Z"
+  },
+  {
+    "id": "execution-attempt-20260830100509-5d84ef99b7c4cd36",
+    "run_id": "run-20260830100509-5d84ef99b7c4cd36",
+    "attempt_id": "attempt-20260830100509-5d84ef99b7c4cd36",
+    "case_id": "device-delete",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "device-delete:assert-1",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-30T10:05:20.705Z"
+  },
+  {
+    "id": "execution-attempt-20260830100520-ca05ec9e0e98e192",
+    "run_id": "run-20260830100520-ca05ec9e0e98e192",
+    "attempt_id": "attempt-20260830100520-ca05ec9e0e98e192",
+    "case_id": "device-edit",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "device-edit:assert-1",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-30T10:05:35.637Z"
+  },
+  {
+    "id": "execution-attempt-20260830100535-5e1162f08a5ae287",
+    "run_id": "run-20260830100535-5e1162f08a5ae287",
+    "attempt_id": "attempt-20260830100535-5e1162f08a5ae287",
+    "case_id": "migration-integrity",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "migration-integrity:assert-1",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-30T10:05:36.001Z"
+  },
+  {
+    "id": "execution-attempt-20260830100536-5a249f1581152537",
+    "run_id": "run-20260830100536-5a249f1581152537",
+    "attempt_id": "attempt-20260830100536-5a249f1581152537",
+    "case_id": "return-entry-session-security",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "return-entry-session-security:assert-1",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-30T10:05:48.665Z"
+  },
+  {
+    "id": "execution-attempt-20260830100548-c84f79b0b95e7cbc",
+    "run_id": "run-20260830100548-c84f79b0b95e7cbc",
+    "attempt_id": "attempt-20260830100548-c84f79b0b95e7cbc",
+    "case_id": "return-private-upload",
+    "status": "passed",
+    "assertions": [],
+    "blockers": [],
+    "recorded_at": "2026-08-30T10:05:56.186Z"
+  },
+  {
+    "id": "execution-attempt-20260830100556-f1ae3800867e63b5",
+    "run_id": "run-20260830100556-f1ae3800867e63b5",
+    "attempt_id": "attempt-20260830100556-f1ae3800867e63b5",
+    "case_id": "return-review-required",
+    "status": "passed",
+    "assertions": [],
+    "blockers": [],
+    "recorded_at": "2026-08-30T10:06:03.934Z"
+  },
+  {
+    "id": "execution-attempt-20260830100603-6450991611f79b4d",
+    "run_id": "run-20260830100603-6450991611f79b4d",
+    "attempt_id": "attempt-20260830100603-6450991611f79b4d",
+    "case_id": "return-success-idempotent",
+    "status": "passed",
+    "assertions": [],
+    "blockers": [],
+    "recorded_at": "2026-08-30T10:06:09.100Z"
   }
 ]

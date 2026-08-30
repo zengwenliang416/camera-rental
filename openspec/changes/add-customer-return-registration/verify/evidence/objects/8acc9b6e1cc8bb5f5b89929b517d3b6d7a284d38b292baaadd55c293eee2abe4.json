@@ -1,0 +1,30 @@
+[
+  {
+    "id": "vc01-fixed-entry-visible",
+    "method": "equal",
+    "actual": true,
+    "expected": true,
+    "status": "passed"
+  },
+  {
+    "id": "vc01-receipt-accepted",
+    "method": "equal",
+    "actual": true,
+    "expected": true,
+    "status": "passed"
+  },
+  {
+    "id": "vc01-submit-count",
+    "method": "equal",
+    "actual": 1,
+    "expected": 1,
+    "status": "passed"
+  },
+  {
+    "id": "vc01-normalized-machine-code",
+    "method": "equal",
+    "actual": "P4-01",
+    "expected": "P4-01",
+    "status": "passed"
+  }
+]

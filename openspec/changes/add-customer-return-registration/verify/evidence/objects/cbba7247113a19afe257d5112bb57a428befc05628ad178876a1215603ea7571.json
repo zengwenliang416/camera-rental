@@ -1,0 +1,23 @@
+[
+  {
+    "id": "vc03-private-upload-order",
+    "method": "equal",
+    "actual": "[\"verify\",\"authorize\",\"put\",\"confirm\",\"submit\"]",
+    "expected": "[\"verify\",\"authorize\",\"put\",\"confirm\",\"submit\"]",
+    "status": "passed"
+  },
+  {
+    "id": "vc03-confirmed-file-bound",
+    "method": "equal",
+    "actual": "[1]",
+    "expected": "[1]",
+    "status": "passed"
+  },
+  {
+    "id": "vc03-upload-success-visible",
+    "method": "equal",
+    "actual": true,
+    "expected": true,
+    "status": "passed"
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "vc02-review-required-visible",
+    "method": "equal",
+    "actual": true,
+    "expected": true,
+    "status": "passed"
+  },
+  {
+    "id": "vc02-unified-error-visible",
+    "method": "equal",
+    "actual": true,
+    "expected": true,
+    "status": "passed"
+  },
+  {
+    "id": "vc02-no-authoritative-side-effect",
+    "method": "equal",
+    "actual": 0,
+    "expected": 0,
+    "status": "passed"
+  },
+  {
+    "id": "vc02-submit-count",
+    "method": "equal",
+    "actual": 2,
+    "expected": 2,
+    "status": "passed"
+  }
+]

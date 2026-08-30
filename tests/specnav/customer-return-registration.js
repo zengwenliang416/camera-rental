@@ -1,7 +1,6 @@
 'use strict';
 
-async function installReturnRegistrationMock(page, mode) {
-  await page.addInitScript(({ scenarioMode }) => {
+function returnRegistrationMockBootstrap(scenarioMode) {
     const stateKey = `specnav:return-registration:${scenarioMode}`;
     const initialState = {
       submitCount: 0,
@@ -208,16 +207,20 @@ async function installReturnRegistrationMock(page, mode) {
         }
       };
     }
-  }, { scenarioMode: mode });
+}
+
+function createReturnRegistrationMockScript(mode) {
+  return `(${returnRegistrationMockBootstrap.toString()})(${JSON.stringify(mode)});`;
 }
 
 const scenarios = {
   'return-success-idempotent': {
     scenario_data: {
-      start_url: 'http://127.0.0.1:4190/return'
+      start_url: 'http://127.0.0.1:4190/return',
+      mock_script: createReturnRegistrationMockScript('success')
     },
     scenario: async function ({ page, assertion, data }) {
-      await installReturnRegistrationMock(page, 'success');
+      await page.addInitScript({ content: data.mock_script });
 
       await page.goto(data.start_url);
       const heading = page.getByRole('heading', {
@@ -255,10 +258,11 @@ const scenarios = {
 
   'return-review-and-security': {
     scenario_data: {
-      start_url: 'http://127.0.0.1:4190/return'
+      start_url: 'http://127.0.0.1:4190/return',
+      mock_script: createReturnRegistrationMockScript('review')
     },
     scenario: async function ({ page, assertion, data }) {
-      await installReturnRegistrationMock(page, 'review');
+      await page.addInitScript({ content: data.mock_script });
 
       await page.goto(data.start_url);
       await page.getByPlaceholder('例如 P4-01').fill('UNKNOWN-01');
@@ -304,10 +308,11 @@ const scenarios = {
 
   'return-private-upload': {
     scenario_data: {
-      start_url: 'http://127.0.0.1:4190/return'
+      start_url: 'http://127.0.0.1:4190/return',
+      mock_script: createReturnRegistrationMockScript('upload')
     },
     scenario: async function ({ page, assertion, data }) {
-      await installReturnRegistrationMock(page, 'upload');
+      await page.addInitScript({ content: data.mock_script });
 
       await page.goto(data.start_url);
       await page.getByPlaceholder('例如 P4-01').fill('P4-01');
@@ -331,13 +336,13 @@ const scenarios = {
 
       assertion.equal(
         'vc03-private-upload-order',
-        state.events,
-        ['verify', 'authorize', 'put', 'confirm', 'submit']
+        JSON.stringify(state.events),
+        JSON.stringify(['verify', 'authorize', 'put', 'confirm', 'submit'])
       );
       assertion.equal(
         'vc03-confirmed-file-bound',
-        state.submitAttachments,
-        [1]
+        JSON.stringify(state.submitAttachments),
+        JSON.stringify([1])
       );
       assertion.equal(
         'vc03-upload-success-visible',

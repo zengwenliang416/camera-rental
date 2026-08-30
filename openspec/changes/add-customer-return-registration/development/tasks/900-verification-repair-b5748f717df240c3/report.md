@@ -2,7 +2,26 @@
 
 ## Status
 
-IN PROGRESS
+READY FOR REVIEW
+
+## Repair
+
+- Replaced the Kernel-denied `page.route` interception in
+  `tests/specnav/customer-return-registration.js` with page-initialized
+  deterministic API mocks and an `XMLHttpRequest` upload shim.
+- Preserved the private upload order, confirmed attachment binding, and
+  visible success assertions.
+- Repair commit: `1ffb55fc8169325a9c0cd42e629f4642271a6258`.
+
+## Validation
+
+- `node --check tests/specnav/customer-return-registration.js`
+- Direct Chromium execution through the installed Verification Kernel
+  Playwright API guard: three assertions passed, the event order was
+  `verify`, `authorize`, `put`, `confirm`, `submit`, and the denied-method list
+  was empty for `return-private-upload`.
+- Formal Verification retest and regression remain owned by Verification and
+  have not been claimed by this Development report.
 
 ## Frozen Evidence
 

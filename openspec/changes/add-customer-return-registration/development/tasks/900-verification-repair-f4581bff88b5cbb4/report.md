@@ -2,7 +2,25 @@
 
 ## Status
 
-IN PROGRESS
+READY FOR REVIEW
+
+## Repair
+
+- Replaced the Kernel-denied `page.route` interception in
+  `tests/specnav/customer-return-registration.js` with a pre-navigation
+  `fetch` shim installed through `page.addInitScript`.
+- Preserved the fixed entry, normalized machine code, accepted receipt, and
+  single-submit assertions.
+- Repair commit: `1ffb55fc8169325a9c0cd42e629f4642271a6258`.
+
+## Validation
+
+- `node --check tests/specnav/customer-return-registration.js`
+- Direct Chromium execution through the installed Verification Kernel
+  Playwright API guard: four assertions passed and the denied-method list was
+  empty for `return-success-idempotent`.
+- Formal Verification retest and regression remain owned by Verification and
+  have not been claimed by this Development report.
 
 ## Frozen Evidence
 

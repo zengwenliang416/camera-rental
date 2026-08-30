@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-08-01T06:59:55.546Z",
+  "generated_at": "2026-08-30T03:30:18.837Z",
   "active_change": "add-customer-return-registration",
   "claims": [
     {
@@ -8,7 +8,7 @@
       "kind": "development-task",
       "stage": "development",
       "task_id": "001-secure-registration-foundation",
-      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "text": "An authorized operator can create a link for one eligible rental order and the",
       "required": true,
       "source": "specnav-codegraph-plan",
       "source_paths": [
@@ -16,13 +16,14 @@
         "openspec/changes/add-customer-return-registration/development/tasks/001-secure-registration-foundation/context.json"
       ],
       "expected_evidence": [
-        "Focused tests or command output",
-        "Task report",
-        "Spec review",
-        "Quality review"
+        "Executable migration",
+        "Focused token and persistence tests",
+        "Development task report and reviews"
       ],
       "allowed_files": [
-        "src"
+        "camera-rental-server/sql/mysql/migrations",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+        "openspec/changes/add-customer-return-registration"
       ],
       "query_ids": [
         "development:task-001-secure-registration-foundation:evidence"
@@ -33,7 +34,7 @@
       "kind": "development-task",
       "stage": "development",
       "task_id": "002-private-rustfs-upload",
-      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "text": "A customer with a valid return token can authorize, upload, confirm, preview and",
       "required": true,
       "source": "specnav-codegraph-plan",
       "source_paths": [
@@ -41,13 +42,16 @@
         "openspec/changes/add-customer-return-registration/development/tasks/002-private-rustfs-upload/context.json"
       ],
       "expected_evidence": [
-        "Focused tests or command output",
-        "Task report",
-        "Spec review",
-        "Quality review"
+        "Attachment policy tests",
+        "RustFS compose validation",
+        "Cross-token and cross-tenant denial tests"
       ],
       "allowed_files": [
-        "src"
+        "camera-rental-server/yudao-module-infra/yudao-module-infra-api",
+        "camera-rental-server/yudao-module-infra/src/main/java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+        "ops/rustfs",
+        "openspec/changes/add-customer-return-registration"
       ],
       "query_ids": [
         "development:task-002-private-rustfs-upload:evidence"
@@ -58,7 +62,7 @@
       "kind": "development-task",
       "stage": "development",
       "task_id": "003-idempotent-return-submission",
-      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "text": "A customer submits logistics, assigned device serials and confirmed photos and",
       "required": true,
       "source": "specnav-codegraph-plan",
       "source_paths": [
@@ -66,13 +70,13 @@
         "openspec/changes/add-customer-return-registration/development/tasks/003-idempotent-return-submission/context.json"
       ],
       "expected_evidence": [
-        "Focused tests or command output",
-        "Task report",
-        "Spec review",
-        "Quality review"
+        "Idempotency and concurrency tests",
+        "Device matching tests",
+        "No-lifecycle-side-effect tests"
       ],
       "allowed_files": [
-        "src"
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+        "openspec/changes/add-customer-return-registration"
       ],
       "query_ids": [
         "development:task-003-idempotent-return-submission:evidence"
@@ -83,7 +87,7 @@
       "kind": "development-task",
       "stage": "development",
       "task_id": "004-nuxt-customer-return-flow",
-      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "text": "A customer can open `/return/[token]` in WeChat, complete the five steps, retry",
       "required": true,
       "source": "specnav-codegraph-plan",
       "source_paths": [
@@ -91,13 +95,13 @@
         "openspec/changes/add-customer-return-registration/development/tasks/004-nuxt-customer-return-flow/context.json"
       ],
       "expected_evidence": [
-        "Focused tests or command output",
-        "Task report",
-        "Spec review",
-        "Quality review"
+        "Nuxt production build",
+        "SSR-safe type check",
+        "Mobile and desktop browser evidence"
       ],
       "allowed_files": [
-        "src"
+        "camera-rental-web",
+        "openspec/changes/add-customer-return-registration"
       ],
       "query_ids": [
         "development:task-004-nuxt-customer-return-flow:evidence"
@@ -108,7 +112,7 @@
       "kind": "development-task",
       "stage": "development",
       "task_id": "005-admin-return-operations",
-      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "text": "Operations staff can create and copy a link from an order, page registrations,",
       "required": true,
       "source": "specnav-codegraph-plan",
       "source_paths": [
@@ -116,13 +120,15 @@
         "openspec/changes/add-customer-return-registration/development/tasks/005-admin-return-operations/context.json"
       ],
       "expected_evidence": [
-        "Focused tests or command output",
-        "Task report",
-        "Spec review",
-        "Quality review"
+        "Admin permission and service tests",
+        "Admin type check and production build",
+        "Browser review flow evidence"
       ],
       "allowed_files": [
-        "src"
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+        "camera-rental-admin/src/api/rental/returnRegistration.ts",
+        "camera-rental-admin/src/views/rental/return-registration",
+        "openspec/changes/add-customer-return-registration"
       ],
       "query_ids": [
         "development:task-005-admin-return-operations:evidence"
@@ -133,12 +139,109 @@
       "kind": "development-task",
       "stage": "development",
       "task_id": "006-production-release-verification",
-      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "text": "The selected feature-owned commit can deploy from GitHub to `154.9.235.80`",
       "required": true,
       "source": "specnav-codegraph-plan",
       "source_paths": [
         "openspec/changes/add-customer-return-registration/development/tasks/006-production-release-verification/brief.md",
         "openspec/changes/add-customer-return-registration/development/tasks/006-production-release-verification/context.json"
+      ],
+      "expected_evidence": [
+        "Migration shell tests",
+        "GitHub deployment run result",
+        "Production public upload and database evidence"
+      ],
+      "allowed_files": [
+        "ops/github-deploy",
+        "ops/rustfs",
+        ".github/workflows/deploy-211.yml",
+        "openspec/changes/add-customer-return-registration"
+      ],
+      "query_ids": [
+        "development:task-006-production-release-verification:evidence"
+      ]
+    },
+    {
+      "id": "development:task-007-admin-device-category-catalog",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "007-admin-device-category-catalog",
+      "text": "The management device page loads the authoritative catalog from the rental",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-customer-return-registration/development/tasks/007-admin-device-category-catalog/brief.md",
+        "openspec/changes/add-customer-return-registration/development/tasks/007-admin-device-category-catalog/context.json"
+      ],
+      "expected_evidence": [
+        "Seven focused backend tests for catalog, create validation, stand codes and ERP inbound classification",
+        "Three frontend catalog model tests",
+        "Admin TypeScript check and local production-equivalent build",
+        "Same-origin browser interaction evidence for all seven categories",
+        "Migration checksum and rollback strategy"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+        "camera-rental-server/sql/mysql/migrations/20260825_049_rental_device_category.sql",
+        "camera-rental-admin/src/api/rental/device.ts",
+        "camera-rental-admin/src/views/rental/device",
+        "camera-rental-admin/src/locales/zh-CN.ts",
+        "camera-rental-admin/src/locales/en.ts",
+        "camera-rental-admin/tests/deviceCatalogModel.test.ts",
+        "ops/github-deploy/migrations.txt",
+        "openspec/changes/add-customer-return-registration"
+      ],
+      "query_ids": [
+        "development:task-007-admin-device-category-catalog:evidence"
+      ]
+    },
+    {
+      "id": "development:task-008-tenant-device-catalog",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "008-tenant-device-catalog",
+      "text": "The existing device-create dialog loads the tenant catalog, allows an",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-customer-return-registration/development/tasks/008-tenant-device-catalog/brief.md",
+        "openspec/changes/add-customer-return-registration/development/tasks/008-tenant-device-catalog/context.json"
+      ],
+      "expected_evidence": [
+        "Focused backend catalog, uniqueness, device-number and ERP inbound tests",
+        "Focused frontend catalog model tests",
+        "Admin TypeScript check and local build",
+        "Migration checksum, validation and rollback documentation",
+        "Scoped diff review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+        "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+        "camera-rental-server/sql/mysql/migrations/20260826_050_rental_device_catalog_management.sql",
+        "camera-rental-admin/src/api/rental/device.ts",
+        "camera-rental-admin/src/views/rental/device",
+        "camera-rental-admin/src/locales/zh-CN.ts",
+        "camera-rental-admin/src/locales/en.ts",
+        "camera-rental-admin/tests/deviceCatalogModel.test.ts",
+        "ops/github-deploy/migrations.txt",
+        "openspec/changes/add-customer-return-registration"
+      ],
+      "query_ids": [
+        "development:task-008-tenant-device-catalog:evidence"
+      ]
+    },
+    {
+      "id": "development:task-009-admin-device-maintenance",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "009-admin-device-maintenance",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-customer-return-registration/development/tasks/009-admin-device-maintenance/brief.md",
+        "openspec/changes/add-customer-return-registration/development/tasks/009-admin-device-maintenance/context.json"
       ],
       "expected_evidence": [
         "Focused tests or command output",
@@ -150,7 +253,7 @@
         "src"
       ],
       "query_ids": [
-        "development:task-006-production-release-verification:evidence"
+        "development:task-009-admin-device-maintenance:evidence"
       ]
     }
   ]

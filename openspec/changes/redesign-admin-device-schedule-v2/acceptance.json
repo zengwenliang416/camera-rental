@@ -6,36 +6,36 @@
       "id": "SCHEDULE-V2-01",
       "statement": "The workbench renders 14, 30 and 90 day device timelines from server-authoritative occupied ranges.",
       "verify_via": "e2e",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "camera-rental-admin/tests/scheduleModel.test.ts"
     },
     {
       "id": "SCHEDULE-V2-02",
       "statement": "Hundreds of devices are searchable and paginated by device lane rather than schedule row.",
       "verify_via": "unit",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalScheduleWorkbenchServiceTest.java"
     },
     {
       "id": "SCHEDULE-V2-03",
       "statement": "Pending and partially allocated order items expose server-selected candidates and use transactional assignment.",
       "verify_via": "e2e",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/RentalDeviceAssignmentServiceImplTest.java"
     },
     {
       "id": "SCHEDULE-V2-04",
       "statement": "Device, order and logistics details open in right-side drawers without exposing unnecessary customer data.",
       "verify_via": "sensory",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "camera-rental-admin/src/views/rental/schedule/index.vue"
     },
     {
       "id": "SCHEDULE-V2-05",
       "statement": "A device remains occupied through outbound, customer possession, return transit and inspection completion.",
       "verify_via": "unit",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/RentalScheduleWorkbenchServiceTest.java"
     }
   ]
 }

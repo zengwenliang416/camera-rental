@@ -11,6 +11,16 @@
     "11.4",
     "12.3"
   ],
+  "acceptance_primary": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A5",
+    "A6",
+    "A7",
+    "A8"
+  ],
   "goal": "Prepare and verify the complete return registration release path for the 154.9.235.80 production host.",
   "must_read": [
     "openspec/changes/add-customer-return-registration/development/tasks/006-production-release-verification/brief.md",
@@ -27,14 +37,13 @@
     "openspec/changes/add-customer-return-registration/prototype/artifact/index.html"
   ],
   "allowed_files": [
-    "ops/github-deploy",
-    "ops/rustfs",
-    ".github/workflows/deploy-211.yml",
+    "ops/github-deploy/**",
+    "ops/rustfs/**",
     "openspec/changes/add-customer-return-registration"
   ],
   "test_paths": [
-    "ops/github-deploy/tests",
-    "ops/rustfs"
+    "bash ops/github-deploy/tests/migration-runner-test.sh && bash ops/github-deploy/tests/incremental-build-lib-test.sh && bash ops/github-deploy/tests/prepare-production-80-test.sh",
+    "bash -n ops/rustfs/*.sh ops/github-deploy/*.sh ops/github-deploy/tests/*.sh"
   ],
   "non_goals": [
     "Do not publish unrelated worktree changes.",

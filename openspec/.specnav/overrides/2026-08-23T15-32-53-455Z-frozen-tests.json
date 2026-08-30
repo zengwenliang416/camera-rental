@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "gate": "frozen-tests",
+  "reason": "Approved acceptance requires missing refunded-closed, cross-tenant, business-key conflict, conversion, and Delivery rollback cases to be added to this focused test file.",
+  "requested_by": "codex",
+  "created_at": "2026-08-23T15:32:53.448Z",
+  "expires_at": "2026-08-23T17:32:53.448Z",
+  "active_change": "add-xianyu-dispatch-backfill",
+  "affected_path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/admin/XianyuOrderShipServiceTest.java"
+}

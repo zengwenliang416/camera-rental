@@ -23,7 +23,7 @@ approved
 
 ## Acceptance Assertions Verified
 
-- A2, A3, A4.
+- A2, A4.
 
 ## Required Fixes
 

@@ -1,0 +1,226 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "004-nuxt-customer-return-flow",
+  "generated_at": "2026-08-30T06:45:32.193Z",
+  "recorded_at": "2026-08-30T06:35:42.710Z",
+  "status": "approved",
+  "reviewed_git_head": "3dd93fc0da232b63eec389956da882b41bcf8f8e",
+  "reviewed_git_tree": "a719269ac66863ad4ba5b924b5e84f88c533695e",
+  "implementation_scope": {
+    "included_patterns": [
+      "camera-rental-web/**",
+      "openspec/changes/add-customer-return-registration"
+    ],
+    "entries": [
+      {
+        "path": "camera-rental-web/.gitignore",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "cfd8b89d5ba26991ad8dff91a1b245e98f7335ae"
+      },
+      {
+        "path": "camera-rental-web/AGENTS.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "25d4d7a4a8fe473492c37bbefd6c8e95d0ad68bd"
+      },
+      {
+        "path": "camera-rental-web/app/app.vue",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5c9e4ffd3fec2823296b547da789e53e1d2142e7"
+      },
+      {
+        "path": "camera-rental-web/app/assets/return-registration.css",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f4e56957ff54854e85490996710c7f0a0d3fd52b"
+      },
+      {
+        "path": "camera-rental-web/app/components/return/ReturnPhotoField.vue",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "882c2777f9131b82acd3b365b846b531f9ff43fd"
+      },
+      {
+        "path": "camera-rental-web/app/components/return/ReturnProgress.vue",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ee429a3989098f9610563730cd17649f3ef8619c"
+      },
+      {
+        "path": "camera-rental-web/app/components/return/ReturnStatusPanel.vue",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fc25efd71af6d32a249251c1b523eb3447dce166"
+      },
+      {
+        "path": "camera-rental-web/app/composables/returnMessages.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3d52e2c358aef4025af8457a5ea3da8c870104aa"
+      },
+      {
+        "path": "camera-rental-web/app/composables/useReturnPreferences.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "611d2b3459fa476adb67c78ce9a8bbcf5023ca4e"
+      },
+      {
+        "path": "camera-rental-web/app/composables/useReturnRegistration.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "068c47af3e530e46b6ee3c39f463d1d1ae6ecfe5"
+      },
+      {
+        "path": "camera-rental-web/app/pages/index.vue",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e384175063b8cfe0d19bbdad155783ddc48c2b60"
+      },
+      {
+        "path": "camera-rental-web/app/pages/return/[token].vue",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "30fa210275500c1d82d8d73bb003c33d09ab04d2"
+      },
+      {
+        "path": "camera-rental-web/app/pages/return/index.vue",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b790f7972509cb6bb267c59ef721063d0707d183"
+      },
+      {
+        "path": "camera-rental-web/app/types/return-registration.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "346075b46f83eb16645eed05e789127268136b5b"
+      },
+      {
+        "path": "camera-rental-web/app/utils/returnSerial.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "04ce604e9def014fd749f2725f8a0df0eb315859"
+      },
+      {
+        "path": "camera-rental-web/app/utils/returnValidation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "60f9593e16d6f5df4100f2bf9b6f12e8aa627433"
+      },
+      {
+        "path": "camera-rental-web/bun.lock",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "502013af9780bffd7642e5c195350e923a8e7d0b"
+      },
+      {
+        "path": "camera-rental-web/nuxt.config.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "34df268aae2fa7336c26b7ef7abf8482da365d2a"
+      },
+      {
+        "path": "camera-rental-web/package.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b7df699649938b28e612fdf6086153498b549380"
+      },
+      {
+        "path": "camera-rental-web/playwright.config.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b975f7ea3f6262e3399c30182be9b07b233df35b"
+      },
+      {
+        "path": "camera-rental-web/public/favicon.ico",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "18993ad91cfd43e03b074dd0b5cc3f37ab38e49c"
+      },
+      {
+        "path": "camera-rental-web/public/robots.txt",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0ad279c73692eed60c7ecc269726c10f3327fd0c"
+      },
+      {
+        "path": "camera-rental-web/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "25b58212c98dffd7229bbb5856f881efb3347868"
+      },
+      {
+        "path": "camera-rental-web/tests/e2e/return-registration.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d1f3370af990fcc48bba28a2f4b19b606e0feca4"
+      },
+      {
+        "path": "camera-rental-web/tests/return-registration.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f68a22a77cdaeea5a758b91412590b2bf7529a01"
+      },
+      {
+        "path": "camera-rental-web/tsconfig.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "307b2134b94b63c404ad3f3254b768ca337c7a37"
+      }
+    ],
+    "sha256": "36fc0643abf2a962bfaa7d14e149c4efe7386f853d1cbd1387f0a5dbd324d743"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/004-nuxt-customer-return-flow/context.json",
+      "sha256": "a520b82e8adae8c13140d25a511fe5f0a38019123d5e6a6cc6a776a6846bb377"
+    },
+    "report": {
+      "path": "development/tasks/004-nuxt-customer-return-flow/report.md",
+      "sha256": "7285f54122aa71d7fe95acbe1c9a4a17a44976b344c487818c6a3f8ff5682da6",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/004-nuxt-customer-return-flow/spec-review.md",
+      "sha256": "e4a5f92b8f237e8346dbd6f8c777a46bb208ffdfac2173967cc8e7deabc962f3",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/004-nuxt-customer-return-flow/quality-review.md",
+      "sha256": "f13e8d089d4253497eec13c953485f9624e1c0166d7ed5c4933c317202acd577",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-af6e02208634f2cc909fcb6dde55cca01f6dca9d7ec922b611ba79b2dc7f2a9e",
+      "command": "cd camera-rental-web && bun test tests/return-registration.test.ts && bunx nuxi typecheck && bun run build",
+      "assertion_ids": [
+        "A2"
+      ],
+      "recorded_at": "2026-08-30T06:35:42.710Z",
+      "validation_receipt_sha256": "cd6484fe5d0af47a3bd15631d4288a12767ed1df721a3124c2322c2dd9d66a42",
+      "evidence_log": {
+        "path": "development/evidence/005-004-nuxt-customer-return-flow.log",
+        "sha256": "211a08b4b167e53576560c0ed30b0002182de698c8fb2411ad5d65dcf64bd0d4",
+        "size": 7984
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A2",
+      "parent_id": "A2",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-af6e02208634f2cc909fcb6dde55cca01f6dca9d7ec922b611ba79b2dc7f2a9e"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "A customer can submit return logistics, assigned device serials, required photos, and optional packaging photos through the public link."
+    }
+  ],
+  "fallback_used": false
+}

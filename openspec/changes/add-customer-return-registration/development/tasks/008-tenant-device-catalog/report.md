@@ -1,77 +1,69 @@
 # Task Report: 008-tenant-device-catalog
 
-## Outcome
+## Status
 
-The existing admin device page now lets an authorized store administrator add
-a tenant-scoped device category or model with a numbering prefix without a new
-page or menu. For manual device creation, the administrator enters `1-999` and
-the backend normalizes it to canonical `01-999` form before combining it with the selected
-model's configured prefix.
+DONE
 
-## Implementation
+## Files Changed
 
-- Added tenant-aware `rental_device_category` and `rental_device_model` tables,
-  current-catalog seeds and `next_sequence` initialization in migration `050`.
-- Added catalog query and category/model create endpoints using the existing
-  `rental:device:query` and `rental:device:create` permissions.
-- Added normalized per-tenant uniqueness checks for category code, model code
-  and device-number prefix, including the explicit `支架` token.
-- Added server-authoritative manual number composition and duplicate-device
-  rejection without incrementing the model's `next_sequence`.
-- Kept transactional `01-999` row-locked reservation for configured ERP inbound
-  models. Unknown ERP models retain the existing legacy numbering path and
-  remain uncategorized.
-- Added category/model quick-create dialogs in the existing device-create
-  dialog, catalog refresh, automatic selection of the saved record and a
-  prefix-plus-number preview.
-- Removed obsolete frontend static category labels and manual device-number
-  validation copy so the backend catalog remains the runtime authority.
+- `camera-rental-server/yudao-module-rental/yudao-module-rental-biz`
+- `camera-rental-server/sql/mysql/migrations/20260826_050_rental_device_catalog_management.sql`
+- `camera-rental-admin/src/api/rental/device.ts`
+- `camera-rental-admin/src/views/rental/device`
+- `camera-rental-admin/src/locales/zh-CN.ts`
+- `camera-rental-admin/src/locales/en.ts`
+- `camera-rental-admin/tests/deviceCatalogModel.test.ts`
+- `ops/github-deploy/migrations.txt`
+- `openspec/changes/add-customer-return-registration`
 
-## Reuse
+## What Changed
 
-- Existing `Dialog` component and Element Plus select footer slots.
-- Existing `TenantBaseDO`, MyBatis Plus mappers and tenant device-number unique
-  constraint.
-- Existing `RentalDeviceCode` normalization and canonical `01-999` formatting.
-- Existing device query/create permissions and device page.
+- Added tenant-aware device-category and device-model persistence, normalized
+  uniqueness rules, current-catalog seed data and model sequence state.
+- Added permission-protected catalog query and category/model creation APIs.
+- Kept the backend authoritative for category/model membership and canonical
+  manual device-number composition from the configured model prefix.
+- Added category/model quick-create dialogs to the existing device-create flow,
+  followed by catalog refresh and automatic selection of the saved entry.
+- Preserved ERP inbound behavior: known models use the tenant catalog and
+  unknown models retain the existing uncategorized path.
 
-## Verification
+## TDD Evidence
 
-- `/Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -pl yudao-module-rental/yudao-module-rental-biz -am -DskipTests compile`
-- `/Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalDeviceCatalogServiceTest,RentalDeviceAdminServiceTest,RentalDeviceInboundServiceTest,RentalDeviceInboundCategoryTest,RentalDeviceCodeStandTest,RentalDeviceCodeTest,ReturnSerialNormalizerTest -Dsurefire.failIfNoSpecifiedTests=false test`
-  - Result: 27 tests, 0 failures, 0 errors.
+- `RentalDeviceCatalogServiceTest`, `RentalDeviceAdminServiceTest`,
+  `RentalDeviceInboundServiceTest`, `RentalDeviceInboundCategoryTest`,
+  `RentalDeviceCodeStandTest`, `RentalDeviceCodeTest` and
+  `ReturnSerialNormalizerTest` ran 33 tests with zero failures or errors.
+- `deviceCatalogModel.test.ts` ran three tests covering backend-provided model
+  options, category/model membership and prefix-plus-suffix preview behavior.
+- The migration runner covered first application, idempotent replay and changed
+  checksum rejection.
+
+## Verification Commands
+
+- `/Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalDeviceCatalogServiceTest,RentalDeviceAdminServiceTest,RentalDeviceInboundServiceTest,RentalDeviceInboundCategoryTest,RentalDeviceCodeStandTest,RentalDeviceCodeTest,ReturnSerialNormalizerTest -Dsurefire.failIfNoSpecifiedTests=false test`
 - `node --test --experimental-strip-types tests/deviceCatalogModel.test.ts`
-  - Result: 3 tests passed.
 - `pnpm ts:check`
-  - Result: passed.
 - `VITE_BASE_URL=http://127.0.0.1:5173 pnpm build:local`
-  - Result: passed; existing CSS `*zoom`, large-chunk and ineffective dynamic
-    import warnings remain outside this task.
-- `bun test tests/return-registration.test.ts`
-  - Result: 7 tests passed.
-- `bun run build`
-  - Result: passed.
 - `bash ops/github-deploy/tests/migration-runner-test.sh`
-  - Result: passed.
 - `bash -n ops/github-deploy/apply-migrations.sh`
-  - Result: passed.
-- Production and audit migration `050` are byte-identical with SHA-256
-  `9ff67ccf71938b093fa6f7601381a3adbd00e1a50738a847f1aba0b3784a14fc`.
-- Scoped `git diff --check` passed.
+- `cmp` and `shasum -a 256` for both migration 050 copies
+- Scoped `git diff --check`
 
-## Not Executed
+## Concerns
 
-- Migration `050` was not applied to any database.
-- Browser/API integration was not run because the new catalog tables were not
-  applied to a local runtime database.
-- No commit, push, deployment or production verification was performed.
+- Migration 050 has not been applied to a database by this task.
+- Browser interaction against the real rental backend remains a formal
+  Verification responsibility.
+- The admin build retains unrelated legacy CSS and large-chunk warnings.
 
-## Risks
+## Scope Deviations
 
-- Manual creation accepts only `1-999` and rejects an already used short code.
-  ERP automatic allocation remains limited to 999 device numbers; a
-  model whose `next_sequence` exceeds 999 requires a reviewed numbering-policy
-  change instead of silent rollover.
-- The additive migration seeds every active system tenant and every tenant
-  already present in `rental_device`; tenants created later need the normal
-  application flow to add their catalog entries.
+- Implementation stayed within the declared allowed files and preserved every
+  listed non-goal.
+
+## Follow-up Needed
+
+- Run the approved Verification V2 case snapshot against an identified runtime.
+- Record migration application separately in Operations before project
+  deployment or archive readiness is claimed.

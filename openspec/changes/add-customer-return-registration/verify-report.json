@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-02T16:50:31.736Z",
+  "project_root": "/Volumes/zwl/camera-rental-github",
+  "active_change": "add-customer-return-registration",
+  "status": "red",
+  "checks": [
+    {
+      "name": "active-change",
+      "status": "pass",
+      "detail": "add-customer-return-registration"
+    },
+    {
+      "name": "proposal.md",
+      "status": "fail",
+      "detail": ""
+    },
+    {
+      "name": "design.md",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "name": "tasks.md",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "name": "delta-specs",
+      "status": "warn",
+      "detail": "Expected openspec/changes/<change>/specs/."
+    },
+    {
+      "name": "tests",
+      "status": "warn",
+      "detail": "No SPECNAV_TEST_COMMAND or package.json test script found."
+    }
+  ],
+  "test_command": null,
+  "test_result": null,
+  "rework": [
+    {
+      "check": "proposal.md",
+      "class": "implementation",
+      "recommendation": "Fix proposal.md and rerun verify."
+    }
+  ]
+}

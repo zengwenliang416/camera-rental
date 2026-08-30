@@ -7,6 +7,9 @@
     "5.4",
     "7.4"
   ],
+  "acceptance_primary": [
+    "A5"
+  ],
   "goal": "Manage return registration links and review submissions with tenant-safe permissions.",
   "must_read": [
     "openspec/changes/add-customer-return-registration/development/tasks/005-admin-return-operations/brief.md",
@@ -23,14 +26,14 @@
     "openspec/changes/add-customer-return-registration/prototype/artifact/index.html"
   ],
   "allowed_files": [
-    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/**",
     "camera-rental-admin/src/api/rental/returnRegistration.ts",
-    "camera-rental-admin/src/views/rental/return-registration",
+    "camera-rental-admin/src/views/rental/return-registration/**",
     "openspec/changes/add-customer-return-registration"
   ],
   "test_paths": [
-    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test",
-    "camera-rental-admin/src/views/rental/return-registration"
+    "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=ReturnRegistrationAdminServiceTest,RentalReturnRegistrationControllerTest -Dsurefire.failIfNoSpecifiedTests=false test",
+    "cd camera-rental-admin && pnpm test:return-registration && pnpm ts:check"
   ],
   "non_goals": [
     "Do not edit the schedule center.",

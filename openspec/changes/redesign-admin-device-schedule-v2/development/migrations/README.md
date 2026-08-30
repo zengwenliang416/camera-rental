@@ -2,14 +2,16 @@
 
 ## Execution Order
 
-- No migration is required unless `manifest.json` sets `required` to `true`.
+- Apply `20260808_046_rental_device_schedule_v2.sql` after the previously
+  recorded migrations and before activating the V2 backend.
 
 ## Validation
 
-- When migrations are required, record exact database or migration commands in
-  `manifest.json`.
+- The production SQL and this audit copy must remain byte-identical.
+- The deployment migration runner must record filename and checksum before the
+  application is considered active.
 
 ## Rollback
 
-- When migrations are required, provide rollback SQL files or a concrete
-  rollback strategy in `manifest.json`.
+- Prefer application rollback while retaining the additive lock table.
+- Destructive rollback requires an approved export and data-retention review.

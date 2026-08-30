@@ -75,8 +75,23 @@
 - `VITE_BASE_URL=http://127.0.0.1:5173 pnpm build:local`: passed with existing
   unrelated Lightning CSS, dynamic-import and large-chunk warnings.
 
+## Video Evidence
+
+- Recorded on 2026-08-30 against the isolated real backend and admin runtime:
+  `evidence/video/2026-08-30-task-009-admin-device-maintenance-e2e.webm`.
+- The recording is 27.08 seconds, VP8, 1440 x 900 at 25 fps. SHA-256:
+  `5893d60e44a34b144a3d88e5449840ebb31d8acbf89fa831789624c90a5697ef`.
+- The machine-readable assertion record is
+  `evidence/video/2026-08-30-task-009-admin-device-maintenance-e2e.json`.
+- All six recorded assertions passed: seven-device initial rendering, immutable
+  identity/lifecycle fields, persisted edit refresh, delete cancellation,
+  successful clean-device deletion and blocked history-device deletion.
+- One non-core remote demo avatar image returned HTTP 503 during replay. Login,
+  device catalog/page, update and delete requests completed successfully, and
+  no page exception occurred.
+
 ## Result
 
 Acceptance assertion `A7` is supported by authenticated local API and browser
-E2E evidence. Production migration application, deployment and user acceptance
-remain separate operations evidence.
+E2E evidence, including the recorded video above. Production migration
+application, deployment and user acceptance remain separate operations evidence.

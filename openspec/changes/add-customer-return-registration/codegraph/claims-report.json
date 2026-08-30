@@ -1,18 +1,22 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-25T14:46:14.538Z",
+  "generated_at": "2026-08-30T10:23:59.174Z",
   "active_change": "add-customer-return-registration",
   "claims_file": "openspec/changes/add-customer-return-registration/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/add-customer-return-registration/codegraph/evidence-index.json",
-  "claims_count": 6,
-  "verified_claims": [],
+  "claims_count": 9,
+  "verified_claims": [
+    "development:task-007-admin-device-category-catalog",
+    "development:task-009-admin-device-maintenance"
+  ],
   "unverified_claims": [
     "development:task-001-secure-registration-foundation",
     "development:task-002-private-rustfs-upload",
     "development:task-003-idempotent-return-submission",
     "development:task-004-nuxt-customer-return-flow",
     "development:task-005-admin-return-operations",
-    "development:task-006-production-release-verification"
+    "development:task-006-production-release-verification",
+    "development:task-008-tenant-device-catalog"
   ],
   "blockers": [],
   "warnings": [
@@ -21,6 +25,7 @@
     "codegraph:claim-unverified:development:task-003-idempotent-return-submission",
     "codegraph:claim-unverified:development:task-004-nuxt-customer-return-flow",
     "codegraph:claim-unverified:development:task-005-admin-return-operations",
-    "codegraph:claim-unverified:development:task-006-production-release-verification"
+    "codegraph:claim-unverified:development:task-006-production-release-verification",
+    "codegraph:claim-unverified:development:task-008-tenant-device-catalog"
   ]
 }

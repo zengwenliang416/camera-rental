@@ -46,6 +46,10 @@ approved
   one frontend model helper. It avoids force-delete, cascade logic, catalog
   mutation and lifecycle-state editing.
 
+## Acceptance Assertions Verified
+
+- A6, A7.
+
 ## Required Fixes
 
 - No required code-quality fix was found in the scoped diff.

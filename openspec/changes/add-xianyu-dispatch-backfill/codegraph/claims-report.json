@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-24T08:11:53.032Z",
+  "generated_at": "2026-08-24T08:43:40.514Z",
   "active_change": "add-xianyu-dispatch-backfill",
   "claims_file": "openspec/changes/add-xianyu-dispatch-backfill/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/add-xianyu-dispatch-backfill/codegraph/evidence-index.json",

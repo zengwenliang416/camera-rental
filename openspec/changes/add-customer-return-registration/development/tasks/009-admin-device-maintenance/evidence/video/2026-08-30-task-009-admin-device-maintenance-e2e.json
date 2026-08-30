@@ -1,0 +1,59 @@
+{
+  "schema": "camera-rental.task-009.video-evidence.v1",
+  "recordedAt": "2026-08-30T05:51:48.045Z",
+  "environment": {
+    "backend": "http://127.0.0.1:48080",
+    "admin": "http://127.0.0.1:5173",
+    "mysqlPort": 13318,
+    "redisPort": 16381
+  },
+  "assertions": [
+    {
+      "name": "initial-device-count",
+      "expected": 7,
+      "actual": 7
+    },
+    {
+      "name": "immutable-fields-disabled",
+      "expected": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "actual": [
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "name": "edit-visible-after-refresh",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "delete-cancel-preserves-row",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "clean-device-delete",
+      "expected": 6,
+      "actual": 6
+    },
+    {
+      "name": "history-device-delete-blocked",
+      "expected": true,
+      "actual": true
+    }
+  ],
+  "failedAssertions": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ],
+  "pageErrors": [],
+  "video": "/Volumes/zwl/camera-rental-github/openspec/changes/add-customer-return-registration/development/tasks/009-admin-device-maintenance/evidence/video/2026-08-30-task-009-admin-device-maintenance-e2e.webm",
+  "status": "pass"
+}

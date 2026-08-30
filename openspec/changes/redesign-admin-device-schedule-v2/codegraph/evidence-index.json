@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-08T07:34:01.819Z",
+  "generated_at": "2026-08-08T09:20:55.442Z",
   "active_change": "redesign-admin-device-schedule-v2",
   "source_raw": "openspec/changes/redesign-admin-device-schedule-v2/codegraph/evidence.jsonl",
   "by_claim": {},

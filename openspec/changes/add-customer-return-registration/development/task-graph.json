@@ -100,6 +100,44 @@
         "11.4",
         "12.3"
       ]
+    },
+    {
+      "id": "007-admin-device-category-catalog",
+      "depends_on": [
+        "001-secure-registration-foundation"
+      ],
+      "task_items": [
+        "13.1",
+        "13.2",
+        "13.3",
+        "13.4"
+      ]
+    },
+    {
+      "id": "008-tenant-device-catalog",
+      "depends_on": [
+        "007-admin-device-category-catalog"
+      ],
+      "task_items": [
+        "14.1",
+        "14.2",
+        "14.3",
+        "14.4",
+        "14.5"
+      ]
+    },
+    {
+      "id": "009-admin-device-maintenance",
+      "depends_on": [
+        "008-tenant-device-catalog"
+      ],
+      "task_items": [
+        "15.1",
+        "15.2",
+        "15.3",
+        "15.4",
+        "15.5"
+      ]
     }
   ],
   "edges": []

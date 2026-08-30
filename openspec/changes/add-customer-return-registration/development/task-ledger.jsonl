@@ -22,3 +22,14 @@
 {"task_id":"006-production-release-verification","status":"spec_review_passed","source":"direct-spec-review","evidence":"development/tasks/006-production-release-verification/spec-review.md","at":"2026-08-02T20:00:36+08:00"}
 {"task_id":"006-production-release-verification","status":"quality_review_passed","source":"direct-quality-review","evidence":"development/tasks/006-production-release-verification/quality-review.md","at":"2026-08-02T20:00:36+08:00"}
 {"task_id":"006-production-release-verification","status":"complete","source":"production-80-release-path-ready-for-verification","at":"2026-08-02T20:00:36+08:00"}
+{"task_id":"007-admin-device-category-catalog","status":"implementation_complete","source":"backend-admin-migration-and-focused-validation","at":"2026-08-25T23:55:00+08:00"}
+{"task_id":"007-admin-device-category-catalog","status":"spec_review_passed","source":"direct-spec-review","evidence":"development/tasks/007-admin-device-category-catalog/spec-review.md","at":"2026-08-25T23:55:00+08:00"}
+{"task_id":"007-admin-device-category-catalog","status":"quality_review_passed","source":"direct-quality-review","evidence":"development/tasks/007-admin-device-category-catalog/quality-review.md","at":"2026-08-25T23:55:00+08:00"}
+{"task_id":"007-admin-device-category-catalog","status":"complete","source":"reviewed-implementation-and-local-tests","at":"2026-08-25T23:55:00+08:00"}
+{"task_id":"009-admin-device-maintenance","status":"implementation_complete","source":"backend-admin-permissions-migration-and-focused-validation","evidence":"development/tasks/009-admin-device-maintenance/report.md","at":"2026-08-30T11:54:14+08:00"}
+{"task_id":"009-admin-device-maintenance","status":"spec_review_passed","source":"direct-spec-review","evidence":"development/tasks/009-admin-device-maintenance/spec-review.md","at":"2026-08-30T12:05:00+08:00"}
+{"task_id":"009-admin-device-maintenance","status":"quality_review_passed","source":"direct-quality-review","evidence":"development/tasks/009-admin-device-maintenance/quality-review.md","at":"2026-08-30T12:05:00+08:00"}
+{"task_id":"009-admin-device-maintenance","status":"complete","source":"reviewed-implementation-and-local-tests","at":"2026-08-30T12:05:00+08:00"}
+{"task_id":"008-tenant-device-catalog","status":"spec_review_passed","source":"direct-spec-review","evidence":"development/tasks/008-tenant-device-catalog/spec-review.md","at":"2026-08-30T14:40:37+08:00"}
+{"task_id":"008-tenant-device-catalog","status":"quality_review_passed","source":"direct-quality-review","evidence":"development/tasks/008-tenant-device-catalog/quality-review.md","at":"2026-08-30T14:40:37+08:00"}
+{"task_id":"008-tenant-device-catalog","status":"complete","source":"reviewed-implementation-and-current-head-signed-evidence","evidence":"development/tasks/008-tenant-device-catalog/acceptance.json","at":"2026-08-30T14:40:37+08:00"}

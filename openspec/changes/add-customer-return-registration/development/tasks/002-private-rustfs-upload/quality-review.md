@@ -33,6 +33,10 @@ approved
 - Storage policy complexity is isolated in the attachment service and
   deployment scripts.
 
+## Acceptance Assertions Verified
+
+- A3.
+
 ## Required Fixes
 
 - No required fixes.

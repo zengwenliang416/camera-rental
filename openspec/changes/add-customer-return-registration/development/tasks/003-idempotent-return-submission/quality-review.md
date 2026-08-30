@@ -31,6 +31,10 @@ approved
 
 - Transactional complexity is concentrated in the submission service.
 
+## Acceptance Assertions Verified
+
+- A2, A4.
+
 ## Required Fixes
 
 - No required fixes.

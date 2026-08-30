@@ -1,16 +1,39 @@
 {
   "schema_version": 1,
   "change_id": "redesign-admin-device-schedule-v2",
-  "required": false,
-  "status": "not_required",
-  "migrations": [],
-  "rollback": [],
-  "rollback_strategy": "No database or seed migration is required for this change.",
+  "required": true,
+  "status": "ready",
+  "migrations": [
+    {
+      "id": "20260808_046_rental_device_schedule_v2",
+      "kind": "ddl",
+      "order": 46,
+      "path": "development/migrations/20260808_046_rental_device_schedule_v2.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260808_046_rental_device_schedule_v2.sql",
+      "sha256": "0a35b72564bd4ad8318e3277733435d7e11b11abb9549bd782c85e09d28c00f7"
+    }
+  ],
+  "rollback": [
+    "Revoke rental:device-lock:update from roles and remove system_role_menu rows for menu id 7042.",
+    "Remove system_menu id 7042 only after confirming no role references remain.",
+    "Retain rental_device_lock audit rows by default; destructive table rollback requires an approved data-retention review."
+  ],
+  "rollback_strategy": "Prefer application rollback while retaining the additive lock table. Do not drop rental_device_lock after production use without exporting its audit rows and approving data loss.",
   "verification": {
-    "commands": [],
-    "evidence": []
+    "commands": [
+      "cmp camera-rental-server/sql/mysql/migrations/20260808_046_rental_device_schedule_v2.sql openspec/changes/redesign-admin-device-schedule-v2/development/migrations/20260808_046_rental_device_schedule_v2.sql",
+      "shasum -a 256 camera-rental-server/sql/mysql/migrations/20260808_046_rental_device_schedule_v2.sql",
+      "bash ops/github-deploy/tests/migration-runner-test.sh",
+      "git diff --check"
+    ],
+    "evidence": [
+      "Production and SpecNav migration copies are byte-identical.",
+      "Observed SHA-256 is 0a35b72564bd4ad8318e3277733435d7e11b11abb9549bd782c85e09d28c00f7.",
+      "The migration is additive and its permission seed is guarded by an existence check."
+    ]
   },
   "notes": [
-    "If any requirement, task, report, or handoff mentions SQL, DDL, DML, seed data, menus, permissions, or migrations, set required=true and add executable SQL files under development/migrations/."
+    "The production-path SQL is the deployment source; the SpecNav copy is executable audit evidence.",
+    "Production deployment must confirm migration 046 appears in the schema migration ledger before activation is considered complete."
   ]
 }

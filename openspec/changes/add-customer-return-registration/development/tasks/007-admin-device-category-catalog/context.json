@@ -1,0 +1,61 @@
+{
+  "task_id": "007-admin-device-category-catalog",
+  "task_items": [
+    "13.1",
+    "13.2",
+    "13.3",
+    "13.4"
+  ],
+  "acceptance_primary": [
+    "A8"
+  ],
+  "goal": "Classify rental devices and create them through a backend-authoritative category/model catalog.",
+  "must_read": [
+    "openspec/changes/add-customer-return-registration/development/tasks/007-admin-device-category-catalog/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/add-customer-return-registration/requirements.md",
+    "openspec/changes/add-customer-return-registration/acceptance.md",
+    "openspec/changes/add-customer-return-registration/spec-map.json",
+    "openspec/changes/add-customer-return-registration/component-impact-map.json",
+    "openspec/changes/add-customer-return-registration/prototype/handoff.md",
+    "openspec/changes/add-customer-return-registration/prototype/decision.json",
+    "openspec/changes/add-customer-return-registration/prototype/artifact/index.html"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-api/src/main/java/cn/iocoder/yudao/module/rental/enums/ErrorCodeConstants.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/**",
+    "camera-rental-server/sql/mysql/migrations/20260825_049_rental_device_category.sql",
+    "camera-rental-admin/src/api/rental/device.ts",
+    "camera-rental-admin/src/views/rental/device/**",
+    "camera-rental-admin/src/locales/zh-CN.ts",
+    "camera-rental-admin/src/locales/en.ts",
+    "camera-rental-admin/tests/deviceCatalogModel.test.ts",
+    "ops/github-deploy/migrations.txt",
+    "openspec/changes/add-customer-return-registration"
+  ],
+  "test_paths": [
+    "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalDeviceCatalogServiceTest,RentalDeviceAdminServiceTest,RentalDeviceInboundCategoryTest,RentalDeviceCodeStandTest -Dsurefire.failIfNoSpecifiedTests=false test",
+    "cd camera-rental-admin && node --test --experimental-strip-types tests/deviceCatalogModel.test.ts && pnpm ts:check"
+  ],
+  "non_goals": [
+    "Do not apply the migration to an unidentified database.",
+    "Do not modify return registration, device assignment, schedule, warehouse return or inspection behavior.",
+    "Do not commit, push or deploy in this task."
+  ],
+  "expected_evidence": [
+    "Seven focused backend tests for catalog, create validation, stand codes and ERP inbound classification",
+    "Three frontend catalog model tests",
+    "Admin TypeScript check and local production-equivalent build",
+    "Same-origin browser interaction evidence for all seven categories",
+    "Migration checksum and rollback strategy"
+  ],
+  "unsafe_assumptions": [
+    "Frontend linked selects do not replace backend validation.",
+    "Unknown historical or ERP model codes cannot be silently classified.",
+    "Mock browser interaction is not live backend E2E."
+  ],
+  "stop_condition": "Stop if the implementation moves catalog authority into the frontend, breaks unknown ERP models, or requires applying migration 049 without an identified target."
+}

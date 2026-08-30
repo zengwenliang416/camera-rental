@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "gate": "frozen-tests",
+  "reason": "Task 12.1 requires editing the return-specific backend validator; the broad historical test_paths entry incorrectly classifies the production source as a frozen test.",
+  "requested_by": "codex",
+  "created_at": "2026-08-25T14:38:10.510Z",
+  "expires_at": "2026-08-25T15:38:10.510Z",
+  "active_change": "add-customer-return-registration",
+  "affected_path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/main/java/cn/iocoder/yudao/module/rental/service/returnregistration/ReturnSerialNormalizer.java"
+}

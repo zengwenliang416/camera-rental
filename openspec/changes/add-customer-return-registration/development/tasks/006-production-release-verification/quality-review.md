@@ -32,6 +32,10 @@ approved
 - Existing valid AES keys are preserved; invalid configured keys fail closed
   instead of being rotated automatically.
 
+## Acceptance Assertions Verified
+
+- A1, A2, A3, A4, A5, A6, A7, A8.
+
 ## Required Fixes
 
 - No required fixes.

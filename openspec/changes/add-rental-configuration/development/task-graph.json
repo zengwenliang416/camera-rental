@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "planning_status": "ready",
+  "tasks": [
+    "001-identifier-foundation",
+    "002-configuration-backend",
+    "003-order-reconciliation",
+    "004-fulfillment-safe-remarks",
+    "005-historical-reconciliation",
+    "006-admin-configuration-ui",
+    "007-documentation-verification"
+  ],
+  "nodes": [
+    {
+      "id": "001-identifier-foundation",
+      "task_items": ["1.1", "1.2", "1.3", "1.4"]
+    },
+    {
+      "id": "002-configuration-backend",
+      "task_items": ["2.1", "2.2", "2.3", "2.4"]
+    },
+    {
+      "id": "003-order-reconciliation",
+      "task_items": ["3.1", "3.2", "3.3", "3.4"]
+    },
+    {
+      "id": "004-fulfillment-safe-remarks",
+      "task_items": ["4.1", "4.2", "4.3", "4.4"]
+    },
+    {
+      "id": "005-historical-reconciliation",
+      "task_items": ["5.1", "5.2", "5.3"]
+    },
+    {
+      "id": "006-admin-configuration-ui",
+      "task_items": ["6.1", "6.2", "6.3", "6.4", "6.5", "6.6"]
+    },
+    {
+      "id": "007-documentation-verification",
+      "task_items": ["7.1", "7.2", "7.3", "7.4", "7.5"]
+    }
+  ],
+  "edges": [
+    {"from": "001-identifier-foundation", "to": "002-configuration-backend"},
+    {"from": "001-identifier-foundation", "to": "003-order-reconciliation"},
+    {"from": "003-order-reconciliation", "to": "004-fulfillment-safe-remarks"},
+    {"from": "003-order-reconciliation", "to": "005-historical-reconciliation"},
+    {"from": "002-configuration-backend", "to": "006-admin-configuration-ui"},
+    {"from": "004-fulfillment-safe-remarks", "to": "007-documentation-verification"},
+    {"from": "005-historical-reconciliation", "to": "007-documentation-verification"},
+    {"from": "006-admin-configuration-ui", "to": "007-documentation-verification"}
+  ]
+}

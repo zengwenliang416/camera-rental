@@ -1,0 +1,38 @@
+{
+  "task_id": "001-identifier-foundation",
+  "task_items": ["1.1", "1.2", "1.3", "1.4"],
+  "goal": "Persist four explicit channel identifier types without fallback and prove safe migration behavior.",
+  "must_read": [
+    "openspec/changes/add-rental-configuration/development/tasks/001-identifier-foundation/brief.md",
+    "openspec/changes/add-rental-configuration/requirements.md",
+    "openspec/changes/add-rental-configuration/acceptance.md",
+    "openspec/changes/add-rental-configuration/spec-map.json",
+    "openspec/changes/add-rental-configuration/component-impact-map.json",
+    "openspec/changes/add-rental-configuration/prototype/handoff.md",
+    "openspec/changes/add-rental-configuration/prototype/decision.json",
+    "openspec/changes/add-rental-configuration/prototype/artifact/index.html",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "docs/integrations/xianyu/source.md"
+  ],
+  "allowed_files": [
+    "camera-rental-server/sql/mysql",
+    "camera-rental-server/yudao-module-rental",
+    "openspec/changes/add-rental-configuration/development/migrations"
+  ],
+  "non_goals": [
+    "Do not implement configuration UI or historical execution.",
+    "Do not infer identifiers from titles, remarks or ambiguous legacy columns."
+  ],
+  "expected_evidence": [
+    "Executable forward migration and rollback strategy",
+    "Focused persistence and migration tests",
+    "Task report, spec review and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Similar external numeric values do not establish identifier equivalence."
+  ],
+  "stop_condition": "Stop if authoritative field ownership is unavailable or a safe backfill requires guessing."
+}

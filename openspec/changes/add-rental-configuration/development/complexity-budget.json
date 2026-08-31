@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "backend orchestration",
+      "limit": "One reconciliation service owns mapping, remark replay, preparation status and idempotent internal-order creation."
+    },
+    {
+      "area": "fulfillment protection",
+      "limit": "One domain guard owns mutable-plan versus immutable-fact decisions; parsers and controllers cannot mutate fulfillment facts."
+    },
+    {
+      "area": "frontend component cohesion",
+      "limit": "Each configuration tab owns one user-facing responsibility; shared identifier and catalog selectors contain no page-local API calls."
+    },
+    {
+      "area": "source size",
+      "limit": "Extract before a new or materially changed production source exceeds 450 physical lines."
+    },
+    {
+      "area": "database change",
+      "limit": "One ordered forward migration plus an explicit rollback strategy; no historical migration file is edited."
+    }
+  ],
+  "forbidden_shortcuts": [
+    "No identifier fallback between XianGuanJia and Xianyu fields.",
+    "No product default fallback for multi-SKU products.",
+    "No frontend authoritative matching or schedule calculation.",
+    "No production backfill or third-party write during Development."
+  ]
+}

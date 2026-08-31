@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "component_rules": [
+    "Extract repeated channel identifier labels, string normalization and copy behavior into shared admin utilities/components.",
+    "Extract repeated catalog category/model selection into shared rental catalog helpers used by device and configuration pages.",
+    "Route order persistence, mapping changes, remark replay and historical backfill through one reconciliation service.",
+    "Route model/date mutation decisions through one fulfillment update guard.",
+    "Keep remark parsing independent from assignment, delivery, inspection, refund and settlement state transitions."
+  ],
+  "planned_extractions": [
+    {
+      "name": "channel identifier presentation",
+      "target": "camera-rental-admin/src/views/rental/configuration/components",
+      "trigger": "Identifier label or copy behavior is needed in more than one surface."
+    },
+    {
+      "name": "catalog model selection",
+      "target": "camera-rental-admin/src/views/rental/shared",
+      "trigger": "Configuration and rental-device pages require the same category/model semantics."
+    },
+    {
+      "name": "order reconciliation",
+      "target": "camera-rental-server/yudao-module-rental",
+      "trigger": "A second caller needs to re-evaluate identifiers, mapping, remark plan or preparation status."
+    },
+    {
+      "name": "fulfillment update guard",
+      "target": "camera-rental-server/yudao-module-rental",
+      "trigger": "Model or rental-date changes can encounter assigned or later lifecycle states."
+    }
+  ]
+}

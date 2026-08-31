@@ -1,0 +1,77 @@
+{
+  "verified_at": "2026-08-31",
+  "entry": "artifact/index.html",
+  "server": "python3 -m http.server 4173",
+  "desktop": {
+    "viewport": "1440x980",
+    "scroll_width": 1425,
+    "client_width": 1425,
+    "horizontal_overflow": false
+  },
+  "mobile": {
+    "viewport": "390x844",
+    "scroll_width": 390,
+    "client_width": 390,
+    "horizontal_overflow": false,
+    "desktop_table_display": "none",
+    "mobile_rule_list_display": "grid"
+  },
+  "states": {
+    "populated": [
+      "populated"
+    ],
+    "loading": [
+      "loading"
+    ],
+    "empty": [
+      "empty"
+    ],
+    "error": [
+      "error"
+    ],
+    "permission": [
+      "permission"
+    ],
+    "disabled": [
+      "populated",
+      "disabled"
+    ]
+  },
+  "tabs": [
+    "catalog",
+    "rules",
+    "remarks"
+  ],
+  "rule_modes": {
+    "single": {
+      "variant": "single-model-drawer",
+      "single_form": "visible",
+      "sku_form": "hidden"
+    },
+    "sku": {
+      "variant": "multi-sku-rule-drawer",
+      "single_form": "hidden",
+      "sku_form": "visible"
+    }
+  },
+  "theme_locale_matrix": [
+    "light + zh-CN",
+    "dark + zh-CN",
+    "light + en",
+    "dark + en"
+  ],
+  "review_anchors": {
+    "screen": true,
+    "project_shell": true,
+    "theme_control": true,
+    "locale_control": true
+  },
+  "console_errors": [],
+  "console_warnings": [],
+  "screenshots": {
+    "desktop-light-zh.png": "f2fbc5fe3b5910ea29791f5a242063d522e5c5c59a05a6cd036b733eecf642be",
+    "desktop-dark-en-drawer.png": "a68e1b5373f4592e4f3c4339224d30a012788d06eb99f6e789a8516d9bb18684",
+    "mobile-light-zh.png": "b9de5b3b093a37fa0877a153403800fc584336d89fc94eaea726b7c7a1d6c551",
+    "impact-dialog-dark-en.png": "afcb8eea8909f29814b813bb9a1197fe64d582678c0320f824000778c553eaa2"
+  }
+}

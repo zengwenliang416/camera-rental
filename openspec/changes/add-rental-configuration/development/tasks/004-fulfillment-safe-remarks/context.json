@@ -1,0 +1,37 @@
+{
+  "task_id": "004-fulfillment-safe-remarks",
+  "task_items": ["4.1", "4.2", "4.3", "4.4"],
+  "goal": "Apply later valid remark plans without overwriting immutable fulfillment or financial facts.",
+  "must_read": [
+    "openspec/changes/add-rental-configuration/development/tasks/004-fulfillment-safe-remarks/brief.md",
+    "openspec/changes/add-rental-configuration/requirements.md",
+    "openspec/changes/add-rental-configuration/acceptance.md",
+    "openspec/changes/add-rental-configuration/spec-map.json",
+    "openspec/changes/add-rental-configuration/component-impact-map.json",
+    "openspec/changes/add-rental-configuration/prototype/handoff.md",
+    "openspec/changes/add-rental-configuration/prototype/decision.json",
+    "openspec/changes/add-rental-configuration/prototype/artifact/index.html",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "docs/integrations/xianyu/source.md"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental",
+    "camera-rental-server/sql/mysql"
+  ],
+  "non_goals": [
+    "Do not treat seller intent as physical or financial completion.",
+    "Do not directly perform device swaps, returns, refunds or settlements."
+  ],
+  "expected_evidence": [
+    "Remark history and last-valid-plan tests",
+    "Lifecycle guard and redteam conflict tests",
+    "Task report, spec review and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Early-return text does not prove that occupancy can be released."
+  ],
+  "stop_condition": "Stop if any remark path can bypass lifecycle guards or transaction boundaries."
+}

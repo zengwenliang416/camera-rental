@@ -1,0 +1,38 @@
+{
+  "task_id": "007-documentation-verification",
+  "task_items": ["7.1", "7.2", "7.3", "7.4", "7.5"],
+  "goal": "Complete documentation, executed validation and reversible release evidence without production mutation.",
+  "must_read": [
+    "openspec/changes/add-rental-configuration/development/tasks/007-documentation-verification/brief.md",
+    "openspec/changes/add-rental-configuration/requirements.md",
+    "openspec/changes/add-rental-configuration/acceptance.md",
+    "openspec/changes/add-rental-configuration/spec-map.json",
+    "openspec/changes/add-rental-configuration/component-impact-map.json",
+    "openspec/changes/add-rental-configuration/prototype/handoff.md",
+    "openspec/changes/add-rental-configuration/prototype/decision.json",
+    "openspec/changes/add-rental-configuration/prototype/artifact/index.html",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "docs/integrations/xianyu/source.md"
+  ],
+  "allowed_files": [
+    "docs/domain",
+    "docs/integrations/xianyu",
+    "openspec/changes/add-rental-configuration"
+  ],
+  "non_goals": [
+    "Do not deploy, push or mutate production.",
+    "Do not mark unavailable checks as passed."
+  ],
+  "expected_evidence": [
+    "Updated field and workflow documentation",
+    "Executed backend, admin and SpecNav verification receipts",
+    "Deployment, monitoring and rollback preparation"
+  ],
+  "unsafe_assumptions": [
+    "Local verification does not establish production readiness without operations evidence."
+  ],
+  "stop_condition": "Stop if any acceptance assertion lacks reproducible evidence or production authorization would be required."
+}

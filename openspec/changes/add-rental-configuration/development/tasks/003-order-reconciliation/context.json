@@ -1,0 +1,37 @@
+{
+  "task_id": "003-order-reconciliation",
+  "task_items": ["3.1", "3.2", "3.3", "3.4"],
+  "goal": "Create eligible internal orders immediately and reconcile readiness idempotently from exact identifiers.",
+  "must_read": [
+    "openspec/changes/add-rental-configuration/development/tasks/003-order-reconciliation/brief.md",
+    "openspec/changes/add-rental-configuration/requirements.md",
+    "openspec/changes/add-rental-configuration/acceptance.md",
+    "openspec/changes/add-rental-configuration/spec-map.json",
+    "openspec/changes/add-rental-configuration/component-impact-map.json",
+    "openspec/changes/add-rental-configuration/prototype/handoff.md",
+    "openspec/changes/add-rental-configuration/prototype/decision.json",
+    "openspec/changes/add-rental-configuration/prototype/artifact/index.html",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "docs/integrations/xianyu/source.md"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental",
+    "camera-rental-server/sql/mysql"
+  ],
+  "non_goals": [
+    "Do not select a concrete device.",
+    "Do not mutate fulfillment or financial facts."
+  ],
+  "expected_evidence": [
+    "Immediate creation and retry idempotency tests",
+    "Skip-rule and exact multi-SKU mapping tests",
+    "Task report, spec review and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Financially complete orders may still be incomplete for model or schedule preparation."
+  ],
+  "stop_condition": "Stop if exact inbound identifiers or internal-order uniqueness cannot be proven."
+}

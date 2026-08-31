@@ -1,0 +1,39 @@
+{
+  "task_id": "006-admin-configuration-ui",
+  "task_items": ["6.1", "6.2", "6.3", "6.4", "6.5", "6.6"],
+  "goal": "Implement the approved three-tab Rental Configuration admin experience with exact string identifiers.",
+  "must_read": [
+    "openspec/changes/add-rental-configuration/development/tasks/006-admin-configuration-ui/brief.md",
+    "openspec/changes/add-rental-configuration/requirements.md",
+    "openspec/changes/add-rental-configuration/acceptance.md",
+    "openspec/changes/add-rental-configuration/spec-map.json",
+    "openspec/changes/add-rental-configuration/component-impact-map.json",
+    "openspec/changes/add-rental-configuration/prototype/handoff.md",
+    "openspec/changes/add-rental-configuration/prototype/decision.json",
+    "openspec/changes/add-rental-configuration/prototype/artifact/index.html",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "docs/integrations/xianyu/source.md"
+  ],
+  "allowed_files": [
+    "camera-rental-admin/src/api/rental",
+    "camera-rental-admin/src/views/rental",
+    "camera-rental-admin/src/locales",
+    "camera-rental-admin/tests"
+  ],
+  "non_goals": [
+    "Do not calculate authoritative mapping or scheduling in the frontend.",
+    "Do not add page-local theme or locale infrastructure."
+  ],
+  "expected_evidence": [
+    "Typed API and model tests",
+    "Permission, state, locale, theme and narrow-layout evidence",
+    "Task report, spec review and quality review"
+  ],
+  "unsafe_assumptions": [
+    "External identifiers must never be parsed as JavaScript numbers."
+  ],
+  "stop_condition": "Stop if backend contracts are not final or exact SKU ownership cannot be represented."
+}

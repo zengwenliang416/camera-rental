@@ -1,0 +1,118 @@
+{
+  "schema": "specnav.prototype.visualInventory.v1",
+  "version": "1",
+  "discovery_status": "complete",
+  "source_project": "camera-rental-admin",
+  "evidence": {
+    "screenshots": [
+      "/var/folders/1v/8sfc4rjx1834mzlqzxqr8lr40000gn/T/codex-clipboard-2c493a65-f60c-4a12-a3cc-c0004650a758.png"
+    ],
+    "routes": [
+      "camera-rental-admin/src/views/rental/device/index.vue",
+      "camera-rental-admin/src/views/rental/xianyu/index.vue",
+      "camera-rental-admin/src/views/rental/schedule/index.vue"
+    ],
+    "design_specs": [
+      "openspec/specs/ui-design/design.md"
+    ],
+    "component_sources": [
+      "openspec/changes/add-rental-configuration/component-impact-map.json",
+      "camera-rental-admin/src/components/ContentWrap/src/ContentWrap.vue",
+      "camera-rental-admin/src/components/Dialog/src/Dialog.vue",
+      "camera-rental-admin/src/layout/components/ToolHeader.vue",
+      "camera-rental-admin/src/layout/components/ThemeSwitch/src/ThemeSwitch.vue",
+      "camera-rental-admin/src/layout/components/LocaleDropdown/src/LocaleDropdown.vue",
+      "camera-rental-admin/src/views/rental/schedule/components/ScheduleCandidateDrawer.vue"
+    ],
+    "codegraph_claims": [
+      "ContentWrap is the shared dense admin content surface.",
+      "Rental admin pages use inline filters, Element Plus tables, tags, alerts, pagination, drawers and dialogs.",
+      "The current admin runtime exposes persisted dark mode and zh-CN/en locale controls."
+    ]
+  },
+  "project_shell": {
+    "source": "current Camera Rental Admin sidebar, tool header, tags view and ContentWrap structure",
+    "required_elements": [
+      "dark left navigation with 租赁运营 section",
+      "top tool header with breadcrumb",
+      "theme and locale controls",
+      "tags view",
+      "ContentWrap-style filter and table region",
+      "right-side rule editor drawer",
+      "impact confirmation dialog"
+    ],
+    "omitted_elements": [
+      "real tenant selector",
+      "real notifications",
+      "real user account menu"
+    ],
+    "theme_policy": "match prototype-manifest.json ui_capabilities.theme",
+    "i18n_policy": "match prototype-manifest.json ui_capabilities.i18n"
+  },
+  "business_surface": {
+    "screens": [
+      "rental-configuration"
+    ],
+    "fields": [
+      "device category",
+      "equipment model",
+      "device number prefix",
+      "shop",
+      "XianGuanJia product ID",
+      "Xianyu item ID",
+      "XianGuanJia SKU ID",
+      "Xianyu SKU ID",
+      "handling policy",
+      "model mode",
+      "equipment model mapping",
+      "enabled status",
+      "seller remark template"
+    ],
+    "actions": [
+      "create or edit device category",
+      "create or edit device model",
+      "filter product rules",
+      "expand synchronized SKU mappings",
+      "edit product rule",
+      "select only synchronized SKU mappings",
+      "preview affected orders",
+      "confirm save and reconciliation",
+      "copy seller remark template"
+    ],
+    "states": [
+      "loading",
+      "empty",
+      "error",
+      "disabled",
+      "permission",
+      "populated"
+    ]
+  },
+  "verification_matrix": {
+    "viewports": [
+      "desktop",
+      "mobile"
+    ],
+    "theme_modes": [
+      "light",
+      "dark"
+    ],
+    "locales": [
+      "zh-CN",
+      "en"
+    ],
+    "states": [
+      "loading",
+      "empty",
+      "error",
+      "disabled",
+      "permission",
+      "populated"
+    ]
+  },
+  "unsupported_capabilities": [
+    "Prototype uses fictional static fixtures and does not call production APIs.",
+    "Prototype does not mutate device catalogs, channel rules, orders, schedules or history.",
+    "Historical reconciliation counters are illustrative only."
+  ]
+}

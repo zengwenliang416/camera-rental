@@ -1,11 +1,19 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-30T10:19:11.947Z",
-  "current_focus": "add-customer-return-registration",
+  "generated_at": "2026-08-31T02:32:58.703Z",
+  "current_focus": "add-rental-configuration",
   "changes": [
     {
       "id": "add-customer-return-registration",
       "stage": "development",
+      "status": "active",
+      "branch": null,
+      "created_at": null,
+      "last_active_at": null
+    },
+    {
+      "id": "add-rental-configuration",
+      "stage": "prototype",
       "status": "active",
       "branch": null,
       "created_at": null,

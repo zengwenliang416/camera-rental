@@ -1,0 +1,38 @@
+{
+  "task_id": "005-historical-reconciliation",
+  "task_items": ["5.1", "5.2", "5.3"],
+  "goal": "Provide bounded, resumable and dry-run-capable historical reconciliation without reversing history.",
+  "must_read": [
+    "openspec/changes/add-rental-configuration/development/tasks/005-historical-reconciliation/brief.md",
+    "openspec/changes/add-rental-configuration/requirements.md",
+    "openspec/changes/add-rental-configuration/acceptance.md",
+    "openspec/changes/add-rental-configuration/spec-map.json",
+    "openspec/changes/add-rental-configuration/component-impact-map.json",
+    "openspec/changes/add-rental-configuration/prototype/handoff.md",
+    "openspec/changes/add-rental-configuration/prototype/decision.json",
+    "openspec/changes/add-rental-configuration/prototype/artifact/index.html",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "docs/integrations/xianyu/source.md"
+  ],
+  "allowed_files": [
+    "camera-rental-server/yudao-module-rental",
+    "docs/domain",
+    "docs/integrations/xianyu"
+  ],
+  "non_goals": [
+    "Do not execute against production without separate authorization.",
+    "Do not delete or reverse fulfilled records."
+  ],
+  "expected_evidence": [
+    "Stable paging, resume and idempotency tests",
+    "Dry-run counters and failure-boundary evidence",
+    "Task report, spec review and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Historical screenshot counts are not current eligibility evidence."
+  ],
+  "stop_condition": "Stop before external or production mutation and if stable paging cannot be proven."
+}

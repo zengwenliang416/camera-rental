@@ -1,0 +1,28 @@
+{
+  "schema": "specnav.codegraph.claims_report.v1",
+  "generated_at": "2026-08-31T02:40:20.915Z",
+  "active_change": "add-rental-configuration",
+  "claims_file": "openspec/changes/add-rental-configuration/codegraph/claims-map.json",
+  "evidence_index": "openspec/changes/add-rental-configuration/codegraph/evidence-index.json",
+  "claims_count": 7,
+  "verified_claims": [],
+  "unverified_claims": [
+    "development:task-001-identifier-foundation",
+    "development:task-002-configuration-backend",
+    "development:task-003-order-reconciliation",
+    "development:task-004-fulfillment-safe-remarks",
+    "development:task-005-historical-reconciliation",
+    "development:task-006-admin-configuration-ui",
+    "development:task-007-documentation-verification"
+  ],
+  "blockers": [],
+  "warnings": [
+    "codegraph:claim-unverified:development:task-001-identifier-foundation",
+    "codegraph:claim-unverified:development:task-002-configuration-backend",
+    "codegraph:claim-unverified:development:task-003-order-reconciliation",
+    "codegraph:claim-unverified:development:task-004-fulfillment-safe-remarks",
+    "codegraph:claim-unverified:development:task-005-historical-reconciliation",
+    "codegraph:claim-unverified:development:task-006-admin-configuration-ui",
+    "codegraph:claim-unverified:development:task-007-documentation-verification"
+  ]
+}

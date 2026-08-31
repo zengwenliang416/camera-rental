@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "camera-rental-server/yudao-module-rental",
+      "owner": "rental-backend"
+    },
+    {
+      "path": "camera-rental-server/sql/mysql",
+      "owner": "rental-database"
+    },
+    {
+      "path": "camera-rental-admin/src/api/rental",
+      "owner": "rental-admin-api"
+    },
+    {
+      "path": "camera-rental-admin/src/views/rental",
+      "owner": "rental-admin-ui"
+    },
+    {
+      "path": "camera-rental-admin/src/locales",
+      "owner": "rental-admin-i18n"
+    },
+    {
+      "path": "docs/domain",
+      "owner": "rental-domain-docs"
+    },
+    {
+      "path": "docs/integrations/xianyu",
+      "owner": "xianyu-integration-docs"
+    },
+    {
+      "path": "openspec/changes/add-rental-configuration",
+      "owner": "specnav-change"
+    }
+  ],
+  "cross_owner_rules": [
+    "Backend API and VO contracts are finalized before dependent admin API changes.",
+    "Database migration review precedes persistence implementation.",
+    "Shared catalog and identifier helpers are owned outside individual page components."
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "active_change": "add-rental-configuration",
+  "status": "passed",
+  "ok": true,
+  "checked_at": "2026-08-31T00:00:00+08:00",
+  "requirements_gate": "passed",
+  "prototype_gate": "passed",
+  "prototype_variant": "admin-three-tab-precise-mapping-v1",
+  "scope_gate": "passed",
+  "production_edits_allowed_after_git_baseline": true,
+  "blockers": []
+}

@@ -1,0 +1,7 @@
+{"task_id":"001-identifier-foundation","task_items":["1.1","1.2","1.3","1.4"],"status":"ready","source":"approved-requirements","note":"Owns explicit channel identifier schema, persistence and migration fixtures."}
+{"task_id":"002-configuration-backend","task_items":["2.1","2.2","2.3","2.4"],"status":"ready","source":"approved-requirements","note":"Owns catalog and shop-scoped product rule administration."}
+{"task_id":"003-order-reconciliation","task_items":["3.1","3.2","3.3","3.4"],"status":"ready","source":"approved-requirements","note":"Owns immediate internal-order creation and centralized preparation reconciliation."}
+{"task_id":"004-fulfillment-safe-remarks","task_items":["4.1","4.2","4.3","4.4"],"status":"ready","source":"approved-requirements","note":"Owns remark history, plan classification and immutable fulfillment guards."}
+{"task_id":"005-historical-reconciliation","task_items":["5.1","5.2","5.3"],"status":"ready","source":"approved-requirements","note":"Owns bounded resumable historical reconciliation and dry-run evidence."}
+{"task_id":"006-admin-configuration-ui","task_items":["6.1","6.2","6.3","6.4","6.5","6.6"],"status":"ready","source":"approved-prototype","note":"Owns the approved three-tab administration experience and removal of quick-create controls."}
+{"task_id":"007-documentation-verification","task_items":["7.1","7.2","7.3","7.4","7.5"],"status":"ready","source":"approved-requirements","note":"Owns documentation, test execution and non-production operations evidence."}

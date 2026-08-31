@@ -1,0 +1,24 @@
+{
+  "tier": "high-risk",
+  "source": "path-trigger",
+  "triggers": [
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-admin/src/api/rental"
+  ],
+  "lane": "full",
+  "escalation_threshold": 10,
+  "reason": "high-risk path triggers: camera-rental-server/sql/mysql/migrations, camera-rental-admin/src/api/rental",
+  "checked_paths": [
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-api",
+    "camera-rental-admin/src/api/rental",
+    "camera-rental-admin/src/views/rental/configuration",
+    "camera-rental-admin/src/views/rental/device",
+    "camera-rental-admin/src/locales",
+    "docs/domain/xianyu-integration.md",
+    "docs/integrations/xianyu",
+    "openspec/changes/add-rental-configuration"
+  ],
+  "generated_at": "2026-08-31T01:50:21.951Z"
+}

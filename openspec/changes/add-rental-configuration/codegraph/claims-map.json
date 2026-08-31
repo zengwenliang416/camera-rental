@@ -1,0 +1,182 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-08-31T02:32:20.903Z",
+  "active_change": "add-rental-configuration",
+  "claims": [
+    {
+      "id": "development:task-001-identifier-foundation",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-identifier-foundation",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-configuration/development/tasks/001-identifier-foundation/brief.md",
+        "openspec/changes/add-rental-configuration/development/tasks/001-identifier-foundation/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-001-identifier-foundation:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-configuration-backend",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-configuration-backend",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-configuration/development/tasks/002-configuration-backend/brief.md",
+        "openspec/changes/add-rental-configuration/development/tasks/002-configuration-backend/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-002-configuration-backend:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-order-reconciliation",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-order-reconciliation",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-configuration/development/tasks/003-order-reconciliation/brief.md",
+        "openspec/changes/add-rental-configuration/development/tasks/003-order-reconciliation/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-003-order-reconciliation:evidence"
+      ]
+    },
+    {
+      "id": "development:task-004-fulfillment-safe-remarks",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "004-fulfillment-safe-remarks",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-configuration/development/tasks/004-fulfillment-safe-remarks/brief.md",
+        "openspec/changes/add-rental-configuration/development/tasks/004-fulfillment-safe-remarks/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-004-fulfillment-safe-remarks:evidence"
+      ]
+    },
+    {
+      "id": "development:task-005-historical-reconciliation",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "005-historical-reconciliation",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-configuration/development/tasks/005-historical-reconciliation/brief.md",
+        "openspec/changes/add-rental-configuration/development/tasks/005-historical-reconciliation/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-005-historical-reconciliation:evidence"
+      ]
+    },
+    {
+      "id": "development:task-006-admin-configuration-ui",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "006-admin-configuration-ui",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-configuration/development/tasks/006-admin-configuration-ui/brief.md",
+        "openspec/changes/add-rental-configuration/development/tasks/006-admin-configuration-ui/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-006-admin-configuration-ui:evidence"
+      ]
+    },
+    {
+      "id": "development:task-007-documentation-verification",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "007-documentation-verification",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-configuration/development/tasks/007-documentation-verification/brief.md",
+        "openspec/changes/add-rental-configuration/development/tasks/007-documentation-verification/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-007-documentation-verification:evidence"
+      ]
+    }
+  ]
+}

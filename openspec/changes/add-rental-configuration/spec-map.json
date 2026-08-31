@@ -1,0 +1,100 @@
+{
+  "touched_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "admin-rental-configuration-page-under-rental-operations",
+    "device-catalog-management-moves-out-of-rental-device-page",
+    "explicit-xgj-and-xianyu-product-sku-labels",
+    "single-model-and-expandable-multi-sku-mapping",
+    "remark-templates-with-copy-actions",
+    "loading-empty-error-permission-and-narrow-layout-states",
+    "no-color-only-status-and-monospace-external-identifiers"
+  ],
+  "architecture_modules": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-api",
+    "camera-rental-server/sql/mysql/migrations",
+    "camera-rental-admin/src/api/rental",
+    "camera-rental-admin/src/views/rental/device",
+    "camera-rental-admin/src/views/rental/configuration",
+    "camera-rental-admin/src/locales",
+    "docs/domain/xianyu-integration.md",
+    "docs/integrations/xianyu"
+  ],
+  "api_contracts": [
+    "GET /admin-api/rental/config/catalog",
+    "POST /admin-api/rental/config/catalog/category",
+    "PUT /admin-api/rental/config/catalog/category",
+    "PUT /admin-api/rental/config/catalog/category/status",
+    "POST /admin-api/rental/config/catalog/model",
+    "PUT /admin-api/rental/config/catalog/model",
+    "PUT /admin-api/rental/config/catalog/model/status",
+    "GET /admin-api/rental/config/channel-product/page",
+    "GET /admin-api/rental/config/channel-product/synced-skus",
+    "POST /admin-api/rental/config/channel-product",
+    "PUT /admin-api/rental/config/channel-product",
+    "PUT /admin-api/rental/config/channel-product/status",
+    "GET /admin-api/rental/config/channel-product/impact",
+    "POST /admin-api/rental/config/channel-product/reconcile",
+    "GET /admin-api/rental/device/catalog"
+  ],
+  "database_entities": [
+    "rental_device_category",
+    "rental_device_model",
+    "xianyu_product",
+    "xianyu_product_sku",
+    "xianyu_order",
+    "xianyu_product_mapping",
+    "rental_channel_product_rule",
+    "rental_channel_product_sku_mapping",
+    "rental_order",
+    "rental_order_item",
+    "rental_schedule",
+    "rental_device_assignment",
+    "rental_manual_review",
+    "xianyu_order_remark_history"
+  ],
+  "permissions": [
+    "rental:configuration:query",
+    "rental:configuration:update",
+    "rental:device:query",
+    "rental:device:create"
+  ],
+  "operational_constraints": [
+    "xianyu-read-only-external-api-scope",
+    "shop-id-and-item-id-strict-match",
+    "no-identifier-fallback-or-title-guessing",
+    "normal-order-created-before-remark-or-model-completeness",
+    "filtered-orders-retain-channel-revenue-and-raw-payload",
+    "historical-reconciliation-is-idempotent-and-resumable",
+    "existing-fulfillment-and-financial-facts-are-immutable-to-remark-config",
+    "external-identifiers-serialized-as-strings",
+    "asia-shanghai-business-dates",
+    "no-customer-pii-or-raw-payload-in-ordinary-logs"
+  ],
+  "data_flows": [
+    "FLOW-RENTAL-CONFIG-CATALOG",
+    "FLOW-XIANYU-PRODUCT-RULE-CONFIG",
+    "FLOW-XIANYU-ORDER-NORMALIZE",
+    "FLOW-XIANYU-ORDER-IMMEDIATE-CREATE",
+    "FLOW-XIANYU-ORDER-RECONCILE",
+    "FLOW-XIANYU-REMARK-PLAN-UPDATE",
+    "FLOW-XIANYU-HISTORICAL-BACKFILL",
+    "FLOW-DEVICE-ASSIGNMENT-GUARD"
+  ],
+  "theme_modes": [
+    "light-dark",
+    "theme-toggle:user"
+  ],
+  "locale_policy": [
+    "i18n:enabled",
+    "locales:zh-CN,en",
+    "default-locale:zh-CN",
+    "locale-toggle:user"
+  ],
+  "unresolved_gaps": []
+}

@@ -1,0 +1,62 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "artifact/index.html",
+  "project_fidelity": {
+    "status": "green",
+    "inventory": "visual-inventory.json",
+    "shell_checked": true,
+    "generic_shell_detected": false,
+    "notes": [
+      "The prototype mirrors the current Camera Rental Admin dark sidebar, tool header, tags view, ContentWrap density, inline filters, Element Plus-style tables, drawer and confirmation dialog.",
+      "Business copy and fields come from add-rental-configuration requirements, including four explicit channel identifiers, synchronized-SKU-only mapping, no default-model fallback, and fulfillment-safe impact preview.",
+      "All fixtures are fictional and no production API or database write is performed."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [
+      "1440x980 desktop",
+      "390x844 mobile"
+    ],
+    "theme_modes": [
+      "light",
+      "dark"
+    ],
+    "locales": [
+      "zh-CN",
+      "en"
+    ],
+    "states": [
+      "populated",
+      "loading",
+      "empty",
+      "error",
+      "permission",
+      "disabled",
+      "single-model drawer",
+      "multi-SKU expanded table",
+      "multi-SKU mapping drawer",
+      "impact preview dialog"
+    ]
+  },
+  "checks": [
+    "SpecNav requirements and UI manifest validation passed before runtime inspection.",
+    "JavaScript syntax, JSON parsing, all 139 zh-CN keys and all 139 en keys passed.",
+    "All six page states expose the intended state region and do not disguise loading, error or permission as an empty table.",
+    "All three tabs and both single-model and synchronized-SKU mapping modes switch to the intended panel.",
+    "The 390x844 viewport has scrollWidth equal to clientWidth and replaces the desktop rule table with mobile cards.",
+    "Light and dark themes plus zh-CN and en render the correct page title and controls.",
+    "The browser console contained no errors or warnings after the favicon fix.",
+    "Dark-mode inherited heading contrast was visually corrected and re-screenshot."
+  ],
+  "evidence": [
+    "evidence/runtime-matrix.json",
+    "evidence/desktop-light-zh.png",
+    "evidence/desktop-dark-en-drawer.png",
+    "evidence/mobile-light-zh.png",
+    "evidence/impact-dialog-dark-en.png",
+    "visual-inventory.json",
+    "screen-map.json"
+  ],
+  "blockers": []
+}

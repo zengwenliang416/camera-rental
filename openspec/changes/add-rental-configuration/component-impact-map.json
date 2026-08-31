@@ -1,0 +1,92 @@
+{
+  "new_components": [
+    "RentalConfigurationPage",
+    "DeviceCatalogConfigurationPanel",
+    "DeviceCategoryFormDialog",
+    "DeviceModelFormDialog",
+    "ChannelProductRuleTable",
+    "ChannelProductRuleFormDrawer",
+    "ChannelSkuMappingTable",
+    "ChannelIdentifierSummary",
+    "RemarkConventionPanel",
+    "RuleImpactPreviewDialog",
+    "RentalConfigurationController",
+    "RentalChannelProductRuleService",
+    "RentalChannelOrderReconciliationService",
+    "XianyuOrderRemarkHistoryService",
+    "RentalOrderPreparationPolicy"
+  ],
+  "reused_components": [
+    "ContentWrap",
+    "Pagination",
+    "Element Plus table form dialog drawer tag alert",
+    "v-hasPermi",
+    "existing admin request client",
+    "existing admin theme and locale toggles",
+    "deviceCatalogModel utilities",
+    "RentalDeviceCatalogService",
+    "XianyuOrderPersistenceServiceImpl",
+    "SellerRemarkRentalPeriodResolver",
+    "RentalDeviceAssignmentService",
+    "RentalScheduleAdminService",
+    "RentalManualReviewMapper"
+  ],
+  "extraction_triggers": [
+    "channel-identifier-label-and-copy-ui-repeats-across-rule-and-order-pages",
+    "catalog-model-label-and-selection-repeat-across-device-and-configuration-pages",
+    "order-reconciliation-trigger-repeats-across-persist-mapping-remark-replay-and-backfill",
+    "fulfillment-protection-checks-repeat-across-model-and-date-updates",
+    "remark-template-copy-and-special-case-help-grow-beyond-one-panel",
+    "any-production-source-file-reaches-450-physical-lines"
+  ],
+  "forbidden_dependencies": [
+    "configuration-page-to-device-page-local-state",
+    "presentational-component-to-rental-api-client",
+    "admin-controller-to-mapper",
+    "frontend-authoritative-product-or-sku-matching",
+    "product-title-or-sku-text-to-equipment-model-inference",
+    "xgj-product-id-fallback-to-xianyu-item-id",
+    "xgj-sku-id-fallback-to-xianyu-sku-id",
+    "remark-parser-to-actual-fulfillment-state-transition",
+    "configuration-update-directly-overwriting-assigned-device",
+    "historical-backfill-deleting-business-history",
+    "ordinary-log-containing-raw-payload-mobile-address-or-credentials"
+  ],
+  "hooks": [
+    "useRentalConfigurationCatalog",
+    "useChannelProductRules",
+    "useChannelSkuMappings",
+    "useRuleImpactPreview",
+    "useRemarkTemplateCopy"
+  ],
+  "utilities": [
+    "formatChannelIdentifier",
+    "buildDeviceNoPreview",
+    "getModelsForCategory",
+    "mapRentalPreparationReason",
+    "normalizeExternalIdentifier",
+    "classifyRemarkPlanChange"
+  ],
+  "services": [
+    "RentalDeviceCatalogService",
+    "RentalChannelProductRuleService",
+    "RentalChannelOrderReconciliationService",
+    "XianyuOrderIdentifierNormalizer",
+    "XianyuOrderRemarkHistoryService",
+    "RentalOrderPreparationPolicy",
+    "RentalFulfillmentUpdateGuard",
+    "RentalHistoricalOrderBackfillService"
+  ],
+  "required_component_tests": [
+    "device-catalog-panel-create-edit-disable-and-permission",
+    "device-page-has-no-catalog-quick-create-actions",
+    "single-model-rule-form",
+    "multi-sku-rule-only-allows-synced-skus",
+    "explicit-four-identifier-labels-and-copy",
+    "remark-template-copy-and-special-case-help",
+    "loading-empty-error-permission-and-narrow-layout",
+    "light-dark-and-zh-CN-en-rendering",
+    "rule-impact-preview-before-dangerous-update"
+  ],
+  "unresolved_gaps": []
+}

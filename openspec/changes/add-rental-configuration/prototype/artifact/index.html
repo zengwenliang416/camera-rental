@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>相机租赁管理后台 - 租赁配置原型</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div
+      id="app-shell"
+      class="app-shell"
+      data-specnav-project-shell="camera-rental-admin"
+      data-specnav-screen="rental-configuration"
+      data-specnav-variant="admin-three-tab-precise-mapping-v1"
+      data-specnav-state="populated"
+      data-theme="light"
+      data-locale="zh-CN"
+    >
+      <aside class="sidebar" data-specnav-component="admin-sidebar">
+        <div class="brand">
+          <div class="brand-mark">CR</div>
+          <div class="brand-copy">
+            <strong data-i18n="brand">相机租赁管理后台</strong>
+            <span>CAMERA RENTAL</span>
+          </div>
+        </div>
+        <nav class="side-nav" aria-label="Primary navigation">
+          <a href="#"><span class="nav-icon">⌂</span><span data-i18n="home">首页</span></a>
+          <div class="nav-group">
+            <div class="nav-group-title">
+              <span><span class="nav-icon">▣</span><span data-i18n="rentalOps">租赁运营</span></span>
+              <span>⌃</span>
+            </div>
+            <a href="#"><span class="nav-icon">▤</span><span data-i18n="channelOrders">渠道订单</span></a>
+            <a href="#"><span class="nav-icon">▱</span><span data-i18n="rentalDevices">租赁设备</span></a>
+            <a class="active" href="#"><span class="nav-icon">⚙</span><span data-i18n="rentalConfig">租赁配置</span></a>
+            <a href="#"><span class="nav-icon">◷</span><span data-i18n="schedules">设备排期</span></a>
+            <a href="#"><span class="nav-icon">!</span><span data-i18n="manualReview">人工复核</span></a>
+            <a href="#"><span class="nav-icon">▥</span><span data-i18n="reports">经营报表</span></a>
+          </div>
+        </nav>
+        <div class="sidebar-foot">
+          <span class="status-dot"></span>
+          <span data-i18n="prototypeData">仅使用虚构原型数据</span>
+        </div>
+      </aside>
+
+      <section class="main-shell">
+        <header class="topbar" data-specnav-component="admin-tool-header">
+          <div class="breadcrumb">
+            <button class="icon-button" aria-label="Collapse navigation">☰</button>
+            <span data-i18n="rentalOps">租赁运营</span>
+            <span class="crumb-separator">/</span>
+            <strong data-i18n="rentalConfig">租赁配置</strong>
+          </div>
+          <div class="top-actions">
+            <div class="control-cluster" data-specnav-component="prototype-state-control">
+              <label for="state-select" data-i18n="stateLabel">原型状态</label>
+              <select id="state-select">
+                <option value="populated" data-i18n="statePopulated">正常数据</option>
+                <option value="loading" data-i18n="stateLoading">加载中</option>
+                <option value="empty" data-i18n="stateEmpty">空数据</option>
+                <option value="error" data-i18n="stateError">加载失败</option>
+                <option value="permission" data-i18n="statePermission">无权限</option>
+                <option value="disabled" data-i18n="stateDisabled">禁用操作</option>
+              </select>
+            </div>
+            <button
+              id="theme-toggle"
+              class="icon-button text-button"
+              data-specnav-theme-control="admin-theme-toggle"
+              aria-label="Toggle theme"
+            >
+              <span id="theme-icon">◐</span>
+              <span id="theme-label">Light</span>
+            </button>
+            <button
+              id="locale-toggle"
+              class="icon-button text-button"
+              data-specnav-locale-control="admin-locale-toggle"
+              aria-label="Toggle locale"
+            >
+              <span>文</span>
+              <span id="locale-label">简体中文</span>
+            </button>
+            <button class="user-chip"><span>管</span><span data-i18n="admin">管理员</span></button>
+          </div>
+        </header>
+
+        <div class="tags-view" data-specnav-component="admin-tags-view">
+          <span data-i18n="home">首页</span>
+          <span class="tag-active"><span data-i18n="rentalConfig">租赁配置</span> ×</span>
+        </div>
+
+        <main class="content">
+          <section class="page-heading">
+            <div>
+              <div class="eyebrow" data-i18n="configCenter">RENTAL CONFIGURATION</div>
+              <h1 data-i18n="pageTitle">租赁配置</h1>
+              <p data-i18n="pageDescription">
+                统一维护设备目录、闲鱼商品精确映射和卖家备注规范。配置不会直接覆盖已发生的履约事实。
+              </p>
+            </div>
+            <div class="heading-metrics">
+              <div><strong>29</strong><span data-i18n="skippedRules">过滤规则</span></div>
+              <div><strong>2</strong><span data-i18n="waitingMapping">待型号配置</span></div>
+              <div><strong>4</strong><span data-i18n="shopsSynced">已同步店铺</span></div>
+            </div>
+          </section>
+
+          <section class="content-wrap" data-specnav-component="rental-configuration-page">
+            <div class="tabs" role="tablist" aria-label="Rental configuration sections">
+              <button role="tab" data-tab="catalog" data-i18n="tabCatalog">设备目录</button>
+              <button class="active" role="tab" data-tab="rules" data-i18n="tabRules">渠道商品规则</button>
+              <button role="tab" data-tab="remarks" data-i18n="tabRemarks">闲鱼备注规范</button>
+            </div>
+
+            <div class="state-region" data-specnav-state="loading">
+              <div class="skeleton skeleton-title"></div>
+              <div class="skeleton"></div>
+              <div class="skeleton"></div>
+              <div class="skeleton skeleton-short"></div>
+            </div>
+            <div class="state-region state-center" data-specnav-state="empty">
+              <div class="state-icon">◇</div>
+              <h2 data-i18n="emptyTitle">暂无配置数据</h2>
+              <p data-i18n="emptyCopy">先同步店铺和商品，再创建第一条精确映射规则。</p>
+              <button class="button primary" data-i18n="syncProducts">同步商品</button>
+            </div>
+            <div class="state-region state-center" data-specnav-state="error">
+              <div class="state-icon danger">!</div>
+              <h2 data-i18n="errorTitle">租赁配置加载失败</h2>
+              <p data-i18n="errorCopy">未展示为空表，请检查服务状态后安全重试。</p>
+              <button class="button primary" data-i18n="retry">重新加载</button>
+            </div>
+            <div class="state-region state-center" data-specnav-state="permission">
+              <div class="state-icon warning">⌁</div>
+              <h2>403</h2>
+              <p data-i18n="permissionCopy">当前账号没有租赁配置读取权限。</p>
+            </div>
+
+            <div class="state-region populated-region" data-specnav-state="populated">
+              <section id="panel-catalog" class="tab-panel" data-panel="catalog" data-specnav-component="device-catalog-configuration-panel">
+                <div class="panel-toolbar">
+                  <div>
+                    <h2 data-i18n="catalogTitle">设备目录</h2>
+                    <p data-i18n="catalogHint">大类和型号在此维护；租赁设备页只负责选择目录和创建设备。</p>
+                  </div>
+                  <button class="button primary">＋ <span data-i18n="newCategory">新增大类</span></button>
+                </div>
+                <div class="catalog-grid">
+                  <section class="sub-card">
+                    <div class="sub-card-head"><strong data-i18n="categories">设备大类</strong><span>4</span></div>
+                    <div class="category-list">
+                      <button class="category-row active"><span><b>CAMERA</b><small data-i18n="camera">相机</small></span><span class="status success" data-i18n="enabled">启用</span></button>
+                      <button class="category-row"><span><b>LENS</b><small data-i18n="lens">镜头</small></span><span class="status success" data-i18n="enabled">启用</span></button>
+                      <button class="category-row"><span><b>DRONE</b><small data-i18n="drone">无人机</small></span><span class="status success" data-i18n="enabled">启用</span></button>
+                      <button class="category-row"><span><b>ACCESSORY</b><small data-i18n="accessory">配件</small></span><span class="status muted" data-i18n="disabled">停用</span></button>
+                    </div>
+                  </section>
+                  <section class="sub-card">
+                    <div class="sub-card-head">
+                      <strong data-i18n="models">相机型号</strong>
+                      <button class="link-button" data-i18n="newModel">新增型号</button>
+                    </div>
+                    <div class="table-scroll">
+                      <table>
+                        <thead><tr><th data-i18n="modelName">型号名称</th><th data-i18n="modelCode">型号编码</th><th data-i18n="prefix">设备编号前缀</th><th data-i18n="status">状态</th><th data-i18n="actions">操作</th></tr></thead>
+                        <tbody>
+                          <tr><td>Alpha 7 IV</td><td class="mono">SONY-A7M4</td><td class="mono">A7M4</td><td><span class="status success" data-i18n="enabled">启用</span></td><td><button class="link-button" data-i18n="edit">编辑</button></td></tr>
+                          <tr><td>Pocket 3</td><td class="mono">DJI-P3</td><td class="mono">P3</td><td><span class="status success" data-i18n="enabled">启用</span></td><td><button class="link-button" data-i18n="edit">编辑</button></td></tr>
+                          <tr><td>Action 5 Pro</td><td class="mono">DJI-A5P</td><td class="mono">A5P</td><td><span class="status success" data-i18n="enabled">启用</span></td><td><button class="link-button" data-i18n="edit">编辑</button></td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+                </div>
+              </section>
+
+              <section id="panel-rules" class="tab-panel active" data-panel="rules" data-specnav-component="channel-product-rule-table">
+                <div class="panel-toolbar">
+                  <div>
+                    <h2 data-i18n="rulesTitle">渠道商品规则</h2>
+                    <p data-i18n="rulesHint">规则按当前租户内的店铺和闲鱼商品 ID 唯一匹配，所有外部标识均按字符串保存。</p>
+                  </div>
+                  <button class="button primary" data-action="open-rule-drawer">＋ <span data-i18n="newRule">新增规则</span></button>
+                </div>
+
+                <div class="filter-form">
+                  <label><span data-i18n="shop">店铺</span><select><option data-i18n="allShops">全部店铺</option><option>小疆（示例）</option><option>发发（示例）</option></select></label>
+                  <label><span data-i18n="xianyuItemId">闲鱼商品 ID</span><input type="text" placeholder="例如 1000000000001"></label>
+                  <label><span data-i18n="handlingPolicy">处理策略</span><select><option data-i18n="all">全部</option><option>CREATE_RENTAL</option><option>CONFIG_SKIPPED</option></select></label>
+                  <label><span data-i18n="mappingStatus">型号状态</span><select><option data-i18n="all">全部</option><option data-i18n="configured">已配置</option><option data-i18n="waitingMapping">待型号配置</option></select></label>
+                  <button class="button" data-i18n="query">查询</button>
+                  <button class="button ghost" data-i18n="reset">重置</button>
+                </div>
+
+                <div class="notice info">
+                  <span>i</span>
+                  <p data-i18n="noFallbackNotice">多型号规则只按已同步闲管家 SKU 精确匹配。SKU 未同步或未配置时，订单保持“待型号配置”，不会回退商品默认型号。</p>
+                </div>
+
+                <div class="table-scroll desktop-table">
+                  <table class="rules-table">
+                    <thead>
+                      <tr>
+                        <th class="expand-cell"></th>
+                        <th data-i18n="shopProduct">店铺 / 商品</th>
+                        <th data-i18n="identifiers">渠道标识</th>
+                        <th data-i18n="handlingPolicy">处理策略</th>
+                        <th data-i18n="modelMode">型号识别</th>
+                        <th data-i18n="mappingResult">型号映射</th>
+                        <th data-i18n="status">状态</th>
+                        <th data-i18n="actions">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td></td>
+                        <td><strong data-i18n="singleProduct">口袋云台单机租赁</strong><small>小疆（示例）</small></td>
+                        <td><span class="id-label" data-i18n="xgjProductId">闲管家商品 ID</span><code>PX-10001</code><span class="id-label" data-i18n="xianyuItemId">闲鱼商品 ID</span><code>1000000000001</code></td>
+                        <td><span class="status success">CREATE_RENTAL</span></td>
+                        <td><span class="status neutral" data-i18n="singleModel">单型号</span></td>
+                        <td><strong>Pocket 3</strong><small class="mono">DJI-P3</small></td>
+                        <td><span class="status success" data-i18n="enabled">启用</span></td>
+                        <td><button class="link-button" data-action="open-rule-drawer" data-mode="single" data-i18n="edit">编辑</button></td>
+                      </tr>
+                      <tr class="multi-row">
+                        <td><button class="expand-button expanded" data-action="toggle-sku" aria-label="Toggle SKU mappings">⌄</button></td>
+                        <td><strong data-i18n="multiProduct">微单相机多规格租赁</strong><small>发发（示例）</small></td>
+                        <td><span class="id-label" data-i18n="xgjProductId">闲管家商品 ID</span><code>PX-20008</code><span class="id-label" data-i18n="xianyuItemId">闲鱼商品 ID</span><code>1000000000002</code></td>
+                        <td><span class="status success">CREATE_RENTAL</span></td>
+                        <td><span class="status primary" data-i18n="bySku">按 SKU</span></td>
+                        <td><strong>2 / 3</strong><small data-i18n="mappedSkuCount">已配置 SKU</small></td>
+                        <td><span class="status warning" data-i18n="waitingMapping">待型号配置</span></td>
+                        <td><button class="link-button" data-action="open-rule-drawer" data-mode="sku" data-i18n="editMapping">配置映射</button></td>
+                      </tr>
+                      <tr class="sku-detail-row">
+                        <td colspan="8">
+                          <div class="sku-detail" data-specnav-component="channel-sku-mapping-table" data-specnav-variant="multi-sku-expanded">
+                            <div class="sku-detail-head">
+                              <div><strong data-i18n="syncedSku">已同步规格</strong><span data-i18n="syncedSkuHint">只能选择这些 SKU，不能手工输入或按文本猜测</span></div>
+                              <span class="sync-time" data-i18n="syncTime">同步于 08-31 09:20</span>
+                            </div>
+                            <div class="table-scroll">
+                              <table>
+                                <thead><tr><th data-i18n="xgjSkuId">闲管家 SKU ID</th><th data-i18n="xianyuSkuId">闲鱼 SKU ID</th><th data-i18n="skuDisplay">规格展示（仅辅助）</th><th data-i18n="equipmentModel">设备型号</th><th data-i18n="mappingStatus">映射状态</th></tr></thead>
+                                <tbody>
+                                  <tr><td><code>SKU-XGJ-001</code></td><td><code>SKU-XY-88001</code></td><td>标准机身</td><td>Alpha 7 IV <small class="mono">SONY-A7M4</small></td><td><span class="status success" data-i18n="configured">已配置</span></td></tr>
+                                  <tr><td><code>SKU-XGJ-002</code></td><td><code>SKU-XY-88002</code></td><td>高像素机身</td><td>Alpha 7R V <small class="mono">SONY-A7R5</small></td><td><span class="status success" data-i18n="configured">已配置</span></td></tr>
+                                  <tr class="waiting-row"><td><code>SKU-XGJ-003</code></td><td><code>SKU-XY-88003</code></td><td>视频机身</td><td class="muted-text" data-i18n="notSelected">未选择</td><td><span class="status warning" data-i18n="waitingMapping">待型号配置</span></td></tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td><strong data-i18n="skipProduct">展示与押金服务商品</strong><small>小疆（示例）</small></td>
+                        <td><span class="id-label" data-i18n="xgjProductId">闲管家商品 ID</span><code>PX-30006</code><span class="id-label" data-i18n="xianyuItemId">闲鱼商品 ID</span><code>1000000000003</code></td>
+                        <td><span class="status neutral">CONFIG_SKIPPED</span></td>
+                        <td class="muted-text">—</td>
+                        <td class="muted-text" data-i18n="noParsing">不解析备注 / 不建内部订单</td>
+                        <td><span class="status success" data-i18n="enabled">启用</span></td>
+                        <td><button class="link-button" data-action="open-rule-drawer" data-mode="skip" data-i18n="edit">编辑</button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="mobile-rule-list">
+                  <article class="mobile-rule-card">
+                    <div class="mobile-card-head"><div><strong data-i18n="singleProduct">口袋云台单机租赁</strong><small>小疆（示例）</small></div><span class="status success" data-i18n="enabled">启用</span></div>
+                    <dl><div><dt data-i18n="xianyuItemId">闲鱼商品 ID</dt><dd><code>1000000000001</code></dd></div><div><dt data-i18n="modelMode">型号识别</dt><dd data-i18n="singleModel">单型号</dd></div><div><dt data-i18n="mappingResult">型号映射</dt><dd>Pocket 3</dd></div></dl>
+                    <button class="button full" data-action="open-rule-drawer" data-mode="single" data-i18n="edit">编辑</button>
+                  </article>
+                  <article class="mobile-rule-card accent-card">
+                    <div class="mobile-card-head"><div><strong data-i18n="multiProduct">微单相机多规格租赁</strong><small>发发（示例）</small></div><span class="status warning" data-i18n="waitingMapping">待型号配置</span></div>
+                    <dl><div><dt data-i18n="xianyuItemId">闲鱼商品 ID</dt><dd><code>1000000000002</code></dd></div><div><dt data-i18n="modelMode">型号识别</dt><dd data-i18n="bySku">按 SKU</dd></div><div><dt data-i18n="mappingResult">型号映射</dt><dd>2 / 3</dd></div></dl>
+                    <button class="button primary full" data-action="open-rule-drawer" data-mode="sku" data-i18n="editMapping">配置映射</button>
+                  </article>
+                </div>
+              </section>
+
+              <section id="panel-remarks" class="tab-panel" data-panel="remarks" data-specnav-component="remark-convention-panel">
+                <div class="panel-toolbar">
+                  <div>
+                    <h2 data-i18n="remarkTitle">闲鱼卖家备注规范</h2>
+                    <p data-i18n="remarkHint">先写完整基础日期，特殊情况只在末尾追加一个清晰关键词，避免备注越来越复杂。</p>
+                  </div>
+                </div>
+                <div class="remark-layout">
+                  <section>
+                    <h3 data-i18n="baseTemplates">三种基础格式</h3>
+                    <article class="template-card">
+                      <div><span class="template-index">01</span><div><strong data-i18n="deliveryTemplate">快递常用</strong><code>发货8.31/收货9.1/发回9.6</code></div></div>
+                      <button class="button" data-copy="发货8.31/收货9.1/发回9.6" data-i18n="copy">复制</button>
+                    </article>
+                    <article class="template-card">
+                      <div><span class="template-index">02</span><div><strong data-i18n="pickupTemplate">自提常用</strong><code>自提8.31/发回9.6</code></div></div>
+                      <button class="button" data-copy="自提8.31/发回9.6" data-i18n="copy">复制</button>
+                    </article>
+                    <article class="template-card">
+                      <div><span class="template-index">03</span><div><strong data-i18n="explicitTemplate">明确租期</strong><code>发货8.31/收货9.1/租期9.2-9.6/发回9.6</code></div></div>
+                      <button class="button" data-copy="发货8.31/收货9.1/租期9.2-9.6/发回9.6" data-i18n="copy">复制</button>
+                    </article>
+                    <div class="notice warning">
+                      <span>!</span>
+                      <p data-i18n="remarkPreserve">新备注为空、不完整或解析失败时保留上一次有效计划，不会清空正确日期。</p>
+                    </div>
+                  </section>
+                  <section>
+                    <h3 data-i18n="specialCases">八种特殊情况</h3>
+                    <div class="case-grid">
+                      <article><strong data-i18n="renew">续租</strong><code>…/发回9.8/续租</code><span data-i18n="renewHint">检查后续排期，无冲突才延长</span></article>
+                      <article><strong data-i18n="earlyReturn">早退</strong><code>…/发回9.4/早退</code><span data-i18n="earlyHint">检测完成前不释放占用</span></article>
+                      <article><strong data-i18n="reschedule">改期</strong><code>完整新日期/改期</code><span data-i18n="rescheduleHint">重新检查设备冲突</span></article>
+                      <article><strong data-i18n="swap">换机</strong><code>完整日期/换机</code><span data-i18n="reviewOnly">仅创建运营提示或复核</span></article>
+                      <article><strong data-i18n="damage">损坏</strong><code>完整日期/损坏</code><span data-i18n="reviewOnly">仅创建运营提示或复核</span></article>
+                      <article><strong data-i18n="lost">遗失</strong><code>完整日期/遗失</code><span data-i18n="reviewOnly">仅创建运营提示或复核</span></article>
+                      <article><strong data-i18n="overdue">逾期</strong><code>完整日期/逾期</code><span data-i18n="reviewOnly">仅创建运营提示或复核</span></article>
+                      <article><strong data-i18n="delay">物流延误</strong><code>完整日期/物流延误</code><span data-i18n="reviewOnly">仅创建运营提示或复核</span></article>
+                    </div>
+                  </section>
+                </div>
+              </section>
+            </div>
+
+            <div class="state-region disabled-banner" data-specnav-state="disabled">
+              <div class="notice warning"><span>!</span><p data-i18n="disabledCopy">当前规则正在重评，保存和启停操作暂时禁用；读取和查看影响范围仍可用。</p></div>
+              <div class="disabled-preview">
+                <button class="button" disabled data-i18n="newRule">新增规则</button>
+                <button class="button primary" disabled data-i18n="saveRule">保存规则</button>
+              </div>
+            </div>
+          </section>
+        </main>
+      </section>
+
+      <div id="drawer-overlay" class="overlay" aria-hidden="true"></div>
+      <aside
+        id="rule-drawer"
+        class="drawer"
+        data-specnav-component="channel-product-rule-form-drawer"
+        data-specnav-variant="single-model-drawer"
+        aria-hidden="true"
+      >
+        <div class="drawer-head">
+          <div><span class="eyebrow" data-i18n="exactMapping">EXACT MAPPING</span><h2 data-i18n="editRule">编辑商品规则</h2></div>
+          <button class="icon-button" data-action="close-drawer" aria-label="Close">×</button>
+        </div>
+        <div class="drawer-body">
+          <div class="form-section">
+            <h3 data-i18n="scopeTitle">唯一匹配范围</h3>
+            <div class="field-grid">
+              <label><span data-i18n="shop">店铺</span><select disabled><option>发发（示例）</option></select></label>
+              <label><span data-i18n="xianyuItemId">闲鱼商品 ID</span><input class="mono" value="1000000000002" disabled></label>
+            </div>
+            <div class="identifier-grid" data-specnav-component="channel-identifier-summary">
+              <div><span data-i18n="xgjProductId">闲管家商品 ID</span><code>PX-20008</code></div>
+              <div><span data-i18n="xianyuItemId">闲鱼商品 ID</span><code>1000000000002</code></div>
+              <div><span data-i18n="xgjSkuId">闲管家 SKU ID</span><code data-i18n="perSku">按下方规格</code></div>
+              <div><span data-i18n="xianyuSkuId">闲鱼 SKU ID</span><code data-i18n="perSku">按下方规格</code></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 data-i18n="policyAndMode">处理策略与型号识别</h3>
+            <label><span data-i18n="handlingPolicy">处理策略</span><select><option>CREATE_RENTAL</option><option>CONFIG_SKIPPED</option></select></label>
+            <div class="radio-row">
+              <label><input type="radio" name="mode" value="single"><span><strong data-i18n="singleModel">单型号</strong><small data-i18n="singleModeHint">整个商品固定对应一个型号</small></span></label>
+              <label><input type="radio" name="mode" value="sku" checked><span><strong data-i18n="bySku">按 SKU</strong><small data-i18n="skuModeHint">每个已同步规格分别对应型号</small></span></label>
+            </div>
+          </div>
+
+          <div id="single-mode-form" class="form-section mode-form">
+            <h3 data-i18n="singleMapping">商品级型号</h3>
+            <label><span data-i18n="equipmentModel">设备型号</span><select><option>Pocket 3 / DJI-P3</option><option>Action 5 Pro / DJI-A5P</option></select></label>
+          </div>
+
+          <div id="sku-mode-form" class="form-section mode-form active" data-specnav-component="channel-sku-mapping-table">
+            <div class="section-title-row"><h3 data-i18n="skuMapping">同步 SKU 映射</h3><span class="status warning" data-i18n="oneMissing">1 项未配置</span></div>
+            <div class="notice info compact"><span>i</span><p data-i18n="skuSelectionRule">SKU 标识来自商品同步，只能选择设备型号；不允许新增或改写 SKU。</p></div>
+            <div class="mapping-card">
+              <div class="mapping-ids"><span><b data-i18n="xgjSkuId">闲管家 SKU ID</b><code>SKU-XGJ-001</code></span><span><b data-i18n="xianyuSkuId">闲鱼 SKU ID</b><code>SKU-XY-88001</code></span></div>
+              <label><span data-i18n="equipmentModel">设备型号</span><select><option>Alpha 7 IV / SONY-A7M4</option></select></label>
+            </div>
+            <div class="mapping-card">
+              <div class="mapping-ids"><span><b data-i18n="xgjSkuId">闲管家 SKU ID</b><code>SKU-XGJ-002</code></span><span><b data-i18n="xianyuSkuId">闲鱼 SKU ID</b><code>SKU-XY-88002</code></span></div>
+              <label><span data-i18n="equipmentModel">设备型号</span><select><option>Alpha 7R V / SONY-A7R5</option></select></label>
+            </div>
+            <div class="mapping-card missing">
+              <div class="mapping-ids"><span><b data-i18n="xgjSkuId">闲管家 SKU ID</b><code>SKU-XGJ-003</code></span><span><b data-i18n="xianyuSkuId">闲鱼 SKU ID</b><code>SKU-XY-88003</code></span></div>
+              <label><span data-i18n="equipmentModel">设备型号</span><select class="needs-value"><option value="" data-i18n="selectModel">请选择设备型号</option><option>Alpha 7S III / SONY-A7S3</option></select></label>
+              <small class="validation-text" data-i18n="noFallbackValidation">未配置时相关订单保持“待型号配置”，不会使用商品默认型号。</small>
+            </div>
+          </div>
+        </div>
+        <div class="drawer-foot">
+          <button class="button" data-action="close-drawer" data-i18n="cancel">取消</button>
+          <button class="button primary" data-action="open-impact" data-i18n="previewSave">预览影响并保存</button>
+        </div>
+      </aside>
+
+      <div
+        id="impact-dialog"
+        class="dialog"
+        data-specnav-component="rule-impact-preview-dialog"
+        data-specnav-variant="impact-preview-dialog"
+        aria-hidden="true"
+      >
+        <div class="dialog-head">
+          <div><span class="eyebrow" data-i18n="safeChange">FULFILLMENT SAFE</span><h2 data-i18n="impactTitle">确认规则变更影响</h2></div>
+          <button class="icon-button" data-action="close-impact" aria-label="Close">×</button>
+        </div>
+        <div class="dialog-body">
+          <div class="impact-summary">
+            <div><strong>12</strong><span data-i18n="affectedOrders">受影响订单</span></div>
+            <div><strong>8</strong><span data-i18n="autoUpdate">可自动更新</span></div>
+            <div><strong>2</strong><span data-i18n="manualReviewCount">进入人工复核</span></div>
+            <div><strong>2</strong><span data-i18n="completedProtected">已履约，仅保留历史</span></div>
+          </div>
+          <div class="notice warning"><span>!</span><p data-i18n="impactWarning">已分配或已出库订单不会自动更换型号或设备；不一致项将进入人工复核。确认后由后端异步重评。</p></div>
+          <div class="change-flow">
+            <div><span>1</span><p><strong data-i18n="saveConfig">保存配置</strong><small data-i18n="saveConfigHint">校验店铺、商品、SKU 归属和版本</small></p></div>
+            <div><span>2</span><p><strong data-i18n="reconcile">异步重评</strong><small data-i18n="reconcileHint">只更新允许自动变化的计划字段</small></p></div>
+            <div><span>3</span><p><strong data-i18n="audit">保留审计</strong><small data-i18n="auditHint">记录配置版本、结果和冲突原因</small></p></div>
+          </div>
+        </div>
+        <div class="dialog-foot">
+          <button class="button" data-action="close-impact" data-i18n="backEdit">返回修改</button>
+          <button class="button primary" data-action="confirm-save" data-i18n="confirmSave">确认保存并重评</button>
+        </div>
+      </div>
+
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+{
+  "screens": [
+    {
+      "id": "rental-configuration",
+      "label": "租赁配置",
+      "requirements": [
+        "requirements.md"
+      ],
+      "acceptance": [
+        "acceptance.md"
+      ],
+      "components": [
+        "DeviceCatalogConfigurationPanel",
+        "ChannelProductRuleTable",
+        "ChannelProductRuleFormDrawer",
+        "ChannelSkuMappingTable",
+        "ChannelIdentifierSummary",
+        "RemarkConventionPanel",
+        "RuleImpactPreviewDialog"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#project_shell",
+        "attached current Camera Rental Admin screenshot",
+        "camera-rental-admin/src/views/rental/device/index.vue"
+      ],
+      "data_flows": [
+        "FLOW-CONFIG-CATALOG",
+        "FLOW-CONFIG-SINGLE-MODEL",
+        "FLOW-CONFIG-BY-SKU",
+        "FLOW-CONFIG-IMPACT-PREVIEW",
+        "FLOW-CONFIG-RECONCILIATION",
+        "FLOW-REMARK-TEMPLATE-COPY"
+      ],
+      "theme_modes": [
+        "light",
+        "dark"
+      ],
+      "locales": [
+        "zh-CN",
+        "en"
+      ],
+      "implementation_files": [
+        "camera-rental-admin/src/views/rental/configuration/index.vue"
+      ]
+    }
+  ],
+  "variants": [
+    "default",
+    "loading",
+    "empty",
+    "error",
+    "disabled",
+    "permission",
+    "admin-three-tab-precise-mapping-v1",
+    "single-model-drawer",
+    "multi-sku-expanded",
+    "impact-preview-dialog"
+  ]
+}

@@ -15,6 +15,55 @@ module.exports = {
         ({ tokenValue, tenantValue }) => {
           localStorage.setItem('ACCESS_TOKEN', tokenValue)
           localStorage.setItem('tenantId', tenantValue)
+
+          const iconifyOrigins = new Set([
+            'https://api.iconify.design',
+            'https://api.simplesvg.com',
+            'https://api.unisvg.com'
+          ])
+          const iconifyIcons = {
+            mdi: new Set(['format-size']),
+            zmdi: new Set(['fullscreen', 'fullscreen-exit']),
+            ion: new Set(['language-sharp'])
+          }
+          const originalFetch = window.fetch.bind(window)
+          window.fetch = async (input, init) => {
+            const requestUrl =
+              typeof input === 'string' || input instanceof URL ? String(input) : input.url
+            const url = new URL(requestUrl, window.location.href)
+            const match = url.pathname.match(/^\/([a-z0-9-]+)\.json$/)
+            const prefix = match?.[1]
+            const names = (url.searchParams.get('icons') || '')
+              .split(',')
+              .map((name) => name.trim())
+              .filter(Boolean)
+            const allowedNames = prefix ? iconifyIcons[prefix] : null
+            if (
+              iconifyOrigins.has(url.origin) &&
+              allowedNames &&
+              names.length > 0 &&
+              names.every((name) => allowedNames.has(name))
+            ) {
+              return new Response(
+                JSON.stringify({
+                  prefix,
+                  icons: Object.fromEntries(
+                    names.map((name) => [
+                      name,
+                      { body: '<path fill="currentColor" d="M4 4h16v16H4z"/>' }
+                    ])
+                  ),
+                  width: 24,
+                  height: 24
+                }),
+                {
+                  status: 200,
+                  headers: { 'Content-Type': 'application/json' }
+                }
+              )
+            }
+            return originalFetch(input, init)
+          }
         },
         {
           tokenValue: cache('specnav-local-token'),

@@ -25,6 +25,17 @@ echo "[deploy] root=${DEPLOY_ROOT}"
 echo "[deploy] release=${RELEASE_SHA}"
 
 mkdir -p "${DEPLOY_ROOT}/releases" "${DEPLOY_ROOT}/shared" "${DEPLOY_ROOT}/shared/logs"
+previous_release_dir="$(release_link_target "${DEPLOY_ROOT}/current" 2>/dev/null || true)"
+if [ "${previous_release_dir}" = "${release_dir}" ]; then
+  echo "[deploy][error] refusing to overwrite the active release: ${release_dir}" >&2
+  exit 1
+fi
+if [ -n "${previous_release_dir}" ]; then
+  echo "[deploy] previous release=${previous_release_dir}"
+else
+  echo "[deploy][warn] no previous release is available for rollback"
+fi
+
 rm -rf "${release_dir}"
 mkdir -p "${release_dir}"
 tar -xzf "${RELEASE_ARCHIVE}" -C "${release_dir}"
@@ -93,51 +104,109 @@ for static_dir in admin schedule-center staff; do
   fi
 done
 
-ln -sfn "${release_dir}" "${DEPLOY_ROOT}/current"
+verify_activated_release() {
+  restart_release_services "${release_dir}" "${SERVER_SERVICE}" "${WEB_SERVICE}" true || return 1
 
-if systemctl list-unit-files "${SERVER_SERVICE}" >/dev/null 2>&1; then
-  echo "[deploy] restart ${SERVER_SERVICE}"
-  systemctl restart "${SERVER_SERVICE}"
-else
-  echo "[deploy][error] ${SERVER_SERVICE} not found" >&2
-  exit 1
-fi
+  if command -v nginx >/dev/null 2>&1; then
+    echo "[deploy] reload nginx"
+    bash -lc "${NGINX_RELOAD_CMD}" || return 1
+    verify_admin_frontend_route "${ADMIN_HEALTH_URL}" "${ADMIN_HEALTH_RESOLVE}" || return 1
+  else
+    echo "[deploy][warn] nginx not installed or not on PATH; static frontends deployed but nginx not reloaded"
+  fi
 
-if [ "${has_web_artifact}" = true ] && systemctl list-unit-files "${WEB_SERVICE}" >/dev/null 2>&1; then
-  echo "[deploy] restart ${WEB_SERVICE}"
-  systemctl restart "${WEB_SERVICE}"
-elif [ "${has_web_artifact}" = false ]; then
-  echo "[deploy] skip ${WEB_SERVICE}; web artifact not included"
-else
-  echo "[deploy][error] ${WEB_SERVICE} not found" >&2
-  exit 1
-fi
-
-if command -v nginx >/dev/null 2>&1; then
-  echo "[deploy] reload nginx"
-  bash -lc "${NGINX_RELOAD_CMD}"
-  verify_admin_frontend_route "${ADMIN_HEALTH_URL}" "${ADMIN_HEALTH_RESOLVE}"
-else
-  echo "[deploy][warn] nginx not installed or not on PATH; static frontends deployed but nginx not reloaded"
-fi
-
-wait_for_service_http \
-  "${SERVER_SERVICE}" \
-  "${BACKEND_HEALTH_URL}" \
-  reachable \
-  "${BACKEND_HEALTH_ATTEMPTS}" \
-  "${HEALTH_INTERVAL_SECONDS}" \
-  "${HEALTH_STABILIZE_SECONDS}"
-verify_rental_routes "http://127.0.0.1:48080"
-
-if [ "${has_web_artifact}" = true ]; then
   wait_for_service_http \
-    "${WEB_SERVICE}" \
-    "${WEB_HEALTH_URL}" \
-    success \
-    "${WEB_HEALTH_ATTEMPTS}" \
+    "${SERVER_SERVICE}" \
+    "${BACKEND_HEALTH_URL}" \
+    reachable \
+    "${BACKEND_HEALTH_ATTEMPTS}" \
     "${HEALTH_INTERVAL_SECONDS}" \
-    "${HEALTH_STABILIZE_SECONDS}"
+    "${HEALTH_STABILIZE_SECONDS}" || return 1
+  verify_rental_routes "http://127.0.0.1:48080" || return 1
+
+  if [ "${has_web_artifact}" = true ]; then
+    wait_for_service_http \
+      "${WEB_SERVICE}" \
+      "${WEB_HEALTH_URL}" \
+      success \
+      "${WEB_HEALTH_ATTEMPTS}" \
+      "${HEALTH_INTERVAL_SECONDS}" \
+      "${HEALTH_STABILIZE_SECONDS}" || return 1
+  fi
+}
+
+verify_restored_release() {
+  local previous_has_web_artifact=false
+  local previous_web_service_available=false
+
+  if [ -f "${previous_release_dir}/web/server/index.mjs" ]; then
+    previous_has_web_artifact=true
+  fi
+  if systemctl list-unit-files "${WEB_SERVICE}" >/dev/null 2>&1; then
+    previous_web_service_available=true
+  fi
+
+  restart_release_services \
+    "${previous_release_dir}" \
+    "${SERVER_SERVICE}" \
+    "${WEB_SERVICE}" \
+    false || {
+      dump_service_diagnostics "${SERVER_SERVICE}"
+      if [ "${previous_has_web_artifact}" = true ] && [ "${previous_web_service_available}" = true ]; then
+        dump_service_diagnostics "${WEB_SERVICE}"
+      fi
+      return 1
+    }
+
+  if command -v nginx >/dev/null 2>&1; then
+    echo "[deploy][rollback] reload nginx"
+    bash -lc "${NGINX_RELOAD_CMD}" || {
+      dump_service_diagnostics "${SERVER_SERVICE}"
+      if [ "${previous_has_web_artifact}" = true ] && [ "${previous_web_service_available}" = true ]; then
+        dump_service_diagnostics "${WEB_SERVICE}"
+      fi
+      return 1
+    }
+    verify_admin_frontend_route "${ADMIN_HEALTH_URL}" "${ADMIN_HEALTH_RESOLVE}" || {
+      dump_service_diagnostics "${SERVER_SERVICE}"
+      if [ "${previous_has_web_artifact}" = true ] && [ "${previous_web_service_available}" = true ]; then
+        dump_service_diagnostics "${WEB_SERVICE}"
+      fi
+      return 1
+    }
+  else
+    echo "[deploy][rollback][warn] nginx not installed or not on PATH" >&2
+  fi
+
+  wait_for_service_http \
+    "${SERVER_SERVICE}" \
+    "${BACKEND_HEALTH_URL}" \
+    reachable \
+    "${BACKEND_HEALTH_ATTEMPTS}" \
+    "${HEALTH_INTERVAL_SECONDS}" \
+    "${HEALTH_STABILIZE_SECONDS}" || return 1
+  verify_rental_routes "http://127.0.0.1:48080" || return 1
+
+  if [ "${previous_has_web_artifact}" = true ] && [ "${previous_web_service_available}" = true ]; then
+    wait_for_service_http \
+      "${WEB_SERVICE}" \
+      "${WEB_HEALTH_URL}" \
+      success \
+      "${WEB_HEALTH_ATTEMPTS}" \
+      "${HEALTH_INTERVAL_SECONDS}" \
+      "${HEALTH_STABILIZE_SECONDS}" || return 1
+  fi
+}
+
+activation_status=0
+run_release_activation_with_rollback \
+  "${DEPLOY_ROOT}/current" \
+  "${previous_release_dir}" \
+  "${release_dir}" \
+  verify_activated_release \
+  verify_restored_release || activation_status=$?
+if [ "${activation_status}" -ne 0 ]; then
+  exit "${activation_status}"
 fi
 
 echo "[deploy] cleanup old releases, keep=${KEEP_RELEASES}"

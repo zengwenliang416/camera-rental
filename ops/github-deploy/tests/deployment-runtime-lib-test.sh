@@ -11,9 +11,17 @@ mkdir -p "${bin_dir}"
 cat > "${bin_dir}/systemctl" <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
+if [ -n "${FAKE_SYSTEMCTL_LOG:-}" ]; then
+  printf '%s\n' "$*" >> "${FAKE_SYSTEMCTL_LOG}"
+fi
 if [ "${1:-}" = "is-active" ]; then
   [ "${FAKE_SERVICE_ACTIVE:-true}" = "true" ]
   exit
+fi
+if [ "${1:-}" = "list-unit-files" ] \
+  && [ "${2:-}" = "web.service" ] \
+  && [ "${FAKE_WEB_SERVICE_EXISTS:-true}" != "true" ]; then
+  exit 1
 fi
 exit 0
 EOF
@@ -60,6 +68,74 @@ chmod +x "${bin_dir}/systemctl" "${bin_dir}/curl" "${bin_dir}/journalctl"
 
 # shellcheck source=../deployment-runtime-lib.sh
 source "${repo_root}/ops/github-deploy/deployment-runtime-lib.sh"
+
+release_test_root="${test_dir}/release-activation"
+previous_release_dir="${release_test_root}/releases/previous"
+next_release_dir="${release_test_root}/releases/next"
+current_release_link="${release_test_root}/current"
+activation_log="${release_test_root}/activation.log"
+rollback_log="${release_test_root}/rollback.log"
+systemctl_log="${release_test_root}/systemctl.log"
+mkdir -p "${previous_release_dir}" "${next_release_dir}"
+previous_release_dir="$(cd "${previous_release_dir}" && pwd -P)"
+next_release_dir="$(cd "${next_release_dir}" && pwd -P)"
+ln -s "${previous_release_dir}" "${current_release_link}"
+
+activation_succeeds() {
+  printf 'activated\n' >> "${activation_log}"
+}
+
+activation_fails() {
+  return 23
+}
+
+rollback_must_not_run() {
+  printf 'unexpected\n' >> "${rollback_log}"
+  return 1
+}
+
+rollback_restarts_previous_release() {
+  printf 'rollback\n' >> "${rollback_log}"
+  restart_release_services \
+    "${previous_release_dir}" \
+    backend.service \
+    web.service \
+    false
+}
+
+run_release_activation_with_rollback \
+  "${current_release_link}" \
+  "${previous_release_dir}" \
+  "${next_release_dir}" \
+  activation_succeeds \
+  rollback_must_not_run
+[ "$(release_link_target "${current_release_link}")" = "${next_release_dir}" ]
+[ ! -e "${rollback_log}" ]
+
+atomic_switch_release_link "${current_release_link}" "${previous_release_dir}"
+activation_status=0
+PATH="${bin_dir}:${PATH}" FAKE_SYSTEMCTL_LOG="${systemctl_log}" \
+  run_release_activation_with_rollback \
+    "${current_release_link}" \
+    "${previous_release_dir}" \
+    "${next_release_dir}" \
+    activation_fails \
+    rollback_restarts_previous_release || activation_status=$?
+[ "${activation_status}" -eq 23 ]
+[ "$(release_link_target "${current_release_link}")" = "${previous_release_dir}" ]
+grep -Fxq 'restart backend.service' "${systemctl_log}"
+grep -Fxq 'rollback' "${rollback_log}"
+
+atomic_switch_release_link "${current_release_link}" "${previous_release_dir}"
+invalid_previous_status=0
+run_release_activation_with_rollback \
+  "${current_release_link}" \
+  "${release_test_root}/releases/missing" \
+  "${next_release_dir}" \
+  activation_fails \
+  rollback_must_not_run >/dev/null 2>&1 || invalid_previous_status=$?
+[ "${invalid_previous_status}" -eq 23 ]
+[ "$(release_link_target "${current_release_link}")" = "${next_release_dir}" ]
 
 return_class_path="cn/iocoder/yudao/module/rental/controller/app/returnregistration/AppReturnRegistrationController.class"
 remark_ai_class_path="cn/iocoder/yudao/module/rental/service/SellerRemarkAiFallbackService.class"

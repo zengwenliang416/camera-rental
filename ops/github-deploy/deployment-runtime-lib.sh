@@ -222,6 +222,136 @@ verify_admin_frontend_route() {
   echo "[deploy] admin frontend and entry asset healthy (${html_status}/${asset_status})"
 }
 
+release_link_target() {
+  local current_link="$1"
+
+  [ -e "${current_link}" ] || [ -L "${current_link}" ] || return 1
+  readlink -f "${current_link}"
+}
+
+atomic_switch_release_link() {
+  local current_link="$1"
+  local release_dir="$2"
+  local next_link="${current_link}.next.$$"
+
+  if [ ! -d "${release_dir}" ]; then
+    echo "[deploy][error] release directory not found: ${release_dir}" >&2
+    return 1
+  fi
+  release_dir="$(cd "${release_dir}" && pwd -P)" || return 1
+
+  unlink "${next_link}" >/dev/null 2>&1 || true
+  ln -s "${release_dir}" "${next_link}" || return 1
+  if mv -Tf "${next_link}" "${current_link}" 2>/dev/null; then
+    return 0
+  fi
+  if mv -fh "${next_link}" "${current_link}" 2>/dev/null; then
+    return 0
+  fi
+
+  unlink "${next_link}" >/dev/null 2>&1 || true
+  echo "[deploy][error] failed to switch release link: ${current_link}" >&2
+  return 1
+}
+
+restore_previous_release_link() {
+  local current_link="$1"
+  local previous_release_dir="$2"
+  local failed_release_dir="$3"
+  local active_release_dir
+
+  if [ -z "${previous_release_dir}" ] || [ ! -d "${previous_release_dir}" ]; then
+    echo "[deploy][error] no valid previous release is available for rollback" >&2
+    return 1
+  fi
+  previous_release_dir="$(cd "${previous_release_dir}" && pwd -P)" || return 1
+  failed_release_dir="$(cd "${failed_release_dir}" && pwd -P)" || return 1
+  if [ "${previous_release_dir}" = "${failed_release_dir}" ]; then
+    echo "[deploy][error] previous release matches the failed release" >&2
+    return 1
+  fi
+
+  active_release_dir="$(release_link_target "${current_link}" 2>/dev/null || true)"
+  if [ "${active_release_dir}" != "${failed_release_dir}" ]; then
+    echo "[deploy][error] current release changed during rollback; refusing to overwrite it" >&2
+    return 1
+  fi
+
+  atomic_switch_release_link "${current_link}" "${previous_release_dir}"
+}
+
+restart_release_services() {
+  local release_dir="$1"
+  local server_service="$2"
+  local web_service="$3"
+  local require_web_service="${4:-true}"
+
+  if ! systemctl list-unit-files "${server_service}" >/dev/null 2>&1; then
+    echo "[deploy][error] ${server_service} not found" >&2
+    return 1
+  fi
+  echo "[deploy] restart ${server_service}"
+  systemctl restart "${server_service}" || return 1
+
+  if [ ! -f "${release_dir}/web/server/index.mjs" ]; then
+    echo "[deploy] skip ${web_service}; web artifact not included"
+    return 0
+  fi
+  if systemctl list-unit-files "${web_service}" >/dev/null 2>&1; then
+    echo "[deploy] restart ${web_service}"
+    systemctl restart "${web_service}" || return 1
+    return 0
+  fi
+  if [ "${require_web_service}" = true ]; then
+    echo "[deploy][error] ${web_service} not found" >&2
+    return 1
+  fi
+
+  echo "[deploy][warn] skip ${web_service}; service not found during rollback" >&2
+}
+
+run_release_activation_with_rollback() {
+  local current_link="$1"
+  local previous_release_dir="$2"
+  local release_dir="$3"
+  local activation_callback="$4"
+  local rollback_callback="$5"
+  local activation_status=0
+  local rollback_status=0
+
+  if ! declare -F "${activation_callback}" >/dev/null; then
+    echo "[deploy][error] activation callback not found: ${activation_callback}" >&2
+    return 2
+  fi
+  if ! declare -F "${rollback_callback}" >/dev/null; then
+    echo "[deploy][error] rollback callback not found: ${rollback_callback}" >&2
+    return 2
+  fi
+
+  atomic_switch_release_link "${current_link}" "${release_dir}" || return
+  "${activation_callback}" || activation_status=$?
+  if [ "${activation_status}" -eq 0 ]; then
+    echo "[deploy] release activation verified"
+    return 0
+  fi
+
+  echo "[deploy][error] release activation failed with status ${activation_status}; restoring previous release" >&2
+  restore_previous_release_link \
+    "${current_link}" \
+    "${previous_release_dir}" \
+    "${release_dir}" || rollback_status=$?
+  if [ "${rollback_status}" -eq 0 ]; then
+    "${rollback_callback}" || rollback_status=$?
+  fi
+
+  if [ "${rollback_status}" -eq 0 ]; then
+    echo "[deploy][rollback] previous release restored and verified"
+  else
+    echo "[deploy][rollback][error] failed release and rollback both require investigation" >&2
+  fi
+  return "${activation_status}"
+}
+
 dump_service_diagnostics() {
   local service="$1"
 

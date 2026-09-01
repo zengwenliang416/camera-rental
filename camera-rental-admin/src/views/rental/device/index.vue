@@ -40,12 +40,7 @@
         </el-select>
       </el-form-item>
       <el-form-item :label="t('rental.device.modelCode')">
-        <el-select
-          v-model="queryParams.equipmentModelCode"
-          class="!w-160px"
-          clearable
-          filterable
-        >
+        <el-select v-model="queryParams.equipmentModelCode" class="!w-160px" clearable filterable>
           <el-option
             v-for="model in queryModelOptions"
             :key="model.id"
@@ -72,7 +67,9 @@
       />
       <el-table-column prop="categoryCode" :label="t('rental.device.category')" min-width="110">
         <template #default="{ row }">
-          {{ row.categoryCode ? categoryLabel(row.categoryCode) : t('rental.device.uncategorized') }}
+          {{
+            row.categoryCode ? categoryLabel(row.categoryCode) : t('rental.device.uncategorized')
+          }}
         </template>
       </el-table-column>
       <el-table-column
@@ -123,12 +120,7 @@
           >
             {{ t('action.del') }}
           </el-button>
-          <el-button
-            link
-            type="primary"
-            v-hasPermi="['rental:device:query']"
-            @click="openQr(row)"
-          >
+          <el-button link type="primary" v-hasPermi="['rental:device:query']" @click="openQr(row)">
             {{ t('rental.device.qr') }}
           </el-button>
           <el-button
@@ -188,17 +180,6 @@
               :label="category.categoryName"
               :value="category.categoryCode"
             />
-            <template #footer>
-              <el-button
-                link
-                type="primary"
-                v-hasPermi="['rental:device:create']"
-                @click.stop="openCategoryCreate"
-              >
-                <Icon icon="ep:plus" class="mr-5px" />
-                {{ t('rental.device.categoryQuickCreate') }}
-              </el-button>
-            </template>
           </el-select>
         </el-form-item>
         <el-form-item :label="t('rental.device.modelCode')" prop="equipmentModelCode">
@@ -215,18 +196,6 @@
               :label="modelLabel(model)"
               :value="model.modelCode"
             />
-            <template #footer>
-              <el-button
-                link
-                type="primary"
-                v-hasPermi="['rental:device:create']"
-                :disabled="!createForm.categoryCode"
-                @click.stop="openModelCreate"
-              >
-                <Icon icon="ep:plus" class="mr-5px" />
-                {{ t('rental.device.modelQuickCreate') }}
-              </el-button>
-            </template>
           </el-select>
         </el-form-item>
         <el-form-item :label="t('rental.device.deviceNo')" prop="deviceNoSuffix">
@@ -299,9 +268,7 @@
 
     <el-dialog v-model="qrVisible" :title="t('rental.device.qrTitle')" width="420px">
       <div v-loading="qrLoading" class="flex flex-col items-center gap-12px">
-        <div class="text-14px">
-          {{ qrInfo?.deviceNo }} / {{ qrInfo?.equipmentModelCode }}
-        </div>
+        <div class="text-14px"> {{ qrInfo?.deviceNo }} / {{ qrInfo?.equipmentModelCode }} </div>
         <el-tag size="small" :type="qrInfo?.signed ? 'success' : 'info'">
           {{ qrInfo?.signed ? t('rental.device.qrSigned') : t('rental.device.qrUnsigned') }}
         </el-tag>
@@ -345,15 +312,6 @@
       </template>
     </el-dialog>
 
-    <DeviceCategoryCreateDialog
-      ref="categoryCreateDialogRef"
-      @success="handleCategoryCreated"
-    />
-    <DeviceModelCreateDialog
-      ref="modelCreateDialogRef"
-      :categories="deviceCatalog"
-      @success="handleModelCreated"
-    />
     <DeviceEditDialog ref="deviceEditDialogRef" @success="getList" />
   </ContentWrap>
 </template>
@@ -382,14 +340,13 @@ import { getRentalLabelKey, getRentalTagType } from '@/utils/rentalLabels'
 import {
   buildDeviceNoPreview,
   findModel,
+  formatDeviceModelLabel,
   getModelsForCategory,
   isModelInCategory,
   normalizeDeviceNoSuffix
 } from './deviceCatalogModel'
 import { formatPurchaseAmount } from './deviceMaintenanceModel'
-import DeviceCategoryCreateDialog from './DeviceCategoryCreateDialog.vue'
 import DeviceEditDialog from './DeviceEditDialog.vue'
-import DeviceModelCreateDialog from './DeviceModelCreateDialog.vue'
 
 defineOptions({ name: 'RentalDevice' })
 const { t } = useI18n()
@@ -443,17 +400,13 @@ const selectedCreateModel = computed(() =>
   findModel(deviceCatalog.value, createForm.categoryCode, createForm.equipmentModelCode)
 )
 const createDeviceNoPreview = computed(() =>
-  buildDeviceNoPreview(
-    selectedCreateModel.value?.deviceNoPrefix,
-    createForm.deviceNoSuffix
-  )
+  buildDeviceNoPreview(selectedCreateModel.value?.deviceNoPrefix, createForm.deviceNoSuffix)
 )
 
 const categoryLabel = (categoryCode: string) =>
   deviceCatalog.value.find((category) => category.categoryCode === categoryCode)?.categoryName ??
   categoryCode
-const modelLabel = (model: RentalDeviceModelVO) =>
-  model.modelName === model.modelCode ? model.modelCode : `${model.modelName} (${model.modelCode})`
+const modelLabel = (model: RentalDeviceModelVO) => formatDeviceModelLabel(model)
 
 const loadCatalog = async () => {
   catalogError.value = false
@@ -490,21 +443,8 @@ const handleCreateModelChange = () => {
   createForm.deviceNoSuffix = ''
 }
 
-const categoryCreateDialogRef = ref<InstanceType<typeof DeviceCategoryCreateDialog>>()
-const modelCreateDialogRef = ref<InstanceType<typeof DeviceModelCreateDialog>>()
 const deviceEditDialogRef = ref<InstanceType<typeof DeviceEditDialog>>()
 const deletingDeviceId = ref<number>()
-
-const openCategoryCreate = () => {
-  categoryCreateDialogRef.value?.open()
-}
-
-const openModelCreate = () => {
-  const category = deviceCatalog.value.find(
-    (item) => item.categoryCode === createForm.categoryCode
-  )
-  modelCreateDialogRef.value?.open(category?.id)
-}
 
 const openEdit = (row: RentalDeviceVO) => {
   deviceEditDialogRef.value?.open(row)
@@ -522,33 +462,6 @@ const handleDelete = async (row: RentalDeviceVO) => {
   } finally {
     deletingDeviceId.value = undefined
   }
-}
-
-const handleCategoryCreated = async (created: { id: number; categoryCode: string }) => {
-  const catalog = await loadCatalog()
-  const category = catalog.find(
-    (item) => item.id === created.id || item.categoryCode === created.categoryCode
-  )
-  if (!category) return
-  createForm.categoryCode = category.categoryCode
-  createForm.equipmentModelCode = ''
-  createForm.deviceNoSuffix = ''
-}
-
-const handleModelCreated = async (created: {
-  id: number
-  categoryId: number
-  modelCode: string
-}) => {
-  const catalog = await loadCatalog()
-  const category = catalog.find((item) => item.id === created.categoryId)
-  const model = category?.models.find(
-    (item) => item.id === created.id || item.modelCode === created.modelCode
-  )
-  if (!category || !model) return
-  createForm.categoryCode = category.categoryCode
-  createForm.equipmentModelCode = model.modelCode
-  createForm.deviceNoSuffix = ''
 }
 
 const normalizeCreateDeviceNoSuffix = () => {

@@ -335,7 +335,7 @@ class XianyuChannelSyncServiceTest {
         LocalDateTime newestAt = LocalDateTime.of(2026, 7, 24, 13, 30);
         when(productMapper.selectNewestCursorCandidate(eq(7L), any(), any()))
                 .thenReturn(XianyuProductDO.builder()
-                        .externalProductId("448592974859526")
+                        .xgjProductId("448592974859526")
                         .sourceUpdatedAt(newestAt)
                         .build());
 

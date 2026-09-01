@@ -38,7 +38,8 @@ class XianyuShopAdminServiceTest {
         when(shopMapper.selectPage(eq(pageParam), any())).thenReturn(new PageResult<>(List.of(XianyuShopDO.builder()
                 .id(1L)
                 .applicationId(3L)
-                .externalShopId("922157703544901")
+                .externalShopId("user-identity-1")
+                .xianyuUserName("shop-user-1")
                 .authorizeId("922158952480837")
                 .shopName("demo")
                 .authorizationStatus("VALID")
@@ -50,7 +51,8 @@ class XianyuShopAdminServiceTest {
         PageResult<XianyuShopRespVO> page = service.getShopPage(pageParam);
         String json = objectMapper.writeValueAsString(page.getList().get(0));
 
-        assertFalse(json.contains("922157703544901"));
+        assertFalse(json.contains("user-identity-1"));
+        assertFalse(json.contains("shop-user-1"));
         assertFalse(json.contains("922158952480837"));
     }
 
@@ -98,8 +100,9 @@ class XianyuShopAdminServiceTest {
         when(readClient.execute(eq(XianyuReadEndpoint.AUTHORIZED_SHOPS), any()))
                 .thenReturn(response("""
                         {"code":0,"data":{"list":[
-                          {"authorize_id":922158952480837,"seller_id":922157703544901,
-                           "shop_name":"demo","is_valid":true,"valid_end_time":1785081599,
+                          {"authorize_id":922158952480837,"user_identity":"user-identity-1",
+                           "user_name":"shop-user-1","shop_name":"demo",
+                           "is_valid":true,"valid_end_time":1785081599,
                            "is_deposit_enough":false}
                         ]}}
                         """));
@@ -112,6 +115,8 @@ class XianyuShopAdminServiceTest {
         assertEquals(1, service.syncAuthorizedShops());
         ArgumentCaptor<XianyuShopDO> captor = ArgumentCaptor.forClass(XianyuShopDO.class);
         verify(shopMapper).updateById(captor.capture());
+        assertEquals("user-identity-1", captor.getValue().getExternalShopId());
+        assertEquals("shop-user-1", captor.getValue().getXianyuUserName());
         assertEquals("DEPOSIT_INSUFFICIENT", captor.getValue().getGuaranteeStatus());
         verify(alertAdminService).recordGuaranteeHealth(
                 9L, "922158952480837", "DEPOSIT_INSUFFICIENT");

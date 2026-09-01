@@ -71,4 +71,10 @@ public interface RentalDeviceAssignmentMapper extends BaseMapperX<RentalDeviceAs
                 .orderByAsc(RentalDeviceAssignmentDO::getId));
     }
 
+    default List<RentalDeviceAssignmentDO> selectListByOrderItem(Long rentalOrderItemId) {
+        return selectList(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
+                .eq(RentalDeviceAssignmentDO::getRentalOrderItemId, rentalOrderItemId)
+                .orderByAsc(RentalDeviceAssignmentDO::getId));
+    }
+
 }

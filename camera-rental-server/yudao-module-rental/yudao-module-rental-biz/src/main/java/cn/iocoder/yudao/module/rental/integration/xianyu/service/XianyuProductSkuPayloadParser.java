@@ -13,9 +13,12 @@ import java.util.List;
 public class XianyuProductSkuPayloadParser {
 
     private final ObjectMapper objectMapper;
+    private final XianyuChannelIdentifierNormalizer identifierNormalizer;
 
-    public XianyuProductSkuPayloadParser(ObjectMapper objectMapper) {
+    public XianyuProductSkuPayloadParser(ObjectMapper objectMapper,
+                                         XianyuChannelIdentifierNormalizer identifierNormalizer) {
         this.objectMapper = objectMapper;
+        this.identifierNormalizer = identifierNormalizer;
     }
 
     public List<XianyuProductSkuGroup> parse(String rawPayload) {
@@ -34,7 +37,7 @@ public class XianyuProductSkuPayloadParser {
         }
         List<XianyuProductSkuGroup> groups = new ArrayList<>(list.size());
         for (JsonNode productNode : list) {
-            groups.add(new XianyuProductSkuGroup(requiredIntegralText(productNode, "product_id"),
+            groups.add(new XianyuProductSkuGroup(requiredIdentifier(productNode, "product_id"),
                     parseSkuItems(productNode.path("sku_items"))));
         }
         return List.copyOf(groups);
@@ -50,7 +53,8 @@ public class XianyuProductSkuPayloadParser {
         List<XianyuProductSkuSnapshot> snapshots = new ArrayList<>(skuItems.size());
         for (JsonNode skuNode : skuItems) {
             snapshots.add(new XianyuProductSkuSnapshot(
-                    requiredIntegralText(skuNode, "sku_id"),
+                    requiredIdentifier(skuNode, "sku_id"),
+                    optionalIdentifier(skuNode, "xy_sku_id"),
                     requiredText(skuNode, "sku_text", 512),
                     requiredStock(skuNode)));
         }
@@ -65,12 +69,20 @@ public class XianyuProductSkuPayloadParser {
         return value.intValue();
     }
 
-    private String requiredIntegralText(JsonNode node, String fieldName) {
-        JsonNode value = node.path(fieldName);
-        if (!value.isIntegralNumber() || !value.canConvertToLong()) {
-            throw malformed("XianGuanJia product SKU payload is missing integer " + fieldName);
+    private String requiredIdentifier(JsonNode node, String fieldName) {
+        try {
+            return identifierNormalizer.normalizeRequired(node, fieldName);
+        } catch (IllegalArgumentException exception) {
+            throw malformed("XianGuanJia product SKU payload has invalid " + fieldName, exception);
         }
-        return value.asText();
+    }
+
+    private String optionalIdentifier(JsonNode node, String fieldName) {
+        try {
+            return identifierNormalizer.normalizeOptional(node, fieldName);
+        } catch (IllegalArgumentException exception) {
+            throw malformed("XianGuanJia product SKU payload has invalid " + fieldName, exception);
+        }
     }
 
     private String requiredText(JsonNode node, String fieldName, int maxLength) {

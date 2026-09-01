@@ -8,8 +8,9 @@ import java.time.LocalDateTime;
  */
 public record XianyuOrderSnapshot(
         String externalOrderId,
-        String externalProductId,
-        String externalSkuId,
+        String xgjProductId,
+        String xianyuItemId,
+        String xgjSkuId,
         String orderStatus,
         Long payAmount,
         String sellerRemark,

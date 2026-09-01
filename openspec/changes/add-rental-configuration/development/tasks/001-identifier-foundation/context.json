@@ -1,6 +1,7 @@
 {
   "task_id": "001-identifier-foundation",
   "task_items": ["1.1", "1.2", "1.3", "1.4"],
+  "acceptance_primary": ["A2"],
   "goal": "Persist four explicit channel identifier types without fallback and prove safe migration behavior.",
   "must_read": [
     "openspec/changes/add-rental-configuration/development/tasks/001-identifier-foundation/brief.md",
@@ -21,6 +22,12 @@
     "camera-rental-server/sql/mysql",
     "camera-rental-server/yudao-module-rental",
     "openspec/changes/add-rental-configuration/development/migrations"
+  ],
+  "test_paths": [
+    "openspec/changes/add-rental-configuration/development/migrations/verify-20260831_052-disposable-mysql.sh",
+    "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalConfigurationFoundationMigrationTest,XianyuAuthorizedShopListParserTest,XianyuOrderPayloadParserTest,XianyuOrderPersistenceServiceImplTest,XianyuProductDetailPayloadParserTest,XianyuProductListPageParserTest,XianyuProductPersistenceServiceTest,XianyuProductSkuPayloadParserTest,XianyuProductSkuPersistenceServiceTest,XianyuProductSyncServiceTest,XianyuProductPushShopResolverTest,XianyuChannelSyncServiceTest,XianyuShopAdminServiceTest -Dsurefire.failIfNoSpecifiedTests=false -Dmaven.repo.local=/Volumes/zwl/maven-repository test",
+    "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -pl yudao-module-rental/yudao-module-rental-biz -Dmaven.repo.local=/Volumes/zwl/maven-repository test",
+    "openspec validate add-rental-configuration --strict"
   ],
   "non_goals": [
     "Do not implement configuration UI or historical execution.",

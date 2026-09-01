@@ -2,28 +2,42 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Missing Requirements
 
-- Replace this scaffold with direct review.
+- None. The required isolated-schema migration fixture is now present and has
+  system-executed evidence on MySQL 8.4.10.
 
 ## Extra Behavior
 
-- None recorded.
+- No unrelated product behavior was identified in the reviewed Task 001 diff.
+- Some downstream conversion code still reads the legacy `external*` fields
+  while the new persistence paths intentionally leave those ambiguous fields
+  null. The task report assigns that integration cleanup to Task 003; this is a
+  staged-delivery risk rather than evidence that A2 failed.
 
 ## Misunderstood Requirements
 
-- None recorded.
+- None identified in the latest diff. The rollback now restores the proven
+  XianGuanJia product and SKU identifiers into null legacy columns before
+  dropping the explicit columns and restoring the original `NOT NULL`
+  definitions.
 
 ## Cannot Verify From Diff
 
-- Replace this scaffold with direct review.
+- Production deployment is outside Task 001 and was not performed. The
+  production-path SQL is byte-identical to the reviewed development copy and
+  was executed by the network-isolated disposable fixture.
+- The fixture intentionally reports one enabled shop awaiting resynchronization
+  and two unresolved order rows representing ambiguous or invalid source data.
+  These rows remain unmapped as required rather than being silently inferred.
 
 ## Acceptance Assertions Verified
 
-- Replace this scaffold with the acceptance.json assertion ids verified during review (e.g. A1, A3), or "not applicable" when the change has no acceptance.json.
+- A2
 
 ## Required Fixes
 
-- Replace this scaffold with direct review.
+- No Task 001 specification fixes remain after the disposable MySQL forward,
+  verification, rollback, and cleanup evidence was independently confirmed.

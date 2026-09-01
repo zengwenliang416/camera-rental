@@ -1,16 +1,122 @@
 {
   "schema_version": 1,
   "change_id": "add-rental-configuration",
-  "required": false,
-  "status": "not_required",
-  "migrations": [],
-  "rollback": [],
-  "rollback_strategy": "No database or seed migration is required for this change.",
+  "required": true,
+  "status": "ready",
+  "migrations": [
+    {
+      "id": "20260831_052_rental_configuration_foundation",
+      "kind": "ddl",
+      "order": 52,
+      "path": "development/migrations/20260831_052_rental_configuration_foundation.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260831_052_rental_configuration_foundation.sql",
+      "sha256": "0a04cac1e27f6cb78541d241750bdd04ed1238d0b297c06aa563931b6d7fb951"
+    },
+    {
+      "id": "20260831_053_rental_configuration_backend",
+      "kind": "ddl",
+      "order": 53,
+      "path": "development/migrations/20260831_053_rental_configuration_backend.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260831_053_rental_configuration_backend.sql",
+      "sha256": "2944be8bd7fe0f7a4b6fb56001c83d312fb51caff5b3f8c27193d4f0a15ce6bc"
+    },
+    {
+      "id": "20260831_054_rental_fulfillment_facts",
+      "kind": "ddl",
+      "order": 54,
+      "path": "development/migrations/20260831_054_rental_fulfillment_facts.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260831_054_rental_fulfillment_facts.sql",
+      "sha256": "e5b2eafe34c43cb5f299982f671d1b72f6fb237efc5d28c7b29fc8797014d969"
+    },
+    {
+      "id": "20260901_055_rental_historical_reconciliation",
+      "kind": "ddl",
+      "order": 55,
+      "path": "development/migrations/20260901_055_rental_historical_reconciliation.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260901_055_rental_historical_reconciliation.sql",
+      "sha256": "182a41a14e64cf913f20268efd1115ea9aba40e483063a9c8ec991c393c08c42"
+    },
+    {
+      "id": "20260901_056_rental_channel_reconciliation_run",
+      "kind": "ddl",
+      "order": 56,
+      "path": "development/migrations/20260901_056_rental_channel_reconciliation_run.sql",
+      "production_path": "camera-rental-server/sql/mysql/migrations/20260901_056_rental_channel_reconciliation_run.sql",
+      "sha256": "03882e854de674a06d1fd9d5afbe52ce3d7484e8ffeca464642a4fce1a791083"
+    }
+  ],
+  "rollback": [
+    "development/migrations/rollback-20260831_052_rental_configuration_foundation.sql",
+    "development/migrations/rollback-20260831_053_rental_configuration_backend.sql",
+    "development/migrations/rollback-20260831_054_rental_fulfillment_facts.sql",
+    "development/migrations/rollback-20260901_055_rental_historical_reconciliation.sql",
+    "development/migrations/rollback-20260901_056_rental_channel_reconciliation_run.sql"
+  ],
+  "rollback_strategy": "Prefer application rollback while retaining additive identifier, rule, remark-history, fulfillment-fact, historical-reconciliation, asynchronous reconciliation-run, and controlled-seed data. The 052 destructive rollback is for pre-production disposable schemas only. The 053 rollback removes only the two lock_version columns and intentionally retains configured rules. The 054 rollback removes only its five additive fulfillment columns and therefore discards values written after deployment. The 055 rollback deletes historical run and failure evidence. The 056 rollback deletes queryable asynchronous rule-reconciliation results. Any production rollback requires a backup, data-retention review, and separate approval.",
   "verification": {
-    "commands": [],
-    "evidence": []
+    "commands": [
+      "shasum -a 256 camera-rental-server/sql/mysql/migrations/20260831_052_rental_configuration_foundation.sql",
+      "openspec/changes/add-rental-configuration/development/migrations/verify-20260831_052-disposable-mysql.sh",
+      "shasum -a 256 camera-rental-server/sql/mysql/migrations/20260831_053_rental_configuration_backend.sql openspec/changes/add-rental-configuration/development/migrations/rollback-20260831_053_rental_configuration_backend.sql openspec/changes/add-rental-configuration/development/migrations/20260831_rental_configuration_skipped_items.sql",
+      "cmp -s camera-rental-server/sql/mysql/migrations/20260831_053_rental_configuration_backend.sql openspec/changes/add-rental-configuration/development/migrations/20260831_053_rental_configuration_backend.sql",
+      "openspec/changes/add-rental-configuration/development/migrations/verify-20260831_053-disposable-mysql.sh",
+      "shasum -a 256 camera-rental-server/sql/mysql/migrations/20260831_054_rental_fulfillment_facts.sql openspec/changes/add-rental-configuration/development/migrations/rollback-20260831_054_rental_fulfillment_facts.sql openspec/changes/add-rental-configuration/development/migrations/fixture-20260831_054-fulfillment-base.sql openspec/changes/add-rental-configuration/development/migrations/verify-20260831_054-disposable-mysql.sh",
+      "cmp -s camera-rental-server/sql/mysql/migrations/20260831_054_rental_fulfillment_facts.sql openspec/changes/add-rental-configuration/development/migrations/20260831_054_rental_fulfillment_facts.sql",
+      "openspec/changes/add-rental-configuration/development/migrations/verify-20260831_054-disposable-mysql.sh",
+      "shasum -a 256 camera-rental-server/sql/mysql/migrations/20260901_055_rental_historical_reconciliation.sql openspec/changes/add-rental-configuration/development/migrations/rollback-20260901_055_rental_historical_reconciliation.sql openspec/changes/add-rental-configuration/development/migrations/verify-20260901_055-disposable-mysql.sh",
+      "cmp -s camera-rental-server/sql/mysql/migrations/20260901_055_rental_historical_reconciliation.sql openspec/changes/add-rental-configuration/development/migrations/20260901_055_rental_historical_reconciliation.sql",
+      "openspec/changes/add-rental-configuration/development/migrations/verify-20260901_055-disposable-mysql.sh",
+      "shasum -a 256 camera-rental-server/sql/mysql/migrations/20260901_056_rental_channel_reconciliation_run.sql openspec/changes/add-rental-configuration/development/migrations/rollback-20260901_056_rental_channel_reconciliation_run.sql",
+      "cmp -s camera-rental-server/sql/mysql/migrations/20260901_056_rental_channel_reconciliation_run.sql openspec/changes/add-rental-configuration/development/migrations/20260901_056_rental_channel_reconciliation_run.sql",
+      "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalConfigurationFoundationMigrationTest,XianyuAuthorizedShopListParserTest,XianyuOrderPayloadParserTest,XianyuOrderPersistenceServiceImplTest,XianyuProductDetailPayloadParserTest,XianyuProductListPageParserTest,XianyuProductPersistenceServiceTest,XianyuProductSkuPayloadParserTest,XianyuProductSkuPersistenceServiceTest,XianyuProductSyncServiceTest,XianyuProductPushShopResolverTest,XianyuChannelSyncServiceTest,XianyuShopAdminServiceTest -Dsurefire.failIfNoSpecifiedTests=false -Dmaven.repo.local=/Volumes/zwl/maven-repository test",
+      "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -pl yudao-module-rental/yudao-module-rental-biz -am -DskipTests -Dmaven.repo.local=/Volumes/zwl/maven-repository install",
+      "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -pl yudao-module-rental/yudao-module-rental-biz -Dmaven.repo.local=/Volumes/zwl/maven-repository test",
+      "git diff --check"
+    ],
+    "evidence": [
+      "Production SQL sha256 is 0a04cac1e27f6cb78541d241750bdd04ed1238d0b297c06aa563931b6d7fb951.",
+      "Order backfill reads product_id, item_id, and sku_id only from valid goods_json; ambiguous legacy external columns are not used as order identifier sources.",
+      "Product and SKU legacy columns are backfilled only because their original persistence paths had one documented source.",
+      "Disposable MySQL 8.4.10 passed base-schema setup, forward migration, read-only verification queries, ambiguity and precision assertions, all new unique constraints, representative post-migration inserts, destructive rollback and rollback restoration.",
+      "The disposable MySQL container used no network or published port, and its temporary container and volume were removed after execution.",
+      "Focused identifier tests passed: 57 tests, 0 failures, 0 errors, 0 skipped.",
+      "Full rental-biz tests passed: 537 tests, 0 failures, 0 errors, 6 environment-gated MySQL concurrency tests skipped.",
+      "Rollback restores proven XianGuanJia identifiers into nullable legacy columns before reapplying the original NOT NULL definitions.",
+      "Migration 053 production SQL sha256 is 2944be8bd7fe0f7a4b6fb56001c83d312fb51caff5b3f8c27193d4f0a15ce6bc; its development copy is byte-identical.",
+      "The controlled seed sha256 is 26f9bfccb8bc3c50b09f489b3837be90bca957c3ab3823522870329a054cbc46 and the 053 rollback sha256 is 8d670288222a32b7715047e1b976f39260629a8862acf553e8b76726460c8188.",
+      "Disposable MySQL 8.4 passed 053 lock_version defaults and stale-version update rejection on both catalog tables, the exact 29-row tenant/shop-scoped seed, zero-match, duplicate-match and expired-authorization rejection, no partial writes, confirmation guarding, conflicting-rule rejection without overwrite, DDL-only rollback, retained seed data, and container/volume cleanup.",
+      "Task 002 focused tests passed: 32 tests, 0 failures, 0 errors, 0 skipped.",
+      "Current full rental-biz tests passed: 556 tests, 0 failures, 0 errors, 6 environment-gated MySQL concurrency tests skipped.",
+      "Migration 054 production SQL sha256 is e5b2eafe34c43cb5f299982f671d1b72f6fb237efc5d28c7b29fc8797014d969; its development copy is byte-identical.",
+      "Migration 054 rollback sha256 is 6392ba372f31fe038514dbbb224aeadf8c131ff75ddbe7482801fa894d133e8b, fixture sha256 is 0d689fe6db18880c04b182a6f35da89316930ce4d73954215af63d9b2ff565a9, and disposable verification script sha256 is 07fa48b7e6186f8aeae19c351a306849c038cca2a9e102b867e85a15a4f2b995.",
+      "Disposable MySQL 8.4 passed all five nullable fulfillment-fact columns, existing-row null defaults, value round trips, destructive 054 rollback, base-row retention, container cleanup, and volume cleanup.",
+      "The real MySQL assign-vs-reconcile two-thread test passed through Spring transaction proxies and production services/Mappers: 1 test, 0 failures, 0 errors, 0 skipped. A test aspect paused the actual schedule Mapper insert so reconciliation deterministically waited on the order lock, then both transactions committed with one assignment, one effective schedule and the extended effective plan.",
+      "RentalDeviceOpsService uses one injected Asia/Shanghai Clock for authoritative return/inspection timestamps and schedule narrowing. Its fixed-clock test changes the JVM default zone to America/Los_Angeles and still records 2026-09-01T00:30 with an exclusive schedule end of 2026-09-02.",
+      "Task 004 focused regression passed: 129 tests, 0 failures, 0 errors, 0 skipped.",
+      "Current full rental-biz tests passed: 631 tests, 0 failures, 0 errors, 7 skipped. The seven skips are six existing environment-gated logistics MySQL tests plus the fulfillment lock-order MySQL test, which passed separately through the disposable 054 fixture.",
+      "Migration 055 production SQL sha256 is 182a41a14e64cf913f20268efd1115ea9aba40e483063a9c8ec991c393c08c42; its development copy is byte-identical.",
+      "Migration 055 rollback sha256 is 8e56b68140bf54bd8b4ae3c5cb6d0db63b41f1d9c4a7edc2230a415fce831774 and disposable verification script sha256 is f58b8b6aefc450d353eeb1698b11492ec3551f72f70720d725ddfc9009b0c6e1.",
+      "Disposable MySQL 8.4 passed both historical-reconciliation tables, five operational indexes, run checkpoint and failure-boundary round trips, the real Spring transaction, Service and MyBatis Mapper reconciliation path, destructive rollback, container cleanup, and volume cleanup.",
+      "The real MySQL historical reconciliation test passed: 1 test, 0 failures, 0 errors, 0 skipped. It covered ordinary creation, CONFIG_SKIPPED, fulfilled-conflict preservation, source-tenant propagation and an idempotent second run without duplicate internal orders.",
+      "Task 005 focused reconciliation and backfill tests passed: 33 tests, 0 failures, 0 errors, 0 skipped.",
+      "The complete Task 005 focused suite including migration and controller coverage passed: 38 tests, 0 failures, 0 errors, 0 skipped.",
+      "Current full rental-biz tests passed: 651 tests, 0 failures, 0 errors, 8 environment-gated MySQL tests skipped. The Task 005 MySQL test passed separately through the disposable 055 fixture.",
+      "Migration 056 production SQL sha256 is 03882e854de674a06d1fd9d5afbe52ce3d7484e8ffeca464642a4fce1a791083; its development copy is byte-identical.",
+      "Migration 056 rollback sha256 is e42209a5eb7f2047a94510453f096435bb393b29404c22ec188f1c438f62aa84. Static migration coverage verifies the tenant-scoped run ledger, result counters, lifecycle timestamps and three operational indexes."
+    ]
   },
   "notes": [
-    "If any requirement, task, report, or handoff mentions SQL, DDL, DML, seed data, menus, permissions, or migrations, set required=true and add executable SQL files under development/migrations/."
+    "Migration 052 is prepared locally only and has not been executed against production.",
+    "Migrations 052 and 053 have byte-identical development mirrors of their production-path SQL.",
+    "The disposable fixture is development evidence only and must not be pointed at an existing database.",
+    "Rollback files are intentionally not part of normal deployment and must not be run against production without the documented review.",
+    "The controlled seed is not a normal migration. It requires an explicit positive tenant id, the fixed confirmation sentinel, backup and approval, and exact unique active VALID matches for 小疆 and 发发.",
+    "The controlled seed performs no third-party write and is not automatically deployed or pointed at production.",
+    "Migration 054 is additive and prepared locally only. Its disposable verification publishes a random loopback-only MySQL port for the Java concurrency test and removes the temporary container and volume on exit.",
+    "The 054 rollback is destructive to expected-return, inspection-completion, inspection-result, and settlement facts and must not run against production without backup and separate approval.",
+    "Migration 055 is additive and prepared locally only. No historical task was run against production or the 80 server.",
+    "The 055 rollback deletes historical reconciliation run and failure evidence and must not run against production without export, data-retention review, backup, and separate approval.",
+    "Migration 056 is additive and prepared locally only. It has not been executed against production or the 80 server.",
+    "The 056 rollback deletes asynchronous rule-reconciliation result history and must not run against production without export, data-retention review, backup, and separate approval."
   ]
 }

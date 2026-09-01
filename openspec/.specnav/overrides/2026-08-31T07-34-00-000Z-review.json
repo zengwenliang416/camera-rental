@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "gate": "review",
+  "reason": "Approved Task 002 requires shared rental API error codes, catalog persistence changes, new configuration mappers/services/controllers, and an incremental migration. Focused tests, disposable MySQL validation, full rental module tests, and independent spec/quality review are mandatory before acceptance.",
+  "requested_by": "codex",
+  "created_at": "2026-08-31T07:34:00.000Z",
+  "expires_at": "2026-08-31T11:34:00.000Z",
+  "active_change": "add-rental-configuration"
+}

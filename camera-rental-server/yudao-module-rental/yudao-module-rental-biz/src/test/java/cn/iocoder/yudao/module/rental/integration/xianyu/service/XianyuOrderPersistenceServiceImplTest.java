@@ -2,16 +2,21 @@ package cn.iocoder.yudao.module.rental.integration.xianyu.service;
 
 import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderDO;
+import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderRemarkHistoryDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuRawPayloadDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuSyncCursorDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
+import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderRemarkHistoryMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuRawPayloadMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuSyncCursorMapper;
 import cn.iocoder.yudao.module.rental.service.SellerRemarkRentalPeriodParser;
 import cn.iocoder.yudao.module.rental.service.SellerRemarkAiFallbackService;
 import cn.iocoder.yudao.module.rental.service.SellerRemarkRentalPeriodResolver;
-import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
 import cn.iocoder.yudao.module.rental.service.logistics.XianyuOrderDeliverySyncService;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationResult;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationService;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalRemarkPlanChangeClassifier;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalRemarkPlanUpdate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,10 +39,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -49,30 +57,42 @@ class XianyuOrderPersistenceServiceImplTest {
     @Mock
     private XianyuOrderMapper orderMapper;
     @Mock
+    private XianyuOrderRemarkHistoryMapper remarkHistoryMapper;
+    @Mock
     private XianyuSyncCursorMapper cursorMapper;
     @Mock
-    private XianyuRentalConversionService conversionService;
+    private RentalChannelOrderReconciliationService reconciliationService;
     @Mock
     private XianyuOrderDeliverySyncService deliverySyncService;
     @Mock
     private SellerRemarkAiFallbackService aiFallbackService;
 
     private XianyuOrderPersistenceService service;
+    private SellerRemarkRentalPeriodResolver rentalPeriodResolver;
 
     @BeforeEach
     void setUp() {
         TenantContextHolder.setTenantId(9L);
+        lenient().when(reconciliationService.reconcile(any())).thenReturn(
+                new RentalChannelOrderReconciliationResult(
+                        "CONVERTED", 1L, null, null, "READY", true));
+        lenient().when(reconciliationService.reconcile(anyLong(), any(RentalRemarkPlanUpdate.class))).thenReturn(
+                new RentalChannelOrderReconciliationResult(
+                        "CONVERTED", 1L, null, null, "READY", true));
+        rentalPeriodResolver = spy(new SellerRemarkRentalPeriodResolver(
+                new SellerRemarkRentalPeriodParser(), aiFallbackService));
         service = new XianyuOrderPersistenceServiceImpl(
-                new XianyuOrderPayloadParser(new ObjectMapper()),
+                new XianyuOrderPayloadParser(new ObjectMapper(), new XianyuChannelIdentifierNormalizer()),
                 new XianyuPayloadHasher(),
                 rawPayloadMapper,
                 orderMapper,
                 cursorMapper,
                 new XianyuSyncCursorAdvancer(),
-                conversionService,
+                reconciliationService,
                 deliverySyncService,
-                new SellerRemarkRentalPeriodResolver(
-                        new SellerRemarkRentalPeriodParser(), aiFallbackService),
+                rentalPeriodResolver,
+                new XianyuOrderRemarkHistoryService(remarkHistoryMapper),
+                new RentalRemarkPlanChangeClassifier(),
                 Clock.fixed(Instant.parse("2026-07-23T10:11:12Z"), ZoneOffset.UTC));
     }
 
@@ -86,7 +106,7 @@ class XianyuOrderPersistenceServiceImplTest {
         String rawPayload = """
                 {"code":0,"data":{"order_no":"order-100","order_status":21,"pay_amount":3000000000,
                 "seller_remark":"","create_time":1704067200,"update_time":1704153600,
-                "goods":{"product_id":"product-1","sku_id":"sku-1"}}}""";
+                "goods":{"product_id":"product-1","item_id":"item-1","sku_id":"sku-1"}}}""";
         when(rawPayloadMapper.selectByTenantIdAndSourceAndHashForUpdate(eq(9L), any(), any(), any()))
                 .thenReturn(XianyuRawPayloadDO.builder().id(99L).build());
         when(orderMapper.selectByShopIdAndExternalOrderIdForUpdate(7L, "order-100")).thenReturn(null);
@@ -101,16 +121,24 @@ class XianyuOrderPersistenceServiceImplTest {
         ArgumentCaptor<XianyuOrderDO> orderCaptor = ArgumentCaptor.forClass(XianyuOrderDO.class);
         verify(rawPayloadMapper).insertOrReuse(eq(9L), rawCaptor.capture());
         verify(orderMapper).insert(orderCaptor.capture());
-        InOrder writeOrder = inOrder(rawPayloadMapper, orderMapper, conversionService);
+        verify(remarkHistoryMapper).insert(any(XianyuOrderRemarkHistoryDO.class));
+        InOrder writeOrder = inOrder(rawPayloadMapper, orderMapper, reconciliationService);
         writeOrder.verify(rawPayloadMapper).insertOrReuse(eq(9L), any(XianyuRawPayloadDO.class));
         writeOrder.verify(rawPayloadMapper)
                 .selectByTenantIdAndSourceAndHashForUpdate(eq(9L), any(), any(), any());
         writeOrder.verify(orderMapper).insert(any(XianyuOrderDO.class));
-        writeOrder.verify(conversionService).autoConvertAfterPersist(1001L);
+        writeOrder.verify(reconciliationService).reconcile(eq(1001L), any(RentalRemarkPlanUpdate.class));
         assertEquals(rawPayload, rawCaptor.getValue().getPayload());
         assertEquals("order:7:order-100", rawCaptor.getValue().getSourceIdentifier());
         assertEquals(64, rawCaptor.getValue().getPayloadHash().length());
         assertEquals(99L, orderCaptor.getValue().getRawPayloadId());
+        assertEquals("product-1", orderCaptor.getValue().getXgjProductId());
+        assertEquals("item-1", orderCaptor.getValue().getXianyuItemId());
+        assertEquals("sku-1", orderCaptor.getValue().getXgjSkuId());
+        assertNull(orderCaptor.getValue().getXianyuSkuId());
+        assertNull(orderCaptor.getValue().getExternalProductId());
+        assertNull(orderCaptor.getValue().getExternalSkuId());
+        assertEquals("WAITING_RECONCILIATION", orderCaptor.getValue().getPreparationStatus());
         assertEquals(3_000_000_000L, orderCaptor.getValue().getPayAmount());
         assertEquals("PENDING", orderCaptor.getValue().getRentalPeriodStatus());
         assertEquals("MISSING_REMARK", orderCaptor.getValue().getRentalPeriodReasonCode());
@@ -131,6 +159,7 @@ class XianyuOrderPersistenceServiceImplTest {
                 .thenReturn(XianyuOrderDO.builder().id(6L)
                         .sellerRemark("发货7.25/收货7.26/发回8.02")
                         .remarkParseVersion("remark-v1").remarkParseStatus("RESOLVED")
+                        .xianyuSkuId("xy-sku-existing")
                         .conversionStatus("REVIEW_REQUIRED")
                         .rentalOrderId(7L).build());
 
@@ -138,17 +167,151 @@ class XianyuOrderPersistenceServiceImplTest {
 
         verify(rawPayloadMapper).insertOrReuse(eq(9L), any(XianyuRawPayloadDO.class));
         verify(orderMapper).updateById(result);
-        verify(conversionService).autoConvertAfterPersist(6L);
+        verify(reconciliationService).reconcile(eq(6L), any(RentalRemarkPlanUpdate.class));
         assertEquals(6L, result.getId());
         assertEquals(5L, result.getRawPayloadId());
         assertEquals("REVIEW_REQUIRED", result.getConversionStatus());
         assertEquals(7L, result.getRentalOrderId());
-        assertEquals("0", result.getExternalSkuId());
+        assertEquals("0", result.getXgjSkuId());
+        assertEquals("xy-sku-existing", result.getXianyuSkuId());
+        assertNull(result.getExternalSkuId());
         assertEquals(SellerRemarkRentalPeriodResolver.VERSION, result.getRemarkParseVersion());
         assertEquals("SUCCESS", result.getRemarkParseStatus());
         assertEquals(LocalDate.of(2026, 7, 27), result.getBillableStartDate());
         assertEquals(LocalDate.of(2026, 8, 2), result.getBillableEndDate());
         assertEquals("SUCCESS", result.getRentalPeriodStatus());
+    }
+
+    @Test
+    void shouldRetainLastEffectivePlanWhenLaterRemarkIsIncomplete() {
+        String rawPayload = """
+                {"code":0,"data":{"order_no":"order-invalid-update","order_status":22,"pay_amount":100,
+                "seller_remark":"发货7.25/收货7.26","order_time":1784952000,
+                "update_time":1785369600,"goods":{"product_id":"product-1","item_id":"item-1"}}}""";
+        XianyuOrderDO existing = XianyuOrderDO.builder()
+                .id(66L)
+                .shopId(8L)
+                .externalOrderId("order-invalid-update")
+                .remarkParseVersion("previous")
+                .remarkParseStatus("SUCCESS")
+                .billableStartDate(LocalDate.of(2026, 7, 27))
+                .billableEndDate(LocalDate.of(2026, 8, 2))
+                .shipDate(LocalDate.of(2026, 7, 25))
+                .receiveDate(LocalDate.of(2026, 7, 26))
+                .returnDate(LocalDate.of(2026, 8, 2))
+                .rentalPeriodStatus("SUCCESS")
+                .conversionStatus("READY")
+                .sourceUpdatedAt(LocalDateTime.of(2026, 7, 28, 0, 0))
+                .build();
+        when(rawPayloadMapper.selectByTenantIdAndSourceAndHashForUpdate(eq(9L), any(), any(), any()))
+                .thenReturn(XianyuRawPayloadDO.builder().id(501L).build());
+        when(orderMapper.selectByShopIdAndExternalOrderIdForUpdate(8L, "order-invalid-update"))
+                .thenReturn(existing);
+
+        XianyuOrderDO result = service.persistOrderDetail(8L, rawPayload);
+
+        assertEquals("PENDING", result.getRemarkParseStatus());
+        assertEquals("MISSING_RETURN_DATE", result.getRentalPeriodReasonCode());
+        assertEquals(LocalDate.of(2026, 7, 27), result.getBillableStartDate());
+        assertEquals(LocalDate.of(2026, 8, 2), result.getBillableEndDate());
+        assertEquals(LocalDate.of(2026, 7, 25), result.getShipDate());
+        assertEquals(LocalDate.of(2026, 7, 26), result.getReceiveDate());
+        assertEquals(LocalDate.of(2026, 8, 2), result.getReturnDate());
+        ArgumentCaptor<XianyuOrderRemarkHistoryDO> historyCaptor =
+                ArgumentCaptor.forClass(XianyuOrderRemarkHistoryDO.class);
+        verify(remarkHistoryMapper).insert(historyCaptor.capture());
+        assertFalse(historyCaptor.getValue().getEffectivePlan());
+        assertEquals("INVALID", historyCaptor.getValue().getChangeType());
+        assertEquals("PENDING", historyCaptor.getValue().getParseStatus());
+        assertEquals("MISSING_RETURN_DATE", historyCaptor.getValue().getParseReasonCode());
+        assertNull(historyCaptor.getValue().getSendBackDate());
+    }
+
+    @Test
+    void shouldRecordEverySuccessfulRemarkUpdateAgainstTheSameOrder() {
+        String rawPayload = """
+                {"code":0,"data":{"order_no":"order-extension","order_status":22,"pay_amount":100,
+                "seller_remark":"发货7.25/收货7.26/发回8.05/续租","order_time":1784952000,
+                "update_time":1785369600,"goods":{"product_id":"product-1","item_id":"item-1"}}}""";
+        XianyuOrderDO existing = XianyuOrderDO.builder()
+                .id(67L)
+                .shopId(8L)
+                .externalOrderId("order-extension")
+                .remarkParseVersion("previous")
+                .billableStartDate(LocalDate.of(2026, 7, 27))
+                .billableEndDate(LocalDate.of(2026, 8, 2))
+                .shipDate(LocalDate.of(2026, 7, 25))
+                .receiveDate(LocalDate.of(2026, 7, 26))
+                .returnDate(LocalDate.of(2026, 8, 2))
+                .rentalPeriodStatus("SUCCESS")
+                .conversionStatus("READY")
+                .sourceUpdatedAt(LocalDateTime.of(2026, 7, 28, 0, 0))
+                .build();
+        when(rawPayloadMapper.selectByTenantIdAndSourceAndHashForUpdate(eq(9L), any(), any(), any()))
+                .thenReturn(XianyuRawPayloadDO.builder().id(502L).build());
+        when(orderMapper.selectByShopIdAndExternalOrderIdForUpdate(8L, "order-extension"))
+                .thenReturn(existing);
+
+        XianyuOrderDO result = service.persistOrderDetail(8L, rawPayload);
+
+        assertEquals(67L, result.getId());
+        assertEquals(LocalDate.of(2026, 8, 5), result.getBillableEndDate());
+        assertEquals(LocalDate.of(2026, 8, 5), result.getReturnDate());
+        ArgumentCaptor<XianyuOrderRemarkHistoryDO> historyCaptor =
+                ArgumentCaptor.forClass(XianyuOrderRemarkHistoryDO.class);
+        verify(remarkHistoryMapper).insert(historyCaptor.capture());
+        assertTrue(historyCaptor.getValue().getEffectivePlan());
+        assertEquals("EXTENSION", historyCaptor.getValue().getChangeType());
+        assertEquals(502L, historyCaptor.getValue().getRawPayloadId());
+        assertEquals(67L, historyCaptor.getValue().getXianyuOrderId());
+        verify(orderMapper).updateEffectivePlanById(
+                67L,
+                LocalDate.of(2026, 7, 27),
+                LocalDate.of(2026, 8, 5),
+                LocalDate.of(2026, 7, 25),
+                LocalDate.of(2026, 7, 26),
+                LocalDate.of(2026, 8, 5));
+    }
+
+    @Test
+    void shouldNotAdvanceEffectivePlanWhenReconciliationRequiresReview() {
+        String rawPayload = """
+                {"code":0,"data":{"order_no":"order-extension-conflict","order_status":22,"pay_amount":100,
+                "seller_remark":"发货7.25/收货7.26/发回8.05/续租","order_time":1784952000,
+                "update_time":1785369600,"goods":{"product_id":"product-1","item_id":"item-1"}}}""";
+        XianyuOrderDO existing = XianyuOrderDO.builder()
+                .id(68L)
+                .shopId(8L)
+                .externalOrderId("order-extension-conflict")
+                .remarkParseVersion("previous")
+                .billableStartDate(LocalDate.of(2026, 7, 27))
+                .billableEndDate(LocalDate.of(2026, 8, 2))
+                .shipDate(LocalDate.of(2026, 7, 25))
+                .receiveDate(LocalDate.of(2026, 7, 26))
+                .returnDate(LocalDate.of(2026, 8, 2))
+                .rentalPeriodStatus("SUCCESS")
+                .conversionStatus("READY")
+                .sourceUpdatedAt(LocalDateTime.of(2026, 7, 28, 0, 0))
+                .build();
+        when(rawPayloadMapper.selectByTenantIdAndSourceAndHashForUpdate(eq(9L), any(), any(), any()))
+                .thenReturn(XianyuRawPayloadDO.builder().id(503L).build());
+        when(orderMapper.selectByShopIdAndExternalOrderIdForUpdate(8L, "order-extension-conflict"))
+                .thenReturn(existing);
+        when(reconciliationService.reconcile(eq(68L), any(RentalRemarkPlanUpdate.class)))
+                .thenReturn(RentalChannelOrderReconciliationResult.reviewRequired(
+                        900L, "ASSIGNED_SCHEDULE_CONFLICT"));
+
+        XianyuOrderDO result = service.persistOrderDetail(8L, rawPayload);
+
+        assertEquals(LocalDate.of(2026, 8, 2), result.getBillableEndDate());
+        assertEquals(LocalDate.of(2026, 8, 2), result.getReturnDate());
+        ArgumentCaptor<XianyuOrderRemarkHistoryDO> historyCaptor =
+                ArgumentCaptor.forClass(XianyuOrderRemarkHistoryDO.class);
+        verify(remarkHistoryMapper).insert(historyCaptor.capture());
+        assertFalse(historyCaptor.getValue().getEffectivePlan());
+        assertEquals("EXTENSION", historyCaptor.getValue().getChangeType());
+        verify(orderMapper, never()).updateEffectivePlanById(anyLong(), any(), any(), any(), any(), any());
+        verify(remarkHistoryMapper, never()).updateById(any(XianyuOrderRemarkHistoryDO.class));
     }
 
     @Test
@@ -231,7 +394,7 @@ class XianyuOrderPersistenceServiceImplTest {
         assertEquals(LocalDate.of(2026, 8, 5), result.getBillableEndDate());
         assertNull(result.getRentalPeriodReasonCode());
         verify(orderMapper).updateById(result);
-        verify(conversionService).autoConvertAfterPersist(1003L);
+        verify(reconciliationService).reconcile(eq(1003L), any(RentalRemarkPlanUpdate.class));
     }
 
     @Test
@@ -243,6 +406,7 @@ class XianyuOrderPersistenceServiceImplTest {
                 .build();
         when(orderMapper.selectMissingRentalPeriodRefs(SellerRemarkRentalPeriodResolver.VERSION, 500))
                 .thenReturn(List.of(historical));
+        when(orderMapper.selectByIdForUpdate(77L)).thenReturn(historical);
 
         int count = service.backfillMissingRentalPeriods(999);
 
@@ -251,7 +415,25 @@ class XianyuOrderPersistenceServiceImplTest {
         assertEquals(LocalDate.of(2026, 8, 5), historical.getBillableEndDate());
         assertEquals("SUCCESS", historical.getRentalPeriodStatus());
         verify(orderMapper).updateById(historical);
-        verify(conversionService).autoConvertAfterPersist(77L);
+        verify(reconciliationService).reconcile(eq(77L), any(RentalRemarkPlanUpdate.class));
+    }
+
+    @Test
+    void shouldDefensivelySkipConfiguredOrdersDuringHistoricalReparse() {
+        XianyuOrderDO skipped = XianyuOrderDO.builder()
+                .id(78L)
+                .conversionStatus("CONFIG_SKIPPED")
+                .sellerRemark("发货7.27/收货7.28/发回8.05")
+                .build();
+        when(orderMapper.selectMissingRentalPeriodRefs(SellerRemarkRentalPeriodResolver.VERSION, 10))
+                .thenReturn(List.of(skipped));
+        when(orderMapper.selectByIdForUpdate(78L)).thenReturn(skipped);
+
+        assertEquals(0, service.backfillMissingRentalPeriods(10));
+
+        verify(rentalPeriodResolver, never()).resolve(any(), any());
+        verify(remarkHistoryMapper, never()).insert(any(XianyuOrderRemarkHistoryDO.class));
+        verify(orderMapper, never()).updateById(skipped);
     }
 
     @Test
@@ -277,7 +459,61 @@ class XianyuOrderPersistenceServiceImplTest {
         assertEquals(200L, result.getPayAmount());
         verify(rawPayloadMapper).insertOrReuse(eq(9L), any(XianyuRawPayloadDO.class));
         verify(orderMapper, never()).updateById(any(XianyuOrderDO.class));
-        verify(conversionService, never()).autoConvertAfterPersist(any());
+        verify(reconciliationService).reconcile(7L);
+    }
+
+    @Test
+    void shouldNotParseOrRecordOlderSnapshotForConfiguredSkippedOrder() {
+        String rawPayload = """
+                {"code":0,"data":{"order_no":"order-skipped-older","order_status":21,"pay_amount":100,
+                "seller_remark":"发货7.25/收货7.26/发回8.02","update_time":1704153600,
+                "goods":{"product_id":"product-1","item_id":"item-skipped"}}}""";
+        XianyuOrderDO existing = XianyuOrderDO.builder()
+                .id(79L)
+                .shopId(8L)
+                .externalOrderId("order-skipped-older")
+                .conversionStatus("CONFIG_SKIPPED")
+                .sourceUpdatedAt(LocalDateTime.of(2024, 1, 3, 0, 0))
+                .build();
+        when(rawPayloadMapper.selectByTenantIdAndSourceAndHashForUpdate(eq(9L), any(), any(), any()))
+                .thenReturn(XianyuRawPayloadDO.builder().id(504L).build());
+        when(orderMapper.selectByShopIdAndExternalOrderIdForUpdate(8L, "order-skipped-older"))
+                .thenReturn(existing);
+        when(reconciliationService.isConfigurationSkipped(8L, "item-skipped", false)).thenReturn(true);
+
+        XianyuOrderDO result = service.persistOrderDetail(8L, rawPayload);
+
+        assertEquals(existing, result);
+        verify(rentalPeriodResolver, never()).resolve(any(), any());
+        verify(remarkHistoryMapper, never()).insert(any(XianyuOrderRemarkHistoryDO.class));
+        verify(orderMapper, never()).updateById(any(XianyuOrderDO.class));
+        verify(reconciliationService).reconcile(79L);
+    }
+
+    @Test
+    void shouldSkipRemarkParsingAndInternalOrderPreparationForConfiguredProduct() {
+        String rawPayload = """
+                {"code":0,"data":{"order_no":"order-skipped","order_status":12,"pay_amount":100,
+                "seller_remark":"this must not be parsed","order_time":1785196800,
+                "goods":{"product_id":"product-1","item_id":"item-skipped","sku_id":"sku-1"}}}""";
+        when(rawPayloadMapper.selectByTenantIdAndSourceAndHashForUpdate(eq(9L), any(), any(), any()))
+                .thenReturn(XianyuRawPayloadDO.builder().id(8L).build());
+        when(orderMapper.selectByShopIdAndExternalOrderIdForUpdate(8L, "order-skipped")).thenReturn(null);
+        when(reconciliationService.isConfigurationSkipped(8L, "item-skipped", false)).thenReturn(true);
+        doAnswer(invocation -> {
+            invocation.getArgument(0, XianyuOrderDO.class).setId(1004L);
+            return 1;
+        }).when(orderMapper).insert(any(XianyuOrderDO.class));
+
+        XianyuOrderDO result = service.persistOrderDetail(8L, rawPayload);
+
+        assertEquals("SKIPPED", result.getRemarkParseStatus());
+        assertEquals("SKIPPED", result.getRentalPeriodStatus());
+        assertEquals("CONFIG_SKIPPED", result.getPreparationStatus());
+        assertEquals("CONFIG_SKIPPED", result.getConversionStatus());
+        verify(rentalPeriodResolver, never()).resolve(any(), any());
+        verify(remarkHistoryMapper, never()).insert(any(XianyuOrderRemarkHistoryDO.class));
+        verify(reconciliationService).reconcile(1004L);
     }
 
     @Test

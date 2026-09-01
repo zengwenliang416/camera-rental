@@ -1,0 +1,57 @@
+-- Durable, resumable historical channel-order reconciliation.
+SET NAMES utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `rental_historical_reconciliation_run` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `tenant_id` bigint NOT NULL DEFAULT 0,
+  `dry_run` bit(1) NOT NULL DEFAULT b'1',
+  `status` varchar(32) NOT NULL DEFAULT 'READY',
+  `start_after_id` bigint NOT NULL DEFAULT 0,
+  `end_id_inclusive` bigint NOT NULL,
+  `cursor_after_id` bigint NOT NULL DEFAULT 0,
+  `batch_size` int NOT NULL,
+  `resume_count` int NOT NULL DEFAULT 0,
+  `scanned_count` int NOT NULL DEFAULT 0,
+  `skipped_count` int NOT NULL DEFAULT 0,
+  `created_count` int NOT NULL DEFAULT 0,
+  `updated_count` int NOT NULL DEFAULT 0,
+  `unchanged_count` int NOT NULL DEFAULT 0,
+  `conflict_count` int NOT NULL DEFAULT 0,
+  `failed_count` int NOT NULL DEFAULT 0,
+  `review_required_count` int NOT NULL DEFAULT 0,
+  `last_failed_order_id` bigint DEFAULT NULL,
+  `last_error_code` varchar(128) DEFAULT NULL,
+  `execution_token` varchar(64) DEFAULT NULL,
+  `lease_until` datetime DEFAULT NULL,
+  `heartbeat_at` datetime DEFAULT NULL,
+  `started_at` datetime DEFAULT NULL,
+  `paused_at` datetime DEFAULT NULL,
+  `finished_at` datetime DEFAULT NULL,
+  `creator` varchar(64) NOT NULL DEFAULT '',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updater` varchar(64) NOT NULL DEFAULT '',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted` bit(1) NOT NULL DEFAULT b'0',
+  PRIMARY KEY (`id`),
+  KEY `idx_rental_history_run_status` (`tenant_id`, `status`, `update_time`),
+  KEY `idx_rental_history_run_lease` (`tenant_id`, `status`, `lease_until`),
+  KEY `idx_rental_history_run_range` (`tenant_id`, `start_after_id`, `end_id_inclusive`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='租赁历史订单补建任务';
+
+CREATE TABLE IF NOT EXISTS `rental_historical_reconciliation_failure` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `tenant_id` bigint NOT NULL DEFAULT 0,
+  `run_id` bigint NOT NULL,
+  `channel_order_id` bigint NOT NULL,
+  `cursor_before_id` bigint NOT NULL DEFAULT 0,
+  `attempt_no` int NOT NULL,
+  `error_code` varchar(128) NOT NULL,
+  `creator` varchar(64) NOT NULL DEFAULT '',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updater` varchar(64) NOT NULL DEFAULT '',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted` bit(1) NOT NULL DEFAULT b'0',
+  PRIMARY KEY (`id`),
+  KEY `idx_rental_history_failure_run` (`tenant_id`, `run_id`, `id`),
+  KEY `idx_rental_history_failure_order` (`tenant_id`, `channel_order_id`, `id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='租赁历史订单补建失败记录';

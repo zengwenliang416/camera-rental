@@ -7,8 +7,8 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalManualReviewDO
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalManualReviewMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
-import cn.iocoder.yudao.module.rental.service.RentalConversionResult;
-import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationResult;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationService;
 import cn.iocoder.yudao.module.system.api.user.AdminUserApi;
 import cn.iocoder.yudao.module.system.api.user.dto.AdminUserRespDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ class RentalManualReviewAdminServiceTest {
 
     private RentalManualReviewMapper reviewMapper;
     private AdminUserApi adminUserApi;
-    private XianyuRentalConversionService conversionService;
+    private RentalChannelOrderReconciliationService reconciliationService;
     private XianyuOrderMapper xianyuOrderMapper;
     private RentalManualReviewAdminService service;
 
@@ -46,10 +46,10 @@ class RentalManualReviewAdminServiceTest {
     void setUp() {
         reviewMapper = mock(RentalManualReviewMapper.class);
         adminUserApi = mock(AdminUserApi.class);
-        conversionService = mock(XianyuRentalConversionService.class);
+        reconciliationService = mock(RentalChannelOrderReconciliationService.class);
         xianyuOrderMapper = mock(XianyuOrderMapper.class);
         service = new RentalManualReviewAdminService(
-                reviewMapper, adminUserApi, conversionService, xianyuOrderMapper,
+                reviewMapper, adminUserApi, reconciliationService, xianyuOrderMapper,
                 Clock.fixed(Instant.parse("2026-07-24T04:00:00Z"), ZoneId.of("Asia/Shanghai")));
     }
 
@@ -93,7 +93,9 @@ class RentalManualReviewAdminServiceTest {
     @Test
     void resolveReviewShouldPersistOperatorAndResolution() {
         when(reviewMapper.selectByIdForUpdate(1L)).thenReturn(orderConversionReview());
-        when(conversionService.convert(10L)).thenReturn(RentalConversionResult.converted(20L));
+        when(reconciliationService.reconcile(10L)).thenReturn(
+                new RentalChannelOrderReconciliationResult(
+                        "CONVERTED", 20L, null, null, "READY", true));
 
         service.resolveReview(1L, "Product mapping completed", 9L);
 
@@ -125,8 +127,9 @@ class RentalManualReviewAdminServiceTest {
     @Test
     void resolveReviewShouldStayOpenWhenConversionPrerequisitesStillFail() {
         when(reviewMapper.selectByIdForUpdate(1L)).thenReturn(orderConversionReview());
-        when(conversionService.convert(10L))
-                .thenReturn(RentalConversionResult.reviewRequired(1L, "PRODUCT_MAPPING_REQUIRED"));
+        when(reconciliationService.reconcile(10L))
+                .thenReturn(RentalChannelOrderReconciliationResult.reviewRequired(
+                        1L, "PRODUCT_MAPPING_REQUIRED"));
 
         assertServiceException(() -> service.resolveReview(1L, "Mapping completed", 9L),
                 RENTAL_MANUAL_REVIEW_PREREQUISITES_UNRESOLVED, "PRODUCT_MAPPING_REQUIRED");

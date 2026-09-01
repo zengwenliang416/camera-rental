@@ -77,6 +77,30 @@ public interface ErrorCodeConstants {
             "设备当前不能停用：{}");
     ErrorCode RENTAL_DEVICE_DELETE_BLOCKED = new ErrorCode(1_040_002_025,
             "设备不能删除：{}");
+    ErrorCode RENTAL_CONFIGURATION_VERSION_CONFLICT = new ErrorCode(1_040_002_026,
+            "租赁配置已被其他管理员修改，请刷新后重试");
+    ErrorCode RENTAL_CHANNEL_PRODUCT_NOT_SYNCHRONIZED = new ErrorCode(1_040_002_027,
+            "该店铺的闲鱼商品尚未同步，不能配置");
+    ErrorCode RENTAL_CHANNEL_SKU_OWNERSHIP_INVALID = new ErrorCode(1_040_002_028,
+            "商品规格不属于当前店铺和商品，不能配置");
+    ErrorCode RENTAL_CHANNEL_PRODUCT_RULE_NOT_EXISTS = new ErrorCode(1_040_002_029,
+            "渠道商品规则不存在");
+    ErrorCode RENTAL_CHANNEL_PRODUCT_RULE_DUPLICATE = new ErrorCode(1_040_002_030,
+            "当前店铺和闲鱼商品已存在配置规则");
+    ErrorCode RENTAL_CHANNEL_PRODUCT_RULE_INVALID = new ErrorCode(1_040_002_031,
+            "渠道商品规则无效：{}");
+    ErrorCode RENTAL_HISTORICAL_BACKFILL_NOT_EXISTS = new ErrorCode(1_040_002_032,
+            "历史订单补建任务不存在");
+    ErrorCode RENTAL_HISTORICAL_BACKFILL_INVALID = new ErrorCode(1_040_002_033,
+            "历史订单补建请求无效：{}");
+    ErrorCode RENTAL_HISTORICAL_BACKFILL_STATE_INVALID = new ErrorCode(1_040_002_034,
+            "历史订单补建任务状态不允许此操作：{}");
+    ErrorCode RENTAL_HISTORICAL_BACKFILL_WRITE_DISABLED = new ErrorCode(1_040_002_035,
+            "历史订单补建写入未启用，只允许 dry-run");
+    ErrorCode RENTAL_CHANNEL_RECONCILIATION_NOT_EXISTS = new ErrorCode(1_040_002_036,
+            "渠道订单重评任务不存在");
+    ErrorCode RENTAL_CHANNEL_RECONCILIATION_ACTIVE = new ErrorCode(1_040_002_037,
+            "该渠道商品规则正在重评，请等待任务完成后再修改");
 
     // ========== 人工复核 1-040-003-000 ==========
     ErrorCode RENTAL_MANUAL_REVIEW_NOT_EXISTS = new ErrorCode(1_040_003_000, "人工复核记录不存在");

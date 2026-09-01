@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class XianyuProductDetailPayloadParser {
@@ -16,9 +18,12 @@ public class XianyuProductDetailPayloadParser {
     private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
 
     private final ObjectMapper objectMapper;
+    private final XianyuChannelIdentifierNormalizer identifierNormalizer;
 
-    public XianyuProductDetailPayloadParser(ObjectMapper objectMapper) {
+    public XianyuProductDetailPayloadParser(ObjectMapper objectMapper,
+                                            XianyuChannelIdentifierNormalizer identifierNormalizer) {
         this.objectMapper = objectMapper;
+        this.identifierNormalizer = identifierNormalizer;
     }
 
     public XianyuProductSnapshot parse(String rawPayload) {
@@ -36,7 +41,8 @@ public class XianyuProductDetailPayloadParser {
             throw malformed("XianGuanJia product payload data is missing");
         }
         return new XianyuProductSnapshot(
-                requiredIntegralText(detail, "product_id"),
+                requiredIdentifier(detail, "product_id"),
+                parsePublishedItems(detail.path("publish_shop")),
                 optionalText(detail, "title"),
                 optionalText(detail, "channel_cat_id"),
                 optionalIntegralText(detail, "product_status", "UNKNOWN"),
@@ -44,12 +50,45 @@ public class XianyuProductDetailPayloadParser {
         );
     }
 
-    private String requiredIntegralText(JsonNode node, String fieldName) {
-        String value = optionalIntegralText(node, fieldName, null);
+    private List<XianyuPublishedItem> parsePublishedItems(JsonNode publishShops) {
+        if (publishShops == null || publishShops.isMissingNode() || publishShops.isNull()) {
+            return List.of();
+        }
+        if (!publishShops.isArray()) {
+            throw malformed("XianGuanJia product payload field publish_shop is invalid");
+        }
+        List<XianyuPublishedItem> items = new ArrayList<>(publishShops.size());
+        for (JsonNode publishShop : publishShops) {
+            String userName = requiredText(publishShop, "user_name");
+            String itemId = optionalIdentifier(publishShop, "item_id");
+            Integer status = optionalInteger(publishShop, "status");
+            items.add(new XianyuPublishedItem(userName, itemId, status));
+        }
+        return List.copyOf(items);
+    }
+
+    private String requiredIdentifier(JsonNode node, String fieldName) {
+        try {
+            return identifierNormalizer.normalizeRequired(node, fieldName);
+        } catch (IllegalArgumentException exception) {
+            throw malformed("XianGuanJia product payload has invalid " + fieldName, exception);
+        }
+    }
+
+    private String optionalIdentifier(JsonNode node, String fieldName) {
+        try {
+            return identifierNormalizer.normalizeOptional(node, fieldName);
+        } catch (IllegalArgumentException exception) {
+            throw malformed("XianGuanJia product payload has invalid " + fieldName, exception);
+        }
+    }
+
+    private String requiredText(JsonNode node, String fieldName) {
+        String value = optionalText(node, fieldName);
         if (value == null || value.isBlank()) {
             throw malformed("XianGuanJia product payload is missing " + fieldName);
         }
-        return value;
+        return value.trim();
     }
 
     private String optionalIntegralText(JsonNode node, String fieldName, String fallback) {
@@ -77,6 +116,11 @@ public class XianyuProductDetailPayloadParser {
             throw malformed("XianGuanJia product payload field " + fieldName + " is not an integer");
         }
         return value.longValue();
+    }
+
+    private Integer optionalInteger(JsonNode node, String fieldName) {
+        Long value = optionalLong(node, fieldName);
+        return value == null ? null : Math.toIntExact(value);
     }
 
     private LocalDateTime epochSecondToShanghaiTime(Long epochSecond) {

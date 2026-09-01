@@ -30,8 +30,16 @@ public class XianyuOrderDO extends TenantBaseDO {
     private Long id;
     private Long shopId;
     private String externalOrderId;
+    private String xgjProductId;
+    private String xianyuItemId;
+    private String xgjSkuId;
+    private String xianyuSkuId;
     private String externalProductId;
     private String externalSkuId;
+    private String preparationStatus;
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
+    private String preparationReasonCode;
+    private LocalDateTime preparationUpdatedAt;
     private String orderStatus;
     private Long payAmount;
     private String currency;

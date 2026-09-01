@@ -8,8 +8,10 @@ import lombok.Data;
 public class RentalProductSkuReportRespVO {
 
     private Long shopId;
-    private String externalProductId;
-    private String externalSkuId;
+    private String xgjProductId;
+    private String xianyuItemId;
+    private String xgjSkuId;
+    private String xianyuSkuId;
     private String goodsTitle;
     private Integer orderCount;
     private Long goodsQuantity;

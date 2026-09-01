@@ -29,15 +29,17 @@ public class XianyuAuthorizedShopListParser {
         }
         for (JsonNode item : list) {
             String authorizeId = text(item, "authorize_id");
-            String externalShopId = firstNonBlank(text(item, "seller_id"), text(item, "shop_id"));
+            String externalShopId = text(item, "user_identity");
+            String xianyuUserName = text(item, "user_name");
             String shopName = firstNonBlank(text(item, "shop_name"), text(item, "user_nick"), text(item, "user_name"));
             boolean valid = !item.has("is_valid") || item.path("is_valid").asBoolean(true);
             Long validEnd = item.path("valid_end_time").isNumber() ? item.path("valid_end_time").asLong() : null;
             String guaranteeStatus = parseGuaranteeStatus(item);
-            if (authorizeId == null || externalShopId == null) {
+            if (authorizeId == null || externalShopId == null || xianyuUserName == null) {
                 continue;
             }
-            shops.add(new XianyuAuthorizedShop(authorizeId, externalShopId, shopName, valid, validEnd, guaranteeStatus));
+            shops.add(new XianyuAuthorizedShop(authorizeId, externalShopId, xianyuUserName, shopName,
+                    valid, validEnd, guaranteeStatus));
         }
         return shops;
     }
@@ -74,7 +76,7 @@ public class XianyuAuthorizedShopListParser {
         if (value.isMissingNode() || value.isNull()) {
             return null;
         }
-        // authorize_id / seller_id are often numeric in the JSON payload
+        // Some documented identifiers are numeric while user_identity is textual.
         if (value.isNumber()) {
             return value.asText();
         }

@@ -15,13 +15,17 @@ import cn.iocoder.yudao.module.rental.enums.rental.RentalDeviceLockTypeEnum;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.TimeZone;
 
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_DISPATCH_FAILED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_RETURN_FAILED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_UNASSIGN_FAILED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -31,13 +35,17 @@ import static org.mockito.Mockito.when;
 
 class RentalDeviceOpsServiceTest {
 
+    private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
+    private static final Clock FIXED_CLOCK =
+            Clock.fixed(Instant.parse("2026-08-31T16:30:00Z"), BUSINESS_ZONE);
+
     private final RentalDeviceMapper deviceMapper = mock(RentalDeviceMapper.class);
     private final RentalDeviceAssignmentMapper assignmentMapper =
             mock(RentalDeviceAssignmentMapper.class);
     private final RentalScheduleMapper scheduleMapper = mock(RentalScheduleMapper.class);
     private final RentalDeviceLockService lockService = mock(RentalDeviceLockService.class);
     private final RentalDeviceOpsService service =
-            new RentalDeviceOpsService(deviceMapper, assignmentMapper, scheduleMapper, lockService);
+            new RentalDeviceOpsService(deviceMapper, assignmentMapper, scheduleMapper, lockService, FIXED_CLOCK);
 
     @Test
     void dispatchThenReturnPass() {
@@ -71,14 +79,24 @@ class RentalDeviceOpsServiceTest {
 
     @Test
     void returnNarrowsScheduleToCheckInDay() {
+        TimeZone originalTimeZone = TimeZone.getDefault();
+        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
+        try {
+            returnNarrowsScheduleToShanghaiCheckInDay();
+        } finally {
+            TimeZone.setDefault(originalTimeZone);
+        }
+    }
+
+    private void returnNarrowsScheduleToShanghaiCheckInDay() {
         RentalDeviceDO device = RentalDeviceDO.builder()
                 .id(1L).deviceNo("A7M4-0001").status("RENTED").enabled(true).build();
         RentalDeviceAssignmentDO assignment = RentalDeviceAssignmentDO.builder()
                 .id(9L).deviceId(1L).status("DISPATCHED").scheduleId(77L).build();
         RentalScheduleDO schedule = RentalScheduleDO.builder()
                 .id(77L).deviceId(1L).status("EFFECTIVE")
-                .occupyStartDate(LocalDate.now().minusDays(3))
-                .occupyEndDateExclusive(LocalDate.now().plusDays(20)).build();
+                .occupyStartDate(LocalDate.of(2026, 8, 29))
+                .occupyEndDateExclusive(LocalDate.of(2026, 9, 20)).build();
         when(deviceMapper.selectByIdForUpdate(1L)).thenReturn(device);
         when(assignmentMapper.selectActiveByDeviceIdForUpdate(1L)).thenReturn(assignment);
         when(scheduleMapper.selectByIdForUpdate(77L)).thenReturn(schedule);
@@ -89,9 +107,10 @@ class RentalDeviceOpsServiceTest {
         RentalDeviceOpsRespVO returned = service.returnDevice(returnReq);
 
         assertEquals("RETURNED", returned.getAssignmentStatus());
-        assertEquals(LocalDate.now().plusDays(1), schedule.getOccupyEndDateExclusive());
+        assertEquals(LocalDate.of(2026, 9, 2), schedule.getOccupyEndDateExclusive());
         verify(scheduleMapper).updateById(schedule);
-        assertNotNull(assignment.getReturnedAt());
+        assertEquals(LocalDateTime.of(2026, 9, 1, 0, 30), assignment.getReturnedAt());
+        assertEquals(LocalDateTime.of(2026, 9, 1, 0, 30), assignment.getInspectionCompletedAt());
         assertEquals("外观完好", assignment.getReturnNote());
     }
 
@@ -103,8 +122,8 @@ class RentalDeviceOpsServiceTest {
                 .id(9L).deviceId(1L).status("DISPATCHED").scheduleId(77L).build();
         RentalScheduleDO schedule = RentalScheduleDO.builder()
                 .id(77L).deviceId(1L).status("EFFECTIVE")
-                .occupyStartDate(LocalDate.now().minusDays(10))
-                .occupyEndDateExclusive(LocalDate.now()).build();
+                .occupyStartDate(LocalDate.of(2026, 8, 20))
+                .occupyEndDateExclusive(LocalDate.of(2026, 9, 1)).build();
         when(deviceMapper.selectByIdForUpdate(1L)).thenReturn(device);
         when(assignmentMapper.selectActiveByDeviceIdForUpdate(1L)).thenReturn(assignment);
         when(scheduleMapper.selectByIdForUpdate(77L)).thenReturn(schedule);
@@ -113,7 +132,7 @@ class RentalDeviceOpsServiceTest {
         returnReq.setDeviceId(1L);
         service.returnDevice(returnReq);
 
-        assertEquals(LocalDate.now(), schedule.getOccupyEndDateExclusive());
+        assertEquals(LocalDate.of(2026, 9, 1), schedule.getOccupyEndDateExclusive());
         verify(scheduleMapper, never()).updateById(any(RentalScheduleDO.class));
     }
 
@@ -163,6 +182,7 @@ class RentalDeviceOpsServiceTest {
                 .id(77L).deviceId(1L).status("EFFECTIVE")
                 .occupyStartDate(LocalDate.now().plusDays(1))
                 .occupyEndDateExclusive(LocalDate.now().plusDays(5)).build();
+        when(assignmentMapper.selectById(9L)).thenReturn(assignment);
         when(assignmentMapper.selectByIdForUpdate(9L)).thenReturn(assignment);
         when(deviceMapper.selectByIdForUpdate(1L)).thenReturn(device);
         when(scheduleMapper.selectByIdForUpdate(77L)).thenReturn(schedule);
@@ -183,6 +203,7 @@ class RentalDeviceOpsServiceTest {
                 .id(9L).deviceId(1L).status("DISPATCHED").build();
         RentalDeviceDO device = RentalDeviceDO.builder()
                 .id(1L).deviceNo("A7M4-0001").status("RENTED").enabled(true).build();
+        when(assignmentMapper.selectById(9L)).thenReturn(assignment);
         when(assignmentMapper.selectByIdForUpdate(9L)).thenReturn(assignment);
         when(deviceMapper.selectByIdForUpdate(1L)).thenReturn(device);
 

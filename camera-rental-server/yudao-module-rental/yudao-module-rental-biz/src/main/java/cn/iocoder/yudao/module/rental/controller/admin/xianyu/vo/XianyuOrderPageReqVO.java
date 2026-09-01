@@ -19,8 +19,10 @@ public class XianyuOrderPageReqVO extends PageParam {
     private String conversionStatus;
     /** Exact or partial match for ops lookup (full value, not redacted). */
     private String externalOrderId;
-    private String externalProductId;
-    private String externalSkuId;
+    private String xgjProductId;
+    private String xianyuItemId;
+    private String xgjSkuId;
+    private String xianyuSkuId;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate startDate;

@@ -12,7 +12,7 @@ import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderSync
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuPendingShipOrderPageReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuPendingShipOrderRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuShipmentOcrRespVO;
-import cn.iocoder.yudao.module.rental.service.RentalConversionResult;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationResult;
 import cn.iocoder.yudao.module.rental.service.admin.ShipmentOcrService;
 import cn.iocoder.yudao.module.rental.service.admin.XianyuOrderAdminService;
 import cn.iocoder.yudao.module.rental.service.admin.XianyuOrderRemarkReparseService;
@@ -114,7 +114,8 @@ public class XianyuOrderController {
     @Operation(summary = "转换渠道订单为内部租赁订单")
     @PreAuthorize("@ss.hasPermission('rental:order:convert')")
     @Parameter(name = "channelOrderId", required = true)
-    public CommonResult<RentalConversionResult> convert(@RequestParam("channelOrderId") Long channelOrderId) {
+    public CommonResult<RentalChannelOrderReconciliationResult> convert(
+            @RequestParam("channelOrderId") Long channelOrderId) {
         return success(orderAdminService.convert(channelOrderId));
     }
 

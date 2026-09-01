@@ -517,9 +517,9 @@ public class XianyuChannelSyncService {
         }
         XianyuProductDO newest = productMapper.selectNewestCursorCandidate(shop.getId(), start, end);
         if (newest != null && newest.getSourceUpdatedAt() != null
-                && StringUtils.hasText(newest.getExternalProductId())) {
+                && StringUtils.hasText(newest.getXgjProductId())) {
             productSyncService.advanceProductCursor(shop.getId(), newest.getSourceUpdatedAt(),
-                    newest.getExternalProductId(), end);
+                    newest.getXgjProductId(), end);
         }
         return new ShopProductSyncResult(pages, received, succeeded, deduplicated, skus);
     }

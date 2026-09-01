@@ -11,13 +11,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class XianyuProductDetailPayloadParserTest {
 
     private final XianyuProductDetailPayloadParser parser =
-            new XianyuProductDetailPayloadParser(new ObjectMapper());
+            new XianyuProductDetailPayloadParser(
+                    new ObjectMapper(), new XianyuChannelIdentifierNormalizer());
 
     @Test
     void shouldParseSuccessfulEnvelope() {
         XianyuProductSnapshot snapshot = parser.parse(successfulResponse());
 
-        assertEquals("441160510721413", snapshot.externalProductId());
+        assertEquals("441160510721413", snapshot.xgjProductId());
+        assertEquals(1, snapshot.publishedItems().size());
+        assertEquals("shop-user-1", snapshot.publishedItems().get(0).xianyuUserName());
+        assertEquals("1062409679830", snapshot.publishedItems().get(0).xianyuItemId());
+        assertEquals(3, snapshot.publishedItems().get(0).status());
         assertEquals("Sony A7M4", snapshot.title());
         assertEquals("fee623cbc89d0ab7a7f7e02f36b0b49a", snapshot.categoryId());
         assertEquals("22", snapshot.status());
@@ -42,6 +47,9 @@ class XianyuProductDetailPayloadParserTest {
                     "price":5500,
                     "stock":1,
                     "publish_status":3,
+                    "publish_shop":[
+                      {"user_name":"shop-user-1","item_id":1062409679830,"status":3}
+                    ],
                     "update_time":1694000092
                   }
                 }

@@ -10,8 +10,8 @@ import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuSyncRunMapper;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadClient;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadEndpoint;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadResponse;
-import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
 import cn.iocoder.yudao.module.rental.service.admin.XianyuAlertAdminService;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,7 +55,7 @@ class XianyuOrderSyncServiceTest {
     @Mock
     private XianyuAlertAdminService alertAdminService;
     @Mock
-    private XianyuRentalConversionService conversionService;
+    private RentalChannelOrderReconciliationService reconciliationService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private XianyuOrderSyncService service;
@@ -64,7 +64,7 @@ class XianyuOrderSyncServiceTest {
     @BeforeEach
     void setUp() {
         service = new XianyuOrderSyncService(readClient, new XianyuOrderListPageParser(), persistenceService,
-                orderMapper, rawPayloadMapper, syncRunMapper, alertAdminService, conversionService,
+                orderMapper, rawPayloadMapper, syncRunMapper, alertAdminService, reconciliationService,
                 new XianyuPayloadHasher(), objectMapper,
                 Clock.fixed(Instant.parse("2026-07-23T12:00:00Z"), ZoneOffset.UTC));
         window = new XianyuOrderSyncWindow(LocalDateTime.of(2026, 7, 22, 0, 0),

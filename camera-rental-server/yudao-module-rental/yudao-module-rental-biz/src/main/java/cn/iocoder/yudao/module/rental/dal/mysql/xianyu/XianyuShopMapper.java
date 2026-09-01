@@ -49,4 +49,12 @@ public interface XianyuShopMapper extends BaseMapperX<XianyuShopDO> {
                 .orderByAsc(XianyuShopDO::getId));
     }
 
+    default List<XianyuShopDO> selectConfigurationShops(Long tenantId) {
+        return selectList(new LambdaQueryWrapperX<XianyuShopDO>()
+                .eq(XianyuShopDO::getTenantId, tenantId)
+                .eq(XianyuShopDO::getAuthorizationStatus, "VALID")
+                .orderByAsc(XianyuShopDO::getShopName)
+                .orderByAsc(XianyuShopDO::getId));
+    }
+
 }

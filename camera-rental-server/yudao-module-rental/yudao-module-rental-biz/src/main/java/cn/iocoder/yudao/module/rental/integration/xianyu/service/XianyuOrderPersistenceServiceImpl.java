@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.rental.integration.xianyu.service;
 
 import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderDO;
+import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderRemarkHistoryDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuRawPayloadDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuSyncCursorDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
@@ -10,9 +11,13 @@ import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuSyncCursorMapper;
 import cn.iocoder.yudao.module.rental.service.SellerRemarkRentalPeriod;
 import cn.iocoder.yudao.module.rental.service.SellerRemarkRentalPeriodResolver;
 import cn.iocoder.yudao.module.rental.service.SellerRemarkResolution;
-import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalLogisticsException;
 import cn.iocoder.yudao.module.rental.service.logistics.XianyuOrderDeliverySyncService;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationService;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationResult;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalRemarkPlanChangeClassifier;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalRemarkPlanChangeType;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalRemarkPlanUpdate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,7 +31,7 @@ import java.util.Objects;
 
 /**
  * Persists channel evidence before normalized order facts and never performs transport or logging.
- * After a successful order-detail upsert, triggers Hermes-style automatic conversion.
+ * After a successful order-detail upsert, triggers authoritative rental reconciliation.
  */
 @Service
 @Slf4j
@@ -43,9 +48,11 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
     private final XianyuOrderMapper orderMapper;
     private final XianyuSyncCursorMapper cursorMapper;
     private final XianyuSyncCursorAdvancer cursorAdvancer;
-    private final XianyuRentalConversionService conversionService;
+    private final RentalChannelOrderReconciliationService reconciliationService;
     private final XianyuOrderDeliverySyncService deliverySyncService;
     private final SellerRemarkRentalPeriodResolver rentalPeriodResolver;
+    private final XianyuOrderRemarkHistoryService remarkHistoryService;
+    private final RentalRemarkPlanChangeClassifier remarkChangeClassifier;
     private final Clock clock;
 
     public XianyuOrderPersistenceServiceImpl(XianyuOrderPayloadParser payloadParser,
@@ -54,9 +61,11 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
                                              XianyuOrderMapper orderMapper,
                                              XianyuSyncCursorMapper cursorMapper,
                                              XianyuSyncCursorAdvancer cursorAdvancer,
-                                             XianyuRentalConversionService conversionService,
+                                             RentalChannelOrderReconciliationService reconciliationService,
                                              XianyuOrderDeliverySyncService deliverySyncService,
                                              SellerRemarkRentalPeriodResolver rentalPeriodResolver,
+                                             XianyuOrderRemarkHistoryService remarkHistoryService,
+                                             RentalRemarkPlanChangeClassifier remarkChangeClassifier,
                                              @Qualifier("xianyuClock") Clock clock) {
         this.payloadParser = payloadParser;
         this.payloadHasher = payloadHasher;
@@ -64,9 +73,11 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
         this.orderMapper = orderMapper;
         this.cursorMapper = cursorMapper;
         this.cursorAdvancer = cursorAdvancer;
-        this.conversionService = conversionService;
+        this.reconciliationService = reconciliationService;
         this.deliverySyncService = deliverySyncService;
         this.rentalPeriodResolver = rentalPeriodResolver;
+        this.remarkHistoryService = remarkHistoryService;
+        this.remarkChangeClassifier = remarkChangeClassifier;
         this.clock = clock;
     }
 
@@ -79,40 +90,66 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
         Long rawPayloadId = persistRawPayload(shopId, snapshot.externalOrderId(), rawPayload);
         XianyuOrderDO existing = orderMapper.selectByShopIdAndExternalOrderIdForUpdate(
                 shopId, snapshot.externalOrderId());
+        boolean configurationSkipped = reconciliationService.isConfigurationSkipped(
+                shopId, snapshot.xianyuItemId(), existing != null && existing.getRentalOrderId() != null);
+        SellerRemarkResolution resolution = configurationSkipped ? null : rentalPeriodResolver.resolve(
+                snapshot.sellerRemark(), referenceDate(snapshot.orderTime(), snapshot.sourceCreatedAt()));
+        SellerRemarkRentalPeriod rentalPeriod = resolution == null ? null : resolution.period();
+        SellerRemarkRentalPeriod previousEffectivePlan = effectivePlan(existing);
+        RentalRemarkPlanChangeType changeType = configurationSkipped ? null
+                : remarkChangeClassifier.classify(
+                        snapshot.sellerRemark(), previousEffectivePlan, rentalPeriod);
+        boolean effectiveCandidate = !configurationSkipped && isEffectiveCandidate(rentalPeriod, changeType);
         if (isOlderThanStoredSnapshot(existing, snapshot)) {
+            if (!configurationSkipped) {
+                remarkHistoryService.record(existing.getId(), rawPayloadId, snapshot.sellerRemark(),
+                        snapshot.sourceUpdatedAt(), rentalPeriod, false, changeType);
+            }
+            reconciliationService.reconcile(existing.getId());
             return existing;
         }
-        SellerRemarkResolution resolution = rentalPeriodResolver.resolve(
-                snapshot.sellerRemark(), referenceDate(snapshot.orderTime(), snapshot.sourceCreatedAt()));
-        SellerRemarkRentalPeriod rentalPeriod = resolution.period();
         XianyuOrderDO order = XianyuOrderDO.builder()
                 .id(existing == null ? null : existing.getId())
                 .shopId(shopId)
                 .externalOrderId(snapshot.externalOrderId())
-                .externalProductId(snapshot.externalProductId())
-                .externalSkuId(snapshot.externalSkuId())
+                .xgjProductId(snapshot.xgjProductId())
+                .xianyuItemId(snapshot.xianyuItemId())
+                .xgjSkuId(snapshot.xgjSkuId())
+                .xianyuSkuId(existing == null ? null : existing.getXianyuSkuId())
+                .preparationStatus(configurationSkipped ? "CONFIG_SKIPPED"
+                        : existing == null || existing.getPreparationStatus() == null
+                                ? "WAITING_RECONCILIATION" : existing.getPreparationStatus())
+                .preparationReasonCode(configurationSkipped
+                        ? null : existing == null ? null : existing.getPreparationReasonCode())
+                .preparationUpdatedAt(existing == null ? null : existing.getPreparationUpdatedAt())
                 .orderStatus(snapshot.orderStatus())
                 .payAmount(snapshot.payAmount())
                 .currency("CNY")
                 .sellerRemark(snapshot.sellerRemark())
-                .remarkParseVersion(rentalPeriod.version())
-                .remarkParseStatus(rentalPeriod.status())
-                .remarkParseSource(resolution.source())
-                .remarkParseConfidence(resolution.confidence())
-                .remarkParseModel(resolution.model())
-                .remarkParseEvidenceJson(resolution.evidenceJson())
-                .billableStartDate(rentalPeriod.billableStartDate())
-                .billableEndDate(rentalPeriod.billableEndDate())
-                .shipDate(rentalPeriod.shipDate())
-                .receiveDate(rentalPeriod.receiveDate())
-                .returnDate(rentalPeriod.returnDate())
-                .rentalPeriodStatus(rentalPeriod.status())
-                .rentalPeriodReasonCode(rentalPeriod.reasonCode())
+                .remarkParseVersion(configurationSkipped
+                        ? value(existing, XianyuOrderDO::getRemarkParseVersion) : rentalPeriod.version())
+                .remarkParseStatus(configurationSkipped ? "SKIPPED" : rentalPeriod.status())
+                .remarkParseSource(configurationSkipped
+                        ? value(existing, XianyuOrderDO::getRemarkParseSource) : resolution.source())
+                .remarkParseConfidence(configurationSkipped
+                        ? value(existing, XianyuOrderDO::getRemarkParseConfidence) : resolution.confidence())
+                .remarkParseModel(configurationSkipped
+                        ? value(existing, XianyuOrderDO::getRemarkParseModel) : resolution.model())
+                .remarkParseEvidenceJson(configurationSkipped
+                        ? value(existing, XianyuOrderDO::getRemarkParseEvidenceJson) : resolution.evidenceJson())
+                .billableStartDate(value(existing, XianyuOrderDO::getBillableStartDate))
+                .billableEndDate(value(existing, XianyuOrderDO::getBillableEndDate))
+                .shipDate(value(existing, XianyuOrderDO::getShipDate))
+                .receiveDate(value(existing, XianyuOrderDO::getReceiveDate))
+                .returnDate(value(existing, XianyuOrderDO::getReturnDate))
+                .rentalPeriodStatus(configurationSkipped ? "SKIPPED" : rentalPeriod.status())
+                .rentalPeriodReasonCode(configurationSkipped ? null : rentalPeriod.reasonCode())
                 .sourceCreatedAt(snapshot.sourceCreatedAt())
                 .sourceUpdatedAt(snapshot.sourceUpdatedAt())
                 .rawPayloadId(rawPayloadId)
-                .conversionStatus(existing == null || existing.getConversionStatus() == null
-                        ? "PENDING" : existing.getConversionStatus())
+                .conversionStatus(configurationSkipped ? "CONFIG_SKIPPED"
+                        : existing == null || existing.getConversionStatus() == null
+                                ? "PENDING" : existing.getConversionStatus())
                 .rentalOrderId(existing == null ? null : existing.getRentalOrderId())
                 .detailJson(snapshot.detailJson())
                 // The API omits receiver fields after shipment, so never replace known values with blanks.
@@ -159,8 +196,14 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
             order.setUpdater("system");
             orderMapper.updateById(order);
         }
-        // Hermes-style: durable channel fact → automatic remark parse / convert / review.
-        conversionService.autoConvertAfterPersist(order.getId());
+        XianyuOrderRemarkHistoryDO history = configurationSkipped ? null
+                : remarkHistoryService.record(order.getId(), rawPayloadId, snapshot.sellerRemark(),
+                        snapshot.sourceUpdatedAt(), rentalPeriod, false, changeType);
+        RentalChannelOrderReconciliationResult reconciliation = configurationSkipped
+                ? reconciliationService.reconcile(order.getId())
+                : reconciliationService.reconcile(
+                        order.getId(), new RentalRemarkPlanUpdate(previousEffectivePlan, rentalPeriod, changeType));
+        applyEffectivePlanIfAccepted(order, rentalPeriod, effectiveCandidate, reconciliation, history);
         syncDelivery(orderMapper.selectById(order.getId()));
         return order;
     }
@@ -175,16 +218,33 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
         int boundedLimit = Math.max(1, Math.min(500, limit));
         List<XianyuOrderDO> orders = orderMapper.selectMissingRentalPeriodRefs(
                 SellerRemarkRentalPeriodResolver.VERSION, boundedLimit);
-        for (XianyuOrderDO order : orders) {
+        int processed = 0;
+        for (XianyuOrderDO candidate : orders) {
+            XianyuOrderDO order = orderMapper.selectByIdForUpdate(candidate.getId());
+            if (order == null || "CONFIG_SKIPPED".equals(order.getConversionStatus())) {
+                continue;
+            }
+            SellerRemarkRentalPeriod previousEffectivePlan = effectivePlan(order);
             SellerRemarkResolution resolution = rentalPeriodResolver.resolve(
                     order.getSellerRemark(), referenceDate(order.getOrderTime(), order.getSourceCreatedAt()));
+            RentalRemarkPlanChangeType changeType = remarkChangeClassifier.classify(
+                    order.getSellerRemark(), previousEffectivePlan, resolution.period());
+            boolean effectiveCandidate = isEffectiveCandidate(resolution.period(), changeType);
             applyRentalPeriod(order, resolution);
             order.setUpdater("system");
             orderMapper.updateById(order);
-            conversionService.autoConvertAfterPersist(order.getId());
+            XianyuOrderRemarkHistoryDO history = remarkHistoryService.record(
+                    order.getId(), order.getRawPayloadId(), order.getSellerRemark(),
+                    order.getSourceUpdatedAt(), resolution.period(), false, changeType);
+            RentalChannelOrderReconciliationResult reconciliation =
+                    reconciliationService.reconcile(order.getId(),
+                            new RentalRemarkPlanUpdate(previousEffectivePlan, resolution.period(), changeType));
+            applyEffectivePlanIfAccepted(
+                    order, resolution.period(), effectiveCandidate, reconciliation, history);
             syncDelivery(orderMapper.selectById(order.getId()));
+            processed++;
         }
-        return orders.size();
+        return processed;
     }
 
     @Override
@@ -199,13 +259,28 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
             if (orders.isEmpty()) {
                 break;
             }
-            for (XianyuOrderDO order : orders) {
+            for (XianyuOrderDO candidate : orders) {
+                XianyuOrderDO order = orderMapper.selectByIdForUpdate(candidate.getId());
+                if (order == null || "CONFIG_SKIPPED".equals(order.getConversionStatus())) {
+                    continue;
+                }
+                SellerRemarkRentalPeriod previousEffectivePlan = effectivePlan(order);
                 SellerRemarkResolution resolution = rentalPeriodResolver.resolve(
                         order.getSellerRemark(), referenceDate(order.getOrderTime(), order.getSourceCreatedAt()));
+                RentalRemarkPlanChangeType changeType = remarkChangeClassifier.classify(
+                        order.getSellerRemark(), previousEffectivePlan, resolution.period());
+                boolean effectiveCandidate = isEffectiveCandidate(resolution.period(), changeType);
                 applyRentalPeriod(order, resolution);
                 order.setUpdater("system");
                 orderMapper.updateById(order);
-                conversionService.autoConvertAfterPersist(order.getId());
+                XianyuOrderRemarkHistoryDO history = remarkHistoryService.record(
+                        order.getId(), order.getRawPayloadId(), order.getSellerRemark(),
+                        order.getSourceUpdatedAt(), resolution.period(), false, changeType);
+                RentalChannelOrderReconciliationResult reconciliation =
+                        reconciliationService.reconcile(order.getId(),
+                                new RentalRemarkPlanUpdate(previousEffectivePlan, resolution.period(), changeType));
+                applyEffectivePlanIfAccepted(
+                        order, resolution.period(), effectiveCandidate, reconciliation, history);
                 syncDelivery(orderMapper.selectById(order.getId()));
                 processed++;
             }
@@ -232,11 +307,6 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
         order.setRemarkParseConfidence(resolution.confidence());
         order.setRemarkParseModel(resolution.model());
         order.setRemarkParseEvidenceJson(resolution.evidenceJson());
-        order.setBillableStartDate(rentalPeriod.billableStartDate());
-        order.setBillableEndDate(rentalPeriod.billableEndDate());
-        order.setShipDate(rentalPeriod.shipDate());
-        order.setReceiveDate(rentalPeriod.receiveDate());
-        order.setReturnDate(rentalPeriod.returnDate());
         order.setRentalPeriodStatus(rentalPeriod.status());
         order.setRentalPeriodReasonCode(rentalPeriod.reasonCode());
     }
@@ -246,6 +316,54 @@ public class XianyuOrderPersistenceServiceImpl implements XianyuOrderPersistence
             return orderTime.toLocalDate();
         }
         return sourceCreatedAt == null ? null : sourceCreatedAt.toLocalDate();
+    }
+
+    private static <T> T value(XianyuOrderDO order, java.util.function.Function<XianyuOrderDO, T> getter) {
+        return order == null ? null : getter.apply(order);
+    }
+
+    private static boolean isEffectiveCandidate(SellerRemarkRentalPeriod candidate,
+                                                RentalRemarkPlanChangeType changeType) {
+        return candidate != null && candidate.isSuccess()
+                && changeType != RentalRemarkPlanChangeType.AMBIGUOUS;
+    }
+
+    private void applyEffectivePlanIfAccepted(
+            XianyuOrderDO order,
+            SellerRemarkRentalPeriod candidate,
+            boolean effectiveCandidate,
+            RentalChannelOrderReconciliationResult reconciliation,
+            XianyuOrderRemarkHistoryDO history) {
+        if (!effectiveCandidate || !reconciliation.planApplied()) {
+            return;
+        }
+        order.setBillableStartDate(candidate.billableStartDate());
+        order.setBillableEndDate(candidate.billableEndDate());
+        order.setShipDate(candidate.shipDate());
+        order.setReceiveDate(candidate.receiveDate());
+        order.setReturnDate(candidate.returnDate());
+        orderMapper.updateEffectivePlanById(
+                order.getId(),
+                candidate.billableStartDate(),
+                candidate.billableEndDate(),
+                candidate.shipDate(),
+                candidate.receiveDate(),
+                candidate.returnDate());
+        remarkHistoryService.markEffective(history);
+    }
+
+    private static SellerRemarkRentalPeriod effectivePlan(XianyuOrderDO order) {
+        if (order == null || order.getBillableStartDate() == null || order.getBillableEndDate() == null
+                || order.getShipDate() == null || order.getReturnDate() == null) {
+            return null;
+        }
+        return SellerRemarkRentalPeriod.success(
+                order.getRemarkParseVersion(),
+                order.getBillableStartDate(),
+                order.getBillableEndDate(),
+                order.getShipDate(),
+                order.getReceiveDate(),
+                order.getReturnDate());
     }
 
     private boolean isOlderThanStoredSnapshot(XianyuOrderDO existing, XianyuOrderSnapshot snapshot) {

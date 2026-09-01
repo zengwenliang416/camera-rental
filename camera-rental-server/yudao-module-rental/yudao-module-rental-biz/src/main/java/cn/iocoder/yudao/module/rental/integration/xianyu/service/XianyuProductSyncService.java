@@ -140,14 +140,14 @@ public class XianyuProductSyncService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean advanceProductCursor(Long shopId, LocalDateTime sourceUpdatedAt, String externalProductId,
+    public boolean advanceProductCursor(Long shopId, LocalDateTime sourceUpdatedAt, String xgjProductId,
                                         LocalDateTime safeUpperBound) {
         Objects.requireNonNull(shopId, "shopId");
         Objects.requireNonNull(sourceUpdatedAt, "sourceUpdatedAt");
-        Objects.requireNonNull(externalProductId, "externalProductId");
+        Objects.requireNonNull(xgjProductId, "xgjProductId");
         Objects.requireNonNull(safeUpperBound, "safeUpperBound");
         XianyuSyncCursorDO current = cursorMapper.selectByShopIdAndResourceTypeForUpdate(shopId, RESOURCE_TYPE);
-        if (!cursorAdvancer.isStrictlyNewer(current, sourceUpdatedAt, externalProductId)) {
+        if (!cursorAdvancer.isStrictlyNewer(current, sourceUpdatedAt, xgjProductId)) {
             return false;
         }
         XianyuSyncCursorDO cursor = XianyuSyncCursorDO.builder()
@@ -155,7 +155,7 @@ public class XianyuProductSyncService {
                 .shopId(shopId)
                 .resourceType(RESOURCE_TYPE)
                 .cursorUpdatedAt(sourceUpdatedAt)
-                .cursorExternalId(externalProductId)
+                .cursorExternalId(xgjProductId)
                 .safeUpperBound(safeUpperBound)
                 .build();
         if (current == null) {
@@ -174,7 +174,7 @@ public class XianyuProductSyncService {
         int deduplicated = 0;
         Map<String, XianyuProductDO> existingProducts = loadRefreshState(shopId, page);
         for (XianyuProductListEntry entry : page.entries()) {
-            if (isDetailCurrent(existingProducts.get(entry.externalProductId()), entry)) {
+            if (isDetailCurrent(existingProducts.get(entry.xgjProductId()), entry)) {
                 succeeded++;
                 deduplicated++;
                 continue;
@@ -182,7 +182,7 @@ public class XianyuProductSyncService {
             productPersistenceService.persistProductDetail(shopId,
                     readClient.execute(XianyuReadEndpoint.PRODUCT_DETAIL,
                             objectMapper.createObjectNode().put("product_id",
-                                    Long.parseLong(entry.externalProductId())), sellerId).rawBody());
+                                    Long.parseLong(entry.xgjProductId())), sellerId).rawBody());
             succeeded++;
         }
         return new ProductRefreshCounts(succeeded, deduplicated);
@@ -191,7 +191,7 @@ public class XianyuProductSyncService {
     private int refreshMultiSpecSkus(Long shopId, String sellerId, XianyuProductListPage page) {
         List<String> multiSpecProductIds = page.entries().stream()
                 .filter(entry -> entry.specType() == 2)
-                .map(XianyuProductListEntry::externalProductId)
+                .map(XianyuProductListEntry::xgjProductId)
                 .distinct()
                 .toList();
         int skuCount = 0;
@@ -213,11 +213,11 @@ public class XianyuProductSyncService {
             return Map.of();
         }
         return productMapper.selectRefreshStateList(shopId, page.entries().stream()
-                        .map(XianyuProductListEntry::externalProductId)
+                        .map(XianyuProductListEntry::xgjProductId)
                         .distinct()
                         .toList())
                 .stream()
-                .collect(Collectors.toMap(XianyuProductDO::getExternalProductId, Function.identity()));
+                .collect(Collectors.toMap(XianyuProductDO::getXgjProductId, Function.identity()));
     }
 
     private boolean isDetailCurrent(XianyuProductDO existing, XianyuProductListEntry entry) {

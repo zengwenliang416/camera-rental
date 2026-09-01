@@ -21,17 +21,17 @@ public class XianyuProductPushShopResolver {
         this.productMapper = productMapper;
     }
 
-    public Long resolveShopId(String sellerId, String externalProductId) {
+    public Long resolveShopId(String sellerId, String xgjProductId) {
         if (StringUtils.hasText(sellerId)) {
             List<XianyuShopDO> shops = shopMapper.selectValidListByExternalShopId(sellerId);
             if (shops.size() == 1) {
                 return shops.get(0).getId();
             }
         }
-        if (!StringUtils.hasText(externalProductId)) {
+        if (!StringUtils.hasText(xgjProductId)) {
             return null;
         }
-        List<Long> shopIds = productMapper.selectListByExternalProductId(externalProductId)
+        List<Long> shopIds = productMapper.selectListByXgjProductId(xgjProductId)
                 .stream()
                 .map(XianyuProductDO::getShopId)
                 .filter(shopId -> shopId != null)

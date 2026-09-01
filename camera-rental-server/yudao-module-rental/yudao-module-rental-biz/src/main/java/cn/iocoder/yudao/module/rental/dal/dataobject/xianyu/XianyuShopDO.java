@@ -23,6 +23,7 @@ public class XianyuShopDO extends TenantBaseDO {
     private Long id;
     private Long applicationId;
     private String externalShopId;
+    private String xianyuUserName;
     private String authorizeId;
     private String shopName;
     private String authorizationStatus;

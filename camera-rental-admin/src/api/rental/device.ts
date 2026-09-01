@@ -1,8 +1,8 @@
 import request from '@/config/axios'
-import type {
-  RentalScheduleDeviceLockVO,
-  RentalScheduleSegmentVO
-} from '@/api/rental/schedule'
+import type { RentalScheduleDeviceLockVO, RentalScheduleSegmentVO } from '@/api/rental/schedule'
+import type { RentalDeviceCategoryVO } from './catalog'
+
+export type { RentalDeviceCategoryVO, RentalDeviceModelVO } from './catalog'
 
 export interface RentalDeviceVO {
   id: number
@@ -78,20 +78,6 @@ export interface RentalDeviceAssignReqVO {
 export interface RentalDevicePageReqVO extends PageParam {
   categoryCode?: string
   equipmentModelCode?: string
-}
-
-export interface RentalDeviceCategoryVO {
-  id: number
-  categoryCode: string
-  categoryName: string
-  models: RentalDeviceModelVO[]
-}
-
-export interface RentalDeviceModelVO {
-  id: number
-  modelCode: string
-  modelName: string
-  deviceNoPrefix: string
 }
 
 export interface RentalDeviceCategoryCreateReqVO {

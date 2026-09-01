@@ -270,11 +270,11 @@ public class RentalDeliveryServiceImpl implements RentalDeliveryService {
             throw new RentalLogisticsException("DELIVERY_DEVICE_REL_INVALID");
         }
         RentalOrderItemDO item = orderItemMapper.selectByIdForUpdate(deviceCommand.rentalOrderItemId());
-        RentalDeviceAssignmentDO assignment = assignmentMapper.selectByIdForUpdate(deviceCommand.assignmentId());
         RentalDeviceDO device = deviceMapper.selectByIdForUpdate(deviceCommand.deviceId());
+        RentalDeviceAssignmentDO assignment = assignmentMapper.selectByIdForUpdate(deviceCommand.assignmentId());
         requireEntity(item, tenantId, "RENTAL_ORDER_ITEM_NOT_FOUND");
-        requireEntity(assignment, tenantId, "RENTAL_ASSIGNMENT_NOT_FOUND");
         requireEntity(device, tenantId, "RENTAL_DEVICE_NOT_FOUND");
+        requireEntity(assignment, tenantId, "RENTAL_ASSIGNMENT_NOT_FOUND");
         if (!Objects.equals(delivery.getRentalOrderId(), item.getRentalOrderId())
                 || !Objects.equals(delivery.getRentalOrderId(), assignment.getRentalOrderId())
                 || !Objects.equals(item.getId(), assignment.getRentalOrderItemId())

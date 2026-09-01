@@ -17,7 +17,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuShopMapper;
 import cn.iocoder.yudao.module.rental.integration.xianyu.service.XianyuOrderSyncService;
-import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
@@ -62,6 +62,10 @@ class XianyuOrderAdminServiceTest {
                 .id(1L)
                 .shopId(2L)
                 .externalOrderId("3364202298717566229")
+                .xgjProductId("xgj-product-1")
+                .xianyuItemId("xianyu-item-1")
+                .xgjSkuId("xgj-sku-1")
+                .xianyuSkuId("xianyu-sku-1")
                 .orderStatus("22")
                 .payAmount(100L)
                 .currency("CNY")
@@ -101,7 +105,7 @@ class XianyuOrderAdminServiceTest {
                 mock(RentalOrderItemMapper.class),
                 mock(RentalDeviceAssignmentMapper.class),
                 mock(XianyuOrderSyncService.class),
-                mock(XianyuRentalConversionService.class));
+                mock(RentalChannelOrderReconciliationService.class));
 
         PageResult<XianyuOrderRespVO> page = service.getOrderPage(pageParam);
         XianyuOrderRespVO vo = page.getList().get(0);
@@ -109,6 +113,10 @@ class XianyuOrderAdminServiceTest {
 
         // Authorized management order queries return the persisted customer snapshot.
         assertEquals("3364202298717566229", vo.getExternalOrderId());
+        assertEquals("xgj-product-1", vo.getXgjProductId());
+        assertEquals("xianyu-item-1", vo.getXianyuItemId());
+        assertEquals("xgj-sku-1", vo.getXgjSkuId());
+        assertEquals("xianyu-sku-1", vo.getXianyuSkuId());
         assertEquals("测试收货人", vo.getReceiverName());
         assertEquals("19900000000", vo.getReceiverMobile());
         assertEquals("测试省测试市测试区测试路1号", vo.getReceiverAddress());
@@ -148,7 +156,7 @@ class XianyuOrderAdminServiceTest {
                 mock(RentalOrderItemMapper.class),
                 mock(RentalDeviceAssignmentMapper.class),
                 syncService,
-                mock(XianyuRentalConversionService.class));
+                mock(RentalChannelOrderReconciliationService.class));
         XianyuOrderSyncReqVO reqVO = new XianyuOrderSyncReqVO();
         reqVO.setShopId(2L);
 
@@ -187,7 +195,7 @@ class XianyuOrderAdminServiceTest {
                 mock(RentalOrderItemMapper.class),
                 mock(RentalDeviceAssignmentMapper.class),
                 mock(XianyuOrderSyncService.class),
-                mock(XianyuRentalConversionService.class));
+                mock(RentalChannelOrderReconciliationService.class));
 
         XianyuOrderRespVO vo = service.getOrderPage(pageParam).getList().get(0);
 
@@ -223,7 +231,7 @@ class XianyuOrderAdminServiceTest {
                 mock(RentalOrderItemMapper.class),
                 mock(RentalDeviceAssignmentMapper.class),
                 mock(XianyuOrderSyncService.class),
-                mock(XianyuRentalConversionService.class));
+                mock(RentalChannelOrderReconciliationService.class));
 
         XianyuOrderRespVO vo = service.getOrderPage(pageParam).getList().get(0);
 
@@ -274,7 +282,7 @@ class XianyuOrderAdminServiceTest {
                 itemMapper,
                 assignmentMapper,
                 mock(XianyuOrderSyncService.class),
-                mock(XianyuRentalConversionService.class));
+                mock(RentalChannelOrderReconciliationService.class));
 
         XianyuOrderRespVO vo = service.getOrderPage(pageParam).getList().get(0);
 
@@ -313,7 +321,7 @@ class XianyuOrderAdminServiceTest {
                 mock(RentalOrderItemMapper.class),
                 mock(RentalDeviceAssignmentMapper.class),
                 mock(XianyuOrderSyncService.class),
-                mock(XianyuRentalConversionService.class));
+                mock(RentalChannelOrderReconciliationService.class));
 
         XianyuOrderRespVO vo = service.getOrderPage(pageParam).getList().get(0);
 

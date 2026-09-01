@@ -21,9 +21,12 @@ public class XianyuOrderPayloadParser {
     private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
 
     private final ObjectMapper objectMapper;
+    private final XianyuChannelIdentifierNormalizer identifierNormalizer;
 
-    public XianyuOrderPayloadParser(ObjectMapper objectMapper) {
+    public XianyuOrderPayloadParser(ObjectMapper objectMapper,
+                                    XianyuChannelIdentifierNormalizer identifierNormalizer) {
         this.objectMapper = objectMapper;
+        this.identifierNormalizer = identifierNormalizer;
     }
 
     public XianyuOrderSnapshot parse(String rawPayload) {
@@ -52,9 +55,10 @@ public class XianyuOrderPayloadParser {
             throw malformed("XianGuanJia order payload cannot be re-serialized", exception);
         }
         return new XianyuOrderSnapshot(
-                requiredText(detail, "order_no"),
-                firstText(goods, "product_id", "item_id"),
-                optionalText(goods, "sku_id"),
+                requiredIdentifier(detail, "order_no"),
+                optionalIdentifier(goods, "product_id"),
+                optionalIdentifier(goods, "item_id"),
+                optionalIdentifier(goods, "sku_id"),
                 optionalText(detail, "order_status", "UNKNOWN"),
                 optionalLong(detail, "pay_amount"),
                 optionalText(detail, "seller_remark"),
@@ -94,6 +98,22 @@ public class XianyuOrderPayloadParser {
         );
     }
 
+    private String requiredIdentifier(JsonNode node, String fieldName) {
+        try {
+            return identifierNormalizer.normalizeRequired(node, fieldName);
+        } catch (IllegalArgumentException exception) {
+            throw malformed("XianGuanJia order payload has invalid " + fieldName, exception);
+        }
+    }
+
+    private String optionalIdentifier(JsonNode node, String fieldName) {
+        try {
+            return identifierNormalizer.normalizeOptional(node, fieldName);
+        } catch (IllegalArgumentException exception) {
+            throw malformed("XianGuanJia order payload has invalid " + fieldName, exception);
+        }
+    }
+
     private String composeAddress(JsonNode detail) {
         List<String> parts = new ArrayList<>(5);
         for (String field : List.of("prov_name", "city_name", "area_name", "town_name", "address")) {
@@ -111,16 +131,6 @@ public class XianyuOrderPayloadParser {
             throw malformed("XianGuanJia order payload is missing " + fieldName);
         }
         return value;
-    }
-
-    private String firstText(JsonNode node, String... fieldNames) {
-        for (String fieldName : fieldNames) {
-            String value = optionalText(node, fieldName);
-            if (value != null && !value.isBlank()) {
-                return value;
-            }
-        }
-        return null;
     }
 
     private String optionalText(JsonNode node, String fieldName) {

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -50,15 +51,25 @@ public class RentalDeviceOpsService {
     private final RentalDeviceAssignmentMapper assignmentMapper;
     private final RentalScheduleMapper scheduleMapper;
     private final RentalDeviceLockService lockService;
+    private final Clock clock;
 
     public RentalDeviceOpsService(RentalDeviceMapper deviceMapper,
                                   RentalDeviceAssignmentMapper assignmentMapper,
                                   RentalScheduleMapper scheduleMapper,
                                   RentalDeviceLockService lockService) {
+        this(deviceMapper, assignmentMapper, scheduleMapper, lockService, Clock.system(BUSINESS_ZONE));
+    }
+
+    RentalDeviceOpsService(RentalDeviceMapper deviceMapper,
+                           RentalDeviceAssignmentMapper assignmentMapper,
+                           RentalScheduleMapper scheduleMapper,
+                           RentalDeviceLockService lockService,
+                           Clock clock) {
         this.deviceMapper = deviceMapper;
         this.assignmentMapper = assignmentMapper;
         this.scheduleMapper = scheduleMapper;
         this.lockService = lockService;
+        this.clock = clock;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -122,8 +133,11 @@ public class RentalDeviceOpsService {
         deviceMapper.updateById(device);
 
         narrowScheduleForReturn(assignment);
+        LocalDateTime completedAt = LocalDateTime.now(clock);
         assignment.setStatus(ASSIGN_RETURNED)
-                .setReturnedAt(LocalDateTime.now())
+                .setReturnedAt(completedAt)
+                .setInspectionCompletedAt(completedAt)
+                .setInspectionResult(passed ? "PASSED" : "FAILED")
                 .setReturnNote(trimToNull(reqVO.getNote()));
         assignmentMapper.updateById(assignment);
 
@@ -132,13 +146,17 @@ public class RentalDeviceOpsService {
 
     @Transactional(rollbackFor = Exception.class)
     public RentalDeviceOpsRespVO unassign(RentalDeviceUnassignReqVO reqVO) {
-        RentalDeviceAssignmentDO assignment = assignmentMapper.selectByIdForUpdate(reqVO.getAssignmentId());
-        if (assignment == null) {
+        RentalDeviceAssignmentDO snapshot = assignmentMapper.selectById(reqVO.getAssignmentId());
+        if (snapshot == null) {
             throw exception(RENTAL_DEVICE_NOT_EXISTS);
         }
-        RentalDeviceDO device = deviceMapper.selectByIdForUpdate(assignment.getDeviceId());
+        RentalDeviceDO device = deviceMapper.selectByIdForUpdate(snapshot.getDeviceId());
         if (device == null) {
             throw exception(RENTAL_DEVICE_NOT_EXISTS);
+        }
+        RentalDeviceAssignmentDO assignment = assignmentMapper.selectByIdForUpdate(reqVO.getAssignmentId());
+        if (assignment == null || !device.getId().equals(assignment.getDeviceId())) {
+            throw exception(RENTAL_DEVICE_UNASSIGN_FAILED, "分配记录已变化，请刷新后重试");
         }
         if (ASSIGN_CANCELED.equals(assignment.getStatus())) {
             return toResp(device, assignment);
@@ -165,7 +183,7 @@ public class RentalDeviceOpsService {
         if (schedule == null || !SCHEDULE_EFFECTIVE.equals(schedule.getStatus())) {
             return;
         }
-        LocalDate newEndExclusive = LocalDate.now(BUSINESS_ZONE).plusDays(1);
+        LocalDate newEndExclusive = LocalDate.now(clock).plusDays(1);
         if (newEndExclusive.isAfter(schedule.getOccupyStartDate())
                 && newEndExclusive.isBefore(schedule.getOccupyEndDateExclusive())) {
             schedule.setOccupyEndDateExclusive(newEndExclusive);

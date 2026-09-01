@@ -71,6 +71,26 @@ class XianyuOrderMapperTest {
     }
 
     @Test
+    void adminPageQueryUsesOnlyExplicitProductAndSkuIdentifiers() {
+        XianyuOrderPageReqVO request = new XianyuOrderPageReqVO();
+        request.setXgjProductId("xgj-product-1");
+        request.setXianyuItemId("xianyu-item-1");
+        request.setXgjSkuId("xgj-sku-1");
+        request.setXianyuSkuId("xianyu-sku-1");
+
+        String sql = XianyuOrderMapper.adminPageQuery(request)
+                .getCustomSqlSegment()
+                .toLowerCase();
+
+        assertTrue(sql.contains("xgj_product_id ="));
+        assertTrue(sql.contains("xianyu_item_id ="));
+        assertTrue(sql.contains("xgj_sku_id ="));
+        assertTrue(sql.contains("xianyu_sku_id ="));
+        assertFalse(sql.contains("external_product_id"));
+        assertFalse(sql.contains("external_sku_id"));
+    }
+
+    @Test
     void adminPageQueryFiltersExactParsedShipDate() {
         XianyuOrderPageReqVO request = new XianyuOrderPageReqVO();
         request.setShipDate(LocalDate.of(2026, 8, 6));

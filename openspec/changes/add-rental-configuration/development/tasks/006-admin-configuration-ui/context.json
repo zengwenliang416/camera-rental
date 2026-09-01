@@ -1,7 +1,8 @@
 {
   "task_id": "006-admin-configuration-ui",
   "task_items": ["6.1", "6.2", "6.3", "6.4", "6.5", "6.6"],
-  "goal": "Implement the approved three-tab Rental Configuration admin experience with exact string identifiers.",
+  "acceptance_primary": ["A1"],
+  "goal": "Implement the approved three-tab Rental Configuration admin experience with exact string identifiers and the minimal backend reconciliation-result contract required to complete the flow.",
   "must_read": [
     "openspec/changes/add-rental-configuration/development/tasks/006-admin-configuration-ui/brief.md",
     "openspec/changes/add-rental-configuration/requirements.md",
@@ -18,17 +19,27 @@
     "docs/integrations/xianyu/source.md"
   ],
   "allowed_files": [
+    "camera-rental-admin/package.json",
+    "camera-rental-admin/src/config/axios/service.ts",
     "camera-rental-admin/src/api/rental",
     "camera-rental-admin/src/views/rental",
     "camera-rental-admin/src/locales",
-    "camera-rental-admin/tests"
+    "camera-rental-admin/tests",
+    "camera-rental-server/yudao-module-rental",
+    "camera-rental-server/sql/mysql/migrations/20260901_056_rental_channel_reconciliation_run.sql",
+    "openspec/changes/add-rental-configuration/development/migrations/20260901_056_rental_channel_reconciliation_run.sql",
+    "openspec/changes/add-rental-configuration/development/migrations/rollback-20260901_056_rental_channel_reconciliation_run.sql",
+    "openspec/changes/add-rental-configuration/development/migrations/manifest.json",
+    "openspec/changes/add-rental-configuration/development/migrations/README.md"
   ],
   "non_goals": [
     "Do not calculate authoritative mapping or scheduling in the frontend.",
-    "Do not add page-local theme or locale infrastructure."
+    "Do not add page-local theme or locale infrastructure.",
+    "Do not execute the migration, deploy services, contact production, or run real shop writes."
   ],
   "expected_evidence": [
     "Typed API and model tests",
+    "Backend reconciliation-run contract and migration tests",
     "Permission, state, locale, theme and narrow-layout evidence",
     "Task report, spec review and quality review"
   ],

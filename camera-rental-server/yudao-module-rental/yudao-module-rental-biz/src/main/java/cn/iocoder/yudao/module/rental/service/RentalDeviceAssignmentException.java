@@ -9,6 +9,7 @@ public class RentalDeviceAssignmentException extends RuntimeException {
         INVALID_COMMAND,
         IDEMPOTENCY_KEY_REUSED,
         ORDER_ITEM_NOT_FOUND,
+        ORDER_NOT_READY,
         ORDER_NOT_ELIGIBLE,
         ITEM_ALREADY_FULLY_ASSIGNED,
         DEVICE_NOT_FOUND,

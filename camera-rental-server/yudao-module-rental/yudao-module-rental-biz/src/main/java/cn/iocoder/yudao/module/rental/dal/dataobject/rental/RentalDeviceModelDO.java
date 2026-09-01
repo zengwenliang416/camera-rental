@@ -26,5 +26,6 @@ public class RentalDeviceModelDO extends TenantBaseDO {
     private Integer nextSequence;
     private Integer sortOrder;
     private Boolean enabled;
+    private Integer lockVersion;
 
 }

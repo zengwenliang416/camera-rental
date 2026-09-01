@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-31T02:40:20.909Z",
+  "generated_at": "2026-08-31T23:40:27.516Z",
   "active_change": "add-rental-configuration",
   "source_raw": "openspec/changes/add-rental-configuration/codegraph/evidence.jsonl",
   "by_claim": {},

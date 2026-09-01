@@ -1,6 +1,6 @@
 # 闲管家官方接口来源
 
-最近在线核对日期：`2026-07-30`。
+最近在线核对日期：`2026-09-01`。
 
 ## 官方索引
 
@@ -211,6 +211,51 @@ POST /api/open/order/detail
   仍保持待处理。历史记录在本地批量重算，不调用第三方写接口。
 
 本次没有使用运行时凭据调用真实接口，也没有执行订单发货或其他第三方写操作。
+
+## 2026-09-01 历史订单补建复核
+
+本次重新读取在线 `llms.txt`、订单列表和订单详情 Markdown：
+
+```text
+POST /api/open/order/list
+POST /api/open/order/detail
+```
+
+订单列表仍要求最近六个月内的 `update_time` 范围，单个条件最多获取一万条，
+`page_no` 和 `page_size` 上限均为 `100`；订单详情仍以字符串 `order_no`
+查询，并返回 `seller_remark`、`goods.product_id`、`goods.item_id` 和
+`goods.sku_id`。
+
+本次历史补建不发送新的闲管家请求，而是对已经持久化的 `xianyu_order` 使用固定
+内部主键上界、升序分页和同一订单 reconciliation 服务重新处理。没有使用运行时
+凭据调用真实接口，没有执行第三方写操作、生产数据库变更、80 服务器操作或真实
+历史补建。
+
+## 2026-09-01 租赁配置字段复核
+
+本次重新读取在线 `llms.txt`，并打开当前订单列表、订单详情、商品详情和商品规格
+Markdown：
+
+```text
+POST /api/open/order/list
+POST /api/open/order/detail
+POST /api/open/product/detail
+POST /api/open/product/sku/list
+```
+
+确认：
+
+- 订单详情 `goods.product_id`、`goods.item_id`、`goods.sku_id` 分别表示闲管家
+  商品 ID、闲鱼商品 ID、闲管家 SKU ID。
+- 商品详情 `product_id` 是闲管家商品 ID，`publish_shop[].item_id` 是对应发布
+  店铺的闲鱼商品 ID。
+- 商品详情和商品规格的 `sku_items[].sku_id` 是闲管家 SKU ID；
+  `sku_items[].xy_sku_id` 是闲鱼 SKU ID，且该字段不是订单详情的权威来源。
+- 商品规格接口仍只适用于多规格商品，请求 `product_id` 数组最多 100 个。
+- 所有 ID 在本地和前端均按字符串处理，缺失时保持为空，不能相互回退。
+
+本次只读取公开文档和本地脱敏测试证据，没有使用商家凭据调用真实接口，没有执行
+第三方写操作、生产数据库变更、80 服务器操作或真实历史补建。
 
 ## 2026-07-25 快递公司查询证据复核
 

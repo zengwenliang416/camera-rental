@@ -22,6 +22,8 @@ public class XianyuProductSkuDO extends TenantBaseDO {
     @TableId
     private Long id;
     private Long productId;
+    private String xgjSkuId;
+    private String xianyuSkuId;
     private String externalSkuId;
     private String skuName;
     private Integer sourceStock;

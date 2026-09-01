@@ -99,8 +99,10 @@
             resultType="cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalProductSkuReportRespVO">
         SELECT
             o.shop_id,
-            o.external_product_id,
-            o.external_sku_id,
+            o.xgj_product_id,
+            o.xianyu_item_id,
+            o.xgj_sku_id,
+            o.xianyu_sku_id,
             MAX(o.goods_title) AS goods_title,
             COUNT(1) AS order_count,
             COALESCE(SUM(o.goods_quantity), 0) AS goods_quantity,
@@ -110,9 +112,9 @@
         WHERE o.tenant_id = #{tenantId}
           AND o.deleted = b'0'
           <include refid="OrderReportTimeRange"/>
-        GROUP BY o.shop_id, o.external_product_id, o.external_sku_id
+        GROUP BY o.shop_id, o.xgj_product_id, o.xianyu_item_id, o.xgj_sku_id, o.xianyu_sku_id
         ORDER BY rent_amount_fen DESC, order_count DESC, o.shop_id,
-                 o.external_product_id, o.external_sku_id
+                 o.xianyu_item_id, o.xgj_sku_id
     </select>
 
     <select id="selectDevicePerformancePage"

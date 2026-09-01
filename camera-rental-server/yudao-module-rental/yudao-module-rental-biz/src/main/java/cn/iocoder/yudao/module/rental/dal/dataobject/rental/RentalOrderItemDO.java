@@ -1,7 +1,9 @@
 package cn.iocoder.yudao.module.rental.dal.dataobject.rental;
 
 import cn.iocoder.yudao.framework.tenant.core.db.TenantBaseDO;
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,7 @@ public class RentalOrderItemDO extends TenantBaseDO {
     @TableId
     private Long id;
     private Long rentalOrderId;
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
     private String equipmentModelCode;
     private String sourceProductId;
     private String sourceSkuId;
@@ -34,5 +37,6 @@ public class RentalOrderItemDO extends TenantBaseDO {
     private LocalDate billableEndDate;
     private LocalDate occupyStartDate;
     private LocalDate occupyEndDateExclusive;
+    private LocalDate expectedSendBackDate;
 
 }

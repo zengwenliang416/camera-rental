@@ -29,16 +29,15 @@ import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuWriteClien
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuWriteEndpoint;
 import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuProperties;
 import cn.iocoder.yudao.module.rental.integration.xianyu.config.XianyuRuntimeConfigService;
-import cn.iocoder.yudao.module.rental.service.RentalConversionResult;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentException;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentResult;
 import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentService;
-import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryCreateCommand;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryResult;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryService;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalLogisticsException;
 import cn.iocoder.yudao.module.rental.service.logistics.WaybillPrivacy;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalOrderPreparationPolicy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.AfterEach;
@@ -62,6 +61,7 @@ import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_WRI
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_DISPATCH_BACKFILL_ORDER_NOT_SHIPPED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_DEVICE_NOT_SHIPPABLE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_IDEMPOTENT_KEY_REUSED;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_CONVERTED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_PENDING;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_REMOTE_ERROR;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHOP_AUTHORIZATION_INVALID;
@@ -71,6 +71,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -86,7 +87,7 @@ class XianyuOrderShipServiceTest {
     private final RentalOrderMapper rentalOrderMapper = mock(RentalOrderMapper.class);
     private final RentalOrderItemMapper rentalOrderItemMapper = mock(RentalOrderItemMapper.class);
     private final RentalDeviceShipmentMapper shipmentMapper = mock(RentalDeviceShipmentMapper.class);
-    private final XianyuRentalConversionService conversionService = mock(XianyuRentalConversionService.class);
+    private final RentalOrderPreparationPolicy preparationPolicy = mock(RentalOrderPreparationPolicy.class);
     private final RentalDeviceAssignmentService assignmentService = mock(RentalDeviceAssignmentService.class);
     private final RentalDeviceOpsService deviceOpsService = mock(RentalDeviceOpsService.class);
     private final RentalDeliveryService deliveryService = mock(RentalDeliveryService.class);
@@ -329,6 +330,7 @@ class XianyuOrderShipServiceTest {
                 .build();
         when(orderMapper.selectByIdForUpdate(10L)).thenReturn(shippedOrder());
         when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        stubPreparedInternalOrder();
         when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
         when(shipmentMapper.selectByBusinessKeyForUpdate(
                 10L, "SF5113560342626", "shunfeng")).thenReturn(existing);
@@ -337,7 +339,7 @@ class XianyuOrderShipServiceTest {
                 ServiceException.class, () -> service().backfillDispatch(backfillReq()));
 
         assertEquals(XIANYU_DISPATCH_BACKFILL_CONFLICT.getCode(), ex.getCode());
-        verify(rentalOrderMapper, never()).selectByIdForUpdate(any());
+        verify(rentalOrderMapper).selectByIdForUpdate(30L);
         verify(shipmentMapper, never()).insert(any(RentalDeviceShipmentDO.class));
     }
 
@@ -353,6 +355,7 @@ class XianyuOrderShipServiceTest {
                 .build();
         when(orderMapper.selectByIdForUpdate(10L)).thenReturn(shippedOrder());
         when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        stubPreparedInternalOrder();
         when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
         when(shipmentMapper.selectByBusinessKeyForUpdate(
                 10L, "SF5113560342626", "shunfeng")).thenReturn(existing);
@@ -361,7 +364,7 @@ class XianyuOrderShipServiceTest {
                 ServiceException.class, () -> service().backfillDispatch(backfillReq()));
 
         assertEquals(XIANYU_DISPATCH_BACKFILL_CONFLICT.getCode(), ex.getCode());
-        verify(rentalOrderMapper, never()).selectByIdForUpdate(any());
+        verify(rentalOrderMapper).selectByIdForUpdate(30L);
         verify(assignmentService, never()).assign(any());
         verify(deviceOpsService, never()).dispatch(any());
         verify(shipmentMapper, never()).insert(any(RentalDeviceShipmentDO.class));
@@ -370,34 +373,22 @@ class XianyuOrderShipServiceTest {
     }
 
     @Test
-    void backfillConvertsUnmappedOrderBeforeAssignment() {
+    void backfillRejectsUnpreparedOrderInsteadOfCreatingShipmentMapping() {
         XianyuOrderDO order = shippedOrder();
         order.setRentalOrderId(null);
         order.setConversionStatus("PENDING");
-        RentalOrderItemDO item = convertedOrderItem();
-        RentalDeviceOpsRespVO dispatched = new RentalDeviceOpsRespVO();
-        dispatched.setAssignmentStatus("DISPATCHED");
         when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
         when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
         when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
-        when(conversionService.convertForShipment(10L, "DJI-P4P"))
-                .thenReturn(RentalConversionResult.converted(30L));
-        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(RentalOrderDO.builder().id(30L).build());
-        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(item);
-        when(assignmentService.assign(any())).thenReturn(new RentalDeviceAssignmentResult(
-                60L, 70L, 40L, item.getOccupyStartDate(), item.getOccupyEndDateExclusive()));
-        when(deviceOpsService.dispatch(any())).thenReturn(dispatched);
 
-        XianyuOrderShipRespVO resp = service().backfillDispatch(backfillReq());
+        ServiceException ex = assertThrows(
+                ServiceException.class, () -> service().backfillDispatch(backfillReq()));
 
-        assertEquals("DISPATCHED", resp.getAssignmentStatus());
-        assertEquals(30L, order.getRentalOrderId());
-        assertEquals("CONVERTED", order.getConversionStatus());
-        verify(conversionService).convertForShipment(10L, "DJI-P4P");
-        verify(assignmentService).assign(any());
-        verify(shipmentMapper).insert(any(RentalDeviceShipmentDO.class));
-        verify(deliveryService).createOrReuse(any());
-        verify(orderMapper).updateById(order);
+        assertEquals(XIANYU_SHIP_ORDER_NOT_CONVERTED.getCode(), ex.getCode());
+        verify(assignmentService, never()).assign(any());
+        verify(shipmentMapper, never()).insert(any(RentalDeviceShipmentDO.class));
+        verify(deliveryService, never()).createOrReuse(any());
+        verify(orderMapper, never()).updateById(order);
         verify(writeClient, never()).execute(any(), any());
     }
 
@@ -707,34 +698,50 @@ class XianyuOrderShipServiceTest {
         assertEquals("shunfeng", shipBodyCaptor.getValue().path("express_code").asText());
         assertEquals("顺丰速运", shipBodyCaptor.getValue().path("express_name").asText());
         assertEquals(4, shipBodyCaptor.getValue().size());
+        verify(preparationPolicy).requireReady(any(RentalOrderDO.class), eq(item));
     }
 
     @Test
-    void shipConvertsUnmappedOrderUsingSelectedDeviceModelBeforeAssignment() {
+    void shipRejectsWhenAuthoritativePreparationPolicyRejectsTheOrder() {
         properties.setWriteEnabled(true);
         XianyuOrderDO order = pendingOrder();
-        order.setRentalOrderId(null);
+        RentalOrderDO rentalOrder = RentalOrderDO.builder()
+                .id(30L)
+                .preparationStatus("WAITING_REMARK")
+                .preparationReasonCode("MISSING_REMARK")
+                .build();
         RentalOrderItemDO item = convertedOrderItem();
-        RentalDeviceOpsRespVO dispatched = new RentalDeviceOpsRespVO();
-        dispatched.setAssignmentStatus("DISPATCHED");
         when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
         when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
         when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
-        when(conversionService.convertForShipment(10L, "DJI-P4P"))
-                .thenReturn(RentalConversionResult.converted(30L));
-        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(RentalOrderDO.builder().id(30L).build());
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(rentalOrder);
         when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(item);
-        when(assignmentService.assign(any())).thenReturn(new RentalDeviceAssignmentResult(
-                60L, 70L, 40L, item.getOccupyStartDate(), item.getOccupyEndDateExclusive()));
-        when(writeClient.execute(eq(XianyuWriteEndpoint.ORDER_SHIP), any())).thenReturn(remoteSuccess());
-        when(deviceOpsService.dispatch(any())).thenReturn(dispatched);
+        doThrow(new RentalDeviceAssignmentException(
+                RentalDeviceAssignmentException.Code.ORDER_NOT_READY, "MISSING_REMARK"))
+                .when(preparationPolicy).requireReady(rentalOrder, item);
 
-        XianyuOrderShipRespVO resp = service().ship(req());
+        ServiceException ex = assertThrows(ServiceException.class, () -> service().ship(req()));
 
-        assertEquals(60L, resp.getAssignmentId());
-        verify(conversionService).convertForShipment(10L, "DJI-P4P");
-        verify(assignmentService).assign(any());
-        verify(writeClient).execute(eq(XianyuWriteEndpoint.ORDER_SHIP), any());
+        assertEquals(XIANYU_SHIP_ORDER_NOT_CONVERTED.getCode(), ex.getCode());
+        verify(preparationPolicy).requireReady(rentalOrder, item);
+        verify(assignmentService, never()).assign(any());
+        verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void shipRejectsUnpreparedOrderInsteadOfUsingSelectedDeviceModel() {
+        properties.setWriteEnabled(true);
+        XianyuOrderDO order = pendingOrder();
+        order.setRentalOrderId(null);
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
+
+        ServiceException ex = assertThrows(ServiceException.class, () -> service().ship(req()));
+
+        assertEquals(XIANYU_SHIP_ORDER_NOT_CONVERTED.getCode(), ex.getCode());
+        verify(assignmentService, never()).assign(any());
+        verify(writeClient, never()).execute(eq(XianyuWriteEndpoint.ORDER_SHIP), any());
     }
 
     @Test
@@ -796,6 +803,7 @@ class XianyuOrderShipServiceTest {
         disabledDevice.setEnabled(false);
         when(orderMapper.selectByIdForUpdate(10L)).thenReturn(pendingOrder());
         when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        stubPreparedInternalOrder();
         when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(disabledDevice);
 
         ServiceException ex = assertThrows(ServiceException.class, () -> service().ship(req()));
@@ -817,6 +825,7 @@ class XianyuOrderShipServiceTest {
         disabledDevice.setEnabled(false);
         when(orderMapper.selectByIdForUpdate(10L)).thenReturn(pendingOrder());
         when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        stubPreparedInternalOrder();
         when(deviceMapper.selectBySerialNumberForUpdate("SERIAL-P4P-001")).thenReturn(disabledDevice);
 
         ServiceException ex = assertThrows(ServiceException.class, () -> service().ship(req));
@@ -857,6 +866,7 @@ class XianyuOrderShipServiceTest {
         req.setDeviceNo("UNKNOWN-DEVICE");
         when(orderMapper.selectByIdForUpdate(10L)).thenReturn(pendingOrder());
         when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        stubPreparedInternalOrder();
 
         ServiceException ex = assertThrows(ServiceException.class, () -> service().ship(req));
 
@@ -879,6 +889,7 @@ class XianyuOrderShipServiceTest {
         disabledDevice.setEnabled(false);
         when(orderMapper.selectByIdForUpdate(10L)).thenReturn(pendingOrder());
         when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        stubPreparedInternalOrder();
         when(deviceMapper.selectByIdForUpdate(40L)).thenReturn(disabledDevice);
 
         ServiceException ex = assertThrows(ServiceException.class, () -> service().ship(req));
@@ -1093,7 +1104,7 @@ class XianyuOrderShipServiceTest {
 
     private XianyuOrderShipService service() {
         return new XianyuOrderShipService(orderMapper, shopMapper, deviceMapper, assignmentMapper, rentalOrderMapper,
-                rentalOrderItemMapper, shipmentMapper, conversionService, assignmentService, deviceOpsService,
+                rentalOrderItemMapper, shipmentMapper, preparationPolicy, assignmentService, deviceOpsService,
                 deliveryService, waybillPrivacy, writeClient, runtimeConfigService, objectMapper);
     }
 
@@ -1198,6 +1209,13 @@ class XianyuOrderShipServiceTest {
                 .occupyStartDate(LocalDate.of(2026, 7, 27))
                 .occupyEndDateExclusive(LocalDate.of(2026, 8, 2))
                 .build();
+    }
+
+    private void stubPreparedInternalOrder() {
+        when(rentalOrderMapper.selectByIdForUpdate(30L))
+                .thenReturn(RentalOrderDO.builder().id(30L).build());
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L))
+                .thenReturn(convertedOrderItem());
     }
 
     private XianyuReadResponse remoteSuccess() {

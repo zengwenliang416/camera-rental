@@ -22,6 +22,8 @@ public class XianyuProductDO extends TenantBaseDO {
     @TableId
     private Long id;
     private Long shopId;
+    private String xgjProductId;
+    private String xianyuItemId;
     private String externalProductId;
     private String title;
     private String categoryId;

@@ -49,9 +49,9 @@ class XianyuProductPushShopResolverTest {
     @Test
     void shouldUseCurrentTenantWhenFallingBackToPersistedProduct() {
         when(shopMapper.selectValidListByExternalShopId("seller-1")).thenReturn(List.of());
-        when(productMapper.selectListByExternalProductId("product-1")).thenReturn(List.of(XianyuProductDO.builder()
+        when(productMapper.selectListByXgjProductId("product-1")).thenReturn(List.of(XianyuProductDO.builder()
                 .shopId(8L)
-                .externalProductId("product-1")
+                .xgjProductId("product-1")
                 .build()));
         when(shopMapper.selectByTenantIdAndId(9L, 8L)).thenReturn(XianyuShopDO.builder()
                 .id(8L)
@@ -66,9 +66,9 @@ class XianyuProductPushShopResolverTest {
     @Test
     void shouldRejectFallbackShopWhenCurrentTenantCannotReadIt() {
         when(shopMapper.selectValidListByExternalShopId("seller-1")).thenReturn(List.of());
-        when(productMapper.selectListByExternalProductId("product-1")).thenReturn(List.of(XianyuProductDO.builder()
+        when(productMapper.selectListByXgjProductId("product-1")).thenReturn(List.of(XianyuProductDO.builder()
                 .shopId(8L)
-                .externalProductId("product-1")
+                .xgjProductId("product-1")
                 .build()));
 
         assertNull(resolver.resolveShopId("seller-1", "product-1"));

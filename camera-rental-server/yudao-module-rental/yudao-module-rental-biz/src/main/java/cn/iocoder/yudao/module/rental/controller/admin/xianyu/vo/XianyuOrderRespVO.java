@@ -17,8 +17,10 @@ public class XianyuOrderRespVO {
     private Long shopId;
     /** Full channel order no. — not redacted; used for ops lookup. */
     private String externalOrderId;
-    private String externalProductId;
-    private String externalSkuId;
+    private String xgjProductId;
+    private String xianyuItemId;
+    private String xgjSkuId;
+    private String xianyuSkuId;
     private String orderStatus;
     /** 单位：分 */
     private Long payAmount;

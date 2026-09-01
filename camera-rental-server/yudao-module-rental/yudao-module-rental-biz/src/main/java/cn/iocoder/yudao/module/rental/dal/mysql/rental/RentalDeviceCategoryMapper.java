@@ -3,6 +3,7 @@ package cn.iocoder.yudao.module.rental.dal.mysql.rental;
 import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceCategoryDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -17,10 +18,28 @@ public interface RentalDeviceCategoryMapper extends BaseMapperX<RentalDeviceCate
                 .orderByAsc(RentalDeviceCategoryDO::getId));
     }
 
+    default List<RentalDeviceCategoryDO> selectConfigurationList() {
+        return selectList(new LambdaQueryWrapper<RentalDeviceCategoryDO>()
+                .orderByAsc(RentalDeviceCategoryDO::getSortOrder)
+                .orderByAsc(RentalDeviceCategoryDO::getId));
+    }
+
     default RentalDeviceCategoryDO selectByCode(String categoryCode) {
         return selectOne(new LambdaQueryWrapper<RentalDeviceCategoryDO>()
                 .eq(RentalDeviceCategoryDO::getCategoryCode, categoryCode)
                 .last("LIMIT 1"));
+    }
+
+    default RentalDeviceCategoryDO selectByIdForUpdate(Long id) {
+        return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceCategoryDO>()
+                .eq(RentalDeviceCategoryDO::getId, id));
+    }
+
+    default int updateByIdAndVersion(RentalDeviceCategoryDO category, Long tenantId, Integer expectedVersion) {
+        return update(category, new LambdaUpdateWrapper<RentalDeviceCategoryDO>()
+                .eq(RentalDeviceCategoryDO::getId, category.getId())
+                .eq(RentalDeviceCategoryDO::getTenantId, tenantId)
+                .eq(RentalDeviceCategoryDO::getLockVersion, expectedVersion));
     }
 
 }

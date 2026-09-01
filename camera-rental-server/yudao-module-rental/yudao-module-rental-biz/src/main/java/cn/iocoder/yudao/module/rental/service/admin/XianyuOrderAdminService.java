@@ -20,8 +20,8 @@ import cn.iocoder.yudao.module.rental.integration.xianyu.service.XianyuOrderPage
 import cn.iocoder.yudao.module.rental.integration.xianyu.service.XianyuOrderSyncService;
 import cn.iocoder.yudao.module.rental.integration.xianyu.service.XianyuOrderSyncWindow;
 import cn.iocoder.yudao.framework.common.exception.ServiceException;
-import cn.iocoder.yudao.module.rental.service.RentalConversionResult;
-import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationResult;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -52,21 +52,21 @@ public class XianyuOrderAdminService {
     private final RentalOrderItemMapper rentalOrderItemMapper;
     private final RentalDeviceAssignmentMapper assignmentMapper;
     private final XianyuOrderSyncService orderSyncService;
-    private final XianyuRentalConversionService conversionService;
+    private final RentalChannelOrderReconciliationService reconciliationService;
 
     public XianyuOrderAdminService(XianyuOrderMapper orderMapper, XianyuShopMapper shopMapper,
                                    RentalOrderMapper rentalOrderMapper,
                                    RentalOrderItemMapper rentalOrderItemMapper,
                                    RentalDeviceAssignmentMapper assignmentMapper,
                                    XianyuOrderSyncService orderSyncService,
-                                   XianyuRentalConversionService conversionService) {
+                                   RentalChannelOrderReconciliationService reconciliationService) {
         this.orderMapper = orderMapper;
         this.shopMapper = shopMapper;
         this.rentalOrderMapper = rentalOrderMapper;
         this.rentalOrderItemMapper = rentalOrderItemMapper;
         this.assignmentMapper = assignmentMapper;
         this.orderSyncService = orderSyncService;
-        this.conversionService = conversionService;
+        this.reconciliationService = reconciliationService;
     }
 
     public PageResult<XianyuOrderRespVO> getOrderPage(XianyuOrderPageReqVO pageReqVO) {
@@ -143,8 +143,8 @@ public class XianyuOrderAdminService {
         }
     }
 
-    public RentalConversionResult convert(Long channelOrderId) {
-        return conversionService.convert(channelOrderId);
+    public RentalChannelOrderReconciliationResult convert(Long channelOrderId) {
+        return reconciliationService.reconcile(channelOrderId);
     }
 
     private XianyuOrderRespVO toVo(XianyuOrderDO order, RentalOrderItemDO item,
@@ -154,8 +154,10 @@ public class XianyuOrderAdminService {
         vo.setShopId(order.getShopId());
         // Ops needs full order no. for lookup / print; do not redact.
         vo.setExternalOrderId(order.getExternalOrderId());
-        vo.setExternalProductId(order.getExternalProductId());
-        vo.setExternalSkuId(order.getExternalSkuId());
+        vo.setXgjProductId(order.getXgjProductId());
+        vo.setXianyuItemId(order.getXianyuItemId());
+        vo.setXgjSkuId(order.getXgjSkuId());
+        vo.setXianyuSkuId(order.getXianyuSkuId());
         vo.setOrderStatus(order.getOrderStatus());
         vo.setPayAmount(order.getPayAmount());
         vo.setCurrency(order.getCurrency());

@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "gate": "review",
+  "reason": "Approved task 001 requires editing the shared Xianyu identifier persistence and incremental migration boundaries. Focused parser and persistence tests, the rental module test suite, migration validation, and direct diff review remain mandatory before the task can be accepted.",
+  "requested_by": "codex",
+  "created_at": "2026-08-31T02:57:17.000Z",
+  "expires_at": "2026-08-31T06:57:17.000Z",
+  "active_change": "add-rental-configuration"
+}

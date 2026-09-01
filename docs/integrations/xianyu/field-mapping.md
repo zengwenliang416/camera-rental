@@ -25,6 +25,28 @@
 或金额，内部领域模型和前端 API 都优先按字符串表达，避免 JSON / JavaScript
 精度丢失。
 
+## 商品与 SKU 标识权威来源
+
+四类标识不能互相回退、互填或复用：
+
+| 语义 | 权威接口字段 | 标准化字段 | 用途 |
+| --- | --- | --- | --- |
+| 闲管家商品 ID | 订单详情 `goods.product_id`；商品详情/规格 `product_id` | `xgj_product_id` | 关联闲管家商品详情和规格同步记录 |
+| 闲鱼商品 ID | 订单详情 `goods.item_id`；商品详情 `publish_shop[].item_id` | `xianyu_item_id` | `shop_id + xianyu_item_id` 商品规则唯一边界 |
+| 闲管家 SKU ID | 订单详情 `goods.sku_id`；商品详情/规格 `sku_items[].sku_id` | `xgj_sku_id` | 多型号规则的订单精确匹配键 |
+| 闲鱼 SKU ID | 商品详情/规格 `sku_items[].xy_sku_id` | `xianyu_sku_id` | 已同步 SKU 的展示和审计字段 |
+
+规则：
+
+- 所有四类标识在 Java、JSON、TypeScript 和页面输入/展示中按字符串处理。
+- 字段缺失时保存为空并记录准备原因；不得用另一个标识填充。
+- 订单详情没有可靠的 `xy_sku_id` 来源，不能从 `goods.sku_id` 推断。
+- `publish_shop[].item_id` 必须通过精确店铺所有权解析后落库，不能把一个商品的
+  item ID 跨店铺复用。
+- 多型号规则只能选择当前店铺、当前闲鱼商品已同步的 SKU；不能手工输入任意 SKU。
+- 旧 `external_product_id` 和 `external_sku_id` 仅保留为历史证据，新运行时不再
+  读取或写入它们作为业务标识。
+
 管理端授权边界：
 
 - `rental:xianyu:query` 的订单分页可返回完整收货快照和卖家备注。
@@ -85,5 +107,7 @@
 | 订单金额单位 | 已确认：分 |
 | 售后金额单位 | 文档未明确，待进一步确认 |
 | 官方时间字段 | Unix 秒；业务日期按 `Asia/Shanghai` 派生 |
-| 商品、SKU、规格字段 | 订单接口已确认 `product_id`、`item_id`、`outer_id`、`sku_id`、`sku_outer_id`、`sku_text` |
+| 订单商品字段 | 已确认 `goods.product_id`、`goods.item_id`、`goods.sku_id`，三者分别保存且不回退 |
+| 商品详情字段 | 已确认 `product_id`、`publish_shop[].item_id`、`sku_items[].sku_id`、`sku_items[].xy_sku_id` |
+| 商品规格字段 | 已确认分组 `product_id` 及 `sku_items[].sku_id`、`sku_items[].xy_sku_id`；一次最多查询 100 个商品 |
 | 售后状态枚举 | 已取得当前枚举；部分 OpenAPI 字段类型异常，保留未知原值 |

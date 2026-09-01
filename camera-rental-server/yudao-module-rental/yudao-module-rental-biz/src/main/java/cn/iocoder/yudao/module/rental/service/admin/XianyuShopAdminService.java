@@ -93,6 +93,7 @@ public class XianyuShopAdminService {
                     .id(existing == null ? null : existing.getId())
                     .applicationId(application.getId())
                     .externalShopId(remote.externalShopId())
+                    .xianyuUserName(remote.xianyuUserName())
                     .authorizeId(remote.authorizeId())
                     .shopName(remote.shopName())
                     .authorizationStatus(remote.valid() ? "VALID" : "INVALID")

@@ -11,6 +11,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleMapper;
 import cn.iocoder.yudao.module.rental.service.admin.RentalDeviceLockService;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalOrderPreparationPolicy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,7 +57,7 @@ class RentalDeviceAssignmentServiceImplTest {
     @BeforeEach
     void setUp() {
         service = new RentalDeviceAssignmentServiceImpl(assignmentMapper, deviceMapper, orderItemMapper, orderMapper,
-                scheduleMapper, deviceLockService);
+                scheduleMapper, deviceLockService, new RentalOrderPreparationPolicy());
     }
 
     @Test
@@ -77,9 +78,10 @@ class RentalDeviceAssignmentServiceImplTest {
         assertEquals(71L, result.scheduleId());
         assertEquals(31L, result.deviceId());
         InOrder locks = inOrder(deviceMapper, orderItemMapper, orderMapper, scheduleMapper);
-        locks.verify(deviceMapper).selectByIdForUpdate(31L);
-        locks.verify(orderItemMapper).selectByIdForUpdate(21L);
+        locks.verify(orderItemMapper).selectById(21L);
         locks.verify(orderMapper).selectByIdForUpdate(11L);
+        locks.verify(orderItemMapper).selectByIdForUpdate(21L);
+        locks.verify(deviceMapper).selectByIdForUpdate(31L);
         locks.verify(scheduleMapper).selectEffectiveOverlapsForUpdate(31L, LocalDate.of(2026, 7, 22),
                 LocalDate.of(2026, 7, 31));
         verify(scheduleMapper).insert(any(RentalScheduleDO.class));
@@ -149,16 +151,19 @@ class RentalDeviceAssignmentServiceImplTest {
 
     @Test
     void shouldRejectMismatchedDeviceModelBeforeScheduling() {
+        RentalOrderItemDO item = readyItem();
+        when(orderItemMapper.selectById(21L)).thenReturn(item);
+        when(orderMapper.selectByIdForUpdate(11L)).thenReturn(RentalOrderDO.builder().id(11L)
+                .status("PENDING_ALLOCATION").preparationStatus("READY").build());
         when(deviceMapper.selectByIdForUpdate(31L)).thenReturn(RentalDeviceDO.builder().id(31L).enabled(true)
                 .status("AVAILABLE").equipmentModelCode("ZV-E10").build());
-        when(orderItemMapper.selectByIdForUpdate(21L)).thenReturn(RentalOrderItemDO.builder().id(21L)
-                .rentalOrderId(11L).quantity(1).equipmentModelCode("A7M4").build());
+        when(orderItemMapper.selectByIdForUpdate(21L)).thenReturn(item);
 
         RentalDeviceAssignmentException exception = assertThrows(RentalDeviceAssignmentException.class,
                 () -> service.assign(command()));
 
         assertEquals(RentalDeviceAssignmentException.Code.DEVICE_MODEL_MISMATCH, exception.getCode());
-        verify(orderMapper, never()).selectByIdForUpdate(anyLong());
+        verify(orderMapper).selectByIdForUpdate(11L);
         verify(scheduleMapper, never()).insert(any(RentalScheduleDO.class));
     }
 
@@ -189,19 +194,42 @@ class RentalDeviceAssignmentServiceImplTest {
         assertEquals(Exception.class, transactional.rollbackFor()[0]);
     }
 
+    @Test
+    void shouldRejectOrderThatIsNotPreparationReady() {
+        RentalOrderItemDO item = readyItem();
+        when(orderItemMapper.selectById(21L)).thenReturn(item);
+        when(orderItemMapper.selectByIdForUpdate(21L)).thenReturn(item);
+        when(orderMapper.selectByIdForUpdate(11L)).thenReturn(RentalOrderDO.builder().id(11L)
+                .status("PENDING_ALLOCATION").preparationStatus("WAITING_REMARK")
+                .preparationReasonCode("MISSING_REMARK").build());
+
+        RentalDeviceAssignmentException exception = assertThrows(
+                RentalDeviceAssignmentException.class, () -> service.assign(command()));
+
+        assertEquals(RentalDeviceAssignmentException.Code.ORDER_NOT_READY, exception.getCode());
+        verify(scheduleMapper, never()).selectEffectiveOverlapsForUpdate(anyLong(), any(), any());
+        verify(scheduleMapper, never()).insert(any(RentalScheduleDO.class));
+    }
+
     private void stubAssignableCommand() {
+        RentalOrderItemDO item = readyItem();
         when(deviceMapper.selectByIdForUpdate(31L)).thenReturn(RentalDeviceDO.builder().id(31L).enabled(true)
                 .status("AVAILABLE").equipmentModelCode("A7M4").build());
         when(deviceLockService.getActiveLocksForUpdate(31L)).thenReturn(List.of());
-        when(orderItemMapper.selectByIdForUpdate(21L)).thenReturn(RentalOrderItemDO.builder().id(21L)
-                .rentalOrderId(11L).quantity(1).equipmentModelCode("A7M4").build());
+        when(orderItemMapper.selectById(21L)).thenReturn(item);
+        when(orderItemMapper.selectByIdForUpdate(21L)).thenReturn(item);
         when(orderMapper.selectByIdForUpdate(11L)).thenReturn(RentalOrderDO.builder().id(11L)
-                .status("PENDING_ALLOCATION").build());
+                .status("PENDING_ALLOCATION").preparationStatus("READY").build());
         when(assignmentMapper.countAssignedByOrderItem(21L)).thenReturn(0L);
     }
 
     @Test
     void shouldRejectDeviceThatBecomesLockedBeforeFinalAssignment() {
+        RentalOrderItemDO item = readyItem();
+        when(orderItemMapper.selectById(21L)).thenReturn(item);
+        when(orderMapper.selectByIdForUpdate(11L)).thenReturn(RentalOrderDO.builder().id(11L)
+                .status("PENDING_ALLOCATION").preparationStatus("READY").build());
+        when(orderItemMapper.selectByIdForUpdate(21L)).thenReturn(item);
         when(deviceMapper.selectByIdForUpdate(31L)).thenReturn(RentalDeviceDO.builder().id(31L).enabled(true)
                 .status("AVAILABLE").equipmentModelCode("A7M4").build());
         when(deviceLockService.getActiveLocksForUpdate(31L)).thenReturn(List.of(
@@ -212,8 +240,18 @@ class RentalDeviceAssignmentServiceImplTest {
                 () -> service.assign(command()));
 
         assertEquals(RentalDeviceAssignmentException.Code.DEVICE_LOCKED, exception.getCode());
-        verify(orderItemMapper, never()).selectByIdForUpdate(anyLong());
+        verify(orderItemMapper).selectByIdForUpdate(21L);
         verify(scheduleMapper, never()).insert(any(RentalScheduleDO.class));
+    }
+
+    private static RentalOrderItemDO readyItem() {
+        return RentalOrderItemDO.builder().id(21L)
+                .rentalOrderId(11L).quantity(1).equipmentModelCode("A7M4")
+                .billableStartDate(LocalDate.of(2026, 7, 25))
+                .billableEndDate(LocalDate.of(2026, 7, 30))
+                .occupyStartDate(LocalDate.of(2026, 7, 22))
+                .occupyEndDateExclusive(LocalDate.of(2026, 7, 31))
+                .build();
     }
 
     private RentalDeviceAssignmentCommand command() {

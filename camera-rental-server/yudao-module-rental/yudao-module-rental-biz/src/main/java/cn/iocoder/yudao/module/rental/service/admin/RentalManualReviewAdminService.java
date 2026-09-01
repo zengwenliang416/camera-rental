@@ -8,8 +8,8 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalManualReviewDO
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalManualReviewMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuOrderMapper;
-import cn.iocoder.yudao.module.rental.service.RentalConversionResult;
-import cn.iocoder.yudao.module.rental.service.XianyuRentalConversionService;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationResult;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationService;
 import cn.iocoder.yudao.module.system.api.user.AdminUserApi;
 import cn.iocoder.yudao.module.system.api.user.dto.AdminUserRespDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,23 +44,23 @@ public class RentalManualReviewAdminService {
 
     private final RentalManualReviewMapper reviewMapper;
     private final AdminUserApi adminUserApi;
-    private final XianyuRentalConversionService conversionService;
+    private final RentalChannelOrderReconciliationService reconciliationService;
     private final XianyuOrderMapper xianyuOrderMapper;
     private final Clock clock;
 
     @Autowired
     public RentalManualReviewAdminService(RentalManualReviewMapper reviewMapper, AdminUserApi adminUserApi,
-                                          XianyuRentalConversionService conversionService,
+                                          RentalChannelOrderReconciliationService reconciliationService,
                                           XianyuOrderMapper xianyuOrderMapper) {
-        this(reviewMapper, adminUserApi, conversionService, xianyuOrderMapper, Clock.system(BUSINESS_ZONE));
+        this(reviewMapper, adminUserApi, reconciliationService, xianyuOrderMapper, Clock.system(BUSINESS_ZONE));
     }
 
     RentalManualReviewAdminService(RentalManualReviewMapper reviewMapper, AdminUserApi adminUserApi,
-                                   XianyuRentalConversionService conversionService,
+                                   RentalChannelOrderReconciliationService reconciliationService,
                                    XianyuOrderMapper xianyuOrderMapper, Clock clock) {
         this.reviewMapper = reviewMapper;
         this.adminUserApi = adminUserApi;
-        this.conversionService = conversionService;
+        this.reconciliationService = reconciliationService;
         this.xianyuOrderMapper = xianyuOrderMapper;
         this.clock = clock;
     }
@@ -86,7 +86,8 @@ public class RentalManualReviewAdminService {
     public void resolveReview(Long id, String resolutionNote, Long userId) {
         RentalManualReviewDO review = getOpenReview(id);
         if (isXianyuOrderConversion(review)) {
-            RentalConversionResult result = conversionService.convert(parseSourceId(review));
+            RentalChannelOrderReconciliationResult result =
+                    reconciliationService.reconcile(parseSourceId(review));
             if (!CONVERSION_STATUS_CONVERTED.equals(result.status())) {
                 throw exception(RENTAL_MANUAL_REVIEW_PREREQUISITES_UNRESOLVED, result.reasonCode());
             }

@@ -1,6 +1,7 @@
 {
   "task_id": "002-configuration-backend",
   "task_items": ["2.1", "2.2", "2.3", "2.4"],
+  "acceptance_primary": [],
   "goal": "Implement authorized catalog and exact shop-scoped product rule configuration with impact preview.",
   "must_read": [
     "openspec/changes/add-rental-configuration/development/tasks/002-configuration-backend/brief.md",
@@ -30,6 +31,13 @@
     "Service and controller tests for exact mapping and permissions",
     "Shop isolation and optimistic conflict tests",
     "Task report, spec review and quality review"
+  ],
+  "test_paths": [
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/device/RentalDeviceCatalogServiceTest.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/configuration/RentalChannelProductRuleServiceTest.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/configuration/RentalChannelProductRuleTransactionIntegrationTest.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/controller/admin/rental/configuration/RentalConfigurationControllerTest.java",
+    "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/configuration/RentalConfigurationBackendMigrationTest.java"
   ],
   "unsafe_assumptions": [
     "Store display names cannot substitute for uniquely resolved internal shop IDs."

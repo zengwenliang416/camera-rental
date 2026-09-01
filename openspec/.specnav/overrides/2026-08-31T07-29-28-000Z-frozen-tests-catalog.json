@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "gate": "frozen-tests",
+  "reason": "Independent Task 002 test audit found that the frozen catalog test only asserted select-for-update plus updateById, which does not prove the required id + tenant_id + lock_version conditional update. The test contract must be corrected before implementation.",
+  "requested_by": "codex",
+  "created_at": "2026-08-31T07:29:28.000Z",
+  "expires_at": "2026-08-31T11:29:28.000Z",
+  "active_change": "add-rental-configuration",
+  "affected_path": "camera-rental-server/yudao-module-rental/yudao-module-rental-biz/src/test/java/cn/iocoder/yudao/module/rental/service/device/RentalDeviceCatalogServiceTest.java"
+}

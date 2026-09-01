@@ -1,16 +1,9 @@
-export interface RentalDeviceCategoryOption {
-  id: number
-  categoryCode: string
-  categoryName: string
-  models: RentalDeviceModelOption[]
-}
+import type {
+  RentalDeviceCategoryVO as RentalDeviceCategoryOption,
+  RentalDeviceModelVO as RentalDeviceModelOption
+} from '@/api/rental/catalog'
 
-export interface RentalDeviceModelOption {
-  id: number
-  modelCode: string
-  modelName: string
-  deviceNoPrefix: string
-}
+export type { RentalDeviceCategoryOption, RentalDeviceModelOption }
 
 export const getModelsForCategory = (
   catalog: RentalDeviceCategoryOption[],
@@ -32,8 +25,10 @@ export const findModel = (
   catalog: RentalDeviceCategoryOption[],
   categoryCode: string,
   modelCode: string
-) =>
-  getModelsForCategory(catalog, categoryCode).find((model) => model.modelCode === modelCode)
+) => getModelsForCategory(catalog, categoryCode).find((model) => model.modelCode === modelCode)
+
+export const formatDeviceModelLabel = (model: RentalDeviceModelOption) =>
+  model.modelName === model.modelCode ? model.modelCode : `${model.modelName} (${model.modelCode})`
 
 export const normalizeDeviceNoSuffix = (deviceNoSuffix: string) => {
   const normalized = deviceNoSuffix.trim()

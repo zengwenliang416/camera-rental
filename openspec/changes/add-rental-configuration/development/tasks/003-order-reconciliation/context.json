@@ -1,6 +1,7 @@
 {
   "task_id": "003-order-reconciliation",
   "task_items": ["3.1", "3.2", "3.3", "3.4"],
+  "acceptance_primary": ["A4"],
   "goal": "Create eligible internal orders immediately and reconcile readiness idempotently from exact identifiers.",
   "must_read": [
     "openspec/changes/add-rental-configuration/development/tasks/003-order-reconciliation/brief.md",

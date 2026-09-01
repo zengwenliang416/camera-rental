@@ -32,6 +32,8 @@ public class RentalDeviceAssignmentDO extends TenantBaseDO {
     private String idempotencyKey;
     private LocalDateTime assignedAt;
     private LocalDateTime returnedAt;
+    private LocalDateTime inspectionCompletedAt;
+    private String inspectionResult;
     private String returnNote;
 
 }

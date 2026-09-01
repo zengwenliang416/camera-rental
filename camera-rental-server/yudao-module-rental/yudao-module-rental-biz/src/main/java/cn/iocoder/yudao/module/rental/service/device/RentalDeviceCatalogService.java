@@ -1,6 +1,10 @@
 package cn.iocoder.yudao.module.rental.service.device;
 
 import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.configuration.vo.RentalConfigurationCatalogRespVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.configuration.vo.RentalDeviceCatalogStatusReqVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.configuration.vo.RentalDeviceCategoryUpdateReqVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.configuration.vo.RentalDeviceModelUpdateReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceCategoryCreateReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceCategoryRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceModelCreateReqVO;
@@ -31,6 +35,7 @@ import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEV
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_MODEL_NOT_EXISTS;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_PREFIX_DUPLICATE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_SEQUENCE_EXHAUSTED;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_CONFIGURATION_VERSION_CONFLICT;
 
 @Service
 public class RentalDeviceCatalogService {
@@ -63,6 +68,38 @@ public class RentalDeviceCatalogService {
                 .toList();
     }
 
+    public RentalConfigurationCatalogRespVO getConfigurationCatalog() {
+        Map<Long, List<RentalConfigurationCatalogRespVO.Model>> modelsByCategory = new LinkedHashMap<>();
+        for (RentalDeviceModelDO model : modelMapper.selectConfigurationList()) {
+            RentalConfigurationCatalogRespVO.Model modelVO = new RentalConfigurationCatalogRespVO.Model();
+            modelVO.setId(model.getId());
+            modelVO.setCategoryId(model.getCategoryId());
+            modelVO.setModelCode(model.getModelCode());
+            modelVO.setModelName(model.getModelName());
+            modelVO.setDeviceNoPrefix(model.getDeviceNoPrefix());
+            modelVO.setSortOrder(model.getSortOrder());
+            modelVO.setEnabled(model.getEnabled());
+            modelVO.setLockVersion(model.getLockVersion());
+            modelsByCategory.computeIfAbsent(model.getCategoryId(), key -> new ArrayList<>()).add(modelVO);
+        }
+        List<RentalConfigurationCatalogRespVO.Category> categories =
+                categoryMapper.selectConfigurationList().stream().map(category -> {
+                    RentalConfigurationCatalogRespVO.Category categoryVO =
+                            new RentalConfigurationCatalogRespVO.Category();
+                    categoryVO.setId(category.getId());
+                    categoryVO.setCategoryCode(category.getCategoryCode());
+                    categoryVO.setCategoryName(category.getCategoryName());
+                    categoryVO.setSortOrder(category.getSortOrder());
+                    categoryVO.setEnabled(category.getEnabled());
+                    categoryVO.setLockVersion(category.getLockVersion());
+                    categoryVO.setModels(modelsByCategory.getOrDefault(category.getId(), List.of()));
+                    return categoryVO;
+                }).toList();
+        RentalConfigurationCatalogRespVO response = new RentalConfigurationCatalogRespVO();
+        response.setCategories(categories);
+        return response;
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public Long createCategory(RentalDeviceCategoryCreateReqVO reqVO) {
         String categoryCode = normalizeCategoryCode(reqVO.getCategoryCode());
@@ -77,6 +114,7 @@ public class RentalDeviceCatalogService {
                 .categoryName(normalizeName(reqVO.getCategoryName(), "大类名称"))
                 .sortOrder(defaultSort(reqVO.getSortOrder()))
                 .enabled(true)
+                .lockVersion(0)
                 .build();
         category.setTenantId(TenantContextHolder.getRequiredTenantId());
         try {
@@ -106,6 +144,7 @@ public class RentalDeviceCatalogService {
                 .nextSequence(1)
                 .sortOrder(defaultSort(reqVO.getSortOrder()))
                 .enabled(true)
+                .lockVersion(0)
                 .build();
         model.setTenantId(TenantContextHolder.getRequiredTenantId());
         try {
@@ -117,6 +156,110 @@ public class RentalDeviceCatalogService {
             throw exception(RENTAL_DEVICE_MODEL_DUPLICATE);
         }
         return model.getId();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Integer updateCategory(RentalDeviceCategoryUpdateReqVO reqVO) {
+        String categoryCode = normalizeCategoryCode(reqVO.getCategoryCode());
+        if (!CATEGORY_CODE.matcher(categoryCode).matches()) {
+            throw exception(RENTAL_DEVICE_CATALOG_CODE_INVALID, "大类编码仅支持大写字母、数字、下划线和连字符");
+        }
+        RentalDeviceCategoryDO duplicate = categoryMapper.selectByCode(categoryCode);
+        if (duplicate != null && !duplicate.getId().equals(reqVO.getId())) {
+            throw exception(RENTAL_DEVICE_CATEGORY_DUPLICATE);
+        }
+        int nextVersion = reqVO.getLockVersion() + 1;
+        RentalDeviceCategoryDO update = RentalDeviceCategoryDO.builder()
+                .id(reqVO.getId())
+                .categoryCode(categoryCode)
+                .categoryName(normalizeName(reqVO.getCategoryName(), "大类名称"))
+                .sortOrder(defaultSort(reqVO.getSortOrder()))
+                .lockVersion(nextVersion)
+                .build();
+        update.setTenantId(TenantContextHolder.getRequiredTenantId());
+        try {
+            if (categoryMapper.updateByIdAndVersion(
+                    update, update.getTenantId(), reqVO.getLockVersion()) == 0) {
+                throw exception(RENTAL_CONFIGURATION_VERSION_CONFLICT);
+            }
+        } catch (DuplicateKeyException ex) {
+            throw exception(RENTAL_DEVICE_CATEGORY_DUPLICATE);
+        }
+        return nextVersion;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Integer updateCategoryStatus(RentalDeviceCatalogStatusReqVO reqVO) {
+        RentalDeviceCategoryDO current = categoryMapper.selectByIdForUpdate(reqVO.getId());
+        if (current == null) {
+            throw exception(RENTAL_DEVICE_CATEGORY_NOT_EXISTS);
+        }
+        int nextVersion = reqVO.getLockVersion() + 1;
+        current.setEnabled(reqVO.getEnabled());
+        current.setLockVersion(nextVersion);
+        Long tenantId = TenantContextHolder.getRequiredTenantId();
+        if (categoryMapper.updateByIdAndVersion(current, tenantId, reqVO.getLockVersion()) == 0) {
+            throw exception(RENTAL_CONFIGURATION_VERSION_CONFLICT);
+        }
+        return nextVersion;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Integer updateModel(RentalDeviceModelUpdateReqVO reqVO) {
+        RentalDeviceModelDO current = modelMapper.selectByIdForUpdate(reqVO.getId());
+        if (current == null) {
+            throw exception(RENTAL_DEVICE_MODEL_NOT_EXISTS);
+        }
+        RentalDeviceCategoryDO category = requireEnabledCategory(reqVO.getCategoryId());
+        String modelCode = normalizeCatalogToken(reqVO.getModelCode(), "型号编码");
+        String deviceNoPrefix = normalizeCatalogToken(reqVO.getDeviceNoPrefix(), "编号前缀");
+        RentalDeviceModelDO duplicateCode = modelMapper.selectByCode(modelCode);
+        if (duplicateCode != null && !duplicateCode.getId().equals(reqVO.getId())) {
+            throw exception(RENTAL_DEVICE_MODEL_DUPLICATE);
+        }
+        RentalDeviceModelDO duplicatePrefix = modelMapper.selectByPrefix(deviceNoPrefix);
+        if (duplicatePrefix != null && !duplicatePrefix.getId().equals(reqVO.getId())) {
+            throw exception(RENTAL_DEVICE_PREFIX_DUPLICATE);
+        }
+        int nextVersion = reqVO.getLockVersion() + 1;
+        current.setCategoryId(category.getId());
+        current.setModelCode(modelCode);
+        current.setModelName(normalizeName(reqVO.getModelName(), "型号名称"));
+        current.setDeviceNoPrefix(deviceNoPrefix);
+        current.setSortOrder(defaultSort(reqVO.getSortOrder()));
+        current.setLockVersion(nextVersion);
+        Long tenantId = TenantContextHolder.getRequiredTenantId();
+        try {
+            if (modelMapper.updateByIdAndVersion(current, tenantId, reqVO.getLockVersion()) == 0) {
+                throw exception(RENTAL_CONFIGURATION_VERSION_CONFLICT);
+            }
+        } catch (DuplicateKeyException ex) {
+            RentalDeviceModelDO conflictingPrefix = modelMapper.selectByPrefix(deviceNoPrefix);
+            if (conflictingPrefix != null && !conflictingPrefix.getId().equals(reqVO.getId())) {
+                throw exception(RENTAL_DEVICE_PREFIX_DUPLICATE);
+            }
+            throw exception(RENTAL_DEVICE_MODEL_DUPLICATE);
+        }
+        return nextVersion;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Integer updateModelStatus(RentalDeviceCatalogStatusReqVO reqVO) {
+        RentalDeviceModelDO current = modelMapper.selectByIdForUpdate(reqVO.getId());
+        if (current == null) {
+            throw exception(RENTAL_DEVICE_MODEL_NOT_EXISTS);
+        }
+        if (Boolean.TRUE.equals(reqVO.getEnabled())) {
+            requireEnabledCategory(current.getCategoryId());
+        }
+        int nextVersion = reqVO.getLockVersion() + 1;
+        current.setEnabled(reqVO.getEnabled());
+        current.setLockVersion(nextVersion);
+        Long tenantId = TenantContextHolder.getRequiredTenantId();
+        if (modelMapper.updateByIdAndVersion(current, tenantId, reqVO.getLockVersion()) == 0) {
+            throw exception(RENTAL_CONFIGURATION_VERSION_CONFLICT);
+        }
+        return nextVersion;
     }
 
     public Optional<CatalogModel> findEnabledModel(String modelCode) {

@@ -23,5 +23,6 @@ public class RentalDeviceCategoryDO extends TenantBaseDO {
     private String categoryName;
     private Integer sortOrder;
     private Boolean enabled;
+    private Integer lockVersion;
 
 }

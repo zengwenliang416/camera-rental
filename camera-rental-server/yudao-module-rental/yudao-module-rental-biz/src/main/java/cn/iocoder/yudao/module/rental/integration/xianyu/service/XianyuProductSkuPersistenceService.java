@@ -7,6 +7,7 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuRawPayloadDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuProductMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuProductSkuMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuRawPayloadMapper;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationTrigger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,7 @@ import java.util.Objects;
 public class XianyuProductSkuPersistenceService {
 
     static final String PRODUCT_SKU_SOURCE_TYPE = "PRODUCT_SKUS";
-    static final String PRODUCT_SKU_SCHEMA_VERSION = "XIAN_GUAN_JIA_PRODUCT_SKUS_V1";
+    static final String PRODUCT_SKU_SCHEMA_VERSION = "XIAN_GUAN_JIA_PRODUCT_SKUS_V2";
     static final String RESTRICTED_PAYLOAD_POLICY = "RESTRICTED_UNREDACTED_V1";
 
     private final XianyuProductSkuPayloadParser payloadParser;
@@ -28,6 +29,7 @@ public class XianyuProductSkuPersistenceService {
     private final XianyuRawPayloadMapper rawPayloadMapper;
     private final XianyuProductMapper productMapper;
     private final XianyuProductSkuMapper productSkuMapper;
+    private final RentalChannelOrderReconciliationTrigger reconciliationTrigger;
     private final Clock clock;
 
     public XianyuProductSkuPersistenceService(XianyuProductSkuPayloadParser payloadParser,
@@ -35,12 +37,14 @@ public class XianyuProductSkuPersistenceService {
                                               XianyuRawPayloadMapper rawPayloadMapper,
                                               XianyuProductMapper productMapper,
                                               XianyuProductSkuMapper productSkuMapper,
+                                              RentalChannelOrderReconciliationTrigger reconciliationTrigger,
                                               @Qualifier("xianyuClock") Clock clock) {
         this.payloadParser = payloadParser;
         this.payloadHasher = payloadHasher;
         this.rawPayloadMapper = rawPayloadMapper;
         this.productMapper = productMapper;
         this.productSkuMapper = productSkuMapper;
+        this.reconciliationTrigger = reconciliationTrigger;
         this.clock = clock;
     }
 
@@ -53,8 +57,8 @@ public class XianyuProductSkuPersistenceService {
         int persisted = 0;
         LocalDateTime now = LocalDateTime.now(clock);
         for (XianyuProductSkuGroup group : groups) {
-            XianyuProductDO product = productMapper.selectByShopIdAndExternalProductId(
-                    shopId, group.externalProductId());
+            XianyuProductDO product = productMapper.selectByShopIdAndXgjProductId(
+                    shopId, group.xgjProductId());
             if (product == null) {
                 throw new IllegalStateException("Product SKU payload references an unknown product");
             }
@@ -62,18 +66,25 @@ public class XianyuProductSkuPersistenceService {
                 upsertSku(product.getId(), snapshot, rawPayloadId, now);
                 persisted++;
             }
+            reconciliationTrigger.afterSkuChange(shopId, group.xgjProductId(),
+                    group.skuItems().stream().map(XianyuProductSkuSnapshot::xgjSkuId).toList());
         }
         return persisted;
     }
 
     private void upsertSku(Long productId, XianyuProductSkuSnapshot snapshot, Long rawPayloadId,
                            LocalDateTime sourceUpdatedAt) {
-        XianyuProductSkuDO existing = productSkuMapper.selectByProductIdAndExternalSkuIdForUpdate(
-                productId, snapshot.externalSkuId());
+        XianyuProductSkuDO existing = productSkuMapper.selectByProductIdAndXgjSkuIdForUpdate(
+                productId, snapshot.xgjSkuId());
+        String xianyuSkuId = snapshot.xianyuSkuId();
+        if (xianyuSkuId == null && existing != null) {
+            xianyuSkuId = existing.getXianyuSkuId();
+        }
         XianyuProductSkuDO sku = XianyuProductSkuDO.builder()
                 .id(existing == null ? null : existing.getId())
                 .productId(productId)
-                .externalSkuId(snapshot.externalSkuId())
+                .xgjSkuId(snapshot.xgjSkuId())
+                .xianyuSkuId(xianyuSkuId)
                 .skuName(snapshot.skuName())
                 .sourceStock(snapshot.stock())
                 .status("ACTIVE")

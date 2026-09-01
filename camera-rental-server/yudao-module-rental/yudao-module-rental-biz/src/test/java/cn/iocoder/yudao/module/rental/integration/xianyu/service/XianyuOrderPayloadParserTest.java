@@ -12,7 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class XianyuOrderPayloadParserTest {
 
-    private final XianyuOrderPayloadParser parser = new XianyuOrderPayloadParser(new ObjectMapper());
+    private final XianyuOrderPayloadParser parser = new XianyuOrderPayloadParser(
+            new ObjectMapper(), new XianyuChannelIdentifierNormalizer());
 
     @Test
     void shouldParseDocumentedOrderDetailFieldsInShanghaiTime() {
@@ -22,12 +23,13 @@ class XianyuOrderPayloadParserTest {
                 "update_time":1704153600,"receiver_name":"张三","receiver_mobile":"13800138000",
                 "prov_name":"广东省","city_name":"深圳市","area_name":"南山区",
                 "town_name":"粤海街道","address":"桂庙新村100室",
-                "goods":{"product_id":421611860404485,
+                "goods":{"product_id":421611860404485,"item_id":1062409679830,
                 "sku_id":5146011339969}}}""");
 
         assertEquals("3364202298717566229", snapshot.externalOrderId());
-        assertEquals("421611860404485", snapshot.externalProductId());
-        assertEquals("5146011339969", snapshot.externalSkuId());
+        assertEquals("421611860404485", snapshot.xgjProductId());
+        assertEquals("1062409679830", snapshot.xianyuItemId());
+        assertEquals("5146011339969", snapshot.xgjSkuId());
         assertEquals("22", snapshot.orderStatus());
         assertEquals(16000L, snapshot.payAmount());
         assertEquals("#租期1.2-1.4#", snapshot.sellerRemark());
@@ -56,6 +58,18 @@ class XianyuOrderPayloadParserTest {
         assertNull(snapshot.waybillNo());
         assertNull(snapshot.expressCode());
         assertNull(snapshot.expressName());
+    }
+
+    @Test
+    void shouldNotFallbackBetweenProductIdentifiers() {
+        XianyuOrderSnapshot snapshot = parser.parse("""
+                {"code":0,"data":{"order_no":"order-item-only",
+                "goods":{"item_id":"1062409679830"}}}
+                """);
+
+        assertNull(snapshot.xgjProductId());
+        assertEquals("1062409679830", snapshot.xianyuItemId());
+        assertNull(snapshot.xgjSkuId());
     }
 
 }

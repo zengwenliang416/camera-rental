@@ -11,6 +11,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleMapper;
 import cn.iocoder.yudao.module.rental.service.admin.RentalDeviceLockService;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalOrderPreparationPolicy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -41,19 +42,22 @@ public class RentalDeviceAssignmentServiceImpl implements RentalDeviceAssignment
     private final RentalOrderMapper orderMapper;
     private final RentalScheduleMapper scheduleMapper;
     private final RentalDeviceLockService deviceLockService;
+    private final RentalOrderPreparationPolicy preparationPolicy;
 
     public RentalDeviceAssignmentServiceImpl(RentalDeviceAssignmentMapper assignmentMapper,
                                              RentalDeviceMapper deviceMapper,
                                              RentalOrderItemMapper orderItemMapper,
                                              RentalOrderMapper orderMapper,
                                              RentalScheduleMapper scheduleMapper,
-                                             RentalDeviceLockService deviceLockService) {
+                                             RentalDeviceLockService deviceLockService,
+                                             RentalOrderPreparationPolicy preparationPolicy) {
         this.assignmentMapper = assignmentMapper;
         this.deviceMapper = deviceMapper;
         this.orderItemMapper = orderItemMapper;
         this.orderMapper = orderMapper;
         this.scheduleMapper = scheduleMapper;
         this.deviceLockService = deviceLockService;
+        this.preparationPolicy = preparationPolicy;
     }
 
     @Override
@@ -66,17 +70,26 @@ public class RentalDeviceAssignmentServiceImpl implements RentalDeviceAssignment
             return replayResult(replay, command);
         }
 
-        // This lock serializes all schedule writers for this physical device.
+        RentalOrderItemDO snapshot = orderItemMapper.selectById(command.rentalOrderItemId());
+        if (snapshot == null || snapshot.getRentalOrderId() == null) {
+            throw new RentalDeviceAssignmentException(RentalDeviceAssignmentException.Code.ORDER_ITEM_NOT_FOUND,
+                    "Rental order item does not exist");
+        }
+        RentalOrderDO order = orderMapper.selectByIdForUpdate(snapshot.getRentalOrderId());
+        RentalOrderItemDO item = orderItemMapper.selectByIdForUpdate(command.rentalOrderItemId());
+        if (item == null || !Objects.equals(snapshot.getRentalOrderId(), item.getRentalOrderId())) {
+            throw new RentalDeviceAssignmentException(RentalDeviceAssignmentException.Code.ORDER_ITEM_NOT_FOUND,
+                    "Rental order item changed while acquiring assignment locks");
+        }
+        requireOrderEligible(order, item);
+        // Keep the global order -> item -> device -> schedule lock order used by remark updates.
         RentalDeviceDO device = deviceMapper.selectByIdForUpdate(command.deviceId());
         requireDeviceAssignable(device);
         if (!deviceLockService.getActiveLocksForUpdate(device.getId()).isEmpty()) {
             throw new RentalDeviceAssignmentException(RentalDeviceAssignmentException.Code.DEVICE_LOCKED,
                     "Rental device has an active classified lock");
         }
-        RentalOrderItemDO item = orderItemMapper.selectByIdForUpdate(command.rentalOrderItemId());
         requireItemMatchesDevice(item, device);
-        RentalOrderDO order = orderMapper.selectByIdForUpdate(item.getRentalOrderId());
-        requireOrderEligible(order, item);
         if (assignmentMapper.countAssignedByOrderItem(item.getId()) >= item.getQuantity()) {
             throw new RentalDeviceAssignmentException(RentalDeviceAssignmentException.Code.ITEM_ALREADY_FULLY_ASSIGNED,
                     "Rental order item is already fully assigned");
@@ -179,6 +192,7 @@ public class RentalDeviceAssignmentServiceImpl implements RentalDeviceAssignment
             throw new RentalDeviceAssignmentException(RentalDeviceAssignmentException.Code.ORDER_NOT_ELIGIBLE,
                     "Rental order is not eligible for allocation");
         }
+        preparationPolicy.requireReady(order, item);
     }
 
 }

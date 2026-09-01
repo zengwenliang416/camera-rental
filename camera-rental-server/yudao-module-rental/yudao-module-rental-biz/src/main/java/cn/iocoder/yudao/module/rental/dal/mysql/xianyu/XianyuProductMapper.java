@@ -11,30 +11,36 @@ import java.util.List;
 @Mapper
 public interface XianyuProductMapper extends BaseMapperX<XianyuProductDO> {
 
-    default XianyuProductDO selectByShopIdAndExternalProductIdForUpdate(Long shopId, String externalProductId) {
+    default XianyuProductDO selectByShopIdAndXgjProductIdForUpdate(Long shopId, String xgjProductId) {
         return selectOneForUpdate(new LambdaQueryWrapper<XianyuProductDO>()
                 .eq(XianyuProductDO::getShopId, shopId)
-                .eq(XianyuProductDO::getExternalProductId, externalProductId));
+                .eq(XianyuProductDO::getXgjProductId, xgjProductId));
     }
 
-    default XianyuProductDO selectByShopIdAndExternalProductId(Long shopId, String externalProductId) {
+    default XianyuProductDO selectByShopIdAndXgjProductId(Long shopId, String xgjProductId) {
         return selectOne(new LambdaQueryWrapper<XianyuProductDO>()
                 .eq(XianyuProductDO::getShopId, shopId)
-                .eq(XianyuProductDO::getExternalProductId, externalProductId));
+                .eq(XianyuProductDO::getXgjProductId, xgjProductId));
     }
 
-    default List<XianyuProductDO> selectRefreshStateList(Long shopId, List<String> externalProductIds) {
-        if (externalProductIds == null || externalProductIds.isEmpty()) {
+    default XianyuProductDO selectByShopIdAndXianyuItemId(Long shopId, String xianyuItemId) {
+        return selectOne(new LambdaQueryWrapper<XianyuProductDO>()
+                .eq(XianyuProductDO::getShopId, shopId)
+                .eq(XianyuProductDO::getXianyuItemId, xianyuItemId));
+    }
+
+    default List<XianyuProductDO> selectRefreshStateList(Long shopId, List<String> xgjProductIds) {
+        if (xgjProductIds == null || xgjProductIds.isEmpty()) {
             return List.of();
         }
         return selectList(new LambdaQueryWrapper<XianyuProductDO>()
                 .eq(XianyuProductDO::getShopId, shopId)
-                .in(XianyuProductDO::getExternalProductId, externalProductIds));
+                .in(XianyuProductDO::getXgjProductId, xgjProductIds));
     }
 
-    default List<XianyuProductDO> selectListByExternalProductId(String externalProductId) {
+    default List<XianyuProductDO> selectListByXgjProductId(String xgjProductId) {
         return selectList(new LambdaQueryWrapper<XianyuProductDO>()
-                .eq(XianyuProductDO::getExternalProductId, externalProductId));
+                .eq(XianyuProductDO::getXgjProductId, xgjProductId));
     }
 
     default XianyuProductDO selectNewestCursorCandidate(Long shopId, LocalDateTime windowStart,
@@ -45,7 +51,7 @@ public interface XianyuProductMapper extends BaseMapperX<XianyuProductDO> {
                 .le(XianyuProductDO::getSourceUpdatedAt, windowEnd)
                 .isNotNull(XianyuProductDO::getSourceUpdatedAt)
                 .orderByDesc(XianyuProductDO::getSourceUpdatedAt)
-                .orderByDesc(XianyuProductDO::getExternalProductId)
+                .orderByDesc(XianyuProductDO::getXgjProductId)
                 .last("LIMIT 1"));
     }
 

@@ -7,10 +7,12 @@ import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderPage
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -32,8 +34,10 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
                 .eqIfPresent(XianyuOrderDO::getOrderStatus, pageReqVO.getOrderStatus())
                 .eqIfPresent(XianyuOrderDO::getConversionStatus, pageReqVO.getConversionStatus())
                 .likeIfPresent(XianyuOrderDO::getExternalOrderId, pageReqVO.getExternalOrderId())
-                .eqIfPresent(XianyuOrderDO::getExternalProductId, pageReqVO.getExternalProductId())
-                .eqIfPresent(XianyuOrderDO::getExternalSkuId, pageReqVO.getExternalSkuId())
+                .eqIfPresent(XianyuOrderDO::getXgjProductId, pageReqVO.getXgjProductId())
+                .eqIfPresent(XianyuOrderDO::getXianyuItemId, pageReqVO.getXianyuItemId())
+                .eqIfPresent(XianyuOrderDO::getXgjSkuId, pageReqVO.getXgjSkuId())
+                .eqIfPresent(XianyuOrderDO::getXianyuSkuId, pageReqVO.getXianyuSkuId())
                 .eqIfPresent(XianyuOrderDO::getShipDate, pageReqVO.getShipDate())
                 .orderByDesc(XianyuOrderDO::getSourceUpdatedAt)
                 .orderByDesc(XianyuOrderDO::getId);
@@ -174,11 +178,17 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
         int boundedLimit = Math.max(1, Math.min(500, limit));
         LambdaQueryWrapperX<XianyuOrderDO> query = new LambdaQueryWrapperX<>();
         query.select(XianyuOrderDO::getId, XianyuOrderDO::getSellerRemark,
-                XianyuOrderDO::getOrderTime, XianyuOrderDO::getSourceCreatedAt);
+                XianyuOrderDO::getRemarkParseVersion,
+                XianyuOrderDO::getBillableStartDate, XianyuOrderDO::getBillableEndDate,
+                XianyuOrderDO::getShipDate, XianyuOrderDO::getReceiveDate, XianyuOrderDO::getReturnDate,
+                XianyuOrderDO::getOrderTime, XianyuOrderDO::getSourceCreatedAt,
+                XianyuOrderDO::getSourceUpdatedAt, XianyuOrderDO::getRawPayloadId);
         query.and(wrapper -> wrapper
                 .isNull(XianyuOrderDO::getRentalPeriodStatus)
                 .or().isNull(XianyuOrderDO::getRemarkParseVersion)
                 .or().ne(XianyuOrderDO::getRemarkParseVersion, currentParseVersion));
+        query.and(wrapper -> wrapper.isNull(XianyuOrderDO::getConversionStatus)
+                .or().ne(XianyuOrderDO::getConversionStatus, "CONFIG_SKIPPED"));
         query.orderByDesc(XianyuOrderDO::getSourceUpdatedAt);
         query.orderByDesc(XianyuOrderDO::getId);
         query.last("LIMIT " + boundedLimit);
@@ -189,11 +199,17 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
         int boundedLimit = Math.max(1, Math.min(500, limit));
         LambdaQueryWrapperX<XianyuOrderDO> query = new LambdaQueryWrapperX<>();
         query.select(XianyuOrderDO::getId, XianyuOrderDO::getSellerRemark,
-                XianyuOrderDO::getOrderTime, XianyuOrderDO::getSourceCreatedAt);
+                XianyuOrderDO::getRemarkParseVersion,
+                XianyuOrderDO::getBillableStartDate, XianyuOrderDO::getBillableEndDate,
+                XianyuOrderDO::getShipDate, XianyuOrderDO::getReceiveDate, XianyuOrderDO::getReturnDate,
+                XianyuOrderDO::getOrderTime, XianyuOrderDO::getSourceCreatedAt,
+                XianyuOrderDO::getSourceUpdatedAt, XianyuOrderDO::getRawPayloadId);
         query.isNotNull(XianyuOrderDO::getSellerRemark)
                 .ne(XianyuOrderDO::getSellerRemark, "")
                 .and(wrapper -> wrapper.isNull(XianyuOrderDO::getRentalPeriodStatus)
-                        .or().ne(XianyuOrderDO::getRentalPeriodStatus, "SUCCESS"));
+                        .or().ne(XianyuOrderDO::getRentalPeriodStatus, "SUCCESS"))
+                .and(wrapper -> wrapper.isNull(XianyuOrderDO::getConversionStatus)
+                        .or().ne(XianyuOrderDO::getConversionStatus, "CONFIG_SKIPPED"));
         query.lt(beforeId != null, XianyuOrderDO::getId, beforeId);
         query.orderByDesc(XianyuOrderDO::getId);
         query.last("LIMIT " + boundedLimit);
@@ -224,6 +240,128 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
         return selectOneForUpdate(new LambdaQueryWrapper<XianyuOrderDO>()
                 .eq(XianyuOrderDO::getId, id));
     }
+
+    @Select("""
+            SELECT MAX(id)
+              FROM xianyu_order
+             WHERE tenant_id = #{tenantId}
+               AND deleted = FALSE
+            """)
+    Long selectHistoricalReconciliationMaxId(@Param("tenantId") Long tenantId);
+
+    @Select("""
+            SELECT id
+              FROM xianyu_order
+             WHERE tenant_id = #{tenantId}
+               AND deleted = FALSE
+               AND id > #{afterId}
+               AND id <= #{endIdInclusive}
+             ORDER BY id
+             LIMIT #{limit}
+            """)
+    List<Long> selectHistoricalReconciliationCandidateIds(
+            @Param("tenantId") Long tenantId,
+            @Param("afterId") Long afterId,
+            @Param("endIdInclusive") Long endIdInclusive,
+            @Param("limit") int limit);
+
+    @Select("""
+            <script>
+            SELECT xo.id
+              FROM xianyu_order xo
+             WHERE xo.tenant_id = #{tenantId}
+               AND xo.deleted = FALSE
+               AND xo.shop_id = #{shopId}
+               AND xo.xianyu_item_id = #{xianyuItemId}
+               AND xo.rental_order_id IS NOT NULL
+               AND xo.conversion_status &lt;&gt; 'CLOSED'
+               AND NOT EXISTS (
+                   SELECT 1
+                     FROM rental_device_assignment assignment
+                    WHERE assignment.tenant_id = xo.tenant_id
+                      AND assignment.rental_order_id = xo.rental_order_id
+                      AND assignment.deleted = FALSE
+               )
+               <if test="afterId != null">
+               AND xo.id &gt; #{afterId}
+               </if>
+             ORDER BY xo.id
+             LIMIT #{limit}
+            </script>
+            """)
+    List<Long> selectMutableReconciliationCandidateIdsByItem(
+            @Param("tenantId") Long tenantId,
+            @Param("shopId") Long shopId,
+            @Param("xianyuItemId") String xianyuItemId,
+            @Param("afterId") Long afterId,
+            @Param("limit") int limit);
+
+    @Select("""
+            <script>
+            SELECT xo.id
+              FROM xianyu_order xo
+             WHERE xo.tenant_id = #{tenantId}
+               AND xo.deleted = FALSE
+               AND xo.shop_id = #{shopId}
+               AND xo.xgj_product_id = #{xgjProductId}
+               AND xo.rental_order_id IS NOT NULL
+               AND xo.conversion_status &lt;&gt; 'CLOSED'
+               AND NOT EXISTS (
+                   SELECT 1
+                     FROM rental_device_assignment assignment
+                    WHERE assignment.tenant_id = xo.tenant_id
+                      AND assignment.rental_order_id = xo.rental_order_id
+                      AND assignment.deleted = FALSE
+               )
+               <if test="afterId != null">
+               AND xo.id &gt; #{afterId}
+               </if>
+             ORDER BY xo.id
+             LIMIT #{limit}
+            </script>
+            """)
+    List<Long> selectMutableReconciliationCandidateIdsByProduct(
+            @Param("tenantId") Long tenantId,
+            @Param("shopId") Long shopId,
+            @Param("xgjProductId") String xgjProductId,
+            @Param("afterId") Long afterId,
+            @Param("limit") int limit);
+
+    @Select("""
+            <script>
+            SELECT xo.id
+              FROM xianyu_order xo
+             WHERE xo.tenant_id = #{tenantId}
+               AND xo.deleted = FALSE
+               AND xo.shop_id = #{shopId}
+               AND xo.xgj_product_id = #{xgjProductId}
+               AND xo.xgj_sku_id IN
+               <foreach collection="xgjSkuIds" item="xgjSkuId" open="(" separator="," close=")">
+                   #{xgjSkuId}
+               </foreach>
+               AND xo.rental_order_id IS NOT NULL
+               AND xo.conversion_status &lt;&gt; 'CLOSED'
+               AND NOT EXISTS (
+                   SELECT 1
+                     FROM rental_device_assignment assignment
+                    WHERE assignment.tenant_id = xo.tenant_id
+                      AND assignment.rental_order_id = xo.rental_order_id
+                      AND assignment.deleted = FALSE
+               )
+               <if test="afterId != null">
+               AND xo.id &gt; #{afterId}
+               </if>
+             ORDER BY xo.id
+             LIMIT #{limit}
+            </script>
+            """)
+    List<Long> selectMutableReconciliationCandidateIdsByProductAndSkus(
+            @Param("tenantId") Long tenantId,
+            @Param("shopId") Long shopId,
+            @Param("xgjProductId") String xgjProductId,
+            @Param("xgjSkuIds") Collection<String> xgjSkuIds,
+            @Param("afterId") Long afterId,
+            @Param("limit") int limit);
 
     default PageResult<XianyuOrderDO> selectPendingShipPage(Long shopId, String keyword, Collection<String> statuses,
                                                             cn.iocoder.yudao.framework.common.pojo.PageParam pageParam) {
@@ -266,6 +404,22 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
                 .orderByDesc(XianyuOrderDO::getSourceUpdatedAt)
                 .orderByDesc(XianyuOrderDO::getExternalOrderId)
                 .last("LIMIT 1"));
+    }
+
+    default int updateEffectivePlanById(Long id,
+                                        LocalDate billableStartDate,
+                                        LocalDate billableEndDate,
+                                        LocalDate shipDate,
+                                        LocalDate receiveDate,
+                                        LocalDate returnDate) {
+        return update(null, new LambdaUpdateWrapper<XianyuOrderDO>()
+                .eq(XianyuOrderDO::getId, id)
+                .set(XianyuOrderDO::getBillableStartDate, billableStartDate)
+                .set(XianyuOrderDO::getBillableEndDate, billableEndDate)
+                .set(XianyuOrderDO::getShipDate, shipDate)
+                .set(XianyuOrderDO::getReceiveDate, receiveDate)
+                .set(XianyuOrderDO::getReturnDate, returnDate)
+                .set(XianyuOrderDO::getUpdater, "system"));
     }
 
 }

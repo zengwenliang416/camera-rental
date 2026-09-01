@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-31T02:40:20.916Z",
+  "generated_at": "2026-08-31T23:40:27.517Z",
   "active_change": "add-rental-configuration",
   "stage": "development",
   "ok": true,
@@ -34,14 +34,14 @@
       "initialized": true,
       "projectPath": "/Volumes/zwl/camera-rental-github",
       "indexPath": "/Volumes/zwl/camera-rental-github/.codegraph",
-      "lastIndexed": null,
-      "fileCount": 0,
-      "nodeCount": 0,
-      "edgeCount": 0,
+      "lastIndexed": "2026-08-31T09:35:18.184Z",
+      "fileCount": 10922,
+      "nodeCount": 255446,
+      "edgeCount": 590531,
       "pendingChanges": {
-        "added": 0,
-        "modified": 0,
-        "removed": 0
+        "added": 17,
+        "modified": 43,
+        "removed": 5
       },
       "reindexRecommended": false,
       "worktreeMismatch": null
@@ -54,14 +54,16 @@
     "effective_mode": "advisory",
     "required_for_stage": false,
     "execution_surface": "cli",
-    "result": "pass",
+    "result": "warn",
     "blockers": [],
-    "warnings": [],
-    "explanation": "CodeGraph policy satisfied for development."
+    "warnings": [
+      "codegraph:index-stale"
+    ],
+    "explanation": "CodeGraph policy has advisory warnings for development."
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-31T02:40:20.909Z",
+    "generated_at": "2026-08-31T23:40:27.516Z",
     "active_change": "add-rental-configuration",
     "source_raw": "openspec/changes/add-rental-configuration/codegraph/evidence.jsonl",
     "by_claim": {},
@@ -72,7 +74,7 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-31T02:40:20.915Z",
+    "generated_at": "2026-08-31T23:40:27.517Z",
     "active_change": "add-rental-configuration",
     "claims_file": "openspec/changes/add-rental-configuration/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/add-rental-configuration/codegraph/evidence-index.json",
@@ -106,6 +108,7 @@
   },
   "blockers": [],
   "warnings": [
+    "codegraph:index-stale",
     "codegraph:claim-unverified:development:task-001-identifier-foundation",
     "codegraph:claim-unverified:development:task-002-configuration-backend",
     "codegraph:claim-unverified:development:task-003-order-reconciliation",

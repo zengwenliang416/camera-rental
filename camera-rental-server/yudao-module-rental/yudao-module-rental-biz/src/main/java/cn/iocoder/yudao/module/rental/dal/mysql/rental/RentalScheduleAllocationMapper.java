@@ -27,6 +27,7 @@ public interface RentalScheduleAllocationMapper {
              WHERE ro.tenant_id = #{tenantId}
                AND ro.deleted = b'0'
                AND ro.status = 'PENDING_ALLOCATION'
+               AND ro.preparation_status = 'READY'
             <if test="orderNo != null and orderNo != ''">
                AND (
                    ro.order_no LIKE CONCAT('%', #{orderNo}, '%')
@@ -82,6 +83,7 @@ public interface RentalScheduleAllocationMapper {
              WHERE ro.tenant_id = #{tenantId}
                AND ro.deleted = b'0'
                AND ro.status = 'PENDING_ALLOCATION'
+               AND ro.preparation_status = 'READY'
             <if test="orderNo != null and orderNo != ''">
                AND (
                    ro.order_no LIKE CONCAT('%', #{orderNo}, '%')

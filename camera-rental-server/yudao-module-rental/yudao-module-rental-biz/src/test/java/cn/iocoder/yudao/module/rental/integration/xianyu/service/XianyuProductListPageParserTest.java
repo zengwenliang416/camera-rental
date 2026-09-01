@@ -23,7 +23,7 @@ class XianyuProductListPageParserTest {
                 """));
 
         assertEquals(1, page.count());
-        assertEquals("448592974859525", page.entries().get(0).externalProductId());
+        assertEquals("448592974859525", page.entries().get(0).xgjProductId());
         assertEquals(2, page.entries().get(0).specType());
         assertEquals(LocalDateTime.of(2023, 8, 10, 16, 46, 39),
                 page.entries().get(0).sourceUpdatedAt());

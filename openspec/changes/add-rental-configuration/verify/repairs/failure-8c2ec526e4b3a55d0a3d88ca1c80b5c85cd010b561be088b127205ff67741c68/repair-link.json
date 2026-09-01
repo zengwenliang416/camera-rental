@@ -4,7 +4,7 @@
   "change_id": "add-rental-configuration",
   "development_task_id": "900-verification-repair-c18e66960e749fed",
   "repair_kind": "test_code",
-  "status": "requested",
+  "status": "in_progress",
   "requested_at": "2026-09-01T13:01:57.331Z",
   "before_identity": {
     "case_snapshot_hash": "9299ee66da1777b0f0046303434f9b1e050856fec6abf1b774bad9e53204ebc6",

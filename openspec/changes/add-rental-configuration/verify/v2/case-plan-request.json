@@ -178,11 +178,12 @@
             "human_signoff_allowed": false
           },
           "evidence_kinds": [
-            "command_output",
             "assertion_result",
+            "log",
             "screenshot",
+            "structured_comparison",
             "trace",
-            "structured_comparison"
+            "video"
           ]
         }
       ],
@@ -192,54 +193,53 @@
           "assertion_ids": [
             "CASE-001-admin-configuration-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "static": {
           "mode": "required",
           "assertion_ids": [
             "CASE-001-admin-configuration-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "unit": {
           "mode": "required",
           "assertion_ids": [
             "CASE-001-admin-configuration-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "redteam": {
           "mode": "required",
           "assertion_ids": [
             "CASE-001-admin-configuration-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "e2e": {
           "mode": "required",
           "assertion_ids": [
             "CASE-001-admin-configuration-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "sensory": {
           "mode": "required",
           "assertion_ids": [
             "CASE-001-admin-configuration-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         }
       },
       "runner": {
-        "kind": "command",
+        "kind": "playwright",
         "timeout_ms": 600000,
-        "entrypoint": "bash",
-        "args": [
-          "openspec/changes/add-rental-configuration/verify/runners/run-case.sh",
-          "CASE-001-admin-configuration"
+        "browser_project": "chromium-desktop",
+        "scenario_id": "rental-configuration-admin-flow",
+        "scenario_hash": "b6fb94d815c5c478b7bbc29af30e9adc5b1780e4d4cbf7973fd9600814787863",
+        "allowed_origins": [
+          "http://127.0.0.1:15173"
         ],
-        "cwd": ".",
-        "env_keys": [],
         "requires_midscene": false
       },
       "evidence_policy": {
@@ -256,11 +256,12 @@
           "video"
         ],
         "required_kinds": [
-          "command_output",
           "assertion_result",
+          "log",
           "screenshot",
+          "structured_comparison",
           "trace",
-          "structured_comparison"
+          "video"
         ],
         "retain_on_failure": true,
         "content_addressed": true
@@ -308,11 +309,10 @@
             "human_signoff_allowed": false
           },
           "evidence_kinds": [
-            "command_output",
             "assertion_result",
-            "database_fact",
-            "structured_comparison",
-            "api_fact"
+            "command_output",
+            "log",
+            "structured_comparison"
           ]
         }
       ],
@@ -369,28 +369,26 @@
           "CASE-002-identifier-authority"
         ],
         "cwd": ".",
-        "env_keys": [],
+        "env_keys": [
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE",
+          "SPECNAV_REPORT_ARTIFACT_ROOT",
+          "SPECNAV_REPORT_ARTIFACT_RUN_ID"
+        ],
         "requires_midscene": false
       },
       "evidence_policy": {
         "allowed_kinds": [
-          "api_fact",
           "assertion_result",
           "command_output",
-          "database_fact",
-          "human_signoff",
           "log",
-          "screenshot",
-          "structured_comparison",
-          "trace",
-          "video"
+          "structured_comparison"
         ],
         "required_kinds": [
-          "command_output",
           "assertion_result",
-          "database_fact",
-          "structured_comparison",
-          "api_fact"
+          "command_output",
+          "log",
+          "structured_comparison"
         ],
         "retain_on_failure": true,
         "content_addressed": true
@@ -434,13 +432,13 @@
           "statement": "Every non-filtered durable channel order creates exactly one internal rental order immediately even when its remark, rental dates, or equipment model are incomplete.",
           "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
           "oracle": {
-            "type": "database_fact",
+            "type": "structured_comparison",
             "human_signoff_allowed": false
           },
           "evidence_kinds": [
-            "command_output",
             "assertion_result",
-            "database_fact",
+            "command_output",
+            "log",
             "structured_comparison"
           ]
         }
@@ -498,26 +496,25 @@
           "CASE-003-immediate-order"
         ],
         "cwd": ".",
-        "env_keys": [],
+        "env_keys": [
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE",
+          "SPECNAV_REPORT_ARTIFACT_ROOT",
+          "SPECNAV_REPORT_ARTIFACT_RUN_ID"
+        ],
         "requires_midscene": false
       },
       "evidence_policy": {
         "allowed_kinds": [
-          "api_fact",
           "assertion_result",
           "command_output",
-          "database_fact",
-          "human_signoff",
           "log",
-          "screenshot",
-          "structured_comparison",
-          "trace",
-          "video"
+          "structured_comparison"
         ],
         "required_kinds": [
-          "command_output",
           "assertion_result",
-          "database_fact",
+          "command_output",
+          "log",
           "structured_comparison"
         ],
         "retain_on_failure": true,
@@ -566,9 +563,9 @@
             "human_signoff_allowed": false
           },
           "evidence_kinds": [
-            "command_output",
             "assertion_result",
-            "database_fact",
+            "command_output",
+            "log",
             "structured_comparison"
           ]
         }
@@ -626,26 +623,25 @@
           "CASE-004-exact-model-mapping"
         ],
         "cwd": ".",
-        "env_keys": [],
+        "env_keys": [
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE",
+          "SPECNAV_REPORT_ARTIFACT_ROOT",
+          "SPECNAV_REPORT_ARTIFACT_RUN_ID"
+        ],
         "requires_midscene": false
       },
       "evidence_policy": {
         "allowed_kinds": [
-          "api_fact",
           "assertion_result",
           "command_output",
-          "database_fact",
-          "human_signoff",
           "log",
-          "screenshot",
-          "structured_comparison",
-          "trace",
-          "video"
+          "structured_comparison"
         ],
         "required_kinds": [
-          "command_output",
           "assertion_result",
-          "database_fact",
+          "command_output",
+          "log",
           "structured_comparison"
         ],
         "retain_on_failure": true,
@@ -690,13 +686,13 @@
           "statement": "Configured skipped products retain channel revenue and raw evidence but do not parse remarks, create reviews or internal rental orders, or generate schedules.",
           "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
           "oracle": {
-            "type": "database_fact",
+            "type": "structured_comparison",
             "human_signoff_allowed": false
           },
           "evidence_kinds": [
-            "command_output",
             "assertion_result",
-            "database_fact",
+            "command_output",
+            "log",
             "structured_comparison"
           ]
         }
@@ -754,26 +750,25 @@
           "CASE-005-config-skipped"
         ],
         "cwd": ".",
-        "env_keys": [],
+        "env_keys": [
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE",
+          "SPECNAV_REPORT_ARTIFACT_ROOT",
+          "SPECNAV_REPORT_ARTIFACT_RUN_ID"
+        ],
         "requires_midscene": false
       },
       "evidence_policy": {
         "allowed_kinds": [
-          "api_fact",
           "assertion_result",
           "command_output",
-          "database_fact",
-          "human_signoff",
           "log",
-          "screenshot",
-          "structured_comparison",
-          "trace",
-          "video"
+          "structured_comparison"
         ],
         "required_kinds": [
-          "command_output",
           "assertion_result",
-          "database_fact",
+          "command_output",
+          "log",
           "structured_comparison"
         ],
         "retain_on_failure": true,
@@ -818,15 +813,14 @@
           "statement": "A later valid remark or model mapping updates the same unassigned internal order, while invalid remarks preserve the last valid plan.",
           "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
           "oracle": {
-            "type": "database_fact",
+            "type": "structured_comparison",
             "human_signoff_allowed": false
           },
           "evidence_kinds": [
-            "command_output",
             "assertion_result",
-            "database_fact",
-            "structured_comparison",
-            "log"
+            "command_output",
+            "log",
+            "structured_comparison"
           ]
         }
       ],
@@ -883,28 +877,26 @@
           "CASE-006-later-valid-update"
         ],
         "cwd": ".",
-        "env_keys": [],
+        "env_keys": [
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE",
+          "SPECNAV_REPORT_ARTIFACT_ROOT",
+          "SPECNAV_REPORT_ARTIFACT_RUN_ID"
+        ],
         "requires_midscene": false
       },
       "evidence_policy": {
         "allowed_kinds": [
-          "api_fact",
           "assertion_result",
           "command_output",
-          "database_fact",
-          "human_signoff",
           "log",
-          "screenshot",
-          "structured_comparison",
-          "trace",
-          "video"
+          "structured_comparison"
         ],
         "required_kinds": [
-          "command_output",
           "assertion_result",
-          "database_fact",
-          "structured_comparison",
-          "log"
+          "command_output",
+          "log",
+          "structured_comparison"
         ],
         "retain_on_failure": true,
         "content_addressed": true
@@ -948,15 +940,14 @@
           "statement": "Configuration and remark changes cannot overwrite assigned, dispatched, returned, inspected, replaced, or financially settled facts.",
           "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
           "oracle": {
-            "type": "database_fact",
+            "type": "structured_comparison",
             "human_signoff_allowed": false
           },
           "evidence_kinds": [
-            "command_output",
             "assertion_result",
-            "database_fact",
-            "structured_comparison",
-            "log"
+            "command_output",
+            "log",
+            "structured_comparison"
           ]
         }
       ],
@@ -1013,28 +1004,26 @@
           "CASE-007-fulfillment-protection"
         ],
         "cwd": ".",
-        "env_keys": [],
+        "env_keys": [
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE",
+          "SPECNAV_REPORT_ARTIFACT_ROOT",
+          "SPECNAV_REPORT_ARTIFACT_RUN_ID"
+        ],
         "requires_midscene": false
       },
       "evidence_policy": {
         "allowed_kinds": [
-          "api_fact",
           "assertion_result",
           "command_output",
-          "database_fact",
-          "human_signoff",
           "log",
-          "screenshot",
-          "structured_comparison",
-          "trace",
-          "video"
+          "structured_comparison"
         ],
         "required_kinds": [
-          "command_output",
           "assertion_result",
-          "database_fact",
-          "structured_comparison",
-          "log"
+          "command_output",
+          "log",
+          "structured_comparison"
         ],
         "retain_on_failure": true,
         "content_addressed": true
@@ -1078,15 +1067,14 @@
           "statement": "Historical reconciliation is idempotent and resumable, creates missing normal rental orders, skips only eligible configured products, and reports conflicts without deleting history.",
           "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
           "oracle": {
-            "type": "database_fact",
+            "type": "structured_comparison",
             "human_signoff_allowed": false
           },
           "evidence_kinds": [
-            "command_output",
             "assertion_result",
-            "database_fact",
-            "structured_comparison",
-            "log"
+            "command_output",
+            "log",
+            "structured_comparison"
           ]
         }
       ],
@@ -1143,28 +1131,26 @@
           "CASE-008-historical-reconciliation"
         ],
         "cwd": ".",
-        "env_keys": [],
+        "env_keys": [
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE",
+          "SPECNAV_REPORT_ARTIFACT_ROOT",
+          "SPECNAV_REPORT_ARTIFACT_RUN_ID"
+        ],
         "requires_midscene": false
       },
       "evidence_policy": {
         "allowed_kinds": [
-          "api_fact",
           "assertion_result",
           "command_output",
-          "database_fact",
-          "human_signoff",
           "log",
-          "screenshot",
-          "structured_comparison",
-          "trace",
-          "video"
+          "structured_comparison"
         ],
         "required_kinds": [
-          "command_output",
           "assertion_result",
-          "database_fact",
-          "structured_comparison",
-          "log"
+          "command_output",
+          "log",
+          "structured_comparison"
         ],
         "retain_on_failure": true,
         "content_addressed": true
@@ -1213,11 +1199,12 @@
             "human_signoff_allowed": false
           },
           "evidence_kinds": [
-            "command_output",
             "assertion_result",
+            "log",
             "screenshot",
+            "structured_comparison",
             "trace",
-            "structured_comparison"
+            "video"
           ]
         }
       ],
@@ -1227,54 +1214,53 @@
           "assertion_ids": [
             "CASE-009-rental-device-catalog-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "static": {
           "mode": "required",
           "assertion_ids": [
             "CASE-009-rental-device-catalog-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "unit": {
           "mode": "required",
           "assertion_ids": [
             "CASE-009-rental-device-catalog-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "redteam": {
           "mode": "required",
           "assertion_ids": [
             "CASE-009-rental-device-catalog-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "e2e": {
           "mode": "required",
           "assertion_ids": [
             "CASE-009-rental-device-catalog-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "sensory": {
           "mode": "required",
           "assertion_ids": [
             "CASE-009-rental-device-catalog-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         }
       },
       "runner": {
-        "kind": "command",
+        "kind": "playwright",
         "timeout_ms": 600000,
-        "entrypoint": "bash",
-        "args": [
-          "openspec/changes/add-rental-configuration/verify/runners/run-case.sh",
-          "CASE-009-rental-device-catalog"
+        "browser_project": "chromium-desktop",
+        "scenario_id": "rental-device-shared-catalog",
+        "scenario_hash": "57dd12290d494cf25572d99170de17cdaa0d10593263dec56ebe7fe6d461bdec",
+        "allowed_origins": [
+          "http://127.0.0.1:15173"
         ],
-        "cwd": ".",
-        "env_keys": [],
         "requires_midscene": false
       },
       "evidence_policy": {
@@ -1291,11 +1277,12 @@
           "video"
         ],
         "required_kinds": [
-          "command_output",
           "assertion_result",
+          "log",
           "screenshot",
+          "structured_comparison",
           "trace",
-          "structured_comparison"
+          "video"
         ],
         "retain_on_failure": true,
         "content_addressed": true
@@ -1344,12 +1331,12 @@
             "human_signoff_allowed": true
           },
           "evidence_kinds": [
-            "command_output",
             "assertion_result",
+            "log",
             "screenshot",
-            "video",
+            "structured_comparison",
             "trace",
-            "human_signoff"
+            "video"
           ]
         }
       ],
@@ -1359,54 +1346,53 @@
           "assertion_ids": [
             "CASE-010-theme-locale-states-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "static": {
           "mode": "required",
           "assertion_ids": [
             "CASE-010-theme-locale-states-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "unit": {
           "mode": "required",
           "assertion_ids": [
             "CASE-010-theme-locale-states-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "redteam": {
           "mode": "required",
           "assertion_ids": [
             "CASE-010-theme-locale-states-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "e2e": {
           "mode": "required",
           "assertion_ids": [
             "CASE-010-theme-locale-states-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         },
         "sensory": {
           "mode": "required",
           "assertion_ids": [
             "CASE-010-theme-locale-states-ASSERT"
           ],
-          "runner": "command"
+          "runner": "playwright"
         }
       },
       "runner": {
-        "kind": "command",
+        "kind": "playwright",
         "timeout_ms": 900000,
-        "entrypoint": "bash",
-        "args": [
-          "openspec/changes/add-rental-configuration/verify/runners/run-case.sh",
-          "CASE-010-theme-locale-states"
+        "browser_project": "chromium-mobile-and-desktop",
+        "scenario_id": "rental-configuration-sensory-states",
+        "scenario_hash": "2fe11b35afd7c7da71b739db4b060eb965b9ca6be68a2e549e43c4370388b9bc",
+        "allowed_origins": [
+          "http://127.0.0.1:15173"
         ],
-        "cwd": ".",
-        "env_keys": [],
         "requires_midscene": false
       },
       "evidence_policy": {
@@ -1423,12 +1409,12 @@
           "video"
         ],
         "required_kinds": [
-          "command_output",
           "assertion_result",
+          "log",
           "screenshot",
-          "video",
+          "structured_comparison",
           "trace",
-          "human_signoff"
+          "video"
         ],
         "retain_on_failure": true,
         "content_addressed": true

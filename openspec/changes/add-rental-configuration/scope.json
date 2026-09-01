@@ -9,6 +9,7 @@
     "camera-rental-admin/src/views/rental",
     "camera-rental-admin/src/locales",
     "camera-rental-admin/tests",
+    "tests/specnav",
     "docs/domain",
     "docs/integrations/xianyu",
     "openspec/changes/add-rental-configuration"

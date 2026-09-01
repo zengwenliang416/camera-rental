@@ -1,0 +1,62 @@
+[
+  {
+    "id": "R1-configuration-page",
+    "statement": "独立租赁配置页维护目录、规则和备注规范，并从租赁设备页移除快捷新建。",
+    "source_path": "openspec/changes/add-rental-configuration/requirements.md",
+    "source_sha256": "acf0af0f63143da7eef88521a71b5bf3265afc1482379fc628a669001d5ec6ab"
+  },
+  {
+    "id": "R2-product-handling",
+    "statement": "商品规则按租户、店铺和闲鱼 item_id 精确隔离，支持 CREATE_RENTAL 与 CONFIG_SKIPPED。",
+    "source_path": "openspec/changes/add-rental-configuration/requirements.md",
+    "source_sha256": "acf0af0f63143da7eef88521a71b5bf3265afc1482379fc628a669001d5ec6ab"
+  },
+  {
+    "id": "R3-exact-model-mapping",
+    "statement": "单型号按店铺加 item_id，多型号必须按同步的闲管家 SKU 精确映射且不得回退。",
+    "source_path": "openspec/changes/add-rental-configuration/requirements.md",
+    "source_sha256": "acf0af0f63143da7eef88521a71b5bf3265afc1482379fc628a669001d5ec6ab"
+  },
+  {
+    "id": "R4-identifier-authority",
+    "statement": "闲管家商品/SKU 与闲鱼 item/SKU 标识分别保存，缺失时保持为空且长整型使用字符串。",
+    "source_path": "openspec/changes/add-rental-configuration/requirements.md",
+    "source_sha256": "acf0af0f63143da7eef88521a71b5bf3265afc1482379fc628a669001d5ec6ab"
+  },
+  {
+    "id": "R5-immediate-order",
+    "statement": "普通渠道订单详情持久化后立即幂等创建内部订单，金额来自 pay_amount，准备完成前不得排期。",
+    "source_path": "openspec/changes/add-rental-configuration/requirements.md",
+    "source_sha256": "acf0af0f63143da7eef88521a71b5bf3265afc1482379fc628a669001d5ec6ab"
+  },
+  {
+    "id": "R6-remark-updates",
+    "statement": "备注历史可追溯，后续有效备注更新计划，无效备注保留上次有效计划。",
+    "source_path": "openspec/changes/add-rental-configuration/requirements.md",
+    "source_sha256": "acf0af0f63143da7eef88521a71b5bf3265afc1482379fc628a669001d5ec6ab"
+  },
+  {
+    "id": "R7-fulfillment-protection",
+    "statement": "自动更新不得覆盖分配、出库、回仓、检测、换机、退款或结算事实。",
+    "source_path": "openspec/changes/add-rental-configuration/requirements.md",
+    "source_sha256": "acf0af0f63143da7eef88521a71b5bf3265afc1482379fc628a669001d5ec6ab"
+  },
+  {
+    "id": "R8-historical-reconciliation",
+    "statement": "历史补建必须有界、可恢复、幂等、可统计并保留历史与冲突。",
+    "source_path": "openspec/changes/add-rental-configuration/requirements.md",
+    "source_sha256": "acf0af0f63143da7eef88521a71b5bf3265afc1482379fc628a669001d5ec6ab"
+  },
+  {
+    "id": "R9-ui-capabilities",
+    "statement": "页面支持 light/dark、zh-CN/en、桌面/窄屏及 loading、empty、error、permission 状态。",
+    "source_path": "openspec/changes/add-rental-configuration/requirements.md",
+    "source_sha256": "acf0af0f63143da7eef88521a71b5bf3265afc1482379fc628a669001d5ec6ab"
+  },
+  {
+    "id": "R10-architecture-flow",
+    "statement": "后端统一拥有规则、归一、重评和补建，前端不复制权威业务规则。",
+    "source_path": "openspec/changes/add-rental-configuration/requirements.md",
+    "source_sha256": "acf0af0f63143da7eef88521a71b5bf3265afc1482379fc628a669001d5ec6ab"
+  }
+]

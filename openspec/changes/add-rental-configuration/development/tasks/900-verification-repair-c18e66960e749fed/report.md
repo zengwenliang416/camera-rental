@@ -1,0 +1,16 @@
+# Repair Report: 900-verification-repair-c18e66960e749fed
+
+## Status
+
+IN PROGRESS
+
+## Frozen Evidence
+
+- `evidence-0439fc38fc212843b566a5f85b5ab03e896b4fa2220f7c9ff7be330d9746f70d`
+- `evidence-1e5149ee837b8b5afdd84a261653da3301460189165ce819a81787d89edb10fa`
+- `evidence-2a5fd869fef8cf8ca2c3ed9e585b03fbb12363fff486011f6f8f2c75a1187dd0`
+- `evidence-2f79c52df1458b9c28b714adc3f876caca2d12734697810cff0f607f2b7ba91c`
+- `evidence-48c025fde341e34a66c43d107900c0bdd1a4785323c977dc9cc3ebb269e165e1`
+- `evidence-7cc35809a44264c5912acd9f6d6210baf84f9908fd10f447223d9abdd08b03a5`
+- `evidence-c7a2df7e17a70832fb54a9f94bb0b11b647e3442440af2f605d82ecd8f3f739e`
+- `evidence-c84a87f27819360fe46b786ff7273f2a6bc78412c2730d94349cbaa0f8238ec7`

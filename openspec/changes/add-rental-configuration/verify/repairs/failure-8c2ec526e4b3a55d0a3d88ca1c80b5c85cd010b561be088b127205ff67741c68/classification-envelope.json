@@ -1,0 +1,62 @@
+{
+  "schema": "specnav.verification.trusted-fact-envelope.v1",
+  "id": "trusted-fact-b36196870f4042e60f7b4a9359824f6e7c714371f5636efbd4cfed2bddcd4f83",
+  "kind": "classification_result",
+  "producer": "specnav-failure-classifier",
+  "payload": {
+    "ok": true,
+    "status": "classified",
+    "packet": {
+      "schema": "specnav.verification.failure-packet.v1",
+      "change_id": "add-rental-configuration",
+      "run_id": "run-20260901122603-762731cb19cdf23b",
+      "case_id": "CASE-001-admin-configuration",
+      "attempt_id": "attempt-20260901124241-f09adc95f22fe1de",
+      "reading_ids": [
+        "reading-2728102176cfc592b8bf93643115d291cf4937d8413b764d87b52a57876e529f",
+        "reading-3be4fd3672dfa458ba2bc3d77699a74428420dc2b8ada6c2b04269d3d19822b3",
+        "reading-910808ebe2d72fe1680f801b055df7311982a324182261b66f22986a85ad24c1",
+        "reading-a258cefa43cd0acc60748e6604be7e1ebe146bd888a0e792b5c2f2dbfc292e8e",
+        "reading-b09973c816c32e4c4f0f79f38be4dc64567de203890e6e62625febd72087275f",
+        "reading-f7445e15ccdff4d459c54be425367a329215da1facf582329214a25324d2cbbf"
+      ],
+      "evidence_ids": [
+        "evidence-0439fc38fc212843b566a5f85b5ab03e896b4fa2220f7c9ff7be330d9746f70d",
+        "evidence-1e5149ee837b8b5afdd84a261653da3301460189165ce819a81787d89edb10fa",
+        "evidence-2a5fd869fef8cf8ca2c3ed9e585b03fbb12363fff486011f6f8f2c75a1187dd0",
+        "evidence-2f79c52df1458b9c28b714adc3f876caca2d12734697810cff0f607f2b7ba91c",
+        "evidence-48c025fde341e34a66c43d107900c0bdd1a4785323c977dc9cc3ebb269e165e1",
+        "evidence-7cc35809a44264c5912acd9f6d6210baf84f9908fd10f447223d9abdd08b03a5",
+        "evidence-c7a2df7e17a70832fb54a9f94bb0b11b647e3442440af2f605d82ecd8f3f739e",
+        "evidence-c84a87f27819360fe46b786ff7273f2a6bc78412c2730d94349cbaa0f8238ec7"
+      ],
+      "classification": "test_defect",
+      "status": "repair_required",
+      "next_action": "repair_required",
+      "summary": "租赁配置业务断言通过，但本地 Playwright 场景未隔离公共顶栏的在线 Iconify 请求。",
+      "root_cause": "CASE-001 已完成配置页操作并产出通过的 assertion_result、结构化比较、截图、trace 和 video。随后管理后台公共顶栏为 mdi:format-size、zmdi:fullscreen 或 zmdi:fullscreen-exit、ion:language-sharp 发起 Iconify 公网读取，违反案例仅允许 http://127.0.0.1:15173 的本地 origin 合同。该依赖与租赁配置断言无关，应由测试场景在页面初始化前提供确定性的本地图标响应，不得开放公网 origin 或修改 Verification 插件。",
+      "failed_assertion_ids": [
+        "CASE-001-admin-configuration-ASSERT"
+      ],
+      "owner": "development",
+      "created_at": "2026-09-01T12:43:00.660Z",
+      "frozen_at": "2026-09-01T12:43:00.660Z",
+      "id": "failure-8c2ec526e4b3a55d0a3d88ca1c80b5c85cd010b561be088b127205ff67741c68"
+    },
+    "signals": [],
+    "blockers": []
+  },
+  "payload_digest": "c51651dbd0cdda061c6f4ce4020b2b3b796a02b8d59da294c1ba7380a299f914",
+  "issued_at": "2026-09-01T13:00:12.115Z",
+  "bindings": {
+    "failure_id": "failure-8c2ec526e4b3a55d0a3d88ca1c80b5c85cd010b561be088b127205ff67741c68",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901122603-762731cb19cdf23b",
+    "case_id": "CASE-001-admin-configuration"
+  },
+  "claims": [
+    "failure-classification:verified"
+  ],
+  "signature_algorithm": "hmac-sha256",
+  "signature": "b7b0be50ff83e0e6abdd69c997c442a54a0cb27a010f1a44bcf5465d2b256d0b"
+}

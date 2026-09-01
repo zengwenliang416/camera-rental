@@ -1,0 +1,213 @@
+{
+  "schema": "specnav.verification.gate-decision.v1",
+  "id": "gate-3ea97ec46ae95b75a8be6332b9cb9ea40f77db7d0702e4bbc8c3571d807887b1",
+  "change_id": "add-rental-configuration",
+  "stage": "release",
+  "decision": "block",
+  "source_case_ids": [
+    "CASE-001-admin-configuration",
+    "CASE-002-identifier-authority",
+    "CASE-003-immediate-order",
+    "CASE-004-exact-model-mapping",
+    "CASE-005-config-skipped",
+    "CASE-006-later-valid-update",
+    "CASE-007-fulfillment-protection",
+    "CASE-008-historical-reconciliation",
+    "CASE-009-rental-device-catalog",
+    "CASE-010-theme-locale-states"
+  ],
+  "source_reading_ids": [
+    "reading-03e1c5479e195643ee3ad31627a76db1839e66808fe66111ea09fecbe93d0671",
+    "reading-088b41dcd9faae0632c8b96f8326988908e54d2c5a0d8c471a2736855876c3b0",
+    "reading-0ca2192195ecd4c83d38a2bfaa07bfc214927083bf5fb1940e1ac0116dc5dae0",
+    "reading-0eb26502779f6882ed927718bc1c8e20833b22812cc7312f49d6012251d68d91",
+    "reading-0eef0c3226eed1004d8a2a238b55820dfbae23c7b96ad446dcea9cdcbcbb3dcc",
+    "reading-14afc6233c810d85f5152b070c71a148c1961ae05b87c4906018f5aa77a633a5",
+    "reading-1a68043cae428f4afda45371c01e5f3c13c63f151225b0d67904606321c002a8",
+    "reading-1d4b793e2df9c02c238fa6986a15fb27834a02da435196664ad30325c7c2389a",
+    "reading-20f94441b12c1fe043b82c3d1197c6f386cecc6c01e32c2476ce8cd6a50664ed",
+    "reading-285babf73972f0410c8add79f74b735e7315f1d267c5a3c2300d0912fdaa5639",
+    "reading-291e39859f75d0948efcad0c9b8c5236871381ed3b65b7936b76a3a65b55393e",
+    "reading-2a0810f8dad70ede48ea2234f96182b81c36b3f4ca22f1c97a5e6698bbbaa6d9",
+    "reading-2ea4612bdc468f03096f3a6dff8cc3b4b7ee6d363ea7cff0a142bfd072f97d64",
+    "reading-31761543f582ba68c566ac8e8f1d20e79fa53ec6deaae962212dc8ae40feb579",
+    "reading-31bb41876877add53477927c1f60170f855af29341c39414059ea96134b5bc7c",
+    "reading-31f382c9274da723c2098387fefa53096d7676dc7c76beaca072f37b3dcf2904",
+    "reading-390162c936f344a9ee0310766b2ac885dc971a3bba7dc8cfb7e6572dae3e9f4d",
+    "reading-42bfa5354763835c3b764fedaf4d08ce948bdc7dc3aae4805bd67a380cf3785d",
+    "reading-4799075d770598ff0f4363ed89e8d06886bb6b198652f84b53dd9f126380e045",
+    "reading-49922f4c34da83da3ce5a6495180a7049acd4786544c6949f4ed33aee538264e",
+    "reading-4ffd1f700a500a413cd4bd83b1a8372a8a47ea26c50edb34cbc9ce8b5ee56436",
+    "reading-53a3872acb9ea6111bed6a51cd3f3694f2a6335414d833788df872e9e1c5d29f",
+    "reading-56581deda8a1a83bca11ec5975fee3171a23584cc74a4f69ae5b8e42c51f5875",
+    "reading-6187ee23c4bf5e5b5abeaa77ba049f8ef33ca87f806be15ed53cdcd839f701b8",
+    "reading-62c6e00d1e15ff7e5ca4ade5c1d7779f1df93715e0c431eff7c6b7e7b5d376e7",
+    "reading-6d62f9b36e7f87d0fdd5297aefaaff9e64ba2d972dee77594d37e186b02c8389",
+    "reading-6f76f3e344da5f03b66560b1f11f7ea5e24de9fd537764f8ce47ba40b573e3a9",
+    "reading-72905dce08f7f45da9ad3984974a427d7aa24148f48fcb98a4d4b720059a043b",
+    "reading-74461aa046dbae864a663e752b4065936405a395d0e134ade5e48f49d7331d41",
+    "reading-79c2c3bc92a74b95b048e34071bbcd65b1121f43f11882a6f0f6f326d7741498",
+    "reading-7d17bf2a86663af89625d1e7495f8af5936d1aade6d9b9c54787a8823c8e6a83",
+    "reading-8461f0829faf83f31e8c8f9ffb50705bb7bb3a6a90f93282afa55b5ec157935e",
+    "reading-849725787c7002aadb91f7d10df158e0dc918e1dcb980243676b279fb71b65d1",
+    "reading-909280685c4edca2d9a9cb715e56e7717a618e0a6c65cbed285ab0296b68c8fd",
+    "reading-91d5d7023125b381b2094087cb18eca5da2313a69d8be5d6c023319794a31bdd",
+    "reading-92e15327d4d4dd56e52ad3d19ae6922e280f2e790a5717964cc5a5c0b0131828",
+    "reading-9c5c8a640cf0737452f19c7aa5de7063d06c547147ba54dcdbac410204420189",
+    "reading-9f88c2cb92e14bb723f42369c066c4f783f576819f1ca2936806b59734416871",
+    "reading-a254957003d3c0339afefc6bbd509e80b941fa3eebb89398abd854ea08347996",
+    "reading-a4b9fe6290a48127683eeab3e1cb865626723b23374843bc3c61e03f04ecc72d",
+    "reading-a4d7e6924898a9bde840b569e41cac6ee226a4c33dcfab8ed76684fba199505a",
+    "reading-ace667fd99bb2dd80b2f187568b533e27bca142d4b3c03460ae8dfbb913b8978",
+    "reading-b85afcb54a36c21fc2d8f4892803f2a9fdd1735759b4afb19c34e7384dcbd207",
+    "reading-bc7b0032c7f41cea8513dbb4e7d11e5b2d8ea55fd259c82bd4a28d56e61b6c5d",
+    "reading-bd33ddf64d723a6328b988414de3c57faac7c7a2614621031ff371b1c6d2ea47",
+    "reading-bde38de1438999d5aafa8aecfac22a71be7c0f71f085a1910a201c95b4935e80",
+    "reading-bf96e1a3cd105f79fc387e11cfa3e3933e8490b3f5de22f5974f6159a0a49046",
+    "reading-c45d7bb91e8c992e5d9ef3c40bf31227bedff11e67072e1553bb581f0900a488",
+    "reading-c46c03616b831621bda2ad4da83074426620cbdf24fde45d1a79748a3ee638f4",
+    "reading-c4aa81bc0fa72c9eed29db56321aa64d2cc7a2cc40640022c0da83997a1b927b",
+    "reading-c6d2ff1d996ad6346e60dd81019bffde7f497efc80535d5b0dbc6c43b2ee1234",
+    "reading-cf4f11397179d69c5528bc07c37d3e2723dba3916e1d952303b97238066329ce",
+    "reading-d460c7e35fc46742725d05c5224b82b8ed8dd9ed2401ad2d6b0340060d860382",
+    "reading-d9514789da368242ce0c59332c4bad16f94fb1cc4ca79bcfbea9c22365afd0f0",
+    "reading-e343faaf08b94a2f26266efb43e09c97c2aa3deea98fac3274d6205d0263b605",
+    "reading-e81220340d90e18bbab0637ca9d120cc80500150b8744a9a78fe2f6b4648c937",
+    "reading-ed8c1aa2ed913cd22ed9ade160a0e9c9d19380f91ee20fed46fe8963f16e25da",
+    "reading-fc9e1f86196b37ca4d3aac2c45da6ccc8fa324c7fa122a9dd4b6edfdf51dbd1c",
+    "reading-fe16f04007fa1dc974745643918fe18116cf0a9d5790e84019d714585d360102",
+    "reading-ff11924d2a95621177eb62ebba9769a1d41291fa4574ff0c5a728c04bc071115"
+  ],
+  "failure_state_status": "invalid",
+  "failure_state_digest": "d82bbd2c54de4a10d8dc252fb0d9aaf07a6b2e3e7b69b2c58e8c7d279b94d0d0",
+  "authority_chain_digest": "58c2b2aff7648974600311fee67f727758fa3541b67a5fc14d72d5824e273067",
+  "evidence_index_version": 49,
+  "runtime_version": "2.0.0-alpha.2",
+  "kernel_version": "2.0.0-alpha.2",
+  "freshness": {
+    "status": "fresh",
+    "checked_at": "2026-09-01T12:31:24.644Z",
+    "reasons": []
+  },
+  "integrity_status": "intact",
+  "policy_version": "verification-v2.0",
+  "blockers": [
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-001-admin-configuration:e2e",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-001-admin-configuration:facticity",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-001-admin-configuration:redteam",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-001-admin-configuration:sensory",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-001-admin-configuration:static",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-001-admin-configuration:unit",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-009-rental-device-catalog:e2e",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-009-rental-device-catalog:facticity",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-009-rental-device-catalog:redteam",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-009-rental-device-catalog:sensory",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-009-rental-device-catalog:static",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-009-rental-device-catalog:unit",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-010-theme-locale-states:e2e",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-010-theme-locale-states:facticity",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-010-theme-locale-states:redteam",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-010-theme-locale-states:sensory",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-010-theme-locale-states:static",
+      "detail": null
+    },
+    {
+      "id": "verification-aggregation:required-reading-blocked",
+      "artifact": "CASE-010-theme-locale-states:unit",
+      "detail": null
+    },
+    {
+      "id": "verification-gate:failure-state-invalid",
+      "artifact": "d82bbd2c54de4a10d8dc252fb0d9aaf07a6b2e3e7b69b2c58e8c7d279b94d0d0",
+      "detail": "58c2b2aff7648974600311fee67f727758fa3541b67a5fc14d72d5824e273067"
+    },
+    {
+      "id": "verification-gate:open-failure",
+      "artifact": "failure-3c0690b9c21e8a09950859d6d5f80449e1a359e4526f553a1d0230d47d16d82b",
+      "detail": null
+    },
+    {
+      "id": "verification-gate:open-failure",
+      "artifact": "failure-417f3af27c74e9e3727b76408fc307a3ecf3942b262a9127a69a247b44a1bb26",
+      "detail": null
+    },
+    {
+      "id": "verification-gate:open-failure",
+      "artifact": "failure-bb210aa8f90f2e1ad3fe92501c871115081a87de2fbc95a03faf1d0fa24b2c3f",
+      "detail": null
+    },
+    {
+      "id": "verification-gate:aggregate-not-pass",
+      "artifact": "verification-aggregate-54568bd20df3971dd0bbdaf8945122e1360dbe21c6de02eee2c98e42e36cfc95",
+      "detail": "blocked"
+    }
+  ],
+  "warnings": [],
+  "decided_at": "2026-09-01T12:31:24.655Z"
+}

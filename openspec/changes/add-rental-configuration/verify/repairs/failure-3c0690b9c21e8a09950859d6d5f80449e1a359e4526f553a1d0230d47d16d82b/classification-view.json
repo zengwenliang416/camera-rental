@@ -1,0 +1,36 @@
+{
+  "schema": "specnav.verification.failure-packet.v1",
+  "change_id": "add-rental-configuration",
+  "run_id": "run-20260901122603-762731cb19cdf23b",
+  "case_id": "CASE-001-admin-configuration",
+  "attempt_id": "attempt-20260901122603-762731cb19cdf23b",
+  "reading_ids": [
+    "reading-31f382c9274da723c2098387fefa53096d7676dc7c76beaca072f37b3dcf2904",
+    "reading-6187ee23c4bf5e5b5abeaa77ba049f8ef33ca87f806be15ed53cdcd839f701b8",
+    "reading-6d62f9b36e7f87d0fdd5297aefaaff9e64ba2d972dee77594d37e186b02c8389",
+    "reading-8461f0829faf83f31e8c8f9ffb50705bb7bb3a6a90f93282afa55b5ec157935e",
+    "reading-909280685c4edca2d9a9cb715e56e7717a618e0a6c65cbed285ab0296b68c8fd",
+    "reading-9f88c2cb92e14bb723f42369c066c4f783f576819f1ca2936806b59734416871"
+  ],
+  "evidence_ids": [
+    "evidence-6b7af10603299d80a7863fbf0280d9160f51dddcb2d3676a55f5811bafc26af7",
+    "evidence-6d1ec4ab7568847442248b60afc3529448636ca49664aaf031d6159649d21717",
+    "evidence-93293aab612041c7c1b960f7de53a8f7943e05c8e382474bb3511d291921e176",
+    "evidence-b3e79d17a18a74ee09e77bb644a52241457af2f87e5ac515c86827733e517a9a",
+    "evidence-cabdd9ca0fdb9383ce993ad98bf18b78e29fdc3e9873f50bea1c82ddafe75345",
+    "evidence-ef382489082292c384ee98d7d5329bd90ef08e0af41b20152759d701a9f34fec",
+    "evidence-f39577f415c7197e097167d31c7261b3e9733bb0631e71944912c5cac7058e63"
+  ],
+  "classification": "environment_defect",
+  "status": "retry_allowed",
+  "next_action": "retry_allowed",
+  "summary": "本地租赁配置 fixture 服务未启动，Chromium 无法连接批准的本地 origin。",
+  "root_cause": "Playwright 在第一步访问 http://127.0.0.1:15173/rental/configuration 时收到 net::ERR_CONNECTION_REFUSED。场景尚未进入页面行为和断言阶段，assertions 数组为空；缺少结构化比较和权威 oracle 是本地 fixture 服务不可用的连带结果，不是产品或测试断言缺陷。",
+  "failed_assertion_ids": [
+    "CASE-001-admin-configuration-ASSERT"
+  ],
+  "owner": "verification",
+  "created_at": "2026-09-01T12:26:07.434Z",
+  "frozen_at": "2026-09-01T12:26:07.434Z",
+  "id": "failure-3c0690b9c21e8a09950859d6d5f80449e1a359e4526f553a1d0230d47d16d82b"
+}

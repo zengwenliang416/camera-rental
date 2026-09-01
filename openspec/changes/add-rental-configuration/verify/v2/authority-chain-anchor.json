@@ -1,0 +1,31 @@
+{
+  "schema": "specnav.verification.authority-chain-anchor.v1",
+  "change_id": "add-rental-configuration",
+  "logs": {
+    "transition_proposals": {
+      "kind": "transition_proposal",
+      "path": "v2/transition-proposals.jsonl",
+      "sequence": 1,
+      "latest_digest": "bf60f711995dd969750e686846c7fd3d9b2d1a4712af8e7db8bc750f82b702fd",
+      "terminal_envelope_id": "trusted-fact-3fa7f96a6a71baf5ba6a61b2be1dd5c167450c548b657d597d60eb9c1535d817"
+    },
+    "transition_receipts": {
+      "kind": "transition_application",
+      "path": "v2/transition-receipts.jsonl",
+      "sequence": 0,
+      "latest_digest": null,
+      "terminal_envelope_id": null
+    },
+    "attempt_facts": {
+      "kind": "attempt_fact",
+      "path": "v2/attempt-facts.jsonl",
+      "sequence": 2,
+      "latest_digest": "3c2a823d16105b493f4f06f19cc0a9f4dbe9b5924e34497d1e472c5c8957c6c4",
+      "terminal_envelope_id": "trusted-fact-8b5e843aebbe8a2ba1482df1ee6f06c509666cfda0aefbe857fcc4dae773de81"
+    }
+  },
+  "anchored_at": "2026-09-01T12:31:24.654Z",
+  "id": "authority-chain-anchor-4674826339f4de72a4c12c480081a02941e2659f378aa0fa44e7eac476483b27",
+  "signature_algorithm": "hmac-sha256",
+  "signature": "bbd9a98534026c6f0d4a4a94c1fa2a1388832ee06311061c957475322c0c63d1"
+}

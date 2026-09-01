@@ -1,0 +1,22 @@
+{
+  "schema": "specnav.verification.root-cause-review.v1",
+  "id": "root-cause-review-case-001-iconify-offline",
+  "failure_id": "failure-8c2ec526e4b3a55d0a3d88ca1c80b5c85cd010b561be088b127205ff67741c68",
+  "root_failure_digest": "44ef667c6c0c3cf323d4b3a9ebbd04c03dd224e5760fd2508f3b168d274ea880",
+  "change_id": "add-rental-configuration",
+  "run_id": "run-20260901122603-762731cb19cdf23b",
+  "case_id": "CASE-001-admin-configuration",
+  "attempt_id": "attempt-20260901124241-f09adc95f22fe1de",
+  "classification": "test_defect",
+  "summary": "租赁配置业务断言通过，但本地 Playwright 场景未隔离公共顶栏的在线 Iconify 请求。",
+  "root_cause": "CASE-001 已完成配置页操作并产出通过的 assertion_result、结构化比较、截图、trace 和 video。随后管理后台公共顶栏为 mdi:format-size、zmdi:fullscreen 或 zmdi:fullscreen-exit、ion:language-sharp 发起 Iconify 公网读取，违反案例仅允许 http://127.0.0.1:15173 的本地 origin 合同。该依赖与租赁配置断言无关，应由测试场景在页面初始化前提供确定性的本地图标响应，不得开放公网 origin 或修改 Verification 插件。",
+  "failed_assertion_ids": [
+    "CASE-001-admin-configuration-ASSERT"
+  ],
+  "reviewer": {
+    "id": "Zengwenliang0416",
+    "kind": "human"
+  },
+  "decision": "approved",
+  "reviewed_at": "2026-09-01T12:59:39Z"
+}

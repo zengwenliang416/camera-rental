@@ -1,0 +1,61 @@
+{
+  "schema": "specnav.verification.trusted-fact-envelope.v1",
+  "id": "trusted-fact-1861c41f7b653511631c27d594db0a306a2a50c19344805f59aa164149658eae",
+  "kind": "classification_result",
+  "producer": "specnav-failure-classifier",
+  "payload": {
+    "ok": true,
+    "status": "classified",
+    "packet": {
+      "schema": "specnav.verification.failure-packet.v1",
+      "change_id": "add-rental-configuration",
+      "run_id": "run-20260901123049-bf275ef7ebbd367a",
+      "case_id": "CASE-009-rental-device-catalog",
+      "attempt_id": "attempt-20260901123049-bf275ef7ebbd367a",
+      "reading_ids": [
+        "reading-088b41dcd9faae0632c8b96f8326988908e54d2c5a0d8c471a2736855876c3b0",
+        "reading-31bb41876877add53477927c1f60170f855af29341c39414059ea96134b5bc7c",
+        "reading-62c6e00d1e15ff7e5ca4ade5c1d7779f1df93715e0c431eff7c6b7e7b5d376e7",
+        "reading-74461aa046dbae864a663e752b4065936405a395d0e134ade5e48f49d7331d41",
+        "reading-9c5c8a640cf0737452f19c7aa5de7063d06c547147ba54dcdbac410204420189",
+        "reading-ed8c1aa2ed913cd22ed9ade160a0e9c9d19380f91ee20fed46fe8963f16e25da"
+      ],
+      "evidence_ids": [
+        "evidence-184383d905fdc669be834df83f3117430c68542a367c367aa95e60c917a8d308",
+        "evidence-29629ea8d8259561649fec7d964fcf748e4ced7c7ceb54b37da7dc74b2decfc9",
+        "evidence-31403b4be030cf9bb586712990301d0e89b6757eeb6a6e54601ec16580e72efd",
+        "evidence-49c4beea92517944512277e3623f30537d98e869a2fb3a47180749e777b1b841",
+        "evidence-511e951b279a3882372e79ba81ee1a4a58e33bc07b7e223dc6613de74b9f178a",
+        "evidence-f03804cd29881536f6b126b87cc3dbf7887de40d1383d81b5ee2b9c85d54e7c4",
+        "evidence-f1d535163934facb5155be8b6e2a3ca35d2f1783c309b39953abb00e7e244866"
+      ],
+      "classification": "environment_defect",
+      "status": "retry_allowed",
+      "next_action": "retry_allowed",
+      "summary": "本地租赁配置 fixture 服务未启动，Chromium 无法连接批准的本地 origin。",
+      "root_cause": "Playwright 在第一步访问 http://127.0.0.1:15173/rental/device 时收到 net::ERR_CONNECTION_REFUSED。场景尚未进入页面行为和断言阶段，assertions 数组为空；缺少结构化比较和权威 oracle 是本地 fixture 服务不可用的连带结果，不是产品或测试断言缺陷。",
+      "failed_assertion_ids": [
+        "CASE-009-rental-device-catalog-ASSERT"
+      ],
+      "owner": "verification",
+      "created_at": "2026-09-01T12:30:52.800Z",
+      "frozen_at": "2026-09-01T12:30:52.800Z",
+      "id": "failure-bb210aa8f90f2e1ad3fe92501c871115081a87de2fbc95a03faf1d0fa24b2c3f"
+    },
+    "signals": [],
+    "blockers": []
+  },
+  "payload_digest": "59310bca8a27621f33f207dd75ce72032a1486cce4652bdd88df76ee2417047b",
+  "issued_at": "2026-09-01T12:41:31.124Z",
+  "bindings": {
+    "failure_id": "failure-bb210aa8f90f2e1ad3fe92501c871115081a87de2fbc95a03faf1d0fa24b2c3f",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901123049-bf275ef7ebbd367a",
+    "case_id": "CASE-009-rental-device-catalog"
+  },
+  "claims": [
+    "failure-classification:verified"
+  ],
+  "signature_algorithm": "hmac-sha256",
+  "signature": "6e0fdfe3b97e3224d0ebc926b661952f9646c7599556363bc1ece0e28d519b91"
+}

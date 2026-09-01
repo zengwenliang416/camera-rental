@@ -1,0 +1,113 @@
+{
+  "schema": "specnav.development.repair-task.v1",
+  "id": "900-verification-repair-c18e66960e749fed",
+  "change_id": "add-rental-configuration",
+  "goal": "Repair test_defect for CASE-001-admin-configuration.",
+  "classification": "test_defect",
+  "owner": "development",
+  "status": "requested",
+  "requested_at": "2026-09-01T13:01:57.331Z",
+  "packet_path": "development/tasks/900-verification-repair-c18e66960e749fed",
+  "scope": {
+    "owner": "development",
+    "source": "approved-development-scope-lock",
+    "allowed_files": [
+      "tests/specnav/rental-configuration-scenarios.cjs"
+    ],
+    "denied_files": [],
+    "requires_review_on": [
+      "tests/specnav/rental-configuration-scenarios.cjs"
+    ],
+    "allowed_operations": {
+      "create": true,
+      "modify": true,
+      "delete": false,
+      "rename": false
+    },
+    "digest": "221d860d4ab1366042556b8d2dcaf32caf9512c60f07df9bc23c1d791e74552e"
+  },
+  "packet_artifacts": [
+    "brief.md",
+    "context.json",
+    "report.md",
+    "spec-review.md",
+    "quality-review.md"
+  ],
+  "required_reviews": [
+    "spec-review",
+    "quality-review"
+  ],
+  "ownership": {
+    "evidence": "verification",
+    "closure": "verification",
+    "repair": "development",
+    "reviews": "development",
+    "transitions": "core",
+    "break_loop": "core"
+  },
+  "frozen_failure": {
+    "failure_packet_id": "failure-8c2ec526e4b3a55d0a3d88ca1c80b5c85cd010b561be088b127205ff67741c68",
+    "failure_packet_digest": "1e41605af7f69f1d7271fc121604940f7027e1c410a04c0556106c560a1448cc",
+    "run_id": "run-20260901122603-762731cb19cdf23b",
+    "case_id": "CASE-001-admin-configuration",
+    "attempt_id": "attempt-20260901124241-f09adc95f22fe1de",
+    "evidence_ids": [
+      "evidence-0439fc38fc212843b566a5f85b5ab03e896b4fa2220f7c9ff7be330d9746f70d",
+      "evidence-1e5149ee837b8b5afdd84a261653da3301460189165ce819a81787d89edb10fa",
+      "evidence-2a5fd869fef8cf8ca2c3ed9e585b03fbb12363fff486011f6f8f2c75a1187dd0",
+      "evidence-2f79c52df1458b9c28b714adc3f876caca2d12734697810cff0f607f2b7ba91c",
+      "evidence-48c025fde341e34a66c43d107900c0bdd1a4785323c977dc9cc3ebb269e165e1",
+      "evidence-7cc35809a44264c5912acd9f6d6210baf84f9908fd10f447223d9abdd08b03a5",
+      "evidence-c7a2df7e17a70832fb54a9f94bb0b11b647e3442440af2f605d82ecd8f3f739e",
+      "evidence-c84a87f27819360fe46b786ff7273f2a6bc78412c2730d94349cbaa0f8238ec7"
+    ],
+    "evidence_content": [
+      {
+        "id": "evidence-0439fc38fc212843b566a5f85b5ab03e896b4fa2220f7c9ff7be330d9746f70d",
+        "digest": "c01674cd356f03aac9eece148e56b2bc9259ba7ec551bbd732e5d246cf1b85a7"
+      },
+      {
+        "id": "evidence-1e5149ee837b8b5afdd84a261653da3301460189165ce819a81787d89edb10fa",
+        "digest": "3a0ac4136f98dc0b4e83fee17114544b8f91c99efc63a7c9292cb22344fd473e"
+      },
+      {
+        "id": "evidence-2a5fd869fef8cf8ca2c3ed9e585b03fbb12363fff486011f6f8f2c75a1187dd0",
+        "digest": "0ebde26cab0dc3f228c87a6d7ce4be2019420ba05284939a7e8ecb4f4d4adba9"
+      },
+      {
+        "id": "evidence-2f79c52df1458b9c28b714adc3f876caca2d12734697810cff0f607f2b7ba91c",
+        "digest": "f9a1ca6450af2007b4f29cb5caa55050a3f6b9f185808e8324fd506d30c50e0a"
+      },
+      {
+        "id": "evidence-48c025fde341e34a66c43d107900c0bdd1a4785323c977dc9cc3ebb269e165e1",
+        "digest": "6490f8ed4813702b1327faddbcbeb1f81b941e82a5164d00da2ae335e79feb8b"
+      },
+      {
+        "id": "evidence-7cc35809a44264c5912acd9f6d6210baf84f9908fd10f447223d9abdd08b03a5",
+        "digest": "7d8ba5b0955088f7d980d775e7be31c5ec28c0cc466ef4c209faa57383859486"
+      },
+      {
+        "id": "evidence-c7a2df7e17a70832fb54a9f94bb0b11b647e3442440af2f605d82ecd8f3f739e",
+        "digest": "72cda58d8a2324357336fc277a208775a8055960841211428abcb21f0996a0bf"
+      },
+      {
+        "id": "evidence-c84a87f27819360fe46b786ff7273f2a6bc78412c2730d94349cbaa0f8238ec7",
+        "digest": "c67c91dc210251fc7845205b7ff2dc8177135505a730b1ed4e371a3a628ea716"
+      }
+    ],
+    "reading_ids": [
+      "reading-2728102176cfc592b8bf93643115d291cf4937d8413b764d87b52a57876e529f",
+      "reading-3be4fd3672dfa458ba2bc3d77699a74428420dc2b8ada6c2b04269d3d19822b3",
+      "reading-910808ebe2d72fe1680f801b055df7311982a324182261b66f22986a85ad24c1",
+      "reading-a258cefa43cd0acc60748e6604be7e1ebe146bd888a0e792b5c2f2dbfc292e8e",
+      "reading-b09973c816c32e4c4f0f79f38be4dc64567de203890e6e62625febd72087275f",
+      "reading-f7445e15ccdff4d459c54be425367a329215da1facf582329214a25324d2cbbf"
+    ],
+    "failed_assertion_ids": [
+      "CASE-001-admin-configuration-ASSERT"
+    ],
+    "summary": "租赁配置业务断言通过，但本地 Playwright 场景未隔离公共顶栏的在线 Iconify 请求。",
+    "root_cause": "CASE-001 已完成配置页操作并产出通过的 assertion_result、结构化比较、截图、trace 和 video。随后管理后台公共顶栏为 mdi:format-size、zmdi:fullscreen 或 zmdi:fullscreen-exit、ion:language-sharp 发起 Iconify 公网读取，违反案例仅允许 http://127.0.0.1:15173 的本地 origin 合同。该依赖与租赁配置断言无关，应由测试场景在页面初始化前提供确定性的本地图标响应，不得开放公网 origin 或修改 Verification 插件。",
+    "frozen_at": "2026-09-01T12:43:00.660Z"
+  }
+}

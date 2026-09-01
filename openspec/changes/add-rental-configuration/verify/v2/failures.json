@@ -2,6 +2,37 @@
   {
     "schema": "specnav.verification.failure-packet.v1",
     "change_id": "add-rental-configuration",
+    "run_id": "run-20260901101654-3596d782bd9262d2",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901101654-3596d782bd9262d2",
+    "reading_ids": [
+      "reading-1ac254a15f137a2c3f874c0c5f140bac99e07e6719757bb402bd8ec04bc44ddc",
+      "reading-8cca29caaabf4fcd78f9a0754a5e53832d14c25560d7518e47bb43247bfa5f6e",
+      "reading-995dc07d0b7a0a5acc20cb48cd6c27087cab2800ae11f86262773b0b445f6443",
+      "reading-9c89a7c0731a182fd64ec67c8efc767b14321322c5e1119b3b9807db5facb2e4",
+      "reading-d1a8dff84a743afd47b07b1c814304aa8df023dd3076c8fe6015509e34a8899b",
+      "reading-e7de9c07b8f71d7f60a3339622ae2ebafacd4d88f2570f866dffe6c03a5fc785"
+    ],
+    "evidence_ids": [
+      "evidence-0e34a5ba2afb9c8a725a4ce1e9454cc29047e3fd0c3cf7abfb43dadea941020e",
+      "evidence-1c9d553a8e21d1340c6aad2499273b2ffe3f5ba6eed798f21228e62af0fefa40"
+    ],
+    "classification": null,
+    "status": "open",
+    "next_action": "blocked_for_decision",
+    "summary": "Verification did not pass for CASE-005-config-skipped.",
+    "root_cause": "Classification is required before retry or development repair.",
+    "failed_assertion_ids": [
+      "CASE-005-config-skipped-ASSERT"
+    ],
+    "owner": "verification",
+    "created_at": "2026-09-01T10:30:26.216Z",
+    "frozen_at": "2026-09-01T10:30:26.216Z",
+    "id": "failure-109b229dd3750a6cf1962d8a7fc92f231e9648633971a4d260690589925ea9b9"
+  },
+  {
+    "schema": "specnav.verification.failure-packet.v1",
+    "change_id": "add-rental-configuration",
     "run_id": "run-20260901074052-302b57f9f6bccee8",
     "case_id": "CASE-001-admin-configuration",
     "attempt_id": "attempt-20260901074052-302b57f9f6bccee8",
@@ -35,6 +66,151 @@
     "created_at": "2026-09-01T07:41:09.818Z",
     "frozen_at": "2026-09-01T07:41:09.818Z",
     "id": "failure-15033d42e9c1902cfdbde338dbf2187f9ecaef9d887bd219afc2d855edd71d42"
+  },
+  {
+    "schema": "specnav.verification.failure-packet.v1",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901122603-762731cb19cdf23b",
+    "case_id": "CASE-001-admin-configuration",
+    "attempt_id": "attempt-20260901122603-762731cb19cdf23b",
+    "reading_ids": [
+      "reading-31f382c9274da723c2098387fefa53096d7676dc7c76beaca072f37b3dcf2904",
+      "reading-6187ee23c4bf5e5b5abeaa77ba049f8ef33ca87f806be15ed53cdcd839f701b8",
+      "reading-6d62f9b36e7f87d0fdd5297aefaaff9e64ba2d972dee77594d37e186b02c8389",
+      "reading-8461f0829faf83f31e8c8f9ffb50705bb7bb3a6a90f93282afa55b5ec157935e",
+      "reading-909280685c4edca2d9a9cb715e56e7717a618e0a6c65cbed285ab0296b68c8fd",
+      "reading-9f88c2cb92e14bb723f42369c066c4f783f576819f1ca2936806b59734416871"
+    ],
+    "evidence_ids": [
+      "evidence-6b7af10603299d80a7863fbf0280d9160f51dddcb2d3676a55f5811bafc26af7",
+      "evidence-6d1ec4ab7568847442248b60afc3529448636ca49664aaf031d6159649d21717",
+      "evidence-93293aab612041c7c1b960f7de53a8f7943e05c8e382474bb3511d291921e176",
+      "evidence-b3e79d17a18a74ee09e77bb644a52241457af2f87e5ac515c86827733e517a9a",
+      "evidence-cabdd9ca0fdb9383ce993ad98bf18b78e29fdc3e9873f50bea1c82ddafe75345",
+      "evidence-ef382489082292c384ee98d7d5329bd90ef08e0af41b20152759d701a9f34fec",
+      "evidence-f39577f415c7197e097167d31c7261b3e9733bb0631e71944912c5cac7058e63"
+    ],
+    "classification": null,
+    "status": "open",
+    "next_action": "blocked_for_decision",
+    "summary": "Verification did not pass for CASE-001-admin-configuration.",
+    "root_cause": "Classification is required before retry or development repair.",
+    "failed_assertion_ids": [
+      "CASE-001-admin-configuration-ASSERT"
+    ],
+    "owner": "verification",
+    "created_at": "2026-09-01T12:26:07.434Z",
+    "frozen_at": "2026-09-01T12:26:07.434Z",
+    "id": "failure-3c0690b9c21e8a09950859d6d5f80449e1a359e4526f553a1d0230d47d16d82b"
+  },
+  {
+    "schema": "specnav.verification.failure-packet.v1",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901123052-7f399366638a6fde",
+    "case_id": "CASE-010-theme-locale-states",
+    "attempt_id": "attempt-20260901123052-7f399366638a6fde",
+    "reading_ids": [
+      "reading-1a68043cae428f4afda45371c01e5f3c13c63f151225b0d67904606321c002a8",
+      "reading-bd33ddf64d723a6328b988414de3c57faac7c7a2614621031ff371b1c6d2ea47",
+      "reading-bf96e1a3cd105f79fc387e11cfa3e3933e8490b3f5de22f5974f6159a0a49046",
+      "reading-c45d7bb91e8c992e5d9ef3c40bf31227bedff11e67072e1553bb581f0900a488",
+      "reading-c6d2ff1d996ad6346e60dd81019bffde7f497efc80535d5b0dbc6c43b2ee1234",
+      "reading-e81220340d90e18bbab0637ca9d120cc80500150b8744a9a78fe2f6b4648c937"
+    ],
+    "evidence_ids": [
+      "evidence-535a922505a0229c6668e8cf55e1fac8cc5785911df8e6eba46c0aec4aa8d767",
+      "evidence-6216df2fbdf580c0a7addc6889d76da39ea9853b475b223a7e22c483dfe3922f",
+      "evidence-b58029984caf23ad7c578290e751fde601344d12e20a108d2980d940e2b8862c",
+      "evidence-bb721984eb3c495072bac6e9cd5fa96ed4453064f2a75513aba67da538ad1747",
+      "evidence-c3df9d3d8ae1f117a93adb8139ec88f2be253b5a0e7a91e37814872be64bc74b",
+      "evidence-da7bd16018261a39e8e3cdc189c323ad2fba5c828342ff5319b03be02dd1a2d7",
+      "evidence-e40a9561f71d62fb2ca6209a3f7e519bc76f10971ab4eb9f3a40dc4661f661b5"
+    ],
+    "classification": null,
+    "status": "open",
+    "next_action": "blocked_for_decision",
+    "summary": "Verification did not pass for CASE-010-theme-locale-states.",
+    "root_cause": "Classification is required before retry or development repair.",
+    "failed_assertion_ids": [
+      "CASE-010-theme-locale-states-ASSERT"
+    ],
+    "owner": "verification",
+    "created_at": "2026-09-01T12:30:55.399Z",
+    "frozen_at": "2026-09-01T12:30:55.399Z",
+    "id": "failure-417f3af27c74e9e3727b76408fc307a3ecf3942b262a9127a69a247b44a1bb26"
+  },
+  {
+    "schema": "specnav.verification.failure-packet.v1",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901122603-762731cb19cdf23b",
+    "case_id": "CASE-001-admin-configuration",
+    "attempt_id": "attempt-20260901124241-f09adc95f22fe1de",
+    "reading_ids": [
+      "reading-2728102176cfc592b8bf93643115d291cf4937d8413b764d87b52a57876e529f",
+      "reading-3be4fd3672dfa458ba2bc3d77699a74428420dc2b8ada6c2b04269d3d19822b3",
+      "reading-910808ebe2d72fe1680f801b055df7311982a324182261b66f22986a85ad24c1",
+      "reading-a258cefa43cd0acc60748e6604be7e1ebe146bd888a0e792b5c2f2dbfc292e8e",
+      "reading-b09973c816c32e4c4f0f79f38be4dc64567de203890e6e62625febd72087275f",
+      "reading-f7445e15ccdff4d459c54be425367a329215da1facf582329214a25324d2cbbf"
+    ],
+    "evidence_ids": [
+      "evidence-0439fc38fc212843b566a5f85b5ab03e896b4fa2220f7c9ff7be330d9746f70d",
+      "evidence-1e5149ee837b8b5afdd84a261653da3301460189165ce819a81787d89edb10fa",
+      "evidence-2a5fd869fef8cf8ca2c3ed9e585b03fbb12363fff486011f6f8f2c75a1187dd0",
+      "evidence-2f79c52df1458b9c28b714adc3f876caca2d12734697810cff0f607f2b7ba91c",
+      "evidence-48c025fde341e34a66c43d107900c0bdd1a4785323c977dc9cc3ebb269e165e1",
+      "evidence-7cc35809a44264c5912acd9f6d6210baf84f9908fd10f447223d9abdd08b03a5",
+      "evidence-c7a2df7e17a70832fb54a9f94bb0b11b647e3442440af2f605d82ecd8f3f739e",
+      "evidence-c84a87f27819360fe46b786ff7273f2a6bc78412c2730d94349cbaa0f8238ec7"
+    ],
+    "classification": null,
+    "status": "open",
+    "next_action": "blocked_for_decision",
+    "summary": "Verification did not pass for CASE-001-admin-configuration.",
+    "root_cause": "Classification is required before retry or development repair.",
+    "failed_assertion_ids": [
+      "CASE-001-admin-configuration-ASSERT"
+    ],
+    "owner": "verification",
+    "created_at": "2026-09-01T12:43:00.660Z",
+    "frozen_at": "2026-09-01T12:43:00.660Z",
+    "id": "failure-8c2ec526e4b3a55d0a3d88ca1c80b5c85cd010b561be088b127205ff67741c68"
+  },
+  {
+    "schema": "specnav.verification.failure-packet.v1",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901123049-bf275ef7ebbd367a",
+    "case_id": "CASE-009-rental-device-catalog",
+    "attempt_id": "attempt-20260901123049-bf275ef7ebbd367a",
+    "reading_ids": [
+      "reading-088b41dcd9faae0632c8b96f8326988908e54d2c5a0d8c471a2736855876c3b0",
+      "reading-31bb41876877add53477927c1f60170f855af29341c39414059ea96134b5bc7c",
+      "reading-62c6e00d1e15ff7e5ca4ade5c1d7779f1df93715e0c431eff7c6b7e7b5d376e7",
+      "reading-74461aa046dbae864a663e752b4065936405a395d0e134ade5e48f49d7331d41",
+      "reading-9c5c8a640cf0737452f19c7aa5de7063d06c547147ba54dcdbac410204420189",
+      "reading-ed8c1aa2ed913cd22ed9ade160a0e9c9d19380f91ee20fed46fe8963f16e25da"
+    ],
+    "evidence_ids": [
+      "evidence-184383d905fdc669be834df83f3117430c68542a367c367aa95e60c917a8d308",
+      "evidence-29629ea8d8259561649fec7d964fcf748e4ced7c7ceb54b37da7dc74b2decfc9",
+      "evidence-31403b4be030cf9bb586712990301d0e89b6757eeb6a6e54601ec16580e72efd",
+      "evidence-49c4beea92517944512277e3623f30537d98e869a2fb3a47180749e777b1b841",
+      "evidence-511e951b279a3882372e79ba81ee1a4a58e33bc07b7e223dc6613de74b9f178a",
+      "evidence-f03804cd29881536f6b126b87cc3dbf7887de40d1383d81b5ee2b9c85d54e7c4",
+      "evidence-f1d535163934facb5155be8b6e2a3ca35d2f1783c309b39953abb00e7e244866"
+    ],
+    "classification": null,
+    "status": "open",
+    "next_action": "blocked_for_decision",
+    "summary": "Verification did not pass for CASE-009-rental-device-catalog.",
+    "root_cause": "Classification is required before retry or development repair.",
+    "failed_assertion_ids": [
+      "CASE-009-rental-device-catalog-ASSERT"
+    ],
+    "owner": "verification",
+    "created_at": "2026-09-01T12:30:52.800Z",
+    "frozen_at": "2026-09-01T12:30:52.800Z",
+    "id": "failure-bb210aa8f90f2e1ad3fe92501c871115081a87de2fbc95a03faf1d0fa24b2c3f"
   },
   {
     "schema": "specnav.verification.failure-packet.v1",

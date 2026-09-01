@@ -1,0 +1,84 @@
+{
+  "ok": true,
+  "checked_at": "2026-09-01T12:31:24.644Z",
+  "summary": {
+    "status": "fresh",
+    "total": 10,
+    "fresh": 10,
+    "stale": 0,
+    "unknown": 0
+  },
+  "cases": [
+    {
+      "case_id": "CASE-001-admin-configuration",
+      "attempt_id": "attempt-20260901122603-762731cb19cdf23b",
+      "checked_at": "2026-09-01T12:31:24.644Z",
+      "status": "fresh",
+      "reasons": []
+    },
+    {
+      "case_id": "CASE-002-identifier-authority",
+      "attempt_id": "attempt-20260901122607-646757b50edeff37",
+      "checked_at": "2026-09-01T12:31:24.644Z",
+      "status": "fresh",
+      "reasons": []
+    },
+    {
+      "case_id": "CASE-003-immediate-order",
+      "attempt_id": "attempt-20260901122645-09be70a389760fea",
+      "checked_at": "2026-09-01T12:31:24.644Z",
+      "status": "fresh",
+      "reasons": []
+    },
+    {
+      "case_id": "CASE-004-exact-model-mapping",
+      "attempt_id": "attempt-20260901122719-9df96d74c0801b83",
+      "checked_at": "2026-09-01T12:31:24.644Z",
+      "status": "fresh",
+      "reasons": []
+    },
+    {
+      "case_id": "CASE-005-config-skipped",
+      "attempt_id": "attempt-20260901122757-8754e811bd18ae43",
+      "checked_at": "2026-09-01T12:31:24.644Z",
+      "status": "fresh",
+      "reasons": []
+    },
+    {
+      "case_id": "CASE-006-later-valid-update",
+      "attempt_id": "attempt-20260901122832-690c1f35411e9c47",
+      "checked_at": "2026-09-01T12:31:24.644Z",
+      "status": "fresh",
+      "reasons": []
+    },
+    {
+      "case_id": "CASE-007-fulfillment-protection",
+      "attempt_id": "attempt-20260901122913-4337d12d441d6a42",
+      "checked_at": "2026-09-01T12:31:24.644Z",
+      "status": "fresh",
+      "reasons": []
+    },
+    {
+      "case_id": "CASE-008-historical-reconciliation",
+      "attempt_id": "attempt-20260901123007-1668f98da56447b5",
+      "checked_at": "2026-09-01T12:31:24.644Z",
+      "status": "fresh",
+      "reasons": []
+    },
+    {
+      "case_id": "CASE-009-rental-device-catalog",
+      "attempt_id": "attempt-20260901123049-bf275ef7ebbd367a",
+      "checked_at": "2026-09-01T12:31:24.644Z",
+      "status": "fresh",
+      "reasons": []
+    },
+    {
+      "case_id": "CASE-010-theme-locale-states",
+      "attempt_id": "attempt-20260901123052-7f399366638a6fde",
+      "checked_at": "2026-09-01T12:31:24.644Z",
+      "status": "fresh",
+      "reasons": []
+    }
+  ],
+  "blockers": []
+}

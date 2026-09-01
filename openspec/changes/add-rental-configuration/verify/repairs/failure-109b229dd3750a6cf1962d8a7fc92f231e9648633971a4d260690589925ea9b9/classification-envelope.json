@@ -1,0 +1,56 @@
+{
+  "schema": "specnav.verification.trusted-fact-envelope.v1",
+  "id": "trusted-fact-f3daa7a5bd4dfd68e8020bcf76b0d48df161914cc682acdb9c312cd1f743a5d2",
+  "kind": "classification_result",
+  "producer": "specnav-failure-classifier",
+  "payload": {
+    "ok": true,
+    "status": "classified",
+    "packet": {
+      "schema": "specnav.verification.failure-packet.v1",
+      "change_id": "add-rental-configuration",
+      "run_id": "run-20260901101654-3596d782bd9262d2",
+      "case_id": "CASE-005-config-skipped",
+      "attempt_id": "attempt-20260901101654-3596d782bd9262d2",
+      "reading_ids": [
+        "reading-1ac254a15f137a2c3f874c0c5f140bac99e07e6719757bb402bd8ec04bc44ddc",
+        "reading-8cca29caaabf4fcd78f9a0754a5e53832d14c25560d7518e47bb43247bfa5f6e",
+        "reading-995dc07d0b7a0a5acc20cb48cd6c27087cab2800ae11f86262773b0b445f6443",
+        "reading-9c89a7c0731a182fd64ec67c8efc767b14321322c5e1119b3b9807db5facb2e4",
+        "reading-d1a8dff84a743afd47b07b1c814304aa8df023dd3076c8fe6015509e34a8899b",
+        "reading-e7de9c07b8f71d7f60a3339622ae2ebafacd4d88f2570f866dffe6c03a5fc785"
+      ],
+      "evidence_ids": [
+        "evidence-0e34a5ba2afb9c8a725a4ce1e9454cc29047e3fd0c3cf7abfb43dadea941020e",
+        "evidence-1c9d553a8e21d1340c6aad2499273b2ffe3f5ba6eed798f21228e62af0fefa40"
+      ],
+      "classification": "environment_defect",
+      "status": "retry_allowed",
+      "next_action": "retry_allowed",
+      "summary": "Maven 业务测试实际通过，但不可达 Nexus 元数据请求拖延执行并触发 Verification runner 超时。",
+      "root_cause": "CASE-005 的 Maven 命令已完成 6 个目标测试并输出 BUILD SUCCESS；随后对不可达 Nexus 的元数据请求将总耗时延长到 13 分 29 秒，超过案例 600000ms 超时。runner 在写入 assertion result 前收到 SIGTERM，因此该失败来自本地依赖仓库网络环境与超时边界，不是产品代码或测试断言缺陷。",
+      "failed_assertion_ids": [
+        "CASE-005-config-skipped-ASSERT"
+      ],
+      "owner": "verification",
+      "created_at": "2026-09-01T10:30:26.216Z",
+      "frozen_at": "2026-09-01T10:30:26.216Z",
+      "id": "failure-109b229dd3750a6cf1962d8a7fc92f231e9648633971a4d260690589925ea9b9"
+    },
+    "signals": [],
+    "blockers": []
+  },
+  "payload_digest": "2cc2d25b778c2415a205986b4629a2edbd53e16f5dca1fd8c8b39510f9f419a2",
+  "issued_at": "2026-09-01T12:15:08.651Z",
+  "bindings": {
+    "failure_id": "failure-109b229dd3750a6cf1962d8a7fc92f231e9648633971a4d260690589925ea9b9",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901101654-3596d782bd9262d2",
+    "case_id": "CASE-005-config-skipped"
+  },
+  "claims": [
+    "failure-classification:verified"
+  ],
+  "signature_algorithm": "hmac-sha256",
+  "signature": "4a5a1213f70c1c928eb1264efb4b29b2c0ce1ac57c20f475c30a09d7471e3c67"
+}

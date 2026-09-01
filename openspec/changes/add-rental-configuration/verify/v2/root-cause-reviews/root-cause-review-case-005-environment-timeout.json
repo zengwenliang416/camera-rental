@@ -1,0 +1,22 @@
+{
+  "schema": "specnav.verification.root-cause-review.v1",
+  "id": "root-cause-review-case-005-environment-timeout",
+  "failure_id": "failure-109b229dd3750a6cf1962d8a7fc92f231e9648633971a4d260690589925ea9b9",
+  "root_failure_digest": "fc97f05c677b4ae4d0fe3f4d0c58615e7439e220466d3313baa5cb598d24299c",
+  "change_id": "add-rental-configuration",
+  "run_id": "run-20260901101654-3596d782bd9262d2",
+  "case_id": "CASE-005-config-skipped",
+  "attempt_id": "attempt-20260901101654-3596d782bd9262d2",
+  "classification": "environment_defect",
+  "summary": "Maven 业务测试实际通过，但不可达 Nexus 元数据请求拖延执行并触发 Verification runner 超时。",
+  "root_cause": "CASE-005 的 Maven 命令已完成 6 个目标测试并输出 BUILD SUCCESS；随后对不可达 Nexus 的元数据请求将总耗时延长到 13 分 29 秒，超过案例 600000ms 超时。runner 在写入 assertion result 前收到 SIGTERM，因此该失败来自本地依赖仓库网络环境与超时边界，不是产品代码或测试断言缺陷。",
+  "failed_assertion_ids": [
+    "CASE-005-config-skipped-ASSERT"
+  ],
+  "reviewer": {
+    "id": "Zengwenliang0416",
+    "kind": "human"
+  },
+  "decision": "approved",
+  "reviewed_at": "2026-09-01T12:10:51Z"
+}

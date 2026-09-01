@@ -1,0 +1,26 @@
+{
+  "schema": "specnav.verification.report-render-manifest.v1",
+  "change_id": "add-rental-configuration",
+  "report_model_id": "report-model-9520cafda4d66230c2ed8770a5098d73549e0344ad2e9b404e2134ff65837a1f",
+  "generated_at": "2026-09-01T12:31:24.779Z",
+  "reports": [
+    {
+      "name": "overview.html",
+      "path": "verify/reports/overview.html",
+      "sha256": "3ca1ccc4387e3d85252a2c1ff809acff99fa036bbd0e664d48165d9801455478",
+      "size": 34672
+    },
+    {
+      "name": "test-case-catalog.html",
+      "path": "verify/reports/test-case-catalog.html",
+      "sha256": "cc3fdfd011d8d32242812f58e4c6ce38ba94f38a0a480241cea0702f6d3b6afc",
+      "size": 40278
+    },
+    {
+      "name": "test-case-results.html",
+      "path": "verify/reports/test-case-results.html",
+      "sha256": "c5654ecd79ffc177cb79ac397621c4c54bc6e5da0acc91a381cea0b383aa4192",
+      "size": 119241
+    }
+  ]
+}

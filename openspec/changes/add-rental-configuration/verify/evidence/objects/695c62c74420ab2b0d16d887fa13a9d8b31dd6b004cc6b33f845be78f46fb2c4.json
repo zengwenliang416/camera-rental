@@ -1,0 +1,26 @@
+[
+  {
+    "sequence": 1,
+    "offset_ms": 786,
+    "kind": "lifecycle",
+    "title": "Scenario: rental-configuration-admin-flow",
+    "status": "info",
+    "detail": "Browser recording and human review timeline started."
+  },
+  {
+    "sequence": 2,
+    "offset_ms": 880,
+    "kind": "lifecycle",
+    "title": "Scenario stopped",
+    "status": "failed",
+    "detail": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:15173/rental/configuration Call log: - navigating to \"http://127.0.0.1:15173/rental/configuration\", waiting until \"load\""
+  },
+  {
+    "sequence": 3,
+    "offset_ms": 882,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "chrome-error://chromewebdata/"
+  }
+]

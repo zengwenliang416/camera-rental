@@ -1,0 +1,22 @@
+{
+  "schema": "specnav.verification.root-cause-review.v1",
+  "id": "root-cause-review-case-009-fixture-unavailable",
+  "failure_id": "failure-bb210aa8f90f2e1ad3fe92501c871115081a87de2fbc95a03faf1d0fa24b2c3f",
+  "root_failure_digest": "a13c222f6b0de93454f6cd8308189dbbe0b4225f4129dd4b1c6ef1131cd8533e",
+  "change_id": "add-rental-configuration",
+  "run_id": "run-20260901123049-bf275ef7ebbd367a",
+  "case_id": "CASE-009-rental-device-catalog",
+  "attempt_id": "attempt-20260901123049-bf275ef7ebbd367a",
+  "classification": "environment_defect",
+  "summary": "本地租赁配置 fixture 服务未启动，Chromium 无法连接批准的本地 origin。",
+  "root_cause": "Playwright 在第一步访问 http://127.0.0.1:15173/rental/device 时收到 net::ERR_CONNECTION_REFUSED。场景尚未进入页面行为和断言阶段，assertions 数组为空；缺少结构化比较和权威 oracle 是本地 fixture 服务不可用的连带结果，不是产品或测试断言缺陷。",
+  "failed_assertion_ids": [
+    "CASE-009-rental-device-catalog-ASSERT"
+  ],
+  "reviewer": {
+    "id": "Zengwenliang0416",
+    "kind": "human"
+  },
+  "decision": "approved",
+  "reviewed_at": "2026-09-01T12:40:32Z"
+}

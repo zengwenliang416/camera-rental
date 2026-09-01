@@ -1,0 +1,19 @@
+{
+  "schema": "specnav.verification.repair-link.v1",
+  "failure_id": "failure-8c2ec526e4b3a55d0a3d88ca1c80b5c85cd010b561be088b127205ff67741c68",
+  "change_id": "add-rental-configuration",
+  "development_task_id": "900-verification-repair-c18e66960e749fed",
+  "repair_kind": "test_code",
+  "status": "requested",
+  "requested_at": "2026-09-01T13:01:57.331Z",
+  "before_identity": {
+    "case_snapshot_hash": "9299ee66da1777b0f0046303434f9b1e050856fec6abf1b774bad9e53204ebc6",
+    "code_sha": "c33dd81b192ca6f988b85393aed1bfe8b46f94e5",
+    "test_sha": "d59621f0e10d1ad6f2a65069d3bf10e0ed6e11d32acca8dd63a9f865fdf97792",
+    "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2"
+  },
+  "scope_digest": "c20ed05daed56ab7e39eeb21a420232a7ee61a59a8c68a161e2b743d3946ba3e",
+  "id": "repair-afab8059f70ee73e4554c137e06ba5444df4fbba51a9b27530a728ff6be785c1"
+}

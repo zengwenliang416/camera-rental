@@ -1,0 +1,26 @@
+[
+  {
+    "sequence": 1,
+    "offset_ms": 734,
+    "kind": "lifecycle",
+    "title": "Scenario: rental-device-shared-catalog",
+    "status": "info",
+    "detail": "Browser recording and human review timeline started."
+  },
+  {
+    "sequence": 2,
+    "offset_ms": 811,
+    "kind": "lifecycle",
+    "title": "Scenario stopped",
+    "status": "failed",
+    "detail": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:15173/rental/device Call log: - navigating to \"http://127.0.0.1:15173/rental/device\", waiting until \"load\""
+  },
+  {
+    "sequence": 3,
+    "offset_ms": 813,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "chrome-error://chromewebdata/"
+  }
+]

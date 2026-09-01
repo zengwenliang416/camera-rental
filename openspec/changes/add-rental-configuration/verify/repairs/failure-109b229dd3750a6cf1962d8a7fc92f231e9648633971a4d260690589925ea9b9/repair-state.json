@@ -1,0 +1,42 @@
+{
+  "ok": true,
+  "status": "retry_required",
+  "label": "failed",
+  "history": [
+    {
+      "kind": "initial",
+      "attempt_id": "attempt-20260901101654-3596d782bd9262d2",
+      "case_id": "CASE-005-config-skipped",
+      "label": "FAILED",
+      "verdict": "fail",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-0e34a5ba2afb9c8a725a4ce1e9454cc29047e3fd0c3cf7abfb43dadea941020e",
+        "evidence-1c9d553a8e21d1340c6aad2499273b2ffe3f5ba6eed798f21228e62af0fefa40"
+      ],
+      "recorded_at": "2026-09-01T10:30:26.018Z"
+    }
+  ],
+  "transition_proposal": {
+    "schema": "specnav.verification.transition-proposal.v1",
+    "failure_id": "failure-109b229dd3750a6cf1962d8a7fc92f231e9648633971a4d260690589925ea9b9",
+    "change_id": "add-rental-configuration",
+    "action": "request_retry",
+    "owner": "core",
+    "from_state": "retry_required",
+    "target_state": "retry",
+    "case_ids": [
+      "CASE-005-config-skipped"
+    ],
+    "attempt_ids": [
+      "attempt-20260901101654-3596d782bd9262d2"
+    ],
+    "reason_ids": [
+      "classified-retry-allowed"
+    ],
+    "proposed_at": "2026-09-01T10:30:26.216Z",
+    "id": "transition-e58526200d77c9ea10780b5ba71ec02f35241ac4cf83e56d85af1548ef2582e9"
+  },
+  "blockers": []
+}

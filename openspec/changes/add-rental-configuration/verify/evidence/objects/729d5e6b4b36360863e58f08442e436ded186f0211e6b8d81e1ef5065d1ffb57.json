@@ -1,0 +1,9 @@
+[
+  {
+    "id": "CASE-001-admin-configuration-ASSERT",
+    "method": "equal",
+    "actual": "所有保存均由后端确认，权限、租户、乐观锁和影响预览生效，页面不推断缺失标识。",
+    "expected": "所有保存均由后端确认，权限、租户、乐观锁和影响预览生效，页面不推断缺失标识。",
+    "status": "passed"
+  }
+]

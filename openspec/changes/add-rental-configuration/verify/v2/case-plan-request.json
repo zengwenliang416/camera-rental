@@ -234,9 +234,11 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 600000,
+        "entrypoint": "playwright",
+        "cwd": ".",
         "browser_project": "chromium",
         "scenario_id": "rental-configuration-admin-flow",
-        "scenario_hash": "b6fb94d815c5c478b7bbc29af30e9adc5b1780e4d4cbf7973fd9600814787863",
+        "scenario_hash": "4161afaeb69ac90df0d1a6523fb012db409b4b0f5752d92c8138c06be1af31a1",
         "allowed_origins": [
           "http://127.0.0.1:15173"
         ],
@@ -1255,9 +1257,11 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 600000,
+        "entrypoint": "playwright",
+        "cwd": ".",
         "browser_project": "chromium",
         "scenario_id": "rental-device-shared-catalog",
-        "scenario_hash": "57dd12290d494cf25572d99170de17cdaa0d10593263dec56ebe7fe6d461bdec",
+        "scenario_hash": "d4e7aa2bdeb7153c982ff7ce472196b4ee1c76a14d1536243b7b0349f93f674c",
         "allowed_origins": [
           "http://127.0.0.1:15173"
         ],
@@ -1387,9 +1391,11 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 900000,
+        "entrypoint": "playwright",
+        "cwd": ".",
         "browser_project": "chromium",
         "scenario_id": "rental-configuration-sensory-states",
-        "scenario_hash": "2fe11b35afd7c7da71b739db4b060eb965b9ca6be68a2e549e43c4370388b9bc",
+        "scenario_hash": "e684b5168700d9958de31494f2682e98c881cf0345f8adce7ea73c0b2ceac18d",
         "allowed_origins": [
           "http://127.0.0.1:15173"
         ],

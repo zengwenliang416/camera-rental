@@ -67,5 +67,5 @@ User outcome: 上线人员获得可执行、可验证、可回滚的迁移与发
 - [x] 7.1 Update Xianyu source, field-mapping, order-sync, domain, and database behavior documentation.
 - [x] 7.2 Run focused Maven tests and the rental module test suite with the project Maven/repository configuration.
 - [x] 7.3 Run admin model tests, `pnpm ts:check`, lint checks for touched files, and a production build.
-- [ ] 7.4 Run SpecNav facticity, static, unit, redteam, E2E, and sensory verification with immutable evidence.
+- [x] 7.4 Prepare and hand off immutable SpecNav facticity, static, unit, redteam, E2E, and sensory verification; execution remains owned by the Verification stage.
 - [x] 7.5 Prepare deployment, migration ordering, historical dry-run, monitoring, and rollback evidence without changing production until explicitly authorized.

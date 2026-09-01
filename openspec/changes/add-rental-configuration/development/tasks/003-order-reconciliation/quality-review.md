@@ -45,8 +45,8 @@ isolation, and old/new rule-identity fan-out.
 
 ## Test Quality
 
-- The independently rerun Task 003 focused suite passed: 153 tests, 0 failures,
-  0 errors, and 0 skipped.
+- Receipt `007-003-order-reconciliation.log` records the current Task 003
+  focused suite at 164 tests, 0 failures, 0 errors, and 0 skipped.
 - The independently rerun Spring/MyBatis/H2 rule transaction test passed:
   1 test, 0 failures, 0 errors, and 0 skipped.
 - `XianyuOrderReconciliationCandidateIntegrationTest` executes the production
@@ -116,6 +116,29 @@ isolation, and old/new rule-identity fan-out.
 - The remaining reconciliation-service size is a maintainability concern, not
   a correctness, security, or release blocker in this review round.
 
+## Acceptance Assertions Verified
+
+- `A4` - Verified at the order-side exact-matching/no-fallback implementation
+  layer. The order reconciliation path selects an enabled product rule only by
+  exact `shopId + xianyuItemId`
+  (`RentalChannelOrderReconciliationService.java:300-306`,
+  `RentalChannelProductRuleMapper.java:25-30`). A single-model rule resolves
+  only its configured `singleDeviceModelId`; a multi-model rule instead
+  requires the order's non-empty XianGuanJia SKU and selects an enabled child
+  mapping only by exact `productRuleId + xgjSkuId`
+  (`RentalChannelOrderReconciliationService.java:308-330`,
+  `RentalChannelProductSkuMappingMapper.java:24-29`). The multi-model branch
+  never reads the product-level default. Synchronized Xianyu SKU enrichment is
+  also rejected unless the same shop, Xianyu item, XianGuanJia product, and
+  XianGuanJia SKU relationship is present
+  (`RentalChannelOrderReconciliationService.java:341-358`).
+  `RentalChannelOrderReconciliationServiceTest` proves no fallback when a
+  product default exists, successful use of the exact enabled SKU mapping,
+  rejection of a mismatched synchronized product, and enrichment only from the
+  complete synchronized relationship (`:207-253,328-362`).
+- No other acceptance assertion is claimed by this Task 003 quality review;
+  the task packet's acceptance set is exactly `A4`.
+
 ## Required Fixes
 
 - None. The previous asynchronous-boundary, failure-isolation, paging, and
@@ -124,7 +147,12 @@ isolation, and old/new rule-identity fan-out.
 
 ## Validation Evidence
 
-- Reviewer-run focused Task 003 suite: 153 tests passed.
+- Independently reviewed the committed implementation diff from baseline
+  `cea45c48` through implementation commit `c621976b`, scoped to the Task 003
+  packet, report, production code, tests, and receipt 007.
+- Receipt `007-003-order-reconciliation.log`: 164 focused Task 003 tests passed.
 - Reviewer-run Spring/MyBatis/H2 rule transaction test: 1 test passed.
 - System-executed full rental-biz suite: 592 tests passed, with 6 existing
   environment-gated MySQL concurrency tests skipped.
+- Current review reran `git diff --check` successfully and
+  `openspec validate add-rental-configuration --strict` returned valid.

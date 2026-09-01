@@ -1,0 +1,72 @@
+[
+  {
+    "id": "A1",
+    "statement": "An authorized administrator can manage the device catalog, channel product rules, exact SKU mappings, and remark templates from the standalone Rental Configuration page.",
+    "verify_via": "e2e",
+    "source_path": "openspec/changes/add-rental-configuration/acceptance.json",
+    "source_sha256": "27532811d66a9c5f2bcefac83d3f1bdecedc4b7d0ca410abf200283bfa434963"
+  },
+  {
+    "id": "A2",
+    "statement": "XianGuanJia product and SKU identifiers and Xianyu item and SKU identifiers are persisted separately without fallback or title/text inference.",
+    "verify_via": "unit",
+    "source_path": "openspec/changes/add-rental-configuration/acceptance.json",
+    "source_sha256": "27532811d66a9c5f2bcefac83d3f1bdecedc4b7d0ca410abf200283bfa434963"
+  },
+  {
+    "id": "A3",
+    "statement": "Every non-filtered durable channel order creates exactly one internal rental order immediately even when its remark, rental dates, or equipment model are incomplete.",
+    "verify_via": "unit",
+    "source_path": "openspec/changes/add-rental-configuration/acceptance.json",
+    "source_sha256": "27532811d66a9c5f2bcefac83d3f1bdecedc4b7d0ca410abf200283bfa434963"
+  },
+  {
+    "id": "A4",
+    "statement": "Single-model products match by shop and Xianyu item id, while multi-model products require an exact synchronized XianGuanJia SKU match and never fall back to a product default.",
+    "verify_via": "redteam",
+    "source_path": "openspec/changes/add-rental-configuration/acceptance.json",
+    "source_sha256": "27532811d66a9c5f2bcefac83d3f1bdecedc4b7d0ca410abf200283bfa434963"
+  },
+  {
+    "id": "A5",
+    "statement": "Configured skipped products retain channel revenue and raw evidence but do not parse remarks, create reviews or internal rental orders, or generate schedules.",
+    "verify_via": "unit",
+    "source_path": "openspec/changes/add-rental-configuration/acceptance.json",
+    "source_sha256": "27532811d66a9c5f2bcefac83d3f1bdecedc4b7d0ca410abf200283bfa434963"
+  },
+  {
+    "id": "A6",
+    "statement": "A later valid remark or model mapping updates the same unassigned internal order, while invalid remarks preserve the last valid plan.",
+    "verify_via": "e2e",
+    "source_path": "openspec/changes/add-rental-configuration/acceptance.json",
+    "source_sha256": "27532811d66a9c5f2bcefac83d3f1bdecedc4b7d0ca410abf200283bfa434963"
+  },
+  {
+    "id": "A7",
+    "statement": "Configuration and remark changes cannot overwrite assigned, dispatched, returned, inspected, replaced, or financially settled facts.",
+    "verify_via": "redteam",
+    "source_path": "openspec/changes/add-rental-configuration/acceptance.json",
+    "source_sha256": "27532811d66a9c5f2bcefac83d3f1bdecedc4b7d0ca410abf200283bfa434963"
+  },
+  {
+    "id": "A8",
+    "statement": "Historical reconciliation is idempotent and resumable, creates missing normal rental orders, skips only eligible configured products, and reports conflicts without deleting history.",
+    "verify_via": "unit",
+    "source_path": "openspec/changes/add-rental-configuration/acceptance.json",
+    "source_sha256": "27532811d66a9c5f2bcefac83d3f1bdecedc4b7d0ca410abf200283bfa434963"
+  },
+  {
+    "id": "A9",
+    "statement": "The Rental Device page consumes the shared catalog for filtering and device creation but no longer exposes category or model quick-create controls.",
+    "verify_via": "e2e",
+    "source_path": "openspec/changes/add-rental-configuration/acceptance.json",
+    "source_sha256": "27532811d66a9c5f2bcefac83d3f1bdecedc4b7d0ca410abf200283bfa434963"
+  },
+  {
+    "id": "A10",
+    "statement": "The configuration experience covers light and dark themes, zh-CN and en locales, desktop and narrow layouts, and loading, empty, error, and permission states.",
+    "verify_via": "sensory",
+    "source_path": "openspec/changes/add-rental-configuration/acceptance.json",
+    "source_sha256": "27532811d66a9c5f2bcefac83d3f1bdecedc4b7d0ca410abf200283bfa434963"
+  }
+]

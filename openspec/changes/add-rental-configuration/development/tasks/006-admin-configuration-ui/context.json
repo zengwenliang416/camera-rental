@@ -21,11 +21,11 @@
   "allowed_files": [
     "camera-rental-admin/package.json",
     "camera-rental-admin/src/config/axios/service.ts",
-    "camera-rental-admin/src/api/rental",
-    "camera-rental-admin/src/views/rental",
-    "camera-rental-admin/src/locales",
-    "camera-rental-admin/tests",
-    "camera-rental-server/yudao-module-rental",
+    "camera-rental-admin/src/api/rental/**",
+    "camera-rental-admin/src/views/rental/**",
+    "camera-rental-admin/src/locales/**",
+    "camera-rental-admin/tests/**",
+    "camera-rental-server/yudao-module-rental/**",
     "camera-rental-server/sql/mysql/migrations/20260901_056_rental_channel_reconciliation_run.sql",
     "openspec/changes/add-rental-configuration/development/migrations/20260901_056_rental_channel_reconciliation_run.sql",
     "openspec/changes/add-rental-configuration/development/migrations/rollback-20260901_056_rental_channel_reconciliation_run.sql",
@@ -42,6 +42,11 @@
     "Backend reconciliation-run contract and migration tests",
     "Permission, state, locale, theme and narrow-layout evidence",
     "Task report, spec review and quality review"
+  ],
+  "test_paths": [
+    "cd camera-rental-admin && pnpm test:rental-configuration && pnpm ts:check && pnpm exec eslint src/views/rental/configuration/configurationModel.ts src/views/rental/configuration/index.vue tests/configurationModel.test.ts && pnpm exec prettier --check src/views/rental/configuration/configurationModel.ts src/views/rental/configuration/index.vue tests/configurationModel.test.ts",
+    "cd camera-rental-admin && pnpm build:prod",
+    "cd camera-rental-server/yudao-module-rental/yudao-module-rental-biz && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -Dtest=RentalChannelProductRuleTransactionIntegrationTest,RentalChannelProductRuleServiceTest,RentalChannelReconciliationRunServiceTest test"
   ],
   "unsafe_assumptions": [
     "External identifiers must never be parsed as JavaScript numbers."

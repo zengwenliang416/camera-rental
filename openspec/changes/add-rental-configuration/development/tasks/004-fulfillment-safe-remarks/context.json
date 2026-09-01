@@ -1,6 +1,7 @@
 {
   "task_id": "004-fulfillment-safe-remarks",
   "task_items": ["4.1", "4.2", "4.3", "4.4"],
+  "acceptance_primary": ["A6", "A7"],
   "goal": "Apply later valid remark plans without overwriting immutable fulfillment or financial facts.",
   "must_read": [
     "openspec/changes/add-rental-configuration/development/tasks/004-fulfillment-safe-remarks/brief.md",
@@ -18,8 +19,8 @@
     "docs/integrations/xianyu/source.md"
   ],
   "allowed_files": [
-    "camera-rental-server/yudao-module-rental",
-    "camera-rental-server/sql/mysql"
+    "camera-rental-server/yudao-module-rental/**",
+    "camera-rental-server/sql/mysql/**"
   ],
   "non_goals": [
     "Do not treat seller intent as physical or financial completion.",
@@ -29,6 +30,10 @@
     "Remark history and last-valid-plan tests",
     "Lifecycle guard and redteam conflict tests",
     "Task report, spec review and quality review"
+  ],
+  "test_paths": [
+    "openspec/changes/add-rental-configuration/development/migrations/verify-20260831_054-disposable-mysql.sh",
+    "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -pl yudao-module-rental/yudao-module-rental-biz -am test -Dmaven.repo.local=/Volumes/zwl/maven-repository -Dtest=XianyuOrderPersistenceServiceImplTest,XianyuOrderShipServiceTest,RentalDeliveryServiceImplTest,RentalChannelOrderReconciliationServiceTest,RentalOrderPreparationPolicyTest,RentalRemarkPlanChangeClassifierTest,RentalFulfillmentUpdateGuardTest,RentalDeviceAssignmentServiceImplTest,RentalDeviceOpsServiceTest -Dsurefire.failIfNoSpecifiedTests=false"
   ],
   "unsafe_assumptions": [
     "Early-return text does not prove that occupancy can be released."

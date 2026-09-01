@@ -97,9 +97,44 @@ None.
 
 - The structured business error, conflict-recovery helper, and tenant/rule
   active-run guard are small, localized additions with justified complexity.
+- `index.vue` is 801 lines, just above the review heuristic for a long file,
+  but its domain request construction is extracted into the 119-line
+  `configurationModel.ts` and its catalog, rule, SKU, impact, reconciliation,
+  and remark presentation remains split across focused components. This is a
+  non-blocking growth watchpoint rather than a current cohesion failure.
 - Migration 056 and its deployment/rollback behavior were not independently
   executed in this review. Production migration execution and rollback approval
   remain outside Task 006.
+
+## Acceptance Assertions Verified
+
+- Task 006's primary acceptance set is exactly `A1`. `A1` is verified at the
+  **Rental Configuration management-page implementation layer**: the
+  permission-gated standalone page composes device-catalog maintenance,
+  channel-product rule management, exact synchronized SKU-to-model mapping,
+  impact confirmation, asynchronous reconciliation results, and the remark
+  convention panel in one typed admin flow.
+- The catalog portion supports category/model create, edit and enable/disable
+  operations, including the device-number prefix. The rule portion supports
+  shop plus Xianyu item scope, `CREATE_RENTAL` / `CONFIG_SKIPPED`, mutually
+  exclusive single-model / multi-SKU modes, explicit XianGuanJia and Xianyu
+  identifiers, and visible waiting-for-mapping states without inferred values.
+  The remark portion supplies the three approved base templates, all eight
+  special-case explanations, and clipboard success/failure feedback.
+- System-executed receipts `012`, `013`, and `014` are all asserted against
+  `A1` and bound to Git head
+  `c621976b210ba78278a25455d156e061f70e6057`: `012` proves the 16 frontend
+  model/rendered-contract tests, type check and targeted code-style checks;
+  `013` proves the production build; `014` proves the focused rule transaction,
+  exact mapping validation and reconciliation-run backend contract with 20
+  passing tests.
+- This implementation-layer verdict is not formal browser acceptance.
+  Authenticated browser E2E and sensory verification, including real
+  light/dark rendering, `zh-CN` / `en` interaction, desktop and 320/375px
+  operation, focus/keyboard behavior, and permission combinations, belongs to
+  the Verification stage. This quality review therefore does not promote A1's
+  final `verify_via: e2e` state or independently adjudicate the sensory
+  assertion, which remains Verification-stage work.
 
 ## Validation Performed
 
@@ -117,6 +152,11 @@ None.
 - Lead-provided current validation reports the focused backend set passing 20
   tests and the complete `yudao-module-rental-biz` suite passing 660 tests with
   0 failures, 0 errors, and 8 skips.
+- Independently inspected Development receipts `012`, `013`, and `014`; all
+  report `status: pass`, exit status `0`, assertion set `["A1"]`, and the same
+  reviewed Git head/tree.
+- Independently reran `git diff --check` and
+  `openspec validate add-rental-configuration --strict`; both passed.
 - Browser E2E, migration execution, deployment, and production-safe acceptance
   were not run in this final targeted review.
 

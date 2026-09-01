@@ -28,16 +28,16 @@ approved
 
 ## Test Quality
 
-- The focused Task 004 command was independently rerun during this review and
-  passed 129 tests with no failures, errors, or skips. Surefire confirms that
+- Receipt 009 records the focused Task 004 command passing 131 tests with no
+  failures, errors, or skips. Surefire confirms that
   `RentalFulfillmentUpdateGuardTest` contributes 19 executed cases and
   `RentalDeviceOpsServiceTest` contributes 9 executed cases.
 - Unit coverage is strong for invalid-plan preservation, accepted-plan
   promotion, review-required non-promotion, assignment/model consistency,
   schedule conflicts, early-return occupancy preservation, returned/settled
   immutability, and deterministic multi-device lock ordering.
-- The previous test-depth blocker is closed. The disposable MySQL 8.4 verification
-  was independently rerun and executed
+- The previous test-depth blocker is closed. Receipt 008 records the disposable
+  MySQL 8.4 verification executing
   `RentalFulfillmentLockOrderMysqlConcurrencyTest` with 1 test, 0 failures,
   0 errors, and 0 skips. The test asserts both services are AOP proxies, pauses
   the real `RentalScheduleMapper.insert(...)`, invokes the production
@@ -87,16 +87,58 @@ approved
 
 - None. Both prior blocking findings were independently verified as resolved.
 
+## Acceptance Assertions Verified
+
+- **A6 - Task 004 server-side assertion verified.** A later parse is recorded
+  against the locked existing channel order, while the builder retains the
+  previous effective dates until reconciliation accepts the candidate
+  (`XianyuOrderPersistenceServiceImpl.java:91-108,140-145,199-206,325-352`).
+  Reconciliation reuses the linked internal order and item, applies model and
+  plan changes through the same fulfillment guard, and persists them only when
+  the guard does not require review
+  (`RentalChannelOrderReconciliationService.java:119-197`;
+  `RentalFulfillmentUpdateGuard.java:116-142`). Receipt 009 executes the
+  persistence, reconciliation, preparation-policy, classifier, guard,
+  assignment, delivery, shipping, and device-ops suites: 131 tests, 0 failures,
+  0 errors, 0 skips. In particular, the persistence tests prove invalid-plan
+  retention, same-order valid promotion, and review-required non-promotion
+  (`XianyuOrderPersistenceServiceImplTest.java:185-315`). This is complete
+  Task 004 server evidence for A6; the acceptance manifest still assigns A6 to
+  final E2E verification, so this review does not claim that later stage is
+  complete.
+- **A7 - Task 004 server-side assertion verified.** The shared guard fails
+  settled/canceled, returned/inspected, mixed-lifecycle, missing or changed
+  assignment/device, active-lock, model-mismatch, and schedule-conflict states
+  closed into review before protected facts are mutated
+  (`RentalFulfillmentUpdateGuard.java:45-113,145-185,232-301`). Early-return
+  text changes only the expected send-back plan and never narrows occupancy;
+  replacement, damage, loss, overdue, and logistics-delay text returns explicit
+  review reasons without replacing a device or completing a physical or
+  financial action (`RentalFulfillmentUpdateGuard.java:94-99,225-230,304-311`).
+  The authoritative warehouse return path alone records returned and inspected
+  timestamps and narrows the schedule
+  (`RentalDeviceOpsService.java:108-142`). Receipt 009 covers these redteam
+  branches in 19 guard tests, including assigned/dispatched conflicts, early
+  release prevention, immutable returned/settled facts, exact device/model
+  consistency, and stable lock ordering
+  (`RentalFulfillmentUpdateGuardTest.java:73-333`). Receipt 008 additionally
+  passes the additive fulfillment-fact migration and the real Spring/MyBatis
+  two-thread assign-vs-reconcile test: 4 tests, 0 failures, 0 errors, 0 skips,
+  ending with `FULFILLMENT_LOCK_ORDER_MYSQL_PASS`. This is complete Task 004
+  server/redteam evidence for A7, not a claim that production migration or the
+  final cross-repository acceptance stage has run.
+
 ## Validation Performed
 
 - `openspec/changes/add-rental-configuration/development/migrations/verify-20260831_054-disposable-mysql.sh`
   passed migration forward/rollback assertions and 4 Maven tests with no
   failures, errors, or skips, including the real-service MySQL concurrency test;
   output ended with `FULFILLMENT_LOCK_ORDER_MYSQL_PASS`.
-- The temporary `codex-rental-mysql-054-89991` container and its volume were
-  absent after the script exited.
-- The focused Task 004 Maven suite passed 129 tests with no failures, errors, or
-  skips.
+- Receipt 008 records the disposable container as
+  `codex-rental-mysql-054-31284`; its verification script completed cleanup
+  after the successful run.
+- Receipt 009 records that the focused Task 004 Maven suite passed 131 tests
+  with no failures, errors, or skips.
 - The existing system-executed validation record for
   `RentalDeviceOpsServiceTest` reports 9 tests passing with the fixed-clock,
   cross-JVM-timezone assertions.

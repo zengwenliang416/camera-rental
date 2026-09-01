@@ -1,0 +1,1317 @@
+{
+  "schema": "specnav.verification.case-snapshot.v1",
+  "id": "snapshot-313a6ffa0356a1fdf9ce8c5d",
+  "change_id": "add-rental-configuration",
+  "snapshot_hash": "313a6ffa0356a1fdf9ce8c5d41fdf6c660046dbf3016ea6cfb3c6fad37ec25de",
+  "cases": [
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "CASE-001-admin-configuration",
+      "change_id": "add-rental-configuration",
+      "requirement_ids": [
+        "R1-configuration-page",
+        "R10-architecture-flow",
+        "R2-product-handling",
+        "R3-exact-model-mapping",
+        "R9-ui-capabilities"
+      ],
+      "acceptance_ids": [
+        "A1"
+      ],
+      "title": "管理员完整维护租赁配置",
+      "goal": "在独立页面维护设备目录、商品规则、精确 SKU 映射和备注模板。",
+      "actor": "具备租赁配置查询和修改权限的管理员",
+      "priority": "P0",
+      "preconditions": [
+        "Development handoff is ok:true and implementation commit c621976b210ba78278a25455d156e061f70e6057 is available.",
+        "Use sanitized fixtures or disposable local services only; do not access production or perform third-party writes.",
+        "Verification Runtime 2.0.0-alpha.2, managed Chromium and FFmpeg are ready."
+      ],
+      "steps": [
+        {
+          "id": "CASE-001-admin-configuration-STEP-1",
+          "action": "登录管理后台，依次验证目录、单型号规则、多 SKU 规则、影响预览、异步重评结果和备注复制。",
+          "expected": "所有保存均由后端确认，权限、租户、乐观锁和影响预览生效，页面不推断缺失标识。",
+          "assertion_ids": [
+            "CASE-001-admin-configuration-ASSERT"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "CASE-001-admin-configuration-ASSERT",
+          "statement": "An authorized administrator can manage the device catalog, channel product rules, exact SKU mappings, and remark templates from the standalone Rental Configuration page.",
+          "expected": "所有保存均由后端确认，权限、租户、乐观锁和影响预览生效，页面不推断缺失标识。",
+          "oracle": {
+            "type": "playwright_assertion",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output",
+            "screenshot",
+            "structured_comparison",
+            "trace"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-001-admin-configuration-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-001-admin-configuration-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-001-admin-configuration-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-001-admin-configuration-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-001-admin-configuration-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-001-admin-configuration-ASSERT"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 600000,
+        "entrypoint": "bash",
+        "args": [
+          "openspec/changes/add-rental-configuration/verify/runners/run-case.sh",
+          "CASE-001-admin-configuration"
+        ],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "api_fact",
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "human_signoff",
+          "log",
+          "screenshot",
+          "structured_comparison",
+          "trace",
+          "video"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output",
+          "screenshot",
+          "structured_comparison",
+          "trace"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-09-01T10:38:02+08:00"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "CASE-002-identifier-authority",
+      "change_id": "add-rental-configuration",
+      "requirement_ids": [
+        "R10-architecture-flow",
+        "R4-identifier-authority"
+      ],
+      "acceptance_ids": [
+        "A2"
+      ],
+      "title": "四类渠道标识严格分离",
+      "goal": "证明 product_id、item_id、sku_id、xy_sku_id 按权威来源分别落库且无回退。",
+      "actor": "订单与商品同步服务",
+      "priority": "P1",
+      "preconditions": [
+        "Development handoff is ok:true and implementation commit c621976b210ba78278a25455d156e061f70e6057 is available.",
+        "Use sanitized fixtures or disposable local services only; do not access production or perform third-party writes.",
+        "Verification Runtime 2.0.0-alpha.2, managed Chromium and FFmpeg are ready."
+      ],
+      "steps": [
+        {
+          "id": "CASE-002-identifier-authority-STEP-1",
+          "action": "输入完整、缺失、超长数字、跨店铺和歧义载荷，检查解析、持久化、接口和前端字符串展示。",
+          "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+          "assertion_ids": [
+            "CASE-002-identifier-authority-ASSERT"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "CASE-002-identifier-authority-ASSERT",
+          "statement": "XianGuanJia product and SKU identifiers and Xianyu item and SKU identifiers are persisted separately without fallback or title/text inference.",
+          "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+          "oracle": {
+            "type": "structured_comparison",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "api_fact",
+            "assertion_result",
+            "command_output",
+            "database_fact",
+            "structured_comparison"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-002-identifier-authority-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-002-identifier-authority-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-002-identifier-authority-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-002-identifier-authority-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-002-identifier-authority-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-002-identifier-authority-ASSERT"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 600000,
+        "entrypoint": "bash",
+        "args": [
+          "openspec/changes/add-rental-configuration/verify/runners/run-case.sh",
+          "CASE-002-identifier-authority"
+        ],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "api_fact",
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "human_signoff",
+          "log",
+          "screenshot",
+          "structured_comparison",
+          "trace",
+          "video"
+        ],
+        "required_kinds": [
+          "api_fact",
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "structured_comparison"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-09-01T10:38:02+08:00"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "CASE-003-immediate-order",
+      "change_id": "add-rental-configuration",
+      "requirement_ids": [
+        "R10-architecture-flow",
+        "R5-immediate-order"
+      ],
+      "acceptance_ids": [
+        "A3"
+      ],
+      "title": "普通订单立即且幂等建单",
+      "goal": "备注、日期或型号不完整时仍立即创建唯一内部订单并保留实付金额。",
+      "actor": "闲鱼订单同步服务",
+      "priority": "P0",
+      "preconditions": [
+        "Development handoff is ok:true and implementation commit c621976b210ba78278a25455d156e061f70e6057 is available.",
+        "Use sanitized fixtures or disposable local services only; do not access production or perform third-party writes.",
+        "Verification Runtime 2.0.0-alpha.2, managed Chromium and FFmpeg are ready."
+      ],
+      "steps": [
+        {
+          "id": "CASE-003-immediate-order-STEP-1",
+          "action": "重复同步同一已付款订单，覆盖缺备注、解析失败、缺租期和缺型号场景并检查准备状态。",
+          "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+          "assertion_ids": [
+            "CASE-003-immediate-order-ASSERT"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "CASE-003-immediate-order-ASSERT",
+          "statement": "Every non-filtered durable channel order creates exactly one internal rental order immediately even when its remark, rental dates, or equipment model are incomplete.",
+          "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+          "oracle": {
+            "type": "database_fact",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output",
+            "database_fact",
+            "structured_comparison"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-003-immediate-order-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-003-immediate-order-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-003-immediate-order-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-003-immediate-order-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-003-immediate-order-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-003-immediate-order-ASSERT"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 600000,
+        "entrypoint": "bash",
+        "args": [
+          "openspec/changes/add-rental-configuration/verify/runners/run-case.sh",
+          "CASE-003-immediate-order"
+        ],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "api_fact",
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "human_signoff",
+          "log",
+          "screenshot",
+          "structured_comparison",
+          "trace",
+          "video"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "structured_comparison"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-09-01T10:38:02+08:00"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "CASE-004-exact-model-mapping",
+      "change_id": "add-rental-configuration",
+      "requirement_ids": [
+        "R10-architecture-flow",
+        "R3-exact-model-mapping"
+      ],
+      "acceptance_ids": [
+        "A4"
+      ],
+      "title": "单型号与多 SKU 精确匹配且不回退",
+      "goal": "验证单型号商品按店铺和 item_id 匹配，多型号必须命中同步 SKU 子映射。",
+      "actor": "订单重评服务",
+      "priority": "P0",
+      "preconditions": [
+        "Development handoff is ok:true and implementation commit c621976b210ba78278a25455d156e061f70e6057 is available.",
+        "Use sanitized fixtures or disposable local services only; do not access production or perform third-party writes.",
+        "Verification Runtime 2.0.0-alpha.2, managed Chromium and FFmpeg are ready."
+      ],
+      "steps": [
+        {
+          "id": "CASE-004-exact-model-mapping-STEP-1",
+          "action": "覆盖正确映射、跨店、跨商品、缺 SKU、未知 SKU、停用映射和商品默认型号存在的对抗场景。",
+          "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+          "assertion_ids": [
+            "CASE-004-exact-model-mapping-ASSERT"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "CASE-004-exact-model-mapping-ASSERT",
+          "statement": "Single-model products match by shop and Xianyu item id, while multi-model products require an exact synchronized XianGuanJia SKU match and never fall back to a product default.",
+          "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+          "oracle": {
+            "type": "structured_comparison",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output",
+            "database_fact",
+            "structured_comparison"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-004-exact-model-mapping-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-004-exact-model-mapping-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-004-exact-model-mapping-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-004-exact-model-mapping-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-004-exact-model-mapping-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-004-exact-model-mapping-ASSERT"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 600000,
+        "entrypoint": "bash",
+        "args": [
+          "openspec/changes/add-rental-configuration/verify/runners/run-case.sh",
+          "CASE-004-exact-model-mapping"
+        ],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "api_fact",
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "human_signoff",
+          "log",
+          "screenshot",
+          "structured_comparison",
+          "trace",
+          "video"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "structured_comparison"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-09-01T10:38:02+08:00"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "CASE-005-config-skipped",
+      "change_id": "add-rental-configuration",
+      "requirement_ids": [
+        "R10-architecture-flow",
+        "R2-product-handling"
+      ],
+      "acceptance_ids": [
+        "A5"
+      ],
+      "title": "过滤商品只保留渠道收入与原始证据",
+      "goal": "证明精确命中 CONFIG_SKIPPED 的商品不会进入租赁履约。",
+      "actor": "订单同步与资格判断服务",
+      "priority": "P0",
+      "preconditions": [
+        "Development handoff is ok:true and implementation commit c621976b210ba78278a25455d156e061f70e6057 is available.",
+        "Use sanitized fixtures or disposable local services only; do not access production or perform third-party writes.",
+        "Verification Runtime 2.0.0-alpha.2, managed Chromium and FFmpeg are ready."
+      ],
+      "steps": [
+        {
+          "id": "CASE-005-config-skipped-STEP-1",
+          "action": "在目标店铺命中过滤规则，并用相同 item_id 的其他店铺、已有内部订单和已有履约事实做边界测试。",
+          "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+          "assertion_ids": [
+            "CASE-005-config-skipped-ASSERT"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "CASE-005-config-skipped-ASSERT",
+          "statement": "Configured skipped products retain channel revenue and raw evidence but do not parse remarks, create reviews or internal rental orders, or generate schedules.",
+          "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+          "oracle": {
+            "type": "database_fact",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output",
+            "database_fact",
+            "structured_comparison"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-005-config-skipped-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-005-config-skipped-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-005-config-skipped-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-005-config-skipped-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-005-config-skipped-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-005-config-skipped-ASSERT"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 600000,
+        "entrypoint": "bash",
+        "args": [
+          "openspec/changes/add-rental-configuration/verify/runners/run-case.sh",
+          "CASE-005-config-skipped"
+        ],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "api_fact",
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "human_signoff",
+          "log",
+          "screenshot",
+          "structured_comparison",
+          "trace",
+          "video"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "structured_comparison"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-09-01T10:38:02+08:00"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "CASE-006-later-valid-update",
+      "change_id": "add-rental-configuration",
+      "requirement_ids": [
+        "R10-architecture-flow",
+        "R6-remark-updates"
+      ],
+      "acceptance_ids": [
+        "A6"
+      ],
+      "title": "后续有效备注或型号更新同一未分配订单",
+      "goal": "验证后续补充有效备注或映射时更新原订单，无效备注保留最后有效计划。",
+      "actor": "订单运营与重评服务",
+      "priority": "P1",
+      "preconditions": [
+        "Development handoff is ok:true and implementation commit c621976b210ba78278a25455d156e061f70e6057 is available.",
+        "Use sanitized fixtures or disposable local services only; do not access production or perform third-party writes.",
+        "Verification Runtime 2.0.0-alpha.2, managed Chromium and FFmpeg are ready."
+      ],
+      "steps": [
+        {
+          "id": "CASE-006-later-valid-update-STEP-1",
+          "action": "按缺失、有效、无效、再次有效的顺序同步备注，并在未分配状态新增或修改型号映射。",
+          "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+          "assertion_ids": [
+            "CASE-006-later-valid-update-ASSERT"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "CASE-006-later-valid-update-ASSERT",
+          "statement": "A later valid remark or model mapping updates the same unassigned internal order, while invalid remarks preserve the last valid plan.",
+          "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+          "oracle": {
+            "type": "database_fact",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output",
+            "database_fact",
+            "log",
+            "structured_comparison"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-006-later-valid-update-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-006-later-valid-update-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-006-later-valid-update-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-006-later-valid-update-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-006-later-valid-update-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-006-later-valid-update-ASSERT"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 600000,
+        "entrypoint": "bash",
+        "args": [
+          "openspec/changes/add-rental-configuration/verify/runners/run-case.sh",
+          "CASE-006-later-valid-update"
+        ],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "api_fact",
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "human_signoff",
+          "log",
+          "screenshot",
+          "structured_comparison",
+          "trace",
+          "video"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "log",
+          "structured_comparison"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-09-01T10:38:02+08:00"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "CASE-007-fulfillment-protection",
+      "change_id": "add-rental-configuration",
+      "requirement_ids": [
+        "R10-architecture-flow",
+        "R7-fulfillment-protection"
+      ],
+      "acceptance_ids": [
+        "A7"
+      ],
+      "title": "备注和配置不能覆盖履约与财务事实",
+      "goal": "验证已分配、已出库、已归还、已检测、换机和结算事实在自动重评中保持不可变。",
+      "actor": "设备运营、订单运营与重评服务",
+      "priority": "P0",
+      "preconditions": [
+        "Development handoff is ok:true and implementation commit c621976b210ba78278a25455d156e061f70e6057 is available.",
+        "Use sanitized fixtures or disposable local services only; do not access production or perform third-party writes.",
+        "Verification Runtime 2.0.0-alpha.2, managed Chromium and FFmpeg are ready."
+      ],
+      "steps": [
+        {
+          "id": "CASE-007-fulfillment-protection-STEP-1",
+          "action": "对各生命周期状态提交续租、早退、改期、换机、损坏、遗失、逾期和物流延误备注及冲突型号。",
+          "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+          "assertion_ids": [
+            "CASE-007-fulfillment-protection-ASSERT"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "CASE-007-fulfillment-protection-ASSERT",
+          "statement": "Configuration and remark changes cannot overwrite assigned, dispatched, returned, inspected, replaced, or financially settled facts.",
+          "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+          "oracle": {
+            "type": "database_fact",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output",
+            "database_fact",
+            "log",
+            "structured_comparison"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-007-fulfillment-protection-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-007-fulfillment-protection-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-007-fulfillment-protection-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-007-fulfillment-protection-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-007-fulfillment-protection-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-007-fulfillment-protection-ASSERT"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 600000,
+        "entrypoint": "bash",
+        "args": [
+          "openspec/changes/add-rental-configuration/verify/runners/run-case.sh",
+          "CASE-007-fulfillment-protection"
+        ],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "api_fact",
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "human_signoff",
+          "log",
+          "screenshot",
+          "structured_comparison",
+          "trace",
+          "video"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "log",
+          "structured_comparison"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-09-01T10:38:02+08:00"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "CASE-008-historical-reconciliation",
+      "change_id": "add-rental-configuration",
+      "requirement_ids": [
+        "R10-architecture-flow",
+        "R8-historical-reconciliation"
+      ],
+      "acceptance_ids": [
+        "A8"
+      ],
+      "title": "历史订单补建可恢复且不破坏历史",
+      "goal": "验证 dry-run、启动、暂停、恢复、租约接管、失败边界、计数和幂等重跑。",
+      "actor": "获授权的租赁运营管理员",
+      "priority": "P0",
+      "preconditions": [
+        "Development handoff is ok:true and implementation commit c621976b210ba78278a25455d156e061f70e6057 is available.",
+        "Use sanitized fixtures or disposable local services only; do not access production or perform third-party writes.",
+        "Verification Runtime 2.0.0-alpha.2, managed Chromium and FFmpeg are ready."
+      ],
+      "steps": [
+        {
+          "id": "CASE-008-historical-reconciliation-STEP-1",
+          "action": "在一次性数据库中运行普通创建、精确过滤、履约冲突、批次失败、暂停恢复和重复执行场景。",
+          "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+          "assertion_ids": [
+            "CASE-008-historical-reconciliation-ASSERT"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "CASE-008-historical-reconciliation-ASSERT",
+          "statement": "Historical reconciliation is idempotent and resumable, creates missing normal rental orders, skips only eligible configured products, and reports conflicts without deleting history.",
+          "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+          "oracle": {
+            "type": "database_fact",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output",
+            "database_fact",
+            "log",
+            "structured_comparison"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-008-historical-reconciliation-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-008-historical-reconciliation-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-008-historical-reconciliation-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-008-historical-reconciliation-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-008-historical-reconciliation-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-008-historical-reconciliation-ASSERT"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 600000,
+        "entrypoint": "bash",
+        "args": [
+          "openspec/changes/add-rental-configuration/verify/runners/run-case.sh",
+          "CASE-008-historical-reconciliation"
+        ],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "api_fact",
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "human_signoff",
+          "log",
+          "screenshot",
+          "structured_comparison",
+          "trace",
+          "video"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "log",
+          "structured_comparison"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-09-01T10:38:02+08:00"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "CASE-009-rental-device-catalog",
+      "change_id": "add-rental-configuration",
+      "requirement_ids": [
+        "R1-configuration-page",
+        "R10-architecture-flow",
+        "R9-ui-capabilities"
+      ],
+      "acceptance_ids": [
+        "A9"
+      ],
+      "title": "租赁设备页只消费共享目录",
+      "goal": "验证租赁设备页仍可筛选和创建设备，但不再提供大类或型号快捷新建。",
+      "actor": "设备管理员",
+      "priority": "P1",
+      "preconditions": [
+        "Development handoff is ok:true and implementation commit c621976b210ba78278a25455d156e061f70e6057 is available.",
+        "Use sanitized fixtures or disposable local services only; do not access production or perform third-party writes.",
+        "Verification Runtime 2.0.0-alpha.2, managed Chromium and FFmpeg are ready."
+      ],
+      "steps": [
+        {
+          "id": "CASE-009-rental-device-catalog-STEP-1",
+          "action": "打开租赁设备页，检查目录筛选、型号选择和设备创建流程，并搜索所有快捷新建入口。",
+          "expected": "目录数据来自共享后端；设备创建可用；页面不存在大类/型号快捷创建按钮、弹窗或隐式入口。",
+          "assertion_ids": [
+            "CASE-009-rental-device-catalog-ASSERT"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "CASE-009-rental-device-catalog-ASSERT",
+          "statement": "The Rental Device page consumes the shared catalog for filtering and device creation but no longer exposes category or model quick-create controls.",
+          "expected": "目录数据来自共享后端；设备创建可用；页面不存在大类/型号快捷创建按钮、弹窗或隐式入口。",
+          "oracle": {
+            "type": "playwright_assertion",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output",
+            "screenshot",
+            "structured_comparison",
+            "trace"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-009-rental-device-catalog-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-009-rental-device-catalog-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-009-rental-device-catalog-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-009-rental-device-catalog-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-009-rental-device-catalog-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-009-rental-device-catalog-ASSERT"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 600000,
+        "entrypoint": "bash",
+        "args": [
+          "openspec/changes/add-rental-configuration/verify/runners/run-case.sh",
+          "CASE-009-rental-device-catalog"
+        ],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "api_fact",
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "human_signoff",
+          "log",
+          "screenshot",
+          "structured_comparison",
+          "trace",
+          "video"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output",
+          "screenshot",
+          "structured_comparison",
+          "trace"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-09-01T10:38:02+08:00"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "CASE-010-theme-locale-states",
+      "change_id": "add-rental-configuration",
+      "requirement_ids": [
+        "R1-configuration-page",
+        "R10-architecture-flow",
+        "R9-ui-capabilities"
+      ],
+      "acceptance_ids": [
+        "A10"
+      ],
+      "title": "配置页主题、语言、窄屏和状态完整",
+      "goal": "验证 light/dark、zh-CN/en、桌面/320/375px 以及 loading、empty、error、permission 状态。",
+      "actor": "中英文桌面和移动窄屏管理员",
+      "priority": "P1",
+      "preconditions": [
+        "Development handoff is ok:true and implementation commit c621976b210ba78278a25455d156e061f70e6057 is available.",
+        "Use sanitized fixtures or disposable local services only; do not access production or perform third-party writes.",
+        "Verification Runtime 2.0.0-alpha.2, managed Chromium and FFmpeg are ready."
+      ],
+      "steps": [
+        {
+          "id": "CASE-010-theme-locale-states-STEP-1",
+          "action": "在所有主题、语言和视口组合中浏览三块配置区域，并触发加载、空数据、错误、无权限、SKU 展开、确认和复制反馈。",
+          "expected": "无页面级横向滚动或不可读内容；文案完整；状态不只依赖颜色；关键交互有清晰反馈并可审阅。",
+          "assertion_ids": [
+            "CASE-010-theme-locale-states-ASSERT"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "CASE-010-theme-locale-states-ASSERT",
+          "statement": "The configuration experience covers light and dark themes, zh-CN and en locales, desktop and narrow layouts, and loading, empty, error, and permission states.",
+          "expected": "无页面级横向滚动或不可读内容；文案完整；状态不只依赖颜色；关键交互有清晰反馈并可审阅。",
+          "oracle": {
+            "type": "playwright_assertion",
+            "human_signoff_allowed": true
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output",
+            "human_signoff",
+            "screenshot",
+            "trace",
+            "video"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-010-theme-locale-states-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-010-theme-locale-states-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-010-theme-locale-states-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-010-theme-locale-states-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-010-theme-locale-states-ASSERT"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "CASE-010-theme-locale-states-ASSERT"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 900000,
+        "entrypoint": "bash",
+        "args": [
+          "openspec/changes/add-rental-configuration/verify/runners/run-case.sh",
+          "CASE-010-theme-locale-states"
+        ],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "api_fact",
+          "assertion_result",
+          "command_output",
+          "database_fact",
+          "human_signoff",
+          "log",
+          "screenshot",
+          "structured_comparison",
+          "trace",
+          "video"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output",
+          "human_signoff",
+          "screenshot",
+          "trace",
+          "video"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-09-01T10:38:02+08:00"
+    }
+  ],
+  "created_at": "2026-09-01T10:38:02+08:00",
+  "created_by": {
+    "id": "codex",
+    "kind": "service",
+    "display_name": "Codex"
+  },
+  "requirements_hash": "a48a4bc4514fdd0291bb8d9fbf7aa4dd009c96751bb9fe677545e1fcdc18f655",
+  "acceptance_hash": "6740584699bfb65ec7a73f79b320b120de339f203ba616aa11139b325c1e19e9"
+}

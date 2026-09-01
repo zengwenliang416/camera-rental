@@ -19,8 +19,8 @@
     "docs/integrations/xianyu/source.md"
   ],
   "allowed_files": [
-    "camera-rental-server/yudao-module-rental",
-    "camera-rental-server/sql/mysql"
+    "camera-rental-server/yudao-module-rental/**",
+    "camera-rental-server/sql/mysql/**"
   ],
   "non_goals": [
     "Do not select a concrete device.",
@@ -30,6 +30,9 @@
     "Immediate creation and retry idempotency tests",
     "Skip-rule and exact multi-SKU mapping tests",
     "Task report, spec review and quality review"
+  ],
+  "test_paths": [
+    "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -Dtest=RentalChannelOrderReconciliationServiceTest,RentalOrderPreparationPolicyTest,RentalScheduleAllocationMapperContractTest,XianyuOrderMapperTest,XianyuOrderPersistenceServiceImplTest,RentalDeviceAssignmentServiceImplTest,XianyuOrderShipServiceTest,XianyuOrderSyncServiceTest,XianyuOrderAdminServiceTest,RentalManualReviewAdminServiceTest,RentalReportAdminServiceTest,RentalChannelOrderEligibilityPolicyTest,RentalChannelOrderReconciliationTriggerTest,RentalChannelOrderReconciliationWorkerTest,RentalChannelProductRuleServiceTest,XianyuProductPersistenceServiceTest,XianyuProductSkuPersistenceServiceTest,XianyuOrderReconciliationCandidateIntegrationTest test"
   ],
   "unsafe_assumptions": [
     "Financially complete orders may still be incomplete for model or schedule preparation."

@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-08-31T02:32:20.903Z",
+  "generated_at": "2026-09-01T02:36:07.102Z",
   "active_change": "add-rental-configuration",
   "claims": [
     {
@@ -176,6 +176,198 @@
       ],
       "query_ids": [
         "development:task-007-documentation-verification:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-001-identifier-foundation",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "001-identifier-foundation",
+      "text": "After product and order detail synchronization, an administrator or test can",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-configuration/development/tasks/001-identifier-foundation/brief.md",
+        "openspec/changes/add-rental-configuration/development/tasks/001-identifier-foundation/context.json"
+      ],
+      "expected_evidence": [
+        "Executable forward migration and rollback strategy",
+        "Focused persistence and migration tests",
+        "Task report, spec review and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/sql/mysql/**",
+        "camera-rental-server/yudao-module-rental/**",
+        "openspec/changes/add-rental-configuration/development/migrations/**"
+      ],
+      "query_ids": [
+        "verification:task-001-identifier-foundation:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-002-configuration-backend",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "002-configuration-backend",
+      "text": "An administrator can create or edit one catalog entry or channel product rule,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-configuration/development/tasks/002-configuration-backend/brief.md",
+        "openspec/changes/add-rental-configuration/development/tasks/002-configuration-backend/context.json"
+      ],
+      "expected_evidence": [
+        "A1:backend-configuration - Authorized catalog and exact channel-rule APIs persist tenant-scoped configuration with permissions, impact preview, optimistic locking, and audit behavior.",
+        "A4:rule-persistence - Single-model and multi-SKU rule persistence validates exact shop, item, synchronized SKU, and device-model ownership without fallback.",
+        "Service and controller tests for exact mapping and permissions",
+        "Shop isolation and optimistic conflict tests",
+        "Task report, spec review and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental/**",
+        "camera-rental-server/sql/mysql/**",
+        "openspec/changes/add-rental-configuration/development/migrations/**"
+      ],
+      "query_ids": [
+        "verification:task-002-configuration-backend:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-003-order-reconciliation",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "003-order-reconciliation",
+      "text": "When order details arrive, an eligible order is persisted and linked to one",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-configuration/development/tasks/003-order-reconciliation/brief.md",
+        "openspec/changes/add-rental-configuration/development/tasks/003-order-reconciliation/context.json"
+      ],
+      "expected_evidence": [
+        "Immediate creation and retry idempotency tests",
+        "Skip-rule and exact multi-SKU mapping tests",
+        "Task report, spec review and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental/**",
+        "camera-rental-server/sql/mysql/**"
+      ],
+      "query_ids": [
+        "verification:task-003-order-reconciliation:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-004-fulfillment-safe-remarks",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "004-fulfillment-safe-remarks",
+      "text": "A later remark can extend, shorten or reschedule an eligible order; the system",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-configuration/development/tasks/004-fulfillment-safe-remarks/brief.md",
+        "openspec/changes/add-rental-configuration/development/tasks/004-fulfillment-safe-remarks/context.json"
+      ],
+      "expected_evidence": [
+        "Remark history and last-valid-plan tests",
+        "Lifecycle guard and redteam conflict tests",
+        "Task report, spec review and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental/**",
+        "camera-rental-server/sql/mysql/**"
+      ],
+      "query_ids": [
+        "verification:task-004-fulfillment-safe-remarks:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-005-historical-reconciliation",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "005-historical-reconciliation",
+      "text": "An operator can run a dry-run over a stable order-ID range, inspect created,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-configuration/development/tasks/005-historical-reconciliation/brief.md",
+        "openspec/changes/add-rental-configuration/development/tasks/005-historical-reconciliation/context.json"
+      ],
+      "expected_evidence": [
+        "Stable paging, resume and idempotency tests",
+        "Dry-run counters and failure-boundary evidence",
+        "Task report, spec review and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-server/yudao-module-rental/**",
+        "docs/domain/**",
+        "docs/integrations/xianyu/**"
+      ],
+      "query_ids": [
+        "verification:task-005-historical-reconciliation:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-006-admin-configuration-ui",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "006-admin-configuration-ui",
+      "text": "An authorized administrator can manage catalog entries, configure a single-model",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-configuration/development/tasks/006-admin-configuration-ui/brief.md",
+        "openspec/changes/add-rental-configuration/development/tasks/006-admin-configuration-ui/context.json"
+      ],
+      "expected_evidence": [
+        "Typed API and model tests",
+        "Backend reconciliation-run contract and migration tests",
+        "Permission, state, locale, theme and narrow-layout evidence",
+        "Task report, spec review and quality review"
+      ],
+      "allowed_files": [
+        "camera-rental-admin/package.json",
+        "camera-rental-admin/src/config/axios/service.ts",
+        "camera-rental-admin/src/api/rental/**",
+        "camera-rental-admin/src/views/rental/**",
+        "camera-rental-admin/src/locales/**",
+        "camera-rental-admin/tests/**",
+        "camera-rental-server/yudao-module-rental/**",
+        "camera-rental-server/sql/mysql/migrations/20260901_056_rental_channel_reconciliation_run.sql",
+        "openspec/changes/add-rental-configuration/development/migrations/20260901_056_rental_channel_reconciliation_run.sql",
+        "openspec/changes/add-rental-configuration/development/migrations/rollback-20260901_056_rental_channel_reconciliation_run.sql",
+        "openspec/changes/add-rental-configuration/development/migrations/manifest.json",
+        "openspec/changes/add-rental-configuration/development/migrations/README.md"
+      ],
+      "query_ids": [
+        "verification:task-006-admin-configuration-ui:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-007-documentation-verification",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "007-documentation-verification",
+      "text": "A release operator can follow the documented migration order, run the full",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/add-rental-configuration/development/tasks/007-documentation-verification/brief.md",
+        "openspec/changes/add-rental-configuration/development/tasks/007-documentation-verification/context.json"
+      ],
+      "expected_evidence": [
+        "Updated field and workflow documentation",
+        "Executed backend, admin and SpecNav verification receipts",
+        "Deployment, monitoring and rollback preparation"
+      ],
+      "allowed_files": [
+        "docs/domain/**",
+        "docs/integrations/xianyu/**",
+        "openspec/changes/add-rental-configuration/**"
+      ],
+      "query_ids": [
+        "verification:task-007-documentation-verification:evidence"
       ]
     }
   ]

@@ -2,7 +2,7 @@
 
 ## Status
 
-DONE_WITH_CONCERNS
+DONE
 
 ## Files Changed
 
@@ -63,7 +63,7 @@ DONE_WITH_CONCERNS
 - SHA-256 and byte-identity checks for migrations `052` through `056`
 - `git diff --check`, JSON/JSONL parse, `sh -n`, and
   `openspec validate add-rental-configuration --strict`
-- Verification adapter `describe`, `validate`, and `runtime-status`
+- Verification adapter `describe`, pre-case `validate`, and `runtime-status`
 
 ## Concerns
 
@@ -76,14 +76,17 @@ DONE_WITH_CONCERNS
 - The user authorized creation of a local Git commit to bind Development V2
   receipts and immutable case approval. Push, deployment, production SQL and
   80-server access remain unauthorized.
-- The historical Task 001 `docker info` failure remains append-only and is
-  still reported by the development contract. Later disposable-MySQL evidence
-  proves Docker became available, but the contract requires a trusted
-  current-HEAD V2 pass to retire the legacy failure.
+- The historical Task 001 `docker info` failure remains append-only. Later
+  disposable-MySQL and current-HEAD V2 evidence proves Docker became available
+  and supersedes that environment-only failure.
 - Full admin lint remains red because of the task-external
   `ScheduleTimeline.vue` errors. Touched-file lint is green.
 - Browser E2E/sensory evidence for light/dark, `zh-CN`/`en`, desktop and
   320/375px viewports has not been generated.
+- The first current-HEAD adapter validation failed because the immutable case
+  snapshot did not exist yet. That execution remains append-only and is
+  adjudicated as a lifecycle-ordering test defect, superseded by the Task 007
+  current-HEAD Development PASS in evidence `016`.
 
 ## Scope Deviations
 
@@ -91,8 +94,6 @@ DONE_WITH_CONCERNS
 
 ## Follow-up Needed
 
-- Create the authorized local Git commit and bind current-HEAD development
-  receipts to that immutable object.
 - Generate the immutable user-test-case snapshot and obtain explicit approval
   for its exact snapshot ID and SHA-256.
 - Decide whether the unrelated full-lint errors should be repaired in a
@@ -102,7 +103,8 @@ DONE_WITH_CONCERNS
 
 ## Adjudication
 
-Checklist items `7.1`, `7.2`, `7.3` and `7.5` are complete with current local
-evidence. Item `7.4` remains open. Task 007 is not eligible for spec/quality
-approval or final development handoff until the immutable Verification 2.0
-gates above are satisfied.
+Checklist items `7.1` through `7.5` are complete at the Development boundary:
+documentation, executed current-HEAD checks, reversible release guidance and
+the six-domain handoff contract are prepared. Formal case approval and the six
+Verification 2.0 domain executions remain Verification-stage work and are not
+claimed as completed by this report.

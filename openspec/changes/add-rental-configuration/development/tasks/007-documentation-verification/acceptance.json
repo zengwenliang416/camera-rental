@@ -1,0 +1,905 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "007-documentation-verification",
+  "generated_at": "2026-09-01T02:32:52.937Z",
+  "recorded_at": "2026-09-01T01:59:19.546Z",
+  "status": "approved",
+  "reviewed_git_head": "c621976b210ba78278a25455d156e061f70e6057",
+  "reviewed_git_tree": "8aae6cbf9e7377b354623d6632a14abea47cb7fd",
+  "implementation_scope": {
+    "included_patterns": [
+      "docs/domain/**",
+      "docs/integrations/xianyu/**",
+      "openspec/changes/add-rental-configuration/**"
+    ],
+    "entries": [
+      {
+        "path": "docs/domain/device-scheduling.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "63cbb2fab8174f16b335fac6b7e16d2a32352c84"
+      },
+      {
+        "path": "docs/domain/rental-order.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "683d84383f13717c594d498254b13d3a05ec7b80"
+      },
+      {
+        "path": "docs/domain/xianyu-integration.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2493652b9912b749a00134b0e4d6158b5f2fda5f"
+      },
+      {
+        "path": "docs/integrations/xianyu/after-sale-sync.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f01027b3da3ee2ed73661bda1e763aefe28b766d"
+      },
+      {
+        "path": "docs/integrations/xianyu/authentication.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d2ea818ce47d6fbf9e8a1da8c4ee3ce7597f2fae"
+      },
+      {
+        "path": "docs/integrations/xianyu/field-mapping.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a65c01fb3bece6794619ab0aec2421b2bad76405"
+      },
+      {
+        "path": "docs/integrations/xianyu/historical-reconciliation.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bf0db5457c90d5c4195e8d82af16ca1f21fa3860"
+      },
+      {
+        "path": "docs/integrations/xianyu/order-sync.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c6552af67e0a16e9b2a7ab51189c5bb96d9f37e4"
+      },
+      {
+        "path": "docs/integrations/xianyu/overview.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "50736c8be6ded43c26749e7b4cdbb274f829592f"
+      },
+      {
+        "path": "docs/integrations/xianyu/product-sync.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "92d93fd275ba5e58e92635a42cfcb20082061fe3"
+      },
+      {
+        "path": "docs/integrations/xianyu/rental-configuration-release.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e9249efe49a1102ea7b84b6539cfcecdf083a79b"
+      },
+      {
+        "path": "docs/integrations/xianyu/shop-authorization.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c64618d4a296b729b5f19c7db796d324d2f21794"
+      },
+      {
+        "path": "docs/integrations/xianyu/source.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f0fdfafceb81dbcbe80bec047fc4fdf7c3a8f6f3"
+      },
+      {
+        "path": "docs/integrations/xianyu/webhook.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f9297be6c2007343a5f74113b51ec20f21b1faef"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/.openspec.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ecf3b45d38b451b91864788fff5144a93d868de0"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/acceptance.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0aeb2fb03a4e75cc07e4259b94c3a8e0367110cf"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/acceptance.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1419b6e2ae1e1f1a232287cbd45dd7dcd46c1681"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/codegraph/claims-map.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "68efa19ea78eb4778fa3571c556791acc7b382ca"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/codegraph/claims-report.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8d581c61b76ad28bd9444a6ac3146c2f4a2585c4"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/codegraph/decision.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "036ff88775b3b80837edf0958a586b89ada5fb53"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/codegraph/drift-report.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "767d86a97774fb05aaa1914cd02060e0cd380077"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/codegraph/evidence-index.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e6db7002a51e93821ad4e175eb7d11b825add33d"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/codegraph/evidence-query-plan.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ef31c447a33a06d4d06008b7970ff9d3ccb26e34"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/codegraph/guard-report.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "aec48809b38323c459f844dc97580b36b84773f6"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/codegraph/status.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "68e1033c90d0873f2554f0a4fc2e16c4a3f7d01b"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/component-impact-map.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "173d307f1a817c19470a7f893c739b58ee800e3d"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/design.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b767ace6e2f947077b5f79b596e1a2c386c0903c"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/acceptance-freeze.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e87a9fd339217bdaa3a7667de4ee557617812a03"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/basis.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "691d4ffa8b043af48939272df92e009224896b37"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/before-dev-check.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "868ccb0ad756fb1f3774374e71e32d9b00777702"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/code-owner-map.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6298947a6093f0e5338137a1f59ab8c8de5f4af6"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/complexity-budget.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c549f9031f1c90669751b81225a9698c4e9b6ae7"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/drift-check.jsonl",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "356a9b8c1f33ff1f1ce4a6d296aa90dd634df1d8"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/extraction-map.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "359b52968286a4dc80449b62393835c20c023d2d"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/handoff-to-verify.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c6fcc5e59b4ad4bcdab2465f55ad10418dc0d166"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/20260831_052_rental_configuration_foundation.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "46e2843fbf027b299a6b4b9868bd3553b807fc60"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/20260831_053_rental_configuration_backend.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a198b4bef9e0aa751dd2d69efb0a0367c0b49b87"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/20260831_054_rental_fulfillment_facts.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0a75f9e1b0b060ab67d6ea36f911ebe4a3ba8292"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/20260831_rental_configuration_skipped_items.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6dd53340886dcb6e8b275c5e9601e706006c4726"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/20260901_055_rental_historical_reconciliation.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ec7cc8db9697b1ab8e8b517256e74852ccb9e271"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/20260901_056_rental_channel_reconciliation_run.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1034118f304deaf2860584419eece6d5585e9b9b"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/fixture-20260831_052-base.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "04bcf1453914a528271aa39aa7bb36ae364d27b6"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/fixture-20260831_052-forward-assertions.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d03316cd709091aef0b306a5e460ef119d41c3c5"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/fixture-20260831_052-rollback-assertions.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "644c8c501ac85f8a1ab4fabe30d0a83bc431186b"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/fixture-20260831_053-catalog-base.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f76cee58b1014d79ce7725e137549df20d31e5b1"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/fixture-20260831_054-fulfillment-base.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1759e1a935272191439d2c750b2d51eec6064a6d"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/manifest.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "63ba1e9e3456c063306459fddb14d831b9fde7b1"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3600ea47ee5166105554b4259d843198d6d759bd"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/rollback-20260831_052_rental_configuration_foundation.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c3bb9e215305005a1a4310945a3067cc9e1e3922"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/rollback-20260831_053_rental_configuration_backend.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a16ba6373afe02de760e957f5f83651d0e2fbfbe"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/rollback-20260831_054_rental_fulfillment_facts.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "37bd41669b7a73c1a287d63e69afd260d34fa6f2"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/rollback-20260901_055_rental_historical_reconciliation.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c06ce15a2163048b9753a54d5f045c1372d25ed2"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/rollback-20260901_056_rental_channel_reconciliation_run.sql",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d653b5c1a7ca164484ba8587ff2016368c60f0cf"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/verify-20260831_052-disposable-mysql.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "538fbda5322a6576b9d81422eab27f5a9df0fb2b"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/verify-20260831_053-disposable-mysql.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bac78d82e61a9ca06798fc80eac333521b459e35"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/verify-20260831_054-disposable-mysql.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1617b81c1c5755d5ef8a78c5d77cd04dd35e52ab"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/migrations/verify-20260901_055-disposable-mysql.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b26158e50210fe6512d2a36e9edad4a8da7d840a"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/prototype-promotion-map.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ffa9a7051e24527e676decde4be49b663df3fe51"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/task-context.jsonl",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bee8de4fb1472ebcb9f75b19348020981ec0766a"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/task-graph.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "37430eed593663762d012dfd3326e86431c9a77a"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/task-ledger.jsonl",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "40cda567bb10609fa68d9e8bc9f967b2d8ae16fe"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/001-identifier-foundation/brief.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ef59a96944c620a6bbfd245e00db587d007cdecb"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/001-identifier-foundation/context.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "41d48e57004839cfcc38b35f15324781d9639b6c"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/001-identifier-foundation/quality-review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "342515b526463e93449e38ce0cad6834a4fefb6d"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/001-identifier-foundation/report.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d2e26747194e8171290caa3a0491aec677f0df7e"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/001-identifier-foundation/spec-review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "87e2251d5f08eb5203e40f992ee1969ac88b17b6"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/002-configuration-backend/brief.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ea9d2a9ad7e579bc7e3d65f1ffd8d0e67f9594cb"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/002-configuration-backend/context.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "63edf1e07711cb1112084735eef3c294d7fe6e04"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/002-configuration-backend/quality-review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ec4f4ccadb941bef45a5cfa8ae29d2570f7696fa"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/002-configuration-backend/report.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "48aab54ac2a839f3122747d071a0f18cfb32ba77"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/002-configuration-backend/spec-review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fbc6e368412870b94e53d78640ae2dc364b1e520"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/003-order-reconciliation/brief.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "28dfe27192a6f32ed8578e4f74613576eb1595f3"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/003-order-reconciliation/context.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "85d85fa7ce54bbd06fafa9a5dcb4b633b1ea1a8b"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/003-order-reconciliation/quality-review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "93a71aca9aee5d53aac08ddaed990c27631a8cef"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/003-order-reconciliation/report.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "858cdcd372443129c3df54de0e0cae7be8c6049c"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/003-order-reconciliation/spec-review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c8762854ae243d10f87b790f7e23c002f11c3375"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/004-fulfillment-safe-remarks/brief.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6b8a9ea2b2ee14aaadc8fa62503286ad055adf54"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/004-fulfillment-safe-remarks/context.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "05cdacd4b3167e92fc655605deb2f940921c024b"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/004-fulfillment-safe-remarks/quality-review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d36444ce6df7c6e3d52dc95c4e391ecc5115d449"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/004-fulfillment-safe-remarks/report.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7b84c1e066cd3c4ed9fdcc49b44185d699c1c1b3"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/004-fulfillment-safe-remarks/spec-review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6c3748c80509fae32009205e4d5db348303d22f4"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/005-historical-reconciliation/brief.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "46f14c8ee97ad55691d23f19c64502d4d90aee8d"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/005-historical-reconciliation/context.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4429d9c77fea1c0475c0e418aa18069165e49d28"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/005-historical-reconciliation/quality-review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1f582bdaf961ba5a8e6ebffd635a39a089cdcd64"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/005-historical-reconciliation/report.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "255847a064499350c0111a62f633245838f386aa"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/005-historical-reconciliation/spec-review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "09cd12c6ebc8ab70a2ae97fcba9f761cfc10ac0a"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/006-admin-configuration-ui/brief.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "231edadb2d980c3a2d6048294388f41c3badf908"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/006-admin-configuration-ui/context.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "41970c0a0b8be02b7ede2da4ef7ef7ec9ba20ed7"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/006-admin-configuration-ui/quality-review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2bf0ac41b908824590ef218ed64d69a9bb8916d9"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/006-admin-configuration-ui/report.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d2cf3bf767332ed30f7a35258c6743645b3a9f54"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/006-admin-configuration-ui/spec-review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f5903ef8b20925071751222ff7b89e1e5d6b46c0"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/007-documentation-verification/brief.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "635065c4b44509a511c718eecf798789c169d73b"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/007-documentation-verification/context.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "06874868ec256296d97b6f7003a94f502ea061d8"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/007-documentation-verification/quality-review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "cbe2e494760b500ca00c419e6ca36e837fd314ce"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/007-documentation-verification/report.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f5422121419c7cca8b0f0cc87e7c01bb9a3d2d0a"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/tasks/007-documentation-verification/spec-review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ca451e53eced9a2ba3060df38834665e55d72226"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/development/validation-log.jsonl",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1920c15bdbb63dd5305181ad2a4353363fb85d31"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/proposal.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2aa0ef26201e41931a126b5150c834f41947a839"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/artifact/app.js",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "df729fbfbe3d12bb67f5aa5cf773218986473fde"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/artifact/index.html",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "32a354810e412272ec2a52b6f07634718bf8f84a"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/artifact/styles.css",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d92a294650e38600712dcecf1d0c4400959a134e"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/decision.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7d94e4268c90ec0ee12c31002b1aa2da2e205419"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/evidence/desktop-dark-en-drawer.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4c93e210084f756d66380572f7dbef5fa059928d"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/evidence/desktop-light-zh.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6f32e2a7a1bf41145df591b3411d75ac3bfaa570"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/evidence/impact-dialog-dark-en.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c43a0ce89fd882592cebaf4f029de599ecb36c80"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/evidence/mobile-light-zh.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e6c00ef4be521d93661a83d471864d44ff0bafa6"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/evidence/runtime-matrix.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "04e4a13e909e57cc32f9d10b49396538fcdca99f"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/handoff.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "62d71d00e719f325bbde8939a1497281c1e4694c"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/prototype-manifest.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f0153e772605a25dc05d48924f548b482ceeb1dc"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/question.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5e445f1187e6e615e0b70eb2c146f01ab567048f"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/screen-map.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "74090402e734ee314ca315ce37bc0730f9929b14"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/verifier-report.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "531a8897b4b6715fdc37aca7b0660ab572a9cf0a"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/prototype/visual-inventory.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9555043a47277a978f4a37ade7292d1ac75e0d9e"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ecd9d3ef7700befafc6e96bf15c84505375795dc"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/requirements.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "99e8c3f7299be6bbb83c383d92f9b8831beee30e"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/risk-tier.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b1ac5185d30141348c23e3d836acd1894b706f8d"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/scope.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "81dc849afaeaad2b3a598e69dbe561cb09fd4e01"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/spec-map.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d22b72abb266b468534736914083422c85bb7083"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/specs/rental-configuration/spec.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d4f271f97f184779ef330c64acd41c3bd6b70aa6"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/specs/xianyu-order-reconciliation/spec.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9e3ed9a5d732ed25405047a91db1d77b5640998f"
+      },
+      {
+        "path": "openspec/changes/add-rental-configuration/tasks.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9ad81edc5c3184d0b94d53f7feb6bb2bbafd3188"
+      }
+    ],
+    "sha256": "2e1223e88bba5567be58e10ab4a0e02316bec949d26aa03706832cbf690c4947"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/007-documentation-verification/context.json",
+      "sha256": "84abf5e3e724ec6e665136661368e3983f9d1a42c7af0bba3d6b3eeb5215293a"
+    },
+    "report": {
+      "path": "development/tasks/007-documentation-verification/report.md",
+      "sha256": "b5e89abf7d36083e1c28b8485b83930c5c88ad151522de8cb414593413fe40f1",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/007-documentation-verification/spec-review.md",
+      "sha256": "24292880e6393cab1fdc28da8e8a5bea79deb5fb31741a386f73da4d58a145fd",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/007-documentation-verification/quality-review.md",
+      "sha256": "175ae6d31a740b18dfe2a0cd1b667b7b035d7fece8bd6c264511ff3eaea12637",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-78cd1f468fc0bf18c322570ba65aa5e9070f0088970a26dc88f9f4449f655802",
+      "command": "git diff --check && openspec validate add-rental-configuration --strict",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "recorded_at": "2026-09-01T01:59:19.546Z",
+      "validation_receipt_sha256": "7060ba5c726c73620cd7cbb9272043875836bb844820c68656e23d5bd4782763",
+      "evidence_log": {
+        "path": "development/evidence/016-007-documentation-verification.log",
+        "sha256": "41fc871b94e260c2ddb0907264de4b46bbde4df28cb634fbe6bffda4c9969ee5",
+        "size": 194
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A1",
+      "parent_id": "A1",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-78cd1f468fc0bf18c322570ba65aa5e9070f0088970a26dc88f9f4449f655802"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "An authorized administrator can manage the device catalog, channel product rules, exact SKU mappings, and remark templates from the standalone Rental Configuration page."
+    },
+    {
+      "id": "A2",
+      "parent_id": "A2",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-78cd1f468fc0bf18c322570ba65aa5e9070f0088970a26dc88f9f4449f655802"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "XianGuanJia product and SKU identifiers and Xianyu item and SKU identifiers are persisted separately without fallback or title/text inference."
+    },
+    {
+      "id": "A3",
+      "parent_id": "A3",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-78cd1f468fc0bf18c322570ba65aa5e9070f0088970a26dc88f9f4449f655802"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Every non-filtered durable channel order creates exactly one internal rental order immediately even when its remark, rental dates, or equipment model are incomplete."
+    },
+    {
+      "id": "A4",
+      "parent_id": "A4",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-78cd1f468fc0bf18c322570ba65aa5e9070f0088970a26dc88f9f4449f655802"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Single-model products match by shop and Xianyu item id, while multi-model products require an exact synchronized XianGuanJia SKU match and never fall back to a product default."
+    },
+    {
+      "id": "A5",
+      "parent_id": "A5",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-78cd1f468fc0bf18c322570ba65aa5e9070f0088970a26dc88f9f4449f655802"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Configured skipped products retain channel revenue and raw evidence but do not parse remarks, create reviews or internal rental orders, or generate schedules."
+    },
+    {
+      "id": "A6",
+      "parent_id": "A6",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-78cd1f468fc0bf18c322570ba65aa5e9070f0088970a26dc88f9f4449f655802"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "A later valid remark or model mapping updates the same unassigned internal order, while invalid remarks preserve the last valid plan."
+    },
+    {
+      "id": "A7",
+      "parent_id": "A7",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-78cd1f468fc0bf18c322570ba65aa5e9070f0088970a26dc88f9f4449f655802"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Configuration and remark changes cannot overwrite assigned, dispatched, returned, inspected, replaced, or financially settled facts."
+    },
+    {
+      "id": "A8",
+      "parent_id": "A8",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-78cd1f468fc0bf18c322570ba65aa5e9070f0088970a26dc88f9f4449f655802"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Historical reconciliation is idempotent and resumable, creates missing normal rental orders, skips only eligible configured products, and reports conflicts without deleting history."
+    },
+    {
+      "id": "A9",
+      "parent_id": "A9",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-78cd1f468fc0bf18c322570ba65aa5e9070f0088970a26dc88f9f4449f655802"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The Rental Device page consumes the shared catalog for filtering and device creation but no longer exposes category or model quick-create controls."
+    },
+    {
+      "id": "A10",
+      "parent_id": "A10",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-78cd1f468fc0bf18c322570ba65aa5e9070f0088970a26dc88f9f4449f655802"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The configuration experience covers light and dark themes, zh-CN and en locales, desktop and narrow layouts, and loading, empty, error, and permission states."
+    }
+  ],
+  "fallback_used": false
+}

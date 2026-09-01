@@ -34,9 +34,10 @@ approved
   numeric identifier precision, product/SKU/rule unique constraints,
   post-migration rows with null legacy fields, menu seeds, complete rollback,
   and restored legacy values.
-- System-executed evidence reports 57 focused tests and 537 rental-biz tests
-  passing. The recorded disposable run passed, and an independent review rerun
-  also ended with `DISPOSABLE_MYSQL_052_PASS`.
+- Current-HEAD signed Development receipts bound to `c621976b` report 63
+  focused tests and 660 rental-biz tests passing, with 8 environment-gated
+  tests skipped. The bound disposable MySQL run also ended with
+  `DISPOSABLE_MYSQL_052_PASS`.
 
 ## Error Handling
 
@@ -61,6 +62,25 @@ approved
 - The forward migration adds non-trivial conditional backfill joins and unique
   constraints. The dedicated disposable fixture now provides the required
   database-level safety net without coupling it to the normal unit-test suite.
+
+## Acceptance Assertions Verified
+
+The following assertion was checked only at the Development implementation
+level against the current-HEAD code, migration, tests, and signed Development
+receipts. This does not replace formal Verification 2.0 execution or production
+acceptance.
+
+- `A2`: XianGuanJia product and SKU identifiers and Xianyu item and SKU
+  identifiers are persisted separately without fallback or title/text
+  inference. Order `goods.product_id`, `goods.item_id`, and `goods.sku_id`
+  remain distinct through parsing and persistence; product
+  `publish_shop.item_id` is accepted only for the uniquely matching
+  synchronized shop; SKU `sku_id` and `xy_sku_id` remain separate string
+  fields; missing or ambiguous values stay null or fail closed instead of
+  borrowing another identifier or inferring from descriptive text. The
+  current-HEAD A2 receipts cover the executable MySQL 8.4 forward/rollback
+  fixture, 63 focused tests, the 660-test rental-biz suite, and strict OpenSpec
+  validation.
 
 ## Required Fixes
 

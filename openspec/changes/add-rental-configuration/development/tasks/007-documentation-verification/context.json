@@ -1,6 +1,18 @@
 {
   "task_id": "007-documentation-verification",
   "task_items": ["7.1", "7.2", "7.3", "7.4", "7.5"],
+  "acceptance_primary": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A5",
+    "A6",
+    "A7",
+    "A8",
+    "A9",
+    "A10"
+  ],
   "goal": "Complete documentation, executed validation and reversible release evidence without production mutation.",
   "must_read": [
     "openspec/changes/add-rental-configuration/development/tasks/007-documentation-verification/brief.md",
@@ -18,9 +30,9 @@
     "docs/integrations/xianyu/source.md"
   ],
   "allowed_files": [
-    "docs/domain",
-    "docs/integrations/xianyu",
-    "openspec/changes/add-rental-configuration"
+    "docs/domain/**",
+    "docs/integrations/xianyu/**",
+    "openspec/changes/add-rental-configuration/**"
   ],
   "non_goals": [
     "Do not deploy, push or mutate production.",
@@ -30,6 +42,9 @@
     "Updated field and workflow documentation",
     "Executed backend, admin and SpecNav verification receipts",
     "Deployment, monitoring and rollback preparation"
+  ],
+  "test_paths": [
+    "git diff --check && openspec validate add-rental-configuration --strict"
   ],
   "unsafe_assumptions": [
     "Local verification does not establish production readiness without operations evidence."

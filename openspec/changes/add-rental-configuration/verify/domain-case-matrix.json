@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "change_id": "add-rental-configuration",
+  "cases": [
+    {
+      "case_id": "CASE-001-admin-configuration",
+      "domains": {
+        "facticity": [
+          "Evaluate A1 through the facticity lens using content-addressed evidence."
+        ],
+        "static": [
+          "Evaluate A1 through the static lens using content-addressed evidence."
+        ],
+        "unit": [
+          "Evaluate A1 through the unit lens using content-addressed evidence."
+        ],
+        "redteam": [
+          "Evaluate A1 through the redteam lens using content-addressed evidence."
+        ],
+        "e2e": [
+          "Evaluate A1 through the e2e lens using content-addressed evidence."
+        ],
+        "sensory": [
+          "Evaluate A1 through the sensory lens using content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "CASE-002-identifier-authority",
+      "domains": {
+        "facticity": [
+          "Evaluate A2 through the facticity lens using content-addressed evidence."
+        ],
+        "static": [
+          "Evaluate A2 through the static lens using content-addressed evidence."
+        ],
+        "unit": [
+          "Evaluate A2 through the unit lens using content-addressed evidence."
+        ],
+        "redteam": [
+          "Evaluate A2 through the redteam lens using content-addressed evidence."
+        ],
+        "e2e": [
+          "Evaluate A2 through the e2e lens using content-addressed evidence."
+        ],
+        "sensory": [
+          "Evaluate A2 through the sensory lens using content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "CASE-003-immediate-order",
+      "domains": {
+        "facticity": [
+          "Evaluate A3 through the facticity lens using content-addressed evidence."
+        ],
+        "static": [
+          "Evaluate A3 through the static lens using content-addressed evidence."
+        ],
+        "unit": [
+          "Evaluate A3 through the unit lens using content-addressed evidence."
+        ],
+        "redteam": [
+          "Evaluate A3 through the redteam lens using content-addressed evidence."
+        ],
+        "e2e": [
+          "Evaluate A3 through the e2e lens using content-addressed evidence."
+        ],
+        "sensory": [
+          "Evaluate A3 through the sensory lens using content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "CASE-004-exact-model-mapping",
+      "domains": {
+        "facticity": [
+          "Evaluate A4 through the facticity lens using content-addressed evidence."
+        ],
+        "static": [
+          "Evaluate A4 through the static lens using content-addressed evidence."
+        ],
+        "unit": [
+          "Evaluate A4 through the unit lens using content-addressed evidence."
+        ],
+        "redteam": [
+          "Evaluate A4 through the redteam lens using content-addressed evidence."
+        ],
+        "e2e": [
+          "Evaluate A4 through the e2e lens using content-addressed evidence."
+        ],
+        "sensory": [
+          "Evaluate A4 through the sensory lens using content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "CASE-005-config-skipped",
+      "domains": {
+        "facticity": [
+          "Evaluate A5 through the facticity lens using content-addressed evidence."
+        ],
+        "static": [
+          "Evaluate A5 through the static lens using content-addressed evidence."
+        ],
+        "unit": [
+          "Evaluate A5 through the unit lens using content-addressed evidence."
+        ],
+        "redteam": [
+          "Evaluate A5 through the redteam lens using content-addressed evidence."
+        ],
+        "e2e": [
+          "Evaluate A5 through the e2e lens using content-addressed evidence."
+        ],
+        "sensory": [
+          "Evaluate A5 through the sensory lens using content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "CASE-006-later-valid-update",
+      "domains": {
+        "facticity": [
+          "Evaluate A6 through the facticity lens using content-addressed evidence."
+        ],
+        "static": [
+          "Evaluate A6 through the static lens using content-addressed evidence."
+        ],
+        "unit": [
+          "Evaluate A6 through the unit lens using content-addressed evidence."
+        ],
+        "redteam": [
+          "Evaluate A6 through the redteam lens using content-addressed evidence."
+        ],
+        "e2e": [
+          "Evaluate A6 through the e2e lens using content-addressed evidence."
+        ],
+        "sensory": [
+          "Evaluate A6 through the sensory lens using content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "CASE-007-fulfillment-protection",
+      "domains": {
+        "facticity": [
+          "Evaluate A7 through the facticity lens using content-addressed evidence."
+        ],
+        "static": [
+          "Evaluate A7 through the static lens using content-addressed evidence."
+        ],
+        "unit": [
+          "Evaluate A7 through the unit lens using content-addressed evidence."
+        ],
+        "redteam": [
+          "Evaluate A7 through the redteam lens using content-addressed evidence."
+        ],
+        "e2e": [
+          "Evaluate A7 through the e2e lens using content-addressed evidence."
+        ],
+        "sensory": [
+          "Evaluate A7 through the sensory lens using content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "CASE-008-historical-reconciliation",
+      "domains": {
+        "facticity": [
+          "Evaluate A8 through the facticity lens using content-addressed evidence."
+        ],
+        "static": [
+          "Evaluate A8 through the static lens using content-addressed evidence."
+        ],
+        "unit": [
+          "Evaluate A8 through the unit lens using content-addressed evidence."
+        ],
+        "redteam": [
+          "Evaluate A8 through the redteam lens using content-addressed evidence."
+        ],
+        "e2e": [
+          "Evaluate A8 through the e2e lens using content-addressed evidence."
+        ],
+        "sensory": [
+          "Evaluate A8 through the sensory lens using content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "CASE-009-rental-device-catalog",
+      "domains": {
+        "facticity": [
+          "Evaluate A9 through the facticity lens using content-addressed evidence."
+        ],
+        "static": [
+          "Evaluate A9 through the static lens using content-addressed evidence."
+        ],
+        "unit": [
+          "Evaluate A9 through the unit lens using content-addressed evidence."
+        ],
+        "redteam": [
+          "Evaluate A9 through the redteam lens using content-addressed evidence."
+        ],
+        "e2e": [
+          "Evaluate A9 through the e2e lens using content-addressed evidence."
+        ],
+        "sensory": [
+          "Evaluate A9 through the sensory lens using content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "CASE-010-theme-locale-states",
+      "domains": {
+        "facticity": [
+          "Evaluate A10 through the facticity lens using content-addressed evidence."
+        ],
+        "static": [
+          "Evaluate A10 through the static lens using content-addressed evidence."
+        ],
+        "unit": [
+          "Evaluate A10 through the unit lens using content-addressed evidence."
+        ],
+        "redteam": [
+          "Evaluate A10 through the redteam lens using content-addressed evidence."
+        ],
+        "e2e": [
+          "Evaluate A10 through the e2e lens using content-addressed evidence."
+        ],
+        "sensory": [
+          "Evaluate A10 through the sensory lens using content-addressed evidence."
+        ]
+      }
+    }
+  ]
+}

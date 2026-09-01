@@ -1,7 +1,7 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-08-31T23:40:27.516Z",
+  "generated_at": "2026-09-01T02:34:49.722Z",
   "project_root": "/Volumes/zwl/camera-rental-github",
   "active_change": "add-rental-configuration",
   "policy": {
@@ -15,8 +15,8 @@
   "execution_surface": "cli",
   "decision": {
     "stage": "development",
-    "result": "warn",
-    "reason": "CodeGraph policy has advisory warnings for development."
+    "result": "pass",
+    "reason": "CodeGraph policy satisfied for development."
   },
   "cli": {
     "available": true,
@@ -38,51 +38,49 @@
     "initialized": true,
     "projectPath": "/Volumes/zwl/camera-rental-github",
     "indexPath": "/Volumes/zwl/camera-rental-github/.codegraph",
-    "lastIndexed": "2026-08-31T09:35:18.184Z",
-    "fileCount": 10922,
-    "nodeCount": 255446,
-    "edgeCount": 590531,
+    "lastIndexed": "2026-09-01T01:34:30.256Z",
+    "fileCount": 10981,
+    "nodeCount": 257210,
+    "edgeCount": 595207,
     "pendingChanges": {
-      "added": 17,
-      "modified": 43,
-      "removed": 5
+      "added": 0,
+      "modified": 0,
+      "removed": 0
     },
     "reindexRecommended": false,
     "worktreeMismatch": null
   },
   "blockers": [],
-  "warnings": [
-    "codegraph:index-stale"
-  ],
+  "warnings": [],
   "raw_codegraph_status": {
     "initialized": true,
     "version": "1.3.1",
     "projectPath": "/Volumes/zwl/camera-rental-github",
     "indexPath": "/Volumes/zwl/camera-rental-github/.codegraph",
-    "lastIndexed": "2026-08-31T09:35:18.184Z",
-    "fileCount": 10922,
-    "nodeCount": 255446,
-    "edgeCount": 590531,
+    "lastIndexed": "2026-09-01T01:34:30.256Z",
+    "fileCount": 10981,
+    "nodeCount": 257210,
+    "edgeCount": 595207,
     "dbSizeBytes": 736329728,
     "backend": "node-sqlite",
     "journalMode": "wal",
     "nodesByKind": {
-      "class": 4736,
-      "component": 3117,
-      "constant": 25482,
-      "enum": 349,
-      "enum_member": 1854,
-      "field": 23884,
-      "file": 10867,
-      "function": 25483,
-      "import": 81116,
-      "interface": 3031,
-      "method": 65054,
-      "namespace": 6031,
+      "class": 4780,
+      "component": 3126,
+      "constant": 25588,
+      "enum": 352,
+      "enum_member": 1875,
+      "field": 24109,
+      "file": 10926,
+      "function": 25569,
+      "import": 81689,
+      "interface": 3049,
+      "method": 65616,
+      "namespace": 6076,
       "property": 672,
-      "route": 2635,
-      "type_alias": 447,
-      "variable": 688
+      "route": 2641,
+      "type_alias": 451,
+      "variable": 691
     },
     "languages": [
       "java",
@@ -95,9 +93,9 @@
       "yaml"
     ],
     "pendingChanges": {
-      "added": 17,
-      "modified": 43,
-      "removed": 5
+      "added": 0,
+      "modified": 0,
+      "removed": 0
     },
     "worktreeMismatch": null,
     "index": {

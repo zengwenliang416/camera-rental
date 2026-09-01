@@ -80,8 +80,9 @@
   forward copies are byte-identical and its static migration test passed.
 - `git diff --check`, JSON/JSONL parsing, shell syntax checks and strict OpenSpec
   validation passed at the Task 006 checkpoint.
-- Task 007 will append current executed receipts rather than treating this summary
-  as current verification evidence.
+- Task 007 current-HEAD static close-out passed in signed evidence `016`; the
+  pre-case adapter execution in evidence `015` remains append-only and is
+  adjudicated as a superseded lifecycle-ordering test defect.
 
 ## Known Risks
 
@@ -89,9 +90,10 @@
   third-party write has been executed against production or the 80 server.
 - The controlled seed requires unique valid unexpired shops for “小疆” and “发发”.
 - Destructive rollback SQL is not a normal production rollback path.
-- Formal Verification 2.0 now has reviewer `Zengwenliang0416` and a ready
-  user-scoped Runtime, but still requires an immutable implementation commit,
-  approved case snapshot, six domains and current runtime/browser evidence.
+- Formal Verification 2.0 now has reviewer `Zengwenliang0416`, immutable
+  implementation commit `c621976b210ba78278a25455d156e061f70e6057` and a
+  ready user-scoped Runtime, but still requires an approved case snapshot, six
+  domains and current runtime/browser evidence.
 - Browser light/dark, `zh-CN`/`en`, desktop and 320/375px interaction evidence is
   not yet established by the development checks.
 

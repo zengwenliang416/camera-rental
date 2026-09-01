@@ -19,9 +19,9 @@
     "docs/integrations/xianyu/source.md"
   ],
   "allowed_files": [
-    "camera-rental-server/sql/mysql",
-    "camera-rental-server/yudao-module-rental",
-    "openspec/changes/add-rental-configuration/development/migrations"
+    "camera-rental-server/sql/mysql/**",
+    "camera-rental-server/yudao-module-rental/**",
+    "openspec/changes/add-rental-configuration/development/migrations/**"
   ],
   "test_paths": [
     "openspec/changes/add-rental-configuration/development/migrations/verify-20260831_052-disposable-mysql.sh",

@@ -1,0 +1,97 @@
+# User-Aligned Test Cases: add-rental-configuration
+
+Implementation commit: `c621976b210ba78278a25455d156e061f70e6057`
+
+## CASE-001-admin-configuration: 管理员完整维护租赁配置
+
+- Actor: 具备租赁配置查询和修改权限的管理员
+- Goal: 在独立页面维护设备目录、商品规则、精确 SKU 映射和备注模板。
+- Action: 登录管理后台，依次验证目录、单型号规则、多 SKU 规则、影响预览、异步重评结果和备注复制。
+- Expected: 所有保存均由后端确认，权限、租户、乐观锁和影响预览生效，页面不推断缺失标识。
+- Acceptance: `A1`
+- Required domains: facticity, static, unit, redteam, e2e, sensory
+
+## CASE-002-identifier-authority: 四类渠道标识严格分离
+
+- Actor: 订单与商品同步服务
+- Goal: 证明 product_id、item_id、sku_id、xy_sku_id 按权威来源分别落库且无回退。
+- Action: 输入完整、缺失、超长数字、跨店铺和歧义载荷，检查解析、持久化、接口和前端字符串展示。
+- Expected: 标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。
+- Acceptance: `A2`
+- Required domains: facticity, static, unit, redteam, e2e, sensory
+
+## CASE-003-immediate-order: 普通订单立即且幂等建单
+
+- Actor: 闲鱼订单同步服务
+- Goal: 备注、日期或型号不完整时仍立即创建唯一内部订单并保留实付金额。
+- Action: 重复同步同一已付款订单，覆盖缺备注、解析失败、缺租期和缺型号场景并检查准备状态。
+- Expected: 同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。
+- Acceptance: `A3`
+- Required domains: facticity, static, unit, redteam, e2e, sensory
+
+## CASE-004-exact-model-mapping: 单型号与多 SKU 精确匹配且不回退
+
+- Actor: 订单重评服务
+- Goal: 验证单型号商品按店铺和 item_id 匹配，多型号必须命中同步 SKU 子映射。
+- Action: 覆盖正确映射、跨店、跨商品、缺 SKU、未知 SKU、停用映射和商品默认型号存在的对抗场景。
+- Expected: 只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。
+- Acceptance: `A4`
+- Required domains: facticity, static, unit, redteam, e2e, sensory
+
+## CASE-005-config-skipped: 过滤商品只保留渠道收入与原始证据
+
+- Actor: 订单同步与资格判断服务
+- Goal: 证明精确命中 CONFIG_SKIPPED 的商品不会进入租赁履约。
+- Action: 在目标店铺命中过滤规则，并用相同 item_id 的其他店铺、已有内部订单和已有履约事实做边界测试。
+- Expected: 仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。
+- Acceptance: `A5`
+- Required domains: facticity, static, unit, redteam, e2e, sensory
+
+## CASE-006-later-valid-update: 后续有效备注或型号更新同一未分配订单
+
+- Actor: 订单运营与重评服务
+- Goal: 验证后续补充有效备注或映射时更新原订单，无效备注保留最后有效计划。
+- Action: 按缺失、有效、无效、再次有效的顺序同步备注，并在未分配状态新增或修改型号映射。
+- Expected: 订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。
+- Acceptance: `A6`
+- Required domains: facticity, static, unit, redteam, e2e, sensory
+
+## CASE-007-fulfillment-protection: 备注和配置不能覆盖履约与财务事实
+
+- Actor: 设备运营、订单运营与重评服务
+- Goal: 验证已分配、已出库、已归还、已检测、换机和结算事实在自动重评中保持不可变。
+- Action: 对各生命周期状态提交续租、早退、改期、换机、损坏、遗失、逾期和物流延误备注及冲突型号。
+- Expected: 允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。
+- Acceptance: `A7`
+- Required domains: facticity, static, unit, redteam, e2e, sensory
+
+## CASE-008-historical-reconciliation: 历史订单补建可恢复且不破坏历史
+
+- Actor: 获授权的租赁运营管理员
+- Goal: 验证 dry-run、启动、暂停、恢复、租约接管、失败边界、计数和幂等重跑。
+- Action: 在一次性数据库中运行普通创建、精确过滤、履约冲突、批次失败、暂停恢复和重复执行场景。
+- Expected: 游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。
+- Acceptance: `A8`
+- Required domains: facticity, static, unit, redteam, e2e, sensory
+
+## CASE-009-rental-device-catalog: 租赁设备页只消费共享目录
+
+- Actor: 设备管理员
+- Goal: 验证租赁设备页仍可筛选和创建设备，但不再提供大类或型号快捷新建。
+- Action: 打开租赁设备页，检查目录筛选、型号选择和设备创建流程，并搜索所有快捷新建入口。
+- Expected: 目录数据来自共享后端；设备创建可用；页面不存在大类/型号快捷创建按钮、弹窗或隐式入口。
+- Acceptance: `A9`
+- Required domains: facticity, static, unit, redteam, e2e, sensory
+
+## CASE-010-theme-locale-states: 配置页主题、语言、窄屏和状态完整
+
+- Actor: 中英文桌面和移动窄屏管理员
+- Goal: 验证 light/dark、zh-CN/en、桌面/320/375px 以及 loading、empty、error、permission 状态。
+- Action: 在所有主题、语言和视口组合中浏览三块配置区域，并触发加载、空数据、错误、无权限、SKU 展开、确认和复制反馈。
+- Expected: 无页面级横向滚动或不可读内容；文案完整；状态不只依赖颜色；关键交互有清晰反馈并可审阅。
+- Acceptance: `A10`
+- Required domains: facticity, static, unit, redteam, e2e, sensory
+
+## Approval Gate
+
+The exact snapshot id and SHA-256 must be approved by the authenticated human reviewer before activation or execution.

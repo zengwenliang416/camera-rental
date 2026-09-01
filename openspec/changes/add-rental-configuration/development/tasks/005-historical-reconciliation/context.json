@@ -1,6 +1,7 @@
 {
   "task_id": "005-historical-reconciliation",
   "task_items": ["5.1", "5.2", "5.3"],
+  "acceptance_primary": ["A8"],
   "goal": "Provide bounded, resumable and dry-run-capable historical reconciliation without reversing history.",
   "must_read": [
     "openspec/changes/add-rental-configuration/development/tasks/005-historical-reconciliation/brief.md",
@@ -18,9 +19,9 @@
     "docs/integrations/xianyu/source.md"
   ],
   "allowed_files": [
-    "camera-rental-server/yudao-module-rental",
-    "docs/domain",
-    "docs/integrations/xianyu"
+    "camera-rental-server/yudao-module-rental/**",
+    "docs/domain/**",
+    "docs/integrations/xianyu/**"
   ],
   "non_goals": [
     "Do not execute against production without separate authorization.",
@@ -30,6 +31,10 @@
     "Stable paging, resume and idempotency tests",
     "Dry-run counters and failure-boundary evidence",
     "Task report, spec review and quality review"
+  ],
+  "test_paths": [
+    "openspec/changes/add-rental-configuration/development/migrations/verify-20260901_055-disposable-mysql.sh",
+    "cd camera-rental-server && /Users/wenliang_zeng/workspace/tool/apache-maven-3.9.10/bin/mvn -o -Dmaven.repo.local=/Volumes/zwl/maven-repository -pl yudao-module-rental/yudao-module-rental-biz -am -Dtest=RentalHistoricalOrderBackfillServiceIntegrationTest,RentalChannelOrderReconciliationServiceTest,RentalHistoricalReconciliationMigrationTest,RentalConfigurationControllerTest -Dsurefire.failIfNoSpecifiedTests=false test"
   ],
   "unsafe_assumptions": [
     "Historical screenshot counts are not current eligibility evidence."

@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_query_plan.v1",
-  "generated_at": "2026-08-31T02:32:20.903Z",
+  "generated_at": "2026-09-01T02:36:07.102Z",
   "active_change": "add-rental-configuration",
   "queries": [
     {
@@ -107,6 +107,111 @@
         "tests or verification commands"
       ],
       "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-007-documentation-verification --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-001-identifier-foundation:evidence",
+      "claim_id": "verification:task-001-identifier-foundation",
+      "stage": "verification",
+      "task_id": "001-identifier-foundation",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"After product and order detail synchronization, an administrator or test can\" in change \"add-rental-configuration\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-001-identifier-foundation --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-002-configuration-backend:evidence",
+      "claim_id": "verification:task-002-configuration-backend",
+      "stage": "verification",
+      "task_id": "002-configuration-backend",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"An administrator can create or edit one catalog entry or channel product rule,\" in change \"add-rental-configuration\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-002-configuration-backend --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-003-order-reconciliation:evidence",
+      "claim_id": "verification:task-003-order-reconciliation",
+      "stage": "verification",
+      "task_id": "003-order-reconciliation",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"When order details arrive, an eligible order is persisted and linked to one\" in change \"add-rental-configuration\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-003-order-reconciliation --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-004-fulfillment-safe-remarks:evidence",
+      "claim_id": "verification:task-004-fulfillment-safe-remarks",
+      "stage": "verification",
+      "task_id": "004-fulfillment-safe-remarks",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"A later remark can extend, shorten or reschedule an eligible order; the system\" in change \"add-rental-configuration\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-004-fulfillment-safe-remarks --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-005-historical-reconciliation:evidence",
+      "claim_id": "verification:task-005-historical-reconciliation",
+      "stage": "verification",
+      "task_id": "005-historical-reconciliation",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"An operator can run a dry-run over a stable order-ID range, inspect created,\" in change \"add-rental-configuration\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-005-historical-reconciliation --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-006-admin-configuration-ui:evidence",
+      "claim_id": "verification:task-006-admin-configuration-ui",
+      "stage": "verification",
+      "task_id": "006-admin-configuration-ui",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"An authorized administrator can manage catalog entries, configure a single-model\" in change \"add-rental-configuration\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-006-admin-configuration-ui --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-007-documentation-verification:evidence",
+      "claim_id": "verification:task-007-documentation-verification",
+      "stage": "verification",
+      "task_id": "007-documentation-verification",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"A release operator can follow the documented migration order, run the full\" in change \"add-rental-configuration\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-007-documentation-verification --query \"<query>\" --write --json"
     }
   ]
 }

@@ -112,6 +112,58 @@ approved
   correctly treats that as a data-retention and deployment-approval risk rather
   than an application-code rollback mechanism.
 
+## Acceptance Assertions Verified
+
+The following assertion was checked at the Task 005 Development/unit evidence
+level against the current implementation, signed receipts 010/011, and their
+reviewed Git object. This does not claim that a production migration, dry-run,
+or real historical reconciliation has executed, and it does not replace the
+formal Verification-stage acceptance state.
+
+- **A8 - Task 005 assertion verified: idempotent and creates missing normal
+  rental orders.** Every candidate delegates to the locked centralized
+  reconciliation service. That service creates a rental order only when no
+  source-linked order exists and returns lock-derived `CREATED`, `UPDATED`, or
+  `UNCHANGED` classification
+  (`RentalHistoricalOrderBackfillService.java:215-246,459-470`;
+  `RentalChannelOrderReconciliationService.java:116-197`). Receipt 010's real
+  Spring/MyBatis/MySQL test creates the missing normal order on the first run,
+  then completes a second run with zero additional creations and unchanged
+  order/item cardinality
+  (`RentalHistoricalOrderBackfillMysqlIntegrationTest.java:84-118,120-128`).
+- **A8 - Task 005 assertion verified: resumable.** Candidate selection is
+  tenant-scoped, strictly ordered by ascending internal order ID, bounded by a
+  frozen inclusive end, and advances only from the durable cursor
+  (`XianyuOrderMapper.java:244-266`;
+  `RentalHistoricalOrderBackfillService.java:193-317,331-360`). Pause, failed
+  batch rollback, checkpoint resume, expired-lease takeover, active-lease
+  rejection, dry-run checkpoint failure, and infrastructure failure recovery
+  are explicitly covered
+  (`RentalHistoricalOrderBackfillServiceIntegrationTest.java:104-205,255-412`).
+- **A8 - Task 005 assertion verified: skips only the eligible exact configured
+  products.** `CONFIG_SKIPPED` is applied only for an enabled exact
+  shop/item rule and only before an internal rental order exists; an existing
+  order is never cleared or reversed by a later skip rule
+  (`RentalChannelOrderReconciliationService.java:123-141,457-460`;
+  `RentalChannelOrderReconciliationServiceTest.java:190-207,279-327`).
+  Other non-eligible channel states may contribute to the operational
+  `skippedCount`, but they remain `INELIGIBLE` and are not mislabeled
+  `CONFIG_SKIPPED`.
+- **A8 - Task 005 assertion verified: reports conflicts without deleting
+  history.** Fulfillment protection returns `CONFLICT_REVIEW`, which increments
+  both conflict and review counters, while the existing rental order,
+  conversion link, expected return plan, and returned assignment remain intact
+  (`RentalHistoricalOrderBackfillService.java:227-246,459-470`;
+  `RentalHistoricalOrderBackfillMysqlIntegrationTest.java:90-98,142-165`;
+  `RentalHistoricalOrderBackfillServiceIntegrationTest.java:209-227`).
+- Receipts 010 and 011 both assert `A8` and are bound to current
+  `HEAD c621976b210ba78278a25455d156e061f70e6057` and tree
+  `8aae6cbf9e7377b354623d6632a14abea47cb7fd`. Their evidence logs match the
+  recorded sizes and SHA-256 digests: receipt 010 is 40,099 bytes /
+  `600677e80e7cee7049e83bd0b922e72a60980f011c628e784099408bd7171e9f`;
+  receipt 011 is 42,774 bytes /
+  `b569cdd8cf314eb8a6fcf6bea81cc70c0c7ab82567e47013702505e467788204`.
+
 ## Required Fixes
 
 - None. The previous execution-recovery, dry-run pause, count consistency,
@@ -135,3 +187,11 @@ approved
   verifier passes `sh -n`.
 - The temporary `codex-rental-mysql-055-35137` container and its volume were
   absent after verifier cleanup.
+- The independent current-HEAD re-review confirmed receipts 010/011 both assert
+  `A8`, both review commit
+  `c621976b210ba78278a25455d156e061f70e6057` / tree
+  `8aae6cbf9e7377b354623d6632a14abea47cb7fd`, and both evidence-log byte counts
+  and SHA-256 digests match their signed validation-log entries.
+- `git diff --check` passed after the quality-review update.
+- `openspec validate add-rental-configuration --strict` passed with
+  `Change 'add-rental-configuration' is valid`.

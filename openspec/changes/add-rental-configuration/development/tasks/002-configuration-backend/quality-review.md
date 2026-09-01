@@ -42,14 +42,19 @@ approved
   actual MyBatis Mappers, H2 in MySQL mode, and a named database constraint. It
   verifies that the failure comes from the replacement child insert and then
   reads back the original parent fields/version and both original child rows.
-- The independently rerun focused command completed with 37 tests, 0 failures,
-  0 errors, and 0 skipped.
+- System-executed receipt `006` records the focused Task 002 command completing
+  with 40 tests, 0 failures, 0 errors, and 0 skipped.
 - Recorded `attestation: "system-executed"` evidence also shows the complete
   rental-biz suite at 561 tests with 0 failures and 0 errors, with six
   pre-existing environment-gated MySQL concurrency tests skipped.
-- The disposable MySQL 8.4 evidence continues to cover catalog locks, the exact
-  29-row seed, tenant/shop isolation, zero/duplicate/expired authorization
-  rejection, conflict atomicity, rollback, and cleanup.
+- System-executed receipt `005` records the disposable MySQL 8.4 fixture
+  covering catalog locks, the exact 29-row seed, tenant/shop isolation,
+  zero/duplicate/expired authorization rejection, conflict atomicity,
+  rollback, and cleanup.
+- Receipts `005` and `006` are both bound to Git head
+  `c621976b210ba78278a25455d156e061f70e6057` and tree
+  `8aae6cbf9e7377b354623d6632a14abea47cb7fd`; their recorded SHA-256 digests
+  and byte sizes match the current evidence logs.
 
 ## Error Handling
 
@@ -93,6 +98,29 @@ approved
   rollback boundary.
 - No new oversized component, deep nesting, fallback branch, or speculative
   abstraction was introduced by the fixes.
+
+## Acceptance Assertions Verified
+
+- `A1:backend-configuration` - Verified only for the Task 002 backend
+  configuration subclaim. The standalone controller delegates tenant-scoped
+  catalog and exact channel-rule operations to services; endpoints require the
+  configuration query/update permissions; saves provide bounded impact counts,
+  conditional optimistic writes, persistence audit fields, and structured
+  change logs. Receipt `005` verifies the schema/seed lock and isolation
+  invariants, and receipt `006` verifies the focused controller and service
+  behavior.
+- `A4:rule-persistence` - Verified only for the Task 002 persistence subclaim.
+  Single-model rules persist the exact internal shop plus Xianyu item mapping;
+  multi-model rules accept only synchronized SKU rows owned by that exact
+  product and persist the XianGuanJia SKU, available Xianyu SKU, and enabled
+  device model without product-, title-, text-, or cross-shop fallback.
+  Optimistic conflicts stop before child mutation, and the database-backed
+  transaction test proves parent and child replacement rollback together.
+- These subclaim findings are not complete acceptance of A1's administrator UI,
+  remark-template, responsive/theme/locale, or browser-state behavior, and are
+  not complete acceptance of A4's order-side matching and reconciliation
+  behavior. Those surfaces require the Task 006 UI evidence and Task 003
+  order-path evidence respectively.
 
 ## Required Fixes
 

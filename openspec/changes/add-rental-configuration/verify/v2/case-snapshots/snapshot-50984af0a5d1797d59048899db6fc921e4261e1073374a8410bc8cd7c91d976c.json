@@ -1,8 +1,8 @@
 {
   "schema": "specnav.verification.case-snapshot.v1",
-  "id": "snapshot-1328c0a1cae721e24b3aa332",
+  "id": "snapshot-50984af0a5d1797d59048899",
   "change_id": "add-rental-configuration",
-  "snapshot_hash": "1328c0a1cae721e24b3aa332c6415e2ce94827664237f7d6283fb65fc0a3cfac",
+  "snapshot_hash": "50984af0a5d1797d59048899db6fc921e4261e1073374a8410bc8cd7c91d976c",
   "cases": [
     {
       "schema": "specnav.verification.test-case.v1",
@@ -103,7 +103,7 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 600000,
-        "browser_project": "chromium",
+        "browser_project": "chromium-desktop",
         "scenario_id": "rental-configuration-admin-flow",
         "scenario_hash": "b6fb94d815c5c478b7bbc29af30e9adc5b1780e4d4cbf7973fd9600814787863",
         "allowed_origins": [
@@ -1124,7 +1124,7 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 600000,
-        "browser_project": "chromium",
+        "browser_project": "chromium-desktop",
         "scenario_id": "rental-device-shared-catalog",
         "scenario_hash": "57dd12290d494cf25572d99170de17cdaa0d10593263dec56ebe7fe6d461bdec",
         "allowed_origins": [
@@ -1256,7 +1256,7 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 900000,
-        "browser_project": "chromium",
+        "browser_project": "chromium-mobile-and-desktop",
         "scenario_id": "rental-configuration-sensory-states",
         "scenario_hash": "2fe11b35afd7c7da71b739db4b060eb965b9ca6be68a2e549e43c4370388b9bc",
         "allowed_origins": [

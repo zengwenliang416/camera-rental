@@ -1,0 +1,15 @@
+{
+  "schema": "specnav.verification.case-approval.v1",
+  "id": "approval-50984af0a5d1797d59048899",
+  "change_id": "add-rental-configuration",
+  "snapshot_id": "snapshot-50984af0a5d1797d59048899",
+  "snapshot_hash": "50984af0a5d1797d59048899db6fc921e4261e1073374a8410bc8cd7c91d976c",
+  "decision": "approved",
+  "reviewer": {
+    "id": "Zengwenliang0416",
+    "kind": "human",
+    "display_name": "Zengwenliang0416"
+  },
+  "decided_at": "2026-09-01T06:33:23Z",
+  "comment": "批准快照 50984af0a5d1797d59048899db6fc921e4261e1073374a8410bc8cd7c91d976c 中已说明的 10 个 Verification 2.0 案例；不授权生产、80 服务器或第三方写操作。"
+}

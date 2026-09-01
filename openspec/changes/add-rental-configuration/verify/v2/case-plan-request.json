@@ -234,7 +234,7 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 600000,
-        "browser_project": "chromium-desktop",
+        "browser_project": "chromium",
         "scenario_id": "rental-configuration-admin-flow",
         "scenario_hash": "b6fb94d815c5c478b7bbc29af30e9adc5b1780e4d4cbf7973fd9600814787863",
         "allowed_origins": [
@@ -1255,7 +1255,7 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 600000,
-        "browser_project": "chromium-desktop",
+        "browser_project": "chromium",
         "scenario_id": "rental-device-shared-catalog",
         "scenario_hash": "57dd12290d494cf25572d99170de17cdaa0d10593263dec56ebe7fe6d461bdec",
         "allowed_origins": [
@@ -1387,7 +1387,7 @@
       "runner": {
         "kind": "playwright",
         "timeout_ms": 900000,
-        "browser_project": "chromium-mobile-and-desktop",
+        "browser_project": "chromium",
         "scenario_id": "rental-configuration-sensory-states",
         "scenario_hash": "2fe11b35afd7c7da71b739db4b060eb965b9ca6be68a2e549e43c4370388b9bc",
         "allowed_origins": [

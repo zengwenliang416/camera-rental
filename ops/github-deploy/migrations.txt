@@ -15,3 +15,8 @@ camera-rental-server/sql/mysql/migrations/20260822_048_device_lifecycle_completi
 camera-rental-server/sql/mysql/migrations/20260825_049_rental_device_category.sql
 camera-rental-server/sql/mysql/migrations/20260826_050_rental_device_catalog_management.sql
 camera-rental-server/sql/mysql/migrations/20260830_051_rental_device_maintenance_permissions.sql
+camera-rental-server/sql/mysql/migrations/20260831_052_rental_configuration_foundation.sql
+camera-rental-server/sql/mysql/migrations/20260831_053_rental_configuration_backend.sql
+camera-rental-server/sql/mysql/migrations/20260831_054_rental_fulfillment_facts.sql
+camera-rental-server/sql/mysql/migrations/20260901_055_rental_historical_reconciliation.sql
+camera-rental-server/sql/mysql/migrations/20260901_056_rental_channel_reconciliation_run.sql

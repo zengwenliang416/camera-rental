@@ -1,0 +1,53 @@
+{
+  "schema": "specnav.verification.trusted-fact-envelope.v1",
+  "id": "trusted-fact-5768950d8c97d2bea7619668d6ef3ac8598271eb14eacdfefc8dceeec850e99d",
+  "kind": "repair_link",
+  "producer": "specnav-development-repair-bridge",
+  "payload": {
+    "schema": "specnav.verification.repair-link.v1",
+    "failure_id": "failure-8c2ec526e4b3a55d0a3d88ca1c80b5c85cd010b561be088b127205ff67741c68",
+    "change_id": "add-rental-configuration",
+    "development_task_id": "900-verification-repair-c18e66960e749fed",
+    "repair_kind": "test_code",
+    "status": "completed",
+    "requested_at": "2026-09-01T13:01:57.331Z",
+    "before_identity": {
+      "case_snapshot_hash": "9299ee66da1777b0f0046303434f9b1e050856fec6abf1b774bad9e53204ebc6",
+      "code_sha": "c33dd81b192ca6f988b85393aed1bfe8b46f94e5",
+      "test_sha": "d59621f0e10d1ad6f2a65069d3bf10e0ed6e11d32acca8dd63a9f865fdf97792",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "scope_digest": "c20ed05daed56ab7e39eeb21a420232a7ee61a59a8c68a161e2b743d3946ba3e",
+    "id": "repair-afab8059f70ee73e4554c137e06ba5444df4fbba51a9b27530a728ff6be785c1",
+    "completed_at": "2026-09-01T13:51:04.411Z",
+    "after_identity": {
+      "case_snapshot_hash": "9299ee66da1777b0f0046303434f9b1e050856fec6abf1b774bad9e53204ebc6",
+      "code_sha": "e8eee4f32c84e9726a62a82247d402799f497f95",
+      "test_sha": "6502a2ad721079b93e8829d6b507af8704d5d10b4074d9fdb1e8a03edf12b623",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "review_evidence_ids": [
+      "evidence-review-quality-c18e66960e749fed",
+      "evidence-review-spec-c18e66960e749fed"
+    ]
+  },
+  "payload_digest": "c3557e66117e54c439fa09ac9ba4861131e955d57c567b2d4f299fbf666a129b",
+  "issued_at": "2026-09-01T13:51:04.413Z",
+  "bindings": {
+    "failure_id": "failure-8c2ec526e4b3a55d0a3d88ca1c80b5c85cd010b561be088b127205ff67741c68",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901122603-762731cb19cdf23b",
+    "case_id": "CASE-001-admin-configuration"
+  },
+  "claims": [
+    "repair-review:spec-approved",
+    "repair-review:quality-approved",
+    "repair-evidence:verified"
+  ],
+  "signature_algorithm": "hmac-sha256",
+  "signature": "6012f2a885377217959e73819ee2b0b88ef2e800c397727ca1136cf61911da04"
+}

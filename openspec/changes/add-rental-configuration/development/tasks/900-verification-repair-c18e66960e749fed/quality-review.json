@@ -1,0 +1,16 @@
+{
+  "schema": "specnav.verification.repair-review.v1",
+  "id": "repair-review-quality-c18e66960e749fed",
+  "kind": "quality-review",
+  "verdict": "approved",
+  "reviewer_id": "Aquinas",
+  "reviewer_kind": "human",
+  "reviewed_at": "2026-09-01T13:50:00Z",
+  "evidence_id": "evidence-review-quality-c18e66960e749fed",
+  "task_id": "900-verification-repair-c18e66960e749fed",
+  "failure_id": "failure-8c2ec526e4b3a55d0a3d88ca1c80b5c85cd010b561be088b127205ff67741c68",
+  "repair_link_id": "repair-afab8059f70ee73e4554c137e06ba5444df4fbba51a9b27530a728ff6be785c1",
+  "repair_link_digest": "b2a6589bb039b296b81d4e5655f8f801418314262f62ea50641cc8eb33d04dca",
+  "scope_digest": "c20ed05daed56ab7e39eeb21a420232a7ee61a59a8c68a161e2b743d3946ba3e",
+  "after_identity_digest": "073a4c2cb140e28f34e736b1c76152888983800afc09db911f6130383d100568"
+}

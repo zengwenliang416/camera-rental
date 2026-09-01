@@ -21,11 +21,11 @@ module.exports = {
             'https://api.simplesvg.com',
             'https://api.unisvg.com'
           ])
-          const iconifyIcons = {
-            mdi: new Set(['format-size']),
-            zmdi: new Set(['fullscreen', 'fullscreen-exit']),
-            ion: new Set(['language-sharp'])
-          }
+          const iconifyIcons = new Map([
+            ['mdi', new Set(['format-size'])],
+            ['zmdi', new Set(['fullscreen', 'fullscreen-exit'])],
+            ['ion', new Set(['language-sharp'])]
+          ])
           const originalFetch = window.fetch.bind(window)
           window.fetch = async (input, init) => {
             const requestUrl =
@@ -37,7 +37,7 @@ module.exports = {
               .split(',')
               .map((name) => name.trim())
               .filter(Boolean)
-            const allowedNames = prefix ? iconifyIcons[prefix] : null
+            const allowedNames = prefix ? iconifyIcons.get(prefix) : null
             if (
               iconifyOrigins.has(url.origin) &&
               allowedNames &&

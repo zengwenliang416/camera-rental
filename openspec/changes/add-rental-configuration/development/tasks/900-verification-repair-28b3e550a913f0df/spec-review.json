@@ -1,0 +1,16 @@
+{
+  "schema": "specnav.verification.repair-review.v1",
+  "id": "repair-review-spec-28b3e550a913f0df",
+  "kind": "spec-review",
+  "verdict": "approved",
+  "reviewer_id": "Peirce",
+  "reviewer_kind": "human",
+  "reviewed_at": "2026-09-01T08:56:00Z",
+  "evidence_id": "evidence-review-spec-28b3e550a913f0df",
+  "task_id": "900-verification-repair-28b3e550a913f0df",
+  "failure_id": "failure-d2d9baa41f37dedd7ba501f33231670c5dddd280788fa0b1ec1e4e4069687651",
+  "repair_link_id": "repair-ef71c98b17aa17c3ecb7fd9381e7a5be6db0a2d7a1ac53b29e90e05f3ac5e5c4",
+  "repair_link_digest": "0041ed813dae29e4711c09041b08aec5a84f96652b9f8a39292b4f802df3c319",
+  "scope_digest": "c20ed05daed56ab7e39eeb21a420232a7ee61a59a8c68a161e2b743d3946ba3e",
+  "after_identity_digest": "dd4ccf14c050b1e7000d497cb18bb7191f5160f549296be8188f55af2bcd9a2a"
+}

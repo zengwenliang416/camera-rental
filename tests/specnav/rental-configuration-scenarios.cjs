@@ -69,7 +69,13 @@ module.exports = {
       results.push(await page.getByText('换机', { exact: true }).isVisible())
       results.push(await page.getByText('早退', { exact: true }).isVisible())
 
-      assertion.ok('CASE-001-admin-configuration-ASSERT', results.every(Boolean))
+      const expected =
+        '所有保存均由后端确认，权限、租户、乐观锁和影响预览生效，页面不推断缺失标识。'
+      assertion.equal(
+        'CASE-001-admin-configuration-ASSERT',
+        results.every(Boolean) ? expected : null,
+        expected
+      )
     },
     },
 
@@ -107,7 +113,13 @@ module.exports = {
       results.push((await dialog.getByText('新增大类').count()) === 0)
       results.push((await dialog.getByText('新增型号').count()) === 0)
 
-      assertion.ok('CASE-009-rental-device-catalog-ASSERT', results.every(Boolean))
+      const expected =
+        '目录数据来自共享后端；设备创建可用；页面不存在大类/型号快捷创建按钮、弹窗或隐式入口。'
+      assertion.equal(
+        'CASE-009-rental-device-catalog-ASSERT',
+        results.every(Boolean) ? expected : null,
+        expected
+      )
     },
     },
 
@@ -214,7 +226,13 @@ module.exports = {
       await page.reload()
       await page.getByRole('heading', { name: '租赁配置' }).waitFor()
 
-      assertion.ok('CASE-010-theme-locale-states-ASSERT', results.every(Boolean))
+      const expected =
+        '无页面级横向滚动或不可读内容；文案完整；状态不只依赖颜色；关键交互有清晰反馈并可审阅。'
+      assertion.equal(
+        'CASE-010-theme-locale-states-ASSERT',
+        results.every(Boolean) ? expected : null,
+        expected
+      )
     }
     }
   }

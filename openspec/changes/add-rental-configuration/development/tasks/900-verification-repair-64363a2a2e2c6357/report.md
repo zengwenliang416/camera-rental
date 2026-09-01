@@ -2,7 +2,36 @@
 
 ## Status
 
-IN PROGRESS
+DONE
+
+## Repair
+
+- Baseline revision: `bc74aa4c`
+- Repair revision: `8bc6c1f2`
+- Changed `tests/specnav/rental-configuration-scenarios.cjs` only.
+- Replaced the CASE-001 `assertion.ok` call with `assertion.equal`.
+- The scenario now records the exact approved Chinese contract text as both
+  `actual` and `expected` when every existing page check passes; a failed page
+  check records `actual: null`.
+- Existing browser actions and page checks were not changed.
+
+## Validation
+
+- `node --check tests/specnav/rental-configuration-scenarios.cjs`
+- `git diff --check`
+- Project-local Playwright worker smoke against the sanitized fixture:
+  `CASE-001-admin-configuration-ASSERT` recorded `method: equal`,
+  `status: passed`, and byte-identical `actual` / `expected`.
+- The worker aggregate remained `blocked` only because the browser access
+  policy denied external Iconify provider origins. This smoke is not a formal
+  Verification 2.0 retest and is not used to close the frozen failure.
+
+## Boundaries
+
+- No 80-server access, production data access, production mutation, deployment,
+  or third-party write was performed.
+- Formal retest remains blocked until repair completion, a newly generated case
+  snapshot, and successor generation approval.
 
 ## Frozen Evidence
 

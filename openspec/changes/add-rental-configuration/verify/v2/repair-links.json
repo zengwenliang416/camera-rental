@@ -5,7 +5,7 @@
     "change_id": "add-rental-configuration",
     "development_task_id": "900-verification-repair-c0b97fbb1a39c479",
     "repair_kind": "test_code",
-    "status": "requested",
+    "status": "in_progress",
     "requested_at": "2026-09-01T08:01:21.064Z",
     "before_identity": {
       "case_snapshot_hash": "1328c0a1cae721e24b3aa332c6415e2ce94827664237f7d6283fb65fc0a3cfac",
@@ -24,7 +24,7 @@
     "change_id": "add-rental-configuration",
     "development_task_id": "900-verification-repair-64363a2a2e2c6357",
     "repair_kind": "test_code",
-    "status": "requested",
+    "status": "in_progress",
     "requested_at": "2026-09-01T08:00:51.143Z",
     "before_identity": {
       "case_snapshot_hash": "1328c0a1cae721e24b3aa332c6415e2ce94827664237f7d6283fb65fc0a3cfac",
@@ -43,7 +43,7 @@
     "change_id": "add-rental-configuration",
     "development_task_id": "900-verification-repair-28b3e550a913f0df",
     "repair_kind": "test_code",
-    "status": "requested",
+    "status": "in_progress",
     "requested_at": "2026-09-01T08:01:03.000Z",
     "before_identity": {
       "case_snapshot_hash": "1328c0a1cae721e24b3aa332c6415e2ce94827664237f7d6283fb65fc0a3cfac",

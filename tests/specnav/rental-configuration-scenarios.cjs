@@ -2,7 +2,8 @@
 
 module.exports = {
   scenarios: {
-    'rental-configuration-admin-flow': async function ({ page, assertion }) {
+    'rental-configuration-admin-flow': {
+      scenario: async function ({ page, assertion }) {
       const origin = 'http://127.0.0.1:15173'
       const cache = (value) =>
         JSON.stringify({
@@ -70,8 +71,10 @@ module.exports = {
 
       assertion.ok('CASE-001-admin-configuration-ASSERT', results.every(Boolean))
     },
+    },
 
-    'rental-device-shared-catalog': async function ({ page, assertion }) {
+    'rental-device-shared-catalog': {
+      scenario: async function ({ page, assertion }) {
       const origin = 'http://127.0.0.1:15173'
       const cache = (value) =>
         JSON.stringify({
@@ -106,8 +109,10 @@ module.exports = {
 
       assertion.ok('CASE-009-rental-device-catalog-ASSERT', results.every(Boolean))
     },
+    },
 
-    'rental-configuration-sensory-states': async function ({ page, assertion }) {
+    'rental-configuration-sensory-states': {
+      scenario: async function ({ page, assertion }) {
       const origin = 'http://127.0.0.1:15173'
       const cache = (value) =>
         JSON.stringify({
@@ -210,6 +215,7 @@ module.exports = {
       await page.getByRole('heading', { name: '租赁配置' }).waitFor()
 
       assertion.ok('CASE-010-theme-locale-states-ASSERT', results.every(Boolean))
+    }
     }
   }
 }

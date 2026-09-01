@@ -11,6 +11,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMap
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleMapper;
 import cn.iocoder.yudao.module.rental.enums.rental.RentalDeviceLockTypeEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -53,6 +54,7 @@ public class RentalDeviceOpsService {
     private final RentalDeviceLockService lockService;
     private final Clock clock;
 
+    @Autowired
     public RentalDeviceOpsService(RentalDeviceMapper deviceMapper,
                                   RentalDeviceAssignmentMapper assignmentMapper,
                                   RentalScheduleMapper scheduleMapper,

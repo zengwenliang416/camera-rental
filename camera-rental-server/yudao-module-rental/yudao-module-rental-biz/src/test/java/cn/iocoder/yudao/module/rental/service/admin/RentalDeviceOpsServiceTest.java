@@ -14,6 +14,7 @@ import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleMapper;
 import cn.iocoder.yudao.module.rental.enums.rental.RentalDeviceLockTypeEnum;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -26,6 +27,7 @@ import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEV
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_RETURN_FAILED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_UNASSIGN_FAILED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -46,6 +48,20 @@ class RentalDeviceOpsServiceTest {
     private final RentalDeviceLockService lockService = mock(RentalDeviceLockService.class);
     private final RentalDeviceOpsService service =
             new RentalDeviceOpsService(deviceMapper, assignmentMapper, scheduleMapper, lockService, FIXED_CLOCK);
+
+    @Test
+    void springSelectsTheProductionConstructor() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+            context.registerBean(RentalDeviceMapper.class, () -> deviceMapper);
+            context.registerBean(RentalDeviceAssignmentMapper.class, () -> assignmentMapper);
+            context.registerBean(RentalScheduleMapper.class, () -> scheduleMapper);
+            context.registerBean(RentalDeviceLockService.class, () -> lockService);
+            context.registerBean(RentalDeviceOpsService.class);
+            context.refresh();
+
+            assertNotNull(context.getBean(RentalDeviceOpsService.class));
+        }
+    }
 
     @Test
     void dispatchThenReturnPass() {

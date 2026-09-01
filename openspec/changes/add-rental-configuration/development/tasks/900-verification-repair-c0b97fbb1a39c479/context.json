@@ -1,0 +1,113 @@
+{
+  "schema": "specnav.development.repair-task.v1",
+  "id": "900-verification-repair-c0b97fbb1a39c479",
+  "change_id": "add-rental-configuration",
+  "goal": "Repair test_defect for CASE-010-theme-locale-states.",
+  "classification": "test_defect",
+  "owner": "development",
+  "status": "requested",
+  "requested_at": "2026-09-01T08:01:21.064Z",
+  "packet_path": "development/tasks/900-verification-repair-c0b97fbb1a39c479",
+  "scope": {
+    "owner": "development",
+    "source": "approved-development-scope-lock",
+    "allowed_files": [
+      "tests/specnav/rental-configuration-scenarios.cjs"
+    ],
+    "denied_files": [],
+    "requires_review_on": [
+      "tests/specnav/rental-configuration-scenarios.cjs"
+    ],
+    "allowed_operations": {
+      "create": true,
+      "modify": true,
+      "delete": false,
+      "rename": false
+    },
+    "digest": "221d860d4ab1366042556b8d2dcaf32caf9512c60f07df9bc23c1d791e74552e"
+  },
+  "packet_artifacts": [
+    "brief.md",
+    "context.json",
+    "report.md",
+    "spec-review.md",
+    "quality-review.md"
+  ],
+  "required_reviews": [
+    "spec-review",
+    "quality-review"
+  ],
+  "ownership": {
+    "evidence": "verification",
+    "closure": "verification",
+    "repair": "development",
+    "reviews": "development",
+    "transitions": "core",
+    "break_loop": "core"
+  },
+  "frozen_failure": {
+    "failure_packet_id": "failure-f8e9e5cc34270f3c89c43ccfa8a332411549d2dc81a801015565b1d692cb873c",
+    "failure_packet_digest": "ece5ba4cfd68e712fad895ef9b5893d50e16d7ebbf86e3744482190872cae3a1",
+    "run_id": "run-20260901074625-95ebf22c4403c8ef",
+    "case_id": "CASE-010-theme-locale-states",
+    "attempt_id": "attempt-20260901074625-95ebf22c4403c8ef",
+    "evidence_ids": [
+      "evidence-2f7005a3bee6e61eebae6a73270164f03a10512ba013e439522137a3a140fdbd",
+      "evidence-3e876737a22dadceab182606f33ba860865e74898ca2bb6d2f8b14247b41ddb6",
+      "evidence-42938523fb7feed26f3d4ce090c778096ae89b4918f0abdd425f2b309d40ef51",
+      "evidence-66f65002ce71914890baa2ab265deb33da2c1a74020e25940e16f2e9390833b0",
+      "evidence-7fd03f6d75c902b6a9605f6df0ba805e22e6f21d01e5607f422eca32b0dc586e",
+      "evidence-80e39351378066b07242ebad54d259b840d7434368730ff66932dfbfb1a1434c",
+      "evidence-8c7e6645cdcb852817d49a95786105f83915ff7e951698fa5ecaec3bdbb844bc",
+      "evidence-ff2f94ff8decb74a80e3b3814e0be773cbf2746ac5c0a1fed25bb5b9e5c94fa2"
+    ],
+    "evidence_content": [
+      {
+        "id": "evidence-2f7005a3bee6e61eebae6a73270164f03a10512ba013e439522137a3a140fdbd",
+        "digest": "a80f11275c7b67498c1470e38bd45ab1010abb4d17cee2229ccc0be68c1d9fc1"
+      },
+      {
+        "id": "evidence-3e876737a22dadceab182606f33ba860865e74898ca2bb6d2f8b14247b41ddb6",
+        "digest": "f9a615f7a85d858e9da44d3f829344a87a4d8a3935b08d51ccf5b919b62ad53e"
+      },
+      {
+        "id": "evidence-42938523fb7feed26f3d4ce090c778096ae89b4918f0abdd425f2b309d40ef51",
+        "digest": "00469746ceccd848369c09144b9550e6bccc7a5eefe54a4634c137f928d5eba2"
+      },
+      {
+        "id": "evidence-66f65002ce71914890baa2ab265deb33da2c1a74020e25940e16f2e9390833b0",
+        "digest": "d53c82b1f9746df150c1677b6bf57ff3cbdd2e0a5718387fddbe04ab31b2110d"
+      },
+      {
+        "id": "evidence-7fd03f6d75c902b6a9605f6df0ba805e22e6f21d01e5607f422eca32b0dc586e",
+        "digest": "44b738a05c06183fa624f27eadc60ade69e0e1fc2ad740bd190e9dff85000f19"
+      },
+      {
+        "id": "evidence-80e39351378066b07242ebad54d259b840d7434368730ff66932dfbfb1a1434c",
+        "digest": "20d56040a4f3741265d3b7b11463dc2667569a264a65753cbef97dfe467d7053"
+      },
+      {
+        "id": "evidence-8c7e6645cdcb852817d49a95786105f83915ff7e951698fa5ecaec3bdbb844bc",
+        "digest": "211becca692ae0fc41fb5d244a888d0e7d1eb95422bf3d2251afe994195b323e"
+      },
+      {
+        "id": "evidence-ff2f94ff8decb74a80e3b3814e0be773cbf2746ac5c0a1fed25bb5b9e5c94fa2",
+        "digest": "efc216985d5701b8caa6cd0bda342bb6b6515f5770ed2f0d228e7fd209987544"
+      }
+    ],
+    "reading_ids": [
+      "reading-07c3139309b49150dfae868aff9ca2756106b298787cd344293c912c1a3ada09",
+      "reading-66132da7b60e328c3aef1f4bf636c5ba506cf76bdd12dbadcd62c77f64826b9b",
+      "reading-942a9a553a83926e2d5cd5096fd6bb5720a301ce61bd9d82ef559245131ff6dc",
+      "reading-cb43f573277fc651faf366abbe237e27d89e307a46e6ff50f083d86dd5833772",
+      "reading-edb1ba95d5af9b610893b50821167a968240be78c710c57695f13c172cb35b21",
+      "reading-f4da8d9a5e882a04d1d98cdf53f3c02be29137d1a392a0df6b06f4191df882d7"
+    ],
+    "failed_assertion_ids": [
+      "CASE-010-theme-locale-states-ASSERT"
+    ],
+    "summary": "浏览器场景断言通过，但断言结果的 expected 与案例合同不一致。",
+    "root_cause": "场景使用 assertion.ok，Playwright runner 因此记录 expected 为布尔值 true；Verification Kernel 要求 playwright_assertion 的 expected 与案例合同中的中文 expected 完全相等，导致已通过的页面断言被判定为 oracle-result-invalid。",
+    "frozen_at": "2026-09-01T07:46:43.926Z"
+  }
+}

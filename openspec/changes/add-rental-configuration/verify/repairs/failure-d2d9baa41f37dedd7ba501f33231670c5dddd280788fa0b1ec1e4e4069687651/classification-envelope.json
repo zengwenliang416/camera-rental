@@ -1,0 +1,62 @@
+{
+  "schema": "specnav.verification.trusted-fact-envelope.v1",
+  "id": "trusted-fact-22c3cc7d884dca7e17ee4825e6eecc8777bb9c6da75544b1a2b64b39cffd7ed4",
+  "kind": "classification_result",
+  "producer": "specnav-failure-classifier",
+  "payload": {
+    "ok": true,
+    "status": "classified",
+    "packet": {
+      "schema": "specnav.verification.failure-packet.v1",
+      "change_id": "add-rental-configuration",
+      "run_id": "run-20260901074616-1d51a8a36cac8b36",
+      "case_id": "CASE-009-rental-device-catalog",
+      "attempt_id": "attempt-20260901074616-1d51a8a36cac8b36",
+      "reading_ids": [
+        "reading-03d92c2157e9e0b9cbcbf9b9c5ec0ad488f0ca41f13ad0a8dccc6763b2e9f0cb",
+        "reading-5c4869a92e9dae7ab04df20bc00072c89d11c10bb5c50e15fe947e113b298861",
+        "reading-71cfd5a8d69aa1dadad94eab1714ecb9455babfac49046777e0cf63552cd4626",
+        "reading-825de3920b18b659dd4c903d2ea04804a247c02bd072bcf02cf81a16ca498a9e",
+        "reading-93e3d5f8f6d54d77794e2091a2db810406164c4c85ca2c92fb4fc26968286df8",
+        "reading-d01042b8336e0be4baeeb6da5211c5c1370a7a8f5902f36ef914a221a486f7af"
+      ],
+      "evidence_ids": [
+        "evidence-0f38fac4b375ed7ec735db69e5bf3f223ea8af9076ba917ed66d45f6b1e035b3",
+        "evidence-20a8053ed183657c62cb38ee80e8b31b7b11eb5f585e3ac0ec181299b793e729",
+        "evidence-4080a7a575ba35403f446944348eceae77465b56e9e2f1c89653a2107efd646c",
+        "evidence-4608511189ce258e23bafd1e5cdb2276b728bb8642060ea150f500a1fb69c856",
+        "evidence-4dc7889eaf5c870bed60e1ce8cf722556715883e136355ad4c2257b9284f7f5d",
+        "evidence-4f404cdc1f1624ca91bfc0cbdae08186807d62dce5b77adc294ed860f6052df6",
+        "evidence-6910c6f5c3301e03e114fd62d8c5a4db852f1d8d795ce7fd3fc89682d19187e3",
+        "evidence-c3c21faaf174b4a57895b8e974cc6043c0db3f57bc89bee39fd9c2e7de9b420e"
+      ],
+      "classification": "test_defect",
+      "status": "repair_required",
+      "next_action": "repair_required",
+      "summary": "浏览器场景断言通过，但断言结果的 expected 与案例合同不一致。",
+      "root_cause": "场景使用 assertion.ok，Playwright runner 因此记录 expected 为布尔值 true；Verification Kernel 要求 playwright_assertion 的 expected 与案例合同中的中文 expected 完全相等，导致已通过的页面断言被判定为 oracle-result-invalid。",
+      "failed_assertion_ids": [
+        "CASE-009-rental-device-catalog-ASSERT"
+      ],
+      "owner": "development",
+      "created_at": "2026-09-01T07:46:25.227Z",
+      "frozen_at": "2026-09-01T07:46:25.227Z",
+      "id": "failure-d2d9baa41f37dedd7ba501f33231670c5dddd280788fa0b1ec1e4e4069687651"
+    },
+    "signals": [],
+    "blockers": []
+  },
+  "payload_digest": "18973d6ff03ca081df2e77c0e0cfe0764bc125afa41e78d6e96cd60370e934e7",
+  "issued_at": "2026-09-01T07:58:46.524Z",
+  "bindings": {
+    "failure_id": "failure-d2d9baa41f37dedd7ba501f33231670c5dddd280788fa0b1ec1e4e4069687651",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074616-1d51a8a36cac8b36",
+    "case_id": "CASE-009-rental-device-catalog"
+  },
+  "claims": [
+    "failure-classification:verified"
+  ],
+  "signature_algorithm": "hmac-sha256",
+  "signature": "64556edbfaf85932ff1fa5d1537fe171ccf813120f37a0018c16c783345c6775"
+}

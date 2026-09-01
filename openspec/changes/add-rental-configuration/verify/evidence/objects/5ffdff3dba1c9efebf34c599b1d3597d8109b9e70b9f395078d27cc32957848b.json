@@ -1,0 +1,7 @@
+{
+  "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+  "assertion_id": "CASE-006-later-valid-update-ASSERT",
+  "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+  "method": "equal",
+  "status": "passed"
+}

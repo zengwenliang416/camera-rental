@@ -1,0 +1,202 @@
+[
+  {
+    "sequence": 1,
+    "offset_ms": 469,
+    "kind": "lifecycle",
+    "title": "Scenario: rental-configuration-sensory-states",
+    "status": "info",
+    "detail": "Browser recording and human review timeline started."
+  },
+  {
+    "sequence": 2,
+    "offset_ms": 543,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 3,
+    "offset_ms": 1333,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 4,
+    "offset_ms": 1436,
+    "kind": "action",
+    "title": "Completed: Navigate",
+    "status": "info",
+    "detail": "page.goto"
+  },
+  {
+    "sequence": 5,
+    "offset_ms": 1646,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 6,
+    "offset_ms": 2126,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 7,
+    "offset_ms": 3077,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 8,
+    "offset_ms": 3447,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 9,
+    "offset_ms": 4309,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 10,
+    "offset_ms": 4670,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 11,
+    "offset_ms": 5466,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 12,
+    "offset_ms": 5821,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 13,
+    "offset_ms": 8144,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 14,
+    "offset_ms": 8538,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 15,
+    "offset_ms": 9503,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 16,
+    "offset_ms": 9847,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 17,
+    "offset_ms": 11137,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 18,
+    "offset_ms": 11865,
+    "kind": "action",
+    "title": "Completed: Click",
+    "status": "info",
+    "detail": "playwright.click"
+  },
+  {
+    "sequence": 19,
+    "offset_ms": 12514,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 20,
+    "offset_ms": 13456,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 21,
+    "offset_ms": 13743,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 22,
+    "offset_ms": 14584,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  },
+  {
+    "sequence": 23,
+    "offset_ms": 14790,
+    "kind": "assertion",
+    "title": "Assertion PASSED: CASE-010-theme-locale-states-ASSERT",
+    "status": "passed",
+    "detail": "ok"
+  },
+  {
+    "sequence": 24,
+    "offset_ms": 14790,
+    "kind": "lifecycle",
+    "title": "Scenario completed",
+    "status": "passed",
+    "detail": "1 deterministic assertion(s) recorded."
+  },
+  {
+    "sequence": 25,
+    "offset_ms": 17487,
+    "kind": "navigation",
+    "title": "Navigation",
+    "status": "info",
+    "detail": "http://127.0.0.1:15173/rental/configuration"
+  }
+]

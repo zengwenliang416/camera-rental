@@ -1,0 +1,7 @@
+{
+  "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+  "assertion_id": "CASE-002-identifier-authority-ASSERT",
+  "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+  "method": "equal",
+  "status": "passed"
+}

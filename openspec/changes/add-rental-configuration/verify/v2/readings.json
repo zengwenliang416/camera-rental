@@ -1,0 +1,4106 @@
+[
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-008d2937fb7d789cc7467d072253b397dbb41bd66db4e0aa2b5de308f1a92845",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074320-ecf65bf1191a1aed",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901074320-ecf65bf1191a1aed",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "sensory",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-450254eee76b79384db40dfefb40d39b112e6557205dec523a232c365b0ac9f5",
+      "evidence-6cd851e09043fb99e03e97163d8c935ec483a5f5853d5bd0694762f1786fe701",
+      "evidence-b590631f596e2d2b8074870a09497826155ead501a2f097ee52dc61efab68bd4",
+      "evidence-c4e8bf466c742bd428bdfcfc30983209f7c49e11313efb1ba7a5d8e66438fcc2"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:43:59.352Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-03d92c2157e9e0b9cbcbf9b9c5ec0ad488f0ca41f13ad0a8dccc6763b2e9f0cb",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074616-1d51a8a36cac8b36",
+    "case_id": "CASE-009-rental-device-catalog",
+    "attempt_id": "attempt-20260901074616-1d51a8a36cac8b36",
+    "step_id": "CASE-009-rental-device-catalog-STEP-1",
+    "assertion_id": "CASE-009-rental-device-catalog-ASSERT",
+    "domain": "unit",
+    "expected": "目录数据来自共享后端；设备创建可用；页面不存在大类/型号快捷创建按钮、弹窗或隐式入口。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-0f38fac4b375ed7ec735db69e5bf3f223ea8af9076ba917ed66d45f6b1e035b3",
+      "evidence-20a8053ed183657c62cb38ee80e8b31b7b11eb5f585e3ac0ec181299b793e729",
+      "evidence-4080a7a575ba35403f446944348eceae77465b56e9e2f1c89653a2107efd646c",
+      "evidence-4608511189ce258e23bafd1e5cdb2276b728bb8642060ea150f500a1fb69c856",
+      "evidence-4dc7889eaf5c870bed60e1ce8cf722556715883e136355ad4c2257b9284f7f5d",
+      "evidence-4f404cdc1f1624ca91bfc0cbdae08186807d62dce5b77adc294ed860f6052df6",
+      "evidence-6910c6f5c3301e03e114fd62d8c5a4db852f1d8d795ce7fd3fc89682d19187e3",
+      "evidence-c3c21faaf174b4a57895b8e974cc6043c0db3f57bc89bee39fd9c2e7de9b420e"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:46:25.169Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-06d3e92109ffa9102025fb3442413f3afb125caa41d4dc88db8b7ddb5ce6218e",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071450-58119eb90ddff7b5",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901071450-58119eb90ddff7b5",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "e2e",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-884263c6d7484573dc3859c8aca6b205ce1d5f8de7547f24ad418c5dcbfe85d2",
+      "evidence-9834ede07914d5dee977218827088d9e8bf92876408334e4f3c5bf73610d7cac",
+      "evidence-bf34e46eb2ce5c2fb58c77d30222ba6ed09945ed48af918ca661000d6a673dcd",
+      "evidence-ccd7be6e587e2723e7b4fbd9bbfc54d433ed6ed803b3a4b3c72172d30455e1b5"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:15:30.031Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-07c3139309b49150dfae868aff9ca2756106b298787cd344293c912c1a3ada09",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074625-95ebf22c4403c8ef",
+    "case_id": "CASE-010-theme-locale-states",
+    "attempt_id": "attempt-20260901074625-95ebf22c4403c8ef",
+    "step_id": "CASE-010-theme-locale-states-STEP-1",
+    "assertion_id": "CASE-010-theme-locale-states-ASSERT",
+    "domain": "unit",
+    "expected": "无页面级横向滚动或不可读内容；文案完整；状态不只依赖颜色；关键交互有清晰反馈并可审阅。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-2f7005a3bee6e61eebae6a73270164f03a10512ba013e439522137a3a140fdbd",
+      "evidence-3e876737a22dadceab182606f33ba860865e74898ca2bb6d2f8b14247b41ddb6",
+      "evidence-42938523fb7feed26f3d4ce090c778096ae89b4918f0abdd425f2b309d40ef51",
+      "evidence-66f65002ce71914890baa2ab265deb33da2c1a74020e25940e16f2e9390833b0",
+      "evidence-7fd03f6d75c902b6a9605f6df0ba805e22e6f21d01e5607f422eca32b0dc586e",
+      "evidence-80e39351378066b07242ebad54d259b840d7434368730ff66932dfbfb1a1434c",
+      "evidence-8c7e6645cdcb852817d49a95786105f83915ff7e951698fa5ecaec3bdbb844bc",
+      "evidence-ff2f94ff8decb74a80e3b3814e0be773cbf2746ac5c0a1fed25bb5b9e5c94fa2"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:46:43.862Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-0983374cb9cb0fdea901a53f1b62e480d67a6161b5334088d0ccd2b747a3c241",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071325-c0e0b094bfd321be",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901071325-c0e0b094bfd321be",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "static",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-41ba6ede08b6c2eac264a47c424e4a5e66f1f65959a69cb7ff12c10bfcc4e0db",
+      "evidence-69fef2427b74f001f0061d6251119deb430ee3fcf80d8df03da907a99256036a",
+      "evidence-a699917836f9e9f81f1e06560b676fd3ada14bb388d89b5485d834a6fb229ebd",
+      "evidence-b481419a2ad65ef6d5a6275c125679e92e1c5cfef0b5d4d7042c924403e8d6c1"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:14:07.196Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-0b9f1b1ac1937de2ca9a9397dec4696fcdb0fd58845cc481cc8aeae2a18b3621",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071325-c0e0b094bfd321be",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901071325-c0e0b094bfd321be",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "unit",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-41ba6ede08b6c2eac264a47c424e4a5e66f1f65959a69cb7ff12c10bfcc4e0db",
+      "evidence-69fef2427b74f001f0061d6251119deb430ee3fcf80d8df03da907a99256036a",
+      "evidence-a699917836f9e9f81f1e06560b676fd3ada14bb388d89b5485d834a6fb229ebd",
+      "evidence-b481419a2ad65ef6d5a6275c125679e92e1c5cfef0b5d4d7042c924403e8d6c1"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:14:07.196Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-0c1cb65a0fd3e37273e0a7d28fe46c1e7adaf7ad05f4314fa144613744d0e568",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074531-55cd681cdaa620c6",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901074531-55cd681cdaa620c6",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "static",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-01e008dc4c857698365be8acecdc8a9e815bec5e4e732c84d529253221c53854",
+      "evidence-0706e47ae8496dfa036068a103794ff17220973528ca3c33ec54c06f5d8e34a5",
+      "evidence-4057696ece06cfc35bc8dde02cf0cc0e5963d0a03ed833ce9a86a50941c642a7",
+      "evidence-ee748c68fff70ac2169c31787d154791bb0a34009550ccdaf16a2d77256e1c1b"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:46:16.247Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-0c1efe448f0875900f1848c3f48ca4342cbcda737afe32c8ee9ff648eee38b5d",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074052-302b57f9f6bccee8",
+    "case_id": "CASE-001-admin-configuration",
+    "attempt_id": "attempt-20260901074052-302b57f9f6bccee8",
+    "step_id": "CASE-001-admin-configuration-STEP-1",
+    "assertion_id": "CASE-001-admin-configuration-ASSERT",
+    "domain": "facticity",
+    "expected": "所有保存均由后端确认，权限、租户、乐观锁和影响预览生效，页面不推断缺失标识。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-2087c2a75f363eecd326e64e8d40ab7b6e14e01c1b73586e96f52283abb26d31",
+      "evidence-2565e42205f22c9b5972d188aac35e5a25a4aeec9ca68de05cf6ed4d8287f70c",
+      "evidence-2574503eec7ac18dc8ee259d2ea26177af1edd5b54a6112066344cfd6365c9ae",
+      "evidence-5555dd453910088d0f2a244e953cbd6f6f0b27d983d2a45fce74b7968a3c487b",
+      "evidence-a92f63e1aae769bc50d9ac81d81e5e8a30a2a6cbb3c81f6661fc6af69b816225",
+      "evidence-b03f5d28efb9875bb2130a2bfdabc9b9189c8cb8f19e04611eee5a9a934c80c0",
+      "evidence-ba813cc545b418c8db4530568617da9e30c0ebfca0586d611514754086db4f12",
+      "evidence-f316065aa4587f5d75b9f55676b2ac38bf81c5ea8393177da555eb2b50bfdff2"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:41:09.761Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-0d39aaeee9f55effa7b7c67e8c017958fabbc9507d41a513cd9811e02e1a8716",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065024-929532f75a5125eb",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901065024-929532f75a5125eb",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "e2e",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1fca37f934781c50281a13ff9369ef5648a42bf31f08273cf5e6d6d50cfd5167",
+      "evidence-3c4c30cbed43ee4d08dc739d3012f0658bb550d233f18087f61b835787950169",
+      "evidence-474f1b2e90511d4660c727c360f709da73ad77eba28e13adcb01559c8781bec0",
+      "evidence-d73ebd0fe0452ffdadbd339951e8344136adf80f65fd23a1395b36c15396aead"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:51:00.494Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-0d78d0aca3860b6bb561818a058d72d04ecaffdb9cb9064e1a9baba8b1dca6b6",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064823-ce247cb3441bdfe3",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901064823-ce247cb3441bdfe3",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "static",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-a332761bb0db6ce0fc52f844b53b15150734295d767cd6e2a2d56fbb1606faf9",
+      "evidence-e77c6b74dd8e50d99db2b2b30c87b19a8f5aba4f6b808f83e9a8ad3753178f1d",
+      "evidence-f378a2b441cf8d4c2de4ad3785c173db06fae638cf16f97eaa7f6e3abfbbef11",
+      "evidence-f6daec65896c0cde5fb9c2ceb4f2cbe82331f211722ac43a756e47b5f94d8aa6"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:49:01.916Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-0f503cf8c079835924b4f1175a7e25e6dc173283b9160777a362b454a5aec61a",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071325-c0e0b094bfd321be",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901071325-c0e0b094bfd321be",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "sensory",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-41ba6ede08b6c2eac264a47c424e4a5e66f1f65959a69cb7ff12c10bfcc4e0db",
+      "evidence-69fef2427b74f001f0061d6251119deb430ee3fcf80d8df03da907a99256036a",
+      "evidence-a699917836f9e9f81f1e06560b676fd3ada14bb388d89b5485d834a6fb229ebd",
+      "evidence-b481419a2ad65ef6d5a6275c125679e92e1c5cfef0b5d4d7042c924403e8d6c1"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:14:07.196Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-103731d73efdc66b148611882d6caceeaabd041bbf791b02c240195ef1df5c10",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064823-ce247cb3441bdfe3",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901064823-ce247cb3441bdfe3",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "redteam",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-a332761bb0db6ce0fc52f844b53b15150734295d767cd6e2a2d56fbb1606faf9",
+      "evidence-e77c6b74dd8e50d99db2b2b30c87b19a8f5aba4f6b808f83e9a8ad3753178f1d",
+      "evidence-f378a2b441cf8d4c2de4ad3785c173db06fae638cf16f97eaa7f6e3abfbbef11",
+      "evidence-f6daec65896c0cde5fb9c2ceb4f2cbe82331f211722ac43a756e47b5f94d8aa6"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:49:01.916Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-110ec31758bfada5c280419cc3333323e2adf7e5afbe5723603c0f0df23fa4c1",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074359-e57594ed843a1792",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901074359-e57594ed843a1792",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "redteam",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-00e1c127c26283634f113d5df784aa1945fd99f316b08e220bbad189b2b775d3",
+      "evidence-2b96405592ad52ed56b304b369744f3d3d18adb8b45a82dc9429d7fd2e2c259b",
+      "evidence-2ec6ea32935699c5a337665e03b2640164c3139222e092831527f76d50ad168b",
+      "evidence-8a5650a71d4f88c6e7a11fde42e200e26e4cb66522c67f8e59356fb38a213b27"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:44:40.177Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-138255fd38ad230815bbd86d5a84805c24ef4258d3b7e89f3630ea88bd21ec74",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071248-6313afbcdc31516d",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901071248-6313afbcdc31516d",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "static",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-8f6dedca9e06039af60b7b151601fffa9831725724f35863ab1f763a512dba7f",
+      "evidence-aa2fed62e3d8800ddd5ae0ea99b2fe94793f136be807372064e56373f9985b77",
+      "evidence-d616c9cb543737b4e19c6b70c96cc7c742031b791feedf2a37de50233548e72d",
+      "evidence-dfbb5febceb751bf5b99152840e0337906b9832a4067e534ab2eddf96f66cc1e"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:13:25.883Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-1756b6b67f8f727bcb87f103b0295394c5cbd1b76aef7040ac956992dabc70c9",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064737-e43981d35c072890",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901064737-e43981d35c072890",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "unit",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-268bf5e5fdbae896f5f75efcf506608d5372cbfe82d2f4032712a8ced4a69d2f",
+      "evidence-5cfee3b0a371879b362e5f9c21a25b6eea5eb9fdf3ce8af6ff43b32351fd9b6e",
+      "evidence-b91a8e5671672a0ade944ed2ebc9a3fa77c385226fa7f39b6cc22517b5fadf3f",
+      "evidence-f1132ffbfc2b1e0be21ab16b12fc09cd7c4d006d1ece1b82e4803362e34b31ab"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:48:23.653Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-180c7c93422e35ac92668d89843cdc6756db426afafca0495033300e070a1d9e",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071530-96e341b66c5b154b",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901071530-96e341b66c5b154b",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "static",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-21b25eab07f8e857084b50a24f4db48aab0628e209e717ff23f76f91910187ad",
+      "evidence-67ec7b3e4b70c41fc41b5979d7a6ccbf100e17c35a4cddf955b55ffb274a6548",
+      "evidence-9a92b133964d4e2c332765a8353a30809859d2faf5a1d5a5eb5148563d74c43c",
+      "evidence-fb65798f9256d641a62eda3697b39418dbb5152a85e67f5f537ffa3953d4054a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:16:14.677Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-1942ac056eea8a9e12da59de032d2f1ce44208f694fe55eab868f1cd37cf2731",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065024-929532f75a5125eb",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901065024-929532f75a5125eb",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "unit",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1fca37f934781c50281a13ff9369ef5648a42bf31f08273cf5e6d6d50cfd5167",
+      "evidence-3c4c30cbed43ee4d08dc739d3012f0658bb550d233f18087f61b835787950169",
+      "evidence-474f1b2e90511d4660c727c360f709da73ad77eba28e13adcb01559c8781bec0",
+      "evidence-d73ebd0fe0452ffdadbd339951e8344136adf80f65fd23a1395b36c15396aead"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:51:00.494Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-198bd2e78db461477ca5ac14bebfd4729d5b93df4abd18617dbeb03bd6e67557",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074109-b93736a6d48ece1f",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901074109-b93736a6d48ece1f",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "static",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3a474e8262d1a4e377a4be747ff1b99a1cff870e17cac149990fd9d0a1bee2c6",
+      "evidence-4a824aeebf8e2caaebf92412b612022f8156b77057c4604de3969a9b7b5407e8",
+      "evidence-806541ccb868a0ccabe52f0ad66a3b1353fbfcb7f994d586564dfaeb678d7dca",
+      "evidence-8de2f91225a14241828e0aeb0c165af590740923b75479f6380b35ae0a8d54c2"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:41:54.443Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-19f01f14ddb655816757c8ad92587f473a4c1328082295465f79b9c59ee1e3f9",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074109-b93736a6d48ece1f",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901074109-b93736a6d48ece1f",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "e2e",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3a474e8262d1a4e377a4be747ff1b99a1cff870e17cac149990fd9d0a1bee2c6",
+      "evidence-4a824aeebf8e2caaebf92412b612022f8156b77057c4604de3969a9b7b5407e8",
+      "evidence-806541ccb868a0ccabe52f0ad66a3b1353fbfcb7f994d586564dfaeb678d7dca",
+      "evidence-8de2f91225a14241828e0aeb0c165af590740923b75479f6380b35ae0a8d54c2"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:41:54.443Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-1fe9f0b34652202dcd47c51f8b13accfbcb981ea6ed721a3305d553bf2927996",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071614-318bfdb0481332fa",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901071614-318bfdb0481332fa",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "unit",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-12bac83040ae1c1262b1f527ca4af49ecf0629a04585b0e30cc8cfb5a051f6ad",
+      "evidence-2df25b5bf94152105ef4b1b738db3d75ebb0be9a3547dc8ed7767cf9e8eda1de",
+      "evidence-6ab3b8fe1144893a404694cbc664133f55110b36f50980e819d34456ce740dc9",
+      "evidence-8426f60951686eed6e7951e46d36428ff6052dc1dae57f14eeff3ee7adff00ef"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:16:57.954Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-242679e1a3b8430ace59f244489e39ea171b1dc56c4a036af9736f32d504ccd7",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065100-cd4916c1dd6ecd90",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901065100-cd4916c1dd6ecd90",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "static",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2be52f245b4917381f0eb5c804c56432478c8250c2de91efc6f68c06626fea88",
+      "evidence-72bf621a4ef0614ac18de540f45ae24ad4f62fde3d103280dfb93bdeaf758143",
+      "evidence-d03282da55a6b410b4a92c29d85c725e71aeb21696dacd7b13fd83aa74248baa",
+      "evidence-f59f38c760129ab6b1ee11d78aa5f0c0216ce7786c2b56228a031005525d9834"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:51:41.557Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-2457f335f0ddf78067559753abc51b519b71647d7bf7a12e9799eaa9eee886d9",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074154-9bc3489be3758375",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901074154-9bc3489be3758375",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "facticity",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-8e8a11096e3291827c5915a878b61770cefd3ede35e3732ba86cf0f6b922fd31",
+      "evidence-b54240448d50f420d1fcf5bb851fed70533447afd9aaa1caf586ddc43b80e824",
+      "evidence-d7547303ad3cd07d5a9d77b0df9e494e0392c18dff5c7e3ef04ada257095a2a3",
+      "evidence-f44c31f94748c6de7afd428f9ed72ce3493a0cb45bb4bed7c9421957d733fc76"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:42:36.251Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-271241d9d64aa577febcc5a03db04699c2e5e7e16a31dd630bbe988bf220f5d1",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074440-b27c0a7e536fa59a",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901074440-b27c0a7e536fa59a",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "unit",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0c3a88440616541ef0948f7dbb7970034544ced0a911157cbcdc94ae8b1e12cb",
+      "evidence-26984b63a03e489bbb19f76d903e39585d04d9cce5c9b06121b421dfc6de2672",
+      "evidence-e27c2d76b0ff7258dc2f28a8b12ad03400ce3becfcca83ad63486d1f36fa39cf",
+      "evidence-e68b3eaeb2fc731375de16175781d8af3e0d2fd6ba49e0fc2b4b97cf25d8eec6"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:45:31.622Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-27b014f4c8722b0541ef9e49863535041bf83c179b0e5ec401955289fb0562d4",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074359-e57594ed843a1792",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901074359-e57594ed843a1792",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "unit",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-00e1c127c26283634f113d5df784aa1945fd99f316b08e220bbad189b2b775d3",
+      "evidence-2b96405592ad52ed56b304b369744f3d3d18adb8b45a82dc9429d7fd2e2c259b",
+      "evidence-2ec6ea32935699c5a337665e03b2640164c3139222e092831527f76d50ad168b",
+      "evidence-8a5650a71d4f88c6e7a11fde42e200e26e4cb66522c67f8e59356fb38a213b27"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:44:40.177Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-27b6380676672be24945746f75621dcabd8532d507b0d6c7035b637b6240d8bc",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064823-ce247cb3441bdfe3",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901064823-ce247cb3441bdfe3",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "facticity",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-a332761bb0db6ce0fc52f844b53b15150734295d767cd6e2a2d56fbb1606faf9",
+      "evidence-e77c6b74dd8e50d99db2b2b30c87b19a8f5aba4f6b808f83e9a8ad3753178f1d",
+      "evidence-f378a2b441cf8d4c2de4ad3785c173db06fae638cf16f97eaa7f6e3abfbbef11",
+      "evidence-f6daec65896c0cde5fb9c2ceb4f2cbe82331f211722ac43a756e47b5f94d8aa6"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:49:01.916Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-2a096a5b87b133c88d912fb1ca835716a0c2534cae88881cdf4d40131b8aa767",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065100-cd4916c1dd6ecd90",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901065100-cd4916c1dd6ecd90",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "e2e",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2be52f245b4917381f0eb5c804c56432478c8250c2de91efc6f68c06626fea88",
+      "evidence-72bf621a4ef0614ac18de540f45ae24ad4f62fde3d103280dfb93bdeaf758143",
+      "evidence-d03282da55a6b410b4a92c29d85c725e71aeb21696dacd7b13fd83aa74248baa",
+      "evidence-f59f38c760129ab6b1ee11d78aa5f0c0216ce7786c2b56228a031005525d9834"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:51:41.557Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-2b58b8491c4e00beca175e61a2686b98670c3e5d919937d7007e076afb7359d5",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071614-318bfdb0481332fa",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901071614-318bfdb0481332fa",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "facticity",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-12bac83040ae1c1262b1f527ca4af49ecf0629a04585b0e30cc8cfb5a051f6ad",
+      "evidence-2df25b5bf94152105ef4b1b738db3d75ebb0be9a3547dc8ed7767cf9e8eda1de",
+      "evidence-6ab3b8fe1144893a404694cbc664133f55110b36f50980e819d34456ce740dc9",
+      "evidence-8426f60951686eed6e7951e46d36428ff6052dc1dae57f14eeff3ee7adff00ef"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:16:57.954Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-2b9e3b57466ed21570a6b0b1e6a75e9c0b5610d577499952917dd541d8a4cbd6",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065141-8effd03387144988",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901065141-8effd03387144988",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "sensory",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-c7d42028699131f05337035d88e7caba076447ae906100bd7678312d98dda7e2",
+      "evidence-e3160a6d9efb767d1f653f1e2c1c6ff320b89f2ee28df6e9ce1280817c9d70f2",
+      "evidence-f14a41632e1d2317ba1a181d45e6e6a0a6c43392418edec80b90ef23ae3a86d9",
+      "evidence-f665077b8ed375d7a84470bf230eb4bd8e0508341a30d5b23e861fcf533695ae"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:52:22.440Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-2bff58120e567f7899a1af0d1c0c52370426b363e4593ec142a6da468db47552",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071248-6313afbcdc31516d",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901071248-6313afbcdc31516d",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "e2e",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-8f6dedca9e06039af60b7b151601fffa9831725724f35863ab1f763a512dba7f",
+      "evidence-aa2fed62e3d8800ddd5ae0ea99b2fe94793f136be807372064e56373f9985b77",
+      "evidence-d616c9cb543737b4e19c6b70c96cc7c742031b791feedf2a37de50233548e72d",
+      "evidence-dfbb5febceb751bf5b99152840e0337906b9832a4067e534ab2eddf96f66cc1e"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:13:25.883Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-2f1e4996fce12ed3dd0944ed223ad8ef97f8544a7ad943e0b36887c7538cab7a",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071450-58119eb90ddff7b5",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901071450-58119eb90ddff7b5",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "unit",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-884263c6d7484573dc3859c8aca6b205ce1d5f8de7547f24ad418c5dcbfe85d2",
+      "evidence-9834ede07914d5dee977218827088d9e8bf92876408334e4f3c5bf73610d7cac",
+      "evidence-bf34e46eb2ce5c2fb58c77d30222ba6ed09945ed48af918ca661000d6a673dcd",
+      "evidence-ccd7be6e587e2723e7b4fbd9bbfc54d433ed6ed803b3a4b3c72172d30455e1b5"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:15:30.031Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-3065d295c94ed60566ebc6f13058fb02d2df7fd2396cd6eae2b12f80e631d9ad",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071530-96e341b66c5b154b",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901071530-96e341b66c5b154b",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "unit",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-21b25eab07f8e857084b50a24f4db48aab0628e209e717ff23f76f91910187ad",
+      "evidence-67ec7b3e4b70c41fc41b5979d7a6ccbf100e17c35a4cddf955b55ffb274a6548",
+      "evidence-9a92b133964d4e2c332765a8353a30809859d2faf5a1d5a5eb5148563d74c43c",
+      "evidence-fb65798f9256d641a62eda3697b39418dbb5152a85e67f5f537ffa3953d4054a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:16:14.677Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-372850ba509151632135e8baeb1d4a2f8950f719b00f4e035e0c74473560008e",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074440-b27c0a7e536fa59a",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901074440-b27c0a7e536fa59a",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "e2e",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0c3a88440616541ef0948f7dbb7970034544ced0a911157cbcdc94ae8b1e12cb",
+      "evidence-26984b63a03e489bbb19f76d903e39585d04d9cce5c9b06121b421dfc6de2672",
+      "evidence-e27c2d76b0ff7258dc2f28a8b12ad03400ce3becfcca83ad63486d1f36fa39cf",
+      "evidence-e68b3eaeb2fc731375de16175781d8af3e0d2fd6ba49e0fc2b4b97cf25d8eec6"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:45:31.622Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-40f19ee08ce8f21dde4aebd9e8778f1f92cd20418508a092db40dcd707f952d6",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071614-318bfdb0481332fa",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901071614-318bfdb0481332fa",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "sensory",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-12bac83040ae1c1262b1f527ca4af49ecf0629a04585b0e30cc8cfb5a051f6ad",
+      "evidence-2df25b5bf94152105ef4b1b738db3d75ebb0be9a3547dc8ed7767cf9e8eda1de",
+      "evidence-6ab3b8fe1144893a404694cbc664133f55110b36f50980e819d34456ce740dc9",
+      "evidence-8426f60951686eed6e7951e46d36428ff6052dc1dae57f14eeff3ee7adff00ef"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:16:57.954Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-431b62dd35d0bff30feb3a723dc8ff95252a9be47f47af007525409e82ede560",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065100-cd4916c1dd6ecd90",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901065100-cd4916c1dd6ecd90",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "redteam",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2be52f245b4917381f0eb5c804c56432478c8250c2de91efc6f68c06626fea88",
+      "evidence-72bf621a4ef0614ac18de540f45ae24ad4f62fde3d103280dfb93bdeaf758143",
+      "evidence-d03282da55a6b410b4a92c29d85c725e71aeb21696dacd7b13fd83aa74248baa",
+      "evidence-f59f38c760129ab6b1ee11d78aa5f0c0216ce7786c2b56228a031005525d9834"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:51:41.557Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-435c345c0dac767e98b7953788874ef673727a04439bc8ab2c3c0feee3bb70f1",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064737-e43981d35c072890",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901064737-e43981d35c072890",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "e2e",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-268bf5e5fdbae896f5f75efcf506608d5372cbfe82d2f4032712a8ced4a69d2f",
+      "evidence-5cfee3b0a371879b362e5f9c21a25b6eea5eb9fdf3ce8af6ff43b32351fd9b6e",
+      "evidence-b91a8e5671672a0ade944ed2ebc9a3fa77c385226fa7f39b6cc22517b5fadf3f",
+      "evidence-f1132ffbfc2b1e0be21ab16b12fc09cd7c4d006d1ece1b82e4803362e34b31ab"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:48:23.653Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-455da6a819e317de3a03092e5cea943809011881cb23386d1e716b0e4a7d4987",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064946-b6de245cf89a16bf",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901064946-b6de245cf89a16bf",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "static",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1a71aa0230289b73aa1717f49d06730afc27f0441455780b7aa59de3c49a8138",
+      "evidence-758c9d468a784272e539d8b2f68e907c1d9fc6621e7646e5c6322a6c51714103",
+      "evidence-76ab1ae5faaa195314a2f0e6194e5d2a1e35b47e94ae9cb32e165eea99f98412",
+      "evidence-cb20a2dd49c0e9b5395e15f600925f9f6745fa8792b1860eb05778a3d857733c"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:50:24.694Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-464d433299ca7128c8c3460d27c03ab672a2cd80991bd5a2a72126d2ff506904",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065141-8effd03387144988",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901065141-8effd03387144988",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "static",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-c7d42028699131f05337035d88e7caba076447ae906100bd7678312d98dda7e2",
+      "evidence-e3160a6d9efb767d1f653f1e2c1c6ff320b89f2ee28df6e9ce1280817c9d70f2",
+      "evidence-f14a41632e1d2317ba1a181d45e6e6a0a6c43392418edec80b90ef23ae3a86d9",
+      "evidence-f665077b8ed375d7a84470bf230eb4bd8e0508341a30d5b23e861fcf533695ae"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:52:22.440Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-480a960c3044104603be94d207e4a7ca818d9f04a51dbc789ab45c09c5a5cb73",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074440-b27c0a7e536fa59a",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901074440-b27c0a7e536fa59a",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "redteam",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0c3a88440616541ef0948f7dbb7970034544ced0a911157cbcdc94ae8b1e12cb",
+      "evidence-26984b63a03e489bbb19f76d903e39585d04d9cce5c9b06121b421dfc6de2672",
+      "evidence-e27c2d76b0ff7258dc2f28a8b12ad03400ce3becfcca83ad63486d1f36fa39cf",
+      "evidence-e68b3eaeb2fc731375de16175781d8af3e0d2fd6ba49e0fc2b4b97cf25d8eec6"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:45:31.622Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-481eaee19bce45e464c5df3a2528725b1e3c5ce98b373ba2183f1ae990fb5f26",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071407-1d65670f7695c8b9",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901071407-1d65670f7695c8b9",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "redteam",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-017a95a6b32eedbafef631953668c344b293acf252b5f053b7ab0a8cbff4206e",
+      "evidence-a135aaec6b686cbddbc46c76893953bbc3371fd6ff97d9a3ed73b3e2d42f7b5a",
+      "evidence-c9a1c76ef90a73e730b7dbe973838bdee18bf427362c22d54c7e490de5cddd00",
+      "evidence-f55798f3f4ca8b64c014bd4859fc9cba1d2022edaba514bccd04f1f754c0092a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:14:49.969Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-4886d5eb27b9cc83897ecd194bd5bf02cf081a25b7c67e7d69216690a41a65d1",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074440-b27c0a7e536fa59a",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901074440-b27c0a7e536fa59a",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "sensory",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0c3a88440616541ef0948f7dbb7970034544ced0a911157cbcdc94ae8b1e12cb",
+      "evidence-26984b63a03e489bbb19f76d903e39585d04d9cce5c9b06121b421dfc6de2672",
+      "evidence-e27c2d76b0ff7258dc2f28a8b12ad03400ce3becfcca83ad63486d1f36fa39cf",
+      "evidence-e68b3eaeb2fc731375de16175781d8af3e0d2fd6ba49e0fc2b4b97cf25d8eec6"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:45:31.622Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-48e6a5461bc7d8de91fc57193e28281655f6d49eefc29503e0891c36d3c04b54",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074154-9bc3489be3758375",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901074154-9bc3489be3758375",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "static",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-8e8a11096e3291827c5915a878b61770cefd3ede35e3732ba86cf0f6b922fd31",
+      "evidence-b54240448d50f420d1fcf5bb851fed70533447afd9aaa1caf586ddc43b80e824",
+      "evidence-d7547303ad3cd07d5a9d77b0df9e494e0392c18dff5c7e3ef04ada257095a2a3",
+      "evidence-f44c31f94748c6de7afd428f9ed72ce3493a0cb45bb4bed7c9421957d733fc76"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:42:36.251Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-495a1717472ab428644edde9319b9e46878a51661386ca4a2e9a11a5cad74145",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074236-6da8f336d9866193",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901074236-6da8f336d9866193",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "e2e",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-478042b079bda62eb664b5630c72286b433ea02cd2f8e20b24a7521191a3c427",
+      "evidence-4e8f3f3a03aca622ee54956c0cf508d6a587ab6123157e300eb5bca231306f07",
+      "evidence-728c4754b3fb4ffa333fe536064263a10eeab864054d7a881e7cca331ded1d49",
+      "evidence-77cbd302be7a975f8c3fc9162d6a3eec8eecdd3383246413093886c6e4585bb5"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:43:20.291Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-4d193407894fdbb8cdecf096cf0a1f7665a13a2aaefaa1f776359f3369f3f1f0",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064946-b6de245cf89a16bf",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901064946-b6de245cf89a16bf",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "unit",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1a71aa0230289b73aa1717f49d06730afc27f0441455780b7aa59de3c49a8138",
+      "evidence-758c9d468a784272e539d8b2f68e907c1d9fc6621e7646e5c6322a6c51714103",
+      "evidence-76ab1ae5faaa195314a2f0e6194e5d2a1e35b47e94ae9cb32e165eea99f98412",
+      "evidence-cb20a2dd49c0e9b5395e15f600925f9f6745fa8792b1860eb05778a3d857733c"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:50:24.694Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-4d8932deef752246f892beb2479dcb741c8e7a2995305c6de0ec3fe5eef8c11c",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074320-ecf65bf1191a1aed",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901074320-ecf65bf1191a1aed",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "e2e",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-450254eee76b79384db40dfefb40d39b112e6557205dec523a232c365b0ac9f5",
+      "evidence-6cd851e09043fb99e03e97163d8c935ec483a5f5853d5bd0694762f1786fe701",
+      "evidence-b590631f596e2d2b8074870a09497826155ead501a2f097ee52dc61efab68bd4",
+      "evidence-c4e8bf466c742bd428bdfcfc30983209f7c49e11313efb1ba7a5d8e66438fcc2"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:43:59.352Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-4ef079205f6aad43b4d1a4e973c0d48c223f270311be7a911f5e2e8bcb4937e6",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071325-c0e0b094bfd321be",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901071325-c0e0b094bfd321be",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "e2e",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-41ba6ede08b6c2eac264a47c424e4a5e66f1f65959a69cb7ff12c10bfcc4e0db",
+      "evidence-69fef2427b74f001f0061d6251119deb430ee3fcf80d8df03da907a99256036a",
+      "evidence-a699917836f9e9f81f1e06560b676fd3ada14bb388d89b5485d834a6fb229ebd",
+      "evidence-b481419a2ad65ef6d5a6275c125679e92e1c5cfef0b5d4d7042c924403e8d6c1"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:14:07.196Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-4f32225fa104be0bd04b327c160f8d6f6bab6b16c79233489c4d1220269728dd",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074531-55cd681cdaa620c6",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901074531-55cd681cdaa620c6",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "e2e",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-01e008dc4c857698365be8acecdc8a9e815bec5e4e732c84d529253221c53854",
+      "evidence-0706e47ae8496dfa036068a103794ff17220973528ca3c33ec54c06f5d8e34a5",
+      "evidence-4057696ece06cfc35bc8dde02cf0cc0e5963d0a03ed833ce9a86a50941c642a7",
+      "evidence-ee748c68fff70ac2169c31787d154791bb0a34009550ccdaf16a2d77256e1c1b"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:46:16.247Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-4f37a473b54413e5b3abc9ab4d3e233586131f14501609a653a84223755533f1",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064901-70dc3f466d41c106",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901064901-70dc3f466d41c106",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "e2e",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-27c1e0e715a99f002cb8ff7099912023567a5e3ab9fc39df510b7cbbb2264f28",
+      "evidence-901d9f5eb7a0306808e3dc69b2dfe93bde84466d919f6c6961609b5fdc10be3c",
+      "evidence-b10c7457804372d9dc60aa6a31b6d120279d7a392c0df25252306ae1b1651563",
+      "evidence-c2c43d9eb3e850616d30096586a5895032eb296cd1e9f73680bdcb4713027e2b"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:49:46.418Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-533f93b657f4c61007d18bfb4f2a74a9903a8c4b5413823b9238c6c007019044",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074154-9bc3489be3758375",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901074154-9bc3489be3758375",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "sensory",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-8e8a11096e3291827c5915a878b61770cefd3ede35e3732ba86cf0f6b922fd31",
+      "evidence-b54240448d50f420d1fcf5bb851fed70533447afd9aaa1caf586ddc43b80e824",
+      "evidence-d7547303ad3cd07d5a9d77b0df9e494e0392c18dff5c7e3ef04ada257095a2a3",
+      "evidence-f44c31f94748c6de7afd428f9ed72ce3493a0cb45bb4bed7c9421957d733fc76"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:42:36.251Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-54429ae5f482b16d67d63435d901dc1bc7dbcd7df56eade05f890769b5af45a1",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065141-8effd03387144988",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901065141-8effd03387144988",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "facticity",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-c7d42028699131f05337035d88e7caba076447ae906100bd7678312d98dda7e2",
+      "evidence-e3160a6d9efb767d1f653f1e2c1c6ff320b89f2ee28df6e9ce1280817c9d70f2",
+      "evidence-f14a41632e1d2317ba1a181d45e6e6a0a6c43392418edec80b90ef23ae3a86d9",
+      "evidence-f665077b8ed375d7a84470bf230eb4bd8e0508341a30d5b23e861fcf533695ae"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:52:22.440Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-558b66c1f7c997e1002c8b789d46424ceb7ee87701f0b9c4ed95418b30086379",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071210-86b686dc0a3397d7",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901071210-86b686dc0a3397d7",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "facticity",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1694e0ac0c065c427ee930b1fa960940be9e002f2be75eef5e5102c463f0868d",
+      "evidence-9e27a9a9bf9bc1774260a142f95ba557a9c6f7b580e25ede36228e3b7f23af01",
+      "evidence-ad5a905393595cccfa7156ab268ac43de8cf9c76585cbf6220aac02ffcb7f216",
+      "evidence-b1b9cdb2e940916bd3b5867a7f5865fdbb5a9aec4f3afc25a59cf52f5413d3fc"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:12:47.967Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-5675a1873b51aef0159e69c331c1427b6e2e7ec1f950aa0bc28e9a55d914f5c5",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074109-b93736a6d48ece1f",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901074109-b93736a6d48ece1f",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "redteam",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3a474e8262d1a4e377a4be747ff1b99a1cff870e17cac149990fd9d0a1bee2c6",
+      "evidence-4a824aeebf8e2caaebf92412b612022f8156b77057c4604de3969a9b7b5407e8",
+      "evidence-806541ccb868a0ccabe52f0ad66a3b1353fbfcb7f994d586564dfaeb678d7dca",
+      "evidence-8de2f91225a14241828e0aeb0c165af590740923b75479f6380b35ae0a8d54c2"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:41:54.443Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-576621dcd6d80e9b7fc3c80fbb38816c3cc8a94a27cd2ec196de5ecbe185cadd",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071248-6313afbcdc31516d",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901071248-6313afbcdc31516d",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "sensory",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-8f6dedca9e06039af60b7b151601fffa9831725724f35863ab1f763a512dba7f",
+      "evidence-aa2fed62e3d8800ddd5ae0ea99b2fe94793f136be807372064e56373f9985b77",
+      "evidence-d616c9cb543737b4e19c6b70c96cc7c742031b791feedf2a37de50233548e72d",
+      "evidence-dfbb5febceb751bf5b99152840e0337906b9832a4067e534ab2eddf96f66cc1e"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:13:25.883Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-57aba59c19e92fccef1e5c1e0f589aaf64f73e7ffc914f7f0778ef8887137121",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071614-318bfdb0481332fa",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901071614-318bfdb0481332fa",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "e2e",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-12bac83040ae1c1262b1f527ca4af49ecf0629a04585b0e30cc8cfb5a051f6ad",
+      "evidence-2df25b5bf94152105ef4b1b738db3d75ebb0be9a3547dc8ed7767cf9e8eda1de",
+      "evidence-6ab3b8fe1144893a404694cbc664133f55110b36f50980e819d34456ce740dc9",
+      "evidence-8426f60951686eed6e7951e46d36428ff6052dc1dae57f14eeff3ee7adff00ef"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:16:57.954Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-5c4869a92e9dae7ab04df20bc00072c89d11c10bb5c50e15fe947e113b298861",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074616-1d51a8a36cac8b36",
+    "case_id": "CASE-009-rental-device-catalog",
+    "attempt_id": "attempt-20260901074616-1d51a8a36cac8b36",
+    "step_id": "CASE-009-rental-device-catalog-STEP-1",
+    "assertion_id": "CASE-009-rental-device-catalog-ASSERT",
+    "domain": "static",
+    "expected": "目录数据来自共享后端；设备创建可用；页面不存在大类/型号快捷创建按钮、弹窗或隐式入口。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-0f38fac4b375ed7ec735db69e5bf3f223ea8af9076ba917ed66d45f6b1e035b3",
+      "evidence-20a8053ed183657c62cb38ee80e8b31b7b11eb5f585e3ac0ec181299b793e729",
+      "evidence-4080a7a575ba35403f446944348eceae77465b56e9e2f1c89653a2107efd646c",
+      "evidence-4608511189ce258e23bafd1e5cdb2276b728bb8642060ea150f500a1fb69c856",
+      "evidence-4dc7889eaf5c870bed60e1ce8cf722556715883e136355ad4c2257b9284f7f5d",
+      "evidence-4f404cdc1f1624ca91bfc0cbdae08186807d62dce5b77adc294ed860f6052df6",
+      "evidence-6910c6f5c3301e03e114fd62d8c5a4db852f1d8d795ce7fd3fc89682d19187e3",
+      "evidence-c3c21faaf174b4a57895b8e974cc6043c0db3f57bc89bee39fd9c2e7de9b420e"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:46:25.169Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-5f720b25f11c7fca7f055a16ba3ca6f4768bd83762b0f651f0e58d82b9668663",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065024-929532f75a5125eb",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901065024-929532f75a5125eb",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "sensory",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1fca37f934781c50281a13ff9369ef5648a42bf31f08273cf5e6d6d50cfd5167",
+      "evidence-3c4c30cbed43ee4d08dc739d3012f0658bb550d233f18087f61b835787950169",
+      "evidence-474f1b2e90511d4660c727c360f709da73ad77eba28e13adcb01559c8781bec0",
+      "evidence-d73ebd0fe0452ffdadbd339951e8344136adf80f65fd23a1395b36c15396aead"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:51:00.494Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-5fc38cd888b5ec7e319c413ebbbff00771b0be3cf2bd3d9be77bb139a1a0a040",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071325-c0e0b094bfd321be",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901071325-c0e0b094bfd321be",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "facticity",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-41ba6ede08b6c2eac264a47c424e4a5e66f1f65959a69cb7ff12c10bfcc4e0db",
+      "evidence-69fef2427b74f001f0061d6251119deb430ee3fcf80d8df03da907a99256036a",
+      "evidence-a699917836f9e9f81f1e06560b676fd3ada14bb388d89b5485d834a6fb229ebd",
+      "evidence-b481419a2ad65ef6d5a6275c125679e92e1c5cfef0b5d4d7042c924403e8d6c1"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:14:07.196Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-62a029d3fdcfa3d7c6b57faf9a20469c250f48ab442f130b3f38f2d62d91d050",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071450-58119eb90ddff7b5",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901071450-58119eb90ddff7b5",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "static",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-884263c6d7484573dc3859c8aca6b205ce1d5f8de7547f24ad418c5dcbfe85d2",
+      "evidence-9834ede07914d5dee977218827088d9e8bf92876408334e4f3c5bf73610d7cac",
+      "evidence-bf34e46eb2ce5c2fb58c77d30222ba6ed09945ed48af918ca661000d6a673dcd",
+      "evidence-ccd7be6e587e2723e7b4fbd9bbfc54d433ed6ed803b3a4b3c72172d30455e1b5"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:15:30.031Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-62f7127ce8c1831620550e780244c4d477206b42643716fb950290bd995daa70",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065100-cd4916c1dd6ecd90",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901065100-cd4916c1dd6ecd90",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "unit",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2be52f245b4917381f0eb5c804c56432478c8250c2de91efc6f68c06626fea88",
+      "evidence-72bf621a4ef0614ac18de540f45ae24ad4f62fde3d103280dfb93bdeaf758143",
+      "evidence-d03282da55a6b410b4a92c29d85c725e71aeb21696dacd7b13fd83aa74248baa",
+      "evidence-f59f38c760129ab6b1ee11d78aa5f0c0216ce7786c2b56228a031005525d9834"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:51:41.557Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-64cce9a0d367b2c1afef19232641fcc142e06a00dfc6872aa16453f6dc712092",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071407-1d65670f7695c8b9",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901071407-1d65670f7695c8b9",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "unit",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-017a95a6b32eedbafef631953668c344b293acf252b5f053b7ab0a8cbff4206e",
+      "evidence-a135aaec6b686cbddbc46c76893953bbc3371fd6ff97d9a3ed73b3e2d42f7b5a",
+      "evidence-c9a1c76ef90a73e730b7dbe973838bdee18bf427362c22d54c7e490de5cddd00",
+      "evidence-f55798f3f4ca8b64c014bd4859fc9cba1d2022edaba514bccd04f1f754c0092a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:14:49.969Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-6549bc2bb6387582e5772364869744f64d83aea2e7cbfaff80eb8abf4d8d440b",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065141-8effd03387144988",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901065141-8effd03387144988",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "redteam",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-c7d42028699131f05337035d88e7caba076447ae906100bd7678312d98dda7e2",
+      "evidence-e3160a6d9efb767d1f653f1e2c1c6ff320b89f2ee28df6e9ce1280817c9d70f2",
+      "evidence-f14a41632e1d2317ba1a181d45e6e6a0a6c43392418edec80b90ef23ae3a86d9",
+      "evidence-f665077b8ed375d7a84470bf230eb4bd8e0508341a30d5b23e861fcf533695ae"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:52:22.440Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-66132da7b60e328c3aef1f4bf636c5ba506cf76bdd12dbadcd62c77f64826b9b",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074625-95ebf22c4403c8ef",
+    "case_id": "CASE-010-theme-locale-states",
+    "attempt_id": "attempt-20260901074625-95ebf22c4403c8ef",
+    "step_id": "CASE-010-theme-locale-states-STEP-1",
+    "assertion_id": "CASE-010-theme-locale-states-ASSERT",
+    "domain": "sensory",
+    "expected": "无页面级横向滚动或不可读内容；文案完整；状态不只依赖颜色；关键交互有清晰反馈并可审阅。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-2f7005a3bee6e61eebae6a73270164f03a10512ba013e439522137a3a140fdbd",
+      "evidence-3e876737a22dadceab182606f33ba860865e74898ca2bb6d2f8b14247b41ddb6",
+      "evidence-42938523fb7feed26f3d4ce090c778096ae89b4918f0abdd425f2b309d40ef51",
+      "evidence-66f65002ce71914890baa2ab265deb33da2c1a74020e25940e16f2e9390833b0",
+      "evidence-7fd03f6d75c902b6a9605f6df0ba805e22e6f21d01e5607f422eca32b0dc586e",
+      "evidence-80e39351378066b07242ebad54d259b840d7434368730ff66932dfbfb1a1434c",
+      "evidence-8c7e6645cdcb852817d49a95786105f83915ff7e951698fa5ecaec3bdbb844bc",
+      "evidence-ff2f94ff8decb74a80e3b3814e0be773cbf2746ac5c0a1fed25bb5b9e5c94fa2"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:46:43.862Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-663afdb3e5fd6b9010d22642dcfeac59518c2ab3050c5347da780cfce867c31d",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071530-96e341b66c5b154b",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901071530-96e341b66c5b154b",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "facticity",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-21b25eab07f8e857084b50a24f4db48aab0628e209e717ff23f76f91910187ad",
+      "evidence-67ec7b3e4b70c41fc41b5979d7a6ccbf100e17c35a4cddf955b55ffb274a6548",
+      "evidence-9a92b133964d4e2c332765a8353a30809859d2faf5a1d5a5eb5148563d74c43c",
+      "evidence-fb65798f9256d641a62eda3697b39418dbb5152a85e67f5f537ffa3953d4054a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:16:14.677Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-67894780f65da9dd0b6f2a39f77421d30ec5cd3da9853856a6fa457636c943cc",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064823-ce247cb3441bdfe3",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901064823-ce247cb3441bdfe3",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "e2e",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-a332761bb0db6ce0fc52f844b53b15150734295d767cd6e2a2d56fbb1606faf9",
+      "evidence-e77c6b74dd8e50d99db2b2b30c87b19a8f5aba4f6b808f83e9a8ad3753178f1d",
+      "evidence-f378a2b441cf8d4c2de4ad3785c173db06fae638cf16f97eaa7f6e3abfbbef11",
+      "evidence-f6daec65896c0cde5fb9c2ceb4f2cbe82331f211722ac43a756e47b5f94d8aa6"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:49:01.916Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-6a4122316d8fba5e9aa31023131040815d0e65b05939d9bd0760eb688a38f191",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065100-cd4916c1dd6ecd90",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901065100-cd4916c1dd6ecd90",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "facticity",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2be52f245b4917381f0eb5c804c56432478c8250c2de91efc6f68c06626fea88",
+      "evidence-72bf621a4ef0614ac18de540f45ae24ad4f62fde3d103280dfb93bdeaf758143",
+      "evidence-d03282da55a6b410b4a92c29d85c725e71aeb21696dacd7b13fd83aa74248baa",
+      "evidence-f59f38c760129ab6b1ee11d78aa5f0c0216ce7786c2b56228a031005525d9834"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:51:41.557Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-6ae458a5fd5825431269a64f253efda7aba5e019256feb45c520ec5d4087cebb",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074236-6da8f336d9866193",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901074236-6da8f336d9866193",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "static",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-478042b079bda62eb664b5630c72286b433ea02cd2f8e20b24a7521191a3c427",
+      "evidence-4e8f3f3a03aca622ee54956c0cf508d6a587ab6123157e300eb5bca231306f07",
+      "evidence-728c4754b3fb4ffa333fe536064263a10eeab864054d7a881e7cca331ded1d49",
+      "evidence-77cbd302be7a975f8c3fc9162d6a3eec8eecdd3383246413093886c6e4585bb5"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:43:20.291Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-6ed22f52a9d13eb87272315b09c26306c50a5bb567a1501fb9c0fd0c44435d5b",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074109-b93736a6d48ece1f",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901074109-b93736a6d48ece1f",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "unit",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3a474e8262d1a4e377a4be747ff1b99a1cff870e17cac149990fd9d0a1bee2c6",
+      "evidence-4a824aeebf8e2caaebf92412b612022f8156b77057c4604de3969a9b7b5407e8",
+      "evidence-806541ccb868a0ccabe52f0ad66a3b1353fbfcb7f994d586564dfaeb678d7dca",
+      "evidence-8de2f91225a14241828e0aeb0c165af590740923b75479f6380b35ae0a8d54c2"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:41:54.443Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-712c8b563a6b29110829050d95b32b9a3f635cbd6a91f7d6f16b47540ff23346",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071210-86b686dc0a3397d7",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901071210-86b686dc0a3397d7",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "unit",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1694e0ac0c065c427ee930b1fa960940be9e002f2be75eef5e5102c463f0868d",
+      "evidence-9e27a9a9bf9bc1774260a142f95ba557a9c6f7b580e25ede36228e3b7f23af01",
+      "evidence-ad5a905393595cccfa7156ab268ac43de8cf9c76585cbf6220aac02ffcb7f216",
+      "evidence-b1b9cdb2e940916bd3b5867a7f5865fdbb5a9aec4f3afc25a59cf52f5413d3fc"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:12:47.967Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-71cfd5a8d69aa1dadad94eab1714ecb9455babfac49046777e0cf63552cd4626",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074616-1d51a8a36cac8b36",
+    "case_id": "CASE-009-rental-device-catalog",
+    "attempt_id": "attempt-20260901074616-1d51a8a36cac8b36",
+    "step_id": "CASE-009-rental-device-catalog-STEP-1",
+    "assertion_id": "CASE-009-rental-device-catalog-ASSERT",
+    "domain": "sensory",
+    "expected": "目录数据来自共享后端；设备创建可用；页面不存在大类/型号快捷创建按钮、弹窗或隐式入口。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-0f38fac4b375ed7ec735db69e5bf3f223ea8af9076ba917ed66d45f6b1e035b3",
+      "evidence-20a8053ed183657c62cb38ee80e8b31b7b11eb5f585e3ac0ec181299b793e729",
+      "evidence-4080a7a575ba35403f446944348eceae77465b56e9e2f1c89653a2107efd646c",
+      "evidence-4608511189ce258e23bafd1e5cdb2276b728bb8642060ea150f500a1fb69c856",
+      "evidence-4dc7889eaf5c870bed60e1ce8cf722556715883e136355ad4c2257b9284f7f5d",
+      "evidence-4f404cdc1f1624ca91bfc0cbdae08186807d62dce5b77adc294ed860f6052df6",
+      "evidence-6910c6f5c3301e03e114fd62d8c5a4db852f1d8d795ce7fd3fc89682d19187e3",
+      "evidence-c3c21faaf174b4a57895b8e974cc6043c0db3f57bc89bee39fd9c2e7de9b420e"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:46:25.169Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-72b3adde87b83b0befd528b2b234c0c9fc4582158a4ab8309eafc016e04c7a67",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074236-6da8f336d9866193",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901074236-6da8f336d9866193",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "facticity",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-478042b079bda62eb664b5630c72286b433ea02cd2f8e20b24a7521191a3c427",
+      "evidence-4e8f3f3a03aca622ee54956c0cf508d6a587ab6123157e300eb5bca231306f07",
+      "evidence-728c4754b3fb4ffa333fe536064263a10eeab864054d7a881e7cca331ded1d49",
+      "evidence-77cbd302be7a975f8c3fc9162d6a3eec8eecdd3383246413093886c6e4585bb5"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:43:20.291Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-72e4fbe077ed5da5ac857d3a19c3c12017f66c9f785b1abf209c05599fe9a3d5",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071614-318bfdb0481332fa",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901071614-318bfdb0481332fa",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "redteam",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-12bac83040ae1c1262b1f527ca4af49ecf0629a04585b0e30cc8cfb5a051f6ad",
+      "evidence-2df25b5bf94152105ef4b1b738db3d75ebb0be9a3547dc8ed7767cf9e8eda1de",
+      "evidence-6ab3b8fe1144893a404694cbc664133f55110b36f50980e819d34456ce740dc9",
+      "evidence-8426f60951686eed6e7951e46d36428ff6052dc1dae57f14eeff3ee7adff00ef"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:16:57.954Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-7394db308f7bbc6c03d555f005f11bd6cff641cc09e8b41d068ba383d620ac72",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064901-70dc3f466d41c106",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901064901-70dc3f466d41c106",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "static",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-27c1e0e715a99f002cb8ff7099912023567a5e3ab9fc39df510b7cbbb2264f28",
+      "evidence-901d9f5eb7a0306808e3dc69b2dfe93bde84466d919f6c6961609b5fdc10be3c",
+      "evidence-b10c7457804372d9dc60aa6a31b6d120279d7a392c0df25252306ae1b1651563",
+      "evidence-c2c43d9eb3e850616d30096586a5895032eb296cd1e9f73680bdcb4713027e2b"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:49:46.418Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-73dd3f8ab905eb651cd4aeb06719d24dcfe24312bbca0349037e91976ce1d68e",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064901-70dc3f466d41c106",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901064901-70dc3f466d41c106",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "sensory",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-27c1e0e715a99f002cb8ff7099912023567a5e3ab9fc39df510b7cbbb2264f28",
+      "evidence-901d9f5eb7a0306808e3dc69b2dfe93bde84466d919f6c6961609b5fdc10be3c",
+      "evidence-b10c7457804372d9dc60aa6a31b6d120279d7a392c0df25252306ae1b1651563",
+      "evidence-c2c43d9eb3e850616d30096586a5895032eb296cd1e9f73680bdcb4713027e2b"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:49:46.418Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-7449a1aebbc64b886684d62710fc04b7b471d551a52dc71f0547824afaa54876",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065141-8effd03387144988",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901065141-8effd03387144988",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "e2e",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-c7d42028699131f05337035d88e7caba076447ae906100bd7678312d98dda7e2",
+      "evidence-e3160a6d9efb767d1f653f1e2c1c6ff320b89f2ee28df6e9ce1280817c9d70f2",
+      "evidence-f14a41632e1d2317ba1a181d45e6e6a0a6c43392418edec80b90ef23ae3a86d9",
+      "evidence-f665077b8ed375d7a84470bf230eb4bd8e0508341a30d5b23e861fcf533695ae"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:52:22.440Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-79a870c05627191bc62f41804973727710c4a48b02db9a6af6b63aeba0837853",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074052-302b57f9f6bccee8",
+    "case_id": "CASE-001-admin-configuration",
+    "attempt_id": "attempt-20260901074052-302b57f9f6bccee8",
+    "step_id": "CASE-001-admin-configuration-STEP-1",
+    "assertion_id": "CASE-001-admin-configuration-ASSERT",
+    "domain": "e2e",
+    "expected": "所有保存均由后端确认，权限、租户、乐观锁和影响预览生效，页面不推断缺失标识。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-2087c2a75f363eecd326e64e8d40ab7b6e14e01c1b73586e96f52283abb26d31",
+      "evidence-2565e42205f22c9b5972d188aac35e5a25a4aeec9ca68de05cf6ed4d8287f70c",
+      "evidence-2574503eec7ac18dc8ee259d2ea26177af1edd5b54a6112066344cfd6365c9ae",
+      "evidence-5555dd453910088d0f2a244e953cbd6f6f0b27d983d2a45fce74b7968a3c487b",
+      "evidence-a92f63e1aae769bc50d9ac81d81e5e8a30a2a6cbb3c81f6661fc6af69b816225",
+      "evidence-b03f5d28efb9875bb2130a2bfdabc9b9189c8cb8f19e04611eee5a9a934c80c0",
+      "evidence-ba813cc545b418c8db4530568617da9e30c0ebfca0586d611514754086db4f12",
+      "evidence-f316065aa4587f5d75b9f55676b2ac38bf81c5ea8393177da555eb2b50bfdff2"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:41:09.761Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-7b177cecd691d0f397dd15a531cb18e1baa801233cee2591980fe2c3a9eb9a21",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074440-b27c0a7e536fa59a",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901074440-b27c0a7e536fa59a",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "facticity",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0c3a88440616541ef0948f7dbb7970034544ced0a911157cbcdc94ae8b1e12cb",
+      "evidence-26984b63a03e489bbb19f76d903e39585d04d9cce5c9b06121b421dfc6de2672",
+      "evidence-e27c2d76b0ff7258dc2f28a8b12ad03400ce3becfcca83ad63486d1f36fa39cf",
+      "evidence-e68b3eaeb2fc731375de16175781d8af3e0d2fd6ba49e0fc2b4b97cf25d8eec6"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:45:31.622Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-7e1cb4c4171b23989148750dc288ed110ca9ad31fab5fa81de557226f7479e31",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074531-55cd681cdaa620c6",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901074531-55cd681cdaa620c6",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "redteam",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-01e008dc4c857698365be8acecdc8a9e815bec5e4e732c84d529253221c53854",
+      "evidence-0706e47ae8496dfa036068a103794ff17220973528ca3c33ec54c06f5d8e34a5",
+      "evidence-4057696ece06cfc35bc8dde02cf0cc0e5963d0a03ed833ce9a86a50941c642a7",
+      "evidence-ee748c68fff70ac2169c31787d154791bb0a34009550ccdaf16a2d77256e1c1b"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:46:16.247Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-825de3920b18b659dd4c903d2ea04804a247c02bd072bcf02cf81a16ca498a9e",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074616-1d51a8a36cac8b36",
+    "case_id": "CASE-009-rental-device-catalog",
+    "attempt_id": "attempt-20260901074616-1d51a8a36cac8b36",
+    "step_id": "CASE-009-rental-device-catalog-STEP-1",
+    "assertion_id": "CASE-009-rental-device-catalog-ASSERT",
+    "domain": "e2e",
+    "expected": "目录数据来自共享后端；设备创建可用；页面不存在大类/型号快捷创建按钮、弹窗或隐式入口。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-0f38fac4b375ed7ec735db69e5bf3f223ea8af9076ba917ed66d45f6b1e035b3",
+      "evidence-20a8053ed183657c62cb38ee80e8b31b7b11eb5f585e3ac0ec181299b793e729",
+      "evidence-4080a7a575ba35403f446944348eceae77465b56e9e2f1c89653a2107efd646c",
+      "evidence-4608511189ce258e23bafd1e5cdb2276b728bb8642060ea150f500a1fb69c856",
+      "evidence-4dc7889eaf5c870bed60e1ce8cf722556715883e136355ad4c2257b9284f7f5d",
+      "evidence-4f404cdc1f1624ca91bfc0cbdae08186807d62dce5b77adc294ed860f6052df6",
+      "evidence-6910c6f5c3301e03e114fd62d8c5a4db852f1d8d795ce7fd3fc89682d19187e3",
+      "evidence-c3c21faaf174b4a57895b8e974cc6043c0db3f57bc89bee39fd9c2e7de9b420e"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:46:25.169Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-83eb446b4d434ff9755eff7f95100e9a436093f7502d9d1a0a8850b0578be9e0",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074109-b93736a6d48ece1f",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901074109-b93736a6d48ece1f",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "facticity",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3a474e8262d1a4e377a4be747ff1b99a1cff870e17cac149990fd9d0a1bee2c6",
+      "evidence-4a824aeebf8e2caaebf92412b612022f8156b77057c4604de3969a9b7b5407e8",
+      "evidence-806541ccb868a0ccabe52f0ad66a3b1353fbfcb7f994d586564dfaeb678d7dca",
+      "evidence-8de2f91225a14241828e0aeb0c165af590740923b75479f6380b35ae0a8d54c2"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:41:54.443Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-8692371ca67183caae4ff7c4fe29453ef00707e080c22c0054434a1801c1c648",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065024-929532f75a5125eb",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901065024-929532f75a5125eb",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "redteam",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1fca37f934781c50281a13ff9369ef5648a42bf31f08273cf5e6d6d50cfd5167",
+      "evidence-3c4c30cbed43ee4d08dc739d3012f0658bb550d233f18087f61b835787950169",
+      "evidence-474f1b2e90511d4660c727c360f709da73ad77eba28e13adcb01559c8781bec0",
+      "evidence-d73ebd0fe0452ffdadbd339951e8344136adf80f65fd23a1395b36c15396aead"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:51:00.494Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-88919c51e315cb1e96b8a8b61e6c1358dcc2318c55bd4c2a2f61e8a02d13af2d",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074052-302b57f9f6bccee8",
+    "case_id": "CASE-001-admin-configuration",
+    "attempt_id": "attempt-20260901074052-302b57f9f6bccee8",
+    "step_id": "CASE-001-admin-configuration-STEP-1",
+    "assertion_id": "CASE-001-admin-configuration-ASSERT",
+    "domain": "static",
+    "expected": "所有保存均由后端确认，权限、租户、乐观锁和影响预览生效，页面不推断缺失标识。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-2087c2a75f363eecd326e64e8d40ab7b6e14e01c1b73586e96f52283abb26d31",
+      "evidence-2565e42205f22c9b5972d188aac35e5a25a4aeec9ca68de05cf6ed4d8287f70c",
+      "evidence-2574503eec7ac18dc8ee259d2ea26177af1edd5b54a6112066344cfd6365c9ae",
+      "evidence-5555dd453910088d0f2a244e953cbd6f6f0b27d983d2a45fce74b7968a3c487b",
+      "evidence-a92f63e1aae769bc50d9ac81d81e5e8a30a2a6cbb3c81f6661fc6af69b816225",
+      "evidence-b03f5d28efb9875bb2130a2bfdabc9b9189c8cb8f19e04611eee5a9a934c80c0",
+      "evidence-ba813cc545b418c8db4530568617da9e30c0ebfca0586d611514754086db4f12",
+      "evidence-f316065aa4587f5d75b9f55676b2ac38bf81c5ea8393177da555eb2b50bfdff2"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:41:09.761Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-8a494ade69f16fc24d1b62a5984359da928603414c188af25b06962f615e0650",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064737-e43981d35c072890",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901064737-e43981d35c072890",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "facticity",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-268bf5e5fdbae896f5f75efcf506608d5372cbfe82d2f4032712a8ced4a69d2f",
+      "evidence-5cfee3b0a371879b362e5f9c21a25b6eea5eb9fdf3ce8af6ff43b32351fd9b6e",
+      "evidence-b91a8e5671672a0ade944ed2ebc9a3fa77c385226fa7f39b6cc22517b5fadf3f",
+      "evidence-f1132ffbfc2b1e0be21ab16b12fc09cd7c4d006d1ece1b82e4803362e34b31ab"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:48:23.653Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-8e04fc5e71fb2d8f4ae0fdcbe46aea99fcd7f28042bd9bdbb46b9ef247c4a74e",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074359-e57594ed843a1792",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901074359-e57594ed843a1792",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "e2e",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-00e1c127c26283634f113d5df784aa1945fd99f316b08e220bbad189b2b775d3",
+      "evidence-2b96405592ad52ed56b304b369744f3d3d18adb8b45a82dc9429d7fd2e2c259b",
+      "evidence-2ec6ea32935699c5a337665e03b2640164c3139222e092831527f76d50ad168b",
+      "evidence-8a5650a71d4f88c6e7a11fde42e200e26e4cb66522c67f8e59356fb38a213b27"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:44:40.177Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-8ff8c68db50db281a61a2f518e9709d7c148b39def2c274e78f62a9f6dad6a3a",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065100-cd4916c1dd6ecd90",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901065100-cd4916c1dd6ecd90",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "sensory",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2be52f245b4917381f0eb5c804c56432478c8250c2de91efc6f68c06626fea88",
+      "evidence-72bf621a4ef0614ac18de540f45ae24ad4f62fde3d103280dfb93bdeaf758143",
+      "evidence-d03282da55a6b410b4a92c29d85c725e71aeb21696dacd7b13fd83aa74248baa",
+      "evidence-f59f38c760129ab6b1ee11d78aa5f0c0216ce7786c2b56228a031005525d9834"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:51:41.557Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-900b6c90a81a352d9b5511d62fc49498c35abcdd61f5f7896a151b0f29bea225",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071407-1d65670f7695c8b9",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901071407-1d65670f7695c8b9",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "e2e",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-017a95a6b32eedbafef631953668c344b293acf252b5f053b7ab0a8cbff4206e",
+      "evidence-a135aaec6b686cbddbc46c76893953bbc3371fd6ff97d9a3ed73b3e2d42f7b5a",
+      "evidence-c9a1c76ef90a73e730b7dbe973838bdee18bf427362c22d54c7e490de5cddd00",
+      "evidence-f55798f3f4ca8b64c014bd4859fc9cba1d2022edaba514bccd04f1f754c0092a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:14:49.969Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-907cbd1f56469f5c40519e88e6dbc0f367ca685077272bd9929473e3c78518c7",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074109-b93736a6d48ece1f",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901074109-b93736a6d48ece1f",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "sensory",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3a474e8262d1a4e377a4be747ff1b99a1cff870e17cac149990fd9d0a1bee2c6",
+      "evidence-4a824aeebf8e2caaebf92412b612022f8156b77057c4604de3969a9b7b5407e8",
+      "evidence-806541ccb868a0ccabe52f0ad66a3b1353fbfcb7f994d586564dfaeb678d7dca",
+      "evidence-8de2f91225a14241828e0aeb0c165af590740923b75479f6380b35ae0a8d54c2"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:41:54.443Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-93e3d5f8f6d54d77794e2091a2db810406164c4c85ca2c92fb4fc26968286df8",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074616-1d51a8a36cac8b36",
+    "case_id": "CASE-009-rental-device-catalog",
+    "attempt_id": "attempt-20260901074616-1d51a8a36cac8b36",
+    "step_id": "CASE-009-rental-device-catalog-STEP-1",
+    "assertion_id": "CASE-009-rental-device-catalog-ASSERT",
+    "domain": "redteam",
+    "expected": "目录数据来自共享后端；设备创建可用；页面不存在大类/型号快捷创建按钮、弹窗或隐式入口。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-0f38fac4b375ed7ec735db69e5bf3f223ea8af9076ba917ed66d45f6b1e035b3",
+      "evidence-20a8053ed183657c62cb38ee80e8b31b7b11eb5f585e3ac0ec181299b793e729",
+      "evidence-4080a7a575ba35403f446944348eceae77465b56e9e2f1c89653a2107efd646c",
+      "evidence-4608511189ce258e23bafd1e5cdb2276b728bb8642060ea150f500a1fb69c856",
+      "evidence-4dc7889eaf5c870bed60e1ce8cf722556715883e136355ad4c2257b9284f7f5d",
+      "evidence-4f404cdc1f1624ca91bfc0cbdae08186807d62dce5b77adc294ed860f6052df6",
+      "evidence-6910c6f5c3301e03e114fd62d8c5a4db852f1d8d795ce7fd3fc89682d19187e3",
+      "evidence-c3c21faaf174b4a57895b8e974cc6043c0db3f57bc89bee39fd9c2e7de9b420e"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:46:25.169Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-942a9a553a83926e2d5cd5096fd6bb5720a301ce61bd9d82ef559245131ff6dc",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074625-95ebf22c4403c8ef",
+    "case_id": "CASE-010-theme-locale-states",
+    "attempt_id": "attempt-20260901074625-95ebf22c4403c8ef",
+    "step_id": "CASE-010-theme-locale-states-STEP-1",
+    "assertion_id": "CASE-010-theme-locale-states-ASSERT",
+    "domain": "redteam",
+    "expected": "无页面级横向滚动或不可读内容；文案完整；状态不只依赖颜色；关键交互有清晰反馈并可审阅。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-2f7005a3bee6e61eebae6a73270164f03a10512ba013e439522137a3a140fdbd",
+      "evidence-3e876737a22dadceab182606f33ba860865e74898ca2bb6d2f8b14247b41ddb6",
+      "evidence-42938523fb7feed26f3d4ce090c778096ae89b4918f0abdd425f2b309d40ef51",
+      "evidence-66f65002ce71914890baa2ab265deb33da2c1a74020e25940e16f2e9390833b0",
+      "evidence-7fd03f6d75c902b6a9605f6df0ba805e22e6f21d01e5607f422eca32b0dc586e",
+      "evidence-80e39351378066b07242ebad54d259b840d7434368730ff66932dfbfb1a1434c",
+      "evidence-8c7e6645cdcb852817d49a95786105f83915ff7e951698fa5ecaec3bdbb844bc",
+      "evidence-ff2f94ff8decb74a80e3b3814e0be773cbf2746ac5c0a1fed25bb5b9e5c94fa2"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:46:43.862Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-9833e25649ee4e9276dedddfdd4343baef8c31a27e7a31fe3f4ce46547b61158",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064901-70dc3f466d41c106",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901064901-70dc3f466d41c106",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "redteam",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-27c1e0e715a99f002cb8ff7099912023567a5e3ab9fc39df510b7cbbb2264f28",
+      "evidence-901d9f5eb7a0306808e3dc69b2dfe93bde84466d919f6c6961609b5fdc10be3c",
+      "evidence-b10c7457804372d9dc60aa6a31b6d120279d7a392c0df25252306ae1b1651563",
+      "evidence-c2c43d9eb3e850616d30096586a5895032eb296cd1e9f73680bdcb4713027e2b"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:49:46.418Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-994968798e5d887d7b032425244a7f3bbcd8753095368af3d91230ab2b710bc1",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074359-e57594ed843a1792",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901074359-e57594ed843a1792",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "sensory",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-00e1c127c26283634f113d5df784aa1945fd99f316b08e220bbad189b2b775d3",
+      "evidence-2b96405592ad52ed56b304b369744f3d3d18adb8b45a82dc9429d7fd2e2c259b",
+      "evidence-2ec6ea32935699c5a337665e03b2640164c3139222e092831527f76d50ad168b",
+      "evidence-8a5650a71d4f88c6e7a11fde42e200e26e4cb66522c67f8e59356fb38a213b27"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:44:40.177Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-9b83a1fd0b7f6d5fdeef248d907dcdafd949d42cf6d943ebe4638b2e0e24d52e",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074154-9bc3489be3758375",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901074154-9bc3489be3758375",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "e2e",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-8e8a11096e3291827c5915a878b61770cefd3ede35e3732ba86cf0f6b922fd31",
+      "evidence-b54240448d50f420d1fcf5bb851fed70533447afd9aaa1caf586ddc43b80e824",
+      "evidence-d7547303ad3cd07d5a9d77b0df9e494e0392c18dff5c7e3ef04ada257095a2a3",
+      "evidence-f44c31f94748c6de7afd428f9ed72ce3493a0cb45bb4bed7c9421957d733fc76"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:42:36.251Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-9ce4fc1a2ff6148c6a9d13d18852afc29f50eeeb1339a2e1d3d93ab28ee4e92d",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074052-302b57f9f6bccee8",
+    "case_id": "CASE-001-admin-configuration",
+    "attempt_id": "attempt-20260901074052-302b57f9f6bccee8",
+    "step_id": "CASE-001-admin-configuration-STEP-1",
+    "assertion_id": "CASE-001-admin-configuration-ASSERT",
+    "domain": "sensory",
+    "expected": "所有保存均由后端确认，权限、租户、乐观锁和影响预览生效，页面不推断缺失标识。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-2087c2a75f363eecd326e64e8d40ab7b6e14e01c1b73586e96f52283abb26d31",
+      "evidence-2565e42205f22c9b5972d188aac35e5a25a4aeec9ca68de05cf6ed4d8287f70c",
+      "evidence-2574503eec7ac18dc8ee259d2ea26177af1edd5b54a6112066344cfd6365c9ae",
+      "evidence-5555dd453910088d0f2a244e953cbd6f6f0b27d983d2a45fce74b7968a3c487b",
+      "evidence-a92f63e1aae769bc50d9ac81d81e5e8a30a2a6cbb3c81f6661fc6af69b816225",
+      "evidence-b03f5d28efb9875bb2130a2bfdabc9b9189c8cb8f19e04611eee5a9a934c80c0",
+      "evidence-ba813cc545b418c8db4530568617da9e30c0ebfca0586d611514754086db4f12",
+      "evidence-f316065aa4587f5d75b9f55676b2ac38bf81c5ea8393177da555eb2b50bfdff2"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:41:09.761Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-9d7998e477de192f1a84c275c98219806d40600501941b10f8a0cd7730be8cd4",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071530-96e341b66c5b154b",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901071530-96e341b66c5b154b",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "redteam",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-21b25eab07f8e857084b50a24f4db48aab0628e209e717ff23f76f91910187ad",
+      "evidence-67ec7b3e4b70c41fc41b5979d7a6ccbf100e17c35a4cddf955b55ffb274a6548",
+      "evidence-9a92b133964d4e2c332765a8353a30809859d2faf5a1d5a5eb5148563d74c43c",
+      "evidence-fb65798f9256d641a62eda3697b39418dbb5152a85e67f5f537ffa3953d4054a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:16:14.677Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-9f1bcb2a9136b9c060da235a801d07be66c9c6dafd232287a6e670251f4ecb65",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064823-ce247cb3441bdfe3",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901064823-ce247cb3441bdfe3",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "unit",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-a332761bb0db6ce0fc52f844b53b15150734295d767cd6e2a2d56fbb1606faf9",
+      "evidence-e77c6b74dd8e50d99db2b2b30c87b19a8f5aba4f6b808f83e9a8ad3753178f1d",
+      "evidence-f378a2b441cf8d4c2de4ad3785c173db06fae638cf16f97eaa7f6e3abfbbef11",
+      "evidence-f6daec65896c0cde5fb9c2ceb4f2cbe82331f211722ac43a756e47b5f94d8aa6"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:49:01.916Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-a18ab2dc468d976747346d8083f5db65a14b8bc34c90c331706af6d8ee751165",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064823-ce247cb3441bdfe3",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901064823-ce247cb3441bdfe3",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "sensory",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-a332761bb0db6ce0fc52f844b53b15150734295d767cd6e2a2d56fbb1606faf9",
+      "evidence-e77c6b74dd8e50d99db2b2b30c87b19a8f5aba4f6b808f83e9a8ad3753178f1d",
+      "evidence-f378a2b441cf8d4c2de4ad3785c173db06fae638cf16f97eaa7f6e3abfbbef11",
+      "evidence-f6daec65896c0cde5fb9c2ceb4f2cbe82331f211722ac43a756e47b5f94d8aa6"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:49:01.916Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-a24a392b0f1ca754ccc20ac93dc3cd053f44551edf0cb40183dad9a53505b918",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071530-96e341b66c5b154b",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901071530-96e341b66c5b154b",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "sensory",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-21b25eab07f8e857084b50a24f4db48aab0628e209e717ff23f76f91910187ad",
+      "evidence-67ec7b3e4b70c41fc41b5979d7a6ccbf100e17c35a4cddf955b55ffb274a6548",
+      "evidence-9a92b133964d4e2c332765a8353a30809859d2faf5a1d5a5eb5148563d74c43c",
+      "evidence-fb65798f9256d641a62eda3697b39418dbb5152a85e67f5f537ffa3953d4054a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:16:14.677Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-a278372ac2243f0681627b3eee027e4d6747b9581dc11929592cfeb74c59d387",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071407-1d65670f7695c8b9",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901071407-1d65670f7695c8b9",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "facticity",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-017a95a6b32eedbafef631953668c344b293acf252b5f053b7ab0a8cbff4206e",
+      "evidence-a135aaec6b686cbddbc46c76893953bbc3371fd6ff97d9a3ed73b3e2d42f7b5a",
+      "evidence-c9a1c76ef90a73e730b7dbe973838bdee18bf427362c22d54c7e490de5cddd00",
+      "evidence-f55798f3f4ca8b64c014bd4859fc9cba1d2022edaba514bccd04f1f754c0092a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:14:49.969Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-a52164d7b42ed6c92f584a06decc7b6040e2fc0ff9b3217794f57c6d7a6dc68b",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074154-9bc3489be3758375",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901074154-9bc3489be3758375",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "redteam",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-8e8a11096e3291827c5915a878b61770cefd3ede35e3732ba86cf0f6b922fd31",
+      "evidence-b54240448d50f420d1fcf5bb851fed70533447afd9aaa1caf586ddc43b80e824",
+      "evidence-d7547303ad3cd07d5a9d77b0df9e494e0392c18dff5c7e3ef04ada257095a2a3",
+      "evidence-f44c31f94748c6de7afd428f9ed72ce3493a0cb45bb4bed7c9421957d733fc76"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:42:36.251Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-ab7f27bb4797379a6691e1b1ac1079ca8615894636d97bdd56e72bbdf992fd77",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071210-86b686dc0a3397d7",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901071210-86b686dc0a3397d7",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "e2e",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1694e0ac0c065c427ee930b1fa960940be9e002f2be75eef5e5102c463f0868d",
+      "evidence-9e27a9a9bf9bc1774260a142f95ba557a9c6f7b580e25ede36228e3b7f23af01",
+      "evidence-ad5a905393595cccfa7156ab268ac43de8cf9c76585cbf6220aac02ffcb7f216",
+      "evidence-b1b9cdb2e940916bd3b5867a7f5865fdbb5a9aec4f3afc25a59cf52f5413d3fc"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:12:47.967Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-ab85587e8f94ffda6cab138f68d9079067553164bcab38d53062be93f363cbd5",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074052-302b57f9f6bccee8",
+    "case_id": "CASE-001-admin-configuration",
+    "attempt_id": "attempt-20260901074052-302b57f9f6bccee8",
+    "step_id": "CASE-001-admin-configuration-STEP-1",
+    "assertion_id": "CASE-001-admin-configuration-ASSERT",
+    "domain": "redteam",
+    "expected": "所有保存均由后端确认，权限、租户、乐观锁和影响预览生效，页面不推断缺失标识。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-2087c2a75f363eecd326e64e8d40ab7b6e14e01c1b73586e96f52283abb26d31",
+      "evidence-2565e42205f22c9b5972d188aac35e5a25a4aeec9ca68de05cf6ed4d8287f70c",
+      "evidence-2574503eec7ac18dc8ee259d2ea26177af1edd5b54a6112066344cfd6365c9ae",
+      "evidence-5555dd453910088d0f2a244e953cbd6f6f0b27d983d2a45fce74b7968a3c487b",
+      "evidence-a92f63e1aae769bc50d9ac81d81e5e8a30a2a6cbb3c81f6661fc6af69b816225",
+      "evidence-b03f5d28efb9875bb2130a2bfdabc9b9189c8cb8f19e04611eee5a9a934c80c0",
+      "evidence-ba813cc545b418c8db4530568617da9e30c0ebfca0586d611514754086db4f12",
+      "evidence-f316065aa4587f5d75b9f55676b2ac38bf81c5ea8393177da555eb2b50bfdff2"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:41:09.761Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-ae2005249f3d2eaa5c1a4085208d4b020b093c2e238af6033e206fae01681f12",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071248-6313afbcdc31516d",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901071248-6313afbcdc31516d",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "unit",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-8f6dedca9e06039af60b7b151601fffa9831725724f35863ab1f763a512dba7f",
+      "evidence-aa2fed62e3d8800ddd5ae0ea99b2fe94793f136be807372064e56373f9985b77",
+      "evidence-d616c9cb543737b4e19c6b70c96cc7c742031b791feedf2a37de50233548e72d",
+      "evidence-dfbb5febceb751bf5b99152840e0337906b9832a4067e534ab2eddf96f66cc1e"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:13:25.883Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-b056f2de05b548df930c025f82942e67749c4f0169f432a46c75469b97a69cf5",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064737-e43981d35c072890",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901064737-e43981d35c072890",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "static",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-268bf5e5fdbae896f5f75efcf506608d5372cbfe82d2f4032712a8ced4a69d2f",
+      "evidence-5cfee3b0a371879b362e5f9c21a25b6eea5eb9fdf3ce8af6ff43b32351fd9b6e",
+      "evidence-b91a8e5671672a0ade944ed2ebc9a3fa77c385226fa7f39b6cc22517b5fadf3f",
+      "evidence-f1132ffbfc2b1e0be21ab16b12fc09cd7c4d006d1ece1b82e4803362e34b31ab"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:48:23.653Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-b4e849efe7349d175fe5bf2c5e982c4388c8dd1ccd7884dadaa084fc839488fe",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071210-86b686dc0a3397d7",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901071210-86b686dc0a3397d7",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "sensory",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1694e0ac0c065c427ee930b1fa960940be9e002f2be75eef5e5102c463f0868d",
+      "evidence-9e27a9a9bf9bc1774260a142f95ba557a9c6f7b580e25ede36228e3b7f23af01",
+      "evidence-ad5a905393595cccfa7156ab268ac43de8cf9c76585cbf6220aac02ffcb7f216",
+      "evidence-b1b9cdb2e940916bd3b5867a7f5865fdbb5a9aec4f3afc25a59cf52f5413d3fc"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:12:47.967Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-b5852649e813bbb94bae2e98087a364c20bae95d5080355c3461f8fb3fd53da6",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071210-86b686dc0a3397d7",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901071210-86b686dc0a3397d7",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "static",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1694e0ac0c065c427ee930b1fa960940be9e002f2be75eef5e5102c463f0868d",
+      "evidence-9e27a9a9bf9bc1774260a142f95ba557a9c6f7b580e25ede36228e3b7f23af01",
+      "evidence-ad5a905393595cccfa7156ab268ac43de8cf9c76585cbf6220aac02ffcb7f216",
+      "evidence-b1b9cdb2e940916bd3b5867a7f5865fdbb5a9aec4f3afc25a59cf52f5413d3fc"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:12:47.967Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-bdabab0c3d4add4bfd723a9c1e207c00ec0f08e3183a1bfdf554eb428a3cf7c5",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074236-6da8f336d9866193",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901074236-6da8f336d9866193",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "sensory",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-478042b079bda62eb664b5630c72286b433ea02cd2f8e20b24a7521191a3c427",
+      "evidence-4e8f3f3a03aca622ee54956c0cf508d6a587ab6123157e300eb5bca231306f07",
+      "evidence-728c4754b3fb4ffa333fe536064263a10eeab864054d7a881e7cca331ded1d49",
+      "evidence-77cbd302be7a975f8c3fc9162d6a3eec8eecdd3383246413093886c6e4585bb5"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:43:20.291Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-bdd7b084df8effcf985e213ee369c6f3337f55c072e3d4fb1bc821bf8c6ff422",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074320-ecf65bf1191a1aed",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901074320-ecf65bf1191a1aed",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "redteam",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-450254eee76b79384db40dfefb40d39b112e6557205dec523a232c365b0ac9f5",
+      "evidence-6cd851e09043fb99e03e97163d8c935ec483a5f5853d5bd0694762f1786fe701",
+      "evidence-b590631f596e2d2b8074870a09497826155ead501a2f097ee52dc61efab68bd4",
+      "evidence-c4e8bf466c742bd428bdfcfc30983209f7c49e11313efb1ba7a5d8e66438fcc2"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:43:59.352Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-bedb0662d0ba4d7b1e82769a30d157b1a5fe85305c0c9fef9bc3954550f57eaa",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065024-929532f75a5125eb",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901065024-929532f75a5125eb",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "static",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1fca37f934781c50281a13ff9369ef5648a42bf31f08273cf5e6d6d50cfd5167",
+      "evidence-3c4c30cbed43ee4d08dc739d3012f0658bb550d233f18087f61b835787950169",
+      "evidence-474f1b2e90511d4660c727c360f709da73ad77eba28e13adcb01559c8781bec0",
+      "evidence-d73ebd0fe0452ffdadbd339951e8344136adf80f65fd23a1395b36c15396aead"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:51:00.494Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-bf6beb49cc4435035f769d18e4c4b3e49b8016d880331a986f6b70b505b86973",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074236-6da8f336d9866193",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901074236-6da8f336d9866193",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "redteam",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-478042b079bda62eb664b5630c72286b433ea02cd2f8e20b24a7521191a3c427",
+      "evidence-4e8f3f3a03aca622ee54956c0cf508d6a587ab6123157e300eb5bca231306f07",
+      "evidence-728c4754b3fb4ffa333fe536064263a10eeab864054d7a881e7cca331ded1d49",
+      "evidence-77cbd302be7a975f8c3fc9162d6a3eec8eecdd3383246413093886c6e4585bb5"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:43:20.291Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-bf9a161b94c37f56a2182bac4cc0674cf987737718e3aae9a8e015957f6bc0ad",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064737-e43981d35c072890",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901064737-e43981d35c072890",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "sensory",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-268bf5e5fdbae896f5f75efcf506608d5372cbfe82d2f4032712a8ced4a69d2f",
+      "evidence-5cfee3b0a371879b362e5f9c21a25b6eea5eb9fdf3ce8af6ff43b32351fd9b6e",
+      "evidence-b91a8e5671672a0ade944ed2ebc9a3fa77c385226fa7f39b6cc22517b5fadf3f",
+      "evidence-f1132ffbfc2b1e0be21ab16b12fc09cd7c4d006d1ece1b82e4803362e34b31ab"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:48:23.653Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-bfb5e236081b4050ad33ec7022899247e74a6a0c8b8fd87581a3c930341e12aa",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074440-b27c0a7e536fa59a",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901074440-b27c0a7e536fa59a",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "static",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0c3a88440616541ef0948f7dbb7970034544ced0a911157cbcdc94ae8b1e12cb",
+      "evidence-26984b63a03e489bbb19f76d903e39585d04d9cce5c9b06121b421dfc6de2672",
+      "evidence-e27c2d76b0ff7258dc2f28a8b12ad03400ce3becfcca83ad63486d1f36fa39cf",
+      "evidence-e68b3eaeb2fc731375de16175781d8af3e0d2fd6ba49e0fc2b4b97cf25d8eec6"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:45:31.622Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-c0f01319e8332b85f4bd27a81456736399517ef446c03225ed538beb6dbc7c40",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071450-58119eb90ddff7b5",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901071450-58119eb90ddff7b5",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "redteam",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-884263c6d7484573dc3859c8aca6b205ce1d5f8de7547f24ad418c5dcbfe85d2",
+      "evidence-9834ede07914d5dee977218827088d9e8bf92876408334e4f3c5bf73610d7cac",
+      "evidence-bf34e46eb2ce5c2fb58c77d30222ba6ed09945ed48af918ca661000d6a673dcd",
+      "evidence-ccd7be6e587e2723e7b4fbd9bbfc54d433ed6ed803b3a4b3c72172d30455e1b5"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:15:30.031Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-c41529724e3c5623e11060ecc26e6d81c81b60ed0f863868e289575a91c3a887",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064946-b6de245cf89a16bf",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901064946-b6de245cf89a16bf",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "redteam",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1a71aa0230289b73aa1717f49d06730afc27f0441455780b7aa59de3c49a8138",
+      "evidence-758c9d468a784272e539d8b2f68e907c1d9fc6621e7646e5c6322a6c51714103",
+      "evidence-76ab1ae5faaa195314a2f0e6194e5d2a1e35b47e94ae9cb32e165eea99f98412",
+      "evidence-cb20a2dd49c0e9b5395e15f600925f9f6745fa8792b1860eb05778a3d857733c"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:50:24.694Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-c57ded49eb2ec91e8ecb9d13eb467ad46b69130566afb676573df46077c27b54",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074320-ecf65bf1191a1aed",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901074320-ecf65bf1191a1aed",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "facticity",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-450254eee76b79384db40dfefb40d39b112e6557205dec523a232c365b0ac9f5",
+      "evidence-6cd851e09043fb99e03e97163d8c935ec483a5f5853d5bd0694762f1786fe701",
+      "evidence-b590631f596e2d2b8074870a09497826155ead501a2f097ee52dc61efab68bd4",
+      "evidence-c4e8bf466c742bd428bdfcfc30983209f7c49e11313efb1ba7a5d8e66438fcc2"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:43:59.352Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-c57fc692b35972a24367909caf0c0bd6a6737f1c68e924776791af856bad01dc",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071325-c0e0b094bfd321be",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901071325-c0e0b094bfd321be",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "redteam",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-41ba6ede08b6c2eac264a47c424e4a5e66f1f65959a69cb7ff12c10bfcc4e0db",
+      "evidence-69fef2427b74f001f0061d6251119deb430ee3fcf80d8df03da907a99256036a",
+      "evidence-a699917836f9e9f81f1e06560b676fd3ada14bb388d89b5485d834a6fb229ebd",
+      "evidence-b481419a2ad65ef6d5a6275c125679e92e1c5cfef0b5d4d7042c924403e8d6c1"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:14:07.196Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-cac233dc6d4cdeb8b6bdff4bcb404dbb67c01feeab37a63e3942637a5c4e87c4",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074052-302b57f9f6bccee8",
+    "case_id": "CASE-001-admin-configuration",
+    "attempt_id": "attempt-20260901074052-302b57f9f6bccee8",
+    "step_id": "CASE-001-admin-configuration-STEP-1",
+    "assertion_id": "CASE-001-admin-configuration-ASSERT",
+    "domain": "unit",
+    "expected": "所有保存均由后端确认，权限、租户、乐观锁和影响预览生效，页面不推断缺失标识。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-2087c2a75f363eecd326e64e8d40ab7b6e14e01c1b73586e96f52283abb26d31",
+      "evidence-2565e42205f22c9b5972d188aac35e5a25a4aeec9ca68de05cf6ed4d8287f70c",
+      "evidence-2574503eec7ac18dc8ee259d2ea26177af1edd5b54a6112066344cfd6365c9ae",
+      "evidence-5555dd453910088d0f2a244e953cbd6f6f0b27d983d2a45fce74b7968a3c487b",
+      "evidence-a92f63e1aae769bc50d9ac81d81e5e8a30a2a6cbb3c81f6661fc6af69b816225",
+      "evidence-b03f5d28efb9875bb2130a2bfdabc9b9189c8cb8f19e04611eee5a9a934c80c0",
+      "evidence-ba813cc545b418c8db4530568617da9e30c0ebfca0586d611514754086db4f12",
+      "evidence-f316065aa4587f5d75b9f55676b2ac38bf81c5ea8393177da555eb2b50bfdff2"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:41:09.761Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-cb43f573277fc651faf366abbe237e27d89e307a46e6ff50f083d86dd5833772",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074625-95ebf22c4403c8ef",
+    "case_id": "CASE-010-theme-locale-states",
+    "attempt_id": "attempt-20260901074625-95ebf22c4403c8ef",
+    "step_id": "CASE-010-theme-locale-states-STEP-1",
+    "assertion_id": "CASE-010-theme-locale-states-ASSERT",
+    "domain": "facticity",
+    "expected": "无页面级横向滚动或不可读内容；文案完整；状态不只依赖颜色；关键交互有清晰反馈并可审阅。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-2f7005a3bee6e61eebae6a73270164f03a10512ba013e439522137a3a140fdbd",
+      "evidence-3e876737a22dadceab182606f33ba860865e74898ca2bb6d2f8b14247b41ddb6",
+      "evidence-42938523fb7feed26f3d4ce090c778096ae89b4918f0abdd425f2b309d40ef51",
+      "evidence-66f65002ce71914890baa2ab265deb33da2c1a74020e25940e16f2e9390833b0",
+      "evidence-7fd03f6d75c902b6a9605f6df0ba805e22e6f21d01e5607f422eca32b0dc586e",
+      "evidence-80e39351378066b07242ebad54d259b840d7434368730ff66932dfbfb1a1434c",
+      "evidence-8c7e6645cdcb852817d49a95786105f83915ff7e951698fa5ecaec3bdbb844bc",
+      "evidence-ff2f94ff8decb74a80e3b3814e0be773cbf2746ac5c0a1fed25bb5b9e5c94fa2"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:46:43.862Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-cc63cf304e24e815c5d8274d77e93d1dc2b90d18f8fd08b6dac63fff16770f46",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071530-96e341b66c5b154b",
+    "case_id": "CASE-007-fulfillment-protection",
+    "attempt_id": "attempt-20260901071530-96e341b66c5b154b",
+    "step_id": "CASE-007-fulfillment-protection-STEP-1",
+    "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+    "domain": "e2e",
+    "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-21b25eab07f8e857084b50a24f4db48aab0628e209e717ff23f76f91910187ad",
+      "evidence-67ec7b3e4b70c41fc41b5979d7a6ccbf100e17c35a4cddf955b55ffb274a6548",
+      "evidence-9a92b133964d4e2c332765a8353a30809859d2faf5a1d5a5eb5148563d74c43c",
+      "evidence-fb65798f9256d641a62eda3697b39418dbb5152a85e67f5f537ffa3953d4054a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:16:14.677Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-cffef1f56194b12270f91f7da97629cff25338a584f5e7a2e742cdffddc8bd30",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074236-6da8f336d9866193",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901074236-6da8f336d9866193",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "unit",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-478042b079bda62eb664b5630c72286b433ea02cd2f8e20b24a7521191a3c427",
+      "evidence-4e8f3f3a03aca622ee54956c0cf508d6a587ab6123157e300eb5bca231306f07",
+      "evidence-728c4754b3fb4ffa333fe536064263a10eeab864054d7a881e7cca331ded1d49",
+      "evidence-77cbd302be7a975f8c3fc9162d6a3eec8eecdd3383246413093886c6e4585bb5"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:43:20.291Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-d01042b8336e0be4baeeb6da5211c5c1370a7a8f5902f36ef914a221a486f7af",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074616-1d51a8a36cac8b36",
+    "case_id": "CASE-009-rental-device-catalog",
+    "attempt_id": "attempt-20260901074616-1d51a8a36cac8b36",
+    "step_id": "CASE-009-rental-device-catalog-STEP-1",
+    "assertion_id": "CASE-009-rental-device-catalog-ASSERT",
+    "domain": "facticity",
+    "expected": "目录数据来自共享后端；设备创建可用；页面不存在大类/型号快捷创建按钮、弹窗或隐式入口。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-0f38fac4b375ed7ec735db69e5bf3f223ea8af9076ba917ed66d45f6b1e035b3",
+      "evidence-20a8053ed183657c62cb38ee80e8b31b7b11eb5f585e3ac0ec181299b793e729",
+      "evidence-4080a7a575ba35403f446944348eceae77465b56e9e2f1c89653a2107efd646c",
+      "evidence-4608511189ce258e23bafd1e5cdb2276b728bb8642060ea150f500a1fb69c856",
+      "evidence-4dc7889eaf5c870bed60e1ce8cf722556715883e136355ad4c2257b9284f7f5d",
+      "evidence-4f404cdc1f1624ca91bfc0cbdae08186807d62dce5b77adc294ed860f6052df6",
+      "evidence-6910c6f5c3301e03e114fd62d8c5a4db852f1d8d795ce7fd3fc89682d19187e3",
+      "evidence-c3c21faaf174b4a57895b8e974cc6043c0db3f57bc89bee39fd9c2e7de9b420e"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:46:25.169Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-d0a89b790eb6a5f7eed6acc129f93c430723e10ae1a2581171b7e8a8d189c469",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074320-ecf65bf1191a1aed",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901074320-ecf65bf1191a1aed",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "unit",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-450254eee76b79384db40dfefb40d39b112e6557205dec523a232c365b0ac9f5",
+      "evidence-6cd851e09043fb99e03e97163d8c935ec483a5f5853d5bd0694762f1786fe701",
+      "evidence-b590631f596e2d2b8074870a09497826155ead501a2f097ee52dc61efab68bd4",
+      "evidence-c4e8bf466c742bd428bdfcfc30983209f7c49e11313efb1ba7a5d8e66438fcc2"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:43:59.352Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-d1706a6e477363d63879e720a05a63b43d4c67a5e4bb5f3c38b9e373931a70ff",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071210-86b686dc0a3397d7",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901071210-86b686dc0a3397d7",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "redteam",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1694e0ac0c065c427ee930b1fa960940be9e002f2be75eef5e5102c463f0868d",
+      "evidence-9e27a9a9bf9bc1774260a142f95ba557a9c6f7b580e25ede36228e3b7f23af01",
+      "evidence-ad5a905393595cccfa7156ab268ac43de8cf9c76585cbf6220aac02ffcb7f216",
+      "evidence-b1b9cdb2e940916bd3b5867a7f5865fdbb5a9aec4f3afc25a59cf52f5413d3fc"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:12:47.967Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-d48f03fce86955c130aa420d53503b20ae5dc21c4c793e7833d26ec2697900e2",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074320-ecf65bf1191a1aed",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901074320-ecf65bf1191a1aed",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "static",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-450254eee76b79384db40dfefb40d39b112e6557205dec523a232c365b0ac9f5",
+      "evidence-6cd851e09043fb99e03e97163d8c935ec483a5f5853d5bd0694762f1786fe701",
+      "evidence-b590631f596e2d2b8074870a09497826155ead501a2f097ee52dc61efab68bd4",
+      "evidence-c4e8bf466c742bd428bdfcfc30983209f7c49e11313efb1ba7a5d8e66438fcc2"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:43:59.352Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-d612558aa527eef0f83eacce35fdd2e64ac143186873727ec5304db2d21f1506",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071248-6313afbcdc31516d",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901071248-6313afbcdc31516d",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "facticity",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-8f6dedca9e06039af60b7b151601fffa9831725724f35863ab1f763a512dba7f",
+      "evidence-aa2fed62e3d8800ddd5ae0ea99b2fe94793f136be807372064e56373f9985b77",
+      "evidence-d616c9cb543737b4e19c6b70c96cc7c742031b791feedf2a37de50233548e72d",
+      "evidence-dfbb5febceb751bf5b99152840e0337906b9832a4067e534ab2eddf96f66cc1e"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:13:25.883Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-d668558dc0bde2ff2c5ef45deac43bfa31f4b94cc958e1e3ad5dc252226468cb",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074359-e57594ed843a1792",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901074359-e57594ed843a1792",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "static",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-00e1c127c26283634f113d5df784aa1945fd99f316b08e220bbad189b2b775d3",
+      "evidence-2b96405592ad52ed56b304b369744f3d3d18adb8b45a82dc9429d7fd2e2c259b",
+      "evidence-2ec6ea32935699c5a337665e03b2640164c3139222e092831527f76d50ad168b",
+      "evidence-8a5650a71d4f88c6e7a11fde42e200e26e4cb66522c67f8e59356fb38a213b27"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:44:40.177Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-d740613a8f7b702aad13ac5590f7b0f84f36b7db2d67e55a7c4de334f5cbaae0",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071450-58119eb90ddff7b5",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901071450-58119eb90ddff7b5",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "facticity",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-884263c6d7484573dc3859c8aca6b205ce1d5f8de7547f24ad418c5dcbfe85d2",
+      "evidence-9834ede07914d5dee977218827088d9e8bf92876408334e4f3c5bf73610d7cac",
+      "evidence-bf34e46eb2ce5c2fb58c77d30222ba6ed09945ed48af918ca661000d6a673dcd",
+      "evidence-ccd7be6e587e2723e7b4fbd9bbfc54d433ed6ed803b3a4b3c72172d30455e1b5"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:15:30.031Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-d99392bf5a4e473ddf19c814f212c2068e0234a8d2b6a3a5da1bc109945a5c74",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074359-e57594ed843a1792",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901074359-e57594ed843a1792",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "facticity",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-00e1c127c26283634f113d5df784aa1945fd99f316b08e220bbad189b2b775d3",
+      "evidence-2b96405592ad52ed56b304b369744f3d3d18adb8b45a82dc9429d7fd2e2c259b",
+      "evidence-2ec6ea32935699c5a337665e03b2640164c3139222e092831527f76d50ad168b",
+      "evidence-8a5650a71d4f88c6e7a11fde42e200e26e4cb66522c67f8e59356fb38a213b27"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:44:40.177Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-d9bb84d091e4cbdbeb172cb99520a62df061aafde952da8a59bb51934e902724",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071614-318bfdb0481332fa",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901071614-318bfdb0481332fa",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "static",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-12bac83040ae1c1262b1f527ca4af49ecf0629a04585b0e30cc8cfb5a051f6ad",
+      "evidence-2df25b5bf94152105ef4b1b738db3d75ebb0be9a3547dc8ed7767cf9e8eda1de",
+      "evidence-6ab3b8fe1144893a404694cbc664133f55110b36f50980e819d34456ce740dc9",
+      "evidence-8426f60951686eed6e7951e46d36428ff6052dc1dae57f14eeff3ee7adff00ef"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:16:57.954Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-da913125184739b48209a2cf6859b18ce6ab2928ab64726af9c8660882009ef9",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064946-b6de245cf89a16bf",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901064946-b6de245cf89a16bf",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "facticity",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1a71aa0230289b73aa1717f49d06730afc27f0441455780b7aa59de3c49a8138",
+      "evidence-758c9d468a784272e539d8b2f68e907c1d9fc6621e7646e5c6322a6c51714103",
+      "evidence-76ab1ae5faaa195314a2f0e6194e5d2a1e35b47e94ae9cb32e165eea99f98412",
+      "evidence-cb20a2dd49c0e9b5395e15f600925f9f6745fa8792b1860eb05778a3d857733c"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:50:24.694Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-da9a7b090052c52533ab87683afce71d9a4a86cc963d3883700993c4aebb6827",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064946-b6de245cf89a16bf",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901064946-b6de245cf89a16bf",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "e2e",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1a71aa0230289b73aa1717f49d06730afc27f0441455780b7aa59de3c49a8138",
+      "evidence-758c9d468a784272e539d8b2f68e907c1d9fc6621e7646e5c6322a6c51714103",
+      "evidence-76ab1ae5faaa195314a2f0e6194e5d2a1e35b47e94ae9cb32e165eea99f98412",
+      "evidence-cb20a2dd49c0e9b5395e15f600925f9f6745fa8792b1860eb05778a3d857733c"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:50:24.694Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-e0ab86f228d1513f73a3b69f9ec80a45528840539b12dbd48392ecdc5cad4bc7",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074531-55cd681cdaa620c6",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901074531-55cd681cdaa620c6",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "sensory",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-01e008dc4c857698365be8acecdc8a9e815bec5e4e732c84d529253221c53854",
+      "evidence-0706e47ae8496dfa036068a103794ff17220973528ca3c33ec54c06f5d8e34a5",
+      "evidence-4057696ece06cfc35bc8dde02cf0cc0e5963d0a03ed833ce9a86a50941c642a7",
+      "evidence-ee748c68fff70ac2169c31787d154791bb0a34009550ccdaf16a2d77256e1c1b"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:46:16.247Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-e19c483065aef6421e9aa0915d683214d1c6ee92ce20fb4a71221c60f44316b3",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071407-1d65670f7695c8b9",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901071407-1d65670f7695c8b9",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "static",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-017a95a6b32eedbafef631953668c344b293acf252b5f053b7ab0a8cbff4206e",
+      "evidence-a135aaec6b686cbddbc46c76893953bbc3371fd6ff97d9a3ed73b3e2d42f7b5a",
+      "evidence-c9a1c76ef90a73e730b7dbe973838bdee18bf427362c22d54c7e490de5cddd00",
+      "evidence-f55798f3f4ca8b64c014bd4859fc9cba1d2022edaba514bccd04f1f754c0092a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:14:49.969Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-e29e9a440a3855f39ed360f91c7d720a42a5e1234eafe8a6486b6f1a25af5305",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074154-9bc3489be3758375",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901074154-9bc3489be3758375",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "unit",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-8e8a11096e3291827c5915a878b61770cefd3ede35e3732ba86cf0f6b922fd31",
+      "evidence-b54240448d50f420d1fcf5bb851fed70533447afd9aaa1caf586ddc43b80e824",
+      "evidence-d7547303ad3cd07d5a9d77b0df9e494e0392c18dff5c7e3ef04ada257095a2a3",
+      "evidence-f44c31f94748c6de7afd428f9ed72ce3493a0cb45bb4bed7c9421957d733fc76"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:42:36.251Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-e3da834bfda9bf41befe75703a13ef2efb95f4ac0cdbf99b7e71a1bc1eef8746",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065024-929532f75a5125eb",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901065024-929532f75a5125eb",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "facticity",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1fca37f934781c50281a13ff9369ef5648a42bf31f08273cf5e6d6d50cfd5167",
+      "evidence-3c4c30cbed43ee4d08dc739d3012f0658bb550d233f18087f61b835787950169",
+      "evidence-474f1b2e90511d4660c727c360f709da73ad77eba28e13adcb01559c8781bec0",
+      "evidence-d73ebd0fe0452ffdadbd339951e8344136adf80f65fd23a1395b36c15396aead"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:51:00.494Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-e80658425f2e392594b37f06b4b841f80fe4a83f00bf8dfb57b1f7611c72c0aa",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074531-55cd681cdaa620c6",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901074531-55cd681cdaa620c6",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "unit",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-01e008dc4c857698365be8acecdc8a9e815bec5e4e732c84d529253221c53854",
+      "evidence-0706e47ae8496dfa036068a103794ff17220973528ca3c33ec54c06f5d8e34a5",
+      "evidence-4057696ece06cfc35bc8dde02cf0cc0e5963d0a03ed833ce9a86a50941c642a7",
+      "evidence-ee748c68fff70ac2169c31787d154791bb0a34009550ccdaf16a2d77256e1c1b"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:46:16.247Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-ec7343ced71f930c0608230a9a878fefa29aae20a43bc55cf5e105d55a2f8462",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071450-58119eb90ddff7b5",
+    "case_id": "CASE-006-later-valid-update",
+    "attempt_id": "attempt-20260901071450-58119eb90ddff7b5",
+    "step_id": "CASE-006-later-valid-update-STEP-1",
+    "assertion_id": "CASE-006-later-valid-update-ASSERT",
+    "domain": "sensory",
+    "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-884263c6d7484573dc3859c8aca6b205ce1d5f8de7547f24ad418c5dcbfe85d2",
+      "evidence-9834ede07914d5dee977218827088d9e8bf92876408334e4f3c5bf73610d7cac",
+      "evidence-bf34e46eb2ce5c2fb58c77d30222ba6ed09945ed48af918ca661000d6a673dcd",
+      "evidence-ccd7be6e587e2723e7b4fbd9bbfc54d433ed6ed803b3a4b3c72172d30455e1b5"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:15:30.031Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-ecc39af31445002ad0de4df90ac2df9f690e6f5e97170abe81343e2b2da21a29",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064901-70dc3f466d41c106",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901064901-70dc3f466d41c106",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "unit",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-27c1e0e715a99f002cb8ff7099912023567a5e3ab9fc39df510b7cbbb2264f28",
+      "evidence-901d9f5eb7a0306808e3dc69b2dfe93bde84466d919f6c6961609b5fdc10be3c",
+      "evidence-b10c7457804372d9dc60aa6a31b6d120279d7a392c0df25252306ae1b1651563",
+      "evidence-c2c43d9eb3e850616d30096586a5895032eb296cd1e9f73680bdcb4713027e2b"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:49:46.418Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-edb1ba95d5af9b610893b50821167a968240be78c710c57695f13c172cb35b21",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074625-95ebf22c4403c8ef",
+    "case_id": "CASE-010-theme-locale-states",
+    "attempt_id": "attempt-20260901074625-95ebf22c4403c8ef",
+    "step_id": "CASE-010-theme-locale-states-STEP-1",
+    "assertion_id": "CASE-010-theme-locale-states-ASSERT",
+    "domain": "e2e",
+    "expected": "无页面级横向滚动或不可读内容；文案完整；状态不只依赖颜色；关键交互有清晰反馈并可审阅。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-2f7005a3bee6e61eebae6a73270164f03a10512ba013e439522137a3a140fdbd",
+      "evidence-3e876737a22dadceab182606f33ba860865e74898ca2bb6d2f8b14247b41ddb6",
+      "evidence-42938523fb7feed26f3d4ce090c778096ae89b4918f0abdd425f2b309d40ef51",
+      "evidence-66f65002ce71914890baa2ab265deb33da2c1a74020e25940e16f2e9390833b0",
+      "evidence-7fd03f6d75c902b6a9605f6df0ba805e22e6f21d01e5607f422eca32b0dc586e",
+      "evidence-80e39351378066b07242ebad54d259b840d7434368730ff66932dfbfb1a1434c",
+      "evidence-8c7e6645cdcb852817d49a95786105f83915ff7e951698fa5ecaec3bdbb844bc",
+      "evidence-ff2f94ff8decb74a80e3b3814e0be773cbf2746ac5c0a1fed25bb5b9e5c94fa2"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:46:43.862Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-eeecffc73af0a95d767fb749cac2ab359bddba44782a6b7f557a0966d5b85925",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064901-70dc3f466d41c106",
+    "case_id": "CASE-004-exact-model-mapping",
+    "attempt_id": "attempt-20260901064901-70dc3f466d41c106",
+    "step_id": "CASE-004-exact-model-mapping-STEP-1",
+    "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+    "domain": "facticity",
+    "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-27c1e0e715a99f002cb8ff7099912023567a5e3ab9fc39df510b7cbbb2264f28",
+      "evidence-901d9f5eb7a0306808e3dc69b2dfe93bde84466d919f6c6961609b5fdc10be3c",
+      "evidence-b10c7457804372d9dc60aa6a31b6d120279d7a392c0df25252306ae1b1651563",
+      "evidence-c2c43d9eb3e850616d30096586a5895032eb296cd1e9f73680bdcb4713027e2b"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:49:46.418Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-f046842dda5544bb58d01f001b1479310b5b117d178c276916a283e7af5b1ade",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064946-b6de245cf89a16bf",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901064946-b6de245cf89a16bf",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "sensory",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-1a71aa0230289b73aa1717f49d06730afc27f0441455780b7aa59de3c49a8138",
+      "evidence-758c9d468a784272e539d8b2f68e907c1d9fc6621e7646e5c6322a6c51714103",
+      "evidence-76ab1ae5faaa195314a2f0e6194e5d2a1e35b47e94ae9cb32e165eea99f98412",
+      "evidence-cb20a2dd49c0e9b5395e15f600925f9f6745fa8792b1860eb05778a3d857733c"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:50:24.694Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-f4da8d9a5e882a04d1d98cdf53f3c02be29137d1a392a0df6b06f4191df882d7",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074625-95ebf22c4403c8ef",
+    "case_id": "CASE-010-theme-locale-states",
+    "attempt_id": "attempt-20260901074625-95ebf22c4403c8ef",
+    "step_id": "CASE-010-theme-locale-states-STEP-1",
+    "assertion_id": "CASE-010-theme-locale-states-ASSERT",
+    "domain": "static",
+    "expected": "无页面级横向滚动或不可读内容；文案完整；状态不只依赖颜色；关键交互有清晰反馈并可审阅。",
+    "actual": null,
+    "oracle": {
+      "type": "none",
+      "owner": "verification-kernel",
+      "deterministic": false
+    },
+    "evidence_ids": [
+      "evidence-2f7005a3bee6e61eebae6a73270164f03a10512ba013e439522137a3a140fdbd",
+      "evidence-3e876737a22dadceab182606f33ba860865e74898ca2bb6d2f8b14247b41ddb6",
+      "evidence-42938523fb7feed26f3d4ce090c778096ae89b4918f0abdd425f2b309d40ef51",
+      "evidence-66f65002ce71914890baa2ab265deb33da2c1a74020e25940e16f2e9390833b0",
+      "evidence-7fd03f6d75c902b6a9605f6df0ba805e22e6f21d01e5607f422eca32b0dc586e",
+      "evidence-80e39351378066b07242ebad54d259b840d7434368730ff66932dfbfb1a1434c",
+      "evidence-8c7e6645cdcb852817d49a95786105f83915ff7e951698fa5ecaec3bdbb844bc",
+      "evidence-ff2f94ff8decb74a80e3b3814e0be773cbf2746ac5c0a1fed25bb5b9e5c94fa2"
+    ],
+    "verdict": "blocked",
+    "recorded_at": "2026-09-01T07:46:43.862Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-f79e6f96b2692c91a7da30e3a0501e763affd7810a455b644a3df926e038f08a",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901064737-e43981d35c072890",
+    "case_id": "CASE-002-identifier-authority",
+    "attempt_id": "attempt-20260901064737-e43981d35c072890",
+    "step_id": "CASE-002-identifier-authority-STEP-1",
+    "assertion_id": "CASE-002-identifier-authority-ASSERT",
+    "domain": "redteam",
+    "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-268bf5e5fdbae896f5f75efcf506608d5372cbfe82d2f4032712a8ced4a69d2f",
+      "evidence-5cfee3b0a371879b362e5f9c21a25b6eea5eb9fdf3ce8af6ff43b32351fd9b6e",
+      "evidence-b91a8e5671672a0ade944ed2ebc9a3fa77c385226fa7f39b6cc22517b5fadf3f",
+      "evidence-f1132ffbfc2b1e0be21ab16b12fc09cd7c4d006d1ece1b82e4803362e34b31ab"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:48:23.653Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-f8a80c9df128bcbae370468db5dca220fa54f721d0f92db9aedd8962a5022ecb",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071407-1d65670f7695c8b9",
+    "case_id": "CASE-005-config-skipped",
+    "attempt_id": "attempt-20260901071407-1d65670f7695c8b9",
+    "step_id": "CASE-005-config-skipped-STEP-1",
+    "assertion_id": "CASE-005-config-skipped-ASSERT",
+    "domain": "sensory",
+    "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-017a95a6b32eedbafef631953668c344b293acf252b5f053b7ab0a8cbff4206e",
+      "evidence-a135aaec6b686cbddbc46c76893953bbc3371fd6ff97d9a3ed73b3e2d42f7b5a",
+      "evidence-c9a1c76ef90a73e730b7dbe973838bdee18bf427362c22d54c7e490de5cddd00",
+      "evidence-f55798f3f4ca8b64c014bd4859fc9cba1d2022edaba514bccd04f1f754c0092a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:14:49.969Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-fb44ee0c1f4e01e51ece145b1f5002a6ee51b20e0bd95bc5506ba9420b904278",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074531-55cd681cdaa620c6",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901074531-55cd681cdaa620c6",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "facticity",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-01e008dc4c857698365be8acecdc8a9e815bec5e4e732c84d529253221c53854",
+      "evidence-0706e47ae8496dfa036068a103794ff17220973528ca3c33ec54c06f5d8e34a5",
+      "evidence-4057696ece06cfc35bc8dde02cf0cc0e5963d0a03ed833ce9a86a50941c642a7",
+      "evidence-ee748c68fff70ac2169c31787d154791bb0a34009550ccdaf16a2d77256e1c1b"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:46:16.247Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "f8121ab17bc64417ed86065f2973f9a721fb3a31db9be75c1619e09768483583"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-fb9ba4b151a94ee8475309390dc817236994ed33344e9825809bffdb59448c56",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901071248-6313afbcdc31516d",
+    "case_id": "CASE-003-immediate-order",
+    "attempt_id": "attempt-20260901071248-6313afbcdc31516d",
+    "step_id": "CASE-003-immediate-order-STEP-1",
+    "assertion_id": "CASE-003-immediate-order-ASSERT",
+    "domain": "redteam",
+    "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-8f6dedca9e06039af60b7b151601fffa9831725724f35863ab1f763a512dba7f",
+      "evidence-aa2fed62e3d8800ddd5ae0ea99b2fe94793f136be807372064e56373f9985b77",
+      "evidence-d616c9cb543737b4e19c6b70c96cc7c742031b791feedf2a37de50233548e72d",
+      "evidence-dfbb5febceb751bf5b99152840e0337906b9832a4067e534ab2eddf96f66cc1e"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T07:13:25.883Z",
+    "code_sha": "35c0ecd2d47b70fea15db05c7a1269c88b6ba915",
+    "test_sha": "30ea023d09548ceb56b4f7b59c054d450360e87ebda6bfc8e81280b656d88e0d"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-fdba64070cde281a2af7d1424d729b77a2db934e4cb6def4bc4f5edc7c4553d5",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901065141-8effd03387144988",
+    "case_id": "CASE-008-historical-reconciliation",
+    "attempt_id": "attempt-20260901065141-8effd03387144988",
+    "step_id": "CASE-008-historical-reconciliation-STEP-1",
+    "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+    "domain": "unit",
+    "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-c7d42028699131f05337035d88e7caba076447ae906100bd7678312d98dda7e2",
+      "evidence-e3160a6d9efb767d1f653f1e2c1c6ff320b89f2ee28df6e9ce1280817c9d70f2",
+      "evidence-f14a41632e1d2317ba1a181d45e6e6a0a6c43392418edec80b90ef23ae3a86d9",
+      "evidence-f665077b8ed375d7a84470bf230eb4bd8e0508341a30d5b23e861fcf533695ae"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-09-01T06:52:22.440Z",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859"
+  }
+]

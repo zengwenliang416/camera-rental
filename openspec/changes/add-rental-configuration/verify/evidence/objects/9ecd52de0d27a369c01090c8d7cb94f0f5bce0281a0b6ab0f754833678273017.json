@@ -1,0 +1,7 @@
+{
+  "actual": true,
+  "assertion_id": "CASE-010-theme-locale-states-ASSERT",
+  "expected": true,
+  "method": "ok",
+  "status": "passed"
+}

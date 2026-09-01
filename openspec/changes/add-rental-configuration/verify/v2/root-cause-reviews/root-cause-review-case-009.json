@@ -1,0 +1,22 @@
+{
+  "schema": "specnav.verification.root-cause-review.v1",
+  "id": "root-cause-review-case-009-oracle-expected",
+  "failure_id": "failure-d2d9baa41f37dedd7ba501f33231670c5dddd280788fa0b1ec1e4e4069687651",
+  "root_failure_digest": "aea88d3b3453a297c7c8832da82f64bb02940f1d369f348493e80d7f75cc42a0",
+  "change_id": "add-rental-configuration",
+  "run_id": "run-20260901074616-1d51a8a36cac8b36",
+  "case_id": "CASE-009-rental-device-catalog",
+  "attempt_id": "attempt-20260901074616-1d51a8a36cac8b36",
+  "classification": "test_defect",
+  "summary": "浏览器场景断言通过，但断言结果的 expected 与案例合同不一致。",
+  "root_cause": "场景使用 assertion.ok，Playwright runner 因此记录 expected 为布尔值 true；Verification Kernel 要求 playwright_assertion 的 expected 与案例合同中的中文 expected 完全相等，导致已通过的页面断言被判定为 oracle-result-invalid。",
+  "failed_assertion_ids": [
+    "CASE-009-rental-device-catalog-ASSERT"
+  ],
+  "reviewer": {
+    "id": "Zengwenliang0416",
+    "kind": "human"
+  },
+  "decision": "approved",
+  "reviewed_at": "2026-09-01T07:56:56Z"
+}

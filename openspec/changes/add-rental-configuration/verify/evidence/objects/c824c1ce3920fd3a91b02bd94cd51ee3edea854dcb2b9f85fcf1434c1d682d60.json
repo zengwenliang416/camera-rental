@@ -1,0 +1,7 @@
+{
+  "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+  "assertion_id": "CASE-008-historical-reconciliation-ASSERT",
+  "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+  "method": "equal",
+  "status": "passed"
+}

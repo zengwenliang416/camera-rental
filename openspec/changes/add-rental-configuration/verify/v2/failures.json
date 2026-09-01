@@ -1,0 +1,113 @@
+[
+  {
+    "schema": "specnav.verification.failure-packet.v1",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074052-302b57f9f6bccee8",
+    "case_id": "CASE-001-admin-configuration",
+    "attempt_id": "attempt-20260901074052-302b57f9f6bccee8",
+    "reading_ids": [
+      "reading-0c1efe448f0875900f1848c3f48ca4342cbcda737afe32c8ee9ff648eee38b5d",
+      "reading-79a870c05627191bc62f41804973727710c4a48b02db9a6af6b63aeba0837853",
+      "reading-88919c51e315cb1e96b8a8b61e6c1358dcc2318c55bd4c2a2f61e8a02d13af2d",
+      "reading-9ce4fc1a2ff6148c6a9d13d18852afc29f50eeeb1339a2e1d3d93ab28ee4e92d",
+      "reading-ab85587e8f94ffda6cab138f68d9079067553164bcab38d53062be93f363cbd5",
+      "reading-cac233dc6d4cdeb8b6bdff4bcb404dbb67c01feeab37a63e3942637a5c4e87c4"
+    ],
+    "evidence_ids": [
+      "evidence-2087c2a75f363eecd326e64e8d40ab7b6e14e01c1b73586e96f52283abb26d31",
+      "evidence-2565e42205f22c9b5972d188aac35e5a25a4aeec9ca68de05cf6ed4d8287f70c",
+      "evidence-2574503eec7ac18dc8ee259d2ea26177af1edd5b54a6112066344cfd6365c9ae",
+      "evidence-5555dd453910088d0f2a244e953cbd6f6f0b27d983d2a45fce74b7968a3c487b",
+      "evidence-a92f63e1aae769bc50d9ac81d81e5e8a30a2a6cbb3c81f6661fc6af69b816225",
+      "evidence-b03f5d28efb9875bb2130a2bfdabc9b9189c8cb8f19e04611eee5a9a934c80c0",
+      "evidence-ba813cc545b418c8db4530568617da9e30c0ebfca0586d611514754086db4f12",
+      "evidence-f316065aa4587f5d75b9f55676b2ac38bf81c5ea8393177da555eb2b50bfdff2"
+    ],
+    "classification": null,
+    "status": "open",
+    "next_action": "blocked_for_decision",
+    "summary": "Verification did not pass for CASE-001-admin-configuration.",
+    "root_cause": "Classification is required before retry or development repair.",
+    "failed_assertion_ids": [
+      "CASE-001-admin-configuration-ASSERT"
+    ],
+    "owner": "verification",
+    "created_at": "2026-09-01T07:41:09.818Z",
+    "frozen_at": "2026-09-01T07:41:09.818Z",
+    "id": "failure-15033d42e9c1902cfdbde338dbf2187f9ecaef9d887bd219afc2d855edd71d42"
+  },
+  {
+    "schema": "specnav.verification.failure-packet.v1",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074616-1d51a8a36cac8b36",
+    "case_id": "CASE-009-rental-device-catalog",
+    "attempt_id": "attempt-20260901074616-1d51a8a36cac8b36",
+    "reading_ids": [
+      "reading-03d92c2157e9e0b9cbcbf9b9c5ec0ad488f0ca41f13ad0a8dccc6763b2e9f0cb",
+      "reading-5c4869a92e9dae7ab04df20bc00072c89d11c10bb5c50e15fe947e113b298861",
+      "reading-71cfd5a8d69aa1dadad94eab1714ecb9455babfac49046777e0cf63552cd4626",
+      "reading-825de3920b18b659dd4c903d2ea04804a247c02bd072bcf02cf81a16ca498a9e",
+      "reading-93e3d5f8f6d54d77794e2091a2db810406164c4c85ca2c92fb4fc26968286df8",
+      "reading-d01042b8336e0be4baeeb6da5211c5c1370a7a8f5902f36ef914a221a486f7af"
+    ],
+    "evidence_ids": [
+      "evidence-0f38fac4b375ed7ec735db69e5bf3f223ea8af9076ba917ed66d45f6b1e035b3",
+      "evidence-20a8053ed183657c62cb38ee80e8b31b7b11eb5f585e3ac0ec181299b793e729",
+      "evidence-4080a7a575ba35403f446944348eceae77465b56e9e2f1c89653a2107efd646c",
+      "evidence-4608511189ce258e23bafd1e5cdb2276b728bb8642060ea150f500a1fb69c856",
+      "evidence-4dc7889eaf5c870bed60e1ce8cf722556715883e136355ad4c2257b9284f7f5d",
+      "evidence-4f404cdc1f1624ca91bfc0cbdae08186807d62dce5b77adc294ed860f6052df6",
+      "evidence-6910c6f5c3301e03e114fd62d8c5a4db852f1d8d795ce7fd3fc89682d19187e3",
+      "evidence-c3c21faaf174b4a57895b8e974cc6043c0db3f57bc89bee39fd9c2e7de9b420e"
+    ],
+    "classification": null,
+    "status": "open",
+    "next_action": "blocked_for_decision",
+    "summary": "Verification did not pass for CASE-009-rental-device-catalog.",
+    "root_cause": "Classification is required before retry or development repair.",
+    "failed_assertion_ids": [
+      "CASE-009-rental-device-catalog-ASSERT"
+    ],
+    "owner": "verification",
+    "created_at": "2026-09-01T07:46:25.227Z",
+    "frozen_at": "2026-09-01T07:46:25.227Z",
+    "id": "failure-d2d9baa41f37dedd7ba501f33231670c5dddd280788fa0b1ec1e4e4069687651"
+  },
+  {
+    "schema": "specnav.verification.failure-packet.v1",
+    "change_id": "add-rental-configuration",
+    "run_id": "run-20260901074625-95ebf22c4403c8ef",
+    "case_id": "CASE-010-theme-locale-states",
+    "attempt_id": "attempt-20260901074625-95ebf22c4403c8ef",
+    "reading_ids": [
+      "reading-07c3139309b49150dfae868aff9ca2756106b298787cd344293c912c1a3ada09",
+      "reading-66132da7b60e328c3aef1f4bf636c5ba506cf76bdd12dbadcd62c77f64826b9b",
+      "reading-942a9a553a83926e2d5cd5096fd6bb5720a301ce61bd9d82ef559245131ff6dc",
+      "reading-cb43f573277fc651faf366abbe237e27d89e307a46e6ff50f083d86dd5833772",
+      "reading-edb1ba95d5af9b610893b50821167a968240be78c710c57695f13c172cb35b21",
+      "reading-f4da8d9a5e882a04d1d98cdf53f3c02be29137d1a392a0df6b06f4191df882d7"
+    ],
+    "evidence_ids": [
+      "evidence-2f7005a3bee6e61eebae6a73270164f03a10512ba013e439522137a3a140fdbd",
+      "evidence-3e876737a22dadceab182606f33ba860865e74898ca2bb6d2f8b14247b41ddb6",
+      "evidence-42938523fb7feed26f3d4ce090c778096ae89b4918f0abdd425f2b309d40ef51",
+      "evidence-66f65002ce71914890baa2ab265deb33da2c1a74020e25940e16f2e9390833b0",
+      "evidence-7fd03f6d75c902b6a9605f6df0ba805e22e6f21d01e5607f422eca32b0dc586e",
+      "evidence-80e39351378066b07242ebad54d259b840d7434368730ff66932dfbfb1a1434c",
+      "evidence-8c7e6645cdcb852817d49a95786105f83915ff7e951698fa5ecaec3bdbb844bc",
+      "evidence-ff2f94ff8decb74a80e3b3814e0be773cbf2746ac5c0a1fed25bb5b9e5c94fa2"
+    ],
+    "classification": null,
+    "status": "open",
+    "next_action": "blocked_for_decision",
+    "summary": "Verification did not pass for CASE-010-theme-locale-states.",
+    "root_cause": "Classification is required before retry or development repair.",
+    "failed_assertion_ids": [
+      "CASE-010-theme-locale-states-ASSERT"
+    ],
+    "owner": "verification",
+    "created_at": "2026-09-01T07:46:43.926Z",
+    "frozen_at": "2026-09-01T07:46:43.926Z",
+    "id": "failure-f8e9e5cc34270f3c89c43ccfa8a332411549d2dc81a801015565b1d692cb873c"
+  }
+]

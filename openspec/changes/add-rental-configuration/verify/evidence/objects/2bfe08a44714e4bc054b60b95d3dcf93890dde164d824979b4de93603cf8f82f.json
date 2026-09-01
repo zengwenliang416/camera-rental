@@ -1,0 +1,7 @@
+{
+  "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+  "assertion_id": "CASE-005-config-skipped-ASSERT",
+  "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+  "method": "equal",
+  "status": "passed"
+}

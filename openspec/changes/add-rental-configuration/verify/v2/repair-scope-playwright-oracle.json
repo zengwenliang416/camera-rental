@@ -1,0 +1,15 @@
+{
+  "allowed_files": [
+    "tests/specnav/rental-configuration-scenarios.cjs"
+  ],
+  "denied_files": [],
+  "requires_review_on": [
+    "tests/specnav/rental-configuration-scenarios.cjs"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": false,
+    "rename": false
+  }
+}

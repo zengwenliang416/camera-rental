@@ -1,0 +1,72 @@
+{
+  "schema": "specnav.verification.generation-review.v1",
+  "change_id": "add-rental-configuration",
+  "reviewer_id": "Zengwenliang0416",
+  "snapshot_id": "snapshot-50984af0a5d1797d59048899",
+  "snapshot_hash": "50984af0a5d1797d59048899db6fc921e4261e1073374a8410bc8cd7c91d976c",
+  "parent_generation_id": null,
+  "fingerprints": {
+    "case_snapshot_hash": "50984af0a5d1797d59048899db6fc921e4261e1073374a8410bc8cd7c91d976c",
+    "code_sha": "e88f200fe9a54947736fbfd3d549278fceb15e52",
+    "test_sha": "1621399ba4022c2adf8f59e04c6a8da1a7bfcd747df55366bb82a64364164859",
+    "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2"
+  },
+  "historical_break_loop_failure_ids": [],
+  "baseline": {
+    "runs": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "records": []
+    },
+    "attempts": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "records": []
+    },
+    "executions": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "records": []
+    },
+    "readings": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "records": []
+    },
+    "failures": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "records": []
+    },
+    "repair_links": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "records": []
+    },
+    "evidence": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "records": []
+    },
+    "transition_proposals": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "records": []
+    },
+    "transition_receipts": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "records": []
+    },
+    "attempt_facts": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "records": []
+    }
+  },
+  "prepared_at": "2026-09-01T06:40:47.853Z",
+  "id": "generation-review-e95b1facbd92011b02c53eab",
+  "review_sha256": "e95b1facbd92011b02c53eab8a76047c7e51bd00e69a4016500bf48e2ef8755e"
+}

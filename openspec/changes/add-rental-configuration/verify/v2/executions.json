@@ -1,0 +1,428 @@
+[
+  {
+    "id": "execution-attempt-20260901064737-e43981d35c072890",
+    "run_id": "run-20260901064737-e43981d35c072890",
+    "attempt_id": "attempt-20260901064737-e43981d35c072890",
+    "case_id": "CASE-002-identifier-authority",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-002-identifier-authority-ASSERT",
+        "method": "equal",
+        "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+        "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T06:48:23.700Z"
+  },
+  {
+    "id": "execution-attempt-20260901064823-ce247cb3441bdfe3",
+    "run_id": "run-20260901064823-ce247cb3441bdfe3",
+    "attempt_id": "attempt-20260901064823-ce247cb3441bdfe3",
+    "case_id": "CASE-003-immediate-order",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-003-immediate-order-ASSERT",
+        "method": "equal",
+        "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+        "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T06:49:01.959Z"
+  },
+  {
+    "id": "execution-attempt-20260901064901-70dc3f466d41c106",
+    "run_id": "run-20260901064901-70dc3f466d41c106",
+    "attempt_id": "attempt-20260901064901-70dc3f466d41c106",
+    "case_id": "CASE-004-exact-model-mapping",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-004-exact-model-mapping-ASSERT",
+        "method": "equal",
+        "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+        "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T06:49:46.469Z"
+  },
+  {
+    "id": "execution-attempt-20260901064946-b6de245cf89a16bf",
+    "run_id": "run-20260901064946-b6de245cf89a16bf",
+    "attempt_id": "attempt-20260901064946-b6de245cf89a16bf",
+    "case_id": "CASE-005-config-skipped",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-005-config-skipped-ASSERT",
+        "method": "equal",
+        "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+        "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T06:50:24.719Z"
+  },
+  {
+    "id": "execution-attempt-20260901065024-929532f75a5125eb",
+    "run_id": "run-20260901065024-929532f75a5125eb",
+    "attempt_id": "attempt-20260901065024-929532f75a5125eb",
+    "case_id": "CASE-006-later-valid-update",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-006-later-valid-update-ASSERT",
+        "method": "equal",
+        "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+        "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T06:51:00.549Z"
+  },
+  {
+    "id": "execution-attempt-20260901065100-cd4916c1dd6ecd90",
+    "run_id": "run-20260901065100-cd4916c1dd6ecd90",
+    "attempt_id": "attempt-20260901065100-cd4916c1dd6ecd90",
+    "case_id": "CASE-007-fulfillment-protection",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-007-fulfillment-protection-ASSERT",
+        "method": "equal",
+        "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+        "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T06:51:41.608Z"
+  },
+  {
+    "id": "execution-attempt-20260901065141-8effd03387144988",
+    "run_id": "run-20260901065141-8effd03387144988",
+    "attempt_id": "attempt-20260901065141-8effd03387144988",
+    "case_id": "CASE-008-historical-reconciliation",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-008-historical-reconciliation-ASSERT",
+        "method": "equal",
+        "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+        "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T06:52:22.498Z"
+  },
+  {
+    "id": "execution-attempt-20260901071210-86b686dc0a3397d7",
+    "run_id": "run-20260901071210-86b686dc0a3397d7",
+    "attempt_id": "attempt-20260901071210-86b686dc0a3397d7",
+    "case_id": "CASE-002-identifier-authority",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-002-identifier-authority-ASSERT",
+        "method": "equal",
+        "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+        "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T07:12:48.024Z"
+  },
+  {
+    "id": "execution-attempt-20260901071248-6313afbcdc31516d",
+    "run_id": "run-20260901071248-6313afbcdc31516d",
+    "attempt_id": "attempt-20260901071248-6313afbcdc31516d",
+    "case_id": "CASE-003-immediate-order",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-003-immediate-order-ASSERT",
+        "method": "equal",
+        "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+        "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T07:13:25.927Z"
+  },
+  {
+    "id": "execution-attempt-20260901071325-c0e0b094bfd321be",
+    "run_id": "run-20260901071325-c0e0b094bfd321be",
+    "attempt_id": "attempt-20260901071325-c0e0b094bfd321be",
+    "case_id": "CASE-004-exact-model-mapping",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-004-exact-model-mapping-ASSERT",
+        "method": "equal",
+        "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+        "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T07:14:07.232Z"
+  },
+  {
+    "id": "execution-attempt-20260901071407-1d65670f7695c8b9",
+    "run_id": "run-20260901071407-1d65670f7695c8b9",
+    "attempt_id": "attempt-20260901071407-1d65670f7695c8b9",
+    "case_id": "CASE-005-config-skipped",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-005-config-skipped-ASSERT",
+        "method": "equal",
+        "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+        "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T07:14:50.029Z"
+  },
+  {
+    "id": "execution-attempt-20260901071450-58119eb90ddff7b5",
+    "run_id": "run-20260901071450-58119eb90ddff7b5",
+    "attempt_id": "attempt-20260901071450-58119eb90ddff7b5",
+    "case_id": "CASE-006-later-valid-update",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-006-later-valid-update-ASSERT",
+        "method": "equal",
+        "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+        "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T07:15:30.107Z"
+  },
+  {
+    "id": "execution-attempt-20260901071530-96e341b66c5b154b",
+    "run_id": "run-20260901071530-96e341b66c5b154b",
+    "attempt_id": "attempt-20260901071530-96e341b66c5b154b",
+    "case_id": "CASE-007-fulfillment-protection",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-007-fulfillment-protection-ASSERT",
+        "method": "equal",
+        "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+        "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T07:16:14.732Z"
+  },
+  {
+    "id": "execution-attempt-20260901071614-318bfdb0481332fa",
+    "run_id": "run-20260901071614-318bfdb0481332fa",
+    "attempt_id": "attempt-20260901071614-318bfdb0481332fa",
+    "case_id": "CASE-008-historical-reconciliation",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-008-historical-reconciliation-ASSERT",
+        "method": "equal",
+        "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+        "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T07:16:58.060Z"
+  },
+  {
+    "id": "execution-attempt-20260901074052-302b57f9f6bccee8",
+    "run_id": "run-20260901074052-302b57f9f6bccee8",
+    "attempt_id": "attempt-20260901074052-302b57f9f6bccee8",
+    "case_id": "CASE-001-admin-configuration",
+    "status": "blocked",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-execution:playwright-access-denied",
+        "artifact": "rental-configuration-admin-flow",
+        "detail": "https://api.iconify.design,https://api.simplesvg.com,https://api.unisvg.com"
+      }
+    ],
+    "recorded_at": "2026-09-01T07:41:09.845Z"
+  },
+  {
+    "id": "execution-attempt-20260901074109-b93736a6d48ece1f",
+    "run_id": "run-20260901074109-b93736a6d48ece1f",
+    "attempt_id": "attempt-20260901074109-b93736a6d48ece1f",
+    "case_id": "CASE-002-identifier-authority",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-002-identifier-authority-ASSERT",
+        "method": "equal",
+        "expected": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+        "actual": "标识保持字符串和明确所有权；缺失或歧义值为空或失败关闭，不借用其他标识或文本推断。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T07:41:54.507Z"
+  },
+  {
+    "id": "execution-attempt-20260901074154-9bc3489be3758375",
+    "run_id": "run-20260901074154-9bc3489be3758375",
+    "attempt_id": "attempt-20260901074154-9bc3489be3758375",
+    "case_id": "CASE-003-immediate-order",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-003-immediate-order-ASSERT",
+        "method": "equal",
+        "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+        "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T07:42:36.306Z"
+  },
+  {
+    "id": "execution-attempt-20260901074236-6da8f336d9866193",
+    "run_id": "run-20260901074236-6da8f336d9866193",
+    "attempt_id": "attempt-20260901074236-6da8f336d9866193",
+    "case_id": "CASE-004-exact-model-mapping",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-004-exact-model-mapping-ASSERT",
+        "method": "equal",
+        "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+        "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T07:43:20.353Z"
+  },
+  {
+    "id": "execution-attempt-20260901074320-ecf65bf1191a1aed",
+    "run_id": "run-20260901074320-ecf65bf1191a1aed",
+    "attempt_id": "attempt-20260901074320-ecf65bf1191a1aed",
+    "case_id": "CASE-005-config-skipped",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-005-config-skipped-ASSERT",
+        "method": "equal",
+        "expected": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+        "actual": "仅目标店铺的新订单跳过备注、复核、内部订单和排期，同时保留原始载荷与 pay_amount；历史履约不逆转。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T07:43:59.398Z"
+  },
+  {
+    "id": "execution-attempt-20260901074359-e57594ed843a1792",
+    "run_id": "run-20260901074359-e57594ed843a1792",
+    "attempt_id": "attempt-20260901074359-e57594ed843a1792",
+    "case_id": "CASE-006-later-valid-update",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-006-later-valid-update-ASSERT",
+        "method": "equal",
+        "expected": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+        "actual": "订单和明细 ID 不变；有效计划和型号可补全，无效结果留历史但不清空上次有效计划。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T07:44:40.221Z"
+  },
+  {
+    "id": "execution-attempt-20260901074440-b27c0a7e536fa59a",
+    "run_id": "run-20260901074440-b27c0a7e536fa59a",
+    "attempt_id": "attempt-20260901074440-b27c0a7e536fa59a",
+    "case_id": "CASE-007-fulfillment-protection",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-007-fulfillment-protection-ASSERT",
+        "method": "equal",
+        "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+        "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T07:45:31.682Z"
+  },
+  {
+    "id": "execution-attempt-20260901074531-55cd681cdaa620c6",
+    "run_id": "run-20260901074531-55cd681cdaa620c6",
+    "attempt_id": "attempt-20260901074531-55cd681cdaa620c6",
+    "case_id": "CASE-008-historical-reconciliation",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "CASE-008-historical-reconciliation-ASSERT",
+        "method": "equal",
+        "expected": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+        "actual": "游标和租约安全，计数准确，失败可恢复，重复执行不重复建单，冲突保留历史且不删除记录。",
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-09-01T07:46:16.321Z"
+  },
+  {
+    "id": "execution-attempt-20260901074616-1d51a8a36cac8b36",
+    "run_id": "run-20260901074616-1d51a8a36cac8b36",
+    "attempt_id": "attempt-20260901074616-1d51a8a36cac8b36",
+    "case_id": "CASE-009-rental-device-catalog",
+    "status": "blocked",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-execution:playwright-access-denied",
+        "artifact": "rental-device-shared-catalog",
+        "detail": "https://api.iconify.design,https://api.unisvg.com,https://api.simplesvg.com"
+      }
+    ],
+    "recorded_at": "2026-09-01T07:46:25.258Z"
+  },
+  {
+    "id": "execution-attempt-20260901074625-95ebf22c4403c8ef",
+    "run_id": "run-20260901074625-95ebf22c4403c8ef",
+    "attempt_id": "attempt-20260901074625-95ebf22c4403c8ef",
+    "case_id": "CASE-010-theme-locale-states",
+    "status": "blocked",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-execution:playwright-access-denied",
+        "artifact": "rental-configuration-sensory-states",
+        "detail": "https://api.iconify.design,https://api.unisvg.com,https://api.simplesvg.com"
+      }
+    ],
+    "recorded_at": "2026-09-01T07:46:43.953Z"
+  }
+]

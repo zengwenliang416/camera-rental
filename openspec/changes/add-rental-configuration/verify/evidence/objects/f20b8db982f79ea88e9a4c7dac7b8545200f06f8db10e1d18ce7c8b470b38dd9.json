@@ -1,0 +1,7 @@
+{
+  "actual": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+  "assertion_id": "CASE-007-fulfillment-protection-ASSERT",
+  "expected": "允许的计划变更经过锁与冲突检查；早退不提前释放；受保护事实保持不变并进入明确人工复核。",
+  "method": "equal",
+  "status": "passed"
+}

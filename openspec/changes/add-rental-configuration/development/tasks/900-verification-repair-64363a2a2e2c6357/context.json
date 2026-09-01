@@ -1,0 +1,113 @@
+{
+  "schema": "specnav.development.repair-task.v1",
+  "id": "900-verification-repair-64363a2a2e2c6357",
+  "change_id": "add-rental-configuration",
+  "goal": "Repair test_defect for CASE-001-admin-configuration.",
+  "classification": "test_defect",
+  "owner": "development",
+  "status": "requested",
+  "requested_at": "2026-09-01T08:00:51.143Z",
+  "packet_path": "development/tasks/900-verification-repair-64363a2a2e2c6357",
+  "scope": {
+    "owner": "development",
+    "source": "approved-development-scope-lock",
+    "allowed_files": [
+      "tests/specnav/rental-configuration-scenarios.cjs"
+    ],
+    "denied_files": [],
+    "requires_review_on": [
+      "tests/specnav/rental-configuration-scenarios.cjs"
+    ],
+    "allowed_operations": {
+      "create": true,
+      "modify": true,
+      "delete": false,
+      "rename": false
+    },
+    "digest": "221d860d4ab1366042556b8d2dcaf32caf9512c60f07df9bc23c1d791e74552e"
+  },
+  "packet_artifacts": [
+    "brief.md",
+    "context.json",
+    "report.md",
+    "spec-review.md",
+    "quality-review.md"
+  ],
+  "required_reviews": [
+    "spec-review",
+    "quality-review"
+  ],
+  "ownership": {
+    "evidence": "verification",
+    "closure": "verification",
+    "repair": "development",
+    "reviews": "development",
+    "transitions": "core",
+    "break_loop": "core"
+  },
+  "frozen_failure": {
+    "failure_packet_id": "failure-15033d42e9c1902cfdbde338dbf2187f9ecaef9d887bd219afc2d855edd71d42",
+    "failure_packet_digest": "d29d3ec1b81f461f3bc48b67e57a603a4ff5c0a32bebac3a44629da6b2a55b39",
+    "run_id": "run-20260901074052-302b57f9f6bccee8",
+    "case_id": "CASE-001-admin-configuration",
+    "attempt_id": "attempt-20260901074052-302b57f9f6bccee8",
+    "evidence_ids": [
+      "evidence-2087c2a75f363eecd326e64e8d40ab7b6e14e01c1b73586e96f52283abb26d31",
+      "evidence-2565e42205f22c9b5972d188aac35e5a25a4aeec9ca68de05cf6ed4d8287f70c",
+      "evidence-2574503eec7ac18dc8ee259d2ea26177af1edd5b54a6112066344cfd6365c9ae",
+      "evidence-5555dd453910088d0f2a244e953cbd6f6f0b27d983d2a45fce74b7968a3c487b",
+      "evidence-a92f63e1aae769bc50d9ac81d81e5e8a30a2a6cbb3c81f6661fc6af69b816225",
+      "evidence-b03f5d28efb9875bb2130a2bfdabc9b9189c8cb8f19e04611eee5a9a934c80c0",
+      "evidence-ba813cc545b418c8db4530568617da9e30c0ebfca0586d611514754086db4f12",
+      "evidence-f316065aa4587f5d75b9f55676b2ac38bf81c5ea8393177da555eb2b50bfdff2"
+    ],
+    "evidence_content": [
+      {
+        "id": "evidence-2087c2a75f363eecd326e64e8d40ab7b6e14e01c1b73586e96f52283abb26d31",
+        "digest": "ae7beb2dbab5478f4450f4a3397610ea702d8e633cacb6da6e46ccb8e932c406"
+      },
+      {
+        "id": "evidence-2565e42205f22c9b5972d188aac35e5a25a4aeec9ca68de05cf6ed4d8287f70c",
+        "digest": "d2ce7a16553ee7f8ca0e31d0d82192282012fbbf01c237c2768fb22d62800bc8"
+      },
+      {
+        "id": "evidence-2574503eec7ac18dc8ee259d2ea26177af1edd5b54a6112066344cfd6365c9ae",
+        "digest": "17f98676460510ed1a0f0ac8227ee8f9eb08323f1d43c3722ea6454bb4bc64db"
+      },
+      {
+        "id": "evidence-5555dd453910088d0f2a244e953cbd6f6f0b27d983d2a45fce74b7968a3c487b",
+        "digest": "37e7c7563f5d74369e6c290c7622d31321f33bff17dede6a59d0ec15b546ab91"
+      },
+      {
+        "id": "evidence-a92f63e1aae769bc50d9ac81d81e5e8a30a2a6cbb3c81f6661fc6af69b816225",
+        "digest": "2cfb2b2f2bd12a748078d86b12d504ebb2e2f312e9c57e6add00d16abcdeb8d8"
+      },
+      {
+        "id": "evidence-b03f5d28efb9875bb2130a2bfdabc9b9189c8cb8f19e04611eee5a9a934c80c0",
+        "digest": "9fe5e4b9354d75b2bed515fc83d6d0c5e352e5ad002342231f69f1e324ad6995"
+      },
+      {
+        "id": "evidence-ba813cc545b418c8db4530568617da9e30c0ebfca0586d611514754086db4f12",
+        "digest": "3dc8315796c11893afe5612fed193b0ec240a1b000e555f00a26be6b9da86dfd"
+      },
+      {
+        "id": "evidence-f316065aa4587f5d75b9f55676b2ac38bf81c5ea8393177da555eb2b50bfdff2",
+        "digest": "05e4ab572b897a69fb8e7a034d5f593d7dc80a8491ace8174b93c4aae1de66a5"
+      }
+    ],
+    "reading_ids": [
+      "reading-0c1efe448f0875900f1848c3f48ca4342cbcda737afe32c8ee9ff648eee38b5d",
+      "reading-79a870c05627191bc62f41804973727710c4a48b02db9a6af6b63aeba0837853",
+      "reading-88919c51e315cb1e96b8a8b61e6c1358dcc2318c55bd4c2a2f61e8a02d13af2d",
+      "reading-9ce4fc1a2ff6148c6a9d13d18852afc29f50eeeb1339a2e1d3d93ab28ee4e92d",
+      "reading-ab85587e8f94ffda6cab138f68d9079067553164bcab38d53062be93f363cbd5",
+      "reading-cac233dc6d4cdeb8b6bdff4bcb404dbb67c01feeab37a63e3942637a5c4e87c4"
+    ],
+    "failed_assertion_ids": [
+      "CASE-001-admin-configuration-ASSERT"
+    ],
+    "summary": "浏览器场景断言通过，但断言结果的 expected 与案例合同不一致。",
+    "root_cause": "场景使用 assertion.ok，Playwright runner 因此记录 expected 为布尔值 true；Verification Kernel 要求 playwright_assertion 的 expected 与案例合同中的中文 expected 完全相等，导致已通过的页面断言被判定为 oracle-result-invalid。",
+    "frozen_at": "2026-09-01T07:41:09.818Z"
+  }
+}

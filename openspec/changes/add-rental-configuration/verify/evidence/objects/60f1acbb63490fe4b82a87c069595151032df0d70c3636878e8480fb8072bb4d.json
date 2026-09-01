@@ -1,0 +1,1454 @@
+[
+  {
+    "type": "debug",
+    "text": "[vite] connecting...",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 826,
+      "column": 8,
+      "lineNumber": 826,
+      "columnNumber": 8
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connected.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 930,
+      "column": 11,
+      "lineNumber": 930,
+      "columnNumber": 11
+    }
+  },
+  {
+    "type": "log",
+    "text": "%c 欢迎使用 %c 相机租赁管理后台 %c background:#2d8cf0;border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 4px 0 0 4px; color: #fff; border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 0 4px 4px 0; color: #2d8cf0; background:transparent",
+    "location": {
+      "url": "http://127.0.0.1:15173/src/utils/Logger.ts",
+      "line": 55,
+      "column": 9,
+      "lineNumber": 55,
+      "columnNumber": 9
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connecting...",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 826,
+      "column": 8,
+      "lineNumber": 826,
+      "columnNumber": 8
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connected.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 930,
+      "column": 11,
+      "lineNumber": 930,
+      "columnNumber": 11
+    }
+  },
+  {
+    "type": "log",
+    "text": "%c 欢迎使用 %c 相机租赁管理后台 %c background:#2d8cf0;border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 4px 0 0 4px; color: #fff; border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 0 4px 4px 0; color: #2d8cf0; background:transparent",
+    "location": {
+      "url": "http://127.0.0.1:15173/src/utils/Logger.ts",
+      "line": 55,
+      "column": 9,
+      "lineNumber": 55,
+      "columnNumber": 9
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connecting...",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 826,
+      "column": 8,
+      "lineNumber": 826,
+      "columnNumber": 8
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connected.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 930,
+      "column": 11,
+      "lineNumber": 930,
+      "columnNumber": 11
+    }
+  },
+  {
+    "type": "log",
+    "text": "%c 欢迎使用 %c 相机租赁管理后台 %c background:#2d8cf0;border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 4px 0 0 4px; color: #fff; border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 0 4px 4px 0; color: #2d8cf0; background:transparent",
+    "location": {
+      "url": "http://127.0.0.1:15173/src/utils/Logger.ts",
+      "line": 55,
+      "column": 9,
+      "lineNumber": 55,
+      "columnNumber": 9
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connecting...",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 826,
+      "column": 8,
+      "lineNumber": 826,
+      "columnNumber": 8
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connected.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 930,
+      "column": 11,
+      "lineNumber": 930,
+      "columnNumber": 11
+    }
+  },
+  {
+    "type": "log",
+    "text": "%c 欢迎使用 %c 相机租赁管理后台 %c background:#2d8cf0;border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 4px 0 0 4px; color: #fff; border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 0 4px 4px 0; color: #2d8cf0; background:transparent",
+    "location": {
+      "url": "http://127.0.0.1:15173/src/utils/Logger.ts",
+      "line": 55,
+      "column": 9,
+      "lineNumber": 55,
+      "columnNumber": 9
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connecting...",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 826,
+      "column": 8,
+      "lineNumber": 826,
+      "columnNumber": 8
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connected.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 930,
+      "column": 11,
+      "lineNumber": 930,
+      "columnNumber": 11
+    }
+  },
+  {
+    "type": "log",
+    "text": "%c 欢迎使用 %c 相机租赁管理后台 %c background:#2d8cf0;border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 4px 0 0 4px; color: #fff; border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 0 4px 4px 0; color: #2d8cf0; background:transparent",
+    "location": {
+      "url": "http://127.0.0.1:15173/src/utils/Logger.ts",
+      "line": 55,
+      "column": 9,
+      "lineNumber": 55,
+      "columnNumber": 9
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connecting...",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 826,
+      "column": 8,
+      "lineNumber": 826,
+      "columnNumber": 8
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connected.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 930,
+      "column": 11,
+      "lineNumber": 930,
+      "columnNumber": 11
+    }
+  },
+  {
+    "type": "log",
+    "text": "%c 欢迎使用 %c 相机租赁管理后台 %c background:#2d8cf0;border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 4px 0 0 4px; color: #fff; border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 0 4px 4px 0; color: #2d8cf0; background:transparent",
+    "location": {
+      "url": "http://127.0.0.1:15173/src/utils/Logger.ts",
+      "line": 55,
+      "column": 9,
+      "lineNumber": 55,
+      "columnNumber": 9
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "location": {
+      "url": "http://127.0.0.1:15173/admin-api/rental/configuration/catalog",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "log",
+    "text": "errAxiosError: Request failed with status code 500",
+    "location": {
+      "url": "http://127.0.0.1:15173/src/config/axios/service.ts",
+      "line": 195,
+      "column": 9,
+      "lineNumber": 195,
+      "columnNumber": 9
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "location": {
+      "url": "http://127.0.0.1:15173/admin-api/rental/configuration/shops",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "log",
+    "text": "errAxiosError: Request failed with status code 500",
+    "location": {
+      "url": "http://127.0.0.1:15173/src/config/axios/service.ts",
+      "line": 195,
+      "column": 9,
+      "lineNumber": 195,
+      "columnNumber": 9
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "location": {
+      "url": "http://127.0.0.1:15173/admin-api/rental/configuration/product-rule/page?pageNo=1&pageSize=10",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "log",
+    "text": "errAxiosError: Request failed with status code 500",
+    "location": {
+      "url": "http://127.0.0.1:15173/src/config/axios/service.ts",
+      "line": 195,
+      "column": 9,
+      "lineNumber": 195,
+      "columnNumber": 9
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connecting...",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 826,
+      "column": 8,
+      "lineNumber": 826,
+      "columnNumber": 8
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connected.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 930,
+      "column": 11,
+      "lineNumber": 930,
+      "columnNumber": 11
+    }
+  },
+  {
+    "type": "log",
+    "text": "%c 欢迎使用 %c 相机租赁管理后台 %c background:#2d8cf0;border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 4px 0 0 4px; color: #fff; border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 0 4px 4px 0; color: #2d8cf0; background:transparent",
+    "location": {
+      "url": "http://127.0.0.1:15173/src/utils/Logger.ts",
+      "line": 55,
+      "column": 9,
+      "lineNumber": 55,
+      "columnNumber": 9
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connecting...",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 826,
+      "column": 8,
+      "lineNumber": 826,
+      "columnNumber": 8
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connected.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 930,
+      "column": 11,
+      "lineNumber": 930,
+      "columnNumber": 11
+    }
+  },
+  {
+    "type": "log",
+    "text": "%c 欢迎使用 %c 相机租赁管理后台 %c background:#2d8cf0;border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 4px 0 0 4px; color: #fff; border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 0 4px 4px 0; color: #2d8cf0; background:transparent",
+    "location": {
+      "url": "http://127.0.0.1:15173/src/utils/Logger.ts",
+      "line": 55,
+      "column": 9,
+      "lineNumber": 55,
+      "columnNumber": 9
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connecting...",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 826,
+      "column": 8,
+      "lineNumber": 826,
+      "columnNumber": 8
+    }
+  },
+  {
+    "type": "debug",
+    "text": "[vite] connected.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 930,
+      "column": 11,
+      "lineNumber": 930,
+      "columnNumber": 11
+    }
+  },
+  {
+    "type": "log",
+    "text": "%c 欢迎使用 %c 相机租赁管理后台 %c background:#2d8cf0;border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 4px 0 0 4px; color: #fff; border:1px solid #2d8cf0;\n      padding: 1px; border-radius: 0 4px 4px 0; color: #2d8cf0; background:transparent",
+    "location": {
+      "url": "http://127.0.0.1:15173/src/utils/Logger.ts",
+      "line": 55,
+      "column": 9,
+      "lineNumber": 55,
+      "columnNumber": 9
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "warning",
+    "text": "[Vue Router warn]: The `next()` callback in navigation guards is deprecated. Return the value instead of calling `next(value)`.",
+    "location": {
+      "url": "http://127.0.0.1:15173/@vite/client",
+      "line": 509,
+      "column": 3,
+      "lineNumber": 509,
+      "columnNumber": 3
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.iconify.design/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.simplesvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/zmdi.json?icons=fullscreen",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/mdi.json?icons=format-size",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "location": {
+      "url": "https://api.unisvg.com/ion.json?icons=language-sharp",
+      "line": 0,
+      "column": 0,
+      "lineNumber": 0,
+      "columnNumber": 0
+    }
+  }
+]

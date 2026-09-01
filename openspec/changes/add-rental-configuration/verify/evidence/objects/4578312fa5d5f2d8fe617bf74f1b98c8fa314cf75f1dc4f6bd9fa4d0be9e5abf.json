@@ -1,0 +1,7 @@
+{
+  "actual": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+  "assertion_id": "CASE-003-immediate-order-ASSERT",
+  "expected": "同一店铺和外部订单号只关联一个订单与明细，pay_amount 不变，未 READY 前不能分配或排期。",
+  "method": "equal",
+  "status": "passed"
+}

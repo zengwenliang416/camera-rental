@@ -1,0 +1,7 @@
+{
+  "actual": true,
+  "assertion_id": "CASE-009-rental-device-catalog-ASSERT",
+  "expected": true,
+  "method": "ok",
+  "status": "passed"
+}

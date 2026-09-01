@@ -1,0 +1,7 @@
+{
+  "actual": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+  "assertion_id": "CASE-004-exact-model-mapping-ASSERT",
+  "expected": "只有精确启用关系可补全型号；多型号任何缺失或不匹配都保持待配置，绝不回退商品默认型号。",
+  "method": "equal",
+  "status": "passed"
+}

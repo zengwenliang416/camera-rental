@@ -1,0 +1,7 @@
+{
+  "actual": true,
+  "assertion_id": "CASE-001-admin-configuration-ASSERT",
+  "expected": true,
+  "method": "ok",
+  "status": "passed"
+}

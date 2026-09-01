@@ -1,0 +1,37 @@
+{
+  "schema": "specnav.verification.failure-packet.v1",
+  "change_id": "add-rental-configuration",
+  "run_id": "run-20260901074052-302b57f9f6bccee8",
+  "case_id": "CASE-001-admin-configuration",
+  "attempt_id": "attempt-20260901074052-302b57f9f6bccee8",
+  "reading_ids": [
+    "reading-0c1efe448f0875900f1848c3f48ca4342cbcda737afe32c8ee9ff648eee38b5d",
+    "reading-79a870c05627191bc62f41804973727710c4a48b02db9a6af6b63aeba0837853",
+    "reading-88919c51e315cb1e96b8a8b61e6c1358dcc2318c55bd4c2a2f61e8a02d13af2d",
+    "reading-9ce4fc1a2ff6148c6a9d13d18852afc29f50eeeb1339a2e1d3d93ab28ee4e92d",
+    "reading-ab85587e8f94ffda6cab138f68d9079067553164bcab38d53062be93f363cbd5",
+    "reading-cac233dc6d4cdeb8b6bdff4bcb404dbb67c01feeab37a63e3942637a5c4e87c4"
+  ],
+  "evidence_ids": [
+    "evidence-2087c2a75f363eecd326e64e8d40ab7b6e14e01c1b73586e96f52283abb26d31",
+    "evidence-2565e42205f22c9b5972d188aac35e5a25a4aeec9ca68de05cf6ed4d8287f70c",
+    "evidence-2574503eec7ac18dc8ee259d2ea26177af1edd5b54a6112066344cfd6365c9ae",
+    "evidence-5555dd453910088d0f2a244e953cbd6f6f0b27d983d2a45fce74b7968a3c487b",
+    "evidence-a92f63e1aae769bc50d9ac81d81e5e8a30a2a6cbb3c81f6661fc6af69b816225",
+    "evidence-b03f5d28efb9875bb2130a2bfdabc9b9189c8cb8f19e04611eee5a9a934c80c0",
+    "evidence-ba813cc545b418c8db4530568617da9e30c0ebfca0586d611514754086db4f12",
+    "evidence-f316065aa4587f5d75b9f55676b2ac38bf81c5ea8393177da555eb2b50bfdff2"
+  ],
+  "classification": "test_defect",
+  "status": "repair_required",
+  "next_action": "repair_required",
+  "summary": "浏览器场景断言通过，但断言结果的 expected 与案例合同不一致。",
+  "root_cause": "场景使用 assertion.ok，Playwright runner 因此记录 expected 为布尔值 true；Verification Kernel 要求 playwright_assertion 的 expected 与案例合同中的中文 expected 完全相等，导致已通过的页面断言被判定为 oracle-result-invalid。",
+  "failed_assertion_ids": [
+    "CASE-001-admin-configuration-ASSERT"
+  ],
+  "owner": "development",
+  "created_at": "2026-09-01T07:41:09.818Z",
+  "frozen_at": "2026-09-01T07:41:09.818Z",
+  "id": "failure-15033d42e9c1902cfdbde338dbf2187f9ecaef9d887bd219afc2d855edd71d42"
+}

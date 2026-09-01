@@ -1,0 +1,9 @@
+[
+  {
+    "id": "CASE-009-rental-device-catalog-ASSERT",
+    "method": "ok",
+    "actual": true,
+    "expected": true,
+    "status": "passed"
+  }
+]

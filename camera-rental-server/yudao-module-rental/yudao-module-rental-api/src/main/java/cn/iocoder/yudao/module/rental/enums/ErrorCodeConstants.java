@@ -38,6 +38,12 @@ public interface ErrorCodeConstants {
             new ErrorCode(1_040_001_028, "闲鱼订单已退款或关闭，不能补录设备出库");
     ErrorCode XIANYU_DISPATCH_BACKFILL_CONFLICT =
             new ErrorCode(1_040_001_029, "已发货补录冲突：{}");
+    ErrorCode XIANYU_SHIP_ORDER_NOT_READY =
+            new ErrorCode(1_040_001_030, "租赁订单尚未达到发货条件：{}");
+    ErrorCode XIANYU_SHIP_PRODUCT_RULE_BIND_REQUIRED =
+            new ErrorCode(1_040_001_031, "该闲鱼商品尚未配置设备型号，请确认绑定扫描设备型号后再发货");
+    ErrorCode XIANYU_SHIP_PRODUCT_RULE_BIND_CONFLICT =
+            new ErrorCode(1_040_001_032, "不能在发货时绑定商品型号：{}");
 
     // ========== 设备分配 / 设备二维码 1-040-002-000 ==========
     ErrorCode RENTAL_DEVICE_ASSIGN_FAILED = new ErrorCode(1_040_002_000, "设备分配失败：{}");

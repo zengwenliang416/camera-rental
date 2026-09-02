@@ -12,11 +12,13 @@ import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuOrderShip
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceAssignmentDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceShipmentDO;
+import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceModelDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderItemDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuShopDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
+import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceModelMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceShipmentMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
@@ -37,6 +39,9 @@ import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryResult;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryService;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalLogisticsException;
 import cn.iocoder.yudao.module.rental.service.logistics.WaybillPrivacy;
+import cn.iocoder.yudao.module.rental.service.configuration.RentalChannelProductRuleService;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationResult;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationService;
 import cn.iocoder.yudao.module.rental.service.reconciliation.RentalOrderPreparationPolicy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -62,7 +67,9 @@ import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_DIS
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_DEVICE_NOT_SHIPPABLE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_IDEMPOTENT_KEY_REUSED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_CONVERTED;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_READY;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_PENDING;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_PRODUCT_RULE_BIND_REQUIRED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_REMOTE_ERROR;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHOP_AUTHORIZATION_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHOP_NOT_EXISTS;
@@ -83,11 +90,16 @@ class XianyuOrderShipServiceTest {
     private final XianyuOrderMapper orderMapper = mock(XianyuOrderMapper.class);
     private final XianyuShopMapper shopMapper = mock(XianyuShopMapper.class);
     private final RentalDeviceMapper deviceMapper = mock(RentalDeviceMapper.class);
+    private final RentalDeviceModelMapper deviceModelMapper = mock(RentalDeviceModelMapper.class);
     private final RentalDeviceAssignmentMapper assignmentMapper = mock(RentalDeviceAssignmentMapper.class);
     private final RentalOrderMapper rentalOrderMapper = mock(RentalOrderMapper.class);
     private final RentalOrderItemMapper rentalOrderItemMapper = mock(RentalOrderItemMapper.class);
     private final RentalDeviceShipmentMapper shipmentMapper = mock(RentalDeviceShipmentMapper.class);
     private final RentalOrderPreparationPolicy preparationPolicy = mock(RentalOrderPreparationPolicy.class);
+    private final RentalChannelProductRuleService productRuleService =
+            mock(RentalChannelProductRuleService.class);
+    private final RentalChannelOrderReconciliationService reconciliationService =
+            mock(RentalChannelOrderReconciliationService.class);
     private final RentalDeviceAssignmentService assignmentService = mock(RentalDeviceAssignmentService.class);
     private final RentalDeviceOpsService deviceOpsService = mock(RentalDeviceOpsService.class);
     private final RentalDeliveryService deliveryService = mock(RentalDeliveryService.class);
@@ -158,8 +170,11 @@ class XianyuOrderShipServiceTest {
                 .receiverMobile("19900000000")
                 .receiverAddress("测试省测试市测试区测试路1号")
                 .sellerRemark("测试卖家备注")
+                .xianyuItemId("1062409679830")
                 .conversionStatus("CONVERTED")
                 .rentalOrderId(30L)
+                .preparationStatus("WAITING_MODEL")
+                .preparationReasonCode("PRODUCT_RULE_NOT_CONFIGURED")
                 .build();
         when(orderMapper.selectPendingShipPage(any(), any(), any(), any()))
                 .thenReturn(new PageResult<>(List.of(order), 1L));
@@ -172,6 +187,9 @@ class XianyuOrderShipServiceTest {
         assertEquals("19900000000", result.getReceiverMobile());
         assertEquals("测试省测试市测试区测试路1号", result.getReceiverAddress());
         assertEquals("测试卖家备注", result.getSellerRemark());
+        assertEquals("1062409679830", result.getXianyuItemId());
+        assertEquals("WAITING_MODEL", result.getPreparationStatus());
+        assertEquals("PRODUCT_RULE_NOT_CONFIGURED", result.getPreparationReasonCode());
     }
 
     @Test
@@ -722,10 +740,96 @@ class XianyuOrderShipServiceTest {
 
         ServiceException ex = assertThrows(ServiceException.class, () -> service().ship(req()));
 
-        assertEquals(XIANYU_SHIP_ORDER_NOT_CONVERTED.getCode(), ex.getCode());
+        assertEquals(XIANYU_SHIP_ORDER_NOT_READY.getCode(), ex.getCode());
         verify(preparationPolicy).requireReady(rentalOrder, item);
         verify(assignmentService, never()).assign(any());
         verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void shipRequiresExplicitConfirmationBeforeCreatingMissingProductRule() {
+        properties.setWriteEnabled(true);
+        XianyuOrderDO order = pendingOrder();
+        order.setXianyuItemId("1062409679830");
+        RentalOrderDO rentalOrder = RentalOrderDO.builder()
+                .id(30L)
+                .preparationStatus("WAITING_MODEL")
+                .preparationReasonCode("PRODUCT_RULE_NOT_CONFIGURED")
+                .build();
+        RentalOrderItemDO item = convertedOrderItem();
+        item.setEquipmentModelCode(null);
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(rentalOrder);
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(item);
+        doThrow(new RentalDeviceAssignmentException(
+                RentalDeviceAssignmentException.Code.ORDER_NOT_READY, "PRODUCT_RULE_NOT_CONFIGURED"))
+                .when(preparationPolicy).requireReady(rentalOrder, item);
+
+        ServiceException ex = assertThrows(ServiceException.class, () -> service().ship(req()));
+
+        assertEquals(XIANYU_SHIP_PRODUCT_RULE_BIND_REQUIRED.getCode(), ex.getCode());
+        verify(productRuleService, never()).createSingleRuleFromShipment(any(), any(), any());
+        verify(reconciliationService, never()).reconcile(any());
+        verify(assignmentService, never()).assign(any());
+        verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void shipCreatesMissingSingleModelRuleAndReconcilesBeforeDispatch() {
+        properties.setWriteEnabled(true);
+        XianyuOrderShipReqVO req = req();
+        req.setBindProductRuleIfMissing(true);
+        XianyuOrderDO order = pendingOrder();
+        order.setXianyuItemId("1062409679830");
+        RentalOrderDO waitingOrder = RentalOrderDO.builder()
+                .id(30L)
+                .preparationStatus("WAITING_MODEL")
+                .preparationReasonCode("PRODUCT_RULE_NOT_CONFIGURED")
+                .build();
+        RentalOrderDO readyOrder = RentalOrderDO.builder()
+                .id(30L)
+                .preparationStatus("READY")
+                .build();
+        RentalOrderItemDO waitingItem = convertedOrderItem();
+        waitingItem.setEquipmentModelCode(null);
+        RentalOrderItemDO readyItem = convertedOrderItem();
+        RentalDeviceDO device = shippableDevice();
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(device);
+        when(deviceModelMapper.selectByCode("DJI-P4P")).thenReturn(RentalDeviceModelDO.builder()
+                .id(300L)
+                .modelCode("DJI-P4P")
+                .enabled(true)
+                .build());
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(waitingOrder, readyOrder);
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L))
+                .thenReturn(waitingItem, readyItem);
+        doThrow(new RentalDeviceAssignmentException(
+                RentalDeviceAssignmentException.Code.ORDER_NOT_READY, "PRODUCT_RULE_NOT_CONFIGURED"))
+                .doNothing()
+                .when(preparationPolicy).requireReady(any(RentalOrderDO.class), any(RentalOrderItemDO.class));
+        when(reconciliationService.reconcile(10L)).thenReturn(
+                new RentalChannelOrderReconciliationResult(
+                        "CONVERTED", 30L, null, null, "READY", true, "UPDATED"));
+        when(assignmentService.assign(any())).thenReturn(new RentalDeviceAssignmentResult(
+                60L, 70L, 40L, readyItem.getOccupyStartDate(), readyItem.getOccupyEndDateExclusive()));
+        when(writeClient.execute(eq(XianyuWriteEndpoint.ORDER_SHIP), any())).thenReturn(remoteSuccess());
+        RentalDeviceOpsRespVO dispatched = new RentalDeviceOpsRespVO();
+        dispatched.setAssignmentStatus("DISPATCHED");
+        when(deviceOpsService.dispatch(any())).thenReturn(dispatched);
+
+        XianyuOrderShipRespVO response = service().ship(req);
+
+        assertEquals("DISPATCHED", response.getAssignmentStatus());
+        InOrder bindingOrder = inOrder(productRuleService, reconciliationService, assignmentService, writeClient);
+        bindingOrder.verify(productRuleService)
+                .createSingleRuleFromShipment(20L, "1062409679830", 300L);
+        bindingOrder.verify(reconciliationService).reconcile(10L);
+        bindingOrder.verify(assignmentService).assign(any());
+        bindingOrder.verify(writeClient).execute(eq(XianyuWriteEndpoint.ORDER_SHIP), any());
     }
 
     @Test
@@ -1103,8 +1207,9 @@ class XianyuOrderShipServiceTest {
     }
 
     private XianyuOrderShipService service() {
-        return new XianyuOrderShipService(orderMapper, shopMapper, deviceMapper, assignmentMapper, rentalOrderMapper,
-                rentalOrderItemMapper, shipmentMapper, preparationPolicy, assignmentService, deviceOpsService,
+        return new XianyuOrderShipService(orderMapper, shopMapper, deviceMapper, deviceModelMapper,
+                assignmentMapper, rentalOrderMapper, rentalOrderItemMapper, shipmentMapper, preparationPolicy,
+                productRuleService, reconciliationService, assignmentService, deviceOpsService,
                 deliveryService, waybillPrivacy, writeClient, runtimeConfigService, objectMapper);
     }
 
@@ -1206,6 +1311,7 @@ class XianyuOrderShipServiceTest {
         return RentalOrderItemDO.builder()
                 .id(50L)
                 .rentalOrderId(30L)
+                .equipmentModelCode("DJI-P4P")
                 .occupyStartDate(LocalDate.of(2026, 7, 27))
                 .occupyEndDateExclusive(LocalDate.of(2026, 8, 2))
                 .build();

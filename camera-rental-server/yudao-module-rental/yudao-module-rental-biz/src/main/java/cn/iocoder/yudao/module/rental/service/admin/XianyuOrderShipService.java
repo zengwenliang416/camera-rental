@@ -12,11 +12,13 @@ import cn.iocoder.yudao.module.rental.controller.admin.xianyu.vo.XianyuPendingSh
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceAssignmentDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceShipmentDO;
+import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceModelDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderItemDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuOrderDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuShopDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
+import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceModelMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceShipmentMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
@@ -38,6 +40,9 @@ import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryDeviceComm
 import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryResult;
 import cn.iocoder.yudao.module.rental.service.logistics.RentalDeliveryService;
 import cn.iocoder.yudao.module.rental.service.logistics.WaybillPrivacy;
+import cn.iocoder.yudao.module.rental.service.configuration.RentalChannelProductRuleService;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationResult;
+import cn.iocoder.yudao.module.rental.service.reconciliation.RentalChannelOrderReconciliationService;
 import cn.iocoder.yudao.module.rental.service.reconciliation.RentalOrderPreparationPolicy;
 import cn.iocoder.yudao.module.rental.enums.logistics.RentalDeliveryDirectionEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -64,7 +69,10 @@ import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_ORD
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_DEVICE_NOT_SHIPPABLE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_IDEMPOTENT_KEY_REUSED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_CONVERTED;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_READY;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_PENDING;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_PRODUCT_RULE_BIND_CONFLICT;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_PRODUCT_RULE_BIND_REQUIRED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_REMOTE_ERROR;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHOP_AUTHORIZATION_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHOP_NOT_EXISTS;
@@ -83,11 +91,14 @@ public class XianyuOrderShipService {
     private final XianyuOrderMapper orderMapper;
     private final XianyuShopMapper shopMapper;
     private final RentalDeviceMapper deviceMapper;
+    private final RentalDeviceModelMapper deviceModelMapper;
     private final RentalDeviceAssignmentMapper assignmentMapper;
     private final RentalOrderMapper rentalOrderMapper;
     private final RentalOrderItemMapper rentalOrderItemMapper;
     private final RentalDeviceShipmentMapper shipmentMapper;
     private final RentalOrderPreparationPolicy preparationPolicy;
+    private final RentalChannelProductRuleService productRuleService;
+    private final RentalChannelOrderReconciliationService reconciliationService;
     private final RentalDeviceAssignmentService assignmentService;
     private final RentalDeviceOpsService deviceOpsService;
     private final RentalDeliveryService deliveryService;
@@ -97,11 +108,14 @@ public class XianyuOrderShipService {
     private final ObjectMapper objectMapper;
 
     public XianyuOrderShipService(XianyuOrderMapper orderMapper, XianyuShopMapper shopMapper,
-                                  RentalDeviceMapper deviceMapper, RentalDeviceAssignmentMapper assignmentMapper,
+                                  RentalDeviceMapper deviceMapper, RentalDeviceModelMapper deviceModelMapper,
+                                  RentalDeviceAssignmentMapper assignmentMapper,
                                   RentalOrderMapper rentalOrderMapper,
                                   RentalOrderItemMapper rentalOrderItemMapper,
                                   RentalDeviceShipmentMapper shipmentMapper,
                                   RentalOrderPreparationPolicy preparationPolicy,
+                                  RentalChannelProductRuleService productRuleService,
+                                  RentalChannelOrderReconciliationService reconciliationService,
                                   RentalDeviceAssignmentService assignmentService,
                                   RentalDeviceOpsService deviceOpsService,
                                   RentalDeliveryService deliveryService,
@@ -111,11 +125,14 @@ public class XianyuOrderShipService {
         this.orderMapper = orderMapper;
         this.shopMapper = shopMapper;
         this.deviceMapper = deviceMapper;
+        this.deviceModelMapper = deviceModelMapper;
         this.assignmentMapper = assignmentMapper;
         this.rentalOrderMapper = rentalOrderMapper;
         this.rentalOrderItemMapper = rentalOrderItemMapper;
         this.shipmentMapper = shipmentMapper;
         this.preparationPolicy = preparationPolicy;
+        this.productRuleService = productRuleService;
+        this.reconciliationService = reconciliationService;
         this.assignmentService = assignmentService;
         this.deviceOpsService = deviceOpsService;
         this.deliveryService = deliveryService;
@@ -154,9 +171,10 @@ public class XianyuOrderShipService {
         }
         requirePending(order);
         XianyuShopDO shop = requireAuthorizedShop(order.getShopId());
-        RentalOrderItemDO item = requirePreparedFirstItem(order);
         RentalDeviceDO device = resolveDevice(reqVO);
         requireDeviceShippable(device);
+        RentalOrderItemDO item = requirePreparedFirstItem(order, reqVO, device);
+        requireDeviceModelMatches(item, device);
 
         RentalDeviceAssignmentResult assignment = assignDevice(reqVO, device, item);
         ObjectNode shipBody = buildShipBody(order, reqVO);
@@ -289,8 +307,11 @@ public class XianyuOrderShipService {
         vo.setReceiverMobile(order.getReceiverMobile());
         vo.setReceiverAddress(order.getReceiverAddress());
         vo.setSellerRemark(order.getSellerRemark());
+        vo.setXianyuItemId(order.getXianyuItemId());
         vo.setRentalOrderId(order.getRentalOrderId());
         vo.setConversionStatus(order.getConversionStatus());
+        vo.setPreparationStatus(order.getPreparationStatus());
+        vo.setPreparationReasonCode(order.getPreparationReasonCode());
         vo.setOrderTime(order.getOrderTime());
         vo.setSourceUpdatedAt(order.getSourceUpdatedAt());
         return vo;
@@ -367,6 +388,12 @@ public class XianyuOrderShipService {
     }
 
     private RentalOrderItemDO requirePreparedFirstItem(XianyuOrderDO order) {
+        return requirePreparedFirstItem(order, null, null);
+    }
+
+    private RentalOrderItemDO requirePreparedFirstItem(XianyuOrderDO order,
+                                                       XianyuOrderShipReqVO reqVO,
+                                                       RentalDeviceDO device) {
         Long rentalOrderId = order.getRentalOrderId();
         if (rentalOrderId == null) {
             throw exception(XIANYU_SHIP_ORDER_NOT_CONVERTED);
@@ -382,9 +409,63 @@ public class XianyuOrderShipService {
         try {
             preparationPolicy.requireReady(rentalOrder, item);
         } catch (RentalDeviceAssignmentException ex) {
-            throw exception(XIANYU_SHIP_ORDER_NOT_CONVERTED);
+            String reasonCode = StringUtils.hasText(rentalOrder.getPreparationReasonCode())
+                    ? rentalOrder.getPreparationReasonCode()
+                    : (StringUtils.hasText(order.getPreparationReasonCode())
+                    ? order.getPreparationReasonCode() : ex.getMessage());
+            if (reqVO != null && device != null && "PRODUCT_RULE_NOT_CONFIGURED".equals(reasonCode)) {
+                if (!Boolean.TRUE.equals(reqVO.getBindProductRuleIfMissing())) {
+                    throw exception(XIANYU_SHIP_PRODUCT_RULE_BIND_REQUIRED);
+                }
+                return bindProductRuleAndReloadPreparedItem(order, device);
+            }
+            throw exception(XIANYU_SHIP_ORDER_NOT_READY,
+                    StringUtils.hasText(reasonCode) ? reasonCode : "ORDER_NOT_READY");
         }
         return item;
+    }
+
+    private RentalOrderItemDO bindProductRuleAndReloadPreparedItem(XianyuOrderDO order,
+                                                                   RentalDeviceDO device) {
+        if (!StringUtils.hasText(order.getXianyuItemId())
+                || !StringUtils.hasText(device.getEquipmentModelCode())) {
+            throw exception(XIANYU_SHIP_PRODUCT_RULE_BIND_CONFLICT, "订单商品或扫描设备缺少型号标识");
+        }
+        RentalDeviceModelDO model = deviceModelMapper.selectByCode(device.getEquipmentModelCode().trim());
+        if (model == null || !Boolean.TRUE.equals(model.getEnabled())
+                || !StringUtils.hasText(model.getModelCode())) {
+            throw exception(XIANYU_SHIP_PRODUCT_RULE_BIND_CONFLICT, "扫描设备对应的型号不存在或已停用");
+        }
+        productRuleService.createSingleRuleFromShipment(
+                order.getShopId(), order.getXianyuItemId(), model.getId());
+        RentalChannelOrderReconciliationResult result = reconciliationService.reconcile(order.getId());
+        if (!"CONVERTED".equals(result.status()) || !"READY".equals(result.preparationStatus())) {
+            throw exception(XIANYU_SHIP_ORDER_NOT_READY,
+                    StringUtils.hasText(result.reasonCode()) ? result.reasonCode() : result.preparationStatus());
+        }
+
+        RentalOrderDO refreshedOrder = rentalOrderMapper.selectByIdForUpdate(order.getRentalOrderId());
+        RentalOrderItemDO refreshedItem = refreshedOrder == null ? null
+                : rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(refreshedOrder.getId());
+        if (refreshedOrder == null || refreshedItem == null) {
+            throw exception(XIANYU_SHIP_ORDER_NOT_CONVERTED);
+        }
+        try {
+            preparationPolicy.requireReady(refreshedOrder, refreshedItem);
+        } catch (RentalDeviceAssignmentException ex) {
+            throw exception(XIANYU_SHIP_ORDER_NOT_READY,
+                    StringUtils.hasText(refreshedOrder.getPreparationReasonCode())
+                            ? refreshedOrder.getPreparationReasonCode() : "ORDER_NOT_READY");
+        }
+        return refreshedItem;
+    }
+
+    private void requireDeviceModelMatches(RentalOrderItemDO item, RentalDeviceDO device) {
+        if (!StringUtils.hasText(item.getEquipmentModelCode())
+                || !StringUtils.hasText(device.getEquipmentModelCode())
+                || !item.getEquipmentModelCode().trim().equals(device.getEquipmentModelCode().trim())) {
+            throw exception(XIANYU_SHIP_DEVICE_NOT_SHIPPABLE, "扫描设备型号与订单商品型号不一致");
+        }
     }
 
     private RentalDeviceAssignmentResult assignDevice(XianyuOrderShipReqVO reqVO, RentalDeviceDO device,

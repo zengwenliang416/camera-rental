@@ -81,7 +81,9 @@ public class XianyuOrderController {
 
     @PostMapping("/ship")
     @Operation(summary = "绑定设备并调用闲管家订单发货")
-    @PreAuthorize("@ss.hasPermission('rental:xianyu:ship')")
+    @PreAuthorize("@ss.hasPermission('rental:xianyu:ship') && "
+            + "(#reqVO.bindProductRuleIfMissing != true "
+            + "|| @ss.hasPermission('rental:configuration:update'))")
     public CommonResult<XianyuOrderShipRespVO> ship(@Valid @RequestBody XianyuOrderShipReqVO reqVO) {
         return success(orderShipService.ship(reqVO));
     }

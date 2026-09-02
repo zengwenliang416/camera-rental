@@ -242,8 +242,11 @@ export interface XianyuPendingShipOrderVO {
   receiverMobile?: string
   receiverAddress?: string
   sellerRemark?: string
+  xianyuItemId?: string
   rentalOrderId?: number
   conversionStatus: string
+  preparationStatus?: string
+  preparationReasonCode?: string
   orderTime?: string
   sourceUpdatedAt?: string
 }
@@ -266,6 +269,7 @@ export interface XianyuOrderShipReqVO {
   waybillNo: string
   source: 'ADMIN' | 'STAFF'
   ocrConfirmed?: boolean
+  bindProductRuleIfMissing?: boolean
 }
 
 export interface XianyuOrderDispatchBackfillReqVO {

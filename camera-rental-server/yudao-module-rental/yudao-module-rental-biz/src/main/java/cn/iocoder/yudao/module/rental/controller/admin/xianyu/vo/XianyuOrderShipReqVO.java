@@ -38,6 +38,9 @@ public class XianyuOrderShipReqVO {
 
     private Boolean ocrConfirmed;
 
+    @Schema(description = "订单仅缺商品型号规则时，是否确认将商品绑定到扫描设备的型号")
+    private Boolean bindProductRuleIfMissing;
+
     @AssertTrue(message = "必须传入 deviceId 或 deviceNo")
     public boolean isDevicePresent() {
         return deviceId != null || StringUtils.hasText(deviceNo);

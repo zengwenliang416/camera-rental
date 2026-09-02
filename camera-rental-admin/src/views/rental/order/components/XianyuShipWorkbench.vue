@@ -81,6 +81,8 @@
         :order="selectedPendingShipOrder"
         :device="selectedDevice"
         :result="shipmentResult"
+        :requires-product-rule-binding="requiresProductRuleBinding"
+        :can-bind-product-rule="canBindProductRule"
       />
 
       <div class="mt-16px flex flex-wrap justify-between gap-8px">
@@ -100,11 +102,17 @@
             v-else
             type="danger"
             :loading="shipping"
-            :disabled="Boolean(shipmentResult)"
+            :disabled="
+              Boolean(shipmentResult) || (requiresProductRuleBinding && !canBindProductRule)
+            "
             v-hasPermi="['rental:xianyu:ship']"
             @click="handleShipXianyuOrder"
           >
-            {{ t('rental.xianyu.confirmShip') }}
+            {{
+              requiresProductRuleBinding
+                ? t('rental.xianyu.confirmBindProductRuleAndShip')
+                : t('rental.xianyu.confirmShip')
+            }}
           </el-button>
         </div>
       </div>
@@ -177,6 +185,12 @@ const selectedPendingShipOrder = ref<XianyuPendingShipOrderVO>()
 const shipmentResult = ref<XianyuOrderShipRespVO>()
 const canOcrShipment = computed(() => hasPermission(['rental:xianyu:ship:ocr']))
 const canShipXianyuOrder = computed(() => hasPermission(['rental:xianyu:ship']))
+const canBindProductRule = computed(() => hasPermission(['rental:configuration:update']))
+const requiresProductRuleBinding = computed(
+  () =>
+    selectedPendingShipOrder.value?.preparationStatus === 'WAITING_MODEL' &&
+    selectedPendingShipOrder.value?.preparationReasonCode === 'PRODUCT_RULE_NOT_CONFIGURED'
+)
 
 const shipmentForm = reactive<XianyuShipmentForm>({
   shopId: undefined,
@@ -438,12 +452,34 @@ const handleWaybillRecognize = async (waybillNo: string) => {
   }
 }
 
-const handleNextStep = () => {
+const ensureSelectedDeviceForProductRuleBinding = async () => {
+  if (!requiresProductRuleBinding.value) {
+    return true
+  }
+  const deviceNo = shipmentForm.deviceNo.trim()
+  if (selectedDevice.value?.deviceNo === deviceNo) {
+    return true
+  }
+  try {
+    const device = await resolveRentalDeviceQr(deviceNo)
+    selectedDevice.value = device
+    shipmentForm.deviceNo = device.deviceNo
+    return true
+  } catch {
+    message.warning(t('rental.xianyu.shipProductRuleDeviceResolveFailed'))
+    return false
+  }
+}
+
+const handleNextStep = async () => {
   if (currentStep.value === 0 && !hasWaybillReady()) {
     return
   }
   if (currentStep.value === 1 && !shipmentForm.deviceNo.trim()) {
     message.warning(t('rental.xianyu.deviceNoRequired'))
+    return
+  }
+  if (currentStep.value === 1 && !(await ensureSelectedDeviceForProductRuleBinding())) {
     return
   }
   currentStep.value += 1
@@ -471,6 +507,10 @@ const handleShipXianyuOrder = async () => {
     message.warning(t('error.noPermission'))
     return
   }
+  if (requiresProductRuleBinding.value && !canBindProductRule.value) {
+    message.warning(t('rental.xianyu.shipProductRuleBindPermissionRequired'))
+    return
+  }
   const selectedOrder = selectedPendingShipOrder.value
   if (!selectedOrder) {
     message.warning(t('rental.xianyu.pendingShipRequired'))
@@ -480,24 +520,40 @@ const handleShipXianyuOrder = async () => {
     currentStep.value = 0
     return
   }
-  const deviceNo = shipmentForm.deviceNo.trim()
+  let deviceNo = shipmentForm.deviceNo.trim()
   if (!deviceNo) {
     currentStep.value = 1
     message.warning(t('rental.xianyu.deviceNoRequired'))
     return
   }
+  if (!(await ensureSelectedDeviceForProductRuleBinding())) {
+    currentStep.value = 1
+    return
+  }
+  deviceNo = shipmentForm.deviceNo.trim()
   const waybillNo = shipmentForm.waybillNo.trim()
   const expressCode = shipmentForm.expressCode.trim()
   const expressName = shipmentForm.expressName.trim()
   try {
     await message.confirm(
-      t('rental.xianyu.shipConfirmMessage', {
-        orderNo: selectedOrder.externalOrderId,
-        deviceNo,
-        expressName,
-        waybillNo
-      }),
-      t('rental.xianyu.confirmShip')
+      requiresProductRuleBinding.value
+        ? t('rental.xianyu.shipBindProductRuleConfirmMessage', {
+            itemId: selectedOrder.xianyuItemId || '-',
+            modelCode: selectedDevice.value?.equipmentModelCode || '-',
+            orderNo: selectedOrder.externalOrderId,
+            deviceNo,
+            expressName,
+            waybillNo
+          })
+        : t('rental.xianyu.shipConfirmMessage', {
+            orderNo: selectedOrder.externalOrderId,
+            deviceNo,
+            expressName,
+            waybillNo
+          }),
+      requiresProductRuleBinding.value
+        ? t('rental.xianyu.confirmBindProductRuleAndShip')
+        : t('rental.xianyu.confirmShip')
     )
   } catch {
     return
@@ -512,7 +568,8 @@ const handleShipXianyuOrder = async () => {
       expressName,
       waybillNo,
       source: 'ADMIN',
-      ocrConfirmed: Boolean(shipmentOcr.value?.waybillNo)
+      ocrConfirmed: Boolean(shipmentOcr.value?.waybillNo),
+      bindProductRuleIfMissing: requiresProductRuleBinding.value
     })
     shipmentResult.value = result
     message.success(

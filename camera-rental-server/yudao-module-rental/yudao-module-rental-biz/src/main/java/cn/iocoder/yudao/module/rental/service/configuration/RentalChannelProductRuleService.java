@@ -34,6 +34,7 @@ import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_CHA
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_CHANNEL_PRODUCT_RULE_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_CHANNEL_PRODUCT_RULE_NOT_EXISTS;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_CONFIGURATION_VERSION_CONFLICT;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_PRODUCT_RULE_BIND_CONFLICT;
 
 @Service
 @Slf4j
@@ -76,6 +77,40 @@ public class RentalChannelProductRuleService {
         return saveResponse(rule.getId(), 0,
                 previewImpact(rule.getShopId(), rule.getXianyuItemId()),
                 reconciliationRunId);
+    }
+
+    /**
+     * Creates the narrowly scoped single-model rule confirmed by an operator during shipment.
+     * Reconciliation is intentionally performed synchronously by the shipment transaction.
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public Long createSingleRuleFromShipment(Long shopId, String xianyuItemId, Long deviceModelId) {
+        String normalizedItemId = xianyuItemId == null ? "" : xianyuItemId.trim();
+        RentalChannelProductRuleDO existing =
+                ruleMapper.selectByShopIdAndItemId(shopId, normalizedItemId);
+        if (existing != null) {
+            throw exception(XIANYU_SHIP_PRODUCT_RULE_BIND_CONFLICT, "该商品已存在配置规则，请到租赁配置中处理");
+        }
+
+        RentalChannelProductRuleSaveReqVO request = new RentalChannelProductRuleSaveReqVO();
+        request.setShopId(shopId);
+        request.setXianyuItemId(normalizedItemId);
+        request.setHandlingPolicy("CREATE_RENTAL");
+        request.setMappingMode("SINGLE");
+        request.setSingleDeviceModelId(deviceModelId);
+        request.setEnabled(true);
+        request.setRuleNote("发货时经人工确认，绑定到扫描设备型号");
+        RentalChannelProductRuleValidator.ValidatedRule validated = validator.validate(request);
+        Long tenantId = TenantContextHolder.getRequiredTenantId();
+        RentalChannelProductRuleDO rule = toRuleDO(request, validated, tenantId, 0);
+        try {
+            ruleMapper.insert(rule);
+        } catch (DuplicateKeyException ex) {
+            throw exception(XIANYU_SHIP_PRODUCT_RULE_BIND_CONFLICT, "该商品规则已被其他操作创建，请刷新后重试");
+        }
+        log.info("[rental-configuration][rule-created-from-shipment] tenantId={} ruleId={} shopId={} itemId={} modelId={}",
+                tenantId, rule.getId(), shopId, normalizedItemId, deviceModelId);
+        return rule.getId();
     }
 
     @Transactional(rollbackFor = Exception.class)

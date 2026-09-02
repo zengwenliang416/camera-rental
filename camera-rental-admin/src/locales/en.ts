@@ -952,8 +952,17 @@ export default {
       shipConfirmDevice: 'Device',
       shipConfirmWaybill: 'Waybill',
       confirmShip: 'Confirm bind and ship',
+      confirmBindProductRuleAndShip: 'Bind product model and ship',
       shipConfirmMessage:
         'Bind device {deviceNo} to order {orderNo} and call XianGuanJia shipping with {expressName} {waybillNo}?',
+      shipBindProductRuleConfirmMessage:
+        'This product has no device model rule. Permanently bind Xianyu item {itemId} to model {modelCode}, assign device {deviceNo} to order {orderNo}, and ship with {expressName} {waybillNo}?',
+      shipProductRuleBindWarning:
+        'This order only lacks a product model rule. Confirmation creates a single-model rule for Xianyu item {itemId} bound to {modelCode}; future orders for this item will use that model.',
+      shipProductRuleBindPermissionRequired:
+        'This order lacks a product model rule. The current account cannot create a global product rule without rental configuration update permission.',
+      shipProductRuleDeviceResolveFailed:
+        'The scanned device model could not be verified. Scan the permanent device QR code again or select the device from the list.',
       shipSuccess:
         'Shipment succeeded: record #{shipmentId}, device {deviceNo}, waybill {waybillNo}',
       shipSubmitBackendHint:

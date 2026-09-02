@@ -27,6 +27,20 @@
     </el-descriptions-item>
   </el-descriptions>
   <el-alert
+    v-if="requiresProductRuleBinding"
+    class="mt-12px"
+    :type="canBindProductRule ? 'warning' : 'error'"
+    :closable="false"
+    :title="
+      canBindProductRule
+        ? t('rental.xianyu.shipProductRuleBindWarning', {
+            itemId: order?.xianyuItemId || '-',
+            modelCode: device?.equipmentModelCode || '-'
+          })
+        : t('rental.xianyu.shipProductRuleBindPermissionRequired')
+    "
+  />
+  <el-alert
     class="mt-12px"
     type="warning"
     :closable="false"
@@ -60,6 +74,8 @@ defineProps<{
   order?: XianyuPendingShipOrderVO
   device?: RentalDeviceVO
   result?: XianyuOrderShipRespVO
+  requiresProductRuleBinding?: boolean
+  canBindProductRule?: boolean
 }>()
 
 const { t } = useI18n()

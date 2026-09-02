@@ -911,8 +911,17 @@ export default {
       shipConfirmDevice: '绑定设备',
       shipConfirmWaybill: '发货运单',
       confirmShip: '确认绑定并发货',
+      confirmBindProductRuleAndShip: '绑定商品型号并发货',
       shipConfirmMessage:
         '确认将设备 {deviceNo} 绑定到订单 {orderNo}，并使用 {expressName} {waybillNo} 调用闲管家发货？',
+      shipBindProductRuleConfirmMessage:
+        '该商品尚未配置设备型号。确认将闲鱼商品 {itemId} 永久绑定到型号 {modelCode}，再将设备 {deviceNo} 分配给订单 {orderNo}，并使用 {expressName} {waybillNo} 发货？',
+      shipProductRuleBindWarning:
+        '该订单仅缺商品型号规则。确认后会将闲鱼商品 {itemId} 创建为单型号规则并绑定到 {modelCode}，后续该商品订单都会使用此型号。',
+      shipProductRuleBindPermissionRequired:
+        '该订单缺少商品型号规则；当前账号没有租赁配置修改权限，不能在发货时创建全局商品规则。',
+      shipProductRuleDeviceResolveFailed:
+        '无法确认扫描设备的真实型号，请重新扫描设备永久二维码或从设备列表中选择。',
       shipSuccess: '发货成功：记录 #{shipmentId}，设备 {deviceNo}，运单 {waybillNo}',
       shipSubmitBackendHint:
         '点击确认后，后端会重新校验设备、订单、租户、排期和写操作开关；前端不会直接改库存。',

@@ -39,6 +39,7 @@ import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_CHA
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_CONFIGURATION_VERSION_CONFLICT;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHOP_AUTHORIZATION_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHOP_NOT_EXISTS;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_PRODUCT_RULE_BIND_CONFLICT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -115,6 +116,43 @@ class RentalChannelProductRuleServiceTest {
         assertEquals(300L, captor.getValue().getSingleDeviceModelId());
         verify(mappingMapper, never()).insert(any(RentalChannelProductSkuMappingDO.class));
         verify(reconciliationTrigger).afterRuleChange(400L, 20L, "1062409679830");
+    }
+
+    @Test
+    void shipmentRuleCreationDoesNotStartAsynchronousReconciliation() {
+        stubExactSource();
+        when(modelMapper.selectById(300L)).thenReturn(enabledModel(300L));
+        when(ruleMapper.insert(any(RentalChannelProductRuleDO.class))).thenAnswer(invocation -> {
+            RentalChannelProductRuleDO rule = invocation.getArgument(0);
+            rule.setId(410L);
+            return 1;
+        });
+
+        Long ruleId = service.createSingleRuleFromShipment(20L, "1062409679830", 300L);
+
+        assertEquals(410L, ruleId);
+        ArgumentCaptor<RentalChannelProductRuleDO> captor =
+                ArgumentCaptor.forClass(RentalChannelProductRuleDO.class);
+        verify(ruleMapper).insert(captor.capture());
+        assertEquals("CREATE_RENTAL", captor.getValue().getHandlingPolicy());
+        assertEquals("SINGLE", captor.getValue().getMappingMode());
+        assertEquals(300L, captor.getValue().getSingleDeviceModelId());
+        assertEquals("发货时经人工确认，绑定到扫描设备型号", captor.getValue().getRuleNote());
+        verify(reconciliationTrigger, never()).afterRuleChange(any(), any(), any());
+    }
+
+    @Test
+    void shipmentRuleCreationNeverOverwritesExistingRule() {
+        when(ruleMapper.selectByShopIdAndItemId(20L, "1062409679830"))
+                .thenReturn(existingRule(20L, "1062409679830"));
+
+        ServiceException ex = assertThrows(ServiceException.class,
+                () -> service.createSingleRuleFromShipment(20L, "1062409679830", 300L));
+
+        assertEquals(XIANYU_SHIP_PRODUCT_RULE_BIND_CONFLICT.getCode(), ex.getCode());
+        verify(productMapper, never()).selectByShopIdAndXianyuItemId(any(), any());
+        verify(ruleMapper, never()).insert(any(RentalChannelProductRuleDO.class));
+        verify(reconciliationTrigger, never()).afterRuleChange(any(), any(), any());
     }
 
     @Test

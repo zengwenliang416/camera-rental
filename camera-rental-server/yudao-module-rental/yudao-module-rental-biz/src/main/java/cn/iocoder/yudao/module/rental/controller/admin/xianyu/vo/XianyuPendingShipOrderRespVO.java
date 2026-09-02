@@ -21,8 +21,11 @@ public class XianyuPendingShipOrderRespVO {
     private String receiverMobile;
     private String receiverAddress;
     private String sellerRemark;
+    private String xianyuItemId;
     private Long rentalOrderId;
     private String conversionStatus;
+    private String preparationStatus;
+    private String preparationReasonCode;
     private LocalDateTime orderTime;
     private LocalDateTime sourceUpdatedAt;
 

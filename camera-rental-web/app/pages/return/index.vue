@@ -19,7 +19,7 @@ interface SelectedPhoto {
   error?: string
 }
 
-const MAX_PHOTO_COUNT = 10
+const MAX_PHOTO_COUNT = 5
 const MAX_PHOTO_SIZE = 15 * 1024 * 1024
 const ALLOWED_PHOTO_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp'])
 const api = useReturnRegistration()
@@ -42,8 +42,8 @@ const form = reactive({
 
 const methodOptions = computed(() => [
   { value: 'EXPRESS' as const, label: t('returnMethodExpress') },
-  { value: 'SELF_DELIVERY' as const, label: t('returnMethodSelf') },
-  { value: 'ERRAND' as const, label: t('returnMethodErrand') }
+  { value: 'ERRAND' as const, label: t('returnMethodErrand') },
+  { value: 'SELF_DELIVERY' as const, label: t('returnMethodSelf') }
 ])
 
 useHead(() => ({ title: `${t('service')} · 捷租达` }))
@@ -224,7 +224,6 @@ const status = computed<RegistrationStatus | undefined>(() =>
     <section v-else class="return-card">
       <div class="return-intro">
         <p class="return-kicker">RETURN CHECK-IN</p>
-        <h1>{{ t('simpleReturnTitle') }}</h1>
         <p>{{ t('simpleReturnBody') }}</p>
       </div>
 

@@ -50,14 +50,12 @@ describe('customer return registration utilities', () => {
     expect(returnMessage('en', 'submit')).toContain('Confirm')
   })
 
-  test('explains that an unregistered machine code is saved for manual review', () => {
-    expect(returnMessage('zh-CN', 'simpleReturnBody')).toContain('无需预先入库')
-    expect(returnMessage('zh-CN', 'simpleReturnBody')).toContain('人工复核')
-  })
-
   test('describes the required sender and return-method-specific fields', () => {
-    expect(returnMessage('zh-CN', 'simpleReturnBody')).toContain('发件人手机号和机器编码必填')
+    expect(returnMessage('zh-CN', 'simpleReturnBody')).toContain('订单号可不填')
+    expect(returnMessage('zh-CN', 'simpleReturnBody')).toContain('手机号机器编码必填')
+    expect(returnMessage('zh-CN', 'simpleReturnBody')).toContain('快递单号')
     expect(returnMessage('zh-CN', 'simpleReturnBody')).toContain('跑腿平台名称')
+    expect(returnMessage('zh-CN', 'simpleReturnBody')).toContain('本人送回')
     expect(returnMessage('zh-CN', 'selfDeliveryHint')).toContain('本人送回！')
   })
 

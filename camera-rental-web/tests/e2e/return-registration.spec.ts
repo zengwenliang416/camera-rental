@@ -27,7 +27,7 @@ test('customer submits required sender mobile and express fields without photo s
   })
 
   await page.goto('/return')
-  await expect(page.getByRole('heading', { name: '一次填完，直接登记退回。' })).toBeVisible()
+  await expect(page.getByText('订单号可不填，手机号机器编码必填')).toBeVisible()
   await fillRequiredFields(page)
   await page.getByRole('button', { name: '提交退回信息' }).dblclick()
 
@@ -71,7 +71,7 @@ test('selected photo uploads through verify, RustFS confirm and simple submit', 
   await page.goto('/return')
   await fillRequiredFields(page)
   await page.locator('input[type="file"]').setInputFiles(photoFile('return.jpg'))
-  await expect(page.getByText('已选择 1/10')).toBeVisible()
+  await expect(page.getByText('已选择 1/5')).toBeVisible()
   await page.getByRole('button', { name: '提交退回信息' }).click()
 
   await expect(page.getByRole('heading', { name: '退回信息已登记' })).toBeVisible()
@@ -111,15 +111,15 @@ test('failed RustFS upload can be retried before submission', async ({ page }) =
   expect(submitCount).toBe(1)
 })
 
-test('photo picker rejects a selection above ten files', async ({ page }) => {
+test('photo picker rejects a selection above five files', async ({ page }) => {
   await mockReturnApi(page, {})
   await page.goto('/return')
 
   await page.locator('input[type="file"]').setInputFiles(
-    Array.from({ length: 11 }, (_, index) => photoFile(`${index + 1}.jpg`))
+    Array.from({ length: 6 }, (_, index) => photoFile(`${index + 1}.jpg`))
   )
 
-  await expect(page.getByText('照片最多选择 10 张')).toBeVisible()
+  await expect(page.getByText('照片最多选择 5 张')).toBeVisible()
   await expect(page.locator('.return-photo-grid figure')).toHaveCount(0)
 })
 
@@ -240,7 +240,7 @@ test('theme and locale preferences remain responsive on mobile', async ({ page }
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
   await page.getByRole('button', { name: 'English' }).click()
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
-  await expect(page.getByRole('heading', { name: 'Register the return in one step.' })).toBeVisible()
+  await expect(page.getByText('The order number is optional.')).toBeVisible()
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - window.innerWidth
   )
@@ -251,7 +251,7 @@ test('historical token routes redirect to the fixed public entry', async ({ page
   await mockReturnApi(page, {})
   await page.goto('/return/legacy-token')
   await expect(page).toHaveURL(/\/return$/)
-  await expect(page.getByRole('heading', { name: '一次填完，直接登记退回。' })).toBeVisible()
+  await expect(page.getByText('订单号可不填，手机号机器编码必填')).toBeVisible()
 })
 
 interface MockOptions {

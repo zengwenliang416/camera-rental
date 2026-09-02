@@ -1,12 +1,17 @@
 package cn.iocoder.yudao.module.rental.job.xianyu;
 
+import cn.iocoder.yudao.framework.quartz.core.scheduler.SchedulerManager;
 import cn.iocoder.yudao.module.infra.dal.dataobject.job.JobDO;
 import cn.iocoder.yudao.module.infra.enums.job.JobStatusEnum;
 import cn.iocoder.yudao.module.infra.service.job.JobService;
 import cn.iocoder.yudao.module.infra.service.job.dto.JobCreateReqDTO;
 import cn.iocoder.yudao.module.rental.integration.xianyu.security.XianyuSafeErrorCode;
 import lombok.extern.slf4j.Slf4j;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.TriggerKey;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -17,6 +22,8 @@ import java.util.Objects;
 /**
  * Registers XianGuanJia sync handlers into infra Job + Quartz when the scheduler is available.
  * Idempotent: creates missing handlers and reports existing DB configuration drift.
+ * 自愈：infra_job 已有记录但 Quartz 里没有对应触发器时（例如 QRTZ 表被重建过），
+ * 按 DB 配置重新挂回调度，否则任务会永远不再执行。
  */
 @Component
 @Order(200)
@@ -24,9 +31,14 @@ import java.util.Objects;
 public class XianyuInfraJobRegistrar implements ApplicationRunner {
 
     private final JobService jobService;
+    private final SchedulerManager schedulerManager;
+    private final Scheduler scheduler;
 
-    public XianyuInfraJobRegistrar(JobService jobService) {
+    public XianyuInfraJobRegistrar(JobService jobService, SchedulerManager schedulerManager,
+                                   ObjectProvider<Scheduler> schedulerProvider) {
         this.jobService = jobService;
+        this.schedulerManager = schedulerManager;
+        this.scheduler = schedulerProvider.getIfAvailable();
     }
 
     @Override
@@ -65,6 +77,7 @@ public class XianyuInfraJobRegistrar implements ApplicationRunner {
                         id, handlerName, registered.getCronExpression());
                 return;
             }
+            ensureScheduled(registered);
             log.info("[xianyu][job-register] infra job ready id={} handler={} cron={} status={}",
                     id, handlerName, registered.getCronExpression(), registered.getStatus());
         } catch (SchedulerException ex) {
@@ -74,6 +87,27 @@ public class XianyuInfraJobRegistrar implements ApplicationRunner {
             log.warn("[xianyu][job-register] failed handler={} code={}",
                     handlerName, XianyuSafeErrorCode.from(ex));
         }
+    }
+
+    /**
+     * infra_job 记录存在不代表 Quartz 调度存在（QRTZ 表重建、调度丢失等情况）。
+     * 触发器缺失时按 DB 配置重新挂回；JobDetail 残留但触发器缺失时先删除再重建。
+     */
+    private void ensureScheduled(JobDO registered) throws SchedulerException {
+        if (scheduler == null) {
+            return;
+        }
+        String handlerName = registered.getHandlerName();
+        if (scheduler.checkExists(new TriggerKey(handlerName))) {
+            return;
+        }
+        log.warn("[xianyu][job-register] quartz trigger missing, re-scheduling id={} handler={} cron={}",
+                registered.getId(), handlerName, registered.getCronExpression());
+        if (scheduler.checkExists(new JobKey(handlerName))) {
+            scheduler.deleteJob(new JobKey(handlerName));
+        }
+        schedulerManager.addJob(registered.getId(), handlerName, registered.getHandlerParam(),
+                registered.getCronExpression(), registered.getRetryCount(), registered.getRetryInterval());
     }
 
 }

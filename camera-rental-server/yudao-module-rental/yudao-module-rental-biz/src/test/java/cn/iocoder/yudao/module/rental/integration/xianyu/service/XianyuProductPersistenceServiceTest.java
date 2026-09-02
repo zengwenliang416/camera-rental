@@ -132,14 +132,30 @@ class XianyuProductPersistenceServiceTest {
     }
 
     @Test
-    void shouldRejectMissingOrAmbiguousOwnedPublishItemBeforeWriting() {
+    void shouldPersistNullItemIdWhenProductIsNotPublishedToThisShop() {
+        when(shopMapper.selectByTenantIdAndId(9L, 77L))
+                .thenReturn(XianyuShopDO.builder().id(77L).xianyuUserName("shop-user-1").build());
+        when(rawPayloadMapper.selectByTenantIdAndSourceAndHashForUpdate(eq(9L), any(), any(), any()))
+                .thenReturn(XianyuRawPayloadDO.builder().id(31L).build());
+        when(productMapper.selectByShopIdAndXgjProductIdForUpdate(77L, "441160510721413"))
+                .thenReturn(null);
+
+        service.persistProductDetail(77L, responseWithPublishShops("""
+                {"user_name":"another-shop","item_id":1,"status":3}
+                """));
+
+        ArgumentCaptor<XianyuProductDO> captor = ArgumentCaptor.forClass(XianyuProductDO.class);
+        verify(productMapper).insert(captor.capture());
+        assertNull(captor.getValue().getXianyuItemId());
+        assertEquals("441160510721413", captor.getValue().getXgjProductId());
+        assertEquals(31L, captor.getValue().getRawPayloadId());
+    }
+
+    @Test
+    void shouldRejectAmbiguousOwnedPublishItemsBeforeWriting() {
         when(shopMapper.selectByTenantIdAndId(9L, 77L))
                 .thenReturn(XianyuShopDO.builder().id(77L).xianyuUserName("shop-user-1").build());
 
-        assertThrows(IllegalStateException.class, () -> service.persistProductDetail(
-                77L, responseWithPublishShops("""
-                        {"user_name":"another-shop","item_id":1,"status":3}
-                        """)));
         assertThrows(IllegalStateException.class, () -> service.persistProductDetail(
                 77L, responseWithPublishShops("""
                         {"user_name":"shop-user-1","item_id":1,"status":3},

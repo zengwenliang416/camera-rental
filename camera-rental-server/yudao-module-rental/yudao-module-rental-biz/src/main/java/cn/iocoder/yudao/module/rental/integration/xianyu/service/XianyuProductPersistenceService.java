@@ -92,10 +92,20 @@ public class XianyuProductPersistenceService {
         return shop;
     }
 
+    /**
+     * 商品详情里的 publish_shop 只保留发布到本店铺账号的条目。
+     * 闲管家商品是应用级数据，同一商品可能只发布到其他闲鱼账号；没有本店条目时
+     * 返回 null 并照常落库（维持去重水位，避免每次同步重复拉详情），但商品不会
+     * 关联闲鱼商品 ID，也不会被该店铺的渠道商品规则匹配。同一账号出现多条发布
+     * 条目属于歧义，仍然拒绝落库。
+     */
     private String resolveOwnedItemId(XianyuProductSnapshot snapshot, XianyuShopDO shop) {
         List<XianyuPublishedItem> ownedItems = snapshot.publishedItems().stream()
                 .filter(item -> shop.getXianyuUserName().equals(item.xianyuUserName()))
                 .toList();
+        if (ownedItems.isEmpty()) {
+            return null;
+        }
         if (ownedItems.size() != 1) {
             throw new IllegalStateException("Product detail does not contain exactly one item for the synchronized shop");
         }

@@ -65,17 +65,14 @@
       <XianyuDeviceStep
         v-else-if="currentStep === 1"
         v-model:upload-files="deviceQrUploadFiles"
-        v-model:qr-payload="deviceQrPayload"
         :form="shipmentForm"
         :selected-device="selectedDevice"
         :has-image="Boolean(deviceQrImageFile)"
         :decoding="deviceQrLoading"
-        :resolving="deviceQrResolving"
         @image-change="handleDeviceQrImageChange"
         @image-remove="handleDeviceQrImageRemove"
         @image-exceed="handleImageExceed"
         @decode="handleDeviceQrImageDecode"
-        @resolve="handleResolveDeviceQrPayload"
         @device-select="handleDeviceCascadeSelect"
       />
       <XianyuShipConfirmStep
@@ -173,9 +170,7 @@ const shipmentOcr = ref<XianyuShipmentOcrRespVO>()
 const shipmentOcrLoading = ref(false)
 const deviceQrUploadFiles = ref<UploadUserFile[]>([])
 const deviceQrImageFile = ref<UploadRawFile>()
-const deviceQrPayload = ref('')
 const deviceQrLoading = ref(false)
-const deviceQrResolving = ref(false)
 const selectedDevice = ref<RentalDeviceVO>()
 const shipping = ref(false)
 const selectedPendingShipOrder = ref<XianyuPendingShipOrderVO>()
@@ -304,7 +299,6 @@ const handleDeviceQrImageDecode = async () => {
   deviceQrLoading.value = true
   try {
     const payload = await decodeBarcodeFromImage(deviceQrImageFile.value)
-    deviceQrPayload.value = payload
     await resolveDeviceQrPayload(
       payload,
       parseDeviceNoFromLabelFileName(deviceQrImageFile.value.name)
@@ -338,20 +332,6 @@ const decodeBarcodeFromImage = async (file: File) => {
     return value
   } finally {
     image.close()
-  }
-}
-
-const handleResolveDeviceQrPayload = async () => {
-  const payload = deviceQrPayload.value.trim()
-  if (!payload) {
-    message.warning(t('rental.xianyu.deviceQrPayloadRequired'))
-    return
-  }
-  deviceQrResolving.value = true
-  try {
-    await resolveDeviceQrPayload(payload)
-  } finally {
-    deviceQrResolving.value = false
   }
 }
 
@@ -562,7 +542,6 @@ const resetShipmentWorkbench = () => {
   shipmentOcr.value = undefined
   deviceQrUploadFiles.value = []
   deviceQrImageFile.value = undefined
-  deviceQrPayload.value = ''
   selectedDevice.value = undefined
   selectedPendingShipOrder.value = undefined
   shipmentResult.value = undefined

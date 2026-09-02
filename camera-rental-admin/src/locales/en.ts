@@ -924,21 +924,16 @@ export default {
       expressRequired: 'Select or fill both express code and express name',
       expressRecognized: 'Express carrier recognized: {name}',
       deviceQrHint:
-        'Upload the device QR image, or scan with a scanner/phone and paste the payload here. The permanent device QR resolver from Device Management returns the device number and serial number.',
+        'Upload the device QR image for automatic recognition, or pick a device by category and model below. The permanent device QR resolver from Device Management returns the device number and serial number.',
       deviceQrUploadHint: 'Drop a device QR image here, or click to select',
       deviceQrUploadTip:
-        'Permanent device QR codes are preferred. Paste the payload manually if image decoding is unavailable.',
+        'Permanent device QR codes are preferred. Use the selectors below if image decoding is unavailable.',
       deviceQrDecode: 'Recognize device QR image',
-      deviceQrResolve: 'Resolve QR payload',
-      deviceQrPayloadLabel: 'Device QR payload / device number',
-      deviceQrPayloadPlaceholder:
-        'Example: CRD1|P4P-01-2JCW|DJI-P4P|..., or enter a device number directly',
       deviceQrImageRequired: 'Upload a device QR image first',
       deviceQrDecodeUnsupported:
-        'This browser does not support QR image decoding. Use a scanner or paste the QR payload.',
+        'This browser does not support QR image decoding. Use the device selectors below.',
       deviceQrDecodeFailed: 'Device QR image recognition failed',
       deviceQrNoCode: 'No QR/barcode content was recognized',
-      deviceQrPayloadRequired: 'Paste a device QR payload or device number first',
       deviceQrResolved: 'Device recognized: {deviceNo}',
       deviceQrFileNameFallback:
         'The QR payload did not match a device. Filled device number from the label file name: {deviceNo}',

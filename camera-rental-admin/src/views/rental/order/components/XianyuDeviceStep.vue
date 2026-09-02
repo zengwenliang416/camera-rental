@@ -25,9 +25,6 @@
     <el-button type="primary" :disabled="!hasImage" :loading="decoding" @click="emit('decode')">
       {{ t('rental.xianyu.deviceQrDecode') }}
     </el-button>
-    <el-button :disabled="!qrPayload.trim()" :loading="resolving" @click="emit('resolve')">
-      {{ t('rental.xianyu.deviceQrResolve') }}
-    </el-button>
   </div>
   <el-form class="mt-16px" label-position="top" :model="form">
     <el-form-item :label="t('rental.xianyu.deviceCascadeLabel')">
@@ -84,14 +81,6 @@
         </el-select>
       </div>
     </el-form-item>
-    <el-form-item :label="t('rental.xianyu.deviceQrPayloadLabel')">
-      <el-input
-        v-model.trim="qrPayload"
-        clearable
-        :placeholder="t('rental.xianyu.deviceQrPayloadPlaceholder')"
-        @keyup.enter="emit('resolve')"
-      />
-    </el-form-item>
     <el-form-item :label="t('rental.device.deviceNo')">
       <el-input
         v-model.trim="form.deviceNo"
@@ -134,17 +123,14 @@ defineProps<{
   selectedDevice?: RentalDeviceVO
   hasImage: boolean
   decoding: boolean
-  resolving: boolean
 }>()
 
 const uploadFiles = defineModel<UploadUserFile[]>('uploadFiles', { required: true })
-const qrPayload = defineModel<string>('qrPayload', { required: true })
 const emit = defineEmits<{
   imageChange: [uploadFile: UploadFile, uploadFiles: UploadFiles]
   imageRemove: []
   imageExceed: []
   decode: []
-  resolve: []
   deviceSelect: [device: RentalDeviceVO]
 }>()
 const { t } = useI18n()

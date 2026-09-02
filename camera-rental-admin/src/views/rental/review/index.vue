@@ -35,8 +35,16 @@
 
     <el-table v-loading="loading" :data="list">
       <el-table-column prop="id" label="ID" width="80" />
-      <el-table-column prop="reviewType" :label="t('rental.review.reviewType')" width="140" />
-      <el-table-column prop="sourceType" :label="t('rental.review.sourceType')" width="120" />
+      <el-table-column :label="t('rental.review.reviewType')" width="140">
+        <template #default="{ row }">
+          {{ reviewValueLabel('reviewTypes', row.reviewType) }}
+        </template>
+      </el-table-column>
+      <el-table-column :label="t('rental.review.sourceType')" width="120">
+        <template #default="{ row }">
+          {{ reviewValueLabel('sourceTypes', row.sourceType) }}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="sourceIdentifier"
         :label="t('rental.review.sourceIdentifier')"
@@ -206,6 +214,13 @@ const resetQuery = async () => {
 
 const reviewStatusLabel = (status: string) => {
   return t(getRentalLabelKey('review', status))
+}
+
+const reviewValueLabel = (map: 'reviewTypes' | 'sourceTypes', value?: string | null) => {
+  if (!value) return '-'
+  const key = `rental.review.${map}.${value}`
+  const translated = t(key)
+  return translated === key ? value : translated
 }
 
 const reviewReasonLabel = (reasonCode?: string, reasonMessage?: string) => {

@@ -60,7 +60,7 @@
         {{ reasonLabel }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('rental.order.remarkParseVersion')">
-        {{ value(order.remarkParseVersion) }}
+        {{ parseVersionLabel }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('rental.order.billablePeriod')">
         {{ dateRange(order.billableStartDate, order.billableEndDate) }}
@@ -123,15 +123,19 @@ const dateRange = (
   const normalizedStart = dateValue(start)
   const normalizedEnd = dateValue(end)
   return normalizedStart && normalizedEnd
-    ? `${normalizedStart} → ${normalizedEnd}`
+    ? `${normalizedStart} ${t('rental.common.dateRangeTo')} ${normalizedEnd}`
     : normalizedStart || normalizedEnd || '-'
 }
+const parseVersionLabel = computed(() => {
+  const version = props.order.remarkParseVersion?.trim()
+  return version ? t('rental.order.remarkParseVersionNamed', { code: version }) : '-'
+})
 const rentalLabel = (group: RentalLabelGroup, input?: string | number | null) =>
   t(getRentalLabelKey(group, input), { code: input ?? '' })
 
 const remarkStatus = computed(() => {
   const status = props.order.remarkParseStatus
-  return status && ['PENDING', 'SUCCESS', 'FAILED'].includes(status)
+  return status && ['PENDING', 'SUCCESS', 'FAILED', 'SKIPPED'].includes(status)
     ? t(`rental.order.remarkParse.${status}`)
     : t('rental.order.remarkParse.UNKNOWN')
 })

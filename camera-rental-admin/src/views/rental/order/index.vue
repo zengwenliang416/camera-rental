@@ -513,6 +513,18 @@ const formatOrderColumnValue = (order: XianyuOrderVO, column: XianyuOrderColumnD
   if (column.key === 'rentalPeriodReasonCode') {
     return remarkReasonLabel(typeof value === 'string' ? value : undefined)
   }
+  if (column.key === 'rentalPeriodStatus') {
+    if (typeof value !== 'string' || !value.trim()) return '-'
+    const key = `rental.order.rentalPeriodStatuses.${value.trim()}`
+    const translated = t(key)
+    return translated === key ? value : translated
+  }
+  if (column.key === 'remarkParseSource') {
+    if (typeof value !== 'string' || !value.trim()) return '-'
+    const key = `rental.order.remarkParseSources.${value.trim()}`
+    const translated = t(key)
+    return translated === key ? value : translated
+  }
   if (column.format === 'amount-fen') {
     return typeof value === 'number' ? formatYuan(value) : '-'
   }
@@ -621,7 +633,7 @@ const loadShops = async () => {
 }
 
 const remarkParseStatusLabel = (status?: string) => {
-  if (status && ['PENDING', 'SUCCESS', 'FAILED'].includes(status)) {
+  if (status && ['PENDING', 'SUCCESS', 'FAILED', 'SKIPPED'].includes(status)) {
     return t(`rental.order.remarkParse.${status}`)
   }
   return t('rental.order.remarkParse.UNKNOWN')

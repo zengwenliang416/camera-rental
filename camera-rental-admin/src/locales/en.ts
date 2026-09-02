@@ -484,6 +484,7 @@ export default {
     common: {
       yuanAmount: 'CNY {amount}',
       retry: 'Retry',
+      dateRangeTo: 'to',
       loadError: 'Failed to load data. Check the network or permissions and retry.'
     },
     configuration: {
@@ -972,6 +973,28 @@ export default {
       alertType: 'Alert type',
       alertSeverity: 'Severity',
       alertStatus: 'Status',
+      alertTypes: {
+        SHOP_AUTH_INVALID: 'Shop authorization invalid',
+        SYNC_FAILED: 'Sync failed',
+        AFTER_SALE_TIMEOUT: 'After-sale timeout',
+        GUARANTEE_HEALTH: 'Guarantee health',
+        UNKNOWN: 'Unknown'
+      },
+      alertSeverities: {
+        WARNING: 'Warning',
+        ERROR: 'Error',
+        UNKNOWN: 'Unknown'
+      },
+      alertStatuses: {
+        OPEN: 'Open',
+        RESOLVED: 'Resolved',
+        UNKNOWN: 'Unknown'
+      },
+      guaranteeStatuses: {
+        HEALTHY: 'Healthy',
+        DEPOSIT_INSUFFICIENT: 'Deposit insufficient',
+        UNKNOWN: 'Unknown'
+      },
       alertSource: 'Source identifier',
       alertMessage: 'Alert message',
       lastSeenAt: 'Last seen',
@@ -1115,6 +1138,7 @@ export default {
       remarkParseStatus: 'Remark parsing',
       remarkParseReason: 'Parse reason',
       remarkParseVersion: 'Parser version',
+      remarkParseVersionNamed: 'Seller remark parser ({code})',
       billablePeriod: 'Billable period',
       occupiedPeriod: 'Device occupied period',
       assignedDevices: 'Assigned device IDs',
@@ -1125,6 +1149,19 @@ export default {
         PENDING: 'Pending',
         SUCCESS: 'Succeeded',
         FAILED: 'Failed',
+        SKIPPED: 'Skipped',
+        UNKNOWN: 'Unknown'
+      },
+      rentalPeriodStatuses: {
+        SUCCESS: 'Confirmed',
+        PENDING: 'Pending',
+        FAILED: 'Parse failed',
+        SKIPPED: 'Skipped',
+        UNKNOWN: 'Unknown'
+      },
+      remarkParseSources: {
+        AI: 'AI parsing',
+        RULE: 'Rule parsing',
         UNKNOWN: 'Unknown'
       },
       remarkReason: {
@@ -1332,12 +1369,18 @@ export default {
         LOCKED: 'Locked'
       },
       logistics: {
-        READY: 'Ready to ship',
-        OUTBOUND_TRANSIT: 'Outbound transit',
-        CUSTOMER_POSSESSION: 'Customer possession',
-        RETURN_TRANSIT: 'Return transit',
-        RETURN_INSPECTION: 'Return inspection',
-        DELAYED: 'Delayed',
+        NONE: 'No logistics',
+        CREATED: 'Created',
+        INFO_RECEIVED: 'Info received',
+        PICKED_UP: 'Picked up',
+        IN_TRANSIT: 'In transit',
+        OUT_FOR_DELIVERY: 'Out for delivery',
+        DELIVERED: 'Delivered',
+        RETURNING: 'Returning',
+        RETURNED: 'Returned',
+        RETURNED_PENDING_INSPECTION: 'Returned, pending inspection',
+        EXCEPTION: 'Exception',
+        CUSTOMS: 'In customs',
         UNKNOWN: 'Unknown'
       },
       pendingTitle: 'Pending allocations',
@@ -1463,9 +1506,36 @@ export default {
       trackingStatuses: {
         READY: 'Ready to query',
         ACCEPTED: 'Accepted',
+        CREATED: 'Created',
+        INFO_RECEIVED: 'Info received',
+        PICKED_UP: 'Picked up',
         IN_TRANSIT: 'In transit',
+        OUT_FOR_DELIVERY: 'Out for delivery',
         DELIVERED: 'Delivered',
+        RETURNING: 'Returning',
+        RETURNED: 'Returned',
+        CUSTOMS: 'In customs',
         EXCEPTION: 'Exception',
+        UNKNOWN: 'Unknown'
+      },
+      reasonCodes: {
+        SCHEDULE_CONFLICT: 'Schedule conflict',
+        DEVICE_LOCKED: 'Device locked',
+        LOGISTICS_RISK: 'Logistics risk',
+        DEVICE_STATUS_NOT_AVAILABLE: 'Device status unavailable',
+        TRACKING_STALE: 'Tracking may be stale',
+        RETURN_IN_TRANSIT: 'Return in transit',
+        RETURN_INSPECTION_PENDING: 'Pending return inspection',
+        MAINTENANCE_LOCKED: 'Locked for maintenance',
+        ORDER_HOLD: 'Order hold',
+        MANUAL_HOLD: 'Manual hold',
+        DISPATCHED_EXTENSION_CONFLICT: 'Dispatched extension conflict',
+        ASSIGNED_SCHEDULE_CONFLICT: 'Assigned schedule conflict',
+        FULFILLMENT_DEVICE_LOCKED: 'Fulfillment device locked',
+        UNKNOWN: 'Unknown reason'
+      },
+      sourceTypes: {
+        XIANYU: 'Xianyu',
         UNKNOWN: 'Unknown'
       },
       trackingStale: 'Tracking may be stale',
@@ -1530,6 +1600,15 @@ export default {
       status: 'Status',
       reviewType: 'Review type',
       sourceType: 'Source type',
+      reviewTypes: {
+        ORDER_CONVERSION: 'Order conversion',
+        FULFILLMENT_UPDATE: 'Fulfillment update',
+        UNKNOWN: 'Unknown'
+      },
+      sourceTypes: {
+        XIANYU_ORDER: 'Xianyu order',
+        UNKNOWN: 'Unknown'
+      },
       sourceIdentifier: 'Source id',
       reasonCode: 'Reason code',
       reasonMessage: 'Reason message',

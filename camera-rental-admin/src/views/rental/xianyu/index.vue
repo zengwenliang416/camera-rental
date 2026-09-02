@@ -54,11 +54,11 @@
             {{ formatNullableDate(row.authorizationExpiresAt) }}
           </template>
         </el-table-column>
-        <el-table-column
-          prop="guaranteeStatus"
-          :label="t('rental.xianyu.guaranteeStatus')"
-          width="140"
-        />
+        <el-table-column :label="t('rental.xianyu.guaranteeStatus')" width="140">
+          <template #default="{ row }">
+            {{ xianyuValueLabel('guaranteeStatuses', row.guaranteeStatus) }}
+          </template>
+        </el-table-column>
         <template #empty>
           <div class="py-24px text-[var(--el-text-color-secondary)]">
             {{ t('rental.xianyu.emptyHint') }}
@@ -233,18 +233,22 @@
       <el-table v-loading="alertLoading" :data="alertList">
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="shopId" :label="t('rental.order.shopId')" width="100" />
-        <el-table-column prop="alertType" :label="t('rental.xianyu.alertType')" min-width="160" />
+        <el-table-column :label="t('rental.xianyu.alertType')" min-width="160">
+          <template #default="{ row }">
+            {{ xianyuValueLabel('alertTypes', row.alertType) }}
+          </template>
+        </el-table-column>
         <el-table-column :label="t('rental.xianyu.alertSeverity')" width="120">
           <template #default="{ row }">
             <el-tag :type="row.severity === 'ERROR' ? 'danger' : 'warning'">
-              {{ row.severity }}
+              {{ xianyuValueLabel('alertSeverities', row.severity) }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column :label="t('rental.xianyu.alertStatus')" width="120">
           <template #default="{ row }">
             <el-tag :type="row.status === 'OPEN' ? 'danger' : 'success'">
-              {{ row.status }}
+              {{ xianyuValueLabel('alertStatuses', row.status) }}
             </el-tag>
           </template>
         </el-table-column>
@@ -596,6 +600,16 @@ const replayForm = reactive<{ eventId?: number; rawPayloadId?: number }>({
 
 const rentalLabel = (group: RentalLabelGroup, value?: string | null) => {
   return t(getRentalLabelKey(group, value), { code: value ?? '' })
+}
+
+const xianyuValueLabel = (
+  map: 'alertTypes' | 'alertSeverities' | 'alertStatuses' | 'guaranteeStatuses',
+  value?: string | null
+) => {
+  if (!value) return '-'
+  const key = `rental.xianyu.${map}.${value}`
+  const translated = t(key)
+  return translated === key ? value : translated
 }
 
 const getList = async () => {

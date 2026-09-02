@@ -47,10 +47,10 @@
           <span class="schedule-data">{{ order.externalOrderNo || '-' }}</span>
         </el-descriptions-item>
         <el-descriptions-item :label="t('rental.schedule.channel')">
-          {{ order.sourceType || '-' }}
+          {{ sourceTypeLabel(order.sourceType) }}
         </el-descriptions-item>
         <el-descriptions-item :label="t('rental.schedule.reviewState')">
-          {{ order.riskCodes.length ? order.riskCodes.join(' / ') : t('rental.schedule.noReview') }}
+          {{ order.riskCodes.length ? reasonCodesLabel(order.riskCodes) : t('rental.schedule.noReview') }}
         </el-descriptions-item>
       </el-descriptions>
 
@@ -137,7 +137,7 @@
           class="schedule-risk-alert"
           :type="delivery.stale ? 'warning' : 'info'"
           :closable="false"
-          :title="`${delivery.sourceCarrierName || '-'} · ${delivery.trackingStatus || '-'}`"
+          :title="`${delivery.sourceCarrierName || '-'} · ${trackingLabel(delivery.trackingStatus)}`"
           :description="delivery.stale ? t('rental.schedule.trackingStale') : undefined"
         />
       </section>
@@ -156,7 +156,8 @@ import type {
 import {
   formatClosedRange,
   formatOccupyRange,
-  getScheduleOrderDisplayNo
+  getScheduleOrderDisplayNo,
+  translateReasonCodes
 } from '../scheduleModel'
 
 const props = defineProps<{
@@ -197,6 +198,22 @@ const assignmentStatusLabel = (value: string) => {
   const translated = t(key)
   return translated === key ? value : translated
 }
+
+const sourceTypeLabel = (value?: string) => {
+  if (!value) return '-'
+  const key = `rental.schedule.sourceTypes.${value}`
+  const translated = t(key)
+  return translated === key ? value : translated
+}
+
+const trackingLabel = (value?: string) => {
+  if (!value) return '-'
+  const key = `rental.schedule.trackingStatuses.${value}`
+  const translated = t(key)
+  return translated === key ? value : translated
+}
+
+const reasonCodesLabel = (codes: string[]) => translateReasonCodes(t, codes)
 
 const assignmentTagType = (value: string) =>
   value === 'ASSIGNED'

@@ -168,7 +168,13 @@
         <dl>
           <div>
             <dt>{{ t('rental.configuration.handlingPolicy') }}</dt>
-            <dd>{{ rule.handlingPolicy }}</dd>
+            <dd>
+              {{
+                rule.handlingPolicy === 'CREATE_RENTAL'
+                  ? t('rental.configuration.handlingPolicyCreateRental')
+                  : t('rental.configuration.handlingPolicyConfigSkipped')
+              }}
+            </dd>
           </div>
           <div>
             <dt>{{ t('rental.configuration.modelMode') }}</dt>

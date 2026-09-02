@@ -55,7 +55,7 @@
       {{ selectedDevice.serialNumber || '-' }}
     </el-descriptions-item>
     <el-descriptions-item :label="t('common.status')">
-      {{ selectedDevice.status }}
+      {{ selectedDevice.status ? t(getRentalLabelKey('device', selectedDevice.status)) : '-' }}
     </el-descriptions-item>
   </el-descriptions>
 </template>
@@ -65,6 +65,7 @@ import type { UploadFile, UploadFiles, UploadProps, UploadUserFile } from 'eleme
 import type { RentalDeviceVO } from '@/api/rental/device'
 import { useI18n } from '@/hooks/web/useI18n'
 import type { XianyuShipmentForm } from './xianyuShipWorkbenchTypes'
+import { getRentalLabelKey } from '@/utils/rentalLabels'
 
 defineOptions({ name: 'XianyuDeviceStep' })
 

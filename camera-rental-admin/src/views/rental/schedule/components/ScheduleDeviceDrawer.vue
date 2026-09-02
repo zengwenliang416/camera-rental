@@ -38,7 +38,7 @@
           {{ logisticsLabel(device.deliveries?.[0]?.trackingStatus) }}
         </el-descriptions-item>
         <el-descriptions-item :label="t('rental.schedule.availabilityState')">
-          {{ device.reasonCodes?.join(' / ') || '-' }}
+          {{ device.reasonCodes?.length ? reasonCodesLabel(device.reasonCodes) : '-' }}
         </el-descriptions-item>
         <el-descriptions-item :label="t('rental.schedule.expectedRelease')">
           {{ device.expectedReleaseDate || '-' }}
@@ -69,7 +69,7 @@
             </template>
           </el-table-column>
           <el-table-column :label="t('rental.schedule.status')" min-width="100">
-            <template #default="{ row }">{{ row.scheduleType || row.status || '-' }}</template>
+            <template #default="{ row }">{{ scheduleStatusLabel(row.status) }}</template>
           </el-table-column>
         </el-table>
       </section>
@@ -84,7 +84,7 @@
             <template #default="{ row }">{{ row.sourceCarrierName || '-' }}</template>
           </el-table-column>
           <el-table-column :label="t('rental.schedule.latestTrace')" min-width="160">
-            <template #default="{ row }">{{ row.trackingStatus || '-' }}</template>
+            <template #default="{ row }">{{ trackingLabel(row.trackingStatus) }}</template>
           </el-table-column>
           <el-table-column width="100" fixed="right">
             <template #default="{ row }">
@@ -125,8 +125,9 @@
 
 <script setup lang="ts">
 import { useI18n } from '@/hooks/web/useI18n'
+import { getRentalLabelKey } from '@/utils/rentalLabels'
 import type { RentalDeviceScheduleDetailVO } from '@/api/rental/device'
-import { formatDateTime, formatOccupyRange } from '../scheduleModel'
+import { formatDateTime, formatOccupyRange, translateReasonCodes } from '../scheduleModel'
 
 defineProps<{
   visible: boolean
@@ -155,6 +156,18 @@ const logisticsLabel = (value?: string) => {
   const translated = t(key)
   return translated === key ? value : translated
 }
+
+const trackingLabel = (value?: string) => {
+  if (!value) return '-'
+  const key = `rental.schedule.trackingStatuses.${value}`
+  const translated = t(key)
+  return translated === key ? value : translated
+}
+
+const scheduleStatusLabel = (value?: string) =>
+  value ? t(getRentalLabelKey('schedule', value), { code: value }) : '-'
+
+const reasonCodesLabel = (codes: string[]) => translateReasonCodes(t, codes)
 
 const directionLabel = (value: string) => {
   const key = `rental.schedule.deliveryDirections.${value}`

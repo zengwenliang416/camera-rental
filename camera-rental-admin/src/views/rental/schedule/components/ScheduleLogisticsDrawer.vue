@@ -78,7 +78,7 @@
             :key="trace.eventSeq"
             :timestamp="formatDateTime(trace.businessTime)"
           >
-            <strong>{{ trace.trackingStatus || '-' }}</strong>
+            <strong>{{ statusLabel(trace.trackingStatus) }}</strong>
             <p>{{ trace.traceText || '-' }}</p>
             <small>{{ trace.location || '' }}</small>
           </el-timeline-item>

@@ -61,6 +61,19 @@ export function getScheduleOrderDisplayNo(order: ScheduleOrderNumberLike): strin
   return id ? `#${id}` : '-'
 }
 
+export function translateReasonCodes(
+  t: (key: string) => string,
+  codes: readonly string[]
+): string {
+  return codes
+    .map((code) => {
+      const key = `rental.schedule.reasonCodes.${code}`
+      const translated = t(key)
+      return translated === key ? code : translated
+    })
+    .join(' / ')
+}
+
 export function getOrCreateAssignmentIdempotencyKey(
   store: Map<string, string>,
   rentalOrderItemId: number,

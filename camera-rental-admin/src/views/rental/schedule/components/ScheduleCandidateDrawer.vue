@@ -41,7 +41,7 @@
         v-if="result.reasonCodes?.length"
         type="warning"
         :closable="false"
-        :title="result.reasonCodes.join(' / ')"
+        :title="reasonCodesLabel(result.reasonCodes)"
       />
 
       <el-table :data="result.candidates" row-key="id">
@@ -51,7 +51,7 @@
           </template>
         </el-table-column>
         <el-table-column :label="t('rental.schedule.status')" width="100">
-          <template #default="{ row }">{{ row.status }}</template>
+          <template #default="{ row }">{{ deviceStatusLabel(row.status) }}</template>
         </el-table-column>
         <el-table-column :label="t('rental.schedule.candidateDecision')" min-width="190">
           <template #default="{ row }">
@@ -59,7 +59,7 @@
               {{ row.eligible ? t('rental.schedule.candidateEligible') : t('rental.schedule.candidateBlocked') }}
             </el-tag>
             <small v-if="row.reasonCodes.length" class="candidate-reasons">
-              {{ row.reasonCodes.join(' / ') }}
+              {{ reasonCodesLabel(row.reasonCodes) }}
             </small>
           </template>
         </el-table-column>
@@ -87,11 +87,12 @@
 
 <script setup lang="ts">
 import { useI18n } from '@/hooks/web/useI18n'
+import { getRentalLabelKey } from '@/utils/rentalLabels'
 import type {
   RentalScheduleCandidateResponseVO,
   RentalScheduleCandidateVO
 } from '@/api/rental/schedule'
-import { formatOccupyRange, getScheduleOrderDisplayNo } from '../scheduleModel'
+import { formatOccupyRange, getScheduleOrderDisplayNo, translateReasonCodes } from '../scheduleModel'
 
 defineProps<{
   visible: boolean
@@ -108,6 +109,10 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+
+const deviceStatusLabel = (value: string) => t(getRentalLabelKey('device', value), { code: value })
+
+const reasonCodesLabel = (codes: string[]) => translateReasonCodes(t, codes)
 </script>
 
 <style scoped>

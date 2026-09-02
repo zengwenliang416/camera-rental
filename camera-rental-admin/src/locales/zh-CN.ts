@@ -480,6 +480,7 @@ export default {
     common: {
       yuanAmount: '{amount} 元',
       retry: '重试',
+      dateRangeTo: '至',
       loadError: '数据加载失败，请检查网络或权限后重试。'
     },
     configuration: {
@@ -928,6 +929,28 @@ export default {
       alertType: '告警类型',
       alertSeverity: '级别',
       alertStatus: '状态',
+      alertTypes: {
+        SHOP_AUTH_INVALID: '店铺授权失效',
+        SYNC_FAILED: '同步失败',
+        AFTER_SALE_TIMEOUT: '售后处理超时',
+        GUARANTEE_HEALTH: '保证金健康度',
+        UNKNOWN: '未知'
+      },
+      alertSeverities: {
+        WARNING: '警告',
+        ERROR: '错误',
+        UNKNOWN: '未知'
+      },
+      alertStatuses: {
+        OPEN: '未处理',
+        RESOLVED: '已解决',
+        UNKNOWN: '未知'
+      },
+      guaranteeStatuses: {
+        HEALTHY: '正常',
+        DEPOSIT_INSUFFICIENT: '保证金不足',
+        UNKNOWN: '未知'
+      },
       alertSource: '来源标识',
       alertMessage: '告警消息',
       lastSeenAt: '最近发现',
@@ -1064,6 +1087,7 @@ export default {
       remarkParseStatus: '备注解析',
       remarkParseReason: '解析说明',
       remarkParseVersion: '解析版本',
+      remarkParseVersionNamed: '卖家备注解析（{code}）',
       billablePeriod: '计租周期',
       occupiedPeriod: '设备占用周期',
       assignedDevices: '已分配设备 ID',
@@ -1074,6 +1098,19 @@ export default {
         PENDING: '待解析',
         SUCCESS: '成功',
         FAILED: '失败',
+        SKIPPED: '已跳过',
+        UNKNOWN: '未知'
+      },
+      rentalPeriodStatuses: {
+        SUCCESS: '已确认',
+        PENDING: '待定',
+        FAILED: '解析失败',
+        SKIPPED: '已跳过',
+        UNKNOWN: '未知'
+      },
+      remarkParseSources: {
+        AI: 'AI 解析',
+        RULE: '规则解析',
         UNKNOWN: '未知'
       },
       remarkReason: {
@@ -1274,12 +1311,18 @@ export default {
         LOCKED: '锁定'
       },
       logistics: {
-        READY: '待发货',
-        OUTBOUND_TRANSIT: '发货运输中',
-        CUSTOMER_POSSESSION: '客户持有',
-        RETURN_TRANSIT: '返仓运输中',
-        RETURN_INSPECTION: '回仓检测中',
-        DELAYED: '物流延迟',
+        NONE: '无物流',
+        CREATED: '已创建',
+        INFO_RECEIVED: '已受理',
+        PICKED_UP: '已揽收',
+        IN_TRANSIT: '运输中',
+        OUT_FOR_DELIVERY: '派送中',
+        DELIVERED: '已签收',
+        RETURNING: '退回中',
+        RETURNED: '已退回',
+        RETURNED_PENDING_INSPECTION: '已退回待检测',
+        EXCEPTION: '异常',
+        CUSTOMS: '清关中',
         UNKNOWN: '未知'
       },
       pendingTitle: '待分配订单',
@@ -1405,9 +1448,36 @@ export default {
       trackingStatuses: {
         READY: '待查询',
         ACCEPTED: '已受理',
+        CREATED: '已创建',
+        INFO_RECEIVED: '已受理',
+        PICKED_UP: '已揽收',
         IN_TRANSIT: '运输中',
+        OUT_FOR_DELIVERY: '派送中',
         DELIVERED: '已签收',
+        RETURNING: '退回中',
+        RETURNED: '已退回',
+        CUSTOMS: '清关中',
         EXCEPTION: '异常',
+        UNKNOWN: '未知'
+      },
+      reasonCodes: {
+        SCHEDULE_CONFLICT: '排期冲突',
+        DEVICE_LOCKED: '设备被锁定',
+        LOGISTICS_RISK: '物流风险',
+        DEVICE_STATUS_NOT_AVAILABLE: '设备状态不可用',
+        TRACKING_STALE: '物流轨迹可能过期',
+        RETURN_IN_TRANSIT: '退回运输中',
+        RETURN_INSPECTION_PENDING: '待回仓检测',
+        MAINTENANCE_LOCKED: '维修锁定',
+        ORDER_HOLD: '订单锁定',
+        MANUAL_HOLD: '人工锁定',
+        DISPATCHED_EXTENSION_CONFLICT: '已出库续租冲突',
+        ASSIGNED_SCHEDULE_CONFLICT: '已分配排期冲突',
+        FULFILLMENT_DEVICE_LOCKED: '履约设备被锁定',
+        UNKNOWN: '未知原因'
+      },
+      sourceTypes: {
+        XIANYU: '闲鱼',
         UNKNOWN: '未知'
       },
       trackingStale: '轨迹可能已过期',
@@ -1472,6 +1542,15 @@ export default {
       status: '状态',
       reviewType: '复核类型',
       sourceType: '来源类型',
+      reviewTypes: {
+        ORDER_CONVERSION: '订单转换',
+        FULFILLMENT_UPDATE: '履约变更',
+        UNKNOWN: '未知'
+      },
+      sourceTypes: {
+        XIANYU_ORDER: '闲鱼订单',
+        UNKNOWN: '未知'
+      },
       sourceIdentifier: '来源标识',
       reasonCode: '原因码',
       reasonMessage: '原因说明',

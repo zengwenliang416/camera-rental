@@ -15,7 +15,7 @@ class ReturnRegistrationModelsTest {
     void serializesAdminShippedDateAsIsoString() throws Exception {
         ReturnRegistrationModels.AdminDetail detail = new ReturnRegistrationModels.AdminDetail(
                 1L, "RR-001", 2L, "ORDER-001", "ACCEPTED",
-                null, null, null, "SF123", LocalDate.of(2026, 8, 3),
+                null, null, null, "SF123", "13800138000", LocalDate.of(2026, 8, 3),
                 null, null, null, null, null, null,
                 null, null, List.of(), List.of()
         );

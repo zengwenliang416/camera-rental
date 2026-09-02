@@ -112,9 +112,11 @@ class ReturnRegistrationSubmissionServiceTest {
         registration.setRentalOrderId(null);
 
         ReturnRegistrationModels.Receipt receipt =
-                service.submitSimple("token", "P4-01", "SF1000000001", null, List.of());
+                service.submitSimple("token", "13800138000", "P4-01",
+                        "SF1000000001", null, null, List.of());
 
         assertEquals(ReturnRegistrationStatusEnum.REVIEW_REQUIRED.name(), receipt.status());
+        assertEquals("13800138000", registration.getSenderMobile());
         verify(assignmentMapper, never()).selectActiveListByRentalOrderId(any());
         verify(deliveryService, never()).createOrReuseLocalOnly(any());
     }
@@ -126,7 +128,8 @@ class ReturnRegistrationSubmissionServiceTest {
                 .setExternalOrderNo("");
 
         ReturnRegistrationModels.Receipt receipt =
-                service.submitSimple("token", "P4-18", "1234567567", null, List.of());
+                service.submitSimple("token", "13800138000", "P4-18",
+                        "1234567567", null, null, List.of());
 
         assertEquals(ReturnRegistrationStatusEnum.REVIEW_REQUIRED.name(), receipt.status());
         ArgumentCaptor<RentalReturnRegistrationDeviceDO> detailCaptor =
@@ -168,7 +171,8 @@ class ReturnRegistrationSubmissionServiceTest {
                         "READY", "SF1****0001", null, List.of()));
 
         ReturnRegistrationModels.Receipt receipt =
-                service.submitSimple("token", "p4 － 01", "SF1000000001", null, List.of());
+                service.submitSimple("token", "13800138000", "p4 － 01",
+                        "SF1000000001", null, null, List.of());
 
         assertEquals(ReturnRegistrationStatusEnum.ACCEPTED.name(), receipt.status());
         assertEquals(80L, receipt.deliveryId());
@@ -181,8 +185,8 @@ class ReturnRegistrationSubmissionServiceTest {
         registration.setRentalOrderId(null);
 
         ReturnRegistrationModels.Receipt receipt =
-                service.submitSimple("token", "P4-01", "SF1000000001", null,
-                        List.of(101L, 102L));
+                service.submitSimple("token", "13800138000", "P4-01",
+                        "SF1000000001", null, null, List.of(101L, 102L));
 
         assertEquals(ReturnRegistrationStatusEnum.REVIEW_REQUIRED.name(), receipt.status());
         verify(attachmentService).validateOptionalForSubmission(
@@ -196,8 +200,8 @@ class ReturnRegistrationSubmissionServiceTest {
                 .validateOptionalForSubmission(registration, List.of(101L));
 
         assertThrows(RuntimeException.class, () ->
-                service.submitSimple("token", "P4-01", "SF1000000001", null,
-                        List.of(101L)));
+                service.submitSimple("token", "13800138000", "P4-01",
+                        "SF1000000001", null, null, List.of(101L)));
 
         verify(registrationDeviceMapper, never()).deleteByRegistrationId(any());
         verify(registrationMapper, never()).updateById(any(RentalReturnRegistrationDO.class));
@@ -260,7 +264,8 @@ class ReturnRegistrationSubmissionServiceTest {
                         "READY", null, null, List.of()));
 
         ReturnRegistrationModels.Receipt receipt =
-                service.submitSimple("token", "P4-01", null, "SELF_DELIVERY", List.of());
+                service.submitSimple("token", "13800138000", "P4-01",
+                        null, null, "SELF_DELIVERY", List.of());
 
         assertEquals(ReturnRegistrationStatusEnum.ACCEPTED.name(), receipt.status());
         assertEquals(80L, receipt.deliveryId());
@@ -271,11 +276,12 @@ class ReturnRegistrationSubmissionServiceTest {
         assertEquals("SELF_DELIVERY", commandCaptor.getValue().sourceCarrierCode());
         assertEquals("本人送回", commandCaptor.getValue().sourceCarrierName());
         assertEquals("SELF_DELIVERY", registration.getReturnMethod());
+        assertEquals("13800138000", registration.getSenderMobile());
         assertNull(registration.getWaybillNo());
     }
 
     @Test
-    void errandSubmissionKeepsOptionalWaybill() {
+    void errandSubmissionRequiresAndStoresPlatformNameWithoutWaybill() {
         RentalDeviceAssignmentDO assignment = RentalDeviceAssignmentDO.builder()
                 .id(50L).rentalOrderId(30L).rentalOrderItemId(60L).deviceId(70L).build();
         RentalDeviceDO device = RentalDeviceDO.builder()
@@ -288,21 +294,46 @@ class ReturnRegistrationSubmissionServiceTest {
                         "READY", null, null, List.of()));
 
         ReturnRegistrationModels.Receipt receipt =
-                service.submitSimple("token", "P4-01", "PD123456", "ERRAND", List.of());
+                service.submitSimple("token", "13800138000", "P4-01",
+                        null, "闪送", "ERRAND", List.of());
 
         assertEquals(ReturnRegistrationStatusEnum.ACCEPTED.name(), receipt.status());
         ArgumentCaptor<RentalDeliveryCreateCommand> commandCaptor =
                 ArgumentCaptor.forClass(RentalDeliveryCreateCommand.class);
         verify(deliveryService).createOrReuseLocalOnly(commandCaptor.capture());
-        assertEquals("PD123456", commandCaptor.getValue().waybillNo());
+        assertEquals("ERRAND-RR202608010001", commandCaptor.getValue().waybillNo());
+        assertEquals("闪送", commandCaptor.getValue().sourceCarrierName());
         assertEquals("ERRAND", registration.getReturnMethod());
-        assertEquals("PD123456", registration.getWaybillNo());
+        assertEquals("闪送", registration.getCarrierName());
+        assertNull(registration.getWaybillNo());
+    }
+
+    @Test
+    void errandSubmissionRejectsMissingPlatformName() {
+        assertThrows(RuntimeException.class, () ->
+                service.submitSimple("token", "13800138000", "P4-01",
+                        null, " ", "ERRAND", List.of()));
+
+        verify(registrationMapper, never()).updateById(any(RentalReturnRegistrationDO.class));
+        verify(deliveryService, never()).createOrReuseLocalOnly(any());
     }
 
     @Test
     void expressSubmissionStillRequiresWaybill() {
         assertThrows(RuntimeException.class, () ->
-                service.submitSimple("token", "P4-01", null, "EXPRESS", List.of()));
+                service.submitSimple("token", "13800138000", "P4-01",
+                        null, null, "EXPRESS", List.of()));
+
+        verify(registrationDeviceMapper, never()).deleteByRegistrationId(any());
+        verify(registrationMapper, never()).updateById(any(RentalReturnRegistrationDO.class));
+        verify(deliveryService, never()).createOrReuseLocalOnly(any());
+    }
+
+    @Test
+    void simpleSubmissionRejectsInvalidSenderMobile() {
+        assertThrows(RuntimeException.class, () ->
+                service.submitSimple("token", "8000", "P4-01",
+                        "SF1000000001", null, "EXPRESS", List.of()));
 
         verify(registrationDeviceMapper, never()).deleteByRegistrationId(any());
         verify(registrationMapper, never()).updateById(any(RentalReturnRegistrationDO.class));
@@ -312,7 +343,8 @@ class ReturnRegistrationSubmissionServiceTest {
     @Test
     void unsupportedReturnMethodIsRejected() {
         assertThrows(RuntimeException.class, () ->
-                service.submitSimple("token", "P4-01", "SF1000000001", "CARRIER_PIGEON", List.of()));
+                service.submitSimple("token", "13800138000", "P4-01",
+                        "SF1000000001", null, "CARRIER_PIGEON", List.of()));
 
         verify(registrationMapper, never()).updateById(any(RentalReturnRegistrationDO.class));
         verify(deliveryService, never()).createOrReuseLocalOnly(any());

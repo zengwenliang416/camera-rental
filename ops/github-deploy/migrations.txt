@@ -20,3 +20,4 @@ camera-rental-server/sql/mysql/migrations/20260831_053_rental_configuration_back
 camera-rental-server/sql/mysql/migrations/20260831_054_rental_fulfillment_facts.sql
 camera-rental-server/sql/mysql/migrations/20260901_055_rental_historical_reconciliation.sql
 camera-rental-server/sql/mysql/migrations/20260901_056_rental_channel_reconciliation_run.sql
+camera-rental-server/sql/mysql/migrations/20260902_057_return_registration_sender_mobile.sql

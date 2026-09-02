@@ -123,6 +123,9 @@
             <el-descriptions-item label="运单号">{{
               detail.waybillNo || '—'
             }}</el-descriptions-item>
+            <el-descriptions-item label="发件人电话">{{
+              detail.senderMobile || '—'
+            }}</el-descriptions-item>
             <el-descriptions-item label="寄出日期">
               {{ formatReturnRegistrationDate(detail.shippedDate) }}
             </el-descriptions-item>

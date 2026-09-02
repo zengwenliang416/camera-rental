@@ -23,6 +23,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -163,15 +164,16 @@ public class AppReturnRegistrationController {
             HttpServletRequest request,
             HttpServletResponse response) {
         rateLimitService.checkVerification(
-                ServletUtils.getClientIP(request), req.orderNo(), req.mobileLast4(), req.machineCode());
+                ServletUtils.getClientIP(request), req.orderNo(), "", req.machineCode());
         ReturnRegistrationOrderVerificationService.VerifiedSession verified =
                 verificationService.verifyOrReuseStandalone(
-                        sessionToken, req.orderNo(), req.mobileLast4(), req.machineCode());
+                        sessionToken, req.orderNo(), "", req.machineCode());
         cookieService.write(response, verified.sessionToken());
         rateLimitService.checkSession(verified.sessionToken(), "simple-submit", 10);
         Receipt result = submissionService.submitSimple(
-                verified.sessionToken(), req.machineCode(), req.waybillNo(),
-                req.returnMethod(), req.attachmentIds());
+                verified.sessionToken(), req.senderMobile(), req.machineCode(),
+                req.waybillNo(), req.errandPlatformName(), req.returnMethod(),
+                req.attachmentIds());
         auditService.record("SIMPLE_SUBMIT", verified.sessionToken(),
                 verified.registrationId(), result.status());
         return success(result);
@@ -209,9 +211,12 @@ public class AppReturnRegistrationController {
 
     public record SimpleSubmitReq(
             @Size(max = 128) String orderNo,
-            @Size(max = 32) String mobileLast4,
+            @NotBlank
+            @Pattern(regexp = "^1\\d{10}$", message = "发件人手机号格式不正确")
+            String senderMobile,
             @NotBlank @Size(max = 128) String machineCode,
             @Size(max = 128) String waybillNo,
+            @Size(max = 128) String errandPlatformName,
             @Size(max = 32) String returnMethod,
             @Size(max = 10) List<Long> attachmentIds
     ) {

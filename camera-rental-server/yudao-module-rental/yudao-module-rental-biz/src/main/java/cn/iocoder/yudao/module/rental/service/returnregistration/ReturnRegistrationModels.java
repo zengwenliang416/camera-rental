@@ -59,6 +59,7 @@ public final class ReturnRegistrationModels {
     public record AdminDetail(
             Long id, String formNo, Long rentalOrderId, String orderNo, String status,
             String returnMethod, String carrierCode, String carrierName, String waybillNo,
+            String senderMobile,
             @JsonFormat(pattern = "yyyy-MM-dd") LocalDate shippedDate,
             String issueDescription, Long deliveryId, LocalDateTime expiresAt,
             LocalDateTime submittedAt, LocalDateTime reviewedAt, Long reviewerId,

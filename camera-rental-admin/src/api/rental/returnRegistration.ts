@@ -35,6 +35,7 @@ export interface ReturnRegistrationAttachment {
 
 export interface ReturnRegistrationDetail extends ReturnRegistrationRow {
   carrierCode?: string
+  senderMobile?: string
   shippedDate?: ApiLocalDate
   issueDescription?: string
   deliveryId?: number
@@ -72,7 +73,5 @@ export const getReturnRegistration = (id: number) =>
 export const revokeReturnRegistration = (id: number) =>
   request.post<boolean>({ url: `${path}/${id}/revoke` })
 
-export const reviewReturnRegistration = (
-  id: number,
-  data: { accept: boolean; note?: string }
-) => request.post<boolean>({ url: `${path}/${id}/review`, data })
+export const reviewReturnRegistration = (id: number, data: { accept: boolean; note?: string }) =>
+  request.post<boolean>({ url: `${path}/${id}/review`, data })

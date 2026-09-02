@@ -67,6 +67,7 @@ class ReturnRegistrationAdminServiceTest {
                 .setRentalOrderId(30L)
                 .setChannelOrderId(40L)
                 .setExternalOrderNo("ORDER-001")
+                .setSenderMobile("13900139000")
                 .setStatus("REVIEW_REQUIRED");
         registration.setTenantId(9L);
         when(registrationMapper.selectById(11L)).thenReturn(registration);
@@ -84,6 +85,7 @@ class ReturnRegistrationAdminServiceTest {
         assertEquals("测试客户", detail.customer().name());
         assertEquals("13800138000", detail.customer().mobile());
         assertEquals("测试地址 1 号", detail.customer().address());
+        assertEquals("13900139000", detail.senderMobile());
     }
 
     @Test

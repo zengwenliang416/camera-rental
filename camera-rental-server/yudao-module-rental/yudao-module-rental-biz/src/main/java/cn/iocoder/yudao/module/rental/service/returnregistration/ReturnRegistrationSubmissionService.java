@@ -74,29 +74,38 @@ public class ReturnRegistrationSubmissionService {
     @Transactional(rollbackFor = Exception.class)
     public Receipt submit(String token, Submission submission) {
         RentalReturnRegistrationDO resolved = resolver.require(token);
-        return resolver.execute(resolved, () -> submitLocked(resolved.getId(), submission, false));
+        return resolver.execute(resolved, () -> submitLocked(resolved.getId(), submission, false, null));
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Receipt submitSimple(String token, String machineCode, String waybillNo,
+    public Receipt submitSimple(String token, String senderMobile, String machineCode,
+                                String waybillNo, String errandPlatformName,
                                 String returnMethod, List<Long> attachmentIds) {
         RentalReturnRegistrationDO resolved = resolver.require(token);
         return resolver.execute(resolved, () -> {
             ReturnMethodEnum method = resolveMethod(returnMethod);
-            String effectiveWaybill = method == ReturnMethodEnum.SELF_DELIVERY ? null : waybillNo;
+            String normalizedSenderMobile = normalizeSenderMobile(senderMobile);
+            if (!normalizedSenderMobile.matches("^1\\d{10}$")) {
+                throw exception(RETURN_REGISTRATION_SUBMISSION_INVALID,
+                        "发件人手机号应为 11 位中国大陆手机号");
+            }
+            String effectiveWaybill = method == ReturnMethodEnum.EXPRESS ? waybillNo : null;
             String normalizedWaybill = normalizeWaybill(effectiveWaybill);
+            String carrierName = simpleCarrierName(method, errandPlatformName);
             Submission submission = new Submission(
                     resolved.getExternalOrderNo(),
                     simpleCarrierCode(method),
-                    simpleCarrierName(method),
+                    carrierName,
                     effectiveWaybill,
                     method.name(),
                     LocalDate.now(ZoneId.of("Asia/Shanghai")),
                     List.of(machineCode),
                     attachmentIds == null ? List.of() : attachmentIds,
                     null,
-                    "simple:" + DigestUtil.sha256Hex(resolved.getId() + ":" + normalizedWaybill));
-            return submitLocked(resolved.getId(), submission, true);
+                    "simple:" + DigestUtil.sha256Hex(
+                            resolved.getId() + ":" + method.name() + ":"
+                                    + normalizedWaybill + ":" + carrierName));
+            return submitLocked(resolved.getId(), submission, true, normalizedSenderMobile);
         });
     }
 
@@ -122,7 +131,7 @@ public class ReturnRegistrationSubmissionService {
     }
 
     private Receipt submitLocked(Long registrationId, Submission submission,
-                                 boolean validateOptionalAttachments) {
+                                 boolean validateOptionalAttachments, String senderMobile) {
         RentalReturnRegistrationDO registration = registrationMapper.selectByIdForUpdate(registrationId);
         if (registration == null) {
             throw exception(RETURN_REGISTRATION_STATUS_INVALID);
@@ -150,6 +159,9 @@ public class ReturnRegistrationSubmissionService {
                 .setIssueDescription(trimToNull(submission.issueDescription()))
                 .setIdempotencyKey(submission.idempotencyKey().trim())
                 .setSubmittedAt(LocalDateTime.now());
+        if (StringUtils.hasText(senderMobile)) {
+            registration.setSenderMobile(senderMobile);
+        }
         boolean needsReview = !match.safe() || StringUtils.hasText(registration.getIssueDescription());
         if (needsReview) {
             registration.setStatus(ReturnRegistrationStatusEnum.REVIEW_REQUIRED.name());
@@ -249,11 +261,16 @@ public class ReturnRegistrationSubmissionService {
         };
     }
 
-    private String simpleCarrierName(ReturnMethodEnum method) {
+    private String simpleCarrierName(ReturnMethodEnum method, String errandPlatformName) {
         return switch (method) {
             case EXPRESS -> "待仓库识别";
             case SELF_DELIVERY -> "本人送回";
-            case ERRAND -> "跑腿送回";
+            case ERRAND -> {
+                if (!StringUtils.hasText(errandPlatformName)) {
+                    throw exception(RETURN_REGISTRATION_SUBMISSION_INVALID, "请填写跑腿平台名称");
+                }
+                yield errandPlatformName.trim();
+            }
         };
     }
 
@@ -304,6 +321,10 @@ public class ReturnRegistrationSubmissionService {
 
     private String normalizeWaybill(String value) {
         return value == null ? "" : value.replaceAll("[\\s-]", "").toUpperCase(Locale.ROOT);
+    }
+
+    private String normalizeSenderMobile(String value) {
+        return value == null ? "" : value.replaceAll("\\D", "");
     }
 
     private String normalizeCode(String value) {

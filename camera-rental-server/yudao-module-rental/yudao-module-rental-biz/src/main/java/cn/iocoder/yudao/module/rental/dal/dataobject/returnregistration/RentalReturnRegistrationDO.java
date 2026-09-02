@@ -24,6 +24,7 @@ public class RentalReturnRegistrationDO extends TenantBaseDO {
     private String tokenHash;
     private String status;
     private String returnMethod;
+    private String senderMobile;
     private String carrierCode;
     private String carrierName;
     private String waybillNo;

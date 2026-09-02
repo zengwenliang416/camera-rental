@@ -55,6 +55,12 @@ describe('customer return registration utilities', () => {
     expect(returnMessage('zh-CN', 'simpleReturnBody')).toContain('人工复核')
   })
 
+  test('describes the required sender and return-method-specific fields', () => {
+    expect(returnMessage('zh-CN', 'simpleReturnBody')).toContain('发件人手机号和机器编码必填')
+    expect(returnMessage('zh-CN', 'simpleReturnBody')).toContain('跑腿平台名称')
+    expect(returnMessage('zh-CN', 'selfDeliveryHint')).toContain('本人送回！')
+  })
+
   test('labels all three return methods in both locales', () => {
     expect(returnMessage('zh-CN', 'returnMethodExpress')).toBe('快递寄回')
     expect(returnMessage('zh-CN', 'returnMethodSelf')).toBe('本人送回')

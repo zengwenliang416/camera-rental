@@ -26,19 +26,20 @@ export function useReturnRegistration() {
     return result.data
   }
 
-  const verify = (orderNo: string, mobileLast4: string, machineCode: string) =>
+  const verify = (orderNo: string, machineCode: string) =>
     request<ReturnContext>('/verify', {
       method: 'POST',
-      body: { orderNo, mobileLast4, machineCode }
+      body: { orderNo, mobileLast4: '', machineCode }
     })
 
   const loadContext = () => request<ReturnContext>('/session')
 
   const simpleSubmit = (form: {
     orderNo: string
-    mobileLast4: string
+    senderMobile: string
     machineCode: string
     waybillNo: string
+    errandPlatformName: string
     returnMethod: ReturnMethod
     attachmentIds?: number[]
   }) =>

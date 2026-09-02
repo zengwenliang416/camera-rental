@@ -33,9 +33,10 @@ const receipt = ref<ReturnReceipt>()
 const photos = reactive<SelectedPhoto[]>([])
 const form = reactive({
   orderNo: '',
-  mobileLast4: '',
+  senderMobile: '',
   machineCode: '',
   waybillNo: '',
+  errandPlatformName: '',
   returnMethod: 'EXPRESS' as ReturnMethod
 })
 
@@ -66,12 +67,13 @@ onBeforeUnmount(() => {
 function validate() {
   error.value = ''
   const orderNo = form.orderNo.trim()
-  const mobileLast4 = form.mobileLast4.replace(/\D/g, '')
+  const senderMobile = form.senderMobile.replace(/\D/g, '')
   const machineCode = normalizeReturnSerial(form.machineCode)
   const waybillNo = form.waybillNo.trim()
+  const errandPlatformName = form.errandPlatformName.trim()
 
-  if (mobileLast4 && !/^\d{4}$/.test(mobileLast4)) {
-    error.value = t('verificationInputError')
+  if (!/^1\d{10}$/.test(senderMobile)) {
+    error.value = t('senderMobileRequired')
     return false
   }
   if (!returnSerialPattern.test(machineCode)) {
@@ -82,11 +84,16 @@ function validate() {
     error.value = t('waybillRequired')
     return false
   }
+  if (form.returnMethod === 'ERRAND' && !errandPlatformName) {
+    error.value = t('errandPlatformRequired')
+    return false
+  }
 
   form.orderNo = orderNo
-  form.mobileLast4 = mobileLast4
+  form.senderMobile = senderMobile
   form.machineCode = machineCode
-  form.waybillNo = waybillNo
+  form.waybillNo = form.returnMethod === 'EXPRESS' ? waybillNo : ''
+  form.errandPlatformName = form.returnMethod === 'ERRAND' ? errandPlatformName : ''
   return true
 }
 
@@ -164,7 +171,7 @@ async function submit() {
   error.value = ''
   try {
     if (photos.length) {
-      await api.verify(form.orderNo, form.mobileLast4, form.machineCode)
+      await api.verify(form.orderNo, form.machineCode)
       for (const photo of photos) {
         if (photo.status !== 'UPLOADED') await uploadPhoto(photo)
       }
@@ -192,7 +199,7 @@ const status = computed<RegistrationStatus | undefined>(() =>
   <main class="return-page">
     <header class="return-topbar">
       <a href="/" class="return-brand">
-        <b>J</b>
+        <img src="/images/jiezuda-logo.png" alt="捷租达">
         <span><strong>捷租达</strong><small>{{ t('service') }}</small></span>
       </a>
       <div class="return-tools">
@@ -233,13 +240,13 @@ const status = computed<RegistrationStatus | undefined>(() =>
         </label>
 
         <label>
-          <span>{{ t('mobileLast4Optional') }}</span>
+          <span>{{ t('senderMobile') }} <b>{{ t('required') }}</b></span>
           <input
-            v-model="form.mobileLast4"
-            maxlength="4"
-            inputmode="numeric"
-            autocomplete="off"
-            :placeholder="t('mobileLast4Placeholder')"
+            v-model="form.senderMobile"
+            maxlength="11"
+            inputmode="tel"
+            autocomplete="tel"
+            :placeholder="t('senderMobilePlaceholder')"
           >
         </label>
 
@@ -272,16 +279,23 @@ const status = computed<RegistrationStatus | undefined>(() =>
           </p>
         </fieldset>
 
-        <label v-if="form.returnMethod !== 'SELF_DELIVERY'">
-          <span>
-            {{ form.returnMethod === 'ERRAND' ? t('errandWaybill') : t('waybill') }}
-            <b v-if="form.returnMethod === 'EXPRESS'">{{ t('required') }}</b>
-          </span>
+        <label v-if="form.returnMethod === 'EXPRESS'">
+          <span>{{ t('waybill') }} <b>{{ t('required') }}</b></span>
           <input
             v-model="form.waybillNo"
             maxlength="128"
             autocomplete="off"
-            :placeholder="form.returnMethod === 'ERRAND' ? t('errandWaybillPlaceholder') : t('waybillPlaceholder')"
+            :placeholder="t('waybillPlaceholder')"
+          >
+        </label>
+
+        <label v-else-if="form.returnMethod === 'ERRAND'">
+          <span>{{ t('errandPlatform') }} <b>{{ t('required') }}</b></span>
+          <input
+            v-model="form.errandPlatformName"
+            maxlength="128"
+            autocomplete="organization"
+            :placeholder="t('errandPlatformPlaceholder')"
           >
         </label>
 
@@ -401,15 +415,12 @@ const status = computed<RegistrationStatus | undefined>(() =>
   text-decoration: none;
 }
 
-.return-brand > b {
-  width: 46px;
-  height: 46px;
-  display: grid;
-  place-items: center;
-  border-radius: 15px;
-  color: #fff;
-  background: #0e5b42;
-  font: 800 24px/1 Georgia, serif;
+.return-brand > img {
+  width: 64px;
+  height: 52px;
+  display: block;
+  object-fit: contain;
+  border-radius: 12px;
 }
 
 .return-brand span {

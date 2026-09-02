@@ -1,6 +1,6 @@
 import { expect, test, type Page, type Request, type Route } from '@playwright/test'
 
-test('mobile customer submits four fields without photo setup requests', async ({ page }) => {
+test('customer submits required sender mobile and express fields without photo setup requests', async ({ page }) => {
   let verifyCount = 0
   let authorizeCount = 0
   let submitCount = 0
@@ -12,7 +12,15 @@ test('mobile customer submits four fields without photo setup requests', async (
     },
     onSubmit: async (request) => {
       submitCount += 1
-      expect(request.postDataJSON()).toMatchObject({ attachmentIds: [] })
+      expect(request.postDataJSON()).toMatchObject({
+        orderNo: '',
+        senderMobile: '13800138000',
+        machineCode: 'P4-01',
+        waybillNo: 'SF1000000001',
+        errandPlatformName: '',
+        returnMethod: 'EXPRESS',
+        attachmentIds: []
+      })
       await new Promise((resolve) => setTimeout(resolve, 100))
       return acceptedReceipt()
     }
@@ -115,10 +123,14 @@ test('photo picker rejects a selection above ten files', async ({ page }) => {
   await expect(page.locator('.return-photo-grid figure')).toHaveCount(0)
 })
 
-test('order and mobile can both stay empty while machine and waybill remain required', async ({ page }) => {
+test('order is optional while sender mobile, machine code and express waybill are required', async ({ page }) => {
   await mockReturnApi(page, {})
   await page.goto('/return')
 
+  await page.getByRole('button', { name: '提交退回信息' }).click()
+  await expect(page.getByText('请填写正确的 11 位发件人手机号')).toBeVisible()
+
+  await page.getByPlaceholder('请输入 11 位手机号').fill('13800138000')
   await page.getByRole('button', { name: '提交退回信息' }).click()
   await expect(page.getByText('请填写正确的机器编码，例如 P4-01')).toBeVisible()
 
@@ -138,6 +150,7 @@ test('current ASCII and stand machine codes pass the return-entry validation', a
 
   for (const machineCode of ['X300U-01', '支架-01']) {
     await page.goto('/return')
+    await page.getByPlaceholder('请输入 11 位手机号').fill('13800138000')
     await page.getByPlaceholder('例如 P4-01').fill(machineCode)
     await page.getByPlaceholder('输入或粘贴物流单号').fill('SF1000000001')
     await page.getByRole('button', { name: '提交退回信息' }).click()
@@ -151,11 +164,68 @@ test('failed single submission shows the server verification error', async ({ pa
   await mockReturnApi(page, { submitFailure: true })
   await page.goto('/return')
   await page.getByPlaceholder('多笔订单时填写完整订单号').fill('ORDER-MISSING')
+  await page.getByPlaceholder('请输入 11 位手机号').fill('13800138000')
   await page.getByPlaceholder('例如 P4-01').fill('P4-01')
   await page.getByPlaceholder('输入或粘贴物流单号').fill('SF1000000001')
   await page.getByRole('button', { name: '提交退回信息' }).click()
 
   await expect(page.getByText('订单信息或机器编码不匹配')).toBeVisible()
+})
+
+test('errand return requires a platform name and sends no waybill', async ({ page }) => {
+  await mockReturnApi(page, {
+    onSubmit: (request) => {
+      expect(request.postDataJSON()).toMatchObject({
+        senderMobile: '13800138000',
+        machineCode: 'P4-01',
+        waybillNo: '',
+        errandPlatformName: '闪送',
+        returnMethod: 'ERRAND'
+      })
+      return acceptedReceipt()
+    }
+  })
+  await page.goto('/return')
+  await page.getByPlaceholder('请输入 11 位手机号').fill('13800138000')
+  await page.getByPlaceholder('例如 P4-01').fill('P4-01')
+  await page.locator('input[name="returnMethod"][value="ERRAND"]').check()
+  await page.getByRole('button', { name: '提交退回信息' }).click()
+  await expect(page.getByText('请填写跑腿平台名称')).toBeVisible()
+  await page.getByPlaceholder('例如：闪送、达达、UU 跑腿').fill('闪送')
+  await page.getByRole('button', { name: '提交退回信息' }).click()
+  await expect(page.getByRole('heading', { name: '退回信息已登记' })).toBeVisible()
+})
+
+test('self delivery shows the fixed instruction and needs no logistics input', async ({ page }) => {
+  await mockReturnApi(page, {
+    onSubmit: (request) => {
+      expect(request.postDataJSON()).toMatchObject({
+        senderMobile: '13800138000',
+        machineCode: 'P4-01',
+        waybillNo: '',
+        errandPlatformName: '',
+        returnMethod: 'SELF_DELIVERY'
+      })
+      return acceptedReceipt()
+    }
+  })
+  await page.goto('/return')
+  await page.getByPlaceholder('请输入 11 位手机号').fill('13800138000')
+  await page.getByPlaceholder('例如 P4-01').fill('P4-01')
+  await page.locator('input[name="returnMethod"][value="SELF_DELIVERY"]').check()
+  await expect(page.getByText('本人送回！设备送到后由仓库当面核验，无需填写物流单号。'))
+    .toBeVisible()
+  await expect(page.getByPlaceholder('输入或粘贴物流单号')).toHaveCount(0)
+  await page.getByRole('button', { name: '提交退回信息' }).click()
+  await expect(page.getByRole('heading', { name: '退回信息已登记' })).toBeVisible()
+})
+
+test('uses the provided Jiezuda logo asset', async ({ page }) => {
+  await mockReturnApi(page, {})
+  await page.goto('/return')
+  const logo = page.getByRole('img', { name: '捷租达' })
+  await expect(logo).toBeVisible()
+  await expect(logo).toHaveAttribute('src', '/images/jiezuda-logo.png')
 })
 
 test('theme and locale preferences remain responsive on mobile', async ({ page }) => {
@@ -241,6 +311,7 @@ async function mockReturnApi(page: Page, options: MockOptions) {
 }
 
 async function fillRequiredFields(page: Page) {
+  await page.getByPlaceholder('请输入 11 位手机号').fill('13800138000')
   await page.getByPlaceholder('例如 P4-01').fill('p4 － 01')
   await page.getByPlaceholder('输入或粘贴物流单号').fill('SF1000000001')
 }

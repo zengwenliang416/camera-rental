@@ -101,6 +101,21 @@ test('identifier summary renders explicit missing markers instead of hiding fiel
   assert.match(html, /rental\.configuration\.xianyuItemId/)
 })
 
+test('handling policies use localized product copy instead of raw enum values', async () => {
+  const [page, drawer, table, zhLocale] = await Promise.all([
+    read('src/views/rental/configuration/index.vue'),
+    read('src/views/rental/configuration/components/ChannelProductRuleDrawer.vue'),
+    read('src/views/rental/configuration/components/ChannelProductRuleTable.vue'),
+    read('src/locales/zh-CN.ts')
+  ])
+
+  assert.doesNotMatch(page, /label="CREATE_RENTAL"|label="CONFIG_SKIPPED"/)
+  assert.doesNotMatch(drawer, />CREATE_RENTAL<|>CONFIG_SKIPPED</)
+  assert.doesNotMatch(table, /\{\{\s*row\.handlingPolicy\s*\}\}/)
+  assert.match(zhLocale, /handlingPolicyCreateRental:\s*'创建租赁订单'/)
+  assert.match(zhLocale, /handlingPolicyConfigSkipped:\s*'跳过解析与建单'/)
+})
+
 test('narrow SKU structure renders both exact identifiers and mapping state', async () => {
   const html = await renderComponent(
     '/src/views/rental/configuration/components/ChannelSkuMappingTable.vue',

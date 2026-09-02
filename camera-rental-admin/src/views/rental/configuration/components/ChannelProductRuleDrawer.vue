@@ -52,8 +52,12 @@
         </header>
         <el-form-item :label="t('rental.configuration.handlingPolicy')" prop="handlingPolicy">
           <el-radio-group v-model="draft.handlingPolicy">
-            <el-radio-button value="CREATE_RENTAL">CREATE_RENTAL</el-radio-button>
-            <el-radio-button value="CONFIG_SKIPPED">CONFIG_SKIPPED</el-radio-button>
+            <el-radio-button value="CREATE_RENTAL">
+              {{ t('rental.configuration.handlingPolicyCreateRental') }}
+            </el-radio-button>
+            <el-radio-button value="CONFIG_SKIPPED">
+              {{ t('rental.configuration.handlingPolicyConfigSkipped') }}
+            </el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-alert

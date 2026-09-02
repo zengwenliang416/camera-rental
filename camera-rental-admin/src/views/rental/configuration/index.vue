@@ -107,8 +107,14 @@
           </el-form-item>
           <el-form-item :label="t('rental.configuration.handlingPolicy')">
             <el-select v-model="ruleQuery.handlingPolicy" class="!w-170px" clearable>
-              <el-option label="CREATE_RENTAL" value="CREATE_RENTAL" />
-              <el-option label="CONFIG_SKIPPED" value="CONFIG_SKIPPED" />
+              <el-option
+                :label="t('rental.configuration.handlingPolicyCreateRental')"
+                value="CREATE_RENTAL"
+              />
+              <el-option
+                :label="t('rental.configuration.handlingPolicyConfigSkipped')"
+                value="CONFIG_SKIPPED"
+              />
             </el-select>
           </el-form-item>
           <el-form-item :label="t('rental.configuration.status')">

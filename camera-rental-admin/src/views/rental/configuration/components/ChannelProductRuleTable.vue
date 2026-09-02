@@ -72,7 +72,11 @@
               :type="row.handlingPolicy === 'CREATE_RENTAL' ? 'success' : 'info'"
               effect="plain"
             >
-              {{ row.handlingPolicy }}
+              {{
+                row.handlingPolicy === 'CREATE_RENTAL'
+                  ? t('rental.configuration.handlingPolicyCreateRental')
+                  : t('rental.configuration.handlingPolicyConfigSkipped')
+              }}
             </el-tag>
           </template>
         </el-table-column>

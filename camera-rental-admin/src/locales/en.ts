@@ -552,6 +552,8 @@ export default {
       keyword: 'Product keyword',
       keywordPlaceholder: 'Title or Xianyu item ID',
       handlingPolicy: 'Handling policy',
+      handlingPolicyCreateRental: 'Create rental order',
+      handlingPolicyConfigSkipped: 'Skip parsing and order creation',
       modelMode: 'Model resolution',
       mappingResult: 'Model mapping',
       mappingStatus: 'Mapping status',

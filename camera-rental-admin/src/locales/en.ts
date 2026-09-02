@@ -922,6 +922,7 @@ export default {
       expressNameManual: 'Express name',
       expressNameManualPlaceholder: 'Fill manually when OCR does not match',
       expressRequired: 'Select or fill both express code and express name',
+      expressRecognized: 'Express carrier recognized: {name}',
       deviceQrHint:
         'Upload the device QR image, or scan with a scanner/phone and paste the payload here. The permanent device QR resolver from Device Management returns the device number and serial number.',
       deviceQrUploadHint: 'Drop a device QR image here, or click to select',
@@ -943,6 +944,10 @@ export default {
         'The QR payload did not match a device. Filled device number from the label file name: {deviceNo}',
       deviceNoFilled: 'Device number filled: {deviceNo}',
       deviceScanPlaceholder: 'Scan or enter the device number / serial number',
+      deviceCascadeLabel: 'Pick a device by category and model',
+      deviceCascadeCategoryPlaceholder: 'Category',
+      deviceCascadeModelPlaceholder: 'Model',
+      deviceCascadeDevicePlaceholder: 'Select a device',
       deviceScanHint:
         'Device shippability, tenant, status, and schedule are finally checked by the backend. The frontend does not update inventory directly.',
       deviceNoRequired: 'Scan or enter a device number',

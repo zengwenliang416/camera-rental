@@ -178,6 +178,11 @@ export interface XianyuExpressCompanyVO {
   hot: boolean
 }
 
+export interface XianyuExpressCandidateVO {
+  code: string
+  name: string
+}
+
 export interface XianyuAlertVO {
   id: number
   shopId?: number
@@ -409,6 +414,13 @@ export const syncXianyuProductPage = (data: XianyuProductSyncReqVO) => {
 
 export const getXianyuExpressCompanyList = () => {
   return request.get<XianyuExpressCompanyVO[]>({ url: '/rental/xianyu/express-company/list' })
+}
+
+export const recognizeXianyuExpress = (waybillNo: string) => {
+  return request.get<XianyuExpressCandidateVO[]>({
+    url: '/rental/xianyu/express-company/recognize',
+    params: { waybillNo }
+  })
 }
 
 export const getXianyuAlertPage = (

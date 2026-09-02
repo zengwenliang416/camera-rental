@@ -38,6 +38,7 @@
         v-model.trim="form.waybillNo"
         clearable
         :placeholder="t('rental.xianyu.waybillNoPlaceholder')"
+        @blur="emit('waybillRecognize', form.waybillNo)"
       />
     </el-form-item>
     <el-form-item :label="t('rental.xianyu.expressName')">
@@ -90,6 +91,7 @@ const emit = defineEmits<{
   imageExceed: []
   ocr: []
   expressChange: [code?: string]
+  waybillRecognize: [waybillNo: string]
 }>()
 const { t } = useI18n()
 

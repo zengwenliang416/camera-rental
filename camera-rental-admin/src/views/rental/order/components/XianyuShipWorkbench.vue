@@ -60,6 +60,7 @@
         @image-exceed="handleImageExceed"
         @ocr="handleShipmentOcr"
         @express-change="handleShipmentExpressChange"
+        @waybill-recognize="handleWaybillRecognize"
       />
       <XianyuDeviceStep
         v-else-if="currentStep === 1"
@@ -75,6 +76,7 @@
         @image-exceed="handleImageExceed"
         @decode="handleDeviceQrImageDecode"
         @resolve="handleResolveDeviceQrPayload"
+        @device-select="handleDeviceCascadeSelect"
       />
       <XianyuShipConfirmStep
         v-else
@@ -128,6 +130,7 @@ import { hasPermission } from '@/directives/permission/hasPermi'
 import {
   getXianyuConfig,
   getXianyuExpressCompanyList,
+  recognizeXianyuExpress,
   recognizeXianyuShipmentImage,
   shipXianyuOrder,
   type XianyuConfigVO,
@@ -352,6 +355,12 @@ const handleResolveDeviceQrPayload = async () => {
   }
 }
 
+const handleDeviceCascadeSelect = (device: RentalDeviceVO) => {
+  selectedDevice.value = device
+  shipmentForm.deviceNo = device.deviceNo
+  message.success(t('rental.xianyu.deviceNoFilled', { deviceNo: device.deviceNo }))
+}
+
 const resolveDeviceQrPayload = async (payload: string, fallbackDeviceNo?: string) => {
   if (payload.startsWith('CRD1|')) {
     try {
@@ -405,6 +414,48 @@ const applyShipmentExpress = (expressCode?: string, expressName?: string) => {
 const handleShipmentExpressChange = (code?: string) => {
   const matched = expressList.value.find((item) => item.code === code)
   shipmentForm.expressName = matched?.expressName || ''
+  autoRecognizedExpressCode.value = ''
+}
+
+// 自动识别出的快递编码；用户手工改动后不再覆盖
+const autoRecognizedExpressCode = ref('')
+const waybillRecognizing = ref(false)
+
+const handleWaybillRecognize = async (waybillNo: string) => {
+  const trimmed = waybillNo.trim()
+  // 识别是辅助能力：单号太短、识别中或用户已手工选择过快递时跳过
+  if (!/^\w{10,}$/.test(trimmed) || waybillRecognizing.value) {
+    return
+  }
+  if (
+    shipmentForm.expressCode.trim() &&
+    shipmentForm.expressCode.trim() !== autoRecognizedExpressCode.value
+  ) {
+    return
+  }
+  waybillRecognizing.value = true
+  try {
+    const candidates = await recognizeXianyuExpress(trimmed)
+    for (const candidate of candidates) {
+      const matched = expressList.value.find(
+        (item) =>
+          item.code === candidate.code ||
+          item.expressName === candidate.name ||
+          item.expressAlias === candidate.name
+      )
+      if (matched) {
+        shipmentForm.expressCode = matched.code
+        shipmentForm.expressName = matched.expressName
+        autoRecognizedExpressCode.value = matched.code
+        message.success(t('rental.xianyu.expressRecognized', { name: matched.expressName }))
+        return
+      }
+    }
+  } catch {
+    // 识别失败静默处理，由运营手工选择快递公司
+  } finally {
+    waybillRecognizing.value = false
+  }
 }
 
 const handleNextStep = () => {
@@ -522,6 +573,7 @@ const resetShipmentWorkbench = () => {
   shipmentForm.deviceNo = ''
   shipmentForm.pageNo = 1
   shipmentForm.pageSize = 5
+  autoRecognizedExpressCode.value = ''
   applyInitialOrder()
 }
 

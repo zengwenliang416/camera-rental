@@ -30,8 +30,8 @@ class RentalConfigurationBackendMigrationTest {
                 "sql/mysql/seeds/20260831_rental_configuration_skipped_items.sql"));
 
         assertThat(seed)
-                .contains("TRIM(`shop_name`) = '小疆'")
-                .contains("TRIM(`shop_name`) = '发发'")
+                .contains("TRIM(`shop_name`) = '小疆同学'")
+                .contains("TRIM(`shop_name`) = '发发学长'")
                 .contains("`authorization_status` = 'VALID'")
                 .contains("SIGNAL SQLSTATE '45000'")
                 .contains("'CONFIG_SKIPPED'")

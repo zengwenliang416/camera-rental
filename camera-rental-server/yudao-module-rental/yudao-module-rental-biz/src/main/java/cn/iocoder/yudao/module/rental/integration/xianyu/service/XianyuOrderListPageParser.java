@@ -34,7 +34,8 @@ public class XianyuOrderListPageParser {
         List<XianyuOrderListEntry> entries = new ArrayList<>(list.size());
         for (JsonNode item : list) {
             entries.add(new XianyuOrderListEntry(requiredText(item, "order_no"),
-                    epochSecondToShanghaiTime(requiredLong(item, "update_time"))));
+                    epochSecondToShanghaiTime(requiredLong(item, "update_time")),
+                    item.path("seller_remark").asText(null)));
         }
         return new XianyuOrderListPage(List.copyOf(entries), count, pageNo, pageSize);
     }

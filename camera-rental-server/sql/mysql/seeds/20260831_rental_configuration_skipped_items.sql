@@ -7,10 +7,10 @@
 --   SET @rental_configuration_seed_confirmation =
 --     'SEED_RENTAL_CONFIGURATION_SKIPPED_ITEMS';
 --
--- The seed resolves exactly one active VALID shop named "小疆" and exactly one
--- active VALID shop named "发发" inside that tenant. Any validation or insert
--- error rolls back the entire transaction. Existing rule conflicts are not
--- overwritten.
+-- The seed resolves exactly one active VALID shop named "小疆同学" and exactly
+-- one active VALID shop named "发发学长" inside that tenant. Any validation or
+-- insert error rolls back the entire transaction. Existing rule conflicts are
+-- not overwritten.
 SET NAMES utf8mb4;
 
 SET @rental_configuration_seed_failed = 0;
@@ -63,7 +63,7 @@ BEGIN
     INTO xiaoj_shop_count, xiaoj_shop_id
   FROM `xianyu_shop`
   WHERE `tenant_id` = target_tenant_id
-    AND TRIM(`shop_name`) = '小疆'
+    AND TRIM(`shop_name`) = '小疆同学'
     AND `authorization_status` = 'VALID'
     AND (
       `authorization_expires_at` IS NULL
@@ -75,7 +75,7 @@ BEGIN
     INTO fafa_shop_count, fafa_shop_id
   FROM `xianyu_shop`
   WHERE `tenant_id` = target_tenant_id
-    AND TRIM(`shop_name`) = '发发'
+    AND TRIM(`shop_name`) = '发发学长'
     AND `authorization_status` = 'VALID'
     AND (
       `authorization_expires_at` IS NULL
@@ -85,12 +85,12 @@ BEGIN
 
   IF xiaoj_shop_count <> 1 THEN
     SIGNAL SQLSTATE '45000'
-      SET MESSAGE_TEXT = 'Expected exactly one active VALID 小疆 shop for tenant';
+      SET MESSAGE_TEXT = 'Expected exactly one active VALID 小疆同学 shop for tenant';
   END IF;
 
   IF fafa_shop_count <> 1 THEN
     SIGNAL SQLSTATE '45000'
-      SET MESSAGE_TEXT = 'Expected exactly one active VALID 发发 shop for tenant';
+      SET MESSAGE_TEXT = 'Expected exactly one active VALID 发发学长 shop for tenant';
   END IF;
 
   START TRANSACTION;

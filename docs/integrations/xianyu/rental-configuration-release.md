@@ -85,7 +85,7 @@ GROUP BY status;
 才可单独申请执行：
 
 - 已确认目标租户。
-- “小疆”和“发发”分别精确匹配唯一、有效、未过期的店铺记录。
+- “小疆同学”和“发发学长”分别精确匹配唯一、有效、未过期的店铺记录。
 - 已备份 `rental_channel_product_rule`。
 - 当前规则不存在冲突。
 - 已设置固定确认串 `SEED_RENTAL_CONFIGURATION_SKIPPED_ITEMS`。

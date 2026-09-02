@@ -223,6 +223,18 @@ public class XianyuOrderSyncService {
                 && !existing.getSourceUpdatedAt().isBefore(entry.sourceUpdatedAt());
     }
 
+    /**
+     * 闲管家修改卖家备注不会刷新订单 update_time 也不触发推送，但列表条目带 seller_remark，
+     * 因此备注不一致时强制重拉详情。列表缺该字段时不做判断。
+     */
+    private static boolean remarkChanged(XianyuOrderDO existing, XianyuOrderListEntry entry) {
+        if (existing == null || entry.sellerRemark() == null) {
+            return false;
+        }
+        String localRemark = existing.getSellerRemark() == null ? "" : existing.getSellerRemark();
+        return !localRemark.equals(entry.sellerRemark());
+    }
+
     private DetailRefreshCounts refreshDetails(Long shopId, XianyuOrderListPage page) {
         int succeeded = 0;
         int deduplicated = 0;
@@ -230,7 +242,7 @@ public class XianyuOrderSyncService {
         try {
             for (XianyuOrderListEntry entry : page.entries()) {
                 XianyuOrderDO existing = existingOrders.get(entry.externalOrderId());
-                if (isDetailCurrent(existing, entry)) {
+                if (isDetailCurrent(existing, entry) && !remarkChanged(existing, entry)) {
                     if (needsReconciliation(existing)) {
                         reconciliationService.reconcile(existing.getId());
                     }

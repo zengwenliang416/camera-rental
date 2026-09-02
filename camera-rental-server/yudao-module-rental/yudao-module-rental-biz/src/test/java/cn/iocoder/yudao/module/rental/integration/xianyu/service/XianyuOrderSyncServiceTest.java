@@ -235,6 +235,51 @@ class XianyuOrderSyncServiceTest {
     }
 
     @Test
+    void shouldRefreshDetailWhenSellerRemarkChangesWithoutUpdateTimeChange() throws Exception {
+        when(readClient.execute(eq(XianyuReadEndpoint.ORDERS), any())).thenReturn(response("""
+                {"code":0,"data":{"count":1,"page_no":1,"page_size":50,"list":[
+                {"order_no":"order-1","update_time":1784710800,"seller_remark":"发货9.02 收货9.03 发回9.05"}]}}"""));
+        when(readClient.execute(eq(XianyuReadEndpoint.ORDER_DETAIL), any()))
+                .thenReturn(response("{\"code\":0,\"data\":{\"order_no\":\"order-1\"}}"));
+        when(persistenceService.persistOrderDetail(eq(7L), any()))
+                .thenReturn(order("order-1", LocalDateTime.of(2026, 7, 22, 17, 0)));
+        XianyuOrderDO current = order("order-1", LocalDateTime.of(2026, 7, 22, 17, 0));
+        current.setRawPayloadId(31L);
+        current.setSellerRemark("发货9.02");
+        when(orderMapper.selectRefreshStateList(eq(7L), eq(List.of("order-1"))))
+                .thenReturn(List.of(current));
+
+        XianyuOrderPageSyncResult result = service.syncPage(7L, 88L, window);
+
+        assertEquals(1, result.receivedCount());
+        assertEquals(1, result.succeededCount());
+        verify(readClient).execute(eq(XianyuReadEndpoint.ORDER_DETAIL), any());
+        verify(persistenceService).persistOrderDetail(eq(7L), any());
+        ArgumentCaptor<XianyuSyncRunDO> runCaptor = ArgumentCaptor.forClass(XianyuSyncRunDO.class);
+        verify(syncRunMapper).updateById(runCaptor.capture());
+        assertEquals(0, runCaptor.getValue().getDeduplicatedCount());
+    }
+
+    @Test
+    void shouldSkipDetailRefreshWhenSellerRemarkMatches() throws Exception {
+        when(readClient.execute(eq(XianyuReadEndpoint.ORDERS), any())).thenReturn(response("""
+                {"code":0,"data":{"count":1,"page_no":1,"page_size":50,"list":[
+                {"order_no":"order-1","update_time":1784710800,"seller_remark":"发货9.02"}]}}"""));
+        XianyuOrderDO current = order("order-1", LocalDateTime.of(2026, 7, 22, 17, 0));
+        current.setRawPayloadId(31L);
+        current.setSellerRemark("发货9.02");
+        when(orderMapper.selectRefreshStateList(eq(7L), eq(List.of("order-1"))))
+                .thenReturn(List.of(current));
+
+        XianyuOrderPageSyncResult result = service.syncPage(7L, 88L, window);
+
+        assertEquals(1, result.receivedCount());
+        assertEquals(1, result.succeededCount());
+        verify(readClient, never()).execute(eq(XianyuReadEndpoint.ORDER_DETAIL), any());
+        verify(persistenceService, never()).persistOrderDetail(any(), any());
+    }
+
+    @Test
     void shouldRejectWindowOutsideSixMonthRetentionBeforeRemoteCall() {
         XianyuOrderSyncWindow expired = new XianyuOrderSyncWindow(
                 LocalDateTime.of(2025, 12, 1, 0, 0),

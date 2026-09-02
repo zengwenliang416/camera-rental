@@ -3,6 +3,8 @@ package cn.iocoder.yudao.module.rental.service.admin;
 import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
 import cn.iocoder.yudao.module.rental.dal.dataobject.xianyu.XianyuRawPayloadDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.xianyu.XianyuRawPayloadMapper;
+import cn.iocoder.yudao.module.rental.integration.logistics.kuaidi100.Kuaidi100AutoNumberCandidate;
+import cn.iocoder.yudao.module.rental.integration.logistics.kuaidi100.Kuaidi100AutoNumberClient;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadClient;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadEndpoint;
 import cn.iocoder.yudao.module.rental.integration.xianyu.client.XianyuReadResponse;
@@ -14,9 +16,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.io.IOException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,6 +34,7 @@ class XianyuExpressCompanyAdminServiceTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private XianyuReadClient readClient;
     private XianyuRawPayloadMapper rawPayloadMapper;
+    private Kuaidi100AutoNumberClient autoNumberClient;
     private XianyuExpressCompanyAdminService service;
 
     @BeforeEach
@@ -37,8 +42,9 @@ class XianyuExpressCompanyAdminServiceTest {
         TenantContextHolder.setTenantId(9L);
         readClient = mock(XianyuReadClient.class);
         rawPayloadMapper = mock(XianyuRawPayloadMapper.class);
+        autoNumberClient = mock(Kuaidi100AutoNumberClient.class);
         service = new XianyuExpressCompanyAdminService(readClient, rawPayloadMapper, new XianyuPayloadHasher(),
-                Clock.fixed(Instant.parse("2026-07-25T04:00:00Z"), ZoneOffset.UTC));
+                autoNumberClient, Clock.fixed(Instant.parse("2026-07-25T04:00:00Z"), ZoneOffset.UTC));
     }
 
     @AfterEach
@@ -69,6 +75,25 @@ class XianyuExpressCompanyAdminServiceTest {
         assertEquals("RESTRICTED_UNREDACTED_V1", payloadCaptor.getValue().getRedactionVersion());
         assertEquals(raw, payloadCaptor.getValue().getPayload());
         assertEquals(64, payloadCaptor.getValue().getPayloadHash().length());
+    }
+
+    @Test
+    void shouldMapRecognizedCandidates() throws Exception {
+        when(autoNumberClient.recognize("SF5119694772350")).thenReturn(List.of(
+                new Kuaidi100AutoNumberCandidate("shunfeng", "顺丰速运")));
+
+        var candidates = service.recognizeWaybill(" SF5119694772350 ");
+
+        assertEquals(1, candidates.size());
+        assertEquals("shunfeng", candidates.get(0).getCode());
+        assertEquals("顺丰速运", candidates.get(0).getName());
+    }
+
+    @Test
+    void shouldReturnEmptyCandidatesWhenRecognitionFails() throws Exception {
+        when(autoNumberClient.recognize(any())).thenThrow(new IOException("timeout"));
+
+        assertEquals(List.of(), service.recognizeWaybill("SF5119694772350"));
     }
 
     private XianyuReadResponse response(String raw) throws Exception {

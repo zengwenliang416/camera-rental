@@ -105,14 +105,15 @@ integration/xianyu/
   关系可以补充闲鱼 `xy_sku_id`。
 - 多型号 SKU 缺失、未同步、未配置或映射停用时保持 `WAITING_MODEL`，不得回退到
   商品级默认型号，也不得根据标题、`sku_text` 或商家编码猜测。
-- 发货、设备分配和排期只能消费已经达到 `READY` 的权威准备状态。唯一例外是订单
-  已创建、备注与占用日期均完整，且准备状态仅因 `PRODUCT_RULE_NOT_CONFIGURED`
-  缺少商品型号规则时：具有 `rental:xianyu:ship` 和
-  `rental:configuration:update` 权限的操作员可在确认页显式确认，将当前
-  `shop_id + xianyu_item_id` 创建为扫描设备型号对应的
-  `CREATE_RENTAL + SINGLE` 规则。后端必须在同一发货事务中同步重评该订单，并在
-  重新达到 `READY` 且型号一致后才允许继续。已有规则、停用规则、`CONFIG_SKIPPED`、
-  `MULTI`、SKU 缺失、型号冲突或其他准备失败不得由发货流程覆盖。
+- 普通发货、设备分配和排期只能消费已经达到 `READY` 的权威准备状态。两条受控例外
+  必须由发货确认页显式触发：一是订单仅因 `PRODUCT_RULE_NOT_CONFIGURED` 缺少商品
+  型号规则时，具有 `rental:xianyu:ship` 和 `rental:configuration:update` 权限的
+  操作员可确认创建当前 `shop_id + xianyu_item_id` 对应扫描设备型号的
+  `CREATE_RENTAL + SINGLE` 规则，并在同一发货事务中重评至 `READY`；二是型号已确定、
+  但准备状态为 `WAITING_REMARK` 时，具有发货权限的操作员可确认先发货、后补租期，
+  创建 `DISPATCHED_PENDING_PLAN` 无排期分配并记录真实出库时间。后续备注补齐后由
+  重评事务创建排期并恢复 `DISPATCHED`。已有规则、停用规则、`CONFIG_SKIPPED`、
+  `MULTI`、SKU 缺失、型号冲突、订单关闭/退款或其他准备失败不得由发货流程覆盖。
 
 配置或备注变化只能修改计划层。已分配、已出库、已回仓、已检测、已换机或已结算
 事实由各自业务流程维护；出现不一致时保留原履约事实并进入人工复核。

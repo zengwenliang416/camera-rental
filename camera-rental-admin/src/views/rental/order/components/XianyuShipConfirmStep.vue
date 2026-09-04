@@ -27,6 +27,13 @@
     </el-descriptions-item>
   </el-descriptions>
   <el-alert
+    v-if="requiresPendingPlanConfirmation"
+    class="mt-12px"
+    type="warning"
+    :closable="false"
+    :title="t('rental.xianyu.shipPendingPlanWarning')"
+  />
+  <el-alert
     v-if="requiresProductRuleBinding"
     class="mt-12px"
     :type="canBindProductRule ? 'warning' : 'error'"
@@ -76,6 +83,7 @@ defineProps<{
   result?: XianyuOrderShipRespVO
   requiresProductRuleBinding?: boolean
   canBindProductRule?: boolean
+  requiresPendingPlanConfirmation?: boolean
 }>()
 
 const { t } = useI18n()

@@ -911,11 +911,16 @@ export default {
       shipConfirmDevice: '绑定设备',
       shipConfirmWaybill: '发货运单',
       confirmShip: '确认绑定并发货',
-      confirmBindProductRuleAndShip: '绑定商品型号并发货',
+      confirmBindProductRuleAndShip: '绑定商品型号并发货（必要时待补租期）',
+      confirmPendingPlanAndShip: '确认先发货，租期待补',
       shipConfirmMessage:
         '确认将设备 {deviceNo} 绑定到订单 {orderNo}，并使用 {expressName} {waybillNo} 调用闲管家发货？',
       shipBindProductRuleConfirmMessage:
-        '该商品尚未配置设备型号。确认将闲鱼商品 {itemId} 永久绑定到型号 {modelCode}，再将设备 {deviceNo} 分配给订单 {orderNo}，并使用 {expressName} {waybillNo} 发货？',
+        '该商品尚未配置设备型号。确认将闲鱼商品 {itemId} 永久绑定到型号 {modelCode}，再将设备 {deviceNo} 分配给订单 {orderNo}，并使用 {expressName} {waybillNo} 发货？如果绑定后仍缺少租期或物流日期，本次确认也会允许先发货、后补租期。',
+      shipPendingPlanConfirmMessage:
+        '订单 {orderNo} 的租期或物流日期尚未完整。确认先将设备 {deviceNo} 使用 {expressName} {waybillNo} 发货，后续再补齐租期计划？',
+      shipPendingPlanWarning:
+        '该订单已识别为租赁订单且商品型号可用，但租期或物流日期尚未完整。确认后会记录真实出库事实，不会虚构租期；补齐备注后系统再创建排期。',
       shipProductRuleBindWarning:
         '该订单仅缺商品型号规则。确认后会将闲鱼商品 {itemId} 创建为单型号规则并绑定到 {modelCode}，后续该商品订单都会使用此型号。',
       shipProductRuleBindPermissionRequired:
@@ -923,6 +928,8 @@ export default {
       shipProductRuleDeviceResolveFailed:
         '无法确认扫描设备的真实型号，请重新扫描设备永久二维码或从设备列表中选择。',
       shipSuccess: '发货成功：记录 #{shipmentId}，设备 {deviceNo}，运单 {waybillNo}',
+      shipPendingPlanSuccess:
+        '已发货，租期待补：记录 #{shipmentId}，设备 {deviceNo}，运单 {waybillNo}',
       shipSubmitBackendHint:
         '点击确认后，后端会重新校验设备、订单、租户、排期和写操作开关；前端不会直接改库存。',
       syncShops: '同步授权店铺',
@@ -1318,7 +1325,8 @@ export default {
         CUSTOMER_POSSESSION: '客户持有',
         RETURN_TRANSIT: '返仓运输',
         RETURN_INSPECTION: '回仓检测',
-        LOCKED: '锁定'
+        LOCKED: '锁定',
+        PENDING_PLAN: '待补租期占用'
       },
       logistics: {
         NONE: '无物流',

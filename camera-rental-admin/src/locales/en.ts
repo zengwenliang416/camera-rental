@@ -952,11 +952,16 @@ export default {
       shipConfirmDevice: 'Device',
       shipConfirmWaybill: 'Waybill',
       confirmShip: 'Confirm bind and ship',
-      confirmBindProductRuleAndShip: 'Bind product model and ship',
+      confirmBindProductRuleAndShip: 'Bind product model and ship (plan may follow)',
+      confirmPendingPlanAndShip: 'Ship now, complete rental dates later',
       shipConfirmMessage:
         'Bind device {deviceNo} to order {orderNo} and call XianGuanJia shipping with {expressName} {waybillNo}?',
       shipBindProductRuleConfirmMessage:
-        'This product has no device model rule. Permanently bind Xianyu item {itemId} to model {modelCode}, assign device {deviceNo} to order {orderNo}, and ship with {expressName} {waybillNo}?',
+        'This product has no device model rule. Permanently bind Xianyu item {itemId} to model {modelCode}, assign device {deviceNo} to order {orderNo}, and ship with {expressName} {waybillNo}? If the binding still leaves rental or logistics dates incomplete, this confirmation also authorizes shipping first and completing the rental plan later.',
+      shipPendingPlanConfirmMessage:
+        'Order {orderNo} is missing a complete rental or logistics plan. Ship device {deviceNo} with {expressName} {waybillNo} now and complete the rental plan later?',
+      shipPendingPlanWarning:
+        'This rental order has a usable product model, but its rental or logistics dates are incomplete. Confirmation records the real dispatch fact without inventing dates; reconciliation will create the schedule after the remark is completed.',
       shipProductRuleBindWarning:
         'This order only lacks a product model rule. Confirmation creates a single-model rule for Xianyu item {itemId} bound to {modelCode}; future orders for this item will use that model.',
       shipProductRuleBindPermissionRequired:
@@ -965,6 +970,8 @@ export default {
         'The scanned device model could not be verified. Scan the permanent device QR code again or select the device from the list.',
       shipSuccess:
         'Shipment succeeded: record #{shipmentId}, device {deviceNo}, waybill {waybillNo}',
+      shipPendingPlanSuccess:
+        'Shipped; rental plan pending: record #{shipmentId}, device {deviceNo}, waybill {waybillNo}',
       shipSubmitBackendHint:
         'After confirmation, the backend rechecks the device, order, tenant, schedule, and write switch. The frontend does not update inventory directly.',
       syncShops: 'Sync authorized shops',
@@ -1375,7 +1382,8 @@ export default {
         CUSTOMER_POSSESSION: 'Customer possession',
         RETURN_TRANSIT: 'Return transit',
         RETURN_INSPECTION: 'Return inspection',
-        LOCKED: 'Locked'
+        LOCKED: 'Locked',
+        PENDING_PLAN: 'Pending rental plan'
       },
       logistics: {
         NONE: 'No logistics',

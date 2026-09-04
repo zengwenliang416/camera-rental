@@ -270,6 +270,7 @@ export interface XianyuOrderShipReqVO {
   source: 'ADMIN' | 'STAFF'
   ocrConfirmed?: boolean
   bindProductRuleIfMissing?: boolean
+  allowPendingPlan?: boolean
 }
 
 export interface XianyuOrderDispatchBackfillReqVO {

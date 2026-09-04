@@ -10,6 +10,7 @@ export type ScheduleSegmentKind =
   | 'RETURN_TRANSIT'
   | 'RETURN_INSPECTION'
   | 'LOCKED'
+  | 'PENDING_PLAN'
 
 export interface RentalScheduleWindowVO {
   fromDate: string

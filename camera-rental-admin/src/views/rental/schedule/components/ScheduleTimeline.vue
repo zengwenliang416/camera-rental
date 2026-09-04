@@ -269,6 +269,7 @@ const segmentClass = (segment: RentalScheduleSegmentVO) => {
     'is-inspection': kind === 'RETURN_INSPECTION',
     'is-locked': kind === 'LOCKED',
     'is-customer': kind === 'CUSTOMER_POSSESSION',
+    'is-pending-plan': kind === 'PENDING_PLAN',
     'is-continued-left': getDisplaySegment(segment).continuesLeft,
     'is-continued-right': getDisplaySegment(segment).continuesRight
   }
@@ -581,6 +582,13 @@ const segmentTitle = (segment: RentalScheduleSegmentVO) => {
   background: var(--el-color-success-light-8);
   border-color: var(--el-color-success-light-5);
   color: var(--el-color-success-dark-2);
+}
+
+.schedule-segment.is-pending-plan {
+  background: var(--el-color-danger-light-9);
+  border-color: var(--el-color-danger-light-5);
+  color: var(--el-color-danger-dark-2);
+  border-style: dashed;
 }
 
 .schedule-segment.is-continued-left {

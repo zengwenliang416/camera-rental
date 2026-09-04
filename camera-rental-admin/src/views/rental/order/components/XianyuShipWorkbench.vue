@@ -83,6 +83,7 @@
         :result="shipmentResult"
         :requires-product-rule-binding="requiresProductRuleBinding"
         :can-bind-product-rule="canBindProductRule"
+        :requires-pending-plan-confirmation="requiresPendingPlanConfirmation"
       />
 
       <div class="mt-16px flex flex-wrap justify-between gap-8px">
@@ -111,7 +112,9 @@
             {{
               requiresProductRuleBinding
                 ? t('rental.xianyu.confirmBindProductRuleAndShip')
-                : t('rental.xianyu.confirmShip')
+                : requiresPendingPlanConfirmation
+                  ? t('rental.xianyu.confirmPendingPlanAndShip')
+                  : t('rental.xianyu.confirmShip')
             }}
           </el-button>
         </div>
@@ -190,6 +193,9 @@ const requiresProductRuleBinding = computed(
   () =>
     selectedPendingShipOrder.value?.preparationStatus === 'WAITING_MODEL' &&
     selectedPendingShipOrder.value?.preparationReasonCode === 'PRODUCT_RULE_NOT_CONFIGURED'
+)
+const requiresPendingPlanConfirmation = computed(
+  () => selectedPendingShipOrder.value?.preparationStatus === 'WAITING_REMARK'
 )
 
 const shipmentForm = reactive<XianyuShipmentForm>({
@@ -545,7 +551,14 @@ const handleShipXianyuOrder = async () => {
             expressName,
             waybillNo
           })
-        : t('rental.xianyu.shipConfirmMessage', {
+        : requiresPendingPlanConfirmation.value
+          ? t('rental.xianyu.shipPendingPlanConfirmMessage', {
+              orderNo: selectedOrder.externalOrderId,
+              deviceNo,
+              expressName,
+              waybillNo
+            })
+          : t('rental.xianyu.shipConfirmMessage', {
             orderNo: selectedOrder.externalOrderId,
             deviceNo,
             expressName,
@@ -553,7 +566,9 @@ const handleShipXianyuOrder = async () => {
           }),
       requiresProductRuleBinding.value
         ? t('rental.xianyu.confirmBindProductRuleAndShip')
-        : t('rental.xianyu.confirmShip')
+        : requiresPendingPlanConfirmation.value
+          ? t('rental.xianyu.confirmPendingPlanAndShip')
+          : t('rental.xianyu.confirmShip')
     )
   } catch {
     return
@@ -569,15 +584,23 @@ const handleShipXianyuOrder = async () => {
       waybillNo,
       source: 'ADMIN',
       ocrConfirmed: Boolean(shipmentOcr.value?.waybillNo),
-      bindProductRuleIfMissing: requiresProductRuleBinding.value
+      bindProductRuleIfMissing: requiresProductRuleBinding.value,
+      // The product-rule confirmation explicitly covers a possible pending-plan outcome.
+      allowPendingPlan:
+        requiresPendingPlanConfirmation.value || requiresProductRuleBinding.value
     })
     shipmentResult.value = result
     message.success(
-      t('rental.xianyu.shipSuccess', {
-        shipmentId: result.shipmentId,
-        deviceNo: result.deviceNo,
-        waybillNo: result.maskedWaybillNo
-      })
+      t(
+        result.assignmentStatus === 'DISPATCHED_PENDING_PLAN'
+          ? 'rental.xianyu.shipPendingPlanSuccess'
+          : 'rental.xianyu.shipSuccess',
+        {
+          shipmentId: result.shipmentId,
+          deviceNo: result.deviceNo,
+          waybillNo: result.maskedWaybillNo
+        }
+      )
     )
     emit('shipped', result)
   } finally {

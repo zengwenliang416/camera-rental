@@ -681,7 +681,7 @@ export default {
         '23': '已退款',
         '24': '交易关闭',
         UNKNOWN: '未知',
-        other: '状态 {code}'
+        other: '其他状态'
       },
       review: {
         OPEN: '待处理',
@@ -1094,8 +1094,8 @@ export default {
       detailTitle: '渠道订单详情',
       convert: '重试转换',
       convertHint: '同步时已自动转换；仅待处理/需复核时可手动重试',
-      conversionResult: '{status}（{reasonCode}）',
-      conversionReviewResult: '{status}（复核 #{reviewId}，{reasonCode}）',
+      conversionResult: '{status}（{reason}）',
+      conversionReviewResult: '{status}（复核 #{reviewId}，{reason}）',
       goodsTitle: '商品标题',
       goodsQuantity: '商品数量',
       totalAmount: '订单原价',
@@ -1106,7 +1106,9 @@ export default {
       remarkParseStatus: '备注解析',
       remarkParseReason: '解析说明',
       remarkParseVersion: '解析版本',
-      remarkParseVersionNamed: '卖家备注解析（{code}）',
+      remarkParseVersionNamed: '卖家备注解析规则',
+      remarkParseVersionValue: '已记录当前规则',
+      remarkParseModelValue: '已记录解析模型',
       billablePeriod: '计租周期',
       occupiedPeriod: '设备占用周期',
       assignedDevices: '已分配设备 ID',
@@ -1128,7 +1130,7 @@ export default {
         UNKNOWN: '未知'
       },
       remarkParseSources: {
-        AI: 'AI 解析',
+        AI: '智能解析',
         RULE: '规则解析',
         UNKNOWN: '未知'
       },
@@ -1143,6 +1145,24 @@ export default {
         LOGISTICS_DATE_BEFORE_ORDER: '物流日期早于下单日期',
         INVALID_RENTAL_DATE: '租期日期无效',
         INVALID_RENTAL_RANGE: '租期结束日期早于开始日期'
+      },
+      reasonCode: {
+        MISSING_XIANYU_ITEM_ID: '缺少闲鱼商品标识',
+        MISSING_XGJ_SKU_ID: '缺少闲管家规格标识',
+        PRODUCT_RULE_NOT_CONFIGURED: '尚未配置商品型号规则',
+        SINGLE_MODEL_NOT_CONFIGURED: '尚未配置单型号设备',
+        SKU_MODEL_NOT_CONFIGURED: '尚未配置规格对应设备',
+        MODEL_MAPPING_MODE_INVALID: '商品型号映射方式无效',
+        RENTAL_ORDER_LINK_CONFLICT: '内部租赁单关联冲突',
+        ORDER_NOT_READY: '订单尚未达到发货条件',
+        RENTAL_PERIOD_NOT_READY: '租期信息尚未补齐',
+        OCCUPIED_PERIOD_NOT_READY: '设备占用时间尚未补齐',
+        ORDER_NOT_PAID: '订单尚未付款',
+        ORDER_REFUNDED: '订单已退款',
+        ORDER_CLOSED: '订单已关闭',
+        INVALID_PAY_AMOUNT: '订单金额无效',
+        CONFLICT_REVIEW: '存在冲突，需要人工确认',
+        UNKNOWN: '需要人工确认'
       }
     },
     device: {

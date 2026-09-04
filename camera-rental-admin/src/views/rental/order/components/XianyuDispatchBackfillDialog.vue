@@ -96,8 +96,7 @@ const message = useMessage()
 const formRef = ref<FormInstance>()
 const submitting = ref(false)
 const idempotencyKey = ref('')
-const rentalLabel = (value?: string | number | null) =>
-  t(getRentalLabelKey('channelOrder', value), { code: value ?? '' })
+const rentalLabel = (value?: string | number | null) => t(getRentalLabelKey('channelOrder', value))
 const form = reactive({
   deviceNo: '',
   waybillNo: '',

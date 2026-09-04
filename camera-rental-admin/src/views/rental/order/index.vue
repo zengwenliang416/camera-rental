@@ -206,7 +206,11 @@
           <el-tooltip
             v-else-if="column.key === 'remarkParseStatus'"
             :content="
-              [remarkReasonLabel(row.rentalPeriodReasonCode), row.remarkParseModel]
+              [
+                remarkReasonLabel(row.rentalPeriodReasonCode),
+                remarkParseSourceLabel(row.remarkParseSource),
+                row.remarkParseModel ? t('rental.order.remarkParseModelValue') : ''
+              ]
                 .filter(Boolean)
                 .join(' / ')
             "
@@ -217,13 +221,7 @@
                 {{ remarkParseStatusLabel(row.remarkParseStatus) }}
               </el-tag>
               <span class="text-12px text-[var(--el-text-color-secondary)]">
-                {{
-                  row.remarkParseSource === 'AI'
-                    ? 'AI'
-                    : row.remarkParseSource === 'RULE'
-                      ? '规则'
-                      : '-'
-                }}
+                {{ remarkParseSourceLabel(row.remarkParseSource) }}
                 <template v-if="row.remarkParseConfidence">
                   {{ Math.round(row.remarkParseConfidence * 100) }}%
                 </template>
@@ -486,7 +484,7 @@ const shopLabel = (shop: XianyuShopVO) => {
 }
 
 const rentalLabel = (group: RentalLabelGroup, value?: string | number | null) => {
-  return t(getRentalLabelKey(group, value), { code: value ?? '' })
+  return t(getRentalLabelKey(group, value))
 }
 
 const formatYuan = (amount?: number) => {
@@ -528,13 +526,21 @@ const formatOrderColumnValue = (order: XianyuOrderVO, column: XianyuOrderColumnD
     if (typeof value !== 'string' || !value.trim()) return '-'
     const key = `rental.order.rentalPeriodStatuses.${value.trim()}`
     const translated = t(key)
-    return translated === key ? value : translated
+    return translated === key ? t('rental.order.rentalPeriodStatuses.UNKNOWN') : translated
   }
   if (column.key === 'remarkParseSource') {
     if (typeof value !== 'string' || !value.trim()) return '-'
     const key = `rental.order.remarkParseSources.${value.trim()}`
     const translated = t(key)
-    return translated === key ? value : translated
+    return translated === key ? t('rental.order.remarkParseSources.UNKNOWN') : translated
+  }
+  if (column.key === 'remarkParseModel') {
+    return typeof value === 'string' && value.trim() ? t('rental.order.remarkParseModelValue') : '-'
+  }
+  if (column.key === 'remarkParseVersion') {
+    return typeof value === 'string' && value.trim()
+      ? t('rental.order.remarkParseVersionValue')
+      : '-'
   }
   if (column.format === 'amount-fen') {
     return typeof value === 'number' ? formatYuan(value) : '-'
@@ -656,11 +662,28 @@ const remarkParseTagType = (status?: string) => {
   return 'warning'
 }
 
+const remarkParseSourceLabel = (source?: string) => {
+  if (!source) return '-'
+  const key = `rental.order.remarkParseSources.${source.trim()}`
+  const translated = t(key)
+  return translated === key ? t('rental.order.remarkParseSources.UNKNOWN') : translated
+}
+
 const remarkReasonLabel = (reason?: string) => {
   if (!reason) return '-'
   const key = `rental.order.remarkReason.${reason}`
-  const translated = t(key, { code: reason })
-  return translated === key ? reason : translated
+  const translated = t(key)
+  if (translated !== key) return translated
+  const reasonCodeKey = `rental.order.reasonCode.${reason}`
+  const reasonCodeLabel = t(reasonCodeKey)
+  return reasonCodeLabel === reasonCodeKey ? t('rental.order.reasonCode.UNKNOWN') : reasonCodeLabel
+}
+
+const conversionReasonLabel = (reason?: string) => {
+  if (!reason) return '-'
+  const key = `rental.order.reasonCode.${reason}`
+  const translated = t(key)
+  return translated === key ? t('rental.order.reasonCode.UNKNOWN') : translated
 }
 
 const getList = async () => {
@@ -776,13 +799,13 @@ const handleConvert = async (id: number) => {
     result.reviewId
       ? t('rental.order.conversionReviewResult', {
           status: statusText,
-          reasonCode: result.reasonCode || '-',
+          reason: conversionReasonLabel(result.reasonCode),
           reviewId: result.reviewId
         })
       : result.reasonCode
         ? t('rental.order.conversionResult', {
             status: statusText,
-            reasonCode: result.reasonCode
+            reason: conversionReasonLabel(result.reasonCode)
           })
         : statusText
   )

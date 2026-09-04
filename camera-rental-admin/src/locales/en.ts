@@ -702,7 +702,7 @@ export default {
         '23': 'Refunded',
         '24': 'Closed',
         UNKNOWN: 'Unknown',
-        other: 'Status {code}'
+        other: 'Other status'
       },
       review: {
         OPEN: 'Open',
@@ -1144,8 +1144,8 @@ export default {
       detailTitle: 'Channel order details',
       convert: 'Retry convert',
       convertHint: 'Auto-convert runs on sync; retry only when pending/review-required',
-      conversionResult: '{status} ({reasonCode})',
-      conversionReviewResult: '{status} (review #{reviewId}, {reasonCode})',
+      conversionResult: '{status} ({reason})',
+      conversionReviewResult: '{status} (review #{reviewId}, {reason})',
       goodsTitle: 'Goods title',
       goodsQuantity: 'Quantity',
       totalAmount: 'Order total',
@@ -1156,7 +1156,9 @@ export default {
       remarkParseStatus: 'Remark parsing',
       remarkParseReason: 'Parse reason',
       remarkParseVersion: 'Parser version',
-      remarkParseVersionNamed: 'Seller remark parser ({code})',
+      remarkParseVersionNamed: 'Seller remark parser',
+      remarkParseVersionValue: 'Current rule recorded',
+      remarkParseModelValue: 'Parser model recorded',
       billablePeriod: 'Billable period',
       occupiedPeriod: 'Device occupied period',
       assignedDevices: 'Assigned device IDs',
@@ -1178,7 +1180,7 @@ export default {
         UNKNOWN: 'Unknown'
       },
       remarkParseSources: {
-        AI: 'AI parsing',
+        AI: 'Automated parsing',
         RULE: 'Rule parsing',
         UNKNOWN: 'Unknown'
       },
@@ -1193,6 +1195,24 @@ export default {
         LOGISTICS_DATE_BEFORE_ORDER: 'A logistics date is earlier than the order date',
         INVALID_RENTAL_DATE: 'Rental date is invalid',
         INVALID_RENTAL_RANGE: 'Rental end date is earlier than its start date'
+      },
+      reasonCode: {
+        MISSING_XIANYU_ITEM_ID: 'Xianyu product identifier is missing',
+        MISSING_XGJ_SKU_ID: 'XianGuanJia SKU identifier is missing',
+        PRODUCT_RULE_NOT_CONFIGURED: 'Product model rule is not configured',
+        SINGLE_MODEL_NOT_CONFIGURED: 'Single equipment model is not configured',
+        SKU_MODEL_NOT_CONFIGURED: 'SKU equipment mapping is not configured',
+        MODEL_MAPPING_MODE_INVALID: 'Product model mapping mode is invalid',
+        RENTAL_ORDER_LINK_CONFLICT: 'Internal rental order link conflict',
+        ORDER_NOT_READY: 'Order is not ready for shipment',
+        RENTAL_PERIOD_NOT_READY: 'Rental dates are incomplete',
+        OCCUPIED_PERIOD_NOT_READY: 'Equipment occupied dates are incomplete',
+        ORDER_NOT_PAID: 'Order has not been paid',
+        ORDER_REFUNDED: 'Order was refunded',
+        ORDER_CLOSED: 'Order is closed',
+        INVALID_PAY_AMOUNT: 'Order amount is invalid',
+        CONFLICT_REVIEW: 'A conflict needs manual confirmation',
+        UNKNOWN: 'Manual confirmation required'
       }
     },
     device: {

@@ -116,10 +116,7 @@ const dateValue = (input?: string | number[] | null) => {
   }
   return typeof input === 'string' ? input.trim() : ''
 }
-const dateRange = (
-  start?: string | number[] | null,
-  end?: string | number[] | null
-) => {
+const dateRange = (start?: string | number[] | null, end?: string | number[] | null) => {
   const normalizedStart = dateValue(start)
   const normalizedEnd = dateValue(end)
   return normalizedStart && normalizedEnd
@@ -128,10 +125,10 @@ const dateRange = (
 }
 const parseVersionLabel = computed(() => {
   const version = props.order.remarkParseVersion?.trim()
-  return version ? t('rental.order.remarkParseVersionNamed', { code: version }) : '-'
+  return version ? t('rental.order.remarkParseVersionValue') : '-'
 })
 const rentalLabel = (group: RentalLabelGroup, input?: string | number | null) =>
-  t(getRentalLabelKey(group, input), { code: input ?? '' })
+  t(getRentalLabelKey(group, input))
 
 const remarkStatus = computed(() => {
   const status = props.order.remarkParseStatus
@@ -144,8 +141,11 @@ const reasonLabel = computed(() => {
   const reason = props.order.rentalPeriodReasonCode
   if (!reason) return '-'
   const key = `rental.order.remarkReason.${reason}`
-  const translated = t(key, { code: reason })
-  return translated === key ? reason : translated
+  const translated = t(key)
+  if (translated !== key) return translated
+  const reasonCodeKey = `rental.order.reasonCode.${reason}`
+  const reasonCodeLabel = t(reasonCodeKey)
+  return reasonCodeLabel === reasonCodeKey ? t('rental.order.reasonCode.UNKNOWN') : reasonCodeLabel
 })
 </script>
 

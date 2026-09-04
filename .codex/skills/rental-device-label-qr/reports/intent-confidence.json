@@ -1,0 +1,66 @@
+{
+  "score": 100,
+  "band": "high",
+  "gate_passed": true,
+  "authoring_ready": true,
+  "strengths": [
+    "The recurring job is concrete enough to anchor the package.",
+    "Real input shape is explicit.",
+    "The hand-back output is concrete.",
+    "Boundary exclusions are already explicit.",
+    "Operational constraints are visible."
+  ],
+  "gaps": [],
+  "follow_up_questions": [],
+  "clarification_plan": {
+    "decision": "proceed",
+    "language": "en",
+    "ambiguity_type": "",
+    "target_slot": "",
+    "direction_slot": "",
+    "question": "",
+    "rationale": "",
+    "decision_impact": "",
+    "blocking_ambiguities": [],
+    "stop_reason": "clear",
+    "inference_quality": "high"
+  },
+  "assumptions": [],
+  "anchor_sentence": "Generate repeatable, print-ready rental device QR label packages in the approved shop-label layout. Primary output: Verified 20x40 mm 600 DPI PNG labels, A4 print PDF, preview sheet, normalized manifest, and ZIP archive.. Exclusions: Do not create or expose signing secrets, mutate production data, change the CRD1 protocol, or route generic QR design tasks here..",
+  "recommended_action": "Intent is clear enough to package the first routeable version.",
+  "context": {
+    "job": "Generate repeatable, print-ready rental device QR label packages in the approved shop-label layout.",
+    "real_inputs": [
+      "A CSV or TSV device manifest containing device_no, serial_number, and a pre-signed QR payload."
+    ],
+    "primary_output": "Verified 20x40 mm 600 DPI PNG labels, A4 print PDF, preview sheet, normalized manifest, and ZIP archive.",
+    "description": "Generate and verify camera-rental device QR label packages from CSV or TSV manifests containing pre-signed payloads. Use when exporting P4P, P3, or other rental-device labels in the Changsha Jiezu Da layout with shop name, phone, device label, right-side QR, 20x40 mm PNGs, A4 PDF, preview, manifest, and ZIP. Excludes QR protocol changes, signing-secret handling, database mutation, shipping, and generic QR design.",
+    "exclusions": [
+      "Do not create or expose signing secrets, mutate production data, change the CRD1 protocol, or route generic QR design tasks here."
+    ],
+    "constraints": [
+      "Keep secrets and production credentials outside the skill; require 100 percent QR decode equality; print at 100 percent scale."
+    ],
+    "standards": [
+      "Every generated PNG must be 945x472 at 600 DPI, every QR must decode to the exact provided payload, sequence and filenames must be deterministic, and the PDF must be valid A4."
+    ],
+    "correction": "",
+    "user_references": [
+      "/var/folders/1v/8sfc4rjx1834mzlqzxqr8lr40000gn/T/codex-clipboard-78ab0014-0efd-4018-93a6-31a6b07892b5.jpg"
+    ],
+    "skill_name": "",
+    "assumptions": [],
+    "clarification_state": {
+      "decision": "proceed",
+      "rounds_used": 0,
+      "max_rounds": 2,
+      "asked_ambiguities": [],
+      "resolved_ambiguities": [],
+      "correction_pending": false,
+      "blocking_ambiguities": [],
+      "stop_reason": "clear",
+      "inference_quality": "high"
+    },
+    "language": "en"
+  }
+}

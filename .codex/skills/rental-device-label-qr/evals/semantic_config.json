@@ -1,0 +1,96 @@
+{
+  "optimizer_hints": {
+    "capability": "Generate and verify print-ready rental-device QR label packages from server-signed CRD1 CSV or TSV manifests",
+    "inputs": [
+      "device CSV",
+      "device TSV",
+      "server-signed CRD1 payload",
+      "设备清单",
+      "已签名载荷",
+      "设备二维码"
+    ],
+    "trigger_actions": [
+      "generate device labels",
+      "build A4 label PDF",
+      "verify every QR",
+      "制作设备贴纸",
+      "导出二维码标签",
+      "逐张回读"
+    ],
+    "exclusions": [
+      "sign payloads",
+      "query database",
+      "ship orders",
+      "bind products",
+      "generic QR artwork",
+      "生成签名",
+      "连接数据库",
+      "执行发货"
+    ]
+  },
+  "fallback_positive_concepts": [
+    "rental_device_label_qr"
+  ],
+  "positive_concepts": {
+    "rental_device_label_qr": {
+      "weight": 1.0,
+      "phrases": [
+        "rental-device labels",
+        "server-signed crd1",
+        "40x20 mm",
+        "a4 label pdf",
+        "verify every qr",
+        "rental equipment qr stickers",
+        "print package",
+        "zxing",
+        "p4p 已签名二维码",
+        "设备贴纸",
+        "二维码标签",
+        "重新导出设备二维码",
+        "预览总表",
+        "verification.json",
+        "逐张回读",
+        "长沙捷租达"
+      ]
+    }
+  },
+  "negative_concepts": {
+    "signing": {
+      "weight": 0.9,
+      "exclusive": true,
+      "phrases": [
+        "generate a new crd1 signature",
+        "生成一个新的 crd1 签名",
+        "生成签名"
+      ]
+    },
+    "server_data": {
+      "weight": 0.8,
+      "exclusive": true,
+      "phrases": [
+        "connect to production database",
+        "连接生产数据库",
+        "从生产服务器导出"
+      ]
+    },
+    "operations": {
+      "weight": 0.8,
+      "exclusive": true,
+      "phrases": [
+        "ship the order",
+        "执行发货",
+        "完成出库",
+        "接口超时",
+        "绑定起来"
+      ]
+    },
+    "generic_design": {
+      "weight": 0.8,
+      "exclusive": true,
+      "phrases": [
+        "marketing qr poster",
+        "营销活动二维码海报"
+      ]
+    }
+  }
+}

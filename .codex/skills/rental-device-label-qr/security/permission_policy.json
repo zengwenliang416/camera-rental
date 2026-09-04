@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-09-03",
+  "runtime_entrypoint": "scripts/generate_labels.py",
+  "readiness_status": "project-production",
+  "capabilities": {
+    "file_write": {
+      "required": true,
+      "decision": "approved",
+      "reviewer": "Project owner current-task authorization",
+      "scope": "Only the explicit --output directory, its sibling ZIP, and skill-owned sibling staging and rollback paths. Existing directories may be replaced only when --overwrite is supplied and the ownership marker matches this skill.",
+      "reason": "The requested reusable generator must publish PNG, PDF, preview, manifest, verification, instructions, and ZIP artifacts while refusing unowned destinations.",
+      "expires_at": "2026-12-03",
+      "evidence": [
+        "SKILL.md",
+        "references/input-contract.md",
+        "references/layout-contract.md",
+        "tests/test_generate_labels.py"
+      ],
+      "target_enforcement": {
+        "openai": "Permission metadata plus explicit CLI destination, ownership marker, sibling staging, and rollback checks; host enforcement remains outside the package.",
+        "claude": "Permission metadata plus explicit CLI destination, ownership marker, sibling staging, and rollback checks; host enforcement remains outside the package.",
+        "generic": "Permission metadata plus explicit CLI destination, ownership marker, sibling staging, and rollback checks; host enforcement remains outside the package.",
+        "vscode": "Workspace trust plus explicit CLI destination, ownership marker, sibling staging, and rollback checks."
+      }
+    }
+  }
+}

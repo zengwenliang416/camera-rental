@@ -1,0 +1,142 @@
+{
+  "ok": true,
+  "skill_dir": "/Volumes/zwl/camera-rental-github/.codex/skills/rental-device-label-qr",
+  "summary": {
+    "scanned_files": 11,
+    "script_count": 1,
+    "internal_module_count": 0,
+    "secret_findings": 0,
+    "dependency_files": [
+      "requirements.txt"
+    ],
+    "network_script_count": 0,
+    "network_policy_covered_count": 0,
+    "network_policy_missing_count": 0,
+    "file_write_script_count": 1,
+    "permission_required_count": 1,
+    "permission_approved_count": 1,
+    "permission_missing_count": 0,
+    "permission_invalid_count": 0,
+    "permission_expired_count": 0,
+    "help_smoke_checked_count": 1,
+    "help_smoke_failed_count": 0,
+    "interactive_script_count": 0,
+    "package_hash_scope": "source-contract-without-generated-reports",
+    "package_hash_file_count": 11,
+    "package_sha256": "51c1940e83193e15e1e01bd95331ecfeb40a362451fada5515029ff27de2b0ee"
+  },
+  "failures": [],
+  "warnings": [],
+  "secrets": [],
+  "scripts": [
+    {
+      "path": "scripts/generate_labels.py",
+      "interface": "cli",
+      "interface_declared": false,
+      "interface_reason": "Default CLI classification; add SCRIPT_INTERFACE for internal modules.",
+      "has_argparse": true,
+      "has_main_guard": true,
+      "uses_input": false,
+      "uses_network": false,
+      "uses_file_write": true,
+      "uses_subprocess": false,
+      "network_urls": [],
+      "network_hosts": []
+    }
+  ],
+  "dependencies": {
+    "present": [
+      "requirements.txt"
+    ],
+    "pinned": [],
+    "unpinned": []
+  },
+  "network_policy": {
+    "present": false,
+    "path": "security/network_policy.json",
+    "schema_version": "",
+    "network_script_count": 0,
+    "covered_scripts": [],
+    "missing_scripts": [],
+    "mismatches": [],
+    "default_policy": {}
+  },
+  "help_smoke": {
+    "enabled": true,
+    "timeout_seconds": 5.0,
+    "candidate_count": 1,
+    "checked_count": 1,
+    "passed_count": 1,
+    "failed_count": 0,
+    "skipped_count": 0,
+    "failed_scripts": [],
+    "results": [
+      {
+        "path": "scripts/generate_labels.py",
+        "command": "python3 scripts/generate_labels.py --help",
+        "returncode": 0,
+        "timed_out": false,
+        "passed": true,
+        "has_help_text": true,
+        "stdout_excerpt": "usage: generate_labels.py [-h] --input INPUT --output OUTPUT --phone PHONE\n                          [--shop-name SHOP_NAME] [--font FONT] [--overwrite]\n\nGenerate verified 40x20 mm rental-device labels from server-signed CRD1\nCSV/TSV input.",
+        "stderr_excerpt": ""
+      }
+    ],
+    "skipped": []
+  },
+  "permission_governance": {
+    "present": true,
+    "path": "security/permission_policy.json",
+    "schema_version": "1.0",
+    "reviewed_at": "2026-09-03",
+    "required_capabilities": [
+      "file_write"
+    ],
+    "approved_capabilities": [
+      "file_write"
+    ],
+    "missing_capabilities": [],
+    "invalid_capabilities": [],
+    "expired_capabilities": [],
+    "approval_count": 1,
+    "required_count": 1,
+    "missing_count": 0,
+    "invalid_count": 0,
+    "expired_count": 0,
+    "approvals": [
+      {
+        "capability": "file_write",
+        "status": "approved",
+        "scripts": [
+          "scripts/generate_labels.py"
+        ],
+        "reviewer": "Project owner current-task authorization",
+        "scope": "Only the explicit --output directory, its sibling ZIP, and skill-owned sibling staging and rollback paths. Existing directories may be replaced only when --overwrite is supplied and the ownership marker matches this skill.",
+        "reason": "The requested reusable generator must publish PNG, PDF, preview, manifest, verification, instructions, and ZIP artifacts while refusing unowned destinations.",
+        "expires_at": "2026-12-03",
+        "evidence": [
+          "SKILL.md",
+          "references/input-contract.md",
+          "references/layout-contract.md",
+          "tests/test_generate_labels.py"
+        ],
+        "target_enforcement": {
+          "openai": "Permission metadata plus explicit CLI destination, ownership marker, sibling staging, and rollback checks; host enforcement remains outside the package.",
+          "claude": "Permission metadata plus explicit CLI destination, ownership marker, sibling staging, and rollback checks; host enforcement remains outside the package.",
+          "generic": "Permission metadata plus explicit CLI destination, ownership marker, sibling staging, and rollback checks; host enforcement remains outside the package.",
+          "vscode": "Workspace trust plus explicit CLI destination, ownership marker, sibling staging, and rollback checks."
+        },
+        "validation": []
+      }
+    ]
+  },
+  "trust_metadata": {
+    "source_tier": "local",
+    "remote_inline_execution": "forbid",
+    "remote_metadata_policy": "allow-metadata-only"
+  },
+  "artifacts": {
+    "json": "/Volumes/zwl/camera-rental-github/.codex/skills/rental-device-label-qr/reports/security_trust_report.json",
+    "markdown": "/Volumes/zwl/camera-rental-github/.codex/skills/rental-device-label-qr/reports/security_trust_report.md"
+  }
+}

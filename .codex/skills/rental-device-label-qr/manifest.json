@@ -1,0 +1,31 @@
+{
+  "name": "rental-device-label-qr",
+  "version": "1.0.0",
+  "owner": "Camera Rental Team",
+  "updated_at": "2026-09-03",
+  "review_due": "2026-12-03",
+  "status": "active",
+  "maturity_tier": "production",
+  "lifecycle_stage": "production",
+  "context_budget_tier": "production",
+  "review_cadence": "quarterly",
+  "category": "operations",
+  "complexity_tier": "moderate",
+  "license": "Proprietary",
+  "skill_ir_source": "reports/skill-ir.json",
+  "skill_archetype": "deterministic-generator",
+  "target_platforms": [
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible",
+    "vscode"
+  ],
+  "factory_components": [
+    "references",
+    "scripts",
+    "evals",
+    "tests",
+    "reports"
+  ]
+}

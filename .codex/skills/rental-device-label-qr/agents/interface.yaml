@@ -1,0 +1,26 @@
+interface:
+  display_name: "Rental Device Label QR"
+  short_description: "Generate verified 40x20 mm rental-device QR labels"
+  default_prompt: "Use $rental-device-label-qr to generate a verified PNG, A4 PDF, preview, manifest, verification report, and ZIP from a CSV or TSV containing server-signed CRD1 device payloads."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+    - "vscode"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    openai: "native-skill-instructions-plus-local-python-cli"
+    claude: "neutral-source-plus-local-python-cli"
+    generic: "neutral-source-plus-python-cli"
+    vscode: "agent-skills-source-with-local-cli-notes"

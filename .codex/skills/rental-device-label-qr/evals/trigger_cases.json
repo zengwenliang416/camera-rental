@@ -1,0 +1,69 @@
+{
+  "recommended_threshold": 0.34,
+  "should_trigger": [
+    {
+      "text": "把服务器导出的 P4P 已签名二维码做成长沙捷租达的 40x20 标签和 A4 打印版。",
+      "family": "cn_p4p_export"
+    },
+    {
+      "text": "用这个 TSV 里的 CRD1 payload 批量生成设备贴纸，每张都要回读验证。",
+      "family": "cn_signed_manifest"
+    },
+    {
+      "text": "Generate 40x20 mm rental-device labels from this CSV of pre-signed CRD1 payloads and include a verified A4 PDF.",
+      "family": "en_signed_manifest"
+    },
+    {
+      "text": "把 P3 和 P4P 的设备编号、序列号后四位、门店电话和二维码排成右侧二维码标签。",
+      "family": "cn_mixed_models"
+    },
+    {
+      "text": "重新导出设备二维码 PNG、预览总表、清单、verification.json 和 ZIP。",
+      "family": "cn_package_regeneration"
+    },
+    {
+      "text": "Create a print package for rental equipment QR stickers and verify every PNG with zxing before publishing it.",
+      "family": "en_verified_print_package"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "text": "帮我给这个设备生成一个新的 CRD1 签名。",
+      "family": "signing_request"
+    },
+    {
+      "text": "连接生产数据库，把所有 P4P 设备查出来。",
+      "family": "database_export"
+    },
+    {
+      "text": "我点击发货接口超时，看看服务器日志。",
+      "family": "shipping_diagnosis"
+    },
+    {
+      "text": "设计一个营销活动二维码海报。",
+      "family": "generic_qr_artwork"
+    },
+    {
+      "text": "把商品 ID 和设备型号绑定起来。",
+      "family": "product_binding"
+    },
+    {
+      "text": "扫描这个设备二维码并完成出库。",
+      "family": "warehouse_operation"
+    }
+  ],
+  "near_neighbor": [
+    {
+      "text": "只把现有二维码图片拼成一个 PDF，不需要设备标签版式或载荷验证。",
+      "family": "generic_pdf_layout"
+    },
+    {
+      "text": "检查 CRD1 协议设计是否安全，但不要生成标签。",
+      "family": "protocol_review"
+    },
+    {
+      "text": "从生产服务器导出设备清单，先不要制作二维码。",
+      "family": "server_export_only"
+    }
+  ]
+}

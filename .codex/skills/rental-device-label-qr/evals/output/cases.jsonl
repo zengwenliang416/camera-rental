@@ -1,0 +1,3 @@
+{"id":"fixture-package","input_files":["tests/fixtures/devices.tsv"],"assertions":["command exits successfully","two 945x472 PNG files are produced at 600 DPI","both QR codes decode exactly to their fixture payloads","verification.json records physical_scan_tested=false","A4 PDF, preview, manifest, instructions, and ZIP are produced"]}
+{"id":"invalid-payload","input_files":["synthetic invalid CSV created by test"],"assertions":["payload/device mismatch fails closed","no output directory or ZIP is published","console output does not disclose the payload"]}
+{"id":"unowned-overwrite","input_files":["tests/fixtures/devices.tsv"],"assertions":["--overwrite refuses a directory without the skill ownership marker","existing user content remains unchanged"]}

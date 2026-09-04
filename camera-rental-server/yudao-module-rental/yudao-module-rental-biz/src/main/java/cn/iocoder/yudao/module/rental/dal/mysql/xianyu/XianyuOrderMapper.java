@@ -41,6 +41,8 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
                 .eqIfPresent(XianyuOrderDO::getShipDate, pageReqVO.getShipDate())
                 .orderByDesc(XianyuOrderDO::getSourceUpdatedAt)
                 .orderByDesc(XianyuOrderDO::getId);
+        query.apply(Boolean.TRUE.equals(pageReqVO.getUnremarked()),
+                "(seller_remark IS NULL OR TRIM(seller_remark) = '')");
         query.apply(pageReqVO.getStartDate() != null,
                 "COALESCE(order_time, source_created_at, create_time) >= {0}",
                 pageReqVO.getStartDate() != null ? pageReqVO.getStartDate().atStartOfDay() : null);

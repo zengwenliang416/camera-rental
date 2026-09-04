@@ -17,6 +17,8 @@ public class XianyuOrderPageReqVO extends PageParam {
     private Long shopId;
     private String orderStatus;
     private String conversionStatus;
+    /** Only return orders whose seller remark is null, empty, or whitespace. */
+    private Boolean unremarked;
     /** Exact or partial match for ops lookup (full value, not redacted). */
     private String externalOrderId;
     private String xgjProductId;

@@ -1045,6 +1045,8 @@ export default {
       shipDatePlaceholder: '选择发货日期',
       today: '今天',
       orderStatus: '订单状态',
+      remarkStatus: '备注状态',
+      unremarked: '未备注',
       payAmountFen: '实付',
       sellerRemark: '卖家备注',
       windowStart: '窗口开始',

@@ -71,6 +71,19 @@ class XianyuOrderMapperTest {
     }
 
     @Test
+    void adminPageQueryFiltersUnremarkedOrdersIncludingWhitespaceOnlyValues() {
+        XianyuOrderPageReqVO request = new XianyuOrderPageReqVO();
+        request.setUnremarked(true);
+
+        String sql = XianyuOrderMapper.adminPageQuery(request)
+                .getCustomSqlSegment()
+                .toLowerCase();
+
+        assertTrue(sql.contains("seller_remark is null"));
+        assertTrue(sql.contains("trim(seller_remark) ="));
+    }
+
+    @Test
     void adminPageQueryUsesOnlyExplicitProductAndSkuIdentifiers() {
         XianyuOrderPageReqVO request = new XianyuOrderPageReqVO();
         request.setXgjProductId("xgj-product-1");

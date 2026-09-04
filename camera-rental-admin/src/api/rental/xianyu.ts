@@ -327,6 +327,7 @@ export const getXianyuOrderPage = (
     shopId?: number
     orderStatus?: string
     conversionStatus?: string
+    unremarked?: boolean
     externalOrderId?: string
     externalProductId?: string
     externalSkuId?: string

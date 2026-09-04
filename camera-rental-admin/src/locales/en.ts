@@ -1094,6 +1094,8 @@ export default {
       shipDatePlaceholder: 'Select ship date',
       today: 'Today',
       orderStatus: 'Order status',
+      remarkStatus: 'Remark status',
+      unremarked: 'Unremarked',
       payAmountFen: 'Paid amount',
       sellerRemark: 'Seller remark',
       windowStart: 'Window start',

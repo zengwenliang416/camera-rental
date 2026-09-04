@@ -66,6 +66,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item :label="t('rental.order.remarkStatus')">
+        <el-select
+          v-model="queryParams.unremarked"
+          class="!w-150px"
+          clearable
+          :placeholder="t('common.selectText')"
+        >
+          <el-option :label="t('rental.order.unremarked')" :value="true" />
+        </el-select>
+      </el-form-item>
       <el-form-item :label="t('rental.order.conversionStatus')">
         <el-select
           v-model="queryParams.conversionStatus"
@@ -450,6 +460,7 @@ const queryParams = reactive<{
   shopId?: number
   orderStatus?: string
   conversionStatus?: string
+  unremarked?: boolean
   externalOrderId?: string
   externalProductId?: string
   externalSkuId?: string
@@ -662,6 +673,7 @@ const getList = async () => {
       shopId: queryParams.shopId,
       orderStatus: queryParams.orderStatus || undefined,
       conversionStatus: queryParams.conversionStatus || undefined,
+      unremarked: queryParams.unremarked || undefined,
       externalOrderId: queryParams.externalOrderId?.trim() || undefined,
       externalProductId: queryParams.externalProductId || undefined,
       externalSkuId: queryParams.externalSkuId || undefined,
@@ -691,6 +703,7 @@ const resetQuery = async () => {
   queryParams.shopId = undefined
   queryParams.orderStatus = undefined
   queryParams.conversionStatus = undefined
+  queryParams.unremarked = undefined
   queryParams.externalOrderId = undefined
   queryParams.externalProductId = undefined
   queryParams.externalSkuId = undefined
@@ -781,6 +794,7 @@ onMounted(async () => {
   queryParams.shopId = Number.isInteger(shopId) && shopId > 0 ? shopId : undefined
   queryParams.orderStatus =
     typeof route.query.orderStatus === 'string' ? route.query.orderStatus : undefined
+  queryParams.unremarked = route.query.unremarked === 'true' ? true : undefined
   queryParams.externalOrderId =
     typeof route.query.externalOrderId === 'string' ? route.query.externalOrderId : undefined
   queryParams.externalProductId =

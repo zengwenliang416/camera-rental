@@ -106,6 +106,33 @@ class RentalDeviceAssignmentServiceImplTest {
     }
 
     @Test
+    void shouldCreatePendingPlanAssignmentWithoutSchedule() {
+        RentalOrderItemDO item = RentalOrderItemDO.builder().id(21L)
+                .rentalOrderId(11L).quantity(1).equipmentModelCode("A7M4").build();
+        RentalOrderDO order = RentalOrderDO.builder().id(11L)
+                .status("PENDING_ALLOCATION").preparationStatus("WAITING_REMARK").build();
+        when(orderItemMapper.selectById(21L)).thenReturn(item);
+        when(orderMapper.selectByIdForUpdate(11L)).thenReturn(order);
+        when(orderItemMapper.selectByIdForUpdate(21L)).thenReturn(item);
+        when(deviceMapper.selectByIdForUpdate(31L)).thenReturn(RentalDeviceDO.builder().id(31L)
+                .enabled(true).status("AVAILABLE").equipmentModelCode("A7M4").build());
+        when(deviceLockService.getActiveLocksForUpdate(31L)).thenReturn(List.of());
+        when(assignmentMapper.countAssignedByOrderItem(21L)).thenReturn(0L);
+        when(assignmentMapper.insert(any(RentalDeviceAssignmentDO.class))).thenAnswer(invocation -> {
+            invocation.getArgument(0, RentalDeviceAssignmentDO.class).setId(81L);
+            return 1;
+        });
+
+        RentalDeviceAssignmentResult result = service.assignPendingPlan(21L, 31L, "pending-1");
+
+        assertEquals(81L, result.assignmentId());
+        assertEquals(31L, result.deviceId());
+        assertEquals(null, result.scheduleId());
+        verify(scheduleMapper, never()).insert(any(RentalScheduleDO.class));
+        verify(assignmentMapper).insert(any(RentalDeviceAssignmentDO.class));
+    }
+
+    @Test
     void shouldRejectAnIdempotencyKeyReusedForAnotherPeriod() {
         when(assignmentMapper.selectByIdempotencyKeyForUpdate("assign-1"))
                 .thenReturn(RentalDeviceAssignmentDO.builder().id(81L).scheduleId(71L).deviceId(31L).build());

@@ -62,7 +62,7 @@ public interface RentalScheduleAllocationMapper {
                             FROM rental_device_assignment pending_assignment
                            WHERE pending_assignment.tenant_id = pending_item.tenant_id
                              AND pending_assignment.rental_order_item_id = pending_item.id
-                             AND pending_assignment.status IN ('ASSIGNED', 'DISPATCHED')
+                             AND pending_assignment.status IN ('ASSIGNED', 'DISPATCHED', 'DISPATCHED_PENDING_PLAN')
                              AND pending_assignment.deleted = b'0'
                       )
                )
@@ -118,7 +118,7 @@ public interface RentalScheduleAllocationMapper {
                             FROM rental_device_assignment pending_assignment
                            WHERE pending_assignment.tenant_id = pending_item.tenant_id
                              AND pending_assignment.rental_order_item_id = pending_item.id
-                             AND pending_assignment.status IN ('ASSIGNED', 'DISPATCHED')
+                             AND pending_assignment.status IN ('ASSIGNED', 'DISPATCHED', 'DISPATCHED_PENDING_PLAN')
                              AND pending_assignment.deleted = b'0'
                       )
                )

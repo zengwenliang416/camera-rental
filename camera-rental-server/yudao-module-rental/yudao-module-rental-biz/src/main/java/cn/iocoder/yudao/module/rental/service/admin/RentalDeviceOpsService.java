@@ -20,6 +20,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Set;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEVICE_DISPATCH_FAILED;
@@ -40,6 +41,7 @@ public class RentalDeviceOpsService {
 
     static final String ASSIGN_ASSIGNED = "ASSIGNED";
     static final String ASSIGN_DISPATCHED = "DISPATCHED";
+    static final String ASSIGN_DISPATCHED_PENDING_PLAN = "DISPATCHED_PENDING_PLAN";
     static final String ASSIGN_RETURNED = "RETURNED";
     static final String ASSIGN_CANCELED = "CANCELED";
 
@@ -115,7 +117,8 @@ public class RentalDeviceOpsService {
         }
 
         RentalDeviceAssignmentDO assignment = assignmentMapper.selectActiveByDeviceIdForUpdate(device.getId());
-        if (assignment == null || !ASSIGN_DISPATCHED.equals(assignment.getStatus())) {
+        if (assignment == null || !Set.of(ASSIGN_DISPATCHED, ASSIGN_DISPATCHED_PENDING_PLAN)
+                .contains(assignment.getStatus())) {
             throw exception(RENTAL_DEVICE_RETURN_FAILED, "未找到已出库的分配记录");
         }
 

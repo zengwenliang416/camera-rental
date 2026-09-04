@@ -169,6 +169,24 @@ class RentalDeviceOpsServiceTest {
     }
 
     @Test
+    void returnAcceptsDispatchedPendingPlanWithoutSchedule() {
+        RentalDeviceDO device = RentalDeviceDO.builder()
+                .id(1L).deviceNo("A7M4-0001").status("RENTED").enabled(true).build();
+        RentalDeviceAssignmentDO assignment = RentalDeviceAssignmentDO.builder()
+                .id(9L).deviceId(1L).status("DISPATCHED_PENDING_PLAN").build();
+        when(deviceMapper.selectByIdForUpdate(1L)).thenReturn(device);
+        when(assignmentMapper.selectActiveByDeviceIdForUpdate(1L)).thenReturn(assignment);
+
+        RentalDeviceReturnReqVO returnReq = new RentalDeviceReturnReqVO();
+        returnReq.setDeviceId(1L);
+        RentalDeviceOpsRespVO returned = service.returnDevice(returnReq);
+
+        assertEquals("AVAILABLE", returned.getDeviceStatus());
+        assertEquals("RETURNED", returned.getAssignmentStatus());
+        verify(scheduleMapper, never()).selectByIdForUpdate(any());
+    }
+
+    @Test
     void returnFailGoesMaintenance() {
         RentalDeviceDO device = RentalDeviceDO.builder()
                 .id(1L).deviceNo("A7M4-0001").status("RENTED").enabled(true).build();

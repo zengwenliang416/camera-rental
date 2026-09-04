@@ -64,7 +64,8 @@ import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_DEV
 public class RentalScheduleAllocationService {
 
     private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
-    private static final Set<String> ACTIVE_ASSIGNMENT_STATUSES = Set.of("ASSIGNED", "DISPATCHED");
+    private static final Set<String> ACTIVE_ASSIGNMENT_STATUSES =
+            Set.of("ASSIGNED", "DISPATCHED", "DISPATCHED_PENDING_PLAN");
     private static final Set<String> TERMINAL_TRACKING_STATUSES = Set.of("DELIVERED", "RETURNED");
     private static final int MAX_CANDIDATE_DEVICES = 100;
     private static final int MAX_NEIGHBORING_SCHEDULES = 8;

@@ -69,12 +69,14 @@ import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHI
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_CONVERTED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_READY;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_PENDING;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_PENDING_PLAN_CONFIRM_REQUIRED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_PRODUCT_RULE_BIND_REQUIRED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_REMOTE_ERROR;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHOP_AUTHORIZATION_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHOP_NOT_EXISTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -705,6 +707,8 @@ class XianyuOrderShipServiceTest {
         assertEquals(50L, deliveryCaptor.getValue().devices().get(0).rentalOrderItemId());
         assertEquals(60L, deliveryCaptor.getValue().devices().get(0).assignmentId());
         assertEquals(40L, deliveryCaptor.getValue().devices().get(0).deviceId());
+        assertNull(order.getShipDate());
+        assertNotNull(order.getConsignTime());
         assertEquals("SF5113560342626", shipmentCaptor.getValue().getWaybillNo());
         assertEquals("shunfeng", shipmentCaptor.getValue().getExpressCode());
         assertEquals("顺丰速运", shipmentCaptor.getValue().getExpressName());
@@ -744,6 +748,81 @@ class XianyuOrderShipServiceTest {
         verify(preparationPolicy).requireReady(rentalOrder, item);
         verify(assignmentService, never()).assign(any());
         verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void shipRequiresExplicitConfirmationForIncompleteRentalPlan() {
+        properties.setWriteEnabled(true);
+        XianyuOrderDO order = pendingOrder();
+        RentalOrderDO rentalOrder = RentalOrderDO.builder()
+                .id(30L).status("PENDING_ALLOCATION")
+                .preparationStatus("WAITING_REMARK")
+                .preparationReasonCode("MISSING_RECEIVE_DATE")
+                .build();
+        RentalOrderItemDO item = convertedOrderItem();
+        item.setBillableStartDate(null);
+        item.setBillableEndDate(null);
+        item.setOccupyStartDate(null);
+        item.setOccupyEndDateExclusive(null);
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(shippableDevice());
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(rentalOrder);
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(item);
+        doThrow(new RentalDeviceAssignmentException(
+                RentalDeviceAssignmentException.Code.ORDER_NOT_READY, "MISSING_RECEIVE_DATE"))
+                .when(preparationPolicy).requireReady(rentalOrder, item);
+
+        ServiceException ex = assertThrows(ServiceException.class, () -> service().ship(req()));
+
+        assertEquals(XIANYU_SHIP_PENDING_PLAN_CONFIRM_REQUIRED.getCode(), ex.getCode());
+        verify(assignmentService, never()).assignPendingPlan(any(), any(), any());
+        verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void confirmedIncompleteRentalPlanShipsAndMarksAssignmentPendingPlan() {
+        properties.setWriteEnabled(true);
+        XianyuOrderShipReqVO req = req();
+        req.setAllowPendingPlan(true);
+        XianyuOrderDO order = pendingOrder();
+        RentalOrderDO rentalOrder = RentalOrderDO.builder()
+                .id(30L).status("PENDING_ALLOCATION")
+                .preparationStatus("WAITING_REMARK")
+                .preparationReasonCode("MISSING_RECEIVE_DATE")
+                .build();
+        RentalOrderItemDO item = convertedOrderItem();
+        item.setBillableStartDate(null);
+        item.setBillableEndDate(null);
+        item.setOccupyStartDate(null);
+        item.setOccupyEndDateExclusive(null);
+        RentalDeviceDO device = shippableDevice();
+        RentalDeviceAssignmentDO assigned = RentalDeviceAssignmentDO.builder()
+                .id(60L).rentalOrderId(30L).rentalOrderItemId(50L).deviceId(40L)
+                .status("DISPATCHED").scheduleId(null).build();
+        when(orderMapper.selectByIdForUpdate(10L)).thenReturn(order);
+        when(shopMapper.selectByTenantIdAndId(9L, 20L)).thenReturn(validShop());
+        when(deviceMapper.selectByDeviceNoForUpdate("P4P-01-2JCW")).thenReturn(device);
+        when(rentalOrderMapper.selectByIdForUpdate(30L)).thenReturn(rentalOrder);
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(item);
+        doThrow(new RentalDeviceAssignmentException(
+                RentalDeviceAssignmentException.Code.ORDER_NOT_READY, "MISSING_RECEIVE_DATE"))
+                .when(preparationPolicy).requireReady(rentalOrder, item);
+        when(assignmentService.assignPendingPlan(50L, 40L, "ship:ship-key"))
+                .thenReturn(new RentalDeviceAssignmentResult(60L, null, 40L, null, null));
+        when(deviceOpsService.dispatch(any())).thenReturn(opsResp("DISPATCHED"));
+        when(assignmentMapper.selectActiveByOrderItemAndDeviceForUpdate(50L, 40L)).thenReturn(null);
+        when(assignmentMapper.selectByIdForUpdate(60L)).thenReturn(assigned);
+        when(writeClient.execute(eq(XianyuWriteEndpoint.ORDER_SHIP), any())).thenReturn(remoteSuccess());
+
+        XianyuOrderShipRespVO response = service().ship(req);
+
+        assertEquals("DISPATCHED_PENDING_PLAN", response.getAssignmentStatus());
+        verify(assignmentService).assignPendingPlan(50L, 40L, "ship:ship-key");
+        verify(assignmentMapper).updateById(assigned);
+        verify(writeClient).execute(eq(XianyuWriteEndpoint.ORDER_SHIP), any());
+        assertNull(order.getShipDate());
+        assertNotNull(order.getConsignTime());
     }
 
     @Test
@@ -1329,6 +1408,12 @@ class XianyuOrderShipServiceTest {
         remotePayload.put("code", 0);
         remotePayload.put("msg", "ok");
         return new XianyuReadResponse(200, 0, remotePayload, remotePayload.toString());
+    }
+
+    private RentalDeviceOpsRespVO opsResp(String status) {
+        RentalDeviceOpsRespVO response = new RentalDeviceOpsRespVO();
+        response.setAssignmentStatus(status);
+        return response;
     }
 
 }

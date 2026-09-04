@@ -31,6 +31,7 @@ public class RentalDeviceAssignmentServiceImpl implements RentalDeviceAssignment
     static final String DEVICE_STATUS_AVAILABLE = "AVAILABLE";
     static final String RENTAL_ORDER_STATUS_PENDING_ALLOCATION = "PENDING_ALLOCATION";
     static final String ASSIGNMENT_STATUS_ASSIGNED = "ASSIGNED";
+    static final String ASSIGNMENT_STATUS_DISPATCHED_PENDING_PLAN = "DISPATCHED_PENDING_PLAN";
     static final String SCHEDULE_STATUS_EFFECTIVE = "EFFECTIVE";
     static final String SCHEDULE_TYPE_RENTAL = "RENTAL";
 
@@ -128,6 +129,62 @@ public class RentalDeviceAssignmentServiceImpl implements RentalDeviceAssignment
         return result(assignment.getId(), schedule.getId(), device.getId(), command);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public RentalDeviceAssignmentResult assignPendingPlan(Long rentalOrderItemId, Long deviceId,
+                                                          String idempotencyKey) {
+        if (rentalOrderItemId == null || deviceId == null || !StringUtils.hasText(idempotencyKey)
+                || idempotencyKey.length() > 128) {
+            throw new RentalDeviceAssignmentException(RentalDeviceAssignmentException.Code.INVALID_COMMAND,
+                    "Pending-plan assignment command is incomplete");
+        }
+        RentalDeviceAssignmentDO replay = assignmentMapper.selectByIdempotencyKeyForUpdate(idempotencyKey);
+        if (replay != null) {
+            if (!Objects.equals(replay.getRentalOrderItemId(), rentalOrderItemId)
+                    || !Objects.equals(replay.getDeviceId(), deviceId)
+                    || replay.getScheduleId() != null) {
+                throw new RentalDeviceAssignmentException(RentalDeviceAssignmentException.Code.IDEMPOTENCY_KEY_REUSED,
+                        "Idempotency key is already bound to a different assignment");
+            }
+            return new RentalDeviceAssignmentResult(replay.getId(), null, replay.getDeviceId(), null, null);
+        }
+
+        RentalOrderItemDO snapshot = orderItemMapper.selectById(rentalOrderItemId);
+        if (snapshot == null || snapshot.getRentalOrderId() == null) {
+            throw new RentalDeviceAssignmentException(RentalDeviceAssignmentException.Code.ORDER_ITEM_NOT_FOUND,
+                    "Rental order item does not exist");
+        }
+        RentalOrderDO order = orderMapper.selectByIdForUpdate(snapshot.getRentalOrderId());
+        RentalOrderItemDO item = orderItemMapper.selectByIdForUpdate(rentalOrderItemId);
+        if (item == null || !Objects.equals(snapshot.getRentalOrderId(), item.getRentalOrderId())) {
+            throw new RentalDeviceAssignmentException(RentalDeviceAssignmentException.Code.ORDER_ITEM_NOT_FOUND,
+                    "Rental order item changed while acquiring assignment locks");
+        }
+        requirePendingPlanOrderEligible(order, item);
+        RentalDeviceDO device = deviceMapper.selectByIdForUpdate(deviceId);
+        requireDeviceAssignable(device);
+        if (!deviceLockService.getActiveLocksForUpdate(device.getId()).isEmpty()) {
+            throw new RentalDeviceAssignmentException(RentalDeviceAssignmentException.Code.DEVICE_LOCKED,
+                    "Rental device has an active classified lock");
+        }
+        requireItemMatchesDevice(item, device);
+        if (assignmentMapper.countAssignedByOrderItem(item.getId()) >= item.getQuantity()) {
+            throw new RentalDeviceAssignmentException(RentalDeviceAssignmentException.Code.ITEM_ALREADY_FULLY_ASSIGNED,
+                    "Rental order item is already fully assigned");
+        }
+
+        RentalDeviceAssignmentDO assignment = RentalDeviceAssignmentDO.builder()
+                .rentalOrderId(order.getId())
+                .rentalOrderItemId(item.getId())
+                .deviceId(device.getId())
+                .status(ASSIGNMENT_STATUS_ASSIGNED)
+                .idempotencyKey(idempotencyKey)
+                .assignedAt(LocalDateTime.now(BUSINESS_ZONE))
+                .build();
+        assignmentMapper.insert(assignment);
+        return new RentalDeviceAssignmentResult(assignment.getId(), null, device.getId(), null, null);
+    }
+
     static boolean overlaps(LocalDate newStart, LocalDate newEndExclusive, LocalDate existingStart,
                             LocalDate existingEndExclusive) {
         return newStart.isBefore(existingEndExclusive) && newEndExclusive.isAfter(existingStart);
@@ -193,6 +250,14 @@ public class RentalDeviceAssignmentServiceImpl implements RentalDeviceAssignment
                     "Rental order is not eligible for allocation");
         }
         preparationPolicy.requireReady(order, item);
+    }
+
+    private void requirePendingPlanOrderEligible(RentalOrderDO order, RentalOrderItemDO item) {
+        if (order == null || !Objects.equals(order.getId(), item.getRentalOrderId())
+                || !RENTAL_ORDER_STATUS_PENDING_ALLOCATION.equals(order.getStatus())) {
+            throw new RentalDeviceAssignmentException(RentalDeviceAssignmentException.Code.ORDER_NOT_ELIGIBLE,
+                    "Rental order is not eligible for allocation");
+        }
     }
 
 }

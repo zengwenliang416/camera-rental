@@ -127,7 +127,7 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
                 ON assignment.rental_order_id = ro.id
                AND assignment.tenant_id = ro.tenant_id
                AND assignment.deleted = b'0'
-               AND assignment.status IN ('ASSIGNED', 'DISPATCHED')
+               AND assignment.status IN ('ASSIGNED', 'DISPATCHED', 'DISPATCHED_PENDING_PLAN')
               JOIN rental_device device
                 ON device.id = assignment.device_id
                AND device.tenant_id = assignment.tenant_id

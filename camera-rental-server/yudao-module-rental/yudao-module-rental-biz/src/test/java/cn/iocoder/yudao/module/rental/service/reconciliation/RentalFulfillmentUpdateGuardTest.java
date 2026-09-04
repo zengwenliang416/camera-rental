@@ -89,6 +89,31 @@ class RentalFulfillmentUpdateGuardTest {
     }
 
     @Test
+    void completesScheduleForDispatchedPendingPlanAssignment() {
+        RentalOrderDO order = order();
+        RentalOrderItemDO item = item();
+        item.setEquipmentModelCode("A7M4");
+        RentalDeviceAssignmentDO assignment =
+                activeAssignment("DISPATCHED_PENDING_PLAN", 30L, 40L);
+        assignment.setScheduleId(null);
+        stubLockedAssignment(assignment, device(30L, "RENTED", "A7M4"));
+        when(scheduleMapper.insert(any(RentalScheduleDO.class))).thenAnswer(invocation -> {
+            invocation.getArgument(0, RentalScheduleDO.class).setId(70L);
+            return 1;
+        });
+
+        RentalFulfillmentUpdateResult result = guard.apply(
+                order, item, update(null, candidate(5), RentalRemarkPlanChangeType.INITIAL), "A7M4");
+
+        assertTrue(result.planApplied());
+        assertFalse(result.reviewRequired());
+        assertEquals(70L, assignment.getScheduleId());
+        assertEquals("DISPATCHED", assignment.getStatus());
+        verify(scheduleMapper).insert(any(RentalScheduleDO.class));
+        verify(assignmentMapper).updateById(assignment);
+    }
+
+    @Test
     void preservesAssignedPlanWhenExtensionConflicts() {
         RentalOrderDO order = order();
         RentalOrderItemDO item = plannedItem();

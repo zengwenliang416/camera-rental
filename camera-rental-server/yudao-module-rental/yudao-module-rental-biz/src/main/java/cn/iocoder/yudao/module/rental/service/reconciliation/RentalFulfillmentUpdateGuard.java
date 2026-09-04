@@ -26,7 +26,11 @@ import java.util.Set;
 @Component
 public class RentalFulfillmentUpdateGuard {
 
-    private static final Set<String> ACTIVE_ASSIGNMENT_STATUSES = Set.of("ASSIGNED", "DISPATCHED");
+    private static final String STATUS_ASSIGNED = "ASSIGNED";
+    private static final String STATUS_DISPATCHED = "DISPATCHED";
+    private static final String STATUS_DISPATCHED_PENDING_PLAN = "DISPATCHED_PENDING_PLAN";
+    private static final Set<String> ACTIVE_ASSIGNMENT_STATUSES =
+            Set.of(STATUS_ASSIGNED, STATUS_DISPATCHED, STATUS_DISPATCHED_PENDING_PLAN);
     private final RentalDeviceAssignmentMapper assignmentMapper;
     private final RentalDeviceMapper deviceMapper;
     private final RentalScheduleMapper scheduleMapper;
@@ -92,12 +96,16 @@ public class RentalFulfillmentUpdateGuard {
             return RentalFulfillmentUpdateResult.review("REMARK_CHANGE_AMBIGUOUS");
         }
         boolean dispatched = activeAssignments.stream()
-                .anyMatch(value -> "DISPATCHED".equals(value.getStatus()));
+                .anyMatch(value -> Set.of(STATUS_DISPATCHED, STATUS_DISPATCHED_PENDING_PLAN)
+                        .contains(value.getStatus()));
+        boolean allPendingPlan = activeAssignments.stream()
+                .allMatch(value -> STATUS_DISPATCHED_PENDING_PLAN.equals(value.getStatus()));
         if (changeType == RentalRemarkPlanChangeType.EARLY_RETURN) {
             applyExpectedSendBack(candidate, order, item);
             return RentalFulfillmentUpdateResult.applied(false, false);
         }
-        if (dispatched && changeType != RentalRemarkPlanChangeType.EXTENSION
+        if (dispatched && !(allPendingPlan && changeType == RentalRemarkPlanChangeType.INITIAL)
+                && changeType != RentalRemarkPlanChangeType.EXTENSION
                 && changeType != RentalRemarkPlanChangeType.UNCHANGED) {
             return RentalFulfillmentUpdateResult.review("DISPATCHED_PLAN_CHANGE_REVIEW");
         }
@@ -148,7 +156,10 @@ public class RentalFulfillmentUpdateGuard {
         Set<Long> ownScheduleIds = new HashSet<>();
         for (RentalDeviceAssignmentDO assignment : assignments) {
             if (assignment.getScheduleId() == null) {
-                return "FULFILLMENT_SCHEDULE_MISSING";
+                if (!STATUS_DISPATCHED_PENDING_PLAN.equals(assignment.getStatus())) {
+                    return "FULFILLMENT_SCHEDULE_MISSING";
+                }
+                continue;
             }
             ownScheduleIds.add(assignment.getScheduleId());
         }
@@ -166,14 +177,18 @@ public class RentalFulfillmentUpdateGuard {
                         .thenComparing(RentalDeviceAssignmentDO::getId))
                 .toList();
         for (RentalDeviceAssignmentDO assignment : orderedAssignments) {
-            RentalScheduleDO schedule = schedules.get(assignment.getScheduleId());
-            if (!matchesAssignment(schedule, assignment)) {
-                return "FULFILLMENT_SCHEDULE_MISMATCH";
+            if (assignment.getScheduleId() != null) {
+                RentalScheduleDO schedule = schedules.get(assignment.getScheduleId());
+                if (!matchesAssignment(schedule, assignment)) {
+                    return "FULFILLMENT_SCHEDULE_MISMATCH";
+                }
             }
             List<RentalScheduleDO> conflicts = scheduleMapper.selectEffectiveOverlapsForUpdate(
                     assignment.getDeviceId(), candidate.occupyStartDate(), candidate.occupyEndDateExclusive());
             if (conflicts.stream().anyMatch(value -> !ownScheduleIds.contains(value.getId()))) {
-                return dispatched ? "DISPATCHED_EXTENSION_CONFLICT" : "ASSIGNED_SCHEDULE_CONFLICT";
+                return STATUS_DISPATCHED_PENDING_PLAN.equals(assignment.getStatus())
+                        ? "DISPATCHED_PENDING_PLAN_CONFLICT"
+                        : dispatched ? "DISPATCHED_EXTENSION_CONFLICT" : "ASSIGNED_SCHEDULE_CONFLICT";
             }
         }
         for (Long scheduleId : orderedScheduleIds) {
@@ -181,6 +196,25 @@ public class RentalFulfillmentUpdateGuard {
             schedule.setOccupyStartDate(candidate.occupyStartDate());
             schedule.setOccupyEndDateExclusive(candidate.occupyEndDateExclusive());
             scheduleMapper.updateById(schedule);
+        }
+        for (RentalDeviceAssignmentDO assignment : orderedAssignments) {
+            if (assignment.getScheduleId() != null) {
+                continue;
+            }
+            RentalScheduleDO schedule = RentalScheduleDO.builder()
+                    .deviceId(assignment.getDeviceId())
+                    .rentalOrderId(assignment.getRentalOrderId())
+                    .rentalOrderItemId(assignment.getRentalOrderItemId())
+                    .scheduleType("RENTAL")
+                    .status("EFFECTIVE")
+                    .occupyStartDate(candidate.occupyStartDate())
+                    .occupyEndDateExclusive(candidate.occupyEndDateExclusive())
+                    .idempotencyKey("pending-plan:" + assignment.getId())
+                    .build();
+            scheduleMapper.insert(schedule);
+            assignment.setScheduleId(schedule.getId());
+            assignment.setStatus(STATUS_DISPATCHED);
+            assignmentMapper.updateById(assignment);
         }
         return null;
     }
@@ -287,10 +321,11 @@ public class RentalFulfillmentUpdateGuard {
         if (device == null) {
             return "FULFILLMENT_DEVICE_MISSING";
         }
-        if ("ASSIGNED".equals(assignment.getStatus()) && !"AVAILABLE".equals(device.getStatus())) {
+        if (STATUS_ASSIGNED.equals(assignment.getStatus()) && !"AVAILABLE".equals(device.getStatus())) {
             return "ASSIGNED_DEVICE_STATE_MISMATCH";
         }
-        if ("DISPATCHED".equals(assignment.getStatus()) && !"RENTED".equals(device.getStatus())) {
+        if (Set.of(STATUS_DISPATCHED, STATUS_DISPATCHED_PENDING_PLAN).contains(assignment.getStatus())
+                && !"RENTED".equals(device.getStatus())) {
             return "DISPATCHED_DEVICE_STATE_MISMATCH";
         }
         if ("RETURNED".equals(assignment.getStatus())

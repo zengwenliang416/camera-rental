@@ -151,7 +151,7 @@
                             WHERE rda.tenant_id = roi.tenant_id
                               AND rda.deleted = b'0'
                               AND rda.rental_order_item_id = roi.id
-                              AND rda.status IN ('ASSIGNED', 'DISPATCHED')
+                              AND rda.status IN ('ASSIGNED', 'DISPATCHED', 'DISPATCHED_PENDING_PLAN')
                         )
                   )
             ) AS pending_allocation_orders,
@@ -170,7 +170,7 @@
                       WHERE rda.tenant_id = roi.tenant_id
                         AND rda.deleted = b'0'
                         AND rda.rental_order_item_id = roi.id
-                        AND rda.status IN ('ASSIGNED', 'DISPATCHED')
+                        AND rda.status IN ('ASSIGNED', 'DISPATCHED', 'DISPATCHED_PENDING_PLAN')
                   )
             ) AS pending_allocation_items,
             COALESCE(SUM(

@@ -41,6 +41,9 @@ public class XianyuOrderShipReqVO {
     @Schema(description = "订单仅缺商品型号规则时，是否确认将商品绑定到扫描设备的型号")
     private Boolean bindProductRuleIfMissing;
 
+    @Schema(description = "商品型号已确定但租期不完整时，是否明确确认先发货、后补租期")
+    private Boolean allowPendingPlan;
+
     @AssertTrue(message = "必须传入 deviceId 或 deviceNo")
     public boolean isDevicePresent() {
         return deviceId != null || StringUtils.hasText(deviceNo);

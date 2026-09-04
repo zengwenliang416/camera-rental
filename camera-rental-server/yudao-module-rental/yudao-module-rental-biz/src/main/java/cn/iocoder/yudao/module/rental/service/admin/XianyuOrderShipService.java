@@ -71,6 +71,7 @@ import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHI
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_CONVERTED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_READY;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_PENDING;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_PENDING_PLAN_CONFIRM_REQUIRED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_PRODUCT_RULE_BIND_CONFLICT;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_PRODUCT_RULE_BIND_REQUIRED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_REMOTE_ERROR;
@@ -87,6 +88,8 @@ public class XianyuOrderShipService {
     private static final Set<String> BACKFILL_CLOSED_STATUSES = Set.of("23", "24");
     private static final Integer BACKFILL_REFUND_SUCCESS_STATUS = 5;
     private static final String BACKFILL_SOURCE = "ADMIN_BACKFILL";
+    private static final String ASSIGNMENT_STATUS_DISPATCHED = "DISPATCHED";
+    private static final String ASSIGNMENT_STATUS_DISPATCHED_PENDING_PLAN = "DISPATCHED_PENDING_PLAN";
 
     private final XianyuOrderMapper orderMapper;
     private final XianyuShopMapper shopMapper;
@@ -157,7 +160,8 @@ public class XianyuOrderShipService {
         if (replay != null) {
             RentalDeliveryResult tracking = replay.getDeliveryId() == null
                     ? null : deliveryService.getResult(replay.getDeliveryId());
-            return toShipResp(replay, deviceMapper.selectById(replay.getDeviceId()), "DISPATCHED", tracking);
+            return toShipResp(replay, deviceMapper.selectById(replay.getDeviceId()),
+                    assignmentStatus(replay.getAssignmentId()), tracking);
         }
         XianyuProperties properties = runtimeConfigService.getCurrent();
         if (properties.getIntegrationStatus() != XianyuProperties.IntegrationStatus.READY
@@ -173,14 +177,19 @@ public class XianyuOrderShipService {
         XianyuShopDO shop = requireAuthorizedShop(order.getShopId());
         RentalDeviceDO device = resolveDevice(reqVO);
         requireDeviceShippable(device);
-        RentalOrderItemDO item = requirePreparedFirstItem(order, reqVO, device);
+        PreparedShipItem prepared = requirePreparedShipItem(order, reqVO, device);
+        RentalOrderItemDO item = prepared.item();
         requireDeviceModelMatches(item, device);
 
-        RentalDeviceAssignmentResult assignment = assignDevice(reqVO, device, item);
+        RentalDeviceAssignmentResult assignment = assignDevice(reqVO, device, item, prepared.pendingPlan());
         ObjectNode shipBody = buildShipBody(order, reqVO);
         XianyuReadResponse remote = callRemote(shipBody);
 
         RentalDeviceOpsRespVO dispatched = dispatch(device.getId(), assignment.assignmentId());
+        if (prepared.pendingPlan()) {
+            markDispatchedPendingPlan(assignment.assignmentId());
+            dispatched.setAssignmentStatus(ASSIGNMENT_STATUS_DISPATCHED_PENDING_PLAN);
+        }
         RentalDeviceShipmentDO shipment = RentalDeviceShipmentDO.builder()
                 .channelOrderId(order.getId())
                 .assignmentId(assignment.assignmentId())
@@ -208,7 +217,8 @@ public class XianyuOrderShipService {
         order.setWaybillNo(reqVO.getWaybillNo());
         order.setExpressCode(reqVO.getExpressCode());
         order.setExpressName(reqVO.getExpressName());
-        order.setConsignTime(LocalDateTime.now(BUSINESS_ZONE));
+        LocalDateTime consignTime = LocalDateTime.now(BUSINESS_ZONE);
+        order.setConsignTime(consignTime);
         orderMapper.updateById(order);
 
         XianyuOrderShipRespVO resp = toShipResp(shipment, device, dispatched.getAssignmentStatus(), delivery);
@@ -388,12 +398,27 @@ public class XianyuOrderShipService {
     }
 
     private RentalOrderItemDO requirePreparedFirstItem(XianyuOrderDO order) {
-        return requirePreparedFirstItem(order, null, null);
+        Long rentalOrderId = order.getRentalOrderId();
+        if (rentalOrderId == null) {
+            throw exception(XIANYU_SHIP_ORDER_NOT_CONVERTED);
+        }
+        RentalOrderDO rentalOrder = rentalOrderMapper.selectByIdForUpdate(rentalOrderId);
+        RentalOrderItemDO item = rentalOrder == null ? null
+                : rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(rentalOrder.getId());
+        if (rentalOrder == null || item == null) {
+            throw exception(XIANYU_SHIP_ORDER_NOT_CONVERTED);
+        }
+        try {
+            preparationPolicy.requireReady(rentalOrder, item);
+        } catch (RentalDeviceAssignmentException ex) {
+            throw exception(XIANYU_SHIP_ORDER_NOT_READY, preparationReason(order, rentalOrder, ex));
+        }
+        return item;
     }
 
-    private RentalOrderItemDO requirePreparedFirstItem(XianyuOrderDO order,
-                                                       XianyuOrderShipReqVO reqVO,
-                                                       RentalDeviceDO device) {
+    private PreparedShipItem requirePreparedShipItem(XianyuOrderDO order,
+                                                     XianyuOrderShipReqVO reqVO,
+                                                     RentalDeviceDO device) {
         Long rentalOrderId = order.getRentalOrderId();
         if (rentalOrderId == null) {
             throw exception(XIANYU_SHIP_ORDER_NOT_CONVERTED);
@@ -408,25 +433,22 @@ public class XianyuOrderShipService {
         }
         try {
             preparationPolicy.requireReady(rentalOrder, item);
+            return new PreparedShipItem(item, false);
         } catch (RentalDeviceAssignmentException ex) {
-            String reasonCode = StringUtils.hasText(rentalOrder.getPreparationReasonCode())
-                    ? rentalOrder.getPreparationReasonCode()
-                    : (StringUtils.hasText(order.getPreparationReasonCode())
-                    ? order.getPreparationReasonCode() : ex.getMessage());
-            if (reqVO != null && device != null && "PRODUCT_RULE_NOT_CONFIGURED".equals(reasonCode)) {
+            String reasonCode = preparationReason(order, rentalOrder, ex);
+            if ("PRODUCT_RULE_NOT_CONFIGURED".equals(reasonCode)) {
                 if (!Boolean.TRUE.equals(reqVO.getBindProductRuleIfMissing())) {
                     throw exception(XIANYU_SHIP_PRODUCT_RULE_BIND_REQUIRED);
                 }
-                return bindProductRuleAndReloadPreparedItem(order, device);
+                return bindProductRuleAndReloadPreparedItem(order, reqVO, device);
             }
-            throw exception(XIANYU_SHIP_ORDER_NOT_READY,
-                    StringUtils.hasText(reasonCode) ? reasonCode : "ORDER_NOT_READY");
+            return requirePendingPlanConfirmation(order, rentalOrder, item, reqVO, reasonCode);
         }
-        return item;
     }
 
-    private RentalOrderItemDO bindProductRuleAndReloadPreparedItem(XianyuOrderDO order,
-                                                                   RentalDeviceDO device) {
+    private PreparedShipItem bindProductRuleAndReloadPreparedItem(XianyuOrderDO order,
+                                                                  XianyuOrderShipReqVO reqVO,
+                                                                  RentalDeviceDO device) {
         if (!StringUtils.hasText(order.getXianyuItemId())
                 || !StringUtils.hasText(device.getEquipmentModelCode())) {
             throw exception(XIANYU_SHIP_PRODUCT_RULE_BIND_CONFLICT, "订单商品或扫描设备缺少型号标识");
@@ -439,7 +461,7 @@ public class XianyuOrderShipService {
         productRuleService.createSingleRuleFromShipment(
                 order.getShopId(), order.getXianyuItemId(), model.getId());
         RentalChannelOrderReconciliationResult result = reconciliationService.reconcile(order.getId());
-        if (!"CONVERTED".equals(result.status()) || !"READY".equals(result.preparationStatus())) {
+        if (!"CONVERTED".equals(result.status())) {
             throw exception(XIANYU_SHIP_ORDER_NOT_READY,
                     StringUtils.hasText(result.reasonCode()) ? result.reasonCode() : result.preparationStatus());
         }
@@ -452,12 +474,52 @@ public class XianyuOrderShipService {
         }
         try {
             preparationPolicy.requireReady(refreshedOrder, refreshedItem);
+            return new PreparedShipItem(refreshedItem, false);
         } catch (RentalDeviceAssignmentException ex) {
-            throw exception(XIANYU_SHIP_ORDER_NOT_READY,
-                    StringUtils.hasText(refreshedOrder.getPreparationReasonCode())
-                            ? refreshedOrder.getPreparationReasonCode() : "ORDER_NOT_READY");
+            return requirePendingPlanConfirmation(order, refreshedOrder, refreshedItem, reqVO,
+                    preparationReason(order, refreshedOrder, ex));
         }
-        return refreshedItem;
+    }
+
+    private PreparedShipItem requirePendingPlanConfirmation(XianyuOrderDO sourceOrder,
+                                                            RentalOrderDO rentalOrder,
+                                                            RentalOrderItemDO item,
+                                                            XianyuOrderShipReqVO reqVO,
+                                                            String reasonCode) {
+        if (!"WAITING_REMARK".equals(rentalOrder.getPreparationStatus())
+                || !"PENDING_ALLOCATION".equals(rentalOrder.getStatus())
+                || !StringUtils.hasText(item.getEquipmentModelCode())
+                || hasCompletePlan(item)) {
+            throw exception(XIANYU_SHIP_ORDER_NOT_READY,
+                    StringUtils.hasText(reasonCode) ? reasonCode : "ORDER_NOT_READY");
+        }
+        if (!Boolean.TRUE.equals(reqVO.getAllowPendingPlan())) {
+            throw exception(XIANYU_SHIP_PENDING_PLAN_CONFIRM_REQUIRED);
+        }
+        if (sourceOrder.getCancelTime() != null) {
+            throw exception(XIANYU_SHIP_ORDER_NOT_PENDING);
+        }
+        return new PreparedShipItem(item, true);
+    }
+
+    private static boolean hasCompletePlan(RentalOrderItemDO item) {
+        return item.getBillableStartDate() != null
+                && item.getBillableEndDate() != null
+                && item.getOccupyStartDate() != null
+                && item.getOccupyEndDateExclusive() != null
+                && item.getOccupyStartDate().isBefore(item.getOccupyEndDateExclusive());
+    }
+
+    private static String preparationReason(XianyuOrderDO sourceOrder,
+                                            RentalOrderDO rentalOrder,
+                                            RentalDeviceAssignmentException ex) {
+        if (StringUtils.hasText(rentalOrder.getPreparationReasonCode())) {
+            return rentalOrder.getPreparationReasonCode();
+        }
+        if (StringUtils.hasText(sourceOrder.getPreparationReasonCode())) {
+            return sourceOrder.getPreparationReasonCode();
+        }
+        return StringUtils.hasText(ex.getMessage()) ? ex.getMessage() : "ORDER_NOT_READY";
     }
 
     private void requireDeviceModelMatches(RentalOrderItemDO item, RentalDeviceDO device) {
@@ -469,7 +531,7 @@ public class XianyuOrderShipService {
     }
 
     private RentalDeviceAssignmentResult assignDevice(XianyuOrderShipReqVO reqVO, RentalDeviceDO device,
-                                                       RentalOrderItemDO item) {
+                                                       RentalOrderItemDO item, boolean pendingPlan) {
         RentalDeviceAssignmentDO existing =
                 assignmentMapper.selectActiveByOrderItemAndDeviceForUpdate(item.getId(), device.getId());
         if (existing != null) {
@@ -477,6 +539,10 @@ public class XianyuOrderShipService {
                     item.getOccupyStartDate(), item.getOccupyEndDateExclusive());
         }
         try {
+            if (pendingPlan) {
+                return assignmentService.assignPendingPlan(
+                        item.getId(), device.getId(), "ship:" + reqVO.getIdempotencyKey());
+            }
             return assignmentService.assign(new RentalDeviceAssignmentCommand(
                     item.getId(), device.getId(), item.getOccupyStartDate(), item.getOccupyEndDateExclusive(),
                     "ship:" + reqVO.getIdempotencyKey()));
@@ -486,6 +552,16 @@ public class XianyuOrderShipService {
             }
             throw exception(XIANYU_SHIP_DEVICE_NOT_SHIPPABLE, ex.getCode().name());
         }
+    }
+
+    private void markDispatchedPendingPlan(Long assignmentId) {
+        RentalDeviceAssignmentDO assignment = assignmentMapper.selectByIdForUpdate(assignmentId);
+        if (assignment == null || !ASSIGNMENT_STATUS_DISPATCHED.equals(assignment.getStatus())
+                || assignment.getScheduleId() != null) {
+            throw exception(XIANYU_SHIP_DEVICE_NOT_SHIPPABLE, "待补租期分配状态已变化");
+        }
+        assignment.setStatus(ASSIGNMENT_STATUS_DISPATCHED_PENDING_PLAN);
+        assignmentMapper.updateById(assignment);
     }
 
     private BackfillDispatchResult ensureBackfillDispatched(String idempotencyKey,
@@ -606,7 +682,12 @@ public class XianyuOrderShipService {
     private XianyuOrderShipRespVO replayResponse(RentalDeviceShipmentDO shipment, RentalDeviceDO device) {
         RentalDeliveryResult tracking = shipment.getDeliveryId() == null
                 ? null : deliveryService.getResult(shipment.getDeliveryId());
-        return toShipResp(shipment, device, "DISPATCHED", tracking);
+        return toShipResp(shipment, device, assignmentStatus(shipment.getAssignmentId()), tracking);
+    }
+
+    private String assignmentStatus(Long assignmentId) {
+        RentalDeviceAssignmentDO assignment = assignmentId == null ? null : assignmentMapper.selectById(assignmentId);
+        return assignment == null ? ASSIGNMENT_STATUS_DISPATCHED : assignment.getStatus();
     }
 
     private XianyuOrderShipRespVO toShipResp(RentalDeviceShipmentDO shipment, RentalDeviceDO device,
@@ -643,6 +724,9 @@ public class XianyuOrderShipService {
             RentalDeviceAssignmentResult assignment,
             String assignmentStatus
     ) {
+    }
+
+    private record PreparedShipItem(RentalOrderItemDO item, boolean pendingPlan) {
     }
 
 }

@@ -54,12 +54,14 @@ public class RentalScheduleWorkbenchService {
     static final String SCHEDULE_EFFECTIVE = "EFFECTIVE";
     static final String STATUS_ASSIGNED = "ASSIGNED";
     static final String STATUS_DISPATCHED = "DISPATCHED";
+    static final String STATUS_DISPATCHED_PENDING_PLAN = "DISPATCHED_PENDING_PLAN";
     static final String DEVICE_RENTED = "RENTED";
     static final String DEVICE_MAINTENANCE = "MAINTENANCE";
     static final String LOGISTICS_NONE = "NONE";
     static final String LOGISTICS_RETURNED_PENDING_INSPECTION = "RETURNED_PENDING_INSPECTION";
     private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
-    private static final Set<String> ACTIVE_ASSIGNMENT_STATUSES = Set.of(STATUS_ASSIGNED, STATUS_DISPATCHED);
+    private static final Set<String> ACTIVE_ASSIGNMENT_STATUSES =
+            Set.of(STATUS_ASSIGNED, STATUS_DISPATCHED, STATUS_DISPATCHED_PENDING_PLAN);
     private static final Set<String> TRANSIT_STATUSES =
             Set.of("PICKED_UP", "IN_TRANSIT", "OUT_FOR_DELIVERY", "RETURNING");
 
@@ -129,21 +131,7 @@ public class RentalScheduleWorkbenchService {
 
         Set<Long> scheduleOrderIds = schedules.stream()
                 .map(RentalScheduleDO::getRentalOrderId).filter(Objects::nonNull).collect(Collectors.toSet());
-        List<RentalOrderDO> scheduleOrders = scheduleOrderIds.isEmpty() ? List.of()
-                : nullSafe(orderMapper.selectList(new LambdaQueryWrapper<RentalOrderDO>()
-                        .eq(RentalOrderDO::getTenantId, tenantId)
-                        .in(RentalOrderDO::getId, scheduleOrderIds)
-                        .orderByAsc(RentalOrderDO::getId)));
-        List<Long> orderIds = scheduleOrders.stream().map(RentalOrderDO::getId)
-                .filter(Objects::nonNull).distinct().toList();
-        List<RentalOrderItemDO> orderItems = orderIds.isEmpty() ? List.of() : nullSafe(orderItemMapper.selectList(
-                new LambdaQueryWrapper<RentalOrderItemDO>()
-                        .eq(RentalOrderItemDO::getTenantId, tenantId)
-                        .in(RentalOrderItemDO::getRentalOrderId, orderIds)
-                        .orderByAsc(RentalOrderItemDO::getRentalOrderId)
-                        .orderByAsc(RentalOrderItemDO::getId)));
-
-        Set<Long> assignmentOrderIds = new LinkedHashSet<>(orderIds);
+        Set<Long> assignmentOrderIds = new LinkedHashSet<>(scheduleOrderIds);
         Set<Long> assignmentDeviceIds = new LinkedHashSet<>(deviceIds);
         List<RentalDeviceAssignmentDO> assignments = assignmentOrderIds.isEmpty() && assignmentDeviceIds.isEmpty()
                 ? List.of() : nullSafe(assignmentMapper.selectList(
@@ -162,6 +150,23 @@ public class RentalScheduleWorkbenchService {
                             }
                         })
                         .orderByAsc(RentalDeviceAssignmentDO::getId)));
+
+        Set<Long> allOrderIds = new LinkedHashSet<>(scheduleOrderIds);
+        assignments.stream().map(RentalDeviceAssignmentDO::getRentalOrderId)
+                .filter(Objects::nonNull).forEach(allOrderIds::add);
+        List<RentalOrderDO> scheduleOrders = allOrderIds.isEmpty() ? List.of()
+                : nullSafe(orderMapper.selectList(new LambdaQueryWrapper<RentalOrderDO>()
+                        .eq(RentalOrderDO::getTenantId, tenantId)
+                        .in(RentalOrderDO::getId, allOrderIds)
+                        .orderByAsc(RentalOrderDO::getId)));
+        List<Long> orderIds = scheduleOrders.stream().map(RentalOrderDO::getId)
+                .filter(Objects::nonNull).distinct().toList();
+        List<RentalOrderItemDO> orderItems = orderIds.isEmpty() ? List.of() : nullSafe(orderItemMapper.selectList(
+                new LambdaQueryWrapper<RentalOrderItemDO>()
+                        .eq(RentalOrderItemDO::getTenantId, tenantId)
+                        .in(RentalOrderItemDO::getRentalOrderId, orderIds)
+                        .orderByAsc(RentalOrderItemDO::getRentalOrderId)
+                        .orderByAsc(RentalOrderItemDO::getId)));
 
         List<RentalDeliveryDeviceRelDO> deliveryRelations = deviceIds.isEmpty()
                 ? List.of() : nullSafe(deliveryRelationMapper.selectList(
@@ -184,6 +189,11 @@ public class RentalScheduleWorkbenchService {
                 .filter(assignment -> assignment.getScheduleId() != null)
                 .collect(Collectors.toMap(RentalDeviceAssignmentDO::getScheduleId, Function.identity(),
                         (left, right) -> left, LinkedHashMap::new));
+        Map<Long, List<RentalDeviceAssignmentDO>> pendingAssignmentsByDeviceId = assignments.stream()
+                .filter(assignment -> STATUS_DISPATCHED_PENDING_PLAN.equals(assignment.getStatus()))
+                .filter(assignment -> assignment.getScheduleId() == null && assignment.getDeviceId() != null)
+                .collect(Collectors.groupingBy(RentalDeviceAssignmentDO::getDeviceId,
+                        LinkedHashMap::new, Collectors.toList()));
         Map<Long, List<RentalDeliveryDO>> deliveriesByDeviceId = deliveriesByDeviceId(deliveryRelations, deliveries);
         Map<Long, List<RentalScheduleDO>> schedulesByDeviceId = schedules.stream()
                 .filter(schedule -> schedule.getDeviceId() != null)
@@ -193,6 +203,7 @@ public class RentalScheduleWorkbenchService {
         List<RentalScheduleWorkbenchDeviceLaneRespVO> lanes = devices.stream()
                 .map(device -> toLane(device, schedulesByDeviceId.getOrDefault(device.getId(), List.of()),
                         orderItemsById, ordersById, assignmentsByScheduleId,
+                        pendingAssignmentsByDeviceId.getOrDefault(device.getId(), List.of()),
                         deliveriesByDeviceId.getOrDefault(device.getId(), List.of()), window))
                 .toList();
         List<RentalScheduleWorkbenchExceptionRespVO> exceptions =
@@ -219,6 +230,7 @@ public class RentalScheduleWorkbenchService {
             RentalDeviceDO device, List<RentalScheduleDO> schedules,
             Map<Long, RentalOrderItemDO> orderItemsById, Map<Long, RentalOrderDO> ordersById,
             Map<Long, RentalDeviceAssignmentDO> assignmentsByScheduleId,
+            List<RentalDeviceAssignmentDO> pendingAssignments,
             List<RentalDeliveryDO> deliveries, Window window) {
         String logisticsStatus = resolveLogisticsStatus(device, deliveries);
         RentalScheduleWorkbenchDeviceLaneRespVO lane = new RentalScheduleWorkbenchDeviceLaneRespVO();
@@ -233,7 +245,7 @@ public class RentalScheduleWorkbenchService {
         lane.setLogisticsStatus(logisticsStatus);
         lane.setOccupied(isOccupied(device, schedules));
         lane.setExpectedReleaseDate(expectedReleaseDate(device, schedules));
-        lane.setSegments(schedules.stream()
+        List<RentalScheduleWorkbenchSegmentRespVO> segments = new ArrayList<>(schedules.stream()
                 .filter(schedule -> validRange(schedule.getOccupyStartDate(), schedule.getOccupyEndDateExclusive()))
                 .filter(schedule -> schedule.getOccupyStartDate().isBefore(window.toDateExclusive())
                         && schedule.getOccupyEndDateExclusive().isAfter(window.fromDate()))
@@ -241,7 +253,49 @@ public class RentalScheduleWorkbenchService {
                         ordersById.get(schedule.getRentalOrderId()), assignmentsByScheduleId.get(schedule.getId()),
                         logisticsStatus, window))
                 .toList());
+        pendingAssignments.stream()
+                .map(assignment -> toPendingPlanSegment(assignment, orderItemsById, ordersById, logisticsStatus, window))
+                .filter(Objects::nonNull)
+                .forEach(segments::add);
+        segments.sort(Comparator.comparing(RentalScheduleWorkbenchSegmentRespVO::getOccupyStartDate,
+                Comparator.nullsLast(Comparator.naturalOrder())));
+        lane.setSegments(segments);
         return lane;
+    }
+
+    private RentalScheduleWorkbenchSegmentRespVO toPendingPlanSegment(
+            RentalDeviceAssignmentDO assignment,
+            Map<Long, RentalOrderItemDO> orderItemsById,
+            Map<Long, RentalOrderDO> ordersById,
+            String logisticsStatus,
+            Window window) {
+        LocalDate occupyStartDate = assignment.getAssignedAt() == null
+                ? window.fromDate() : assignment.getAssignedAt().toLocalDate();
+        if (!occupyStartDate.isBefore(window.toDateExclusive())) {
+            return null;
+        }
+        RentalOrderItemDO item = orderItemsById.get(assignment.getRentalOrderItemId());
+        RentalOrderDO order = ordersById.get(assignment.getRentalOrderId());
+        RentalScheduleWorkbenchSegmentRespVO segment = new RentalScheduleWorkbenchSegmentRespVO();
+        segment.setRentalOrderId(assignment.getRentalOrderId());
+        segment.setRentalOrderItemId(assignment.getRentalOrderItemId());
+        segment.setAssignmentId(assignment.getId());
+        segment.setOrderNo(order == null ? null : order.getOrderNo());
+        segment.setSegmentType("PENDING_PLAN");
+        segment.setScheduleType("RENTAL");
+        segment.setStatus(assignment.getStatus());
+        segment.setLogisticsStatus(logisticsStatus);
+        if (item != null) {
+            segment.setBillableStartDate(item.getBillableStartDate());
+            segment.setBillableEndDate(item.getBillableEndDate());
+        }
+        segment.setOccupyStartDate(occupyStartDate);
+        segment.setOccupyEndDateExclusive(window.toDateExclusive());
+        segment.setDisplayStartDate(max(occupyStartDate, window.fromDate()));
+        segment.setDisplayEndDateExclusive(window.toDateExclusive());
+        segment.setLeftContinuation(occupyStartDate.isBefore(window.fromDate()));
+        segment.setRightContinuation(true);
+        return segment;
     }
 
     private RentalScheduleWorkbenchSegmentRespVO toSegment(
@@ -346,6 +400,7 @@ public class RentalScheduleWorkbenchService {
         metrics.setInTransitDevices(lanes.stream().filter(lane -> TRANSIT_STATUSES.contains(lane.getLogisticsStatus())).count());
         metrics.setOccupiedDeviceDays(lanes.stream()
                 .flatMap(lane -> lane.getSegments().stream())
+                .filter(segment -> !"PENDING_PLAN".equals(segment.getSegmentType()))
                 .mapToLong(segment -> ChronoUnit.DAYS.between(
                         segment.getDisplayStartDate(), segment.getDisplayEndDateExclusive()))
                 .sum());

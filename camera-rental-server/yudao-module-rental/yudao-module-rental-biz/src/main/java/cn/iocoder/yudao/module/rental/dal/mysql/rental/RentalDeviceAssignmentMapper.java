@@ -23,7 +23,8 @@ public interface RentalDeviceAssignmentMapper extends BaseMapperX<RentalDeviceAs
         // Active links still occupy the order item slot until returned.
         return selectCount(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
                 .eq(RentalDeviceAssignmentDO::getRentalOrderItemId, rentalOrderItemId)
-                .in(RentalDeviceAssignmentDO::getStatus, "ASSIGNED", "DISPATCHED"));
+                .in(RentalDeviceAssignmentDO::getStatus,
+                        "ASSIGNED", "DISPATCHED", "DISPATCHED_PENDING_PLAN"));
     }
 
     @Select("SELECT COUNT(*) FROM rental_device_assignment"
@@ -34,7 +35,8 @@ public interface RentalDeviceAssignmentMapper extends BaseMapperX<RentalDeviceAs
     default RentalDeviceAssignmentDO selectActiveByDeviceIdForUpdate(Long deviceId) {
         return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
                 .eq(RentalDeviceAssignmentDO::getDeviceId, deviceId)
-                .in(RentalDeviceAssignmentDO::getStatus, "ASSIGNED", "DISPATCHED")
+                .in(RentalDeviceAssignmentDO::getStatus,
+                        "ASSIGNED", "DISPATCHED", "DISPATCHED_PENDING_PLAN")
                 .orderByDesc(RentalDeviceAssignmentDO::getId)
                 .last("LIMIT 1"));
     }
@@ -43,7 +45,8 @@ public interface RentalDeviceAssignmentMapper extends BaseMapperX<RentalDeviceAs
         return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
                 .eq(RentalDeviceAssignmentDO::getRentalOrderItemId, rentalOrderItemId)
                 .eq(RentalDeviceAssignmentDO::getDeviceId, deviceId)
-                .in(RentalDeviceAssignmentDO::getStatus, "ASSIGNED", "DISPATCHED")
+                .in(RentalDeviceAssignmentDO::getStatus,
+                        "ASSIGNED", "DISPATCHED", "DISPATCHED_PENDING_PLAN")
                 .orderByDesc(RentalDeviceAssignmentDO::getId)
                 .last("LIMIT 1"));
     }
@@ -59,7 +62,8 @@ public interface RentalDeviceAssignmentMapper extends BaseMapperX<RentalDeviceAs
         }
         return selectList(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
                 .in(RentalDeviceAssignmentDO::getRentalOrderId, rentalOrderIds)
-                .in(RentalDeviceAssignmentDO::getStatus, "ASSIGNED", "DISPATCHED")
+                .in(RentalDeviceAssignmentDO::getStatus,
+                        "ASSIGNED", "DISPATCHED", "DISPATCHED_PENDING_PLAN")
                 .orderByAsc(RentalDeviceAssignmentDO::getRentalOrderId)
                 .orderByAsc(RentalDeviceAssignmentDO::getId));
     }
@@ -67,7 +71,8 @@ public interface RentalDeviceAssignmentMapper extends BaseMapperX<RentalDeviceAs
     default List<RentalDeviceAssignmentDO> selectActiveListByRentalOrderId(Long rentalOrderId) {
         return selectList(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
                 .eq(RentalDeviceAssignmentDO::getRentalOrderId, rentalOrderId)
-                .in(RentalDeviceAssignmentDO::getStatus, "ASSIGNED", "DISPATCHED")
+                .in(RentalDeviceAssignmentDO::getStatus,
+                        "ASSIGNED", "DISPATCHED", "DISPATCHED_PENDING_PLAN")
                 .orderByAsc(RentalDeviceAssignmentDO::getId));
     }
 

@@ -29,6 +29,7 @@ public class RentalOrderLifecycleService {
     static final String ORDER_STATUS_CANCELED = "CANCELED";
     static final String ASSIGNMENT_STATUS_CANCELED = "CANCELED";
     static final String ASSIGNMENT_STATUS_DISPATCHED = "DISPATCHED";
+    static final String ASSIGNMENT_STATUS_DISPATCHED_PENDING_PLAN = "DISPATCHED_PENDING_PLAN";
     static final String SCHEDULE_STATUS_EFFECTIVE = "EFFECTIVE";
     static final String SCHEDULE_STATUS_CANCELED = "CANCELED";
 
@@ -59,7 +60,8 @@ public class RentalOrderLifecycleService {
         List<RentalDeviceAssignmentDO> assignments =
                 assignmentMapper.selectActiveListByRentalOrderId(orderId);
         for (RentalDeviceAssignmentDO assignment : assignments) {
-            if (ASSIGNMENT_STATUS_DISPATCHED.equals(assignment.getStatus())) {
+            if (ASSIGNMENT_STATUS_DISPATCHED.equals(assignment.getStatus())
+                    || ASSIGNMENT_STATUS_DISPATCHED_PENDING_PLAN.equals(assignment.getStatus())) {
                 throw exception(RENTAL_ORDER_CANCEL_FAILED,
                         "订单存在已出库设备，请先完成回仓或换机后再取消");
             }

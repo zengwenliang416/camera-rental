@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -136,6 +137,43 @@ class RentalScheduleWorkbenchServiceTest {
         assertEquals(1, result.getExceptions().stream()
                 .filter(item -> "RETURN_INSPECTION_PENDING".equals(item.getCode())).count());
         assertTrue(result.getPendingAllocations().isEmpty());
+    }
+
+    @Test
+    void shouldShowDispatchedPendingPlanAsVisibleTimelineSegment() {
+        RentalDeviceDO device = RentalDeviceDO.builder()
+                .id(301L).deviceNo("A7M4-0003").equipmentModelCode("SONY-A7M4")
+                .status("RENTED").enabled(true).build();
+        Page<RentalDeviceDO> page = new Page<>(1, 25);
+        page.setRecords(List.of(device));
+        page.setTotal(1);
+        when(workbenchMapper.selectDevicePage(any(), eq(9L), any(), any(), any(), any())).thenReturn(page);
+        when(workbenchMapper.selectDeviceMetrics(any(), any(), any(), any(), any(), any(), any()))
+                .thenReturn(null);
+        when(assignmentMapper.selectList(any())).thenReturn(List.of(
+                RentalDeviceAssignmentDO.builder()
+                        .id(401L).rentalOrderId(501L).rentalOrderItemId(601L).deviceId(301L)
+                        .status("DISPATCHED_PENDING_PLAN").assignedAt(LocalDateTime.of(2026, 8, 3, 10, 0))
+                        .scheduleId(null).build()));
+        when(orderMapper.selectList(any())).thenReturn(List.of(
+                RentalOrderDO.builder().id(501L).orderNo("R-20260803-001").build()));
+        when(orderItemMapper.selectList(any())).thenReturn(List.of(
+                RentalOrderItemDO.builder().id(601L).rentalOrderId(501L).build()));
+
+        RentalScheduleWorkbenchRespVO result = service.getWorkbench(
+                request(LocalDate.of(2026, 8, 1), LocalDate.of(2026, 8, 15), "14D"));
+
+        var lane = result.getDevicePage().getList().get(0);
+        assertEquals(1, lane.getSegments().size());
+        var segment = lane.getSegments().get(0);
+        assertEquals("PENDING_PLAN", segment.getSegmentType());
+        assertEquals(401L, segment.getAssignmentId());
+        assertEquals("R-20260803-001", segment.getOrderNo());
+        assertEquals(LocalDate.of(2026, 8, 3), segment.getOccupyStartDate());
+        assertEquals(LocalDate.of(2026, 8, 15), segment.getOccupyEndDateExclusive());
+        assertEquals(LocalDate.of(2026, 8, 15), segment.getDisplayEndDateExclusive());
+        assertTrue(segment.getRightContinuation());
+        assertEquals(0L, result.getMetrics().getOccupiedDeviceDays());
     }
 
     private RentalScheduleWorkbenchReqVO request(LocalDate from, LocalDate toExclusive, String viewMode) {

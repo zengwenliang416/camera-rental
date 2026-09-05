@@ -27,11 +27,51 @@
     </el-button>
   </div>
   <el-form class="mt-16px" label-position="top" :model="form">
+    <el-form-item :label="t('rental.xianyu.deviceSearchLabel')">
+      <el-select
+        v-model="selectedDeviceNo"
+        class="w-full"
+        clearable
+        filterable
+        remote
+        remote-show-suffix
+        :debounce="0"
+        :remote-method="handleDeviceSearch"
+        :loading="devicesLoading"
+        :placeholder="t('rental.xianyu.deviceCascadeDevicePlaceholder')"
+        @visible-change="handleDeviceDropdown"
+        @change="handleDeviceChange"
+        @clear="handleDeviceClear"
+      >
+        <el-option
+          v-for="device in visibleDeviceOptions"
+          :key="device.id"
+          :label="deviceLabel(device)"
+          :value="device.deviceNo"
+          :disabled="device.enabled === false"
+        />
+        <template #footer>
+          <el-button v-if="devicesError" link type="primary" @click="loadDevices(nextPage)">
+            {{ t('rental.common.retry') }}
+          </el-button>
+          <el-button
+            v-else-if="deviceOptions.length < deviceTotal"
+            link
+            type="primary"
+            :loading="devicesLoading"
+            @click="loadDevices(nextPage)"
+          >
+            {{ t('rental.xianyu.deviceSearchMore') }}
+          </el-button>
+        </template>
+      </el-select>
+      <el-text v-if="devicesError" type="danger">{{ t('rental.common.loadError') }}</el-text>
+    </el-form-item>
     <el-form-item :label="t('rental.xianyu.deviceCascadeLabel')">
-      <div class="w-full flex flex-wrap gap-8px">
+      <el-space class="w-full" wrap>
         <el-select
           v-model="selectedCategoryCode"
-          class="!w-1/3"
+          class="!w-240px"
           clearable
           :placeholder="t('rental.xianyu.deviceCascadeCategoryPlaceholder')"
           @change="handleCategoryChange"
@@ -45,7 +85,7 @@
         </el-select>
         <el-select
           v-model="selectedModelCode"
-          class="!w-1/3"
+          class="!w-240px"
           clearable
           :disabled="!selectedCategoryCode"
           :placeholder="t('rental.xianyu.deviceCascadeModelPlaceholder')"
@@ -58,28 +98,14 @@
             :value="model.modelCode"
           />
         </el-select>
-        <el-select
-          v-model="selectedDeviceNo"
-          class="!w-1/3"
-          clearable
-          filterable
-          :loading="devicesLoading"
-          :disabled="!selectedModelCode"
-          :placeholder="t('rental.xianyu.deviceCascadeDevicePlaceholder')"
-          @change="handleDeviceChange"
-        >
-          <el-option
-            v-for="device in deviceOptions"
-            :key="device.deviceNo"
-            :label="
-              device.serialNumber
-                ? `${device.deviceNo} / ${device.serialNumber}`
-                : device.deviceNo
-            "
-            :value="device.deviceNo"
-          />
-        </el-select>
-      </div>
+        <el-button :disabled="!selectedCategoryCode && !selectedModelCode" @click="clearFilters">
+          {{ t('rental.xianyu.deviceSearchClearFilters') }}
+        </el-button>
+        <el-button v-if="catalogError" link type="primary" @click="loadCatalog">
+          {{ t('rental.common.retry') }}
+        </el-button>
+      </el-space>
+      <el-text v-if="catalogError" type="danger">{{ t('rental.common.loadError') }}</el-text>
     </el-form-item>
     <el-form-item :label="t('rental.device.deviceNo')">
       <el-input
@@ -104,7 +130,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { UploadFile, UploadFiles, UploadProps, UploadUserFile } from 'element-plus'
 import {
   getRentalDeviceCatalog,
@@ -118,7 +144,7 @@ import { getRentalLabelKey } from '@/utils/rentalLabels'
 
 defineOptions({ name: 'XianyuDeviceStep' })
 
-defineProps<{
+const props = defineProps<{
   form: XianyuShipmentForm
   selectedDevice?: RentalDeviceVO
   hasImage: boolean
@@ -132,62 +158,166 @@ const emit = defineEmits<{
   imageExceed: []
   decode: []
   deviceSelect: [device: RentalDeviceVO]
+  deviceClear: []
 }>()
 const { t } = useI18n()
 
-// 大类 → 型号 → 设备 级联选择；扫码/手工输入仍然保留
 const catalog = ref<RentalDeviceCategoryVO[]>([])
+const catalogError = ref(false)
 const selectedCategoryCode = ref('')
 const selectedModelCode = ref('')
 const selectedDeviceNo = ref('')
 const deviceOptions = ref<RentalDeviceVO[]>([])
 const devicesLoading = ref(false)
+const devicesError = ref(false)
+const deviceTotal = ref(0)
+const nextPage = ref(1)
+const keyword = ref('')
+let requestVersion = 0
+let searchTimer: ReturnType<typeof setTimeout> | undefined
 
 const availableModels = computed(() => {
   const category = catalog.value.find((item) => item.categoryCode === selectedCategoryCode.value)
-  return (category?.models || []).filter((model) => model.enabled !== false)
+  return (category?.models || []).filter(
+    (model) => model.enabled !== false || model.modelCode === selectedModelCode.value
+  )
 })
 
+// 保留当前设备的选项，避免翻页或扫码回填后只显示编号。
+const visibleDeviceOptions = computed(() => {
+  const selected = props.selectedDevice
+  return selected && !deviceOptions.value.some((device) => device.id === selected.id)
+    ? [selected, ...deviceOptions.value]
+    : deviceOptions.value
+})
+
+const deviceLabel = (device: RentalDeviceVO) => {
+  const category = catalog.value.find((item) => item.categoryCode === device.categoryCode)
+  const model = category?.models.find((item) => item.modelCode === device.equipmentModelCode)
+  return [
+    device.deviceNo,
+    device.serialNumber,
+    category?.categoryName || device.categoryCode,
+    model?.modelName || device.equipmentModelCode,
+    device.status ? t(getRentalLabelKey('device', device.status)) : ''
+  ]
+    .filter(Boolean)
+    .join(' / ')
+}
+
 const loadCatalog = async () => {
+  catalogError.value = false
   try {
     catalog.value = await getRentalDeviceCatalog()
   } catch {
-    catalog.value = []
+    catalogError.value = true
   }
+}
+
+const invalidateSearch = () => {
+  clearTimeout(searchTimer)
+  requestVersion += 1
+  devicesLoading.value = false
+}
+
+const loadDevices = async (pageNo = 1) => {
+  if (devicesLoading.value) return
+  const version = ++requestVersion
+  devicesLoading.value = true
+  devicesError.value = false
+  try {
+    const page = await getRentalDevicePage({
+      categoryCode: selectedCategoryCode.value || undefined,
+      equipmentModelCode: selectedModelCode.value || undefined,
+      keyword: keyword.value || undefined,
+      enabled: true,
+      pageNo,
+      pageSize: 20
+    })
+    if (version !== requestVersion) return
+    const options = pageNo === 1 ? [] : deviceOptions.value
+    deviceOptions.value = [
+      ...new Map([...options, ...(page.list || [])].map((device) => [device.id, device])).values()
+    ]
+    deviceTotal.value = page.total
+    nextPage.value = pageNo + 1
+  } catch {
+    if (version === requestVersion) devicesError.value = true
+  } finally {
+    if (version === requestVersion) devicesLoading.value = false
+  }
+}
+
+const resetSearchResults = () => {
+  invalidateSearch()
+  deviceOptions.value = []
+  deviceTotal.value = 0
+  nextPage.value = 1
+  devicesError.value = false
+}
+
+const handleDeviceSearch = (query: string) => {
+  resetSearchResults()
+  keyword.value = query.trim()
+  searchTimer = setTimeout(() => void loadDevices(), 300)
+}
+
+const handleDeviceDropdown = (visible: boolean) => {
+  if (!visible) return
+  resetSearchResults()
+  keyword.value = ''
+  void loadDevices()
+}
+
+const clearSelectedDevice = () => {
+  selectedDeviceNo.value = ''
+  emit('deviceClear')
 }
 
 const handleCategoryChange = () => {
   selectedModelCode.value = ''
-  selectedDeviceNo.value = ''
-  deviceOptions.value = []
+  handleModelChange()
 }
 
-const handleModelChange = async () => {
-  selectedDeviceNo.value = ''
-  deviceOptions.value = []
-  if (!selectedModelCode.value) {
-    return
-  }
-  devicesLoading.value = true
-  try {
-    const page = await getRentalDevicePage({
-      categoryCode: selectedCategoryCode.value,
-      equipmentModelCode: selectedModelCode.value,
-      pageNo: 1,
-      pageSize: 100
-    })
-    deviceOptions.value = (page.list || []).filter((device) => device.enabled !== false)
-  } finally {
-    devicesLoading.value = false
-  }
+const handleModelChange = () => {
+  clearSelectedDevice()
+  keyword.value = ''
+  resetSearchResults()
+  void loadDevices()
+}
+
+const clearFilters = () => {
+  selectedCategoryCode.value = ''
+  handleCategoryChange()
+}
+
+const handleDeviceClear = () => {
+  clearSelectedDevice()
+  handleDeviceSearch('')
 }
 
 const handleDeviceChange = (deviceNo?: string) => {
-  const device = deviceOptions.value.find((item) => item.deviceNo === deviceNo)
+  const device = visibleDeviceOptions.value.find((item) => item.deviceNo === deviceNo)
   if (device) {
+    resetSearchResults()
     emit('deviceSelect', device)
   }
 }
+
+watch(
+  () => props.selectedDevice,
+  (device) => {
+    selectedDeviceNo.value = device?.deviceNo || ''
+    if (device) {
+      resetSearchResults()
+      selectedCategoryCode.value = device.categoryCode || ''
+      selectedModelCode.value = device.equipmentModelCode
+    }
+  },
+  { immediate: true }
+)
+
+onBeforeUnmount(invalidateSearch)
 
 const handleChange: UploadProps['onChange'] = (uploadFile, files) => {
   emit('imageChange', uploadFile, files)

@@ -78,6 +78,8 @@ export interface RentalDeviceAssignReqVO {
 export interface RentalDevicePageReqVO extends PageParam {
   categoryCode?: string
   equipmentModelCode?: string
+  keyword?: string
+  enabled?: boolean
 }
 
 export interface RentalDeviceCategoryCreateReqVO {

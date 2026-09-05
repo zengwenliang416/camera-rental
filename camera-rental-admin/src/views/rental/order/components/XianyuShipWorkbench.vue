@@ -74,6 +74,7 @@
         @image-exceed="handleImageExceed"
         @decode="handleDeviceQrImageDecode"
         @device-select="handleDeviceCascadeSelect"
+        @device-clear="handleDeviceClear"
       />
       <XianyuShipConfirmStep
         v-else
@@ -361,6 +362,20 @@ const handleDeviceCascadeSelect = (device: RentalDeviceVO) => {
   message.success(t('rental.xianyu.deviceNoFilled', { deviceNo: device.deviceNo }))
 }
 
+const handleDeviceClear = () => {
+  selectedDevice.value = undefined
+  shipmentForm.deviceNo = ''
+}
+
+watch(
+  () => shipmentForm.deviceNo,
+  (deviceNo) => {
+    if (selectedDevice.value && selectedDevice.value.deviceNo !== deviceNo.trim()) {
+      selectedDevice.value = undefined
+    }
+  }
+)
+
 const resolveDeviceQrPayload = async (payload: string, fallbackDeviceNo?: string) => {
   if (payload.startsWith('CRD1|')) {
     try {
@@ -559,11 +574,11 @@ const handleShipXianyuOrder = async () => {
               waybillNo
             })
           : t('rental.xianyu.shipConfirmMessage', {
-            orderNo: selectedOrder.externalOrderId,
-            deviceNo,
-            expressName,
-            waybillNo
-          }),
+              orderNo: selectedOrder.externalOrderId,
+              deviceNo,
+              expressName,
+              waybillNo
+            }),
       requiresProductRuleBinding.value
         ? t('rental.xianyu.confirmBindProductRuleAndShip')
         : requiresPendingPlanConfirmation.value
@@ -586,8 +601,7 @@ const handleShipXianyuOrder = async () => {
       ocrConfirmed: Boolean(shipmentOcr.value?.waybillNo),
       bindProductRuleIfMissing: requiresProductRuleBinding.value,
       // The product-rule confirmation explicitly covers a possible pending-plan outcome.
-      allowPendingPlan:
-        requiresPendingPlanConfirmation.value || requiresProductRuleBinding.value
+      allowPendingPlan: requiresPendingPlanConfirmation.value || requiresProductRuleBinding.value
     })
     shipmentResult.value = result
     message.success(

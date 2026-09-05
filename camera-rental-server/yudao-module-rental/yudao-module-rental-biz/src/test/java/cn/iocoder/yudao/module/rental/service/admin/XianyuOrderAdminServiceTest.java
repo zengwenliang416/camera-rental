@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHOP_AUTHORIZATION_INVALID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -330,6 +331,41 @@ class XianyuOrderAdminServiceTest {
         assertEquals(LocalDate.of(2026, 8, 6), vo.getOccupyEndDateExclusive());
         assertNull(vo.getRentalOrderItemId());
         assertEquals(List.of(), vo.getAssignedDeviceIds());
+    }
+
+    @Test
+    void orderPageFillsMappedModelCodeForUnconvertedOrder() {
+        XianyuOrderMapper orderMapper = mock(XianyuOrderMapper.class);
+        RentalChannelOrderReconciliationService reconciliationService =
+                mock(RentalChannelOrderReconciliationService.class);
+        XianyuOrderDO order = XianyuOrderDO.builder()
+                .id(69L)
+                .shopId(3L)
+                .externalOrderId("test-order-6425")
+                .xianyuItemId("item-1")
+                .xgjSkuId("sku-1")
+                .orderStatus("12")
+                .payAmount(14000L)
+                .currency("CNY")
+                .conversionStatus("PENDING")
+                .build();
+        XianyuOrderPageReqVO pageParam = new XianyuOrderPageReqVO();
+        when(orderMapper.selectAdminPage(pageParam)).thenReturn(new PageResult<>(List.of(order), 1L));
+        when(reconciliationService.resolveDisplayModelCodes(List.of(order)))
+                .thenReturn(Map.of(69L, "A7M4"));
+        XianyuOrderAdminService service = new XianyuOrderAdminService(
+                orderMapper,
+                mock(XianyuShopMapper.class),
+                mock(RentalOrderMapper.class),
+                mock(RentalOrderItemMapper.class),
+                mock(RentalDeviceAssignmentMapper.class),
+                mock(XianyuOrderSyncService.class),
+                reconciliationService);
+
+        XianyuOrderRespVO vo = service.getOrderPage(pageParam).getList().get(0);
+
+        assertNull(vo.getRentalOrderItemId());
+        assertEquals("A7M4", vo.getEquipmentModelCode());
     }
 
 }

@@ -95,16 +95,26 @@ public class XianyuOrderAdminService {
                             assignment.getRentalOrderItemId(), ignored -> new ArrayList<>())
                             .add(assignment.getDeviceId()));
         }
+        List<XianyuOrderDO> ordersWithoutItem = page.getList().stream()
+                .filter(order -> firstItemByOrderId.get(order.getRentalOrderId()) == null)
+                .toList();
+        Map<Long, String> displayModelCodeByOrderId = ordersWithoutItem.isEmpty()
+                ? Map.of()
+                : nullSafeMap(reconciliationService.resolveDisplayModelCodes(ordersWithoutItem));
         List<XianyuOrderRespVO> list = page.getList().stream()
                 .map(order -> {
                     RentalOrderItemDO item = firstItemByOrderId.get(order.getRentalOrderId());
                     List<Long> assignedDeviceIds = item == null
                             ? List.of()
                             : deviceIdsByOrderItemId.getOrDefault(item.getId(), List.of());
-                    return toVo(order, item, assignedDeviceIds,
+                    XianyuOrderRespVO vo = toVo(order, item, assignedDeviceIds,
                             order.getRentalOrderId() == null
                                     ? null
                                     : rentalOrderById.get(order.getRentalOrderId()));
+                    if (item == null) {
+                        vo.setEquipmentModelCode(displayModelCodeByOrderId.get(order.getId()));
+                    }
+                    return vo;
                 })
                 .collect(Collectors.toList());
         return new PageResult<>(list, page.getTotal());
@@ -215,6 +225,10 @@ public class XianyuOrderAdminService {
 
     private static <T> List<T> nullSafe(List<T> values) {
         return values == null ? Collections.emptyList() : values;
+    }
+
+    private static <K, V> Map<K, V> nullSafeMap(Map<K, V> values) {
+        return values == null ? Map.of() : values;
     }
 
     private void fillRentalPeriod(XianyuOrderDO order, RentalOrderDO rentalOrder,

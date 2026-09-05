@@ -1,7 +1,6 @@
 package cn.iocoder.yudao.module.rental.controller.admin.rental;
 
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
-import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceAssignReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceCategoryCreateReqVO;
@@ -14,6 +13,7 @@ import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceOps
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceQrRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceResolveQrReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceRespVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDevicePageReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceReturnReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceUnassignReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceUpdateReqVO;
@@ -67,10 +67,8 @@ public class RentalDeviceController {
     @Operation(summary = "分页查询设备")
     @PreAuthorize("@ss.hasPermission('rental:device:query')")
     public CommonResult<PageResult<RentalDeviceRespVO>> getDevicePage(
-            @RequestParam(value = "categoryCode", required = false) String categoryCode,
-            @RequestParam(value = "equipmentModelCode", required = false) String equipmentModelCode,
-            @Validated PageParam pageParam) {
-        return success(deviceAdminService.getDevicePage(categoryCode, equipmentModelCode, pageParam));
+            @Valid RentalDevicePageReqVO reqVO) {
+        return success(deviceAdminService.getDevicePage(reqVO));
     }
 
     @GetMapping("/catalog")

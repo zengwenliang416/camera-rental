@@ -1,12 +1,12 @@
 package cn.iocoder.yudao.module.rental.service.admin;
 
-import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.module.rental.config.RentalDeviceProperties;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceCreateReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceQrRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceRespVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDevicePageReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceUpdateReqVO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
@@ -62,13 +62,18 @@ public class RentalDeviceAdminService {
         this.deviceCatalogService = deviceCatalogService;
     }
 
-    public PageResult<RentalDeviceRespVO> getDevicePage(String categoryCode, String equipmentModelCode,
-                                                        PageParam pageParam) {
-        PageResult<RentalDeviceDO> page = deviceMapper.selectPage(pageParam,
-                new LambdaQueryWrapperX<RentalDeviceDO>()
-                        .eqIfPresent(RentalDeviceDO::getCategoryCode, categoryCode)
-                        .eqIfPresent(RentalDeviceDO::getEquipmentModelCode, equipmentModelCode)
-                        .orderByDesc(RentalDeviceDO::getId));
+    public PageResult<RentalDeviceRespVO> getDevicePage(RentalDevicePageReqVO reqVO) {
+        String keyword = normalizeOptional(reqVO.getKeyword());
+        LambdaQueryWrapperX<RentalDeviceDO> query = new LambdaQueryWrapperX<RentalDeviceDO>()
+                .eqIfPresent(RentalDeviceDO::getCategoryCode, reqVO.getCategoryCode())
+                .eqIfPresent(RentalDeviceDO::getEquipmentModelCode, reqVO.getEquipmentModelCode())
+                .eqIfPresent(RentalDeviceDO::getEnabled, reqVO.getEnabled());
+        if (keyword != null) {
+            query.and(group -> group.like(RentalDeviceDO::getDeviceNo, keyword)
+                    .or().like(RentalDeviceDO::getSerialNumber, keyword));
+        }
+        query.orderByDesc(RentalDeviceDO::getId);
+        PageResult<RentalDeviceDO> page = deviceMapper.selectPage(reqVO, query);
         List<RentalDeviceRespVO> list = page.getList().stream().map(this::toVo).collect(Collectors.toList());
         return new PageResult<>(list, page.getTotal());
     }

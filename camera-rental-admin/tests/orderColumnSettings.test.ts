@@ -84,7 +84,8 @@ const CURRENT_PAGE_DEFAULT_KEYS = [
   'expressName',
   'conversionStatus',
   'sellerRemark',
-  'remarkParseStatus'
+  'remarkParseStatus',
+  'equipmentModelCode'
 ]
 
 test('column metadata covers every standardized XianyuOrderVO field', () => {

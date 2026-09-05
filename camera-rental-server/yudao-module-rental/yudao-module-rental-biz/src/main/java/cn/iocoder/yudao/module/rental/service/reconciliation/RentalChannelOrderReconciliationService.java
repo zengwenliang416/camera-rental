@@ -27,6 +27,9 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -336,6 +339,98 @@ public class RentalChannelOrderReconciliationService {
             return ModelResolution.missing(missingReason);
         }
         return new ModelResolution(model.getModelCode().trim(), null);
+    }
+
+    /**
+     * Read-only batch variant of {@link #resolveModel} for list display: resolves the configured
+     * equipment model code for orders that have no rental order item yet. No row locks, no N+1.
+     */
+    public Map<Long, String> resolveDisplayModelCodes(List<XianyuOrderDO> orders) {
+        if (orders == null || orders.isEmpty()) {
+            return Map.of();
+        }
+        List<String> itemIds = orders.stream()
+                .filter(order -> StringUtils.hasText(order.getXianyuItemId()))
+                .map(order -> order.getXianyuItemId().trim())
+                .distinct()
+                .toList();
+        if (itemIds.isEmpty()) {
+            return Map.of();
+        }
+        Map<String, RentalChannelProductRuleDO> ruleByShopAndItem = new HashMap<>();
+        for (RentalChannelProductRuleDO rule : ruleMapper.selectEnabledListByXianyuItemIds(itemIds)) {
+            if (!"CREATE_RENTAL".equals(rule.getHandlingPolicy())
+                    || !StringUtils.hasText(rule.getXianyuItemId())) {
+                continue;
+            }
+            ruleByShopAndItem.putIfAbsent(shopItemKey(rule.getShopId(), rule.getXianyuItemId()), rule);
+        }
+        if (ruleByShopAndItem.isEmpty()) {
+            return Map.of();
+        }
+        List<Long> multiRuleIds = ruleByShopAndItem.values().stream()
+                .filter(rule -> "MULTI".equals(rule.getMappingMode()))
+                .map(RentalChannelProductRuleDO::getId)
+                .distinct()
+                .toList();
+        Map<String, Long> modelIdByRuleAndSku = new HashMap<>();
+        if (!multiRuleIds.isEmpty()) {
+            for (RentalChannelProductSkuMappingDO mapping
+                    : skuMappingMapper.selectListByProductRuleIds(multiRuleIds)) {
+                if (!Boolean.TRUE.equals(mapping.getEnabled())
+                        || !StringUtils.hasText(mapping.getXgjSkuId())) {
+                    continue;
+                }
+                modelIdByRuleAndSku.putIfAbsent(
+                        mapping.getProductRuleId() + "|" + mapping.getXgjSkuId().trim(),
+                        mapping.getDeviceModelId());
+            }
+        }
+        Map<Long, Long> modelIdByOrderId = new HashMap<>();
+        for (XianyuOrderDO order : orders) {
+            if (!StringUtils.hasText(order.getXianyuItemId())) {
+                continue;
+            }
+            RentalChannelProductRuleDO rule =
+                    ruleByShopAndItem.get(shopItemKey(order.getShopId(), order.getXianyuItemId()));
+            if (rule == null) {
+                continue;
+            }
+            if ("SINGLE".equals(rule.getMappingMode())) {
+                if (rule.getSingleDeviceModelId() != null) {
+                    modelIdByOrderId.put(order.getId(), rule.getSingleDeviceModelId());
+                }
+            } else if ("MULTI".equals(rule.getMappingMode())
+                    && StringUtils.hasText(order.getXgjSkuId())) {
+                Long modelId =
+                        modelIdByRuleAndSku.get(rule.getId() + "|" + order.getXgjSkuId().trim());
+                if (modelId != null) {
+                    modelIdByOrderId.put(order.getId(), modelId);
+                }
+            }
+        }
+        if (modelIdByOrderId.isEmpty()) {
+            return Map.of();
+        }
+        List<Long> modelIds = modelIdByOrderId.values().stream().distinct().toList();
+        Map<Long, String> modelCodeById = new HashMap<>();
+        for (RentalDeviceModelDO model : modelMapper.selectByIds(modelIds)) {
+            if (Boolean.TRUE.equals(model.getEnabled()) && StringUtils.hasText(model.getModelCode())) {
+                modelCodeById.put(model.getId(), model.getModelCode().trim());
+            }
+        }
+        Map<Long, String> modelCodeByOrderId = new HashMap<>();
+        modelIdByOrderId.forEach((orderId, modelId) -> {
+            String modelCode = modelCodeById.get(modelId);
+            if (modelCode != null) {
+                modelCodeByOrderId.put(orderId, modelCode);
+            }
+        });
+        return modelCodeByOrderId;
+    }
+
+    private static String shopItemKey(Long shopId, String xianyuItemId) {
+        return shopId + "|" + xianyuItemId.trim();
     }
 
     private void enrichExactXianyuSku(XianyuOrderDO source) {

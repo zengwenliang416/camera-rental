@@ -32,11 +32,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
@@ -502,6 +505,124 @@ class RentalChannelOrderReconciliationServiceTest {
         assertEquals("A7M4", storedItem.get().getEquipmentModelCode());
         verify(rentalOrderMapper, times(1)).insert(any(RentalOrderDO.class));
         verify(rentalOrderItemMapper, times(1)).insert(any(RentalOrderItemDO.class));
+    }
+
+    @Test
+    void resolvesDisplayModelCodeFromSingleModeRule() {
+        XianyuOrderDO order = sourceOrder();
+        RentalChannelProductRuleDO rule = RentalChannelProductRuleDO.builder()
+                .id(51L)
+                .shopId(7L)
+                .xianyuItemId("item-1")
+                .handlingPolicy("CREATE_RENTAL")
+                .mappingMode("SINGLE")
+                .singleDeviceModelId(61L)
+                .enabled(true)
+                .build();
+        when(ruleMapper.selectEnabledListByXianyuItemIds(List.of("item-1")))
+                .thenReturn(List.of(rule));
+        when(modelMapper.selectByIds(List.of(61L))).thenReturn(List.of(
+                RentalDeviceModelDO.builder().id(61L).modelCode("POCKET4").enabled(true).build()));
+
+        Map<Long, String> result = service.resolveDisplayModelCodes(List.of(order));
+
+        assertEquals(Map.of(10L, "POCKET4"), result);
+    }
+
+    @Test
+    void resolvesDisplayModelCodeFromMultiModeSkuMapping() {
+        XianyuOrderDO order = sourceOrder();
+        RentalChannelProductRuleDO rule = RentalChannelProductRuleDO.builder()
+                .id(52L)
+                .shopId(7L)
+                .xianyuItemId("item-1")
+                .handlingPolicy("CREATE_RENTAL")
+                .mappingMode("MULTI")
+                .enabled(true)
+                .build();
+        when(ruleMapper.selectEnabledListByXianyuItemIds(List.of("item-1")))
+                .thenReturn(List.of(rule));
+        when(skuMappingMapper.selectListByProductRuleIds(List.of(52L))).thenReturn(List.of(
+                RentalChannelProductSkuMappingDO.builder()
+                        .id(71L)
+                        .productRuleId(52L)
+                        .xgjSkuId("sku-1")
+                        .deviceModelId(62L)
+                        .enabled(true)
+                        .build()));
+        when(modelMapper.selectByIds(List.of(62L))).thenReturn(List.of(
+                RentalDeviceModelDO.builder().id(62L).modelCode("A7M4").enabled(true).build()));
+
+        Map<Long, String> result = service.resolveDisplayModelCodes(List.of(order));
+
+        assertEquals(Map.of(10L, "A7M4"), result);
+    }
+
+    @Test
+    void skipsDisplayModelCodeForSkippedPolicyDisabledModelAndMissingSku() {
+        XianyuOrderDO skippedPolicyOrder = sourceOrder();
+        RentalChannelProductRuleDO skippedRule = RentalChannelProductRuleDO.builder()
+                .id(53L)
+                .shopId(7L)
+                .xianyuItemId("item-1")
+                .handlingPolicy("CONFIG_SKIPPED")
+                .mappingMode("SINGLE")
+                .singleDeviceModelId(61L)
+                .enabled(true)
+                .build();
+        when(ruleMapper.selectEnabledListByXianyuItemIds(List.of("item-1")))
+                .thenReturn(List.of(skippedRule));
+
+        assertTrue(service.resolveDisplayModelCodes(List.of(skippedPolicyOrder)).isEmpty());
+
+        XianyuOrderDO disabledModelOrder = sourceOrder();
+        RentalChannelProductRuleDO singleRule = RentalChannelProductRuleDO.builder()
+                .id(54L)
+                .shopId(7L)
+                .xianyuItemId("item-1")
+                .handlingPolicy("CREATE_RENTAL")
+                .mappingMode("SINGLE")
+                .singleDeviceModelId(61L)
+                .enabled(true)
+                .build();
+        when(ruleMapper.selectEnabledListByXianyuItemIds(List.of("item-1")))
+                .thenReturn(List.of(singleRule));
+        when(modelMapper.selectByIds(List.of(61L))).thenReturn(List.of(
+                RentalDeviceModelDO.builder().id(61L).modelCode("POCKET4").enabled(false).build()));
+
+        assertTrue(service.resolveDisplayModelCodes(List.of(disabledModelOrder)).isEmpty());
+
+        XianyuOrderDO missingSkuOrder = sourceOrder();
+        missingSkuOrder.setXgjSkuId("sku-unknown");
+        RentalChannelProductRuleDO multiRule = RentalChannelProductRuleDO.builder()
+                .id(55L)
+                .shopId(7L)
+                .xianyuItemId("item-1")
+                .handlingPolicy("CREATE_RENTAL")
+                .mappingMode("MULTI")
+                .enabled(true)
+                .build();
+        when(ruleMapper.selectEnabledListByXianyuItemIds(List.of("item-1")))
+                .thenReturn(List.of(multiRule));
+        when(skuMappingMapper.selectListByProductRuleIds(List.of(55L))).thenReturn(List.of(
+                RentalChannelProductSkuMappingDO.builder()
+                        .id(72L)
+                        .productRuleId(55L)
+                        .xgjSkuId("sku-1")
+                        .deviceModelId(62L)
+                        .enabled(true)
+                        .build()));
+
+        assertTrue(service.resolveDisplayModelCodes(List.of(missingSkuOrder)).isEmpty());
+    }
+
+    @Test
+    void resolveDisplayModelCodesSkipsOrdersWithoutXianyuItemId() {
+        XianyuOrderDO order = sourceOrder();
+        order.setXianyuItemId(" ");
+
+        assertTrue(service.resolveDisplayModelCodes(List.of(order)).isEmpty());
+        verify(ruleMapper, never()).selectEnabledListByXianyuItemIds(any());
     }
 
     private RentalOrderDO capturedUpdatedOrder() {

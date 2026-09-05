@@ -13,6 +13,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Collection;
+import java.util.List;
+
 @Mapper
 public interface RentalChannelProductRuleMapper extends BaseMapperX<RentalChannelProductRuleDO> {
 
@@ -27,6 +30,16 @@ public interface RentalChannelProductRuleMapper extends BaseMapperX<RentalChanne
         return selectOneForUpdate(new LambdaQueryWrapper<RentalChannelProductRuleDO>()
                 .eq(RentalChannelProductRuleDO::getShopId, shopId)
                 .eq(RentalChannelProductRuleDO::getXianyuItemId, xianyuItemId)
+                .eq(RentalChannelProductRuleDO::getEnabled, true));
+    }
+
+    default List<RentalChannelProductRuleDO> selectEnabledListByXianyuItemIds(
+            Collection<String> xianyuItemIds) {
+        if (xianyuItemIds == null || xianyuItemIds.isEmpty()) {
+            return List.of();
+        }
+        return selectList(new LambdaQueryWrapper<RentalChannelProductRuleDO>()
+                .in(RentalChannelProductRuleDO::getXianyuItemId, xianyuItemIds)
                 .eq(RentalChannelProductRuleDO::getEnabled, true));
     }
 

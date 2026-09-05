@@ -429,10 +429,14 @@ const total = ref(0)
 const selectedColumnKeys = ref<XianyuOrderColumnKey[]>(
   sanitizePersistedXianyuOrderColumnKeys(wsCache.get(orderColumnCacheKey))
 )
-const visibleOrderColumns = computed(() => {
-  const selected = new Set(selectedColumnKeys.value)
-  return XIANYU_ORDER_COLUMNS.filter((column) => selected.has(column.key))
-})
+const orderColumnByKey = new Map<XianyuOrderColumnKey, XianyuOrderColumnDefinition>(
+  XIANYU_ORDER_COLUMNS.map((column) => [column.key, column])
+)
+const visibleOrderColumns = computed(() =>
+  selectedColumnKeys.value
+    .map((key) => orderColumnByKey.get(key))
+    .filter((column): column is XianyuOrderColumnDefinition => column != null)
+)
 const orderStatusOptions = computed(() =>
   getRentalStatusValues('channelOrder').map((value) => ({
     value,

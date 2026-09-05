@@ -608,17 +608,25 @@ export function sanitizePersistedXianyuOrderColumnKeys(value: unknown): XianyuOr
   const parsed = parsePersistedColumnKeys(value)
   if (!Array.isArray(parsed)) return resetXianyuOrderColumnKeys()
 
-  const requestedKeys = parsed.filter(
-    (key): key is XianyuOrderColumnKey =>
-      typeof key === 'string' && XIANYU_ORDER_COLUMN_KEY_SET.has(key as XianyuOrderColumnKey)
-  )
+  const requestedKeys: XianyuOrderColumnKey[] = []
+  for (const key of parsed) {
+    if (
+      typeof key === 'string' &&
+      XIANYU_ORDER_COLUMN_KEY_SET.has(key as XianyuOrderColumnKey) &&
+      !requestedKeys.includes(key as XianyuOrderColumnKey)
+    ) {
+      requestedKeys.push(key as XianyuOrderColumnKey)
+    }
+  }
 
   if (requestedKeys.length === 0 && parsed.length > 0) {
     return resetXianyuOrderColumnKeys()
   }
 
+  // User column order is preserved; locked columns the persisted list missed are prepended.
   const requestedKeySet = new Set<XianyuOrderColumnKey>(requestedKeys)
-  return XIANYU_ORDER_COLUMNS.filter(
-    (column) => column.locked || requestedKeySet.has(column.key)
+  const missingLockedKeys = XIANYU_ORDER_COLUMNS.filter(
+    (column) => column.locked && !requestedKeySet.has(column.key)
   ).map((column) => column.key)
+  return [...missingLockedKeys, ...requestedKeys]
 }

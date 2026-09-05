@@ -119,7 +119,7 @@ test('current order page columns are visible by default and ID is locked', () =>
   assert.equal(XIANYU_ORDER_COLUMNS.find((column) => column.key === 'id')?.locked, true)
 })
 
-test('persisted column keys are sanitized, deduplicated, ordered, and keep locked columns', () => {
+test('persisted column keys keep user order, are deduplicated, and keep locked columns', () => {
   assert.deepEqual(
     sanitizePersistedXianyuOrderColumnKeys([
       'goodsTitle',
@@ -128,12 +128,14 @@ test('persisted column keys are sanitized, deduplicated, ordered, and keep locke
       'rawPayload',
       'id'
     ]),
-    ['id', 'goodsTitle']
+    ['goodsTitle', 'id']
   )
   assert.deepEqual(sanitizePersistedXianyuOrderColumnKeys('["goodsTitle", "id", "goodsTitle"]'), [
-    'id',
-    'goodsTitle'
+    'goodsTitle',
+    'id'
   ])
+  // Locked columns missing from the persisted list are prepended.
+  assert.deepEqual(sanitizePersistedXianyuOrderColumnKeys(['goodsTitle']), ['id', 'goodsTitle'])
   assert.deepEqual(sanitizePersistedXianyuOrderColumnKeys([]), ['id'])
   assert.deepEqual(sanitizePersistedXianyuOrderColumnKeys(['not-a-column']), [
     ...XIANYU_ORDER_DEFAULT_VISIBLE_KEYS

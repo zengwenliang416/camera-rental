@@ -35,11 +35,9 @@
         filterable
         remote
         remote-show-suffix
-        :debounce="0"
         :remote-method="handleDeviceSearch"
         :loading="devicesLoading"
         :placeholder="t('rental.xianyu.deviceCascadeDevicePlaceholder')"
-        @visible-change="handleDeviceDropdown"
         @change="handleDeviceChange"
         @clear="handleDeviceClear"
       >
@@ -174,7 +172,6 @@ const deviceTotal = ref(0)
 const nextPage = ref(1)
 const keyword = ref('')
 let requestVersion = 0
-let searchTimer: ReturnType<typeof setTimeout> | undefined
 
 const availableModels = computed(() => {
   const category = catalog.value.find((item) => item.categoryCode === selectedCategoryCode.value)
@@ -215,7 +212,6 @@ const loadCatalog = async () => {
 }
 
 const invalidateSearch = () => {
-  clearTimeout(searchTimer)
   requestVersion += 1
   devicesLoading.value = false
 }
@@ -256,16 +252,14 @@ const resetSearchResults = () => {
   devicesError.value = false
 }
 
+// 输入过程中保留旧选项，只显示加载态，等结果返回后整体替换，避免清空列表导致下拉闪烁。
+// 输入防抖由 el-select 自带的 debounce（默认 300ms）负责；展开下拉时内部会触发一次 remote-method。
 const handleDeviceSearch = (query: string) => {
-  resetSearchResults()
   keyword.value = query.trim()
-  searchTimer = setTimeout(() => void loadDevices(), 300)
-}
-
-const handleDeviceDropdown = (visible: boolean) => {
-  if (!visible) return
-  resetSearchResults()
-  keyword.value = ''
+  invalidateSearch()
+  nextPage.value = 1
+  deviceTotal.value = 0
+  devicesError.value = false
   void loadDevices()
 }
 

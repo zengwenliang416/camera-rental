@@ -1088,6 +1088,7 @@ export default {
       externalOrderIdPlaceholder: 'Full or partial order no.',
       receiverName: 'Receiver',
       receiverMobile: 'Receiver phone',
+      receiverMobilePlaceholder: 'Full or partial mobile',
       receiverAddress: 'Receiver address',
       externalProductId: 'External product ID',
       externalSkuId: 'External SKU ID',

@@ -21,6 +21,8 @@ public class XianyuOrderPageReqVO extends PageParam {
     private Boolean unremarked;
     /** Exact or partial match for ops lookup (full value, not redacted). */
     private String externalOrderId;
+    /** Partial match on the receiver mobile for ops lookup. */
+    private String receiverMobile;
     private String xgjProductId;
     private String xianyuItemId;
     private String xgjSkuId;

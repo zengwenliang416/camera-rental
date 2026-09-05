@@ -35,6 +35,15 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
+      <el-form-item :label="t('rental.order.receiverMobile')">
+        <el-input
+          v-model="queryParams.receiverMobile"
+          class="!w-200px"
+          clearable
+          :placeholder="t('rental.order.receiverMobilePlaceholder')"
+          @keyup.enter="handleQuery"
+        />
+      </el-form-item>
       <el-form-item :label="t('rental.order.filterShop')">
         <el-select
           v-model="queryParams.shopId"
@@ -464,6 +473,7 @@ const queryParams = reactive<{
   conversionStatus?: string
   unremarked?: boolean
   externalOrderId?: string
+  receiverMobile?: string
   externalProductId?: string
   externalSkuId?: string
   dateRange?: [string, string]
@@ -702,6 +712,7 @@ const getList = async () => {
       conversionStatus: queryParams.conversionStatus || undefined,
       unremarked: queryParams.unremarked || undefined,
       externalOrderId: queryParams.externalOrderId?.trim() || undefined,
+      receiverMobile: queryParams.receiverMobile?.trim() || undefined,
       externalProductId: queryParams.externalProductId || undefined,
       externalSkuId: queryParams.externalSkuId || undefined,
       startDate: queryParams.dateRange?.[0],
@@ -732,6 +743,7 @@ const resetQuery = async () => {
   queryParams.conversionStatus = undefined
   queryParams.unremarked = undefined
   queryParams.externalOrderId = undefined
+  queryParams.receiverMobile = undefined
   queryParams.externalProductId = undefined
   queryParams.externalSkuId = undefined
   queryParams.dateRange = undefined

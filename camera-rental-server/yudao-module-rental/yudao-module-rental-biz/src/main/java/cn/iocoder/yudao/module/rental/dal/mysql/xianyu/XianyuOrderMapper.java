@@ -34,6 +34,7 @@ public interface XianyuOrderMapper extends BaseMapperX<XianyuOrderDO> {
                 .eqIfPresent(XianyuOrderDO::getOrderStatus, pageReqVO.getOrderStatus())
                 .eqIfPresent(XianyuOrderDO::getConversionStatus, pageReqVO.getConversionStatus())
                 .likeIfPresent(XianyuOrderDO::getExternalOrderId, pageReqVO.getExternalOrderId())
+                .likeIfPresent(XianyuOrderDO::getReceiverMobile, pageReqVO.getReceiverMobile())
                 .eqIfPresent(XianyuOrderDO::getXgjProductId, pageReqVO.getXgjProductId())
                 .eqIfPresent(XianyuOrderDO::getXianyuItemId, pageReqVO.getXianyuItemId())
                 .eqIfPresent(XianyuOrderDO::getXgjSkuId, pageReqVO.getXgjSkuId())

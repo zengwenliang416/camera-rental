@@ -71,6 +71,18 @@ class XianyuOrderMapperTest {
     }
 
     @Test
+    void adminPageQueryFiltersReceiverMobileByPartialMatch() {
+        XianyuOrderPageReqVO request = new XianyuOrderPageReqVO();
+        request.setReceiverMobile("8000");
+
+        String sql = XianyuOrderMapper.adminPageQuery(request)
+                .getCustomSqlSegment()
+                .toLowerCase();
+
+        assertTrue(sql.contains("receiver_mobile like"));
+    }
+
+    @Test
     void adminPageQueryFiltersUnremarkedOrdersIncludingWhitespaceOnlyValues() {
         XianyuOrderPageReqVO request = new XianyuOrderPageReqVO();
         request.setUnremarked(true);

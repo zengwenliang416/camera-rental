@@ -1039,6 +1039,7 @@ export default {
       externalOrderIdPlaceholder: '完整或部分订单号',
       receiverName: '收货人',
       receiverMobile: '收货电话',
+      receiverMobilePlaceholder: '完整或部分手机号',
       receiverAddress: '收货地址',
       externalProductId: '外部商品 ID',
       externalSkuId: '外部 SKU ID',

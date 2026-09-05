@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "gate": "review",
+  "reason": "Reviewed bounded production data seed: exact tenant/shop/item/model assertions, immutable fulfillment exclusions, fixed order-id ceiling, transactional rollback, and postconditions.",
+  "requested_by": "codex",
+  "created_at": "2026-09-03T14:40:05.587Z",
+  "expires_at": "2026-09-03T16:40:05.587Z",
+  "active_change": "add-rental-configuration",
+  "affected_path": "camera-rental-server/sql/mysql/seeds/20260903_rental_channel_product_rule_p4p.sql"
+}

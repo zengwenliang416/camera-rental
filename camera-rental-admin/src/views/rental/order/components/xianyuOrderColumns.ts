@@ -535,7 +535,7 @@ const XIANYU_ORDER_COLUMN_MAP = {
     label: '设备型号',
     width: 140,
     format: 'text',
-    defaultVisible: false
+    defaultVisible: true
   },
   rentalQuantity: {
     key: 'rentalQuantity',

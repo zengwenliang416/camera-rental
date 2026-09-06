@@ -85,14 +85,17 @@
     <select id="selectSourceBreakdown"
             resultType="cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalReportSourceRespVO">
         SELECT
-            'XIANYU' AS source_type,
+            o.source_type AS source_type,
             COUNT(1) AS order_count,
-            COALESCE(SUM(o.pay_amount), 0) AS rent_amount_fen,
+            COALESCE(SUM(o.rent_amount), 0) AS rent_amount_fen,
             COALESCE(SUM(o.refund_amount), 0) AS refund_amount_fen
-        FROM xianyu_order o
+        FROM rental_order o
         WHERE o.tenant_id = #{tenantId}
           AND o.deleted = b'0'
-          <include refid="OrderReportTimeRange"/>
+          AND o.create_time &gt;= #{startDate}
+          AND o.create_time &lt; #{endDateExclusive}
+        GROUP BY o.source_type
+        ORDER BY order_count DESC, o.source_type
     </select>
 
     <select id="selectProductSkuPage"

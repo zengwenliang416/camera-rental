@@ -16,6 +16,9 @@ import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderDeliveryMapper
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
 import cn.iocoder.yudao.module.rental.enums.rental.RentalDeliveryMethodEnum;
+import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentCommand;
+import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentException;
+import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentService;
 import cn.iocoder.yudao.module.rental.service.admin.RentalDeviceOpsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,14 +29,17 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_MANUAL_ORDER_ASSIGNMENT_INCOMPLETE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_MANUAL_ORDER_CONFIRM_EXPRESS;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_MANUAL_ORDER_DELIVERY_METHOD_INVALID;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_MANUAL_ORDER_DEVICE_ASSIGN_FAILED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_MANUAL_ORDER_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_MANUAL_ORDER_MODEL_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_ORDER_NOT_EXISTS;
@@ -54,6 +60,7 @@ public class RentalManualOrderServiceImpl implements RentalManualOrderService {
     private final RentalOrderDeliveryMapper orderDeliveryMapper;
     private final RentalDeviceModelMapper deviceModelMapper;
     private final RentalDeviceAssignmentMapper assignmentMapper;
+    private final RentalDeviceAssignmentService assignmentService;
     private final RentalDeviceOpsService deviceOpsService;
     private final Clock clock;
 
@@ -64,9 +71,10 @@ public class RentalManualOrderServiceImpl implements RentalManualOrderService {
                                         RentalOrderDeliveryMapper orderDeliveryMapper,
                                         RentalDeviceModelMapper deviceModelMapper,
                                         RentalDeviceAssignmentMapper assignmentMapper,
+                                        RentalDeviceAssignmentService assignmentService,
                                         RentalDeviceOpsService deviceOpsService) {
         this(orderMapper, orderItemMapper, customerMapper, orderDeliveryMapper, deviceModelMapper,
-                assignmentMapper, deviceOpsService, Clock.system(BUSINESS_ZONE));
+                assignmentMapper, assignmentService, deviceOpsService, Clock.system(BUSINESS_ZONE));
     }
 
     RentalManualOrderServiceImpl(RentalOrderMapper orderMapper,
@@ -75,6 +83,7 @@ public class RentalManualOrderServiceImpl implements RentalManualOrderService {
                                  RentalOrderDeliveryMapper orderDeliveryMapper,
                                  RentalDeviceModelMapper deviceModelMapper,
                                  RentalDeviceAssignmentMapper assignmentMapper,
+                                 RentalDeviceAssignmentService assignmentService,
                                  RentalDeviceOpsService deviceOpsService,
                                  Clock clock) {
         this.orderMapper = orderMapper;
@@ -83,6 +92,7 @@ public class RentalManualOrderServiceImpl implements RentalManualOrderService {
         this.orderDeliveryMapper = orderDeliveryMapper;
         this.deviceModelMapper = deviceModelMapper;
         this.assignmentMapper = assignmentMapper;
+        this.assignmentService = assignmentService;
         this.deviceOpsService = deviceOpsService;
         this.clock = clock;
     }
@@ -100,11 +110,13 @@ public class RentalManualOrderServiceImpl implements RentalManualOrderService {
         }
         RentalDeliveryMethodEnum deliveryMethod = resolveDeliveryMethod(reqVO.getDelivery());
         long totalRentAmount = 0L;
+        Set<Long> selectedDeviceIds = new HashSet<>();
         for (RentalManualOrderCreateReqVO.Item item : reqVO.getItems()) {
             RentalDeviceModelDO model = deviceModelMapper.selectByCode(item.getModelCode().trim());
             if (model == null || !Boolean.TRUE.equals(model.getEnabled())) {
                 throw exception(RENTAL_MANUAL_ORDER_MODEL_INVALID, item.getModelCode().trim());
             }
+            validateSelectedDevices(item, selectedDeviceIds);
             totalRentAmount += item.getRentAmount();
         }
 
@@ -130,6 +142,17 @@ public class RentalManualOrderServiceImpl implements RentalManualOrderService {
         order.setOrderNo("OFF-" + String.format("%019d", order.getId()));
         orderMapper.updateById(order);
 
+        RentalManualOrderCreateReqVO.Delivery delivery = reqVO.getDelivery();
+        RentalOrderDeliveryDO orderDelivery = RentalOrderDeliveryDO.builder()
+                .rentalOrderId(order.getId())
+                .deliveryMethod(deliveryMethod.name())
+                .receiverName(trimToNull(delivery.getReceiverName()))
+                .receiverMobile(trimToNull(delivery.getReceiverMobile()))
+                .receiverAddress(trimToNull(delivery.getReceiverAddress()))
+                .deliveryRemark(trimToNull(delivery.getRemark()))
+                .build();
+        orderDeliveryMapper.insert(orderDelivery);
+
         for (RentalManualOrderCreateReqVO.Item item : reqVO.getItems()) {
             RentalOrderItemDO orderItem = RentalOrderItemDO.builder()
                     .rentalOrderId(order.getId())
@@ -143,23 +166,37 @@ public class RentalManualOrderServiceImpl implements RentalManualOrderService {
                     .expectedSendBackDate(end)
                     .build();
             orderItemMapper.insert(orderItem);
+            assignSelectedDevices(orderItem, item, start, end.plusDays(1));
         }
-
-        RentalManualOrderCreateReqVO.Delivery delivery = reqVO.getDelivery();
-        RentalOrderDeliveryDO orderDelivery = RentalOrderDeliveryDO.builder()
-                .rentalOrderId(order.getId())
-                .deliveryMethod(deliveryMethod.name())
-                .receiverName(trimToNull(delivery.getReceiverName()))
-                .receiverMobile(trimToNull(delivery.getReceiverMobile()))
-                .receiverAddress(trimToNull(delivery.getReceiverAddress()))
-                .deliveryRemark(trimToNull(delivery.getRemark()))
-                .build();
-        orderDeliveryMapper.insert(orderDelivery);
 
         RentalManualOrderCreateRespVO respVO = new RentalManualOrderCreateRespVO();
         respVO.setId(order.getId());
         respVO.setOrderNo(order.getOrderNo());
         return respVO;
+    }
+
+    private void validateSelectedDevices(RentalManualOrderCreateReqVO.Item item, Set<Long> selectedDeviceIds) {
+        if (item.getDeviceIds().size() != item.getQuantity()) {
+            throw exception(RENTAL_MANUAL_ORDER_INVALID, "设备数量必须与选中的具体设备数量一致");
+        }
+        for (Long deviceId : item.getDeviceIds()) {
+            if (!selectedDeviceIds.add(deviceId)) {
+                throw exception(RENTAL_MANUAL_ORDER_INVALID, "同一具体设备不能重复选择");
+            }
+        }
+    }
+
+    private void assignSelectedDevices(RentalOrderItemDO orderItem, RentalManualOrderCreateReqVO.Item item,
+                                       LocalDate occupyStartDate, LocalDate occupyEndDateExclusive) {
+        for (Long deviceId : item.getDeviceIds()) {
+            try {
+                assignmentService.assign(new RentalDeviceAssignmentCommand(
+                        orderItem.getId(), deviceId, occupyStartDate, occupyEndDateExclusive,
+                        "offline-create:" + orderItem.getRentalOrderId() + ":" + orderItem.getId() + ":" + deviceId));
+            } catch (RentalDeviceAssignmentException ex) {
+                throw exception(RENTAL_MANUAL_ORDER_DEVICE_ASSIGN_FAILED, ex.getCode().name());
+            }
+        }
     }
 
     @Override

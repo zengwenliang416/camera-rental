@@ -12,13 +12,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 class RentalOrderManualControllerSecurityTest {
 
     @Test
-    void createManualOrderRequiresOrderCreatePermission() throws NoSuchMethodException {
+    void createManualOrderRequiresOrderCreateAndDeviceAssignPermissions() throws NoSuchMethodException {
         Method method = RentalOrderManualController.class.getDeclaredMethod(
                 "createManualOrder", RentalManualOrderCreateReqVO.class);
 
         PreAuthorize annotation = method.getAnnotation(PreAuthorize.class);
         assertThat(annotation).isNotNull();
         assertThat(annotation.value()).contains("@ss.hasPermission('rental:order:create')");
+        assertThat(annotation.value()).contains("@ss.hasPermission('rental:device:assign')");
+        assertThat(annotation.value()).contains("&&");
     }
 
     @Test

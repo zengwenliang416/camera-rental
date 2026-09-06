@@ -136,5 +136,7 @@ public interface ErrorCodeConstants {
             "快递配送订单请走线下快递发货流程，无需确认送出");
     ErrorCode RENTAL_MANUAL_ORDER_ASSIGNMENT_INCOMPLETE = new ErrorCode(1_040_005_004,
             "订单设备尚未分配完成，不能确认送出");
+    ErrorCode RENTAL_MANUAL_ORDER_DEVICE_ASSIGN_FAILED = new ErrorCode(1_040_005_005,
+            "线下订单设备绑定失败：{}");
 
 }

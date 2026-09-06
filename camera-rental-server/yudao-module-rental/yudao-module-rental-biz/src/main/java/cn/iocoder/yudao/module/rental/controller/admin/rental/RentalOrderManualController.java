@@ -36,8 +36,9 @@ public class RentalOrderManualController {
     }
 
     @PostMapping("/order/create-manual")
-    @Operation(summary = "手动创建线下租赁订单")
-    @PreAuthorize("@ss.hasPermission('rental:order:create')")
+    @Operation(summary = "手动创建线下租赁订单并绑定具体设备排期")
+    @PreAuthorize("@ss.hasPermission('rental:order:create') && "
+            + "@ss.hasPermission('rental:device:assign')")
     public CommonResult<RentalManualOrderCreateRespVO> createManualOrder(
             @Valid @RequestBody RentalManualOrderCreateReqVO reqVO) {
         return success(manualOrderService.createManualOrder(reqVO));

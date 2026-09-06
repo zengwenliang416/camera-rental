@@ -16,9 +16,13 @@ import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceModelMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderDeliveryMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
+import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentCommand;
+import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentException;
+import cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentService;
 import cn.iocoder.yudao.module.rental.service.admin.RentalDeviceOpsService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -29,6 +33,7 @@ import java.util.List;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_MANUAL_ORDER_ASSIGNMENT_INCOMPLETE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_MANUAL_ORDER_CONFIRM_EXPRESS;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_MANUAL_ORDER_DELIVERY_METHOD_INVALID;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_MANUAL_ORDER_DEVICE_ASSIGN_FAILED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_MANUAL_ORDER_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_MANUAL_ORDER_MODEL_INVALID;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.RENTAL_ORDER_NOT_EXISTS;
@@ -41,6 +46,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -56,11 +62,12 @@ class RentalManualOrderServiceTest {
     private final RentalOrderDeliveryMapper orderDeliveryMapper = mock(RentalOrderDeliveryMapper.class);
     private final RentalDeviceModelMapper deviceModelMapper = mock(RentalDeviceModelMapper.class);
     private final RentalDeviceAssignmentMapper assignmentMapper = mock(RentalDeviceAssignmentMapper.class);
+    private final RentalDeviceAssignmentService assignmentService = mock(RentalDeviceAssignmentService.class);
     private final RentalDeviceOpsService deviceOpsService = mock(RentalDeviceOpsService.class);
     private final Clock clock = Clock.fixed(Instant.parse("2026-09-06T02:00:00Z"), BUSINESS_ZONE);
     private final RentalManualOrderServiceImpl service = new RentalManualOrderServiceImpl(
             orderMapper, orderItemMapper, customerMapper, orderDeliveryMapper, deviceModelMapper,
-            assignmentMapper, deviceOpsService, clock);
+            assignmentMapper, assignmentService, deviceOpsService, clock);
 
     private RentalManualOrderCreateReqVO validReqVO() {
         RentalManualOrderCreateReqVO reqVO = new RentalManualOrderCreateReqVO();
@@ -72,6 +79,7 @@ class RentalManualOrderServiceTest {
         RentalManualOrderCreateReqVO.Item item = new RentalManualOrderCreateReqVO.Item();
         item.setModelCode("P4P");
         item.setQuantity(2);
+        item.setDeviceIds(List.of(101L, 102L));
         item.setRentAmount(30000L);
         reqVO.setItems(List.of(item));
         reqVO.setBillableStartDate(TODAY.plusDays(1));
@@ -98,6 +106,11 @@ class RentalManualOrderServiceTest {
         lenient().when(customerMapper.insert(any(RentalCustomerDO.class))).thenAnswer(invocation -> {
             RentalCustomerDO customer = invocation.getArgument(0);
             customer.setId(78L);
+            return 1;
+        });
+        lenient().when(orderItemMapper.insert(any(RentalOrderItemDO.class))).thenAnswer(invocation -> {
+            RentalOrderItemDO item = invocation.getArgument(0);
+            item.setId(789L);
             return 1;
         });
     }
@@ -154,6 +167,66 @@ class RentalManualOrderServiceTest {
         assertEquals("13900000002", delivery.getReceiverMobile());
         assertEquals("上海市徐汇区某路 1 号", delivery.getReceiverAddress());
         assertEquals("下午送达", delivery.getDeliveryRemark());
+
+        ArgumentCaptor<RentalDeviceAssignmentCommand> assignmentCaptor =
+                ArgumentCaptor.forClass(RentalDeviceAssignmentCommand.class);
+        verify(assignmentService, times(2)).assign(assignmentCaptor.capture());
+        List<RentalDeviceAssignmentCommand> assignments = assignmentCaptor.getAllValues();
+        assertEquals(789L, assignments.get(0).rentalOrderItemId());
+        assertEquals(101L, assignments.get(0).deviceId());
+        assertEquals(TODAY.plusDays(1), assignments.get(0).occupyStartDate());
+        assertEquals(TODAY.plusDays(5), assignments.get(0).occupyEndDateExclusive());
+        assertEquals("offline-create:456:789:101", assignments.get(0).idempotencyKey());
+        assertEquals(102L, assignments.get(1).deviceId());
+
+        InOrder createOrder = inOrder(orderDeliveryMapper, assignmentService);
+        createOrder.verify(orderDeliveryMapper).insert(any(RentalOrderDeliveryDO.class));
+        createOrder.verify(assignmentService, times(2)).assign(any(RentalDeviceAssignmentCommand.class));
+    }
+
+    @Test
+    void createManualOrderRejectsDeviceCountMismatchBeforePersistence() {
+        stubEnabledModel("P4P");
+        RentalManualOrderCreateReqVO reqVO = validReqVO();
+        reqVO.getItems().get(0).setDeviceIds(List.of(101L));
+
+        ServiceException ex = assertThrows(ServiceException.class,
+                () -> service.createManualOrder(reqVO));
+
+        assertEquals(RENTAL_MANUAL_ORDER_INVALID.getCode(), ex.getCode());
+        verify(orderMapper, never()).insert(any(RentalOrderDO.class));
+        verify(assignmentService, never()).assign(any());
+    }
+
+    @Test
+    void createManualOrderRejectsDuplicateDeviceAcrossItems() {
+        stubEnabledModel("P4P");
+        RentalManualOrderCreateReqVO reqVO = validReqVO();
+        RentalManualOrderCreateReqVO.Item duplicate = new RentalManualOrderCreateReqVO.Item();
+        duplicate.setModelCode("P4P");
+        duplicate.setQuantity(1);
+        duplicate.setDeviceIds(List.of(101L));
+        duplicate.setRentAmount(10000L);
+        reqVO.setItems(List.of(reqVO.getItems().get(0), duplicate));
+
+        ServiceException ex = assertThrows(ServiceException.class,
+                () -> service.createManualOrder(reqVO));
+
+        assertEquals(RENTAL_MANUAL_ORDER_INVALID.getCode(), ex.getCode());
+        verify(orderMapper, never()).insert(any(RentalOrderDO.class));
+        verify(assignmentService, never()).assign(any());
+    }
+
+    @Test
+    void createManualOrderMapsAssignmentFailureToManualOrderError() {
+        stubEnabledModel("P4P");
+        when(assignmentService.assign(any())).thenThrow(new RentalDeviceAssignmentException(
+                RentalDeviceAssignmentException.Code.SCHEDULE_CONFLICT, "conflict"));
+
+        ServiceException ex = assertThrows(ServiceException.class,
+                () -> service.createManualOrder(validReqVO()));
+
+        assertEquals(RENTAL_MANUAL_ORDER_DEVICE_ASSIGN_FAILED.getCode(), ex.getCode());
     }
 
     @Test

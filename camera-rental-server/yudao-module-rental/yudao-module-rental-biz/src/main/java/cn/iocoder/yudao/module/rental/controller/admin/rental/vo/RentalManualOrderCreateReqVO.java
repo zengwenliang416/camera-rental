@@ -77,6 +77,11 @@ public class RentalManualOrderCreateReqVO {
         @Min(1)
         private Integer quantity;
 
+        @Schema(description = "本明细绑定的具体设备实例 ID")
+        @NotEmpty
+        @Size(max = 99)
+        private List<@NotNull Long> deviceIds;
+
         @Schema(description = "租金，单位分")
         @NotNull
         @Min(0)

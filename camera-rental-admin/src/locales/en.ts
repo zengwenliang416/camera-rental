@@ -1289,6 +1289,10 @@ export default {
       submit: 'Create order',
       createSuccess:
         'Order {orderNo} created; devices are bound and the occupied schedule is recorded',
+      metaCreatedDate: 'Entry date',
+      metaSourceLabel: 'Source',
+      metaSourceOffline: 'Offline',
+      periodNote: 'Charged by calendar day, inclusive of both ends',
       itemLabel: 'Item {index}',
       summaryTitle: 'Order summary',
       summaryPeriod: 'Period',

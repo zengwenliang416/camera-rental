@@ -77,3 +77,15 @@ rental_channel_order
 ## 敏感信息
 
 订单详情和日志应遵守最小披露原则。手机号、地址、身份证、支付凭证、AppSecret 和完整签名不得出现在普通看板、日志、测试快照或前端返回中。
+
+## 订单来源
+
+`rental_order.source_type` 区分来源：`XIANYU` 由闲鱼渠道订单转换产生，
+`OFFLINE` 由管理端手动录单（`POST /admin-api/rental/order/create-manual`，权限
+`rental:order:create`）产生。线下订单创建即 `PENDING_ALLOCATION` + `READY`，
+订单号为 `OFF-` + 19 位零填充自增 id；客户主档存于 `rental_customer`（手机号
+AES 加密、完整号码等值反查），配送信息存于 `rental_order_delivery`
+（EXPRESS/ERRAND/SELF_DELIVERY，收货人手机号与地址加密）。跑腿/自送订单在设备
+分满后经 `POST /admin-api/rental/order/confirm-outbound` 确认送出，复用设备出库
+写路径，不产生 `rental_delivery` / `rental_device_shipment` 记录；快递配送的线下
+订单走线下快递流程。报表按 `source_type` 实际值统计来源。

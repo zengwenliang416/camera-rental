@@ -99,6 +99,10 @@ newStart < existingEndExclusive
   历史分配不受影响。取消后的订单不再出现在待分配读模型（查询按
   `status = 'PENDING_ALLOCATION'` 过滤）。
 
+待分配读模型与分配链路是渠道中立的：只按 `status = 'PENDING_ALLOCATION'` 且
+`preparation_status = 'READY'` 过滤，不看 `source_type`。因此手动录入的 OFFLINE
+订单（见租赁订单领域文档"订单来源"）创建后即进入同一待分配、分配、出库链路。
+
 续租、换机仍无自动化处理：换机只能"旧机回仓 + 新机重新分配"两段人工操作。
 
 ## 分配流程

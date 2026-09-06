@@ -126,4 +126,15 @@ public interface ErrorCodeConstants {
     ErrorCode RETURN_REGISTRATION_VERIFICATION_FAILED = new ErrorCode(1_040_004_005,
             "订单信息或机器编码不匹配");
 
+    // ========== 线下手动录单 1-040-005-000 ==========
+    ErrorCode RENTAL_MANUAL_ORDER_INVALID = new ErrorCode(1_040_005_000, "线下订单信息无效：{}");
+    ErrorCode RENTAL_MANUAL_ORDER_MODEL_INVALID = new ErrorCode(1_040_005_001,
+            "设备型号不存在或已停用：{}");
+    ErrorCode RENTAL_MANUAL_ORDER_DELIVERY_METHOD_INVALID = new ErrorCode(1_040_005_002,
+            "配送方式无效");
+    ErrorCode RENTAL_MANUAL_ORDER_CONFIRM_EXPRESS = new ErrorCode(1_040_005_003,
+            "快递配送订单请走线下快递发货流程，无需确认送出");
+    ErrorCode RENTAL_MANUAL_ORDER_ASSIGNMENT_INCOMPLETE = new ErrorCode(1_040_005_004,
+            "订单设备尚未分配完成，不能确认送出");
+
 }

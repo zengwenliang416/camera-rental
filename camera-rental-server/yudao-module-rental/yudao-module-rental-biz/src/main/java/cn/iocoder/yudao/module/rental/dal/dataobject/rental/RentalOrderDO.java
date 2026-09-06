@@ -31,8 +31,10 @@ public class RentalOrderDO extends TenantBaseDO {
     private String sourceType;
     private String sourceOrderId;
     private Long channelOrderId;
+    private Long customerId;
     private String status;
     private Long rentAmount;
+    private Long depositAmount;
     private Long refundAmount;
     private LocalDateTime settledAt;
     private LocalDate billableStartDate;

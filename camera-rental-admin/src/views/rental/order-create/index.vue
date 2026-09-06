@@ -46,45 +46,67 @@
       </section>
 
       <section class="form-section">
+        <h3>{{ t('rental.orderCreate.periodTitle') }}</h3>
+        <el-form-item :label="t('rental.orderCreate.billableStartDate')" prop="billableStartDate">
+          <el-date-picker
+            v-model="formData.billableStartDate"
+            type="date"
+            value-format="YYYY-MM-DD"
+            :disabled-date="disabledPastDate"
+            :placeholder="t('rental.orderCreate.billableStartDatePlaceholder')"
+            @change="validateDatePair"
+          />
+        </el-form-item>
+        <el-form-item :label="t('rental.orderCreate.billableEndDate')" prop="billableEndDate">
+          <el-date-picker
+            v-model="formData.billableEndDate"
+            type="date"
+            value-format="YYYY-MM-DD"
+            :disabled-date="disabledPastDate"
+            :placeholder="t('rental.orderCreate.billableEndDatePlaceholder')"
+            @change="validateDatePair"
+          />
+        </el-form-item>
+      </section>
+
+      <section class="form-section">
         <h3>{{ t('rental.orderCreate.itemsTitle') }}</h3>
         <el-alert
-          v-if="catalogError"
-          class="mb-12px"
-          type="error"
+          class="mb-16px"
+          type="info"
           :closable="false"
           show-icon
-          :title="t('rental.orderCreate.catalogLoadError')"
-        >
-          <el-button link type="primary" @click="loadCatalog">
-            {{ t('rental.common.retry') }}
-          </el-button>
-        </el-alert>
-        <div v-for="(item, index) in formData.items" :key="index" class="item-row">
+          :title="t('rental.orderCreate.itemDeviceHint')"
+        />
+        <div v-for="(item, index) in formData.items" :key="item.key" class="item-row">
           <el-form-item
-            :label="t('rental.orderCreate.itemModel')"
-            :prop="`items.${index}.modelCode`"
-            :rules="itemModelRules"
+            class="item-device"
+            :label="t('rental.orderCreate.itemDevice')"
+            :prop="`items.${index}.devices`"
+            :rules="itemDeviceRules"
           >
-            <el-select
-              v-model="item.modelCode"
-              class="!w-280px"
-              filterable
-              :loading="catalogLoading"
-              :placeholder="t('rental.orderCreate.itemModelPlaceholder')"
-            >
-              <el-option
-                v-for="model in modelOptions"
-                :key="model.modelCode"
-                :label="formatDeviceModelLabel(model)"
-                :value="model.modelCode"
-              />
-            </el-select>
+            <OrderDeviceSelect
+              :model-value="item.devices"
+              :disabled="!rentalPeriodReady"
+              :excluded-device-ids="excludedDeviceIds(index)"
+              @update:model-value="updateItemDevices(index, $event)"
+            />
           </el-form-item>
-          <el-form-item
-            :label="t('rental.orderCreate.itemQuantity')"
-            :prop="`items.${index}.quantity`"
-          >
-            <el-input-number v-model="item.quantity" :min="1" :max="99" controls-position="right" />
+          <el-form-item :label="t('rental.orderCreate.itemModel')">
+            <el-input
+              class="!w-180px"
+              disabled
+              :model-value="item.devices[0]?.equipmentModelCode || ''"
+              :placeholder="t('rental.orderCreate.itemModelAuto')"
+            />
+          </el-form-item>
+          <el-form-item :label="t('rental.orderCreate.itemQuantity')">
+            <el-input-number
+              class="!w-120px"
+              disabled
+              :model-value="item.devices.length"
+              :min="0"
+            />
           </el-form-item>
           <el-form-item
             :label="t('rental.orderCreate.itemRentAmount')"
@@ -114,30 +136,6 @@
           <Icon icon="ep:plus" class="mr-5px" />
           {{ t('rental.orderCreate.addItem') }}
         </el-button>
-      </section>
-
-      <section class="form-section">
-        <h3>{{ t('rental.orderCreate.periodTitle') }}</h3>
-        <el-form-item :label="t('rental.orderCreate.billableStartDate')" prop="billableStartDate">
-          <el-date-picker
-            v-model="formData.billableStartDate"
-            type="date"
-            value-format="YYYY-MM-DD"
-            :disabled-date="disabledPastDate"
-            :placeholder="t('rental.orderCreate.billableStartDatePlaceholder')"
-            @change="validateDatePair"
-          />
-        </el-form-item>
-        <el-form-item :label="t('rental.orderCreate.billableEndDate')" prop="billableEndDate">
-          <el-date-picker
-            v-model="formData.billableEndDate"
-            type="date"
-            value-format="YYYY-MM-DD"
-            :disabled-date="disabledPastDate"
-            :placeholder="t('rental.orderCreate.billableEndDatePlaceholder')"
-            @change="validateDatePair"
-          />
-        </el-form-item>
       </section>
 
       <section class="form-section">
@@ -215,12 +213,7 @@
       </section>
 
       <el-form-item>
-        <el-button
-          v-hasPermi="['rental:order:create']"
-          type="primary"
-          :loading="submitting"
-          @click="submit"
-        >
+        <el-button v-if="canCreateBoundOrder" type="primary" :loading="submitting" @click="submit">
           {{ t('rental.orderCreate.submit') }}
         </el-button>
       </el-form-item>
@@ -229,10 +222,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import type { FormInstance, FormRules } from 'element-plus'
-import { getRentalDeviceCatalog, type RentalDeviceCategoryVO } from '@/api/rental/device'
+import type { FormInstance, FormItemRule, FormRules } from 'element-plus'
+import type { RentalDeviceVO } from '@/api/rental/device'
 import {
   createRentalManualOrder,
   suggestRentalCustomer,
@@ -241,13 +234,14 @@ import {
 } from '@/api/rental/orderCreate'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
-import { formatDeviceModelLabel } from '@/views/rental/device/deviceCatalogModel'
+import { hasPermission } from '@/directives/permission/hasPermi'
+import OrderDeviceSelect from './components/OrderDeviceSelect.vue'
 
 defineOptions({ name: 'RentalOrderCreate' })
 
 interface OrderItemForm {
-  modelCode: string
-  quantity: number
+  key: number
+  devices: RentalDeviceVO[]
   /** 租金，单位：元，提交时换算为分 */
   rentAmount?: number
 }
@@ -259,15 +253,19 @@ const message = useMessage()
 const router = useRouter()
 const formRef = ref<FormInstance>()
 const submitting = ref(false)
-const catalog = ref<RentalDeviceCategoryVO[]>([])
-const catalogLoading = ref(false)
-const catalogError = ref(false)
+let nextItemKey = 2
+const canCreateBoundOrder = computed(
+  () =>
+    hasPermission(['rental:order:create']) &&
+    hasPermission(['rental:device:query']) &&
+    hasPermission(['rental:device:assign'])
+)
 
 const formData = reactive({
   customerName: '',
   customerMobile: '',
   customerWechatId: '',
-  items: [{ modelCode: '', quantity: 1, rentAmount: undefined }] as OrderItemForm[],
+  items: [{ key: 1, devices: [], rentAmount: undefined }] as OrderItemForm[],
   billableStartDate: '',
   billableEndDate: '',
   depositAmount: undefined as number | undefined,
@@ -277,10 +275,6 @@ const formData = reactive({
   receiverAddress: '',
   deliveryRemark: ''
 })
-
-const modelOptions = computed(() =>
-  catalog.value.flatMap((category) => category.models).filter((model) => model.enabled !== false)
-)
 
 const receiverRequired = computed(() => formData.deliveryMethod !== 'EXPRESS')
 
@@ -294,6 +288,14 @@ const toShanghaiDate = (date: Date) =>
   new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Shanghai' }).format(date)
 
 const disabledPastDate = (date: Date) => toShanghaiDate(date) < toShanghaiDate(new Date())
+
+const rentalPeriodReady = computed(
+  () =>
+    Boolean(formData.billableStartDate) &&
+    Boolean(formData.billableEndDate) &&
+    formData.billableStartDate <= formData.billableEndDate &&
+    formData.billableStartDate >= toShanghaiDate(new Date())
+)
 
 const validateDatePair = () => {
   formRef.value?.validateField(['billableStartDate', 'billableEndDate']).catch(() => undefined)
@@ -349,33 +351,37 @@ const rules = computed<FormRules>(() => ({
   ]
 }))
 
-const itemModelRules = computed(() => [
-  { required: true, message: t('rental.orderCreate.itemModelRequired'), trigger: 'change' }
+const itemDeviceRules = computed<FormItemRule[]>(() => [
+  {
+    type: 'array' as const,
+    required: true,
+    min: 1,
+    message: t('rental.orderCreate.itemDeviceRequired'),
+    trigger: 'change'
+  }
 ])
 
 const itemRentRules = computed(() => [
   { required: true, message: t('rental.orderCreate.itemRentAmountRequired'), trigger: 'blur' }
 ])
 
-const loadCatalog = async () => {
-  catalogLoading.value = true
-  catalogError.value = false
-  try {
-    catalog.value = await getRentalDeviceCatalog()
-  } catch {
-    catalogError.value = true
-  } finally {
-    catalogLoading.value = false
-  }
-}
-
 const addItem = () => {
-  formData.items.push({ modelCode: '', quantity: 1, rentAmount: undefined })
+  formData.items.push({ key: nextItemKey++, devices: [], rentAmount: undefined })
 }
 
 const removeItem = (index: number) => {
   if (formData.items.length <= 1) return
   formData.items.splice(index, 1)
+}
+
+const excludedDeviceIds = (currentIndex: number) =>
+  formData.items.flatMap((item, index) =>
+    index === currentIndex ? [] : item.devices.map((device) => device.id)
+  )
+
+const updateItemDevices = (index: number, devices: RentalDeviceVO[]) => {
+  formData.items[index].devices = devices
+  formRef.value?.validateField(`items.${index}.devices`).catch(() => undefined)
 }
 
 const handleDeliveryMethodChange = () => {
@@ -409,8 +415,9 @@ const buildRequest = (): RentalManualOrderCreateReqVO => ({
     wechatId: formData.customerWechatId.trim() || undefined
   },
   items: formData.items.map((item) => ({
-    modelCode: item.modelCode,
-    quantity: item.quantity,
+    modelCode: item.devices[0]?.equipmentModelCode || '',
+    quantity: item.devices.length,
+    deviceIds: item.devices.map((device) => device.id),
     rentAmount: yuanToFen(item.rentAmount) ?? 0
   })),
   billableStartDate: formData.billableStartDate,
@@ -431,13 +438,17 @@ const submit = async () => {
   try {
     const result = await createRentalManualOrder(buildRequest())
     message.success(t('rental.orderCreate.createSuccess', { orderNo: result.orderNo }))
-    router.push({ name: 'RentalSchedule' })
+    router.push({
+      name: 'RentalSchedule',
+      query: {
+        occupyStartDate: formData.billableStartDate,
+        deviceId: formData.items[0]?.devices[0]?.id
+      }
+    })
   } finally {
     submitting.value = false
   }
 }
-
-onMounted(loadCatalog)
 </script>
 
 <style scoped>
@@ -483,6 +494,15 @@ onMounted(loadCatalog)
   flex-wrap: wrap;
   gap: 0 16px;
   align-items: flex-start;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: var(--el-fill-color-extra-light);
+  border: 1px solid var(--el-border-color-lighter);
+  border-radius: 8px;
+}
+
+.item-device {
+  flex: 1 1 520px;
 }
 
 .item-remove {

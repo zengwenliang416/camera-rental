@@ -1171,7 +1171,7 @@ export default {
     },
     orderCreate: {
       pageTitle: '线下录单',
-      pageDescription: '录入微信等线下渠道的租赁订单，创建成功后进入待分配排期。',
+      pageDescription: '录入线下租赁订单，同时绑定具体设备和租期占用。',
       customerTitle: '客户信息',
       customerName: '客户姓名',
       customerNamePlaceholder: '请输入客户姓名',
@@ -1184,6 +1184,17 @@ export default {
       customerMatched: '已带出老客户信息',
       optional: '选填',
       itemsTitle: '设备明细',
+      itemDevice: '具体设备',
+      itemDevicePlaceholder: '搜索设备编号或序列号，可多选同型号设备',
+      itemDevicePeriodFirst: '请先填写租期',
+      itemDeviceRequired: '请选择具体设备',
+      itemDeviceHint:
+        '先填写租期，再按设备编号或序列号选择要绑定的具体设备。提交后会立即写入设备排期。',
+      itemDeviceSelected: '已选择 {count} 台 {modelCode} 设备',
+      itemDeviceSameModel: '同一条明细只能选择同一设备型号，请拆分为多行。',
+      itemDeviceMore: '加载更多设备',
+      itemDeviceLoadError: '设备列表加载失败，请检查网络或权限后重试。',
+      itemModelAuto: '选择设备后自动带出',
       itemModel: '设备型号',
       itemModelPlaceholder: '选择设备型号',
       itemModelRequired: '请选择设备型号',
@@ -1222,7 +1233,7 @@ export default {
       deliveryRemarkPlaceholder: '选填',
       deliveryRemarkErrandPlaceholder: '选填，可填写闪送/达达等平台名',
       submit: '创建订单',
-      createSuccess: '订单 {orderNo} 创建成功，已进入待分配'
+      createSuccess: '订单 {orderNo} 创建成功，设备已绑定租期并写入排期'
     },
     device: {
       pageTitle: '租赁设备',

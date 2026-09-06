@@ -1222,7 +1222,7 @@ export default {
     orderCreate: {
       pageTitle: 'Offline Order Entry',
       pageDescription:
-        'Record rental orders from offline channels such as WeChat. Created orders go straight to pending allocation.',
+        'Record an offline rental order and bind concrete devices to its occupied rental period.',
       customerTitle: 'Customer',
       customerName: 'Name',
       customerNamePlaceholder: 'Enter customer name',
@@ -1235,6 +1235,18 @@ export default {
       customerMatched: 'Existing customer info loaded',
       optional: 'Optional',
       itemsTitle: 'Items',
+      itemDevice: 'Specific device',
+      itemDevicePlaceholder: 'Search by device number or serial number; select multiple devices',
+      itemDevicePeriodFirst: 'Enter the rental period first',
+      itemDeviceRequired: 'Select at least one specific device',
+      itemDeviceHint:
+        'Enter the rental period first, then select devices by number or serial number. Submission writes the occupied schedule immediately.',
+      itemDeviceSelected: '{count} {modelCode} device(s) selected',
+      itemDeviceSameModel:
+        'One item can contain only one device model. Use another row for a different model.',
+      itemDeviceMore: 'Load more devices',
+      itemDeviceLoadError: 'Failed to load devices. Check the network or permissions and retry.',
+      itemModelAuto: 'Filled after device selection',
       itemModel: 'Device model',
       itemModelPlaceholder: 'Select a device model',
       itemModelRequired: 'Select a device model',
@@ -1275,7 +1287,8 @@ export default {
       deliveryRemarkPlaceholder: 'Optional',
       deliveryRemarkErrandPlaceholder: 'Optional, e.g. the errand platform name (Shansong, Dada)',
       submit: 'Create order',
-      createSuccess: 'Order {orderNo} created and moved to pending allocation'
+      createSuccess:
+        'Order {orderNo} created; devices are bound and the occupied schedule is recorded'
     },
     device: {
       pageTitle: 'Rental devices',

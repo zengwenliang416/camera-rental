@@ -11,6 +11,7 @@ export interface RentalManualOrderCustomerReqVO {
 export interface RentalManualOrderItemReqVO {
   modelCode: string
   quantity: number
+  deviceIds: number[]
   /** 租金，单位：分 */
   rentAmount: number
 }
@@ -26,9 +27,9 @@ export interface RentalManualOrderDeliveryReqVO {
 export interface RentalManualOrderCreateReqVO {
   customer: RentalManualOrderCustomerReqVO
   items: RentalManualOrderItemReqVO[]
-  /** 计租开始日期（闭区间），YYYY-MM-DD */
+  /** 计租开始日期（闭区间），YYYY-MM-DD；同时作为设备占用开始日期 */
   billableStartDate: string
-  /** 计租结束日期（闭区间），YYYY-MM-DD */
+  /** 计租结束日期（闭区间），YYYY-MM-DD；设备占用结束日期为次日 */
   billableEndDate: string
   /** 押金，单位：分 */
   depositAmount?: number

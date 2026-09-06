@@ -1,6 +1,7 @@
 <template>
   <div class="order-device-select">
     <el-select
+      ref="selectRef"
       v-model="selectedIds"
       class="w-full"
       clearable
@@ -10,6 +11,7 @@
       multiple
       remote
       remote-show-suffix
+      :reserve-keyword="false"
       :disabled="disabled"
       :loading="loading"
       :placeholder="
@@ -58,7 +60,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import type { SelectInstance } from 'element-plus'
 import { getRentalDevicePage, type RentalDeviceVO } from '@/api/rental/device'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
@@ -84,6 +87,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const message = useMessage()
+const selectRef = ref<SelectInstance>()
 const selectedIds = ref<number[]>([])
 const options = ref<RentalDeviceVO[]>([])
 const loading = ref(false)
@@ -185,7 +189,10 @@ const handleSelectionChange = (ids: number[]) => {
   selectedIds.value = sameModelDevices.map((device) => device.id)
   emit('update:modelValue', sameModelDevices)
   keyword.value = ''
-  resetOptions()
+  void nextTick(() => {
+    selectRef.value?.blur()
+    resetOptions()
+  })
 }
 
 watch(

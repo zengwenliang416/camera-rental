@@ -1,20 +1,25 @@
 package cn.iocoder.yudao.module.rental.service;
 
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceDispatchReqVO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceAssignmentDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderDO;
+import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderDeliveryDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderItemDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalScheduleDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
+import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderDeliveryMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleMapper;
 import cn.iocoder.yudao.module.rental.service.admin.RentalDeviceLockService;
+import cn.iocoder.yudao.module.rental.service.admin.RentalDeviceOpsService;
 import cn.iocoder.yudao.module.rental.service.reconciliation.RentalOrderPreparationPolicy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -51,13 +56,18 @@ class RentalDeviceAssignmentServiceImplTest {
     private RentalScheduleMapper scheduleMapper;
     @Mock
     private RentalDeviceLockService deviceLockService;
+    @Mock
+    private RentalOrderDeliveryMapper orderDeliveryMapper;
+    @Mock
+    private RentalDeviceOpsService deviceOpsService;
 
     private RentalDeviceAssignmentService service;
 
     @BeforeEach
     void setUp() {
         service = new RentalDeviceAssignmentServiceImpl(assignmentMapper, deviceMapper, orderItemMapper, orderMapper,
-                scheduleMapper, deviceLockService, new RentalOrderPreparationPolicy());
+                scheduleMapper, deviceLockService, new RentalOrderPreparationPolicy(),
+                orderDeliveryMapper, deviceOpsService);
     }
 
     @Test
@@ -236,6 +246,136 @@ class RentalDeviceAssignmentServiceImplTest {
         assertEquals(RentalDeviceAssignmentException.Code.ORDER_NOT_READY, exception.getCode());
         verify(scheduleMapper, never()).selectEffectiveOverlapsForUpdate(anyLong(), any(), any());
         verify(scheduleMapper, never()).insert(any(RentalScheduleDO.class));
+    }
+
+    @Test
+    void shouldDispatchImmediatelyForOfflineErrandOrder() {
+        RentalDeviceAssignmentService realService = serviceWithRealOps();
+        RentalDeviceDO device = RentalDeviceDO.builder().id(31L).enabled(true)
+                .status("AVAILABLE").equipmentModelCode("A7M4").build();
+        RentalDeviceAssignmentDO[] inserted = stubAssignableOfflineOrder(device, "ERRAND");
+        when(assignmentMapper.selectByIdForUpdate(81L)).thenAnswer(invocation -> inserted[0]);
+
+        RentalDeviceAssignmentResult result = realService.assign(command());
+
+        assertEquals(81L, result.assignmentId());
+        assertEquals("DISPATCHED", inserted[0].getStatus());
+        assertEquals("RENTED", device.getStatus());
+        verify(deviceMapper).updateById(device);
+        verify(assignmentMapper).updateById(inserted[0]);
+    }
+
+    @Test
+    void shouldDispatchImmediatelyForOfflineSelfDeliveryOrder() {
+        RentalDeviceAssignmentService realService = serviceWithRealOps();
+        RentalDeviceDO device = RentalDeviceDO.builder().id(31L).enabled(true)
+                .status("AVAILABLE").equipmentModelCode("A7M4").build();
+        RentalDeviceAssignmentDO[] inserted = stubAssignableOfflineOrder(device, "SELF_DELIVERY");
+        when(assignmentMapper.selectByIdForUpdate(81L)).thenAnswer(invocation -> inserted[0]);
+
+        RentalDeviceAssignmentResult result = realService.assign(command());
+
+        assertEquals(81L, result.assignmentId());
+        assertEquals("DISPATCHED", inserted[0].getStatus());
+        assertEquals("RENTED", device.getStatus());
+    }
+
+    @Test
+    void shouldKeepAssignOnlyForOfflineExpressOrder() {
+        RentalDeviceAssignmentDO[] inserted = stubAssignableOfflineOrder("EXPRESS");
+
+        RentalDeviceAssignmentResult result = service.assign(command());
+
+        assertEquals(81L, result.assignmentId());
+        assertEquals("ASSIGNED", inserted[0].getStatus());
+        verify(deviceOpsService, never()).dispatch(any());
+        verify(deviceMapper, never()).updateById(any(RentalDeviceDO.class));
+    }
+
+    @Test
+    void shouldKeepAssignOnlyWhenOrderHasNoDeliveryRecord() {
+        RentalDeviceAssignmentDO[] inserted = stubAssignableOfflineOrder(null);
+
+        RentalDeviceAssignmentResult result = service.assign(command());
+
+        assertEquals(81L, result.assignmentId());
+        assertEquals("ASSIGNED", inserted[0].getStatus());
+        verify(deviceOpsService, never()).dispatch(any());
+    }
+
+    @Test
+    void shouldPropagateDispatchFailureSoAssignmentRollsBack() {
+        stubAssignableOfflineOrder("ERRAND");
+        when(deviceOpsService.dispatch(any())).thenThrow(new IllegalStateException("dispatch failed"));
+
+        assertThrows(IllegalStateException.class, () -> service.assign(command()));
+
+        verify(assignmentMapper).insert(any(RentalDeviceAssignmentDO.class));
+        verify(deviceMapper, never()).updateById(any(RentalDeviceDO.class));
+    }
+
+    @Test
+    void shouldDispatchPendingPlanAssignmentForOfflineErrandOrder() {
+        RentalOrderItemDO item = RentalOrderItemDO.builder().id(21L)
+                .rentalOrderId(11L).quantity(1).equipmentModelCode("A7M4").build();
+        when(orderItemMapper.selectById(21L)).thenReturn(item);
+        when(orderMapper.selectByIdForUpdate(11L)).thenReturn(RentalOrderDO.builder().id(11L)
+                .status("PENDING_ALLOCATION").preparationStatus("WAITING_REMARK").build());
+        when(orderItemMapper.selectByIdForUpdate(21L)).thenReturn(item);
+        when(deviceMapper.selectByIdForUpdate(31L)).thenReturn(RentalDeviceDO.builder().id(31L)
+                .enabled(true).status("AVAILABLE").equipmentModelCode("A7M4").build());
+        when(deviceLockService.getActiveLocksForUpdate(31L)).thenReturn(List.of());
+        when(assignmentMapper.countAssignedByOrderItem(21L)).thenReturn(0L);
+        when(assignmentMapper.insert(any(RentalDeviceAssignmentDO.class))).thenAnswer(invocation -> {
+            invocation.getArgument(0, RentalDeviceAssignmentDO.class).setId(81L);
+            return 1;
+        });
+        when(orderDeliveryMapper.selectByRentalOrderId(11L)).thenReturn(RentalOrderDeliveryDO.builder()
+                .rentalOrderId(11L).deliveryMethod("ERRAND").build());
+
+        RentalDeviceAssignmentResult result = service.assignPendingPlan(21L, 31L, "pending-1");
+
+        assertEquals(81L, result.assignmentId());
+        ArgumentCaptor<RentalDeviceDispatchReqVO> captor =
+                ArgumentCaptor.forClass(RentalDeviceDispatchReqVO.class);
+        verify(deviceOpsService).dispatch(captor.capture());
+        assertEquals(31L, captor.getValue().getDeviceId());
+        assertEquals(81L, captor.getValue().getAssignmentId());
+    }
+
+    private RentalDeviceAssignmentService serviceWithRealOps() {
+        RentalDeviceOpsService realOpsService =
+                new RentalDeviceOpsService(deviceMapper, assignmentMapper, scheduleMapper, deviceLockService);
+        return new RentalDeviceAssignmentServiceImpl(assignmentMapper, deviceMapper, orderItemMapper, orderMapper,
+                scheduleMapper, deviceLockService, new RentalOrderPreparationPolicy(),
+                orderDeliveryMapper, realOpsService);
+    }
+
+    private RentalDeviceAssignmentDO[] stubAssignableOfflineOrder(String deliveryMethod) {
+        return stubAssignableOfflineOrder(RentalDeviceDO.builder().id(31L).enabled(true)
+                .status("AVAILABLE").equipmentModelCode("A7M4").build(), deliveryMethod);
+    }
+
+    private RentalDeviceAssignmentDO[] stubAssignableOfflineOrder(RentalDeviceDO device,
+                                                                  String deliveryMethod) {
+        RentalOrderItemDO item = readyItem();
+        when(deviceMapper.selectByIdForUpdate(31L)).thenReturn(device);
+        when(deviceLockService.getActiveLocksForUpdate(31L)).thenReturn(List.of());
+        when(orderItemMapper.selectById(21L)).thenReturn(item);
+        when(orderItemMapper.selectByIdForUpdate(21L)).thenReturn(item);
+        when(orderMapper.selectByIdForUpdate(11L)).thenReturn(RentalOrderDO.builder().id(11L)
+                .status("PENDING_ALLOCATION").preparationStatus("READY").build());
+        when(assignmentMapper.countAssignedByOrderItem(21L)).thenReturn(0L);
+        RentalDeviceAssignmentDO[] inserted = new RentalDeviceAssignmentDO[1];
+        doAnswer(invocation -> {
+            RentalDeviceAssignmentDO value = invocation.getArgument(0);
+            value.setId(81L);
+            inserted[0] = value;
+            return 1;
+        }).when(assignmentMapper).insert(any(RentalDeviceAssignmentDO.class));
+        when(orderDeliveryMapper.selectByRentalOrderId(11L)).thenReturn(deliveryMethod == null ? null
+                : RentalOrderDeliveryDO.builder().rentalOrderId(11L).deliveryMethod(deliveryMethod).build());
+        return inserted;
     }
 
     private void stubAssignableCommand() {

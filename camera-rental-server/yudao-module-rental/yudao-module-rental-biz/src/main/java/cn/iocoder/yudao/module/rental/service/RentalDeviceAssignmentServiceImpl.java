@@ -1,16 +1,21 @@
 package cn.iocoder.yudao.module.rental.service;
 
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalDeviceDispatchReqVO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceAssignmentDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalDeviceDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderDO;
+import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderDeliveryDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalOrderItemDO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalScheduleDO;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceAssignmentMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalDeviceMapper;
+import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderDeliveryMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderItemMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalOrderMapper;
 import cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalScheduleMapper;
+import cn.iocoder.yudao.module.rental.enums.rental.RentalDeliveryMethodEnum;
 import cn.iocoder.yudao.module.rental.service.admin.RentalDeviceLockService;
+import cn.iocoder.yudao.module.rental.service.admin.RentalDeviceOpsService;
 import cn.iocoder.yudao.module.rental.service.reconciliation.RentalOrderPreparationPolicy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +49,8 @@ public class RentalDeviceAssignmentServiceImpl implements RentalDeviceAssignment
     private final RentalScheduleMapper scheduleMapper;
     private final RentalDeviceLockService deviceLockService;
     private final RentalOrderPreparationPolicy preparationPolicy;
+    private final RentalOrderDeliveryMapper orderDeliveryMapper;
+    private final RentalDeviceOpsService deviceOpsService;
 
     public RentalDeviceAssignmentServiceImpl(RentalDeviceAssignmentMapper assignmentMapper,
                                              RentalDeviceMapper deviceMapper,
@@ -51,7 +58,9 @@ public class RentalDeviceAssignmentServiceImpl implements RentalDeviceAssignment
                                              RentalOrderMapper orderMapper,
                                              RentalScheduleMapper scheduleMapper,
                                              RentalDeviceLockService deviceLockService,
-                                             RentalOrderPreparationPolicy preparationPolicy) {
+                                             RentalOrderPreparationPolicy preparationPolicy,
+                                             RentalOrderDeliveryMapper orderDeliveryMapper,
+                                             RentalDeviceOpsService deviceOpsService) {
         this.assignmentMapper = assignmentMapper;
         this.deviceMapper = deviceMapper;
         this.orderItemMapper = orderItemMapper;
@@ -59,6 +68,8 @@ public class RentalDeviceAssignmentServiceImpl implements RentalDeviceAssignment
         this.scheduleMapper = scheduleMapper;
         this.deviceLockService = deviceLockService;
         this.preparationPolicy = preparationPolicy;
+        this.orderDeliveryMapper = orderDeliveryMapper;
+        this.deviceOpsService = deviceOpsService;
     }
 
     @Override
@@ -126,6 +137,7 @@ public class RentalDeviceAssignmentServiceImpl implements RentalDeviceAssignment
                 .assignedAt(LocalDateTime.now(BUSINESS_ZONE))
                 .build();
         assignmentMapper.insert(assignment);
+        dispatchIfOfflineHandover(order.getId(), device.getId(), assignment.getId());
         return result(assignment.getId(), schedule.getId(), device.getId(), command);
     }
 
@@ -182,7 +194,30 @@ public class RentalDeviceAssignmentServiceImpl implements RentalDeviceAssignment
                 .assignedAt(LocalDateTime.now(BUSINESS_ZONE))
                 .build();
         assignmentMapper.insert(assignment);
+        dispatchIfOfflineHandover(order.getId(), device.getId(), assignment.getId());
         return new RentalDeviceAssignmentResult(assignment.getId(), null, device.getId(), null, null);
+    }
+
+    /**
+     * Offline ERRAND/SELF_DELIVERY orders are handed over the moment devices are selected:
+     * run the new assignment through the same dispatch write path as warehouse scan-out
+     * (device AVAILABLE -&gt; RENTED, assignment ASSIGNED -&gt; DISPATCHED) inside this
+     * transaction. Channel orders have no rental_order_delivery row and keep the
+     * assign-only behavior; EXPRESS offline orders ship through the offline express process.
+     */
+    private void dispatchIfOfflineHandover(Long rentalOrderId, Long deviceId, Long assignmentId) {
+        RentalOrderDeliveryDO delivery = orderDeliveryMapper.selectByRentalOrderId(rentalOrderId);
+        if (delivery == null) {
+            return;
+        }
+        RentalDeliveryMethodEnum method = RentalDeliveryMethodEnum.of(delivery.getDeliveryMethod());
+        if (method == null || !method.requiresReceiverInfo()) {
+            return;
+        }
+        RentalDeviceDispatchReqVO dispatchReqVO = new RentalDeviceDispatchReqVO();
+        dispatchReqVO.setDeviceId(deviceId);
+        dispatchReqVO.setAssignmentId(assignmentId);
+        deviceOpsService.dispatch(dispatchReqVO);
     }
 
     static boolean overlaps(LocalDate newStart, LocalDate newEndExclusive, LocalDate existingStart,

@@ -13,9 +13,10 @@ public interface RentalManualOrderService {
     RentalManualOrderCreateRespVO createManualOrder(RentalManualOrderCreateReqVO reqVO);
 
     /**
-     * Confirms hand-over for ERRAND/SELF_DELIVERY orders: every fully assigned device is
-     * dispatched through the same write path as warehouse scan-out. Never writes
-     * rental_delivery or rental_device_shipment.
+     * Fallback for ERRAND/SELF_DELIVERY orders: assignments created through the allocation
+     * entry points are already dispatched inline, so this only dispatches devices still in
+     * ASSIGNED status (e.g. assigned before the inline hand-over existed) and stays
+     * idempotent on repeat calls. Never writes rental_delivery or rental_device_shipment.
      */
     void confirmOutbound(Long orderId);
 

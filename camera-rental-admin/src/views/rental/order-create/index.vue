@@ -1,258 +1,269 @@
 <template>
   <div class="rental-order-create-page">
-    <div class="page-heading">
-      <span class="page-eyebrow">OFFLINE MANUAL ORDER</span>
-      <h1>{{ t('rental.orderCreate.pageTitle') }}</h1>
-      <p>{{ t('rental.orderCreate.pageDescription') }}</p>
-    </div>
+    <div class="order-sheet">
+      <header class="sheet-head">
+        <div class="sheet-title">
+          <h1>{{ t('rental.orderCreate.pageTitle') }}</h1>
+          <span class="sheet-desc">{{ t('rental.orderCreate.pageDescription') }}</span>
+        </div>
+        <div class="sheet-meta">
+          <span>
+            {{ t('rental.orderCreate.metaCreatedDate') }}
+            <strong>{{ todayDate }}</strong>
+          </span>
+          <span>
+            {{ t('rental.orderCreate.metaSourceLabel') }}
+            <strong>{{ t('rental.orderCreate.metaSourceOffline') }}</strong>
+          </span>
+        </div>
+      </header>
 
-    <el-form
-      ref="formRef"
-      v-loading="submitting"
-      :model="formData"
-      :rules="rules"
-      label-width="110px"
-      class="order-create-layout"
-    >
-      <div class="form-main">
-        <section class="form-card">
-          <header class="form-card-header">
-            <span class="form-card-index">01</span>
-            <h3>{{ t('rental.orderCreate.customerTitle') }}</h3>
-          </header>
-          <div class="form-grid">
-            <el-form-item :label="t('rental.orderCreate.customerName')" prop="customerName">
-              <el-input
-                v-model="formData.customerName"
-                maxlength="64"
-                :placeholder="t('rental.orderCreate.customerNamePlaceholder')"
-              />
-            </el-form-item>
-            <el-form-item :label="t('rental.orderCreate.customerMobile')" prop="customerMobile">
-              <el-input
-                v-model.trim="formData.customerMobile"
-                maxlength="11"
-                :placeholder="t('rental.orderCreate.customerMobilePlaceholder')"
-                @blur="handleMobileBlur"
-              />
-            </el-form-item>
-            <el-form-item :label="t('rental.orderCreate.customerWechatId')" prop="customerWechatId">
-              <el-input
-                v-model="formData.customerWechatId"
-                maxlength="64"
-                :placeholder="t('rental.orderCreate.optional')"
-              />
-            </el-form-item>
-          </div>
-        </section>
-
-        <section class="form-card">
-          <header class="form-card-header">
-            <span class="form-card-index">02</span>
-            <h3>{{ t('rental.orderCreate.periodTitle') }}</h3>
-          </header>
-          <div class="form-grid">
-            <el-form-item
-              :label="t('rental.orderCreate.billableStartDate')"
-              prop="billableStartDate"
-            >
-              <el-date-picker
-                v-model="formData.billableStartDate"
-                class="w-full"
-                type="date"
-                value-format="YYYY-MM-DD"
-                :disabled-date="disabledPastDate"
-                :placeholder="t('rental.orderCreate.billableStartDatePlaceholder')"
-                @change="validateDatePair"
-              />
-            </el-form-item>
-            <el-form-item :label="t('rental.orderCreate.billableEndDate')" prop="billableEndDate">
-              <el-date-picker
-                v-model="formData.billableEndDate"
-                class="w-full"
-                type="date"
-                value-format="YYYY-MM-DD"
-                :disabled-date="disabledPastDate"
-                :placeholder="t('rental.orderCreate.billableEndDatePlaceholder')"
-                @change="validateDatePair"
-              />
-            </el-form-item>
-          </div>
-        </section>
-
-        <section class="form-card">
-          <header class="form-card-header">
-            <span class="form-card-index">03</span>
-            <h3>{{ t('rental.orderCreate.itemsTitle') }}</h3>
-          </header>
-          <el-alert
-            class="mb-16px"
-            type="info"
-            :closable="false"
-            show-icon
-            :title="t('rental.orderCreate.itemDeviceHint')"
-          />
-          <div v-for="(item, index) in formData.items" :key="item.key" class="item-card">
-            <div class="item-card-header">
-              <span class="item-card-title">
-                {{ t('rental.orderCreate.itemLabel', { index: index + 1 }) }}
-              </span>
-              <el-tag
-                v-if="item.devices[0]?.equipmentModelCode"
-                size="small"
-                effect="plain"
-                class="item-card-model"
-              >
-                {{ item.devices[0].equipmentModelCode }}
-              </el-tag>
-              <el-button
-                class="item-card-remove"
-                link
-                type="danger"
-                :disabled="formData.items.length <= 1"
-                @click="removeItem(index)"
-              >
-                {{ t('rental.orderCreate.removeItem') }}
-              </el-button>
+      <el-form
+        ref="formRef"
+        v-loading="submitting"
+        :model="formData"
+        :rules="rules"
+        label-width="82px"
+        class="sheet-body"
+      >
+        <div class="sheet-main">
+          <section class="sheet-section">
+            <div class="section-title">
+              <h2>{{ t('rental.orderCreate.customerTitle') }}</h2>
             </div>
-            <el-form-item
-              class="item-device"
-              :label="t('rental.orderCreate.itemDevice')"
-              :prop="`items.${index}.devices`"
-              :rules="itemDeviceRules"
-            >
-              <OrderDeviceSelect
-                :model-value="item.devices"
-                :disabled="!rentalPeriodReady"
-                :excluded-device-ids="excludedDeviceIds(index)"
-                @update:model-value="updateItemDevices(index, $event)"
-              />
-            </el-form-item>
-            <div class="item-card-footer">
-              <el-form-item :label="t('rental.orderCreate.itemQuantity')">
-                <el-input-number
-                  class="!w-120px"
-                  disabled
-                  :model-value="item.devices.length"
-                  :min="0"
+            <div class="field-grid">
+              <el-form-item :label="t('rental.orderCreate.customerName')" prop="customerName">
+                <el-input
+                  v-model="formData.customerName"
+                  maxlength="64"
+                  :placeholder="t('rental.orderCreate.customerNamePlaceholder')"
+                />
+              </el-form-item>
+              <el-form-item :label="t('rental.orderCreate.customerMobile')" prop="customerMobile">
+                <el-input
+                  v-model.trim="formData.customerMobile"
+                  maxlength="11"
+                  :placeholder="t('rental.orderCreate.customerMobilePlaceholder')"
+                  @blur="handleMobileBlur"
                 />
               </el-form-item>
               <el-form-item
-                :label="t('rental.orderCreate.itemRentAmount')"
-                :prop="`items.${index}.rentAmount`"
-                :rules="itemRentRules"
+                :label="t('rental.orderCreate.customerWechatId')"
+                prop="customerWechatId"
               >
-                <el-input-number
-                  v-model="item.rentAmount"
-                  class="!w-160px"
-                  :min="0"
-                  :precision="2"
-                  :controls="false"
-                  placeholder="0.00"
+                <el-input
+                  v-model="formData.customerWechatId"
+                  maxlength="64"
+                  :placeholder="t('rental.orderCreate.optional')"
                 />
               </el-form-item>
             </div>
-          </div>
-          <el-button class="add-item-btn" @click="addItem">
-            <Icon icon="ep:plus" class="mr-5px" />
-            {{ t('rental.orderCreate.addItem') }}
-          </el-button>
-        </section>
+          </section>
 
-        <section class="form-card">
-          <header class="form-card-header">
-            <span class="form-card-index">04</span>
-            <h3>{{ t('rental.orderCreate.deliveryTitle') }}</h3>
-          </header>
-          <el-form-item :label="t('rental.orderCreate.deliveryMethod')" prop="deliveryMethod">
-            <el-radio-group v-model="formData.deliveryMethod" @change="handleDeliveryMethodChange">
-              <el-radio-button value="EXPRESS">
-                {{ t('rental.orderCreate.deliveryMethodExpress') }}
-              </el-radio-button>
-              <el-radio-button value="ERRAND">
-                {{ t('rental.orderCreate.deliveryMethodErrand') }}
-              </el-radio-button>
-              <el-radio-button value="SELF_DELIVERY">
-                {{ t('rental.orderCreate.deliveryMethodSelfDelivery') }}
-              </el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-          <el-alert
-            v-if="formData.deliveryMethod === 'EXPRESS'"
-            class="mb-16px"
-            type="info"
-            :closable="false"
-            show-icon
-            :title="t('rental.orderCreate.expressHint')"
-          />
-          <div v-else class="form-grid">
-            <el-form-item :label="t('rental.orderCreate.receiverName')" prop="receiverName">
-              <el-input
-                v-model="formData.receiverName"
-                maxlength="64"
-                :placeholder="t('rental.orderCreate.receiverNamePlaceholder')"
-              />
-            </el-form-item>
-            <el-form-item :label="t('rental.orderCreate.receiverMobile')" prop="receiverMobile">
-              <el-input
-                v-model.trim="formData.receiverMobile"
-                maxlength="11"
-                :placeholder="t('rental.orderCreate.receiverMobilePlaceholder')"
-              />
-            </el-form-item>
+          <section class="sheet-section">
+            <div class="section-title">
+              <h2>{{ t('rental.orderCreate.periodTitle') }}</h2>
+              <span class="section-note">{{ t('rental.orderCreate.periodNote') }}</span>
+            </div>
+            <div class="field-grid">
+              <el-form-item
+                :label="t('rental.orderCreate.billableStartDate')"
+                prop="billableStartDate"
+              >
+                <el-date-picker
+                  v-model="formData.billableStartDate"
+                  class="w-full"
+                  type="date"
+                  value-format="YYYY-MM-DD"
+                  :disabled-date="disabledPastDate"
+                  :placeholder="t('rental.orderCreate.billableStartDatePlaceholder')"
+                  @change="validateDatePair"
+                />
+              </el-form-item>
+              <el-form-item :label="t('rental.orderCreate.billableEndDate')" prop="billableEndDate">
+                <el-date-picker
+                  v-model="formData.billableEndDate"
+                  class="w-full"
+                  type="date"
+                  value-format="YYYY-MM-DD"
+                  :disabled-date="disabledPastDate"
+                  :placeholder="t('rental.orderCreate.billableEndDatePlaceholder')"
+                  @change="validateDatePair"
+                />
+              </el-form-item>
+            </div>
+          </section>
+
+          <section class="sheet-section">
+            <div class="section-title">
+              <h2>{{ t('rental.orderCreate.itemsTitle') }}</h2>
+            </div>
+            <el-alert
+              class="mb-10px"
+              type="info"
+              :closable="false"
+              show-icon
+              :title="t('rental.orderCreate.itemDeviceHint')"
+            />
+            <div v-for="(item, index) in formData.items" :key="item.key" class="item-card">
+              <div class="item-head">
+                <span class="item-no">
+                  {{ t('rental.orderCreate.itemLabel', { index: index + 1 }) }}
+                </span>
+                <el-tag v-if="item.devices[0]?.equipmentModelCode" size="small" effect="plain">
+                  {{ item.devices[0].equipmentModelCode }}
+                </el-tag>
+                <el-button
+                  class="item-remove"
+                  link
+                  type="danger"
+                  :disabled="formData.items.length <= 1"
+                  @click="removeItem(index)"
+                >
+                  {{ t('rental.orderCreate.removeItem') }}
+                </el-button>
+              </div>
+              <el-form-item
+                :label="t('rental.orderCreate.itemDevice')"
+                :prop="`items.${index}.devices`"
+                :rules="itemDeviceRules"
+              >
+                <OrderDeviceSelect
+                  :model-value="item.devices"
+                  :disabled="!rentalPeriodReady"
+                  :excluded-device-ids="excludedDeviceIds(index)"
+                  @update:model-value="updateItemDevices(index, $event)"
+                />
+              </el-form-item>
+              <div class="item-foot">
+                <el-form-item :label="t('rental.orderCreate.itemQuantity')">
+                  <el-input-number
+                    class="!w-110px"
+                    disabled
+                    :model-value="item.devices.length"
+                    :min="0"
+                  />
+                </el-form-item>
+                <el-form-item
+                  :label="t('rental.orderCreate.itemRentAmount')"
+                  :prop="`items.${index}.rentAmount`"
+                  :rules="itemRentRules"
+                >
+                  <el-input-number
+                    v-model="item.rentAmount"
+                    class="!w-140px"
+                    :min="0"
+                    :precision="2"
+                    :controls="false"
+                    placeholder="0.00"
+                  />
+                </el-form-item>
+              </div>
+            </div>
+            <el-button class="add-item-btn" @click="addItem">
+              <Icon icon="ep:plus" class="mr-5px" />
+              {{ t('rental.orderCreate.addItem') }}
+            </el-button>
+          </section>
+
+          <section class="sheet-section">
+            <div class="section-title">
+              <h2>{{ t('rental.orderCreate.deliveryTitle') }}</h2>
+            </div>
             <el-form-item
-              class="form-grid-span"
-              :label="t('rental.orderCreate.receiverAddress')"
-              prop="receiverAddress"
+              class="delivery-method"
+              :label="t('rental.orderCreate.deliveryMethod')"
+              prop="deliveryMethod"
+            >
+              <el-radio-group
+                v-model="formData.deliveryMethod"
+                @change="handleDeliveryMethodChange"
+              >
+                <el-radio-button value="EXPRESS">
+                  {{ t('rental.orderCreate.deliveryMethodExpress') }}
+                </el-radio-button>
+                <el-radio-button value="ERRAND">
+                  {{ t('rental.orderCreate.deliveryMethodErrand') }}
+                </el-radio-button>
+                <el-radio-button value="SELF_DELIVERY">
+                  {{ t('rental.orderCreate.deliveryMethodSelfDelivery') }}
+                </el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+            <el-alert
+              v-if="formData.deliveryMethod === 'EXPRESS'"
+              type="info"
+              :closable="false"
+              show-icon
+              :title="t('rental.orderCreate.expressHint')"
+            />
+            <div v-else class="field-grid">
+              <el-form-item :label="t('rental.orderCreate.receiverName')" prop="receiverName">
+                <el-input
+                  v-model="formData.receiverName"
+                  maxlength="64"
+                  :placeholder="t('rental.orderCreate.receiverNamePlaceholder')"
+                />
+              </el-form-item>
+              <el-form-item :label="t('rental.orderCreate.receiverMobile')" prop="receiverMobile">
+                <el-input
+                  v-model.trim="formData.receiverMobile"
+                  maxlength="11"
+                  :placeholder="t('rental.orderCreate.receiverMobilePlaceholder')"
+                />
+              </el-form-item>
+              <el-form-item
+                class="span-all"
+                :label="t('rental.orderCreate.receiverAddress')"
+                prop="receiverAddress"
+              >
+                <el-input
+                  v-model="formData.receiverAddress"
+                  maxlength="200"
+                  :placeholder="t('rental.orderCreate.receiverAddressPlaceholder')"
+                />
+              </el-form-item>
+            </div>
+            <el-form-item
+              class="delivery-remark"
+              :label="t('rental.orderCreate.deliveryRemark')"
+              prop="deliveryRemark"
             >
               <el-input
-                v-model="formData.receiverAddress"
+                v-model="formData.deliveryRemark"
+                type="textarea"
+                :rows="2"
                 maxlength="200"
-                :placeholder="t('rental.orderCreate.receiverAddressPlaceholder')"
+                :placeholder="deliveryRemarkPlaceholder"
               />
             </el-form-item>
-          </div>
-          <el-form-item :label="t('rental.orderCreate.deliveryRemark')" prop="deliveryRemark">
-            <el-input
-              v-model="formData.deliveryRemark"
-              type="textarea"
-              :rows="2"
-              maxlength="200"
-              :placeholder="deliveryRemarkPlaceholder"
-            />
-          </el-form-item>
-        </section>
-      </div>
+          </section>
+        </div>
 
-      <aside class="form-aside">
-        <section class="form-card summary-card">
-          <header class="form-card-header">
-            <h3>{{ t('rental.orderCreate.summaryTitle') }}</h3>
-          </header>
-          <dl class="summary-list">
-            <div class="summary-row">
+        <aside class="sheet-stub">
+          <h2>{{ t('rental.orderCreate.summaryTitle') }}</h2>
+          <dl class="stub-rows">
+            <div class="stub-row">
               <dt>{{ t('rental.orderCreate.summaryPeriod') }}</dt>
               <dd v-if="rentalPeriodReady">
                 {{ formData.billableStartDate }} ~ {{ formData.billableEndDate }}
-                <span class="summary-sub">
+                <span class="stub-sub">
                   {{ t('rental.orderCreate.summaryDays', { days: rentalDays }) }}
                 </span>
               </dd>
-              <dd v-else class="summary-empty">
-                {{ t('rental.orderCreate.summaryPeriodEmpty') }}
-              </dd>
+              <dd v-else class="stub-empty">{{ t('rental.orderCreate.summaryPeriodEmpty') }}</dd>
             </div>
-            <div class="summary-row">
+            <div class="stub-row">
               <dt>{{ t('rental.orderCreate.summaryDevices') }}</dt>
-              <dd> {{ totalDeviceCount }} {{ t('rental.orderCreate.summaryDeviceUnit') }} </dd>
+              <dd>{{ totalDeviceCount }} {{ t('rental.orderCreate.summaryDeviceUnit') }}</dd>
             </div>
-            <div class="summary-row">
+            <div class="stub-row">
               <dt>{{ t('rental.orderCreate.summaryRent') }}</dt>
               <dd>{{ formatYuan(totalRentAmount) }}</dd>
             </div>
           </dl>
-          <div class="summary-deposit">
-            <span class="summary-deposit-label">{{ t('rental.orderCreate.depositAmount') }}</span>
+          <div class="stub-deposit">
+            <span class="stub-deposit-label">{{ t('rental.orderCreate.depositAmount') }}</span>
             <el-form-item prop="depositAmount">
               <el-input-number
                 v-model="formData.depositAmount"
@@ -263,25 +274,24 @@
                 placeholder="0.00"
               />
             </el-form-item>
-            <p class="summary-hint">{{ t('rental.orderCreate.depositHint') }}</p>
+            <p class="stub-hint">{{ t('rental.orderCreate.depositHint') }}</p>
           </div>
-          <div class="summary-total">
+          <div class="stub-total">
             <span>{{ t('rental.orderCreate.summaryTotal') }}</span>
             <strong>{{ formatYuan(totalPayable) }}</strong>
           </div>
           <el-button
             v-if="canCreateBoundOrder"
-            class="summary-submit"
+            class="stub-submit"
             type="primary"
-            size="large"
             :loading="submitting"
             @click="submit"
           >
             {{ t('rental.orderCreate.submit') }}
           </el-button>
-        </section>
-      </aside>
-    </el-form>
+        </aside>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -350,6 +360,8 @@ const deliveryRemarkPlaceholder = computed(() =>
 
 const toShanghaiDate = (date: Date) =>
   new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Shanghai' }).format(date)
+
+const todayDate = toShanghaiDate(new Date())
 
 const disabledPastDate = (date: Date) => toShanghaiDate(date) < toShanghaiDate(new Date())
 
@@ -537,218 +549,283 @@ const submit = async () => {
 
 <style scoped>
 .rental-order-create-page {
-  padding-bottom: 24px;
-}
-
-.page-heading {
-  margin: 4px 4px 20px;
-}
-
-.page-eyebrow {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  color: var(--el-color-primary);
-}
-
-.page-heading h1 {
-  margin: 6px 0 4px;
-  font-size: 22px;
-  font-weight: 600;
-}
-
-.page-heading p {
-  margin: 0;
+  padding-bottom: 16px;
   font-size: 13px;
+}
+
+.order-sheet {
+  max-width: 1080px;
+  background: var(--el-bg-color);
+  border: 1px solid var(--el-border-color-lighter);
+  border-radius: 6px;
+}
+
+/* ---------- 单据抬头 ---------- */
+.sheet-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px 12px;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+}
+
+.sheet-title h1 {
+  display: inline;
+  font-family: 'Songti SC', 'Noto Serif SC', STSong, SimSun, serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+}
+
+.sheet-desc {
+  margin-left: 12px;
+  font-size: 12px;
   color: var(--el-text-color-secondary);
 }
 
-.order-create-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
+.sheet-meta {
+  flex-shrink: 0;
+  display: flex;
   gap: 16px;
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.sheet-meta strong {
+  font-weight: 500;
+  color: var(--el-text-color-regular);
+}
+
+/* ---------- 主联 + 存根联 ---------- */
+.sheet-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 272px;
   align-items: start;
 }
 
-.form-main {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.sheet-main {
   min-width: 0;
 }
 
-.form-card {
-  padding: 20px 20px 4px;
-  background: var(--el-bg-color);
-  border: 1px solid var(--el-border-color-lighter);
-  border-radius: 10px;
+.sheet-section {
+  padding: 12px 24px 14px;
 }
 
-.form-card-header {
+.sheet-section + .sheet-section {
+  border-top: 1px solid var(--el-border-color-lighter);
+}
+
+.section-title {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 10px;
-  margin-bottom: 18px;
+  margin-bottom: 10px;
 }
 
-.form-card-header h3 {
+.section-title h2 {
   margin: 0;
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.form-card-index {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--el-color-primary);
-  background: var(--el-color-primary-light-9);
-  border-radius: 8px;
 }
 
-.form-grid {
+.section-note {
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+}
+
+.field-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  column-gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 8px 20px;
 }
 
-.form-grid-span {
+.field-grid .span-all {
   grid-column: 1 / -1;
 }
 
-.form-grid .el-form-item .el-input,
-.form-grid .el-form-item .el-date-editor {
-  width: 100%;
+.field-grid :deep(.el-form-item) {
+  margin-bottom: 0;
 }
 
+.field-grid :deep(.el-form-item__label) {
+  font-size: 12px;
+}
+
+/* ---------- 设备明细 ---------- */
 .item-card {
-  padding: 12px 16px 0;
-  margin-bottom: 12px;
-  background: var(--el-fill-color-extra-light);
+  padding: 8px 12px 10px;
+  margin-bottom: 8px;
   border: 1px solid var(--el-border-color-lighter);
-  border-radius: 8px;
+  border-left: 3px solid var(--el-text-color-primary);
+  border-radius: 4px;
 }
 
-.item-card-header {
+.item-head {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
-.item-card-title {
-  font-size: 13px;
+.item-no {
+  font-size: 12px;
   font-weight: 600;
 }
 
-.item-card-remove {
+.item-remove {
   margin-left: auto;
 }
 
-.item-card-footer {
+.item-card :deep(.el-form-item) {
+  margin-bottom: 8px;
+}
+
+.item-foot {
   display: flex;
   flex-wrap: wrap;
-  gap: 0 24px;
+  gap: 0 16px;
+}
+
+.item-foot :deep(.el-form-item) {
+  margin-bottom: 0;
 }
 
 .add-item-btn {
   width: 100%;
-  margin-bottom: 16px;
   border-style: dashed;
 }
 
-.form-aside {
+.delivery-method {
+  margin-bottom: 10px;
+}
+
+.delivery-remark {
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+/* ---------- 存根联 ---------- */
+.sheet-stub {
   position: sticky;
   top: 12px;
+  padding: 12px 20px 16px;
+  border-left: 2px dashed var(--el-border-color);
 }
 
-.summary-list {
-  margin: 0 0 4px;
+.sheet-stub h2 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--el-text-color-secondary);
 }
 
-.summary-row {
+.stub-rows {
+  margin: 0;
+  font-size: 12px;
+}
+
+.stub-row {
   display: flex;
-  align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
-  padding: 8px 0;
+  align-items: baseline;
+  gap: 10px;
+  padding: 5px 0;
   border-bottom: 1px dashed var(--el-border-color-lighter);
 }
 
-.summary-row dt {
+.stub-row dt {
   flex-shrink: 0;
-  font-size: 13px;
   color: var(--el-text-color-secondary);
 }
 
-.summary-row dd {
+.stub-row dd {
   margin: 0;
-  font-size: 13px;
   text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
-.summary-sub {
-  margin-left: 6px;
+.stub-sub {
+  margin-left: 4px;
+  font-size: 11px;
   color: var(--el-text-color-secondary);
 }
 
-.summary-empty {
+.stub-empty {
   color: var(--el-text-color-placeholder);
 }
 
-.summary-deposit {
-  margin-top: 16px;
+.stub-deposit {
+  margin-top: 10px;
 }
 
-.summary-deposit-label {
+.stub-deposit-label {
   display: block;
-  margin-bottom: 8px;
-  font-size: 13px;
+  margin-bottom: 4px;
+  font-size: 12px;
   color: var(--el-text-color-regular);
 }
 
-.summary-hint {
+.stub-deposit :deep(.el-form-item) {
+  margin-bottom: 0;
+}
+
+.stub-hint {
   margin: 4px 0 0;
   font-size: 12px;
   color: var(--el-text-color-secondary);
 }
 
-.summary-total {
+.stub-total {
   display: flex;
-  align-items: baseline;
+  padding-top: 10px;
+  margin-top: 12px;
+  border-top: 2px solid var(--el-text-color-primary);
   justify-content: space-between;
-  padding-top: 16px;
-  margin-top: 16px;
-  border-top: 1px solid var(--el-border-color-lighter);
+  align-items: baseline;
 }
 
-.summary-total span {
-  font-size: 13px;
-  color: var(--el-text-color-secondary);
+.stub-total span {
+  font-size: 12px;
+  color: var(--el-text-color-regular);
 }
 
-.summary-total strong {
-  font-size: 22px;
+.stub-total strong {
+  font-family: 'Songti SC', 'Noto Serif SC', STSong, SimSun, serif;
+  font-size: 20px;
   font-weight: 700;
-  color: var(--el-color-primary);
+  font-variant-numeric: tabular-nums;
 }
 
-.summary-submit {
+.stub-submit {
   width: 100%;
-  margin: 16px 0;
+  margin-top: 12px;
+  letter-spacing: 0.1em;
 }
 
-@media (width <= 1100px) {
-  .order-create-layout {
+/* ---------- 响应式 ---------- */
+@media (width <= 900px) {
+  .sheet-body {
     grid-template-columns: 1fr;
   }
 
-  .form-aside {
+  .sheet-stub {
     position: static;
+    border-top: 2px dashed var(--el-border-color);
+    border-left: none;
+  }
+
+  .sheet-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .sheet-section {
+    padding: 12px 16px 14px;
   }
 }
 </style>

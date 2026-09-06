@@ -10,7 +10,6 @@
       multiple
       remote
       remote-show-suffix
-      reserve-keyword
       :disabled="disabled"
       :loading="loading"
       :placeholder="

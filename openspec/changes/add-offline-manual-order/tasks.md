@@ -39,10 +39,10 @@
 
 ## 5. Frontend — camera-rental-admin
 
-- [ ] 5.1 `src/api/rental/orderCreate.ts`。
-- [ ] 5.2 `src/views/rental/order-create/index.vue`：客户区块（手机号反查带出）、
-  设备/租期、金额（元→分）、配送区块、`v-hasPermi="['rental:order:create']"`，
-  成功提示 orderNo 并跳待分配页。
+- [x] 5.1 `src/api/rental/orderCreate.ts`：明细提交 `deviceIds`。
+- [x] 5.2 `src/views/rental/order-create/index.vue`：先填租期、按编号/序列号选择具体
+  设备、自动带出型号和数量、金额（元→分）、配送区块；提交同时要求录单和设备分配
+  权限，成功定位到设备排期页。
 - [ ] 5.3 待分配列表外部单号空时兜底显示 orderNo（按 4.2 验证结果决定）。
 
 ## 6. Tests
@@ -53,7 +53,7 @@
 - [x] 6.3 迁移文本断言测试（新表/新列/菜单幂等）。
 - [x] 6.4 分配即送出用例：ERRAND/SELF_DELIVERY 分配后 DISPATCHED+RENTED、EXPRESS 与
   无配送记录不 dispatch、dispatch 失败分配回滚、`assignPendingPlan` 覆盖。
-- [ ] 6.5 前端 `pnpm ts:check`；有相邻 vitest 样例才补表单用例。
+- [x] 6.5 前端 `pnpm ts:check`；补充具体设备选择与绑定服务测试。
 
 ## 7. Docs & Verify
 

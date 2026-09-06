@@ -5,8 +5,8 @@
 ### Requirement: 管理端手动创建线下租赁订单
 
 系统 SHALL 提供 `POST /admin-api/rental/order/create-manual`（权限
-`rental:order:create`），入参包含客户信息（姓名、手机号、微信号可空）、订单明细
-（设备型号、数量、租金）、租期起止（闭区间）、押金、配送方式与配送信息。
+`rental:order:create` 与 `rental:device:assign`），入参包含客户信息（姓名、手机号、微信号可空）、订单明细
+（设备型号、具体设备实例 ID、数量、租金）、租期起止（闭区间）、押金、配送方式与配送信息。
 
 - 创建的订单 MUST 落库为 `source_type='OFFLINE'`、`status='PENDING_ALLOCATION'`、
   `preparation_status='READY'`，从而直接出现在既有待分配列表。
@@ -14,16 +14,19 @@
   MUST 按半开区间存储（`occupy_end_date_exclusive = 结束日期 + 1`）。
 - 设备型号 MUST 在租赁设备型号目录中存在且启用；租期 MUST 满足 start <= end 且
   不早于当天（Asia/Shanghai）；金额与押金 MUST NOT 为负。
+- 每条明细 MUST 绑定与数量相同的具体设备实例，实例不得在同一订单中重复；
+  创建订单、设备分配和设备占用排期 MUST 在同一事务中完成。
 
-#### Scenario: 录单后进入待分配
+#### Scenario: 录单后设备立即绑定排期
 
-- GIVEN 运营提交合法录单表单 WHEN 创建成功 THEN 订单可在待分配列表出现，并可用
-  既有 `/rental/device/assign` 完成设备分配。
+- GIVEN 运营提交合法录单表单并选择具体设备 WHEN 创建成功 THEN 订单可在待分配列表
+  出现，选中的每台设备均有对应的 `rental_device_assignment` 和有效
+  `rental_schedule`，设备排期表立即显示该占用区间。
 
 #### Scenario: 非法输入拒绝
 
-- WHEN 型号不存在、租期倒置、金额为负或配送必填项缺失 THEN 返回 1-040-005 段
-  业务错误码，不产生任何落库记录。
+- WHEN 型号不存在、设备不可绑定、设备数量不一致、租期倒置、金额为负或配送必填项
+  缺失 THEN 返回 1-040-005 段业务错误码，不产生任何订单、明细、配送、分配或排期记录。
 
 ### Requirement: 客户主档与反查
 

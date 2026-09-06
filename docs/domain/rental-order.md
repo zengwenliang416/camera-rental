@@ -46,9 +46,10 @@ rental_channel_order
 
 异常分支包括取消、支付失败、库存冲突、换机、提前归还、退款、损坏赔偿和人工复核。具体状态值在实现前应结合现有项目字典和支付模块确认。
 
-订单创建时按 SKU、数量和设备占用半开区间预留容量，不立即绑定具体设备。
-未支付预留必须过期释放；支付成功后确认预留。具体设备由运营人员在拣货前
-选择或由员工扫码确认，并在同一事务中完成实例冲突复查、设备分配和排期写入。
+渠道订单创建时按 SKU、数量和设备占用半开区间预留容量，不立即绑定具体设备。
+线下手动录单要求运营人员在填写租期后直接选择具体设备实例；创建订单、设备分配
+和排期写入在同一事务中完成。渠道订单仍可由运营人员在拣货前选择或由员工扫码
+确认，并在同一事务中完成实例冲突复查、设备分配和排期写入。
 
 ## 金额规则
 
@@ -82,7 +83,9 @@ rental_channel_order
 
 `rental_order.source_type` 区分来源：`XIANYU` 由闲鱼渠道订单转换产生，
 `OFFLINE` 由管理端手动录单（`POST /admin-api/rental/order/create-manual`，权限
-`rental:order:create`）产生。线下订单创建即 `PENDING_ALLOCATION` + `READY`，
+`rental:order:create` 与 `rental:device:assign`）产生。线下订单创建即
+`PENDING_ALLOCATION` + `READY`；请求明细携带具体 `deviceIds`，每台设备立即创建
+对应的分配和占用排期，
 订单号为 `OFF-` + 19 位零填充自增 id；客户主档存于 `rental_customer`（手机号
 AES 加密、完整号码等值反查），配送信息存于 `rental_order_delivery`
 （EXPRESS/ERRAND/SELF_DELIVERY，收货人手机号与地址加密）。跑腿/自送订单在分配

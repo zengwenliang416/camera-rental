@@ -60,8 +60,8 @@ newStart < existingEndExclusive
 ## V1 设备分配事务
 
 当前 V1 由后端的本地分配服务处理一个 `rental_order_item` 与一个具体
-`rental_device`。输入的占用日期已经是半开区间，不接受前端传入的字符串或
-闭区间推断。
+`rental_device`。线下录单会在订单创建事务内逐台调用该服务，输入的占用日期
+已经是半开区间，不接受前端传入的字符串或闭区间推断。
 
 事务内的顺序固定为：
 

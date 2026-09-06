@@ -42,14 +42,24 @@ MUST 先按完整手机号等值反查：命中则复用并在有变更时更新
 （EXPRESS/ERRAND/SELF_DELIVERY）、加密收货人姓名/电话/地址与配送备注；
 ERRAND/SELF_DELIVERY 时收货信息 MUST 必填。
 
-系统 SHALL 提供 `POST /admin-api/rental/order/confirm-outbound`：仅当订单
-delivery_method 非 EXPRESS 且设备已分满时，将订单履约状态推进为已送出；
-MUST NOT 写 `rental_delivery` 或 `rental_device_shipment`。
+ERRAND/SELF_DELIVERY 的 OFFLINE 订单 SHALL 在既有分配入口（`assign` /
+`assignPendingPlan`）新建分配落库后同事务直接完成出库：assignment 推进为
+DISPATCHED、设备推进为 RENTED，复用仓库出库同一写路径；无配送记录（渠道订单）或
+EXPRESS 时 MUST 保持分配后不出库。
 
-#### Scenario: 跑腿送出确认
+系统 SHALL 提供 `POST /admin-api/rental/order/confirm-outbound` 作为兜底：仅当订单
+delivery_method 非 EXPRESS 且设备已分满时，推进仍为 ASSIGNED 的分配；重复调用
+MUST 幂等；MUST NOT 写 `rental_delivery` 或 `rental_device_shipment`。
 
-- GIVEN OFFLINE 订单配送方式为 ERRAND 且设备已全部分配 WHEN 调用确认 THEN 订单
-  履约状态推进，且不产生任何快递运单记录。
+#### Scenario: 跑腿订单分配即送出
+
+- GIVEN OFFLINE 订单配送方式为 ERRAND WHEN 运营在分配入口选好设备 THEN 该分配
+  同事务推进为 DISPATCHED、设备为 RENTED，且不产生任何快递运单记录。
+
+#### Scenario: 兜底确认补送
+
+- GIVEN OFFLINE 跑腿订单存在仍为 ASSIGNED 的历史分配 WHEN 调用确认 THEN 仅这些
+  分配被推进，已 DISPATCHED 的分配不受影响。
 
 #### Scenario: 快递方式拒绝确认
 

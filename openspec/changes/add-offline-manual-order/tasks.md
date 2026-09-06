@@ -26,6 +26,10 @@
   VO 放 `controller/admin/rental/vo/`。
 - [x] 3.3 核实对账 job / `RentalFulfillmentUpdateGuard` 不回退 OFFLINE 订单
   preparationStatus；若会，加 `source_type='XIANYU'` 过滤。
+- [x] 3.4 分配写路径挂钩：`assign` / `assignPendingPlan` 新建分配落库后查
+  `rental_order_delivery`，ERRAND/SELF_DELIVERY 即复用 `RentalDeviceOpsService.dispatch()`
+  同事务出库（assignment→DISPATCHED、设备→RENTED）；EXPRESS 与无配送记录的渠道订单
+  保持 assign-only；`confirm-outbound` 降为兜底且幂等。
 
 ## 4. Backend — 既有链路适配
 
@@ -47,7 +51,9 @@
   金额分/客户复用与新建/delivery 落库）、校验失败分支、orderNo 回填。
 - [x] 6.2 Controller 安全测试（反射注解）。
 - [x] 6.3 迁移文本断言测试（新表/新列/菜单幂等）。
-- [ ] 6.4 前端 `pnpm ts:check`；有相邻 vitest 样例才补表单用例。
+- [x] 6.4 分配即送出用例：ERRAND/SELF_DELIVERY 分配后 DISPATCHED+RENTED、EXPRESS 与
+  无配送记录不 dispatch、dispatch 失败分配回滚、`assignPendingPlan` 覆盖。
+- [ ] 6.5 前端 `pnpm ts:check`；有相邻 vitest 样例才补表单用例。
 
 ## 7. Docs & Verify
 

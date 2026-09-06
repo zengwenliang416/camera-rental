@@ -43,11 +43,17 @@ preparationStatus 回退；若会，则其查询条件加 `source_type='XIANYU'`
 加密列只支持等值匹配，客户反查按完整手机号精确匹配；管理端展示遵循既有看板
 脱敏惯例。
 
-### D6 出库确认的边界
+### D6 分配即送出，confirm-outbound 降为兜底
 
 - 分配复用 `POST /admin-api/rental/device/assign`（渠道中立，已验证）。
-- `confirm-outbound` 仅面向 `delivery_method != EXPRESS` 的订单，校验设备已分满，
-  写履约状态；**不写** `rental_delivery`/`rental_device_shipment`。
+- ERRAND/SELF_DELIVERY 线下订单在分配写路径内直接完成出库：`assign` 与
+  `assignPendingPlan` 在新建 assignment 落库后查 `rental_order_delivery`，命中即对
+  本次 assignment 复用 `RentalDeviceOpsService.dispatch()` 同一写路径（设备
+  AVAILABLE→RENTED、assignment ASSIGNED→DISPATCHED），同事务、失败整体回滚。
+  无 delivery 记录（闲鱼订单）或 EXPRESS 时保持 assign-only，渠道链路零行为变化。
+- `confirm-outbound` 保留为兜底入口：校验 `delivery_method != EXPRESS` 与设备分满，
+  仅推进仍为 ASSIGNED 的分配，重复调用幂等；**不写**
+  `rental_delivery`/`rental_device_shipment`。
 - EXPRESS 线下订单本期仅提示线下发货，不接 OCR/物流跟踪。
 
 ## 明确不做

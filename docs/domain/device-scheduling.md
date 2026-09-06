@@ -80,6 +80,10 @@ newStart < existingEndExclusive
 两个空窗口并发插入。重复使用同一幂等键时返回已有分配，不再创建第二条排期或
 分配。数据库的幂等唯一约束仍作为错误路径的最终保护。
 
+配送方式为 ERRAND/SELF_DELIVERY 的 OFFLINE 订单在分配落库后同事务直接出库
+（复用仓库出库写路径，assignment 推进 DISPATCHED、设备推进 RENTED）；
+渠道订单无配送记录、EXPRESS 线下订单保持分配后不出库。
+
 ## V1 排期释放与收窄
 
 排期状态在 `EFFECTIVE` 之外引入 `CANCELED`；所有冲突判断与统计只认

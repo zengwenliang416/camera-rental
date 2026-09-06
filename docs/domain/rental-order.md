@@ -85,7 +85,9 @@ rental_channel_order
 `rental:order:create`）产生。线下订单创建即 `PENDING_ALLOCATION` + `READY`，
 订单号为 `OFF-` + 19 位零填充自增 id；客户主档存于 `rental_customer`（手机号
 AES 加密、完整号码等值反查），配送信息存于 `rental_order_delivery`
-（EXPRESS/ERRAND/SELF_DELIVERY，收货人手机号与地址加密）。跑腿/自送订单在设备
-分满后经 `POST /admin-api/rental/order/confirm-outbound` 确认送出，复用设备出库
-写路径，不产生 `rental_delivery` / `rental_device_shipment` 记录；快递配送的线下
-订单走线下快递流程。报表按 `source_type` 实际值统计来源。
+（EXPRESS/ERRAND/SELF_DELIVERY，收货人手机号与地址加密）。跑腿/自送订单在分配
+入口选好设备时即同事务完成出库（assignment 推进 DISPATCHED、设备推进 RENTED，
+复用设备出库写路径）；`POST /admin-api/rental/order/confirm-outbound` 保留为兜底
+入口，仅推进仍为 ASSIGNED 的分配且幂等。两条路径都不产生 `rental_delivery` /
+`rental_device_shipment` 记录；快递配送的线下订单走线下快递流程。报表按
+`source_type` 实际值统计来源。

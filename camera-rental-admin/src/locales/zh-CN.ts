@@ -1233,7 +1233,16 @@ export default {
       deliveryRemarkPlaceholder: '选填',
       deliveryRemarkErrandPlaceholder: '选填，可填写闪送/达达等平台名',
       submit: '创建订单',
-      createSuccess: '订单 {orderNo} 创建成功，设备已绑定租期并写入排期'
+      createSuccess: '订单 {orderNo} 创建成功，设备已绑定租期并写入排期',
+      itemLabel: '明细 {index}',
+      summaryTitle: '订单摘要',
+      summaryPeriod: '租期',
+      summaryPeriodEmpty: '未选择租期',
+      summaryDays: '共 {days} 天',
+      summaryDevices: '设备台数',
+      summaryDeviceUnit: '台',
+      summaryRent: '租金合计',
+      summaryTotal: '应收合计（含押金）'
     },
     device: {
       pageTitle: '租赁设备',

@@ -1288,7 +1288,16 @@ export default {
       deliveryRemarkErrandPlaceholder: 'Optional, e.g. the errand platform name (Shansong, Dada)',
       submit: 'Create order',
       createSuccess:
-        'Order {orderNo} created; devices are bound and the occupied schedule is recorded'
+        'Order {orderNo} created; devices are bound and the occupied schedule is recorded',
+      itemLabel: 'Item {index}',
+      summaryTitle: 'Order summary',
+      summaryPeriod: 'Period',
+      summaryPeriodEmpty: 'No period selected',
+      summaryDays: '{days} day(s)',
+      summaryDevices: 'Devices',
+      summaryDeviceUnit: 'unit(s)',
+      summaryRent: 'Rent total',
+      summaryTotal: 'Total due (incl. deposit)'
     },
     device: {
       pageTitle: 'Rental devices',

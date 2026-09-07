@@ -37,6 +37,12 @@
             <div class="form-tip">{{ t('rental.logistics.subscribeEnabledHint') }}</div>
           </div>
         </el-form-item>
+        <el-form-item :label="t('rental.logistics.addressParseEnabled')">
+          <div class="field-control">
+            <el-switch v-model="form.addressParseEnabled" />
+            <div class="form-tip">{{ t('rental.logistics.addressParseEnabledHint') }}</div>
+          </div>
+        </el-form-item>
         <el-form-item
           :label="t('rental.logistics.minimumQueryIntervalSeconds')"
           prop="minimumQueryIntervalSeconds"
@@ -85,19 +91,10 @@
       </div>
 
       <el-form-item>
-        <el-button
-          type="primary"
-          :loading="saving"
-          v-hasRole="['super_admin']"
-          @click="save"
-        >
+        <el-button type="primary" :loading="saving" v-hasRole="['super_admin']" @click="save">
           {{ t('rental.logistics.saveProvider') }}
         </el-button>
-        <el-button
-          :loading="verifying"
-          v-hasRole="['super_admin']"
-          @click="verify"
-        >
+        <el-button :loading="verifying" v-hasRole="['super_admin']" @click="verify">
           {{ t('rental.logistics.verifyProvider') }}
         </el-button>
       </el-form-item>
@@ -140,6 +137,7 @@ const form = reactive({
   enabled: false,
   queryEnabled: false,
   subscribeEnabled: false,
+  addressParseEnabled: false,
   callbackBaseUrl: '',
   minimumQueryIntervalSeconds: 1800,
   resultVersion: '4'
@@ -163,6 +161,7 @@ watch(
       enabled: value.enabled,
       queryEnabled: value.queryEnabled,
       subscribeEnabled: value.subscribeEnabled,
+      addressParseEnabled: value.addressParseEnabled,
       callbackBaseUrl: value.callbackBaseUrl || '',
       minimumQueryIntervalSeconds: value.minimumQueryIntervalSeconds,
       resultVersion: value.resultVersion || '4'
@@ -177,11 +176,23 @@ const save = async () => {
     message.warning(t('rental.logistics.providerEnablePrerequisite'))
     return
   }
+  if (
+    form.enabled &&
+    form.addressParseEnabled &&
+    !props.config?.credentials.some(
+      (credential) =>
+        credential.enabled && credential.apiKeyConfigured && credential.apiSecretConfigured
+    )
+  ) {
+    message.warning(t('rental.logistics.addressParseEnablePrerequisite'))
+    return
+  }
   const payload: RentalLogisticsProviderConfigUpdateReqVO = {
     providerCode: form.providerCode,
     enabled: form.enabled,
     queryEnabled: form.queryEnabled,
     subscribeEnabled: form.subscribeEnabled,
+    addressParseEnabled: form.addressParseEnabled,
     callbackSecretAction: 'KEEP',
     callbackBaseUrl: form.callbackBaseUrl.trim() || null,
     minimumQueryIntervalSeconds: form.minimumQueryIntervalSeconds,

@@ -730,9 +730,10 @@ export default {
         'Manage tenant-scoped Kuaidi100 settings and multiple credentials in the admin console. The schedule center only reads logistics results.',
       loadError: 'Failed to load Kuaidi100 configuration. Check the network and permissions.',
       secretHint:
-        'Customer Code and API Key values are encrypted by the backend and never returned as plaintext. Keep preserves stored values when editing a credential.',
+        'Customer Code, API Key, and API Secret values are encrypted by the backend and never returned as plaintext. Keep preserves stored values when editing.',
       providerTitle: 'Provider settings',
-      providerDescription: 'Controls active queries, push subscriptions, and the callback URL.',
+      providerDescription:
+        'Controls active queries, push subscriptions, smart address parsing, and callbacks.',
       enabled: 'Provider enabled',
       enabledHint:
         'Disabling stops Kuaidi100 calls without deleting saved settings or logistics data.',
@@ -742,6 +743,9 @@ export default {
       subscribeEnabled: 'Push subscription',
       subscribeEnabledHint:
         'Lets Kuaidi100 push tracking updates and is the primary source of routine updates.',
+      addressParseEnabled: 'Smart address parsing',
+      addressParseEnabledHint:
+        'Uses Kuaidi100 to structure receiver details during offline order entry and falls back to local rules.',
       callbackBaseUrl: 'Public callback service URL',
       callbackBaseUrlHint:
         'Enter the public backend origin. Do not use localhost or append the callback path; the system adds:',
@@ -765,10 +769,14 @@ export default {
       providerVerifyFailed: 'Provider validation failed: {reason}',
       providerEnablePrerequisite:
         'Configure the public callback service URL before enabling push subscriptions',
+      addressParseEnablePrerequisite:
+        'Configure and enable an API Key and API Secret before enabling smart address parsing',
       checkCallbackBaseUrl: 'public callback service URL',
       checkCallbackBaseUrlOptional:
         'push subscriptions are disabled, so no callback URL is required',
       checkEnabledCredential: 'At least one complete enabled credential',
+      checkAddressCredential: 'At least one enabled credential with API Key and API Secret',
+      checkAddressCredentialOptional: 'Smart address parsing is disabled; API Secret is optional',
       configurationOrderHint:
         'Active queries only need a complete enabled credential. A public callback URL is required only when push subscriptions are enabled.',
       configurationIncompleteSummary: 'Configuration is incomplete. Missing: {items}',
@@ -782,7 +790,7 @@ export default {
       resultVersionRequired: 'Enter resultVersion',
       credentialsTitle: 'Kuaidi100 credentials',
       credentialsDescription:
-        'Multiple Customer Code and API Key pairs are supported. Enabled credentials are selected by stable sort order.',
+        'Configure Customer Code, API Key, and API Secret credentials. API Secret is used for smart address parsing.',
       addCredential: 'Add credential',
       editCredential: 'Edit credential',
       credentialName: 'Credential name',
@@ -793,14 +801,15 @@ export default {
       disabledState: 'Disabled',
       customerCode: 'Customer Code',
       apiKey: 'API Key',
+      apiSecret: 'API Secret',
       sortOrder: 'Sort order',
       sortOrderHint: 'Lower numbers have higher priority',
       sortOrderRequired: 'Enter a sort order',
       configStatus: 'Configuration status',
       notConfigured: 'Not configured',
-      credentialsEmpty: 'No Kuaidi100 credentials. Add a Customer Code and API Key pair.',
+      credentialsEmpty: 'No Kuaidi100 credentials. Add Customer Code, API Key, and API Secret.',
       credentialSecretsRequired:
-        'Customer Code and API Key must keep existing values or provide replacements',
+        'Customer Code, API Key, and API Secret must keep existing values or provide replacements',
       credentialSaved: 'Kuaidi100 credential saved',
       credentialDeleted: 'Kuaidi100 credential deleted',
       deleteCredentialConfirm:

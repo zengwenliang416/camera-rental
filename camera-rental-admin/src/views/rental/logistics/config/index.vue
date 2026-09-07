@@ -114,6 +114,20 @@ const configChecklist = computed(() => [
     )
   },
   {
+    key: 'addressCredential',
+    label: config.value?.addressParseEnabled
+      ? t('rental.logistics.checkAddressCredential')
+      : t('rental.logistics.checkAddressCredentialOptional'),
+    complete:
+      !config.value?.addressParseEnabled ||
+      Boolean(
+        config.value?.credentials.some(
+          (credential) =>
+            credential.enabled && credential.apiKeyConfigured && credential.apiSecretConfigured
+        )
+      )
+  },
+  {
     key: 'callbackBaseUrl',
     label: config.value?.subscribeEnabled
       ? t('rental.logistics.checkCallbackBaseUrl')

@@ -8,11 +8,7 @@
             {{ t('rental.logistics.credentialsDescription') }}
           </div>
         </div>
-        <el-button
-          type="primary"
-          v-hasRole="['super_admin']"
-          @click="openDialog()"
-        >
+        <el-button type="primary" v-hasRole="['super_admin']" @click="openDialog()">
           <Icon icon="ep:plus" class="mr-5px" />
           {{ t('rental.logistics.addCredential') }}
         </el-button>
@@ -50,6 +46,14 @@
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column :label="t('rental.logistics.apiSecret')" min-width="170">
+        <template #default="{ row }">
+          <span v-if="row.apiSecretConfigured">{{ row.maskedApiSecret || '********' }}</span>
+          <el-tag v-else type="warning" size="small">
+            {{ t('rental.logistics.notConfigured') }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="sortOrder"
         :label="t('rental.logistics.sortOrder')"
@@ -79,20 +83,10 @@
           >
             {{ t('rental.logistics.verify') }}
           </el-button>
-          <el-button
-            link
-            type="primary"
-            v-hasRole="['super_admin']"
-            @click="openDialog(row)"
-          >
+          <el-button link type="primary" v-hasRole="['super_admin']" @click="openDialog(row)">
             {{ t('action.edit') }}
           </el-button>
-          <el-button
-            link
-            type="danger"
-            v-hasRole="['super_admin']"
-            @click="remove(row)"
-          >
+          <el-button link type="danger" v-hasRole="['super_admin']" @click="remove(row)">
             {{ t('action.del') }}
           </el-button>
         </template>
@@ -148,6 +142,16 @@
         :allow-keep="Boolean(form.id)"
         :label="t('rental.logistics.apiKey')"
       />
+
+      <el-divider content-position="left">{{ t('rental.logistics.apiSecret') }}</el-divider>
+      <LogisticsSecretEditor
+        v-model:action="form.apiSecretAction"
+        v-model:value="form.apiSecret"
+        :configured="editing?.apiSecretConfigured || false"
+        :masked="editing?.maskedApiSecret || undefined"
+        :allow-keep="Boolean(form.id)"
+        :label="t('rental.logistics.apiSecret')"
+      />
     </el-form>
     <template #footer>
       <el-button @click="dialogVisible = false">{{ t('common.cancel') }}</el-button>
@@ -178,7 +182,7 @@ import { formatNullableDate } from '@/utils/formatTime'
 import LogisticsSecretEditor from './LogisticsSecretEditor.vue'
 import { logisticsStatusKey, logisticsStatusTagType } from '../logisticsConfigModel'
 
-defineProps<{ config?: RentalLogisticsProviderConfigVO }>()
+const props = defineProps<{ config?: RentalLogisticsProviderConfigVO }>()
 const emit = defineEmits<{ refresh: [] }>()
 const { t } = useI18n()
 const message = useMessage()
@@ -196,7 +200,9 @@ const form = reactive({
   customerCodeAction: 'REPLACE' as RentalLogisticsSecretAction,
   customerCode: '',
   apiKeyAction: 'REPLACE' as RentalLogisticsSecretAction,
-  apiKey: ''
+  apiKey: '',
+  apiSecretAction: 'REPLACE' as RentalLogisticsSecretAction,
+  apiSecret: ''
 })
 const rules: FormRules = {
   credentialName: [
@@ -217,7 +223,9 @@ const resetForm = () => {
     customerCodeAction: 'REPLACE',
     customerCode: '',
     apiKeyAction: 'REPLACE',
-    apiKey: ''
+    apiKey: '',
+    apiSecretAction: 'REPLACE',
+    apiSecret: ''
   })
 }
 
@@ -232,7 +240,8 @@ const openDialog = (credential?: RentalLogisticsProviderCredentialVO) => {
       enabled: credential.enabled,
       sortOrder: credential.sortOrder,
       customerCodeAction: 'KEEP',
-      apiKeyAction: 'KEEP'
+      apiKeyAction: 'KEEP',
+      apiSecretAction: 'KEEP'
     })
   }
   dialogVisible.value = true
@@ -260,7 +269,10 @@ const save = async () => {
     form.apiKeyAction,
     form.apiKey
   )
-  if (!customerCodeValid || !apiKeyValid) {
+  const apiSecretValid =
+    !props.config?.addressParseEnabled ||
+    secretExists(Boolean(editing.value?.apiSecretConfigured), form.apiSecretAction, form.apiSecret)
+  if (!customerCodeValid || !apiKeyValid || !apiSecretValid) {
     message.warning(t('rental.logistics.credentialSecretsRequired'))
     return
   }
@@ -273,7 +285,10 @@ const save = async () => {
     customerCodeAction: form.customerCodeAction,
     customerCode: form.customerCodeAction === 'REPLACE' ? form.customerCode.trim() : undefined,
     apiKeyAction: form.apiKeyAction,
-    apiKey: form.apiKeyAction === 'REPLACE' ? form.apiKey.trim() : undefined
+    apiKey: form.apiKeyAction === 'REPLACE' ? form.apiKey.trim() : undefined,
+    apiSecretAction:
+      form.apiSecretAction === 'REPLACE' && !form.apiSecret.trim() ? 'KEEP' : form.apiSecretAction,
+    apiSecret: form.apiSecretAction === 'REPLACE' ? form.apiSecret.trim() || undefined : undefined
   }
   saving.value = true
   try {

@@ -12,6 +12,8 @@ export interface RentalLogisticsProviderCredentialVO {
   maskedCustomerCode?: string | null
   apiKeyConfigured: boolean
   maskedApiKey?: string | null
+  apiSecretConfigured: boolean
+  maskedApiSecret?: string | null
   configStatus: string
   lastVerifiedAt?: string | null
 }
@@ -21,6 +23,7 @@ export interface RentalLogisticsProviderConfigVO {
   enabled: boolean
   queryEnabled: boolean
   subscribeEnabled: boolean
+  addressParseEnabled: boolean
   callbackSecretConfigured: boolean
   maskedCallbackSecret?: string | null
   callbackBaseUrl?: string | null
@@ -36,6 +39,7 @@ export interface RentalLogisticsProviderConfigUpdateReqVO {
   enabled: boolean
   queryEnabled: boolean
   subscribeEnabled: boolean
+  addressParseEnabled: boolean
   callbackSecretAction: RentalLogisticsSecretAction
   callbackSecret?: string
   callbackBaseUrl?: string | null
@@ -53,6 +57,8 @@ export interface RentalLogisticsProviderCredentialSaveReqVO {
   customerCode?: string
   apiKeyAction: RentalLogisticsSecretAction
   apiKey?: string
+  apiSecretAction: RentalLogisticsSecretAction
+  apiSecret?: string
 }
 
 export interface RentalLogisticsProviderVerifyResultVO {

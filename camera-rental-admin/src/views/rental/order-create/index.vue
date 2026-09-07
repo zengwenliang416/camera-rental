@@ -138,8 +138,9 @@
               <div class="item-foot">
                 <el-form-item :label="t('rental.orderCreate.itemQuantity')">
                   <el-input-number
-                    class="!w-110px"
+                    class="!w-80px"
                     disabled
+                    :controls="false"
                     :model-value="item.devices.length"
                     :min="0"
                   />
@@ -256,6 +257,16 @@
             <div class="stub-row">
               <dt>{{ t('rental.orderCreate.summaryDevices') }}</dt>
               <dd>{{ totalDeviceCount }} {{ t('rental.orderCreate.summaryDeviceUnit') }}</dd>
+            </div>
+            <div v-for="(item, index) in billedItems" :key="item.key" class="stub-row stub-item">
+              <dt>
+                {{
+                  item.devices[0]?.equipmentModelCode ||
+                  t('rental.orderCreate.itemLabel', { index: index + 1 })
+                }}
+                <span class="stub-sub">× {{ item.devices.length }}</span>
+              </dt>
+              <dd>{{ formatYuan(item.rentAmount || 0) }}</dd>
             </div>
             <div class="stub-row">
               <dt>{{ t('rental.orderCreate.summaryRent') }}</dt>
@@ -384,6 +395,8 @@ const rentalDays = computed(() => {
 const totalDeviceCount = computed(() =>
   formData.items.reduce((sum, item) => sum + item.devices.length, 0)
 )
+
+const billedItems = computed(() => formData.items.filter((item) => item.devices.length > 0))
 
 const totalRentAmount = computed(() =>
   formData.items.reduce((sum, item) => sum + (item.rentAmount || 0), 0)
@@ -693,6 +706,18 @@ const submit = async () => {
   margin-bottom: 0;
 }
 
+.item-foot :deep(.el-form-item__label) {
+  width: auto;
+  padding-right: 8px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.delivery-method :deep(.el-form-item__label),
+.delivery-remark :deep(.el-form-item__label) {
+  font-size: 12px;
+}
+
 .add-item-btn {
   width: 100%;
   border-style: dashed;
@@ -756,6 +781,10 @@ const submit = async () => {
 
 .stub-empty {
   color: var(--el-text-color-placeholder);
+}
+
+.stub-item dt {
+  color: var(--el-text-color-regular);
 }
 
 .stub-deposit {

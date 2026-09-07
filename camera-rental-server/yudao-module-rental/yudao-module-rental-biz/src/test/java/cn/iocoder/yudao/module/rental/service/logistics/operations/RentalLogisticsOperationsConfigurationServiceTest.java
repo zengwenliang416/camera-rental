@@ -62,8 +62,10 @@ class RentalLogisticsOperationsConfigurationServiceTest {
         assertEquals(2, view.credentials().size());
         assertTrue(view.credentials().stream().allMatch(it -> it.customerCodeConfigured()
                 && it.apiKeyConfigured()
+                && it.apiSecretConfigured()
                 && "********".equals(it.maskedCustomerCode())
-                && "********".equals(it.maskedApiKey())));
+                && "********".equals(it.maskedApiKey())
+                && "********".equals(it.maskedApiSecret())));
         assertFalse(view.toString().contains("customer-secret"));
         assertFalse(view.toString().contains("api-secret"));
     }
@@ -186,7 +188,7 @@ class RentalLogisticsOperationsConfigurationServiceTest {
 
         var view = service.saveProviderCredential(new ProviderCredentialCommand(null, "kuaidi100",
                 "primary", true, 10, SecretAction.REPLACE, "customer-secret",
-                SecretAction.REPLACE, "api-secret"));
+                SecretAction.REPLACE, "api-secret", SecretAction.REPLACE, "address-secret"));
 
         ArgumentCaptor<RentalLogisticsProviderCredentialDO> captor =
                 ArgumentCaptor.forClass(RentalLogisticsProviderCredentialDO.class);
@@ -196,10 +198,13 @@ class RentalLogisticsOperationsConfigurationServiceTest {
         assertEquals("primary", captor.getValue().getCredentialName());
         assertEquals("customer-secret", captor.getValue().getCustomerCode());
         assertEquals("api-secret", captor.getValue().getApiKey());
+        assertEquals("address-secret", captor.getValue().getApiSecret());
         assertEquals("********", view.maskedCustomerCode());
         assertEquals("********", view.maskedApiKey());
+        assertEquals("********", view.maskedApiSecret());
         assertFalse(view.toString().contains("customer-secret"));
         assertFalse(view.toString().contains("api-secret"));
+        assertFalse(view.toString().contains("address-secret"));
     }
 
     @Test
@@ -234,6 +239,30 @@ class RentalLogisticsOperationsConfigurationServiceTest {
         assertEquals("PROVIDER_CONFIG_INCOMPLETE", exception.getCode());
         verify(configMapper, never()).updateById(config);
     }
+    @Test
+    void enablingAddressParseRequiresApiSecretWithoutChangingTrackingCredentialRules() {
+        RentalLogisticsProviderConfigDO config = RentalLogisticsProviderConfigDO.builder()
+                .providerCode("KUAIDI100")
+                .enabled(false)
+                .queryEnabled(true)
+                .subscribeEnabled(false)
+                .addressParseEnabled(false)
+                .build();
+        RentalLogisticsProviderCredentialDO trackingOnly =
+                credential(11L, "primary", "customer", "key", true);
+        trackingOnly.setApiSecret(null);
+        when(configMapper.selectByProviderCodeForUpdate(9L, "KUAIDI100")).thenReturn(config);
+        when(credentialMapper.selectListByProvider(9L, "KUAIDI100"))
+                .thenReturn(java.util.List.of(trackingOnly));
+
+        RentalLogisticsException exception = assertThrows(RentalLogisticsException.class,
+                () -> service.saveProviderConfig(new ProviderConfigCommand("KUAIDI100", true, true,
+                        false, true, SecretAction.KEEP, null, null, 1800, "4")));
+
+        assertEquals("PROVIDER_CONFIG_INCOMPLETE", exception.getCode());
+        verify(configMapper, never()).updateById(config);
+    }
+
 
     @Test
     void mappingWriteIsTenantScopedNormalizedAndDisabledByDefault() {
@@ -279,6 +308,7 @@ class RentalLogisticsOperationsConfigurationServiceTest {
                 .sortOrder(100)
                 .customerCode(customerCode)
                 .apiKey(apiKey)
+                .apiSecret("address-" + apiKey)
                 .configStatus("LOCALLY_VERIFIED")
                 .build();
         credential.setTenantId(9L);

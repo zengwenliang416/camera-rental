@@ -16,20 +16,28 @@ public class Kuaidi100HttpGateway implements Kuaidi100Gateway {
 
     static final String DEFAULT_SUBSCRIBE_URL = "https://poll.kuaidi100.com/poll";
     static final String DEFAULT_QUERY_URL = "https://poll.kuaidi100.com/poll/query.do";
+    static final String DEFAULT_ADDRESS_RESOLUTION_URL = "https://api.kuaidi100.com/address/resolution";
 
     private final OkHttpClient client;
     private final String subscribeUrl;
     private final String queryUrl;
+    private final String addressResolutionUrl;
 
     @Autowired
     public Kuaidi100HttpGateway(@Qualifier("kuaidi100OkHttpClient") OkHttpClient client) {
-        this(client, DEFAULT_SUBSCRIBE_URL, DEFAULT_QUERY_URL);
+        this(client, DEFAULT_SUBSCRIBE_URL, DEFAULT_QUERY_URL, DEFAULT_ADDRESS_RESOLUTION_URL);
     }
 
     public Kuaidi100HttpGateway(OkHttpClient client, String subscribeUrl, String queryUrl) {
+        this(client, subscribeUrl, queryUrl, DEFAULT_ADDRESS_RESOLUTION_URL);
+    }
+
+    public Kuaidi100HttpGateway(OkHttpClient client, String subscribeUrl, String queryUrl,
+                                String addressResolutionUrl) {
         this.client = client;
         this.subscribeUrl = subscribeUrl;
         this.queryUrl = queryUrl;
+        this.addressResolutionUrl = addressResolutionUrl;
     }
 
     @Override
@@ -40,6 +48,11 @@ public class Kuaidi100HttpGateway implements Kuaidi100Gateway {
     @Override
     public String query(Map<String, String> form) throws IOException {
         return post(queryUrl, form);
+    }
+
+    @Override
+    public String resolveAddress(Map<String, String> form) throws IOException {
+        return post(addressResolutionUrl, form);
     }
 
     private String post(String url, Map<String, String> form) throws IOException {

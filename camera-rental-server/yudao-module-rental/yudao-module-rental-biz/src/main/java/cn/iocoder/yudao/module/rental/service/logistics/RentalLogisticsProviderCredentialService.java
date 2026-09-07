@@ -46,6 +46,21 @@ public class RentalLogisticsProviderCredentialService {
         return credentials.get(index);
     }
 
+
+    public RentalLogisticsProviderCredentialDO resolveForAddressParse(String providerCode) {
+        return credentialMapper.selectListByProvider(
+                        TenantContextHolder.getRequiredTenantId(), providerCode)
+                .stream()
+                .filter(candidate -> isAddressParseUsable(candidate, providerCode))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public boolean hasAddressParseCredential(String providerCode) {
+        return credentialMapper.selectListByProvider(
+                        TenantContextHolder.getRequiredTenantId(), providerCode)
+                .stream().anyMatch(candidate -> isAddressParseUsable(candidate, providerCode));
+    }
     public boolean hasUsableCredential(String providerCode) {
         return credentialMapper.selectListByProvider(
                         TenantContextHolder.getRequiredTenantId(), providerCode)
@@ -58,5 +73,13 @@ public class RentalLogisticsProviderCredentialService {
                 && Boolean.TRUE.equals(credential.getEnabled())
                 && StringUtils.hasText(credential.getCustomerCode())
                 && StringUtils.hasText(credential.getApiKey());
+    }
+
+    public boolean isAddressParseUsable(RentalLogisticsProviderCredentialDO credential, String providerCode) {
+        return credential != null
+                && Objects.equals(providerCode, credential.getProviderCode())
+                && Boolean.TRUE.equals(credential.getEnabled())
+                && StringUtils.hasText(credential.getApiKey())
+                && StringUtils.hasText(credential.getApiSecret());
     }
 }

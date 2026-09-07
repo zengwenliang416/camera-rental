@@ -21,12 +21,20 @@ public final class RentalLogisticsOperationsModels {
             Boolean enabled,
             Boolean queryEnabled,
             Boolean subscribeEnabled,
+            Boolean addressParseEnabled,
             SecretAction callbackSecretAction,
             String callbackSecret,
             String callbackBaseUrl,
             Integer minimumQueryIntervalSeconds,
             String resultVersion
     ) {
+        public ProviderConfigCommand(String providerCode, Boolean enabled, Boolean queryEnabled,
+                                     Boolean subscribeEnabled, SecretAction callbackSecretAction,
+                                     String callbackSecret, String callbackBaseUrl,
+                                     Integer minimumQueryIntervalSeconds, String resultVersion) {
+            this(providerCode, enabled, queryEnabled, subscribeEnabled, null, callbackSecretAction,
+                    callbackSecret, callbackBaseUrl, minimumQueryIntervalSeconds, resultVersion);
+        }
     }
 
     public record ProviderConfigView(
@@ -34,6 +42,7 @@ public final class RentalLogisticsOperationsModels {
             boolean enabled,
             boolean queryEnabled,
             boolean subscribeEnabled,
+            boolean addressParseEnabled,
             boolean callbackSecretConfigured,
             String maskedCallbackSecret,
             String callbackBaseUrl,
@@ -57,8 +66,17 @@ public final class RentalLogisticsOperationsModels {
             SecretAction customerCodeAction,
             String customerCode,
             SecretAction apiKeyAction,
-            String apiKey
+            String apiKey,
+            SecretAction apiSecretAction,
+            String apiSecret
     ) {
+        public ProviderCredentialCommand(Long id, String providerCode, String credentialName,
+                                         Boolean enabled, Integer sortOrder,
+                                         SecretAction customerCodeAction, String customerCode,
+                                         SecretAction apiKeyAction, String apiKey) {
+            this(id, providerCode, credentialName, enabled, sortOrder, customerCodeAction, customerCode,
+                    apiKeyAction, apiKey, null, null);
+        }
     }
 
     public record ProviderCredentialView(
@@ -71,11 +89,12 @@ public final class RentalLogisticsOperationsModels {
             String maskedCustomerCode,
             boolean apiKeyConfigured,
             String maskedApiKey,
+            boolean apiSecretConfigured,
+            String maskedApiSecret,
             String configStatus,
             LocalDateTime lastVerifiedAt
     ) {
     }
-
     public record ProviderVerifyResult(boolean valid, String reason, LocalDateTime verifiedAt) {
     }
 

@@ -22,3 +22,4 @@ camera-rental-server/sql/mysql/migrations/20260901_055_rental_historical_reconci
 camera-rental-server/sql/mysql/migrations/20260901_056_rental_channel_reconciliation_run.sql
 camera-rental-server/sql/mysql/migrations/20260902_057_return_registration_sender_mobile.sql
 camera-rental-server/sql/mysql/migrations/20260906_058_rental_offline_manual_order.sql
+camera-rental-server/sql/mysql/migrations/20260907_059_kuaidi100_address_resolution.sql

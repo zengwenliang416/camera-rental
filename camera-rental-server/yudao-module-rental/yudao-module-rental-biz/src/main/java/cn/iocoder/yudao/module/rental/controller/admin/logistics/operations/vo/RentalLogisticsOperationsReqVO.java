@@ -24,6 +24,7 @@ public final class RentalLogisticsOperationsReqVO {
         private Boolean enabled;
         private Boolean queryEnabled;
         private Boolean subscribeEnabled;
+        private Boolean addressParseEnabled;
         private SecretAction callbackSecretAction;
         @Size(max = 512)
         private String callbackSecret;
@@ -56,6 +57,9 @@ public final class RentalLogisticsOperationsReqVO {
         private SecretAction apiKeyAction;
         @Size(max = 512)
         private String apiKey;
+        private SecretAction apiSecretAction;
+        @Size(max = 512)
+        private String apiSecret;
     }
 
     @Schema(description = "管理后台 - 物流承运商映射保存 Request VO")

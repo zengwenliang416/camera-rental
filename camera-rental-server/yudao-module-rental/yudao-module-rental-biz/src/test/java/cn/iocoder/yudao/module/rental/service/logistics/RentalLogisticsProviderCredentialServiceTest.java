@@ -87,6 +87,18 @@ class RentalLogisticsProviderCredentialServiceTest {
         verify(credentialMapper).selectByTenantIdAndId(9L, 99L);
     }
 
+
+    @Test
+    void addressParsingUsesApiKeyAndSecretWithoutChangingDeliveryUsability() {
+        RentalLogisticsProviderCredentialDO trackingOnly = credential(11L, true, "customer", "key");
+        RentalLogisticsProviderCredentialDO addressReady = credential(12L, true, "customer", "key");
+        addressReady.setApiSecret("secret");
+        when(credentialMapper.selectListByProvider(9L, "KUAIDI100"))
+                .thenReturn(List.of(trackingOnly, addressReady));
+
+        assertEquals(12L, service.resolveForAddressParse("KUAIDI100").getId());
+        assertEquals(11L, service.resolveForDelivery(delivery(100L, null)).getId());
+    }
     private RentalDeliveryDO delivery(Long id, Long credentialId) {
         return RentalDeliveryDO.builder()
                 .id(id)

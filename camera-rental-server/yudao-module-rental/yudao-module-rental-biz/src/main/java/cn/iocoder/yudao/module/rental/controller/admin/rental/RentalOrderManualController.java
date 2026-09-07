@@ -1,11 +1,16 @@
 package cn.iocoder.yudao.module.rental.controller.admin.rental;
 
+import cn.iocoder.yudao.framework.apilog.core.annotation.ApiAccessLog;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalAddressParseReqVO;
+import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalAddressParseRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalCustomerSuggestRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalManualOrderCreateReqVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalManualOrderCreateRespVO;
 import cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalOrderConfirmOutboundReqVO;
 import cn.iocoder.yudao.module.rental.dal.dataobject.rental.RentalCustomerDO;
+import cn.iocoder.yudao.module.rental.service.rental.RentalAddressParseResult;
+import cn.iocoder.yudao.module.rental.service.rental.RentalAddressParseService;
 import cn.iocoder.yudao.module.rental.service.rental.RentalManualOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,9 +35,33 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 public class RentalOrderManualController {
 
     private final RentalManualOrderService manualOrderService;
+    private final RentalAddressParseService addressParseService;
 
-    public RentalOrderManualController(RentalManualOrderService manualOrderService) {
+    public RentalOrderManualController(RentalManualOrderService manualOrderService,
+                                       RentalAddressParseService addressParseService) {
         this.manualOrderService = manualOrderService;
+        this.addressParseService = addressParseService;
+    }
+
+    @PostMapping("/address/parse")
+    @Operation(summary = "智能识别姓名、手机号和标准化收货地址")
+    @ApiAccessLog(requestEnable = false)
+    @PreAuthorize("@ss.hasPermission('rental:order:create')")
+    public CommonResult<RentalAddressParseRespVO> parseAddress(
+            @Valid @RequestBody RentalAddressParseReqVO reqVO) {
+        RentalAddressParseResult result = addressParseService.parse(reqVO.getText());
+        RentalAddressParseRespVO respVO = new RentalAddressParseRespVO();
+        respVO.setName(result.name());
+        respVO.setMobile(result.mobile());
+        respVO.setAddress(result.address());
+        respVO.setProvince(result.province());
+        respVO.setCity(result.city());
+        respVO.setDistrict(result.district());
+        respVO.setStreet(result.street());
+        respVO.setSource(result.source());
+        respVO.setFallback(result.fallback());
+        respVO.setWarnings(result.warnings());
+        return success(respVO);
     }
 
     @PostMapping("/order/create-manual")

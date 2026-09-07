@@ -34,6 +34,9 @@ public class RentalLogisticsProviderCredentialDO extends TenantBaseDO {
     @TableField(typeHandler = EncryptTypeHandler.class)
     @ToString.Exclude
     private String apiKey;
+    @TableField(typeHandler = EncryptTypeHandler.class)
+    @ToString.Exclude
+    private String apiSecret;
     private String configStatus;
     private LocalDateTime lastVerifiedAt;
 }

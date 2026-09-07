@@ -68,6 +68,7 @@ public class RentalLogisticsConfigurationOperationsService {
         applyBoolean(command.enabled(), config::setEnabled);
         applyBoolean(command.queryEnabled(), config::setQueryEnabled);
         applyBoolean(command.subscribeEnabled(), config::setSubscribeEnabled);
+        applyBoolean(command.addressParseEnabled(), config::setAddressParseEnabled);
         config.setCallbackSecret(applySecret(config.getCallbackSecret(), command.callbackSecretAction(),
                 command.callbackSecret(), "CALLBACK_SECRET_REQUIRED"));
         if (command.callbackBaseUrl() != null) {
@@ -159,6 +160,8 @@ public class RentalLogisticsConfigurationOperationsService {
                 command.customerCode(), "CUSTOMER_CODE_REQUIRED"));
         credential.setApiKey(applySecret(credential.getApiKey(), command.apiKeyAction(),
                 command.apiKey(), "API_KEY_REQUIRED"));
+        credential.setApiSecret(applySecret(credential.getApiSecret(), command.apiSecretAction(),
+                command.apiSecret(), "API_SECRET_REQUIRED"));
         credential.setConfigStatus(isCredentialComplete(credential) ? "READY_UNVERIFIED" : "INCOMPLETE");
         if (Boolean.TRUE.equals(credential.getEnabled()) && !isCredentialComplete(credential)) {
             throw new RentalLogisticsException("PROVIDER_CREDENTIAL_INCOMPLETE");
@@ -269,6 +272,7 @@ public class RentalLogisticsConfigurationOperationsService {
                 .enabled(false)
                 .queryEnabled(false)
                 .subscribeEnabled(false)
+                .addressParseEnabled(false)
                 .minimumQueryIntervalSeconds(RentalLogisticsProviderConfigService.MINIMUM_QUERY_INTERVAL_SECONDS)
                 .resultVersion("4")
                 .configStatus("INCOMPLETE")
@@ -282,6 +286,7 @@ public class RentalLogisticsConfigurationOperationsService {
                 Boolean.TRUE.equals(config.getEnabled()),
                 Boolean.TRUE.equals(config.getQueryEnabled()),
                 Boolean.TRUE.equals(config.getSubscribeEnabled()),
+                Boolean.TRUE.equals(config.getAddressParseEnabled()),
                 StringUtils.hasText(config.getCallbackSecret()), mask(config.getCallbackSecret()),
                 config.getCallbackBaseUrl(),
                 config.getMinimumQueryIntervalSeconds() == null
@@ -298,6 +303,7 @@ public class RentalLogisticsConfigurationOperationsService {
                 credential.getSortOrder() == null ? 100 : credential.getSortOrder(),
                 StringUtils.hasText(credential.getCustomerCode()), mask(credential.getCustomerCode()),
                 StringUtils.hasText(credential.getApiKey()), mask(credential.getApiKey()),
+                StringUtils.hasText(credential.getApiSecret()), mask(credential.getApiSecret()),
                 credential.getConfigStatus(), credential.getLastVerifiedAt());
     }
 
@@ -319,9 +325,13 @@ public class RentalLogisticsConfigurationOperationsService {
 
     private boolean isProviderReady(RentalLogisticsProviderConfigDO config,
                                     List<RentalLogisticsProviderCredentialDO> credentials) {
-        return isGlobalConfigComplete(config)
-                && credentials.stream().anyMatch(credential ->
+        boolean trackingCredentialReady = credentials.stream().anyMatch(credential ->
                 Boolean.TRUE.equals(credential.getEnabled()) && isCredentialComplete(credential));
+        boolean addressCredentialReady = !Boolean.TRUE.equals(config.getAddressParseEnabled())
+                || credentials.stream().anyMatch(credential -> Boolean.TRUE.equals(credential.getEnabled())
+                && StringUtils.hasText(credential.getApiKey())
+                && StringUtils.hasText(credential.getApiSecret()));
+        return isGlobalConfigComplete(config) && trackingCredentialReady && addressCredentialReady;
     }
 
     private String effectiveProviderStatus(RentalLogisticsProviderConfigDO config,

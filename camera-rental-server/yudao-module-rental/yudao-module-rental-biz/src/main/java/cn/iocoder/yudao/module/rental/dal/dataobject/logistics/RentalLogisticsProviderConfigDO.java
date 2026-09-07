@@ -28,6 +28,7 @@ public class RentalLogisticsProviderConfigDO extends TenantBaseDO {
     private Boolean enabled;
     private Boolean queryEnabled;
     private Boolean subscribeEnabled;
+    private Boolean addressParseEnabled;
     @TableField(typeHandler = EncryptTypeHandler.class)
     @ToString.Exclude
     private String callbackSecret;

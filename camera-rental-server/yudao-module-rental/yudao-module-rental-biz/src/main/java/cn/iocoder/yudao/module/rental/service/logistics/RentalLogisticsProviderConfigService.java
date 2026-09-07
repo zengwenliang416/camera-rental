@@ -24,6 +24,12 @@ public class RentalLogisticsProviderConfigService {
         return config != null && Boolean.TRUE.equals(config.getEnabled());
     }
 
+
+    public boolean isAddressParseEnabled(String providerCode) {
+        RentalLogisticsProviderConfigDO config = get(providerCode);
+        return config != null && Boolean.TRUE.equals(config.getEnabled())
+                && Boolean.TRUE.equals(config.getAddressParseEnabled());
+    }
     public int minimumQueryIntervalSeconds(String providerCode) {
         RentalLogisticsProviderConfigDO config = get(providerCode);
         if (config == null || config.getMinimumQueryIntervalSeconds() == null) {

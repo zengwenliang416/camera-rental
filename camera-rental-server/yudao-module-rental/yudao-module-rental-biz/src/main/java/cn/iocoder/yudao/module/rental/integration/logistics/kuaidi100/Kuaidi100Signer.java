@@ -15,6 +15,10 @@ public class Kuaidi100Signer {
         return md5Upper(param + key + customer);
     }
 
+    public String signAddress(String param, String timestamp, String key, String secret) {
+        return md5Upper(param + timestamp + key + secret);
+    }
+
     public String signCallback(String param, String salt) {
         return md5Upper(param + salt);
     }

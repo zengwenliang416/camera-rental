@@ -89,7 +89,7 @@ public class RentalLogisticsOperationsController {
     public CommonResult<ProviderConfigView> saveProviderConfig(
             @Valid @RequestBody ProviderConfigUpdateReqVO reqVO) {
         ProviderConfigCommand command = new ProviderConfigCommand(reqVO.getProviderCode(), reqVO.getEnabled(),
-                reqVO.getQueryEnabled(), reqVO.getSubscribeEnabled(),
+                reqVO.getQueryEnabled(), reqVO.getSubscribeEnabled(), reqVO.getAddressParseEnabled(),
                 reqVO.getCallbackSecretAction(), reqVO.getCallbackSecret(), reqVO.getCallbackBaseUrl(),
                 reqVO.getMinimumQueryIntervalSeconds(), reqVO.getResultVersion());
         return success(configurationService.saveProviderConfig(command));
@@ -104,7 +104,8 @@ public class RentalLogisticsOperationsController {
         ProviderCredentialCommand command = new ProviderCredentialCommand(reqVO.getId(),
                 reqVO.getProviderCode(), reqVO.getCredentialName(), reqVO.getEnabled(),
                 reqVO.getSortOrder(), reqVO.getCustomerCodeAction(), reqVO.getCustomerCode(),
-                reqVO.getApiKeyAction(), reqVO.getApiKey());
+                reqVO.getApiKeyAction(), reqVO.getApiKey(), reqVO.getApiSecretAction(),
+                reqVO.getApiSecret());
         return success(configurationService.saveProviderCredential(command));
     }
 

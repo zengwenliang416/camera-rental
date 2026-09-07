@@ -167,6 +167,45 @@
           <div class="section-title">
             <h2>{{ t('rental.orderCreate.deliveryTitle') }}</h2>
           </div>
+          <div class="address-parser">
+            <div class="address-parser__head">
+              <div>
+                <strong>{{ t('rental.orderCreate.smartAddressTitle') }}</strong>
+                <div class="address-parser__hint">
+                  {{ t('rental.orderCreate.smartAddressHint') }}
+                </div>
+              </div>
+              <el-button
+                type="primary"
+                plain
+                :loading="addressParsing"
+                :disabled="!addressRawText.trim()"
+                @click="parseAndFillAddress"
+              >
+                {{ t('rental.orderCreate.smartAddressAction') }}
+              </el-button>
+            </div>
+            <el-input
+              v-model="addressRawText"
+              type="textarea"
+              :rows="3"
+              maxlength="1000"
+              show-word-limit
+              :placeholder="t('rental.orderCreate.smartAddressPlaceholder')"
+            />
+            <el-alert
+              v-if="addressParseResult"
+              class="mt-8px"
+              :type="addressParseResult.fallback ? 'warning' : 'success'"
+              :closable="false"
+              show-icon
+              :title="
+                addressParseResult.fallback
+                  ? t('rental.orderCreate.smartAddressFallback')
+                  : t('rental.orderCreate.smartAddressProviderSuccess')
+              "
+            />
+          </div>
           <el-form-item
             class="delivery-method"
             :label="t('rental.orderCreate.deliveryMethod')"
@@ -191,7 +230,7 @@
             show-icon
             :title="t('rental.orderCreate.expressHint')"
           />
-          <div v-else class="field-grid">
+          <div class="field-grid">
             <el-form-item :label="t('rental.orderCreate.receiverName')" prop="receiverName">
               <el-input
                 v-model="formData.receiverName"
@@ -295,8 +334,10 @@ import type { FormInstance, FormItemRule, FormRules } from 'element-plus'
 import type { RentalDeviceVO } from '@/api/rental/device'
 import {
   createRentalManualOrder,
+  parseRentalAddress,
   suggestRentalCustomer,
   type RentalDeliveryMethod,
+  type RentalAddressParseRespVO,
   type RentalManualOrderCreateReqVO
 } from '@/api/rental/orderCreate'
 import { useI18n } from '@/hooks/web/useI18n'
@@ -320,6 +361,9 @@ const message = useMessage()
 const router = useRouter()
 const formRef = ref<FormInstance>()
 const submitting = ref(false)
+const addressParsing = ref(false)
+const addressRawText = ref('')
+const addressParseResult = ref<RentalAddressParseRespVO>()
 let nextItemKey = 2
 const canCreateBoundOrder = computed(
   () =>
@@ -495,6 +539,64 @@ const handleMobileBlur = async () => {
   }
 }
 
+const parseAndFillAddress = async () => {
+  const text = addressRawText.value.trim()
+  if (!text) return
+  addressParsing.value = true
+  try {
+    const result = await parseRentalAddress(text)
+    addressParseResult.value = result
+    const values = [result.name, result.mobile, result.address].filter(Boolean)
+    if (!values.length) {
+      message.warning(t('rental.orderCreate.smartAddressNoResult'))
+      return
+    }
+    const conflicts = [
+      [formData.receiverName, result.name, t('rental.orderCreate.receiverName')],
+      [formData.receiverMobile, result.mobile, t('rental.orderCreate.receiverMobile')],
+      [formData.receiverAddress, result.address, t('rental.orderCreate.receiverAddress')]
+    ].filter(([current, parsed]) =>
+      Boolean(current && parsed && String(current).trim() !== String(parsed).trim())
+    )
+    if (conflicts.length) {
+      try {
+        await message.confirm(
+          t('rental.orderCreate.smartAddressOverwriteConfirm', {
+            fields: conflicts
+              .map(([, , label]) => label)
+              .join(t('rental.orderCreate.listSeparator'))
+          })
+        )
+      } catch {
+        return
+      }
+    }
+    if (result.name) formData.receiverName = result.name
+    if (result.mobile) formData.receiverMobile = result.mobile
+    if (result.address) formData.receiverAddress = result.address
+    if (!formData.customerName.trim() && result.name) formData.customerName = result.name
+    if (!formData.customerMobile.trim() && result.mobile) formData.customerMobile = result.mobile
+    formRef.value
+      ?.validateField([
+        'customerName',
+        'customerMobile',
+        'receiverName',
+        'receiverMobile',
+        'receiverAddress'
+      ])
+      .catch(() => undefined)
+    if (result.warnings.includes('MULTIPLE_MOBILES_REVIEW')) {
+      message.warning(t('rental.orderCreate.smartAddressMultipleMobiles'))
+    } else {
+      message.success(t('rental.orderCreate.smartAddressFilled'))
+    }
+  } catch {
+    message.warning(t('rental.orderCreate.smartAddressRequestFailed'))
+  } finally {
+    addressParsing.value = false
+  }
+}
+
 const yuanToFen = (value?: number) => (value === undefined ? undefined : Math.round(value * 100))
 
 const buildRequest = (): RentalManualOrderCreateReqVO => ({
@@ -514,9 +616,9 @@ const buildRequest = (): RentalManualOrderCreateReqVO => ({
   depositAmount: yuanToFen(formData.depositAmount),
   delivery: {
     method: formData.deliveryMethod,
-    receiverName: receiverRequired.value ? formData.receiverName.trim() : undefined,
-    receiverMobile: receiverRequired.value ? formData.receiverMobile.trim() : undefined,
-    receiverAddress: receiverRequired.value ? formData.receiverAddress.trim() : undefined,
+    receiverName: formData.receiverName.trim() || undefined,
+    receiverMobile: formData.receiverMobile.trim() || undefined,
+    receiverAddress: formData.receiverAddress.trim() || undefined,
     remark: formData.deliveryRemark.trim() || undefined
   }
 })
@@ -688,6 +790,29 @@ const submit = async () => {
 .add-item-btn {
   width: 100%;
   border-style: dashed;
+}
+
+.address-parser {
+  padding: 12px;
+  margin-bottom: 12px;
+  background: var(--el-fill-color-lighter);
+  border: 1px solid var(--el-border-color-lighter);
+  border-radius: 4px;
+}
+
+.address-parser__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.address-parser__hint {
+  margin-top: 3px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--el-text-color-secondary);
 }
 
 .delivery-method {

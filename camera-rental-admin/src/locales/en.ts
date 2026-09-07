@@ -1277,6 +1277,25 @@ export default {
       depositAmount: 'Deposit (CNY)',
       depositHint: 'Optional. Leave empty if no deposit was collected.',
       deliveryTitle: 'Delivery',
+      smartAddressTitle: 'Smart receiver parsing',
+      smartAddressHint:
+        'Paste a name, mobile number, and full address. The result only fills the form; review it before submitting.',
+      smartAddressPlaceholder:
+        'Example: Nicole, 13800000000, Shanghai Songjiang District Yongfeng Street...',
+      smartAddressAction: 'Parse and fill',
+      smartAddressProviderSuccess: 'Kuaidi100 parsing completed. Review the receiver details.',
+      smartAddressFallback:
+        'Kuaidi100 was unavailable; local rules were used. Review the address carefully.',
+      smartAddressNoResult:
+        'No usable receiver details were recognized. Adjust the text and retry.',
+      smartAddressOverwriteConfirm:
+        'Existing values differ for: {fields}. Replace them with the parsed result?',
+      smartAddressFilled: 'Parsed values filled. Review them before submitting.',
+      smartAddressMultipleMobiles:
+        'Multiple mobile numbers were found. No phone number was filled automatically.',
+      smartAddressRequestFailed:
+        'Parsing failed. Enter the receiver details manually or retry later.',
+      listSeparator: ', ',
       deliveryMethod: 'Method',
       deliveryMethodExpress: 'Express',
       deliveryMethodErrand: 'Errand',

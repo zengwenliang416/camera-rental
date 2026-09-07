@@ -48,6 +48,18 @@ export interface RentalCustomerSuggestVO {
   wechatId?: string
 }
 
+export interface RentalAddressParseRespVO {
+  name?: string
+  mobile?: string
+  address?: string
+  province?: string
+  city?: string
+  district?: string
+  street?: string
+  source: 'KUAIDI100' | 'LOCAL'
+  fallback: boolean
+  warnings: string[]
+}
 export const createRentalManualOrder = (data: RentalManualOrderCreateReqVO) => {
   return request.post<RentalManualOrderCreateRespVO>({
     url: '/rental/order/create-manual',
@@ -63,5 +75,12 @@ export const suggestRentalCustomer = (mobile: string) => {
   return request.get<RentalCustomerSuggestVO | null>({
     url: '/rental/customer/suggest',
     params: { mobile }
+  })
+}
+
+export const parseRentalAddress = (text: string) => {
+  return request.post<RentalAddressParseRespVO>({
+    url: '/rental/address/parse',
+    data: { text }
   })
 }

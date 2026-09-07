@@ -567,7 +567,6 @@ const submit = async () => {
 }
 
 .order-sheet {
-  max-width: 1080px;
   background: var(--el-bg-color);
   border: 1px solid var(--el-border-color-lighter);
   border-radius: 6px;
@@ -615,8 +614,8 @@ const submit = async () => {
 /* ---------- 主联 + 存根联 ---------- */
 .sheet-body {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 272px;
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: stretch;
 }
 
 .sheet-main {
@@ -734,9 +733,8 @@ const submit = async () => {
 
 /* ---------- 存根联 ---------- */
 .sheet-stub {
-  position: sticky;
-  top: 12px;
   padding: 12px 20px 16px;
+  background: var(--el-fill-color-lighter);
   border-left: 2px dashed var(--el-border-color);
 }
 

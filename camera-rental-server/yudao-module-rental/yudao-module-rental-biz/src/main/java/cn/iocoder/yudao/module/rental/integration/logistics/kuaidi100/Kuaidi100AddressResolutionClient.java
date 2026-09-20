@@ -4,6 +4,7 @@ import cn.iocoder.yudao.module.rental.dal.dataobject.logistics.RentalLogisticsPr
 import cn.iocoder.yudao.module.rental.service.rental.RentalAddressParseResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -22,6 +23,7 @@ public class Kuaidi100AddressResolutionClient {
     private final ObjectMapper objectMapper;
     private final Clock clock;
 
+    @Autowired
     public Kuaidi100AddressResolutionClient(Kuaidi100Gateway gateway, Kuaidi100Signer signer,
                                              ObjectMapper objectMapper) {
         this(gateway, signer, objectMapper, Clock.systemUTC());

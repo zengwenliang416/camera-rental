@@ -122,7 +122,6 @@ public class RentalScheduleAllocationService {
         }
 
         List<Long> orderIds = ids(orders, RentalOrderDO::getId);
-        Map<Long, String> externalOrderNos = externalOrderNos(orders, tenantId);
         List<RentalOrderItemDO> items = tenantRows(orderItemMapper.selectListByRentalOrderIds(orderIds), tenantId);
         List<RentalDeviceAssignmentDO> assignments = tenantRows(
                 assignmentMapper.selectActiveListByRentalOrderIds(orderIds), tenantId);
@@ -130,9 +129,10 @@ public class RentalScheduleAllocationService {
                 group(assignments, RentalDeviceAssignmentDO::getRentalOrderItemId);
         Map<Long, List<RentalOrderItemDO>> itemsByOrder = group(items, RentalOrderItemDO::getRentalOrderId);
 
+        Map<Long, XianyuOrderDO> channelOrders = channelOrders(orders, tenantId);
         List<RentalPendingAllocationOrderRespVO> result = orders.stream()
                 .map(order -> toPendingOrder(order, itemsByOrder.getOrDefault(order.getId(), List.of()),
-                        assignmentsByItem, externalOrderNos.get(order.getChannelOrderId())))
+                        assignmentsByItem, channelOrders.get(order.getChannelOrderId())))
                 .filter(order -> !order.getItems().isEmpty())
                 .toList();
         return new PageResult<>(result, total);
@@ -247,7 +247,16 @@ public class RentalScheduleAllocationService {
 
         RentalOrderScheduleDetailRespVO result = new RentalOrderScheduleDetailRespVO();
         copyOrder(result, order);
-        result.setExternalOrderNo(externalOrderNo(order, tenantId));
+        XianyuOrderDO channelOrder = order.getChannelOrderId() == null
+                ? null : tenantRow(xianyuOrderMapper.selectById(order.getChannelOrderId()), tenantId);
+        result.setExternalOrderNo(channelOrder == null ? null : trimToNull(channelOrder.getExternalOrderId()));
+        result.setGoodsTitle(channelOrder == null ? null : trimToNull(channelOrder.getGoodsTitle()));
+        if (channelOrder != null) {
+            result.setBuyerNick(trimToNull(channelOrder.getBuyerNick()));
+            result.setReceiverName(trimToNull(channelOrder.getReceiverName()));
+            result.setReceiverMobile(trimToNull(channelOrder.getReceiverMobile()));
+            result.setReceiverAddress(trimToNull(channelOrder.getReceiverAddress()));
+        }
         List<RentalScheduleOrderItemRespVO> itemResults = items.stream()
                 .map(item -> toOrderItem(item, assignmentsByItem.getOrDefault(item.getId(), List.of()),
                         devicesById, schedulesById, tenantId))
@@ -313,11 +322,12 @@ public class RentalScheduleAllocationService {
 
     private RentalPendingAllocationOrderRespVO toPendingOrder(
             RentalOrderDO order, List<RentalOrderItemDO> items,
-            Map<Long, List<RentalDeviceAssignmentDO>> assignmentsByItem, String externalOrderNo) {
+            Map<Long, List<RentalDeviceAssignmentDO>> assignmentsByItem, XianyuOrderDO channelOrder) {
         RentalPendingAllocationOrderRespVO result = new RentalPendingAllocationOrderRespVO();
         result.setId(order.getId());
         result.setOrderNo(order.getOrderNo());
-        result.setExternalOrderNo(externalOrderNo);
+        result.setExternalOrderNo(channelOrder == null ? null : trimToNull(channelOrder.getExternalOrderId()));
+        result.setGoodsTitle(channelOrder == null ? null : trimToNull(channelOrder.getGoodsTitle()));
         result.setSourceType(order.getSourceType());
         result.setSourceOrderId(order.getSourceOrderId());
         result.setStatus(order.getStatus());
@@ -344,15 +354,14 @@ public class RentalScheduleAllocationService {
         return result;
     }
 
-    private Map<Long, String> externalOrderNos(List<RentalOrderDO> orders, Long tenantId) {
+    private Map<Long, XianyuOrderDO> channelOrders(List<RentalOrderDO> orders, Long tenantId) {
         List<Long> channelOrderIds = ids(orders, RentalOrderDO::getChannelOrderId);
         if (channelOrderIds.isEmpty()) {
             return Map.of();
         }
         return tenantRows(xianyuOrderMapper.selectByIds(channelOrderIds), tenantId).stream()
                 .filter(order -> order.getId() != null)
-                .filter(order -> order.getExternalOrderId() != null && !order.getExternalOrderId().isBlank())
-                .collect(Collectors.toMap(XianyuOrderDO::getId, XianyuOrderDO::getExternalOrderId,
+                .collect(Collectors.toMap(XianyuOrderDO::getId, Function.identity(),
                         (left, right) -> left, LinkedHashMap::new));
     }
 

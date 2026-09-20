@@ -84,6 +84,7 @@ class RentalScheduleAllocationServiceTest {
         XianyuOrderDO channelOrder = XianyuOrderDO.builder()
                 .id(601L)
                 .externalOrderId("3892746501234567890")
+                .goodsTitle("大疆 Pocket 4 免押租赁")
                 .build();
         channelOrder.setTenantId(9L);
 
@@ -101,6 +102,7 @@ class RentalScheduleAllocationServiceTest {
 
         assertEquals(1L, result.getTotal());
         assertEquals("3892746501234567890", result.getList().get(0).getExternalOrderNo());
+        assertEquals("大疆 Pocket 4 免押租赁", result.getList().get(0).getGoodsTitle());
         assertEquals("XY-0000000000000000501", result.getList().get(0).getOrderNo());
         assertEquals(LocalDate.of(2026, 8, 9), result.getList().get(0).getOccupyStartDate());
         assertEquals(LocalDate.of(2026, 8, 14), result.getList().get(0).getOccupyEndDateExclusive());

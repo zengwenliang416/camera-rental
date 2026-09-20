@@ -13,6 +13,8 @@ public class RentalPendingAllocationOrderRespVO {
     private Long id;
     private String orderNo;
     private String externalOrderNo;
+    @Schema(description = "渠道商品标题，闲鱼单取 listing 标题")
+    private String goodsTitle;
     private String sourceType;
     private String sourceOrderId;
     private String status;

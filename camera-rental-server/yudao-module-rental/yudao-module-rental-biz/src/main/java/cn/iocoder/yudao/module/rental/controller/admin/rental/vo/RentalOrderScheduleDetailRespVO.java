@@ -13,6 +13,16 @@ public class RentalOrderScheduleDetailRespVO {
     private Long id;
     private String orderNo;
     private String externalOrderNo;
+    @Schema(description = "渠道商品标题，闲鱼单取 listing 标题")
+    private String goodsTitle;
+    @Schema(description = "闲鱼买家昵称")
+    private String buyerNick;
+    @Schema(description = "收货人姓名")
+    private String receiverName;
+    @Schema(description = "收货人手机")
+    private String receiverMobile;
+    @Schema(description = "收货地址")
+    private String receiverAddress;
     private String sourceType;
     private String sourceOrderId;
     private String status;

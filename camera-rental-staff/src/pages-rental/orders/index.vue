@@ -34,7 +34,7 @@
           v-for="order in visibleOrders"
           :key="order.id"
           tone="info"
-          :kicker="`待分配 ${order.remainingQuantity ?? 0} / ${order.requiredQuantity ?? 0}`"
+          :kicker="(order.remainingQuantity ?? 0) > 0 ? `待分配 ${order.remainingQuantity} / ${order.requiredQuantity ?? 0}` : '设备已分配'"
           :tag="shippingLabel(order.shippingStatus)"
           :order-no="displayOrderNo(order)"
           :title="goodsLine(order)"
@@ -57,6 +57,7 @@
 
 <script setup lang="ts">
 import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
+import { getAndClearTabParams } from '@/utils/url'
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { getStaffOrders } from '@/api/rental/order'
@@ -81,6 +82,7 @@ const error = ref('')
 const orders = ref<PendingAllocationOrder[]>([])
 const pendingTotal = ref(0)
 const visibleOrders = orders
+let initialized = false
 
 const refreshing = ref(false)
 const pageNo = ref(1)
@@ -111,6 +113,7 @@ async function load(reset = true) {
     orders.value = reset ? result.list || [] : [...orders.value, ...(result.list || [])]
     pendingTotal.value = result.total ?? orders.value.length
     pageNo.value = page
+    initialized = true
   } catch (err) {
     if (version === requestVersion)
       error.value = staffError(err, '订单查询失败，请重试')
@@ -141,8 +144,36 @@ function goScan() {
   uni.switchTab({ url: '/pages-rental/device-scan/index' })
 }
 onShow(() => {
-  void load()
+  const params = getAndClearTabParams()
+  if (params?.queue && queues.some(item => item.value === params.queue)) {
+    queue.value = params.queue as StaffOrderQueue
+    void load()
+  } else if (!initialized) {
+    void load()
+  } else {
+    // 保留分页与滚动位置，仅更新已展示的对象。
+    void refreshVisible()
+  }
 })
+async function refreshVisible() {
+  const version = ++requestVersion
+  const pages = pageNo.value
+  try {
+    const fresh: PendingAllocationOrder[] = []
+    for (let page = 1; page <= pages; page++) {
+      const data = await getStaffOrders({ pageNo: page, pageSize: 20, keyword: keyword.value.trim() || undefined, queue: queue.value })
+      if (version !== requestVersion)
+        return
+      fresh.push(...(data.list || []))
+      pendingTotal.value = data.total
+    }
+    orders.value = fresh
+    error.value = ''
+  } catch (err) {
+    if (version === requestVersion)
+      error.value = `保留上次列表，刷新失败：${staffError(err, '请下拉重试')}`
+  }
+}
 </script>
 
 <style scoped>
@@ -170,6 +201,8 @@ onShow(() => {
   flex: 1;
 }
 .queues {
+  display: flex;
+  gap: 12rpx;
   flex-wrap: wrap;
   margin: 8rpx 0 16rpx;
   border-bottom: 4rpx solid #111;
@@ -198,8 +231,8 @@ onShow(() => {
   background: #f5f5f5;
 }
 .banner.error {
-  color: var(--staff-accent, #e10600);
-  background: var(--staff-accent-soft, #fff1f0);
+  color: #b42318;
+  background: #fff4f2;
 }
 .list {
   display: flex;

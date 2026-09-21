@@ -131,7 +131,7 @@
       </view>
 
       <view class="hint">
-        型号、状态和排期由后端复核
+        设备分配后仍需核对运单并完成发货
       </view>
     </scroll-view>
     <view class="footer">
@@ -158,6 +158,7 @@ import { resolveRentalDeviceQr } from '@/api/rental/device'
 import ScanBanner from '@/components/rental/scan-banner.vue'
 import StaffHeader from '@/components/rental/staff-header.vue'
 import { extractDeviceNo, maskOrderId, normalizeCode } from '@/utils/staffScan'
+import { candidateReason, reconcilePicked } from '@/models/rental/staffWorkflow'
 import { operationKey, staffError } from '@/models/rental/staffOperations'
 import { useAccess } from '@/hooks/useAccess'
 import { formatApiDate, occupyRangeLabel } from '@/models/rental/orderDisplay'
@@ -188,13 +189,18 @@ const emptySlots = computed(() => {
   const remain = Math.max(0, (result.value?.remainingQuantity ?? 0) - picked.value.length)
   return remain > 0 ? [1] : []
 })
-const canConfirm = computed(() => !loading.value && !submitting.value && picked.value.length > 0 && hasAccessByCodes(['rental:device:assign']))
+const canConfirm = computed(() => !loading.value && !submitting.value && !error.value && picked.value.length > 0 && hasAccessByCodes(['rental:device:assign']))
 
 async function load() {
   loading.value = true
   error.value = ''
   try {
-    result.value = await getDeviceCandidates(itemId.value)
+    const fresh = await getDeviceCandidates(itemId.value)
+    const previousCount = picked.value.length
+    picked.value = reconcilePicked(picked.value, fresh.candidates || [], fresh.remainingQuantity || 0)
+    result.value = fresh
+    if (picked.value.length !== previousCount)
+      uni.showToast({ title: '已移除当前不可分配设备，请重新核对', icon: 'none' })
   } catch (err) {
     error.value = staffError(err, '候选设备加载失败')
   } finally {
@@ -234,11 +240,13 @@ async function acceptDeviceScan(raw: string) {
     if (!matched || matched.eligible !== true) {
       exceptions.record({
         kind: 'scan',
-        title: '型号不符',
-        detail: `订单需要 ${result.value?.equipmentModelCode || '指定型号'}，扫描到 ${deviceNo}`,
+        title: '设备不可分配',
+        detail: candidateReason(matched),
+        rentalOrderId: result.value?.rentalOrderId,
+        itemId: itemId.value,
         source: '扫码拣货',
       })
-      error.value = `扫描到 ${deviceNo}，不在可分配候选中`
+      error.value = candidateReason(matched)
       return
     }
     error.value = ''
@@ -247,11 +255,13 @@ async function acceptDeviceScan(raw: string) {
   } catch (err) {
     if (err && typeof err === 'object' && 'errMsg' in err && String(err.errMsg).includes('cancel'))
       return
+    error.value = staffError(err, '未获取到设备码')
     exceptions.record({
       kind: 'scan',
       title: '扫码失败',
       detail: staffError(err, '未获取到设备码'),
       source: '扫码拣货',
+      itemId: itemId.value,
     })
   }
 }
@@ -282,8 +292,10 @@ async function submit() {
     uni.showToast({ title: `已分配 ${completed} 台设备`, icon: 'success' })
     uni.navigateBack()
   } catch (err) {
-    error.value = `${completed ? `已成功 ${completed} 台；` : ''}${staffError(err, '分配结果未确认，请核对后重试')}`
-    exceptions.record({ kind: 'order', title: '分配未全部完成', detail: error.value, source: '设备分配' })
+    const failure = staffError(err, '分配结果未确认，请核对后重试')
+    await load()
+    error.value = `${completed ? `已成功 ${completed} 台；` : ''}${failure}`
+    exceptions.record({ kind: 'order', title: '分配未全部完成', detail: error.value, source: '设备分配', itemId: itemId.value, rentalOrderId: result.value?.rentalOrderId })
   } finally {
     submitting.value = false
   }
@@ -302,11 +314,15 @@ onLoad((query) => {
 
 <style scoped>
 .page {
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #fff;
 }
 .content {
-  height: calc(100vh - 140rpx);
+  flex: 1;
+  min-height: 0;
+  height: 0;
   padding: calc(var(--staff-status-bar-height, 0px) + 12rpx) 28rpx 40rpx;
   box-sizing: border-box;
 }
@@ -390,8 +406,8 @@ onLoad((query) => {
   margin-bottom: 16rpx;
 }
 .banner.error {
-  color: var(--staff-accent, #e10600);
-  background: var(--staff-accent-soft, #fff1f0);
+  color: #b42318;
+  background: #fff4f2;
 }
 .footer {
   padding: 16rpx 28rpx calc(16rpx + env(safe-area-inset-bottom));

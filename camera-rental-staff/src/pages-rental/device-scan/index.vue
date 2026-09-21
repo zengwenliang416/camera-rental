@@ -1,6 +1,6 @@
 <template>
   <view class="page" :style="staffPageStyle">
-    <scroll-view scroll-y class="content">
+    <scroll-view scroll-y class="content" :scroll-into-view="timelineAnchor">
       <view class="head">
         <view>
           <view class="title">
@@ -17,7 +17,7 @@
       </view>
 
       <view class="search">
-        <wd-input v-model="manualCode" placeholder="输入设备编号、型号或关键词" clearable />
+        <wd-input v-model="manualCode" placeholder="输入完整设备码或签名二维码" clearable />
         <wd-button type="primary" :disabled="!manualCode.trim() || loading" @click="resolve(manualCode)">
           查询
         </wd-button>
@@ -27,6 +27,14 @@
         {{ error }}
       </view>
 
+      <view v-if="loading" class="muted">
+        正在查询设备…
+      </view>
+      <view v-if="scheduleError" class="error">
+        {{ scheduleError }}<wd-button plain size="small" @click="retrySchedule">
+          重试排期查询
+        </wd-button>
+      </view>
       <template v-if="device">
         <view class="hero">
           <view>
@@ -78,17 +86,20 @@
             {{ device.enabled ? '已启用' : '已停用' }}
           </view>
           <view class="flag">
-            <view class="dot" :class="hasLock ? 'off' : 'on'" />
-            {{ hasLock ? '有维修锁' : '无维修锁' }}
+            <view class="dot" :class="scheduleLoaded && !hasLock ? 'on' : 'off'" />
+            {{ !scheduleLoaded ? '锁定状态未获取' : hasLock ? '存在有效锁定' : '无有效锁定' }}
           </view>
           <view class="flag">
-            <view class="dot on" />
-            {{ device.inspectionState || '排期有效' }}
+            <view class="dot" :class="device.inspectionState === 'PASSED' ? 'on' : 'off'" />
+            {{ inspectionStateLabel(device.inspectionState) }}
           </view>
         </view>
 
-        <view class="section-head">
-          设备时间线
+        <view id="device-timeline" class="section-head">
+          完整设备排期
+        </view>
+        <view v-if="scheduleLoaded && !timeline.length" class="muted">
+          当前没有排期记录
         </view>
         <view v-for="(row, index) in timeline" :key="index" class="tl">
           <view class="tl-dot" />
@@ -107,11 +118,11 @@
       </template>
     </scroll-view>
     <view v-if="device" class="footer">
-      <wd-button plain @click="goOrders">
+      <wd-button v-if="device.currentAssignment?.rentalOrderId" plain @click="goOrders">
         查看订单
       </wd-button>
       <wd-button type="primary" @click="toastTimeline">
-        查看完整排期
+        定位完整排期
       </wd-button>
     </view>
   </view>
@@ -119,8 +130,11 @@
 
 <script setup lang="ts">
 import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
+import { onShow } from '@dcloudio/uni-app'
+import { getAndClearTabParams } from '@/utils/url'
+import { deviceStatusLabel, inspectionStateLabel } from '@/models/rental/staffOperations'
 import { computed, ref } from 'vue'
-import { getDeviceScheduleDetail, resolveRentalDeviceQr } from '@/api/rental/device'
+import { getDeviceScheduleDetail, lookupRentalDevice } from '@/api/rental/device'
 import type { RentalDeviceScheduleDetail } from '@/api/rental/device'
 import { formatMonthDay, occupyRangeLabel } from '@/models/rental/orderDisplay'
 import { useStaffExceptionStore } from '@/store/staffException'
@@ -134,6 +148,9 @@ definePage({
   },
 })
 
+const scheduleLoaded = ref(false)
+const scheduleError = ref('')
+const timelineAnchor = ref('')
 const loading = ref(false)
 const manualCode = ref('')
 const error = ref('')
@@ -165,14 +182,25 @@ const timeline = computed(() => {
   return rows
 })
 
-function statusLabel(status?: string) {
-  const labels: Record<string, string> = {
-    AVAILABLE: '空闲可租',
-    RENTED: '已分配 · 待出库',
-    MAINTENANCE: '维修锁定',
-    DISPATCHED: '已出库',
+const statusLabel = deviceStatusLabel
+
+async function retrySchedule() {
+  if (!device.value)
+    return
+  const requestedDeviceId = device.value.id
+  scheduleLoaded.value = false
+  scheduleError.value = ''
+  try {
+    const detail = await getDeviceScheduleDetail(requestedDeviceId)
+    if (device.value?.id !== requestedDeviceId)
+      return
+    device.value = detail
+    scheduleLoaded.value = true
+  } catch {
+    if (device.value?.id !== requestedDeviceId)
+      return
+    scheduleError.value = '设备基本信息已获取，排期、锁定和检测状态暂未获取，不能据此判断可用。'
   }
-  return status ? labels[status] || status : '-'
 }
 
 async function resolve(payload: string) {
@@ -181,13 +209,13 @@ async function resolve(payload: string) {
     return
   loading.value = true
   error.value = ''
+  device.value = undefined
+  scheduleLoaded.value = false
+  scheduleError.value = ''
   try {
-    const basic = await resolveRentalDeviceQr(value)
-    try {
-      device.value = await getDeviceScheduleDetail(basic.id)
-    } catch {
-      device.value = { ...basic }
-    }
+    const basic = await lookupRentalDevice(value)
+    device.value = { ...basic }
+    await retrySchedule()
     manualCode.value = device.value.deviceNo
   } catch (err) {
     device.value = undefined
@@ -206,21 +234,35 @@ async function resolve(payload: string) {
 const { scan: scanDevice, scannerConnected } = useStaffScanner(result => resolve(result.text))
 
 function goOrders() {
-  uni.switchTab({ url: '/pages-rental/orders/index' })
+  const id = device.value?.currentAssignment?.rentalOrderId
+  if (id)
+    uni.navigateTo({ url: `/pages-rental/orders/detail?id=${id}` })
 }
 
 function toastTimeline() {
-  uni.showToast({ title: timeline.value.length ? `共 ${timeline.value.length} 条排期记录` : '暂无排期记录', icon: 'none' })
+  timelineAnchor.value = ''
+  setTimeout(() => {
+    timelineAnchor.value = 'device-timeline'
+  }, 0)
 }
+onShow(() => {
+  const params = getAndClearTabParams()
+  if (params?.deviceNo)
+    void resolve(params.deviceNo)
+})
 </script>
 
 <style scoped>
 .page {
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #fff;
 }
 .content {
-  height: calc(100vh - 140rpx);
+  flex: 1;
+  min-height: 0;
+  height: 0;
   padding: calc(var(--staff-status-bar-height, 0px) + 12rpx) 28rpx 24rpx;
   box-sizing: border-box;
 }
@@ -327,6 +369,7 @@ function toastTimeline() {
   background: var(--staff-accent-soft, #fff1f0);
 }
 .footer {
+  margin-bottom: 110rpx;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12rpx;

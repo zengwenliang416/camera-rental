@@ -1,18 +1,23 @@
 <template>
   <view class="page" :style="staffPageStyle">
     <scroll-view scroll-y class="content">
-      <staff-header title="仓务工作台" @scanner="goScan" />
+      <staff-header title="捷租达" brand @scanner="goScan" />
 
       <view class="hero">
         <view class="hero-label">
           待分配设备
         </view>
         <view class="hero-count">
-          <text class="hero-num">{{ pendingCount }}</text>
+          <text class="hero-num">{{ allocationError ? '—' : pendingCount }}</text>
           <text class="hero-unit">台</text>
         </view>
       </view>
 
+      <view v-if="allocationError || shipError" class="empty error">
+        {{ allocationError || shipError }}<wd-button plain size="small" @click="load">
+          重试加载
+        </wd-button>
+      </view>
       <view class="stats">
         <view class="stat" @click="goOrders">
           <view class="i-carbon-box stat-ico" />
@@ -20,7 +25,7 @@
             待分配
           </view>
           <view class="stat-value">
-            {{ pendingCount }}<text class="unit">台</text><text class="chev">›</text>
+            {{ allocationError ? '—' : pendingCount }}<text class="unit">台</text><text class="chev">›</text>
           </view>
         </view>
         <view class="stat" @click="goShip">
@@ -29,7 +34,7 @@
             待发货
           </view>
           <view class="stat-value">
-            {{ shipCount }}<text class="unit">单</text><text class="chev">›</text>
+            {{ shipError ? '—' : shipCount }}<text class="unit">单</text><text class="chev">›</text>
           </view>
         </view>
         <view class="stat" @click="goReturn">
@@ -57,7 +62,7 @@
       <view class="section-head">
         <text>待分配</text>
         <text class="more" @click="goOrders">
-          {{ urgent.length }}项 ›
+          查看待分配 ›
         </text>
       </view>
       <view v-if="urgent.length" class="task-list">
@@ -111,6 +116,7 @@
 
 <script lang="ts" setup>
 import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
+import { setTabParams } from '@/utils/url'
 import { onShow } from '@dcloudio/uni-app'
 import { computed, ref } from 'vue'
 import { getPendingAllocationOrders } from '@/api/rental/order'
@@ -144,6 +150,9 @@ definePage({
 const orders = ref<PendingAllocationOrder[]>([])
 const shipOrders = ref<XianyuPendingShipOrder[]>([])
 const error = ref('')
+const allocationError = ref('')
+const shipError = ref('')
+let loadVersion = 0
 const pendingCount = ref(0)
 const shipCount = ref(0)
 const exceptions = useStaffExceptionStore()
@@ -170,7 +179,7 @@ const followUps = computed(() => {
     title: order.goodsTitle ? `${order.goodsTitle} × ${order.goodsQuantity ?? 1}` : `闲鱼待发货 × ${order.goodsQuantity ?? 1}`,
     subtitle: '闲鱼待发货',
     routeLabel: '',
-    open: () => goShip(),
+    open: () => goShip(order.id),
   }))
   return [...rest, ...ships].slice(0, 4)
 })
@@ -187,34 +196,52 @@ function sumRemaining(list: PendingAllocationOrder[]) {
   return list.reduce((sum, order) => sum + (order.remainingQuantity ?? 0), 0)
 }
 
-function sumShipQty(list: XianyuPendingShipOrder[]) {
-  return list.reduce((sum, order) => sum + (order.goodsQuantity ?? 1), 0)
+async function loadAllocationQueue() {
+  const first = await getPendingAllocationOrders({ pageNo: 1, pageSize: 100 })
+  const list = [...(first.list || [])]
+  for (let page = 2; list.length < first.total; page++) {
+    if (page > 100)
+      throw new Error('待分配任务较多，请到订单列表查看')
+    const next = await getPendingAllocationOrders({ pageNo: page, pageSize: 100 })
+    if (!next.list?.length)
+      throw new Error('任务队列发生变化，请刷新统计')
+    list.push(...next.list)
+  }
+  return { list, total: first.total }
 }
 
 async function load() {
+  const version = ++loadVersion
   error.value = ''
+  allocationError.value = ''
+  shipError.value = ''
   const [allocationResult, shipResult] = await Promise.allSettled([
-    getPendingAllocationOrders({ pageNo: 1, pageSize: 100 }),
+    loadAllocationQueue(),
     getXianyuPendingShipOrderPage({ pageNo: 1, pageSize: 20 }),
   ])
+  if (version !== loadVersion)
+    return
   if (allocationResult.status === 'fulfilled') {
     orders.value = allocationResult.value.list || []
     pendingCount.value = sumRemaining(orders.value)
   } else {
     orders.value = []
     pendingCount.value = 0
-    error.value = queueErrorMessage(allocationResult.reason)
+    allocationError.value = queueErrorMessage(allocationResult.reason)
+    error.value = allocationError.value
   }
   if (shipResult.status === 'fulfilled') {
     shipOrders.value = shipResult.value.list || []
-    shipCount.value = shipResult.value.total || sumShipQty(shipOrders.value)
+    shipCount.value = shipResult.value.total ?? shipOrders.value.length
   } else {
     shipOrders.value = []
     shipCount.value = 0
+    shipError.value = queueErrorMessage(shipResult.reason)
   }
 }
 
 function goOrders() {
+  setTabParams({ queue: 'PENDING_ALLOCATION' })
   uni.switchTab({ url: '/pages-rental/orders/index' })
 }
 function goScan() {
@@ -223,8 +250,8 @@ function goScan() {
 function goReturn() {
   uni.switchTab({ url: '/pages-rental/device-return/index' })
 }
-function goShip() {
-  uni.navigateTo({ url: '/pages-rental/xianyu-ship/index' })
+function goShip(channelOrderId?: number) {
+  uni.navigateTo({ url: `/pages-rental/xianyu-ship/index${typeof channelOrderId === 'number' ? `?channelOrderId=${channelOrderId}` : ''}` })
 }
 function goExceptions() {
   uni.navigateTo({ url: '/pages-rental/exceptions/index' })

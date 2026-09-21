@@ -1,7 +1,7 @@
 <template>
   <view class="page" :style="staffPageStyle">
     <scroll-view scroll-y class="content">
-      <staff-header title="异常中心" @scanner="goScan" />
+      <staff-header title="操作记录" @scanner="goScan" />
       <view class="hero">
         <view>
           <view class="muted">
@@ -17,7 +17,7 @@
         <view class="rule" />
         <view>
           <view class="muted">
-            今日已解决
+            今日已标记
           </view>
           <view class="num">
             {{ resolvedToday.length }}
@@ -64,16 +64,16 @@
         </view>
         <view class="actions">
           <wd-button size="small" type="primary" @click.stop="openItem(item)">
-            {{ item.kind === 'scan' ? '重新扫描' : '查看' }}
+            {{ item.itemId || item.rentalOrderId ? '返回相关业务' : item.kind === 'scan' ? '重新查询' : '查看说明' }}
           </wd-button>
           <wd-button size="small" plain @click.stop="exceptions.resolve(item.id)">
-            标记已处理
+            标记已查看
           </wd-button>
         </view>
       </view>
 
       <view class="section-head">
-        <text>已解决异常</text>
+        <text>已标记记录</text>
         <text class="muted">
           {{ resolvedItems.length }} 条
         </text>
@@ -91,7 +91,7 @@
       </view>
 
       <view class="note">
-        异常不会在本地伪装为成功。所有异常均需处理后才能继续作业。
+        这里只保留本次登录的操作失败记录。标记仅表示已查看，不会修改订单、设备或物流状态。
       </view>
     </scroll-view>
   </view>
@@ -122,13 +122,13 @@ const tabs = [
   { key: 'order' as const, label: '订单' },
   { key: 'network' as const, label: '网络' },
 ]
-const resolvedItems = computed(() => items.value.filter(item => item.status === 'resolved'))
+const resolvedItems = computed(() => items.value.filter(item => item.status === 'resolved' && (current.value === 'all' || item.kind === current.value)))
 const filteredOpen = computed(() => current.value === 'all' ? openItems.value : openItems.value.filter(item => item.kind === current.value))
 
 function countOf(key: 'all' | StaffExceptionKind) {
   if (key === 'all')
-    return items.value.length
-  return items.value.filter(item => item.kind === key).length
+    return openItems.value.length
+  return openItems.value.filter(item => item.kind === key).length
 }
 
 function formatTime(ts: number) {
@@ -142,10 +142,13 @@ function goScan() {
 }
 
 function openItem(item: StaffException) {
-  if (item.kind === 'scan')
+  if (item.itemId)
+    uni.navigateTo({ url: `/pages-rental/orders/candidates?itemId=${item.itemId}` })
+  else if (item.rentalOrderId)
+    uni.navigateTo({ url: `/pages-rental/orders/detail?id=${item.rentalOrderId}` })
+  else if (item.kind === 'scan')
     goScan()
-  else if (item.kind === 'order')
-    uni.switchTab({ url: '/pages-rental/orders/index' })
+  else uni.showModal({ title: item.title, content: `${item.detail}\n请返回原作业页面刷新并核对结果，不要重复提交。`, showCancel: false })
 }
 </script>
 

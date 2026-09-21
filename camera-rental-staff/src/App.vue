@@ -5,8 +5,13 @@ import { navigateToInterceptor } from '@/router/interceptor'
 import { useDictStore, useTokenStore } from '@/store'
 import { tabbarStore } from '@/tabbar/store'
 import { scanner } from '@/services/scanner'
+import { useThemeStore } from '@/store/theme'
 
-onLaunch(() => {})
+onLaunch(() => {
+  const theme = useThemeStore()
+  theme.theme = 'light'
+  theme.setThemeVars({ buttonPrimaryBg: '#087f75', buttonPrimaryBgActive: '#06635b', buttonPrimaryColor: '#087f75', buttonPrimaryPlainBorder: '#087f75' })
+})
 onShow((options) => {
   void scanner.initialize()
 

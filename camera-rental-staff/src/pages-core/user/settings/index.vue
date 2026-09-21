@@ -12,8 +12,8 @@
 
     <!-- Logo 区域 -->
     <view class="flex flex-col items-center py-60rpx">
-      <wd-img class="mb-24rpx" src="/static/logo.svg" width="150rpx" height="150rpx" mode="aspectFit" round />
-      <text class="text-40rpx text-gray-800 font-medium">芋道移动端</text>
+      <wd-img class="mb-24rpx" src="/static/brand/jiezuda-logo.png" width="188rpx" height="150rpx" mode="aspectFit" />
+      <text class="text-40rpx text-gray-800 font-medium">捷租达</text>
     </view>
 
     <!-- 设置列表 -->
@@ -30,7 +30,7 @@
           </template>
         </wd-cell>
         <wd-cell
-          title="本地缓存"
+          title="字典缓存"
           :value="storageSize"
           is-link
           @click="handleClearCache"
@@ -50,10 +50,10 @@
         <text class="text-[#1890ff]" @click="handleGoPrivacy">《隐私协议》</text>
       </view>
       <text class="mb-10rpx text-24rpx text-gray-400">
-        Copyright © 2026 iocoder.cn All Rights Reserved.
+        捷租达 · 员工作业端
       </text>
       <text class="text-24rpx text-gray-400">
-        芋道源码
+        设备租赁与仓务管理
       </text>
     </view>
   </view>
@@ -64,6 +64,7 @@ import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { onMounted, ref } from 'vue'
 import { navigateBackPlus } from '@/utils'
+import { useDictStore } from '@/store/dict'
 
 definePage({
   style: {
@@ -74,7 +75,7 @@ definePage({
 
 const toast = useToast()
 const dialog = useDialog()
-const version = ref('1.0.0') // 当前版本号
+const version = ref('1.0.2') // 当前版本号
 const storageSize = ref('') // 本地缓存大小
 
 /** 返回上一页 */
@@ -86,14 +87,13 @@ function handleBack() {
 function getAppVersion() {
   // #ifdef APP-PLUS
   const appInfo = uni.getSystemInfoSync()
-  version.value = appInfo.appVersion || '1.0.0'
+  version.value = appInfo.appVersion || '1.0.2'
   // #endif
 }
 
 /** 获取本地缓存大小 */
 function getStorageSize() {
-  const info = uni.getStorageInfoSync()
-  storageSize.value = `${info.currentSize}KB`
+  storageSize.value = useDictStore().isLoaded ? '已加载' : '未加载'
 }
 
 /** 显示版本信息 */
@@ -106,14 +106,14 @@ async function handleClearCache() {
   try {
     await dialog.confirm({
       title: '提示',
-      msg: '确定要清除本地缓存吗？',
+      msg: '仅清除字典缓存，保留登录、租户和操作数据，确定继续吗？',
     })
   } catch {
     return
   }
 
   try {
-    uni.clearStorageSync()
+    useDictStore().clearDictCache()
     getStorageSize()
     toast.success('缓存清除成功')
   } catch {

@@ -12,6 +12,8 @@ export interface StaffException {
   title: string
   detail: string
   source: string
+  rentalOrderId?: number
+  itemId?: number
   status: StaffExceptionStatus
   createdAt: number
   resolvedAt?: number
@@ -46,6 +48,8 @@ export const useStaffExceptionStore = defineStore('staff-exception', () => {
       title: input.title,
       detail: sanitizeStaffMessage(input.detail),
       source: input.source,
+      rentalOrderId: input.rentalOrderId,
+      itemId: input.itemId,
     }, ...items.value].slice(0, 50)
   }
 

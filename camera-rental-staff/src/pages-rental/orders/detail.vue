@@ -8,7 +8,7 @@
         订单详情
       </view>
     </view>
-    <scroll-view scroll-y class="content">
+    <scroll-view scroll-y class="content" :scroll-into-view="detailAnchor">
       <view v-if="loading" class="empty">
         正在加载订单...
       </view>
@@ -107,11 +107,12 @@
           </view>
         </view>
 
+        <view id="order-devices" />
         <view
           v-for="item in items"
           :key="String(item.id)"
           class="goods"
-          @click="openCandidates(item.id)"
+          @click="(item.remainingQuantity ?? 0) > 0 && openCandidates(item.id)"
         >
           <view class="thumb">
             <view class="i-carbon-camera" />
@@ -119,13 +120,16 @@
           <view class="flex-1">
             <view class="goods-title">
               {{ detail?.goodsTitle || text(item.equipmentModelCode) }}
-              × {{ item.remainingQuantity ?? item.requiredQuantity ?? 0 }}
+              × {{ item.requiredQuantity ?? 0 }}
             </view>
             <view class="muted">
               {{ itemQuantityLabel(item) }}
             </view>
+            <view v-for="assignment in item.assignments || []" :key="assignment.id" class="muted">
+              {{ assignment.deviceNo }} · {{ assignment.status === 'DISPATCHED' ? '已出库' : assignment.status === 'ASSIGNED' ? '已分配' : assignment.status === 'RETURNED' ? '已回仓' : assignment.status === 'CANCELED' ? '已取消' : '状态待核对' }}
+            </view>
           </view>
-          <text class="arrow">
+          <text v-if="(item.remainingQuantity ?? 0) > 0" class="arrow">
             ›
           </text>
         </view>
@@ -217,7 +221,7 @@
       <wd-button plain @click="openFirstItem">
         查看设备
       </wd-button>
-      <wd-button type="primary" @click="openShipping">
+      <wd-button v-if="hasAccessByCodes(['rental:xianyu:ship']) && detail?.sourceType === 'XIANYU'" type="primary" @click="openShipping">
         开始发货
       </wd-button>
     </view>
@@ -226,7 +230,8 @@
 
 <script setup lang="ts">
 import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
-import { onLoad } from '@dcloudio/uni-app'
+import { useAccess } from '@/hooks/useAccess'
+import { onLoad, onShow } from '@dcloudio/uni-app'
 import { computed, ref } from 'vue'
 import { getOrderScheduleDetail } from '@/api/rental/order'
 import type { RentalOrderItem, RentalOrderScheduleDetail } from '@/api/rental/order'
@@ -250,6 +255,9 @@ definePage({
   },
 })
 
+const { hasAccessByCodes } = useAccess()
+const orderId = ref(0)
+const detailAnchor = ref('')
 const loading = ref(true)
 const error = ref('')
 const detail = ref<RentalOrderScheduleDetail>()
@@ -262,6 +270,8 @@ const hasCustomer = computed(() => Boolean(
   || detail.value?.receiverAddress,
 ))
 async function load(id: number) {
+  loading.value = true
+  error.value = ''
   try {
     detail.value = await getOrderScheduleDetail(id)
   } catch (err) {
@@ -274,30 +284,37 @@ function openCandidates(id: unknown) {
   uni.navigateTo({ url: `/pages-rental/orders/candidates?itemId=${String(id)}` })
 }
 function openFirstItem() {
-  const first = items.value[0]
-  if (first)
-    openCandidates(first.id)
+  detailAnchor.value = ''
+  setTimeout(() => {
+    detailAnchor.value = 'order-devices'
+  }, 0)
 }
 function goBack() {
   uni.navigateBack()
 }
 function openShipping() {
-  uni.navigateTo({ url: '/pages-rental/xianyu-ship/index' })
+  uni.navigateTo({ url: `/pages-rental/xianyu-ship/index?rentalOrderId=${orderId.value}` })
 }
 onLoad((query) => {
   const id = Number(query?.id)
   if (id) {
-    void load(id)
+    orderId.value = id
   } else {
     error.value = '缺少订单编号'
     loading.value = false
   }
 })
+onShow(() => {
+  if (orderId.value)
+    void load(orderId.value)
+})
 </script>
 
 <style scoped>
 .page {
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #fff;
 }
 .nav {
@@ -316,7 +333,9 @@ onLoad((query) => {
   font-weight: 800;
 }
 .content {
-  height: calc(100vh - 220rpx);
+  flex: 1;
+  min-height: 0;
+  height: 0;
   padding: 8rpx 28rpx 40rpx;
   box-sizing: border-box;
 }

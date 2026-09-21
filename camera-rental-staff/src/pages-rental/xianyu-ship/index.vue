@@ -1,517 +1,540 @@
 <template>
   <view class="page" :style="staffPageStyle">
+    <view class="nav">
+      <wd-button size="small" plain @click="goBack">
+        返回
+      </wd-button><text class="title">订单发货</text>
+    </view>
     <scroll-view scroll-y class="content">
-      <staff-header title="扫码发货" @scanner="scanWaybill" />
-      <view class="hero">
-        <view class="muted">
-          四步完成发货
+      <view class="card">
+        <view class="section-head">
+          <text>当前订单</text><wd-button v-if="!lockedOrder" plain size="small" @click="showOrders = !showOrders">
+            {{ showOrders ? '收起' : selectedOrder ? '更换订单' : '选择订单' }}
+          </wd-button>
+        </view>
+        <view v-if="orderLoading" class="muted">
+          正在获取待发货订单…
+        </view>
+        <view v-if="selectedOrder" class="strong">
+          {{ maskOrderId(selectedOrder.externalOrderId) }}
+        </view>
+        <view v-if="selectedOrder" class="muted">
+          {{ selectedOrder.goodsTitle || '租赁设备' }}
+        </view>
+        <view v-if="orderDetail" class="recipient">
+          <view>{{ orderDetail.receiverName || '收件人未提供' }} · {{ orderDetail.receiverMobile || '电话未提供' }}</view>
+          <view>{{ orderDetail.receiverAddress || '地址未提供，请先核对订单收货信息' }}</view>
+          <view class="muted">
+            本单设备 {{ requiredCount }} 台 · 本次已核验 {{ resolvedDevice ? 1 : 0 }} 台
+          </view>
+        </view>
+        <view v-if="orderError" class="error">
+          {{ orderError }}<wd-button size="small" plain @click="reloadOrder">
+            重试
+          </wd-button>
+        </view>
+        <view v-if="!selectedOrder && !orderLoading && !orderError" class="muted">
+          请先选择本次发货订单
+        </view>
+        <view v-if="showOrders && !lockedOrder">
+          <view class="search">
+            <wd-input v-model="keyword" placeholder="订单号 / 商品关键词" clearable @confirm="searchOrders()" /><wd-button size="small" :loading="orderLoading" @click="searchOrders()">
+              搜索
+            </wd-button>
+          </view>
+          <view v-for="item in orderList" :key="item.id" class="order-option" :class="{ selected: selectedOrder?.id === item.id }" @click="selectOrder(item)">
+            <view class="strong">
+              {{ maskOrderId(item.externalOrderId) }}
+            </view><view class="muted">
+              {{ item.goodsTitle || '租赁设备' }} · {{ item.goodsQuantity ?? 1 }} 件
+            </view>
+          </view>
+          <view v-if="!orderLoading && !orderList.length" class="muted">
+            没有匹配的待发货订单
+          </view>
+          <wd-button v-if="orderList.length < orderTotal" plain block :loading="orderLoading" @click="searchOrders(false)">
+            加载更多
+          </wd-button>
         </view>
       </view>
 
-      <view class="step" :class="{ active: step === 1 }" @click="scanWaybill">
-        <view class="badge">
-          1
-        </view>
-        <view class="flex-1">
-          <view class="step-kicker">
-            运单
-          </view>
-          <view class="step-title">
-            扫描运单码
-          </view>
-          <view class="step-value">
-            {{ waybillNo ? maskWaybill(waybillNo) : '扫描物流运单码' }}
-          </view>
-          <view v-if="expressName" class="muted">
-            {{ expressName }}
-          </view>
-        </view>
-        <text class="arrow">
-          ›
-        </text>
+      <view v-if="selectedOrder" class="scan-hint">
+        {{ resolving ? '正在核验设备…' : `侧键扫描目标：${scanTarget === 'device' ? '设备永久码' : '物流运单码'}` }}
       </view>
-
-      <view class="step" :class="{ active: step === 2 }" @click="scanDevice">
-        <view class="badge">
-          2
+      <view class="card">
+        <view class="section-head">
+          <text>1 · 核验设备</text><text v-if="resolvedDevice" class="ok">已识别</text>
         </view>
-        <view class="flex-1">
-          <view class="step-kicker">
-            设备
-          </view>
-          <view class="step-title">
-            扫设备永久码
-          </view>
-          <view class="step-value">
-            {{ deviceNo || '扫描设备永久码' }}
-          </view>
-          <view v-if="resolvedDevice" class="ok">
-            {{ deviceStatusLabel(resolvedDevice.status) }}
-          </view>
+        <view v-if="resolvedDevice" class="strong">
+          {{ resolvedDevice.deviceNo }} · {{ resolvedDevice.equipmentModelCode }}
         </view>
-        <text class="arrow">
-          ›
-        </text>
-      </view>
-
-      <view class="step" :class="{ active: step === 3 }" @click="pickOrder">
-        <view class="badge">
-          3
+        <view v-if="resolvedDevice" class="muted">
+          {{ deviceStatusLabel(resolvedDevice.status) }}
         </view>
-        <view class="flex-1">
-          <view class="step-kicker">
-            订单
-          </view>
-          <view class="step-title">
-            选择发货订单
-          </view>
-          <view class="step-value">
-            {{ selectedOrder ? maskOrderId(selectedOrder.externalOrderId) : '匹配发货订单' }}
-          </view>
-          <view v-if="selectedOrder" class="muted">
-            {{ selectedOrder.goodsTitle || '闲鱼订单' }}
-          </view>
+        <view v-if="deviceError" class="error">
+          {{ deviceError }}
         </view>
-        <text class="arrow">
-          ›
-        </text>
-      </view>
-
-      <view class="step">
-        <view class="badge">
-          4
-        </view>
-        <view class="flex-1">
-          <view class="step-kicker">
-            复核
-          </view>
-          <view class="step-title">
-            核对以下信息
-          </view>
-          <view class="review">
-            <view>订单号 {{ maskOrderId(selectedOrder?.externalOrderId) || '-' }}</view>
-            <view>设备 {{ deviceNo || '-' }}</view>
-            <view>快递 {{ expressName || '-' }}</view>
-            <view>运单 {{ maskWaybill(waybillNo) }}</view>
-          </view>
-        </view>
-      </view>
-
-      <view class="manual-inputs">
-        <view class="muted">
-          当前侧键扫描目标：{{ scanTarget === 'waybill' ? '运单' : '设备' }}
-        </view>
-        <wd-input v-model="manualWaybill" label="运单号" placeholder="无法扫码时输入运单号" clearable @confirm="confirmManualWaybill" />
-        <wd-button plain size="small" @click="confirmManualWaybill">
-          确认运单
+        <wd-button plain block :disabled="!selectedOrder || resolving" @click="scanDevice">
+          {{ resolvedDevice ? '重扫设备' : '扫描设备永久码' }}
         </wd-button>
-        <wd-input v-model="manualDevice" label="设备编号" placeholder="无法扫码时输入设备编号" clearable @confirm="acceptDeviceScan(manualDevice)" />
-        <wd-button plain size="small" :loading="resolving" @click="acceptDeviceScan(manualDevice)">
-          查询设备
+        <view class="manual-toggle" @click="manualDeviceVisible = !manualDeviceVisible">
+          {{ manualDeviceVisible ? '收起手工输入' : '无法扫码？手工输入设备码' }}
+        </view>
+        <view v-if="manualDeviceVisible" class="manual">
+          <wd-input v-model="manualDevice" placeholder="完整设备码" clearable @confirm="acceptDeviceScan(manualDevice)" /><wd-button size="small" :disabled="!selectedOrder" :loading="resolving" @click="acceptDeviceScan(manualDevice)">
+            核验设备
+          </wd-button>
+        </view>
+      </view>
+      <view class="card">
+        <view class="section-head">
+          <text>2 · 物流运单</text><text v-if="waybillNo" class="ok">已录入</text>
+        </view>
+        <view v-if="waybillNo" class="strong">
+          {{ maskWaybill(waybillNo) }}
+        </view>
+        <wd-button plain block :disabled="!selectedOrder" @click="scanWaybill">
+          {{ waybillNo ? '重扫运单' : '扫描物流运单码' }}
         </wd-button>
-        <wd-button plain block @click="carrierVisible = true">
-          {{ expressName || '请选择物流公司' }}
-        </wd-button>
+        <view class="manual-toggle" @click="manualWaybillVisible = !manualWaybillVisible">
+          {{ manualWaybillVisible ? '收起手工输入' : '无法扫码？手工输入运单号' }}
+        </view>
+        <view v-if="manualWaybillVisible" class="manual">
+          <wd-input v-model="manualWaybill" placeholder="完整运单号" clearable @confirm="confirmManualWaybill" /><wd-button size="small" @click="confirmManualWaybill">
+            确认运单
+          </wd-button>
+        </view>
+        <view class="carrier">
+          <text>快递公司</text><wd-button plain size="small" @click="carrierVisible = true">
+            {{ expressName || '请选择' }} · 修改
+          </wd-button>
+        </view>
+        <view v-if="waybillNo && !expressCode" class="muted">
+          未能确定快递公司，请手动选择
+        </view>
+        <view v-if="expressError" class="error">
+          {{ expressError }}<wd-button plain size="small" @click="loadExpress">
+            重试
+          </wd-button>
+        </view>
         <wd-select-picker v-model="expressCode" v-model:visible="carrierVisible" type="radio" :columns="expressList" label-key="expressName" value-key="code" filterable title="物流公司" />
-        <view v-if="expressError" class="muted">
-          {{ expressError }}
-        </view>
-        <wd-button v-if="expressError" plain size="small" @click="loadExpress">
-          重新加载物流公司
-        </wd-button>
       </view>
-      <view id="shipping-orders" class="search">
-        <wd-input v-model="keyword" placeholder="订单号/商品关键词" clearable />
-        <wd-button size="small" type="primary" :loading="orderLoading" @click="searchOrders()">
-          搜索
-        </wd-button>
-      </view>
-      <view
-        v-for="item in orderList"
-        :key="item.id"
-        class="order"
-        :class="{ on: selectedOrder?.id === item.id }"
-        @click="selectedOrder = item"
-      >
-        <view class="strong">
-          {{ maskOrderId(item.externalOrderId) }}
-        </view>
-        <view class="muted">
-          {{ item.goodsTitle || '-' }} · ×{{ item.goodsQuantity ?? 1 }}
-        </view>
-      </view>
-      <view v-if="orderError" class="muted">
-        {{ orderError }}
-      </view>
-      <view v-else-if="!orderLoading && !orderList.length" class="muted">
-        没有匹配的待发货订单
-      </view>
-      <wd-button v-if="orderList.length < orderTotal" plain block :loading="orderLoading" @click="searchOrders(false)">
-        加载更多订单
-      </wd-button>
     </scroll-view>
     <view class="footer">
-      <view class="row">
-        <wd-button plain @click="resetScan">
-          重新扫描
-        </wd-button>
-        <wd-button plain @click="pickOrder">
-          更换订单
-        </wd-button>
-      </view>
-      <wd-button type="primary" block :disabled="!canShip" @click="goConfirm">
-        进入发货确认
+      <view class="muted">
+        {{ blocker || '信息已齐全，下一步核对收件信息并确认发货' }}
+      </view><wd-button type="primary" block :disabled="!!blocker" @click="goConfirm">
+        核对并发货
       </wd-button>
     </view>
   </view>
 </template>
 
 <script lang="ts" setup>
-import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
 import type { XianyuExpressCompany, XianyuPendingShipOrder } from '@/api/rental/xianyu'
 import type { RentalDevice } from '@/api/rental/device'
-import { useToast } from '@wot-ui/ui/components/wd-toast'
+import type { RentalOrderScheduleDetail } from '@/api/rental/order'
+import { onLoad, onShow, onUnload } from '@dcloudio/uni-app'
 import { computed, ref } from 'vue'
-import { resolveRentalDeviceQr } from '@/api/rental/device'
-import {
-  getXianyuExpressCompanyList,
-  getXianyuPendingShipOrderPage,
-} from '@/api/rental/xianyu'
-import { onLoad, onShow } from '@dcloudio/uni-app'
-import { deviceStatusLabel, staffError } from '@/models/rental/staffOperations'
-import { useAccess } from '@/hooks/useAccess'
+import { useToast } from '@wot-ui/ui/components/wd-toast'
+import { getOrderScheduleDetail } from '@/api/rental/order'
+import { lookupRentalDevice } from '@/api/rental/device'
+import { getXianyuExpressCompanyList, getXianyuPendingShipOrderPage } from '@/api/rental/xianyu'
+import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
 import { useStaffScanner } from '@/hooks/useStaffScanner'
-import StaffHeader from '@/components/rental/staff-header.vue'
+import { useAccess } from '@/hooks/useAccess'
+import { deviceStatusLabel, staffError } from '@/models/rental/staffOperations'
+import { findPendingShipment, singleShipmentBlocker } from '@/models/rental/staffWorkflow'
 import { useShipDraftStore } from '@/store/shipDraft'
-import { useStaffExceptionStore } from '@/store/staffException'
-import { extractDeviceNo, extractWaybillNo, maskOrderId, maskWaybill, normalizeCode } from '@/utils/staffScan'
+import { extractDeviceNo, extractWaybillNo, maskOrderId, maskWaybill } from '@/utils/staffScan'
 
+definePage({ style: { navigationStyle: 'custom' } })
 const staffPageStyle = useStaffPageStyle()
-
-definePage({
-  style: {
-    navigationStyle: 'custom',
-  },
-})
-
 const toast = useToast()
 const draftStore = useShipDraftStore()
-const exceptions = useStaffExceptionStore()
-
-const waybillNo = ref('')
-const expressCode = ref('')
-const deviceNo = ref('')
-const resolvedDevice = ref<RentalDevice>()
-const keyword = ref('')
-const orderList = ref<XianyuPendingShipOrder[]>([])
+const { hasAccessByCodes } = useAccess()
 const selectedOrder = ref<XianyuPendingShipOrder>()
-const expressList = ref<XianyuExpressCompany[]>([])
-const expressName = computed(() => expressList.value.find(item => item.code === expressCode.value)?.expressName || '')
-const ocrConfirmed = ref(false)
+const orderDetail = ref<RentalOrderScheduleDetail>()
+const lockedOrder = ref(false)
+const showOrders = ref(false)
 const orderLoading = ref(false)
 const orderError = ref('')
+const orderList = ref<XianyuPendingShipOrder[]>([])
+const keyword = ref('')
+const orderTotal = ref(0)
+let orderPage = 1
+let searchVersion = 0
+let selectionVersion = 0
+let target: { rentalOrderId?: number, channelOrderId?: number } = {}
+const resolvedDevice = ref<RentalDevice>()
+const deviceError = ref('')
+const resolving = ref(false)
+const manualDevice = ref('')
+const manualDeviceVisible = ref(false)
+const manualWaybillVisible = ref(false)
+const manualWaybill = ref('')
+const waybillNo = ref('')
+const expressList = ref<XianyuExpressCompany[]>([])
+const expressCode = ref('')
+const expressName = computed(() => expressList.value.find(item => item.code === expressCode.value)?.expressName || '')
 const expressError = ref('')
 const carrierVisible = ref(false)
-const manualDevice = ref('')
-const manualWaybill = ref('')
-const resolving = ref(false)
-const orderTotal = ref(0)
-const orderPage = ref(1)
-let searchVersion = 0
+const scanTarget = ref<'device' | 'waybill'>('device')
 let awaitingConfirmation = false
-let targetRentalOrderId = 0
-const { hasAccessByCodes } = useAccess()
-
-const step = computed(() => {
-  if (!waybillNo.value)
-    return 1
-  if (!deviceNo.value)
-    return 2
+const requiredCount = computed(() => orderDetail.value?.items?.reduce((n, item) => n + (item.requiredQuantity || 0), 0) || orderDetail.value?.requiredQuantity || 0)
+const blocker = computed(() => {
+  if (!hasAccessByCodes(['rental:xianyu:ship']))
+    return '当前账号没有发货权限'
+  if (orderLoading.value)
+    return '正在加载订单'
+  if (orderError.value)
+    return orderError.value
   if (!selectedOrder.value)
-    return 3
-  return 4
-})
-const canShip = computed(() => Boolean(
-  selectedOrder.value
-  && resolvedDevice.value
-  && !resolving.value
-  && !orderLoading.value
-  && !orderError.value
-  && hasAccessByCodes(['rental:xianyu:ship'])
-  && normalizeCode(deviceNo.value)
-  && /^\w{10,}$/.test(normalizeCode(waybillNo.value))
-  && expressCode.value.trim()
-  && expressName.value.trim(),
-))
-
-function applyWaybill(raw: string) {
-  if (raw.startsWith('CRD1|'))
-    throw new Error('请扫描物流运单码')
-  const value = extractWaybillNo(raw)
-  if (!/^\w{10,}$/.test(value))
-    throw new Error('运单号格式不正确，请重新扫描或输入')
-  waybillNo.value = value
-  manualWaybill.value = value
-  // 只匹配快递接口返回的真实代码，不把空字符串当作任意匹配。
-  expressCode.value = value.startsWith('SF')
-    ? expressList.value.find(item => /顺丰/.test(item.expressName))?.code || ''
-    : ''
-  ocrConfirmed.value = false
-}
-
-const scanTarget = ref<'waybill' | 'device'>('waybill')
-
-function confirmManualWaybill() {
-  try {
-    applyWaybill(manualWaybill.value)
-    scanTarget.value = 'device'
-  } catch (error) {
-    toast.warning(staffError(error, '运单识别失败'))
-  }
-}
-
-const { scan } = useStaffScanner(async (result) => {
-  if (scanTarget.value === 'waybill') {
-    if (result.text.startsWith('CRD1|'))
-      throw new Error('当前等待运单码，请先扫描运单或点击设备步骤')
-    applyWaybill(result.text)
-    scanTarget.value = 'device'
-  } else {
-    await acceptDeviceScan(result.text)
-  }
-})
-
-async function scanWaybill() {
-  scanTarget.value = 'waybill'
-  await scan()
-}
-
-async function scanDevice() {
-  scanTarget.value = 'device'
-  await scan()
-}
-
-async function acceptDeviceScan(raw: string) {
+    return '请先选择发货订单'
+  const unsupported = singleShipmentBlocker(orderDetail.value)
+  if (unsupported)
+    return unsupported
   if (resolving.value)
-    return
-  resolving.value = true
-  resolvedDevice.value = undefined
-  deviceNo.value = ''
-  try {
-    const payload = raw.trim()
-    const device = await resolveRentalDeviceQr(payload.startsWith('CRD1|') ? payload : extractDeviceNo(payload))
-    resolvedDevice.value = device
-    deviceNo.value = device.deviceNo
-    manualDevice.value = device.deviceNo
-  } catch (error) {
-    toast.warning(staffError(error, '设备识别失败'))
-  } finally {
-    resolving.value = false
-  }
+    return '正在核验设备'
+  if (deviceError.value)
+    return deviceError.value
+  if (!resolvedDevice.value)
+    return '请扫描本次发货设备'
+  if (!waybillNo.value)
+    return '请扫描或输入物流运单号'
+  if (!expressName.value)
+    return '请选择快递公司'
+  return ''
+})
+function goBack() {
+  uni.navigateBack({ fail: () => uni.switchTab({ url: '/pages-rental/orders/index' }) })
 }
-
-function pickOrder() {
-  selectedOrder.value = undefined
-  void searchOrders()
-}
-
-function resetScan() {
-  waybillNo.value = ''
-  deviceNo.value = ''
+function clearScans() {
   resolvedDevice.value = undefined
-  ocrConfirmed.value = false
-  expressCode.value = ''
-  selectedOrder.value = undefined
+  deviceError.value = ''
   manualDevice.value = ''
+  waybillNo.value = ''
   manualWaybill.value = ''
-  scanTarget.value = 'waybill'
-  draftStore.clear()
+  expressCode.value = ''
+  scanTarget.value = 'device'
 }
-
-function goConfirm() {
-  if (!canShip.value || !selectedOrder.value) {
-    toast.warning('请先补齐运单、设备和订单')
+async function selectOrder(item: XianyuPendingShipOrder) {
+  if (selectedOrder.value?.id !== item.id && (resolvedDevice.value || waybillNo.value)) {
+    const result = await new Promise<boolean>(resolve => uni.showModal({ title: '更换发货订单', content: '更换后需要重新扫描设备和运单，是否继续？', success: r => resolve(r.confirm), fail: () => resolve(false) }))
+    if (!result)
+      return
+  }
+  const version = ++selectionVersion
+  if (selectedOrder.value?.id !== item.id)
+    clearScans()
+  selectedOrder.value = item
+  orderDetail.value = undefined
+  showOrders.value = false
+  orderError.value = ''
+  orderLoading.value = true
+  try {
+    if (!item.rentalOrderId)
+      throw new Error('订单尚未关联租赁订单，请先在后台完成订单准备')
+    const detail = await getOrderScheduleDetail(item.rentalOrderId)
+    if (version !== selectionVersion)
+      return
+    if (detail.id !== item.rentalOrderId)
+      throw new Error('订单关联不一致，请返回重新核对')
+    orderDetail.value = detail
+  } catch (error) {
+    if (version === selectionVersion)
+      orderError.value = staffError(error, '订单详情加载失败')
+  } finally {
+    if (version === selectionVersion)
+      orderLoading.value = false
+  }
+}
+async function reloadOrder() {
+  if (!lockedOrder.value) {
+    if (selectedOrder.value)
+      await selectOrder(selectedOrder.value)
+    else await searchOrders()
     return
   }
-  draftStore.setDraft({
-    channelOrderId: selectedOrder.value.id,
-    orderNo: selectedOrder.value.externalOrderId,
-    goodsTitle: selectedOrder.value.goodsTitle,
-    deviceNo: normalizeCode(deviceNo.value),
-    deviceStatus: resolvedDevice.value?.status,
-    expressCode: expressCode.value.trim(),
-    expressName: expressName.value.trim(),
-    waybillNo: normalizeCode(waybillNo.value),
-    ocrConfirmed: ocrConfirmed.value,
-  })
-  awaitingConfirmation = true
-  uni.navigateTo({ url: '/pages-rental/xianyu-ship/confirm' })
-}
-
-async function searchOrders(reset = true) {
-  if (!reset && orderLoading.value)
-    return
-  const version = ++searchVersion
-  const page = reset ? 1 : orderPage.value + 1
+  const version = ++selectionVersion
   orderLoading.value = true
   orderError.value = ''
-  if (reset) {
-    orderList.value = []
-    selectedOrder.value = undefined
-  }
   try {
-    const data = await getXianyuPendingShipOrderPage({ pageNo: page, pageSize: 20, keyword: keyword.value.trim() || undefined })
-    if (version !== searchVersion)
+    // 先获取已选租赁订单，使用真实渠道订单号收窄查询；仍以 ID 精确匹配。
+    const detail = target.rentalOrderId ? await getOrderScheduleDetail(target.rentalOrderId) : undefined
+    const item = await findPendingShipment(pageNo => getXianyuPendingShipOrderPage({ pageNo, pageSize: 100, keyword: detail?.externalOrderNo || undefined }), target)
+    if (version !== selectionVersion)
       return
-    orderList.value = reset ? data.list || [] : [...orderList.value, ...(data.list || [])]
-    orderTotal.value = data.total || 0
-    orderPage.value = page
-    if (targetRentalOrderId) {
-      selectedOrder.value = orderList.value.find(item => item.rentalOrderId === targetRentalOrderId)
-      if (selectedOrder.value)
-        targetRentalOrderId = 0
-    }
+    await selectOrder(item)
   } catch (error) {
+    if (version !== selectionVersion)
+      return
+    orderError.value = staffError(error, '指定订单加载失败')
+    orderLoading.value = false
+  }
+}
+async function searchOrders(reset = true) {
+  if (orderLoading.value)
+    return
+  const version = ++searchVersion
+  const page = reset ? 1 : orderPage + 1
+  orderLoading.value = true
+  orderError.value = ''
+  try {
+    const result = await getXianyuPendingShipOrderPage({ pageNo: page, pageSize: 20, keyword: keyword.value.trim() || undefined })
     if (version !== searchVersion)
       return
-    orderError.value = staffError(error, '待发货订单加载失败')
-    exceptions.record({ kind: 'network', title: '订单加载失败', detail: orderError.value, source: '发货提交' })
+    orderList.value = reset ? result.list || [] : [...orderList.value, ...(result.list || [])]
+    orderTotal.value = result.total
+    orderPage = page
+  } catch (error) {
+    if (version === searchVersion)
+      orderError.value = staffError(error, '待发货订单加载失败')
   } finally {
     if (version === searchVersion)
       orderLoading.value = false
   }
 }
-
+async function acceptDeviceScan(raw: string) {
+  if (!selectedOrder.value) {
+    toast.warning('请先选择发货订单')
+    return
+  }
+  if (resolving.value)
+    return
+  const version = selectionVersion
+  resolving.value = true
+  resolvedDevice.value = undefined
+  deviceError.value = ''
+  try {
+    const payload = raw.trim()
+    const device = await lookupRentalDevice(payload.startsWith('CRD1|') ? payload : extractDeviceNo(payload))
+    if (version !== selectionVersion)
+      return
+    const unsupported = singleShipmentBlocker(orderDetail.value)
+    if (unsupported)
+      throw new Error(unsupported)
+    const item = orderDetail.value?.items?.[0]
+    if (item?.equipmentModelCode !== device.equipmentModelCode)
+      throw new Error('扫描设备型号与当前订单不符')
+    const active = item?.assignments?.filter(a => a.status === 'ASSIGNED' || a.status === 'DISPATCHED') || []
+    if (active.length && !active.some(a => a.deviceId === device.id))
+      throw new Error('此订单已分配其他设备，请核对设备编号')
+    resolvedDevice.value = device
+    manualDevice.value = device.deviceNo
+    scanTarget.value = 'waybill'
+  } catch (error) {
+    if (version === selectionVersion)
+      deviceError.value = staffError(error, '设备核验失败')
+  } finally { resolving.value = false }
+}
+function applyWaybill(raw: string) {
+  if (!selectedOrder.value)
+    throw new Error('请先选择发货订单')
+  if (raw.startsWith('CRD1|'))
+    throw new Error('当前等待物流运单，请点击核验设备后扫描设备码')
+  const value = extractWaybillNo(raw)
+  if (!/^\w{10,}$/.test(value))
+    throw new Error('运单号格式不正确，请重新扫描或输入')
+  waybillNo.value = value
+  manualWaybill.value = value
+  expressCode.value = value.startsWith('SF') ? expressList.value.find(item => /顺丰/.test(item.expressName))?.code || '' : ''
+}
+function confirmManualWaybill() {
+  try {
+    applyWaybill(manualWaybill.value)
+  } catch (error) {
+    toast.warning(staffError(error, '运单识别失败'))
+  }
+}
+const { scan } = useStaffScanner(async (result) => {
+  if (scanTarget.value === 'device')
+    await acceptDeviceScan(result.text)
+  else applyWaybill(result.text)
+})
+async function scanDevice() {
+  scanTarget.value = 'device'
+  await scan()
+}
+async function scanWaybill() {
+  scanTarget.value = 'waybill'
+  await scan()
+}
 async function loadExpress() {
   expressError.value = ''
   try {
     expressList.value = await getXianyuExpressCompanyList()
-  } catch (error) {
-    expressError.value = staffError(error, '快递公司加载失败，请重试')
-  }
+    if (waybillNo.value.startsWith('SF') && !expressCode.value)
+      expressCode.value = expressList.value.find(item => /顺丰/.test(item.expressName))?.code || ''
+  } catch (error) { expressError.value = staffError(error, '快递公司获取失败，请重试') }
 }
-
+function goConfirm() {
+  if (blocker.value || !selectedOrder.value || !resolvedDevice.value)
+    return
+  draftStore.setDraft({
+    channelOrderId: selectedOrder.value.id,
+    rentalOrderId: selectedOrder.value.rentalOrderId,
+    orderNo: selectedOrder.value.externalOrderId,
+    goodsTitle: selectedOrder.value.goodsTitle,
+    receiverName: orderDetail.value?.receiverName,
+    receiverMobile: orderDetail.value?.receiverMobile,
+    receiverAddress: orderDetail.value?.receiverAddress,
+    deviceNo: resolvedDevice.value.deviceNo,
+    deviceStatus: resolvedDevice.value.status,
+    expressCode: expressCode.value,
+    expressName: expressName.value,
+    waybillNo: waybillNo.value,
+    ocrConfirmed: false,
+  })
+  awaitingConfirmation = true
+  uni.navigateTo({ url: '/pages-rental/xianyu-ship/confirm' })
+}
 onLoad((query) => {
-  targetRentalOrderId = Number(query?.rentalOrderId) || 0
-  keyword.value = query?.keyword ? decodeURIComponent(String(query.keyword)) : ''
+  target = { rentalOrderId: Number(query?.rentalOrderId) || undefined, channelOrderId: Number(query?.channelOrderId) || undefined }
+  lockedOrder.value = !!(target.rentalOrderId || target.channelOrderId)
+  showOrders.value = !lockedOrder.value
   void loadExpress()
-  void searchOrders()
+  void reloadOrder()
 })
 onShow(() => {
   if (awaitingConfirmation && !draftStore.draft) {
-    resetScan()
-    void searchOrders()
+    clearScans()
+    selectedOrder.value = undefined
+    orderDetail.value = undefined
+    if (lockedOrder.value) {
+      orderError.value = '发货已完成，请返回订单查看最新状态'
+      orderLoading.value = false
+    } else {
+      showOrders.value = true
+      void searchOrders()
+    }
   }
   awaitingConfirmation = false
+})
+onUnload(() => {
+  selectionVersion++
+  searchVersion++
 })
 </script>
 
 <style scoped>
 .page {
-  min-height: 100vh;
-  background: #fff;
-}
-.content {
-  height: calc(100vh - 220rpx);
-  padding: calc(var(--staff-status-bar-height, 0px) + 12rpx) 28rpx 24rpx;
-  box-sizing: border-box;
-}
-.hero {
+  height: 100vh;
   display: flex;
-  justify-content: space-between;
-  padding: 16rpx 0 20rpx;
+  flex-direction: column;
+  background: #f4f7f6;
 }
-.muted {
-  color: #6b6b6b;
-  font-size: 22rpx;
-}
-.motto {
-  font-size: 22rpx;
-  font-weight: 700;
-}
-.step {
-  display: flex;
-  gap: 16rpx;
-  padding: 24rpx;
-  margin-bottom: 16rpx;
-  border: 2rpx solid #eee;
-}
-.step.active {
-  border-color: var(--staff-accent, #e10600);
-  background: var(--staff-accent-soft, #fff1f0);
-}
-.badge {
+.nav {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 56rpx;
-  height: 56rpx;
-  color: #fff;
-  background: #111;
-  border-radius: 50%;
-  font-weight: 800;
+  gap: 24rpx;
+  padding: calc(var(--staff-status-bar-height, 0px) + 12rpx) 24rpx 16rpx;
+  background: #fff;
 }
-.step.active .badge {
-  background: var(--staff-accent, #e10600);
-}
-.step-kicker {
-  color: #6b6b6b;
-  font-size: 20rpx;
-}
-.step-title {
-  margin-top: 4rpx;
-  font-size: 28rpx;
-  font-weight: 800;
-}
-.step-value {
-  margin-top: 8rpx;
-  font-size: 30rpx;
+.title {
+  font-size: 36rpx;
   font-weight: 700;
+  color: #143c3a;
 }
-.ok {
-  margin-top: 6rpx;
-  color: #15803d;
-  font-size: 22rpx;
+.content {
+  flex: 1;
+  height: 0;
+  min-height: 0;
+  padding: 20rpx 24rpx;
+  box-sizing: border-box;
 }
-.review {
-  margin-top: 8rpx;
-  color: #6b6b6b;
-  font-size: 22rpx;
+.card {
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  border: 1rpx solid #e2eae7;
+  border-radius: 20rpx;
+  background: #fff;
+}
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  margin-bottom: 16rpx;
+}
+.strong {
+  font-size: 30rpx;
+  font-weight: 650;
+  margin: 12rpx 0;
+  overflow-wrap: anywhere;
+}
+.muted {
+  color: #63736d;
+  font-size: 24rpx;
   line-height: 1.6;
 }
-.arrow {
-  color: #999;
-  font-size: 40rpx;
+.recipient {
+  font-size: 26rpx;
+  line-height: 1.7;
+  margin-top: 16rpx;
+}
+.scan-hint {
+  color: #075c54;
+  background: #e6f4ef;
+  border-radius: 12rpx;
+  padding: 18rpx;
+  margin-bottom: 20rpx;
+  font-size: 26rpx;
+}
+.ok {
+  color: #087f75;
+  font-size: 24rpx;
+}
+.error {
+  color: #b42318;
+  background: #fff4f2;
+  padding: 14rpx;
+  margin: 12rpx 0;
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+.manual-toggle {
+  color: #64766f;
+  font-size: 24rpx;
+  padding: 20rpx 0 8rpx;
+}
+.manual {
+  margin-top: 12rpx;
+}
+.carrier {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20rpx;
+  font-size: 26rpx;
 }
 .search {
   display: flex;
-  gap: 12rpx;
   align-items: center;
-  margin: 12rpx 0;
+  gap: 12rpx;
+  margin: 16rpx 0;
 }
 .search :deep(.wd-input) {
   flex: 1;
 }
-.order {
+.order-option {
+  border: 1rpx solid #e1e8e4;
   padding: 16rpx;
-  margin-bottom: 12rpx;
-  border: 2rpx solid #eee;
+  border-radius: 12rpx;
+  margin: 12rpx 0;
 }
-.order.on {
-  border-color: #2563eb;
-  background: #eff6ff;
-}
-.strong {
-  font-weight: 800;
+.order-option.selected {
+  border-color: #087f75;
+  background: #edf8f5;
 }
 .footer {
-  padding: 12rpx 28rpx calc(12rpx + env(safe-area-inset-bottom));
-  border-top: 2rpx solid #eee;
+  background: #fff;
+  padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom));
+  border-top: 1rpx solid #e2eae7;
 }
-.row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12rpx;
+.footer .muted {
   margin-bottom: 12rpx;
 }
 </style>

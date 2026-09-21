@@ -10,10 +10,10 @@ export const useThemeStore = defineStore(
 
     /** 主题变量 */
     const themeVars = ref<ConfigProviderThemeVars>({
-      buttonPrimaryBg: '#e10600',
-      buttonPrimaryBgActive: '#b80500',
-      buttonPrimaryColor: '#e10600',
-      buttonPrimaryPlainBorder: '#e10600',
+      buttonPrimaryBg: '#087f75',
+      buttonPrimaryBgActive: '#06635b',
+      buttonPrimaryColor: '#087f75',
+      buttonPrimaryPlainBorder: '#087f75',
     })
 
     /** 设置主题变量 */

@@ -21,7 +21,7 @@
       <view class="section-head">
         <text>检测项目</text>
         <text class="muted">
-          请逐项检查，确认设备状态
+          已检查 {{ checkedCount }} / {{ checks.length }} 项
         </text>
       </view>
       <view v-for="item in checks" :key="item.key" class="check">
@@ -50,11 +50,14 @@
         结果提交后写入检测记录，请确认检测结果准确无误
       </view>
     </scroll-view>
+    <view v-if="submitHint" class="submit-hint">
+      {{ submitHint }}
+    </view>
     <view class="footer">
-      <wd-button plain :disabled="submitting || !!inspectionBlocker(checks, false) || !canReturn" :loading="submitting" @click="submit(false)">
+      <wd-button plain :disabled="!deviceNo || submitting || !!inspectionBlocker(checks, false) || !canReturn" :loading="submitting" @click="submit(false)">
         检测不通过 · 转维修
       </wd-button>
-      <wd-button type="primary" :disabled="submitting || !!inspectionBlocker(checks, true) || !canReturn" :loading="submitting" @click="submit(true)">
+      <wd-button type="primary" :disabled="!deviceNo || submitting || !!inspectionBlocker(checks, true) || !canReturn" :loading="submitting" @click="submit(true)">
         检测通过 · 恢复可租
       </wd-button>
     </view>
@@ -63,8 +66,8 @@
 
 <script setup lang="ts">
 import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
-import { onLoad } from '@dcloudio/uni-app'
-import { computed, reactive, ref } from 'vue'
+import { computed, onBeforeUnmount, reactive, ref } from 'vue'
+import { onBackPress, onLoad } from '@dcloudio/uni-app'
 import { returnRentalDevice } from '@/api/rental/device'
 import { useStaffExceptionStore } from '@/store/staffException'
 import { deviceStatusLabel, inspectionBlocker, staffError } from '@/models/rental/staffOperations'
@@ -86,6 +89,10 @@ const submitting = ref(false)
 const exceptions = useStaffExceptionStore()
 const { hasAccessByCodes } = useAccess()
 const canReturn = computed(() => hasAccessByCodes(['rental:device:assign']))
+let saved = false
+let allowBack = false
+let confirmingBack = false
+let initialNote = ''
 const checks = reactive([
   { key: 'body', no: '01', label: '机身外观', options: ['正常', '有问题', '待确认'], value: '待确认' },
   { key: 'power', no: '02', label: '开机与功能', options: ['正常', '有问题', '待确认'], value: '待确认' },
@@ -94,10 +101,31 @@ const checks = reactive([
   { key: 'accessories', no: '05', label: '其他配件', options: ['齐全', '缺件', '待确认'], value: '待确认' },
 ])
 
+const checkedCount = computed(() => checks.filter(item => item.value !== '待确认').length)
+const submitHint = computed(() => !deviceNo.value ? '缺少设备，请返回重新扫描' : !canReturn.value ? '当前账号没有回仓权限' : inspectionBlocker(checks, checks.every(item => ['正常', '齐全'].includes(item.value))))
 function goBack() {
   if (!submitting.value)
     uni.navigateBack()
 }
+onBackPress(() => {
+  if (submitting.value)
+    return true
+  if (saved || allowBack || (!checkedCount.value && note.value === initialNote))
+    return false
+  if (!confirmingBack) {
+    confirmingBack = true
+    uni.showModal({ title: '检测尚未提交', content: '返回会丢弃本页检测结果，确认返回吗？', success: (result) => {
+      if (result.confirm) {
+        allowBack = true
+        uni.navigateBack()
+      }
+    }, complete: () => { confirmingBack = false } })
+  }
+  return true
+})
+onBeforeUnmount(() => {
+  confirmingBack = false
+})
 
 async function submit(passed: boolean) {
   if (!deviceNo.value || submitting.value || !canReturn.value)
@@ -116,6 +144,7 @@ async function submit(passed: boolean) {
       inspectPassed: passed,
       note: [note.value.trim(), checklist].filter(Boolean).join(' | ') || undefined,
     })
+    saved = true
     uni.showToast({ title: `回仓完成：${deviceStatusLabel(result.deviceStatus)}`, icon: 'success' })
     const pages = getCurrentPages() as Array<{ getOpenerEventChannel?: () => { emit: (name: string) => void } }>
     pages[pages.length - 1]?.getOpenerEventChannel?.().emit('returned')
@@ -134,12 +163,15 @@ onLoad((query) => {
   deviceId.value = query?.deviceId ? Number(query.deviceId) : undefined
   model.value = query?.model ? decodeURIComponent(String(query.model)) : ''
   note.value = query?.note ? decodeURIComponent(String(query.note)) : ''
+  initialNote = note.value
 })
 </script>
 
 <style scoped>
 .page {
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #fff;
 }
 .nav {
@@ -157,7 +189,9 @@ onLoad((query) => {
   font-weight: 800;
 }
 .content {
-  height: calc(100vh - 220rpx);
+  flex: 1;
+  min-height: 0;
+  height: 0;
   padding: 8rpx 28rpx 24rpx;
   box-sizing: border-box;
 }
@@ -216,6 +250,11 @@ onLoad((query) => {
   color: var(--staff-accent, #e10600);
   font-size: 24rpx;
   font-weight: 700;
+}
+.submit-hint {
+  padding: 12rpx 28rpx;
+  color: #6b6b6b;
+  font-size: 24rpx;
 }
 .footer {
   display: grid;

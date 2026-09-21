@@ -12,6 +12,7 @@ export interface RentalOrderItem {
   requiredQuantity?: number
   assignedQuantity?: number
   remainingQuantity?: number
+  assignments?: Array<{ id: number, deviceId: number, deviceNo: string, status: string }>
   rentAmount?: number
   billableStartDate?: ApiDate
   billableEndDate?: ApiDate

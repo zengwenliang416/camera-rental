@@ -19,7 +19,7 @@
         <view class="section-head">
           <text>核对信息</text>
           <text class="muted">
-            4 项已确认
+            请核对本次发货
           </text>
         </view>
         <view class="row">
@@ -74,11 +74,17 @@
             </view>
           </view>
         </view>
-        <view class="info">
-          后端将再次校验权限、租户、订单状态、设备状态、排期
+        <view class="row">
+          <view>
+            <view class="muted">
+              收件信息
+            </view><view class="strong">
+              {{ draft.receiverName || '收件人未提供' }} · {{ draft.receiverMobile || '电话未提供' }}
+            </view><view>{{ draft.receiverAddress || '地址未提供，请返回核对订单' }}</view>
+          </view>
         </view>
         <view class="info">
-          结果不明时先核对订单；本页重试使用同一操作号，由服务端校验
+          如提交结果不明，请先核对订单状态，再决定是否重试
         </view>
       </template>
     </scroll-view>
@@ -195,6 +201,7 @@ async function submit() {
       title: '发货失败',
       detail: message,
       source: '发货提交',
+      rentalOrderId: submittedDraft.rentalOrderId,
     })
     uni.showToast({ title: message, icon: 'none' })
   } finally {
@@ -210,7 +217,9 @@ onHide(endHold)
 
 <style scoped>
 .page {
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #fff;
 }
 .nav {
@@ -228,7 +237,9 @@ onHide(endHold)
   font-weight: 800;
 }
 .content {
-  height: calc(100vh - 280rpx);
+  flex: 1;
+  min-height: 0;
+  height: 0;
   padding: 8rpx 28rpx;
   box-sizing: border-box;
 }

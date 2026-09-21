@@ -5,6 +5,10 @@ import { useUserStore } from '@/store/user'
 
 export interface ShipDraft {
   channelOrderId: number
+  rentalOrderId?: number
+  receiverName?: string
+  receiverMobile?: string
+  receiverAddress?: string
   orderNo: string
   goodsTitle?: string
   deviceNo: string

@@ -8,7 +8,7 @@
       <view class="card">
         <view class="user">
           <view class="avatar">
-            <view class="i-carbon-user" />
+            <wd-img src="/static/images/default-avatar.png" width="96rpx" height="96rpx" mode="aspectFit" />
           </view>
           <view>
             <view class="name">
@@ -45,14 +45,8 @@
       </view>
 
       <view class="list">
-        <view class="item" @click="toggleTheme">
-          <text>主题</text>
-          <text class="muted">
-            {{ theme === 'dark' ? '深色' : '浅色' }} ›
-          </text>
-        </view>
         <view class="item" @click="handleGoSettings">
-          <text>网络诊断 / 关于仓务 App</text>
+          <text>应用设置 / 关于捷租达</text>
           <text class="muted">
             ›
           </text>
@@ -83,7 +77,6 @@ import type { UserProfileVO } from '@/api/system/user/profile'
 import { LOGIN_PAGE } from '@/router/config'
 import { scannerConnected } from '@/services/scanner'
 import { useUserStore } from '@/store'
-import { useThemeStore } from '@/store/theme'
 import { useTokenStore } from '@/store/token'
 
 const staffPageStyle = useStaffPageStyle()
@@ -96,11 +89,9 @@ definePage({
 
 const userStore = useUserStore()
 const tokenStore = useTokenStore()
-const themeStore = useThemeStore()
 const toast = useToast()
 const dialog = useDialog()
 const { userInfo, permissions } = storeToRefs(userStore)
-const { theme } = storeToRefs(themeStore)
 const userProfile = ref<UserProfileVO | null>(null)
 const permissionText = computed(() => {
   const labels: string[] = []
@@ -121,11 +112,6 @@ onMounted(async () => {
   }
   await userStore.fetchUserInfo()
 })
-
-function toggleTheme() {
-  themeStore.toggleTheme()
-  toast.success(themeStore.theme === 'dark' ? '已切换深色' : '已切换浅色')
-}
 
 function goScan() {
   uni.switchTab({ url: '/pages-rental/device-scan/index' })
@@ -182,7 +168,9 @@ async function handleLogout() {
   justify-content: center;
   width: 96rpx;
   height: 96rpx;
-  border: 2rpx solid #111;
+  border: 2rpx solid #e8eeee;
+  border-radius: 20rpx;
+  overflow: hidden;
   font-size: 48rpx;
 }
 .name {

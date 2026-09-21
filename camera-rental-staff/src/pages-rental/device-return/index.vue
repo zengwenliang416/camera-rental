@@ -48,6 +48,9 @@
       </view>
     </scroll-view>
     <view class="footer">
+      <view v-if="!canSubmit" class="muted">
+        {{ resolving ? '正在识别设备…' : !hasAccessByCodes(['rental:device:assign']) ? '当前账号没有回仓权限' : '请先扫描本次回仓设备' }}
+      </view>
       <wd-button type="primary" block :disabled="!canSubmit" @click="goInspect">
         核对设备并进入检测
       </wd-button>
@@ -60,7 +63,7 @@ import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
 import type { RentalDevice } from '@/api/rental/device'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { computed, ref } from 'vue'
-import { resolveRentalDeviceQr } from '@/api/rental/device'
+import { lookupRentalDevice } from '@/api/rental/device'
 import ScanBanner from '@/components/rental/scan-banner.vue'
 import StaffHeader from '@/components/rental/staff-header.vue'
 import { useStaffExceptionStore } from '@/store/staffException'
@@ -93,15 +96,22 @@ async function resolveScannedDevice(raw: string) {
   const payload = String(raw || '').trim()
   if (!payload || resolving.value)
     return
+  const previousDeviceId = resolvedDevice.value?.id
   resolving.value = true
   resolvedDevice.value = undefined
   deviceNo.value = ''
   try {
-    const device = await resolveRentalDeviceQr(payload.startsWith('CRD1|') ? payload : extractDeviceNo(payload))
+    const device = await lookupRentalDevice(payload.startsWith('CRD1|') ? payload : extractDeviceNo(payload))
+    if (previousDeviceId !== device.id) {
+      if (note.value)
+        toast.info('已切换设备，请重新填写本台设备备注')
+      note.value = ''
+    }
     resolvedDevice.value = device
     deviceNo.value = device.deviceNo
     manualCode.value = device.deviceNo
   } catch (error) {
+    note.value = ''
     const message = staffError(error, '设备识别失败')
     exceptions.record({ kind: 'scan', title: '设备识别失败', detail: message, source: '扫码入库' })
     toast.warning(message)
@@ -140,11 +150,15 @@ function goInspect() {
 
 <style scoped>
 .page {
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #fff;
 }
 .content {
-  height: calc(100vh - 140rpx);
+  flex: 1;
+  min-height: 0;
+  height: 0;
   padding: calc(var(--staff-status-bar-height, 0px) + 12rpx) 28rpx 24rpx;
   box-sizing: border-box;
 }
@@ -195,6 +209,7 @@ function goInspect() {
   margin-top: 12rpx;
 }
 .footer {
+  margin-bottom: 110rpx;
   padding: 16rpx 28rpx calc(16rpx + env(safe-area-inset-bottom));
 }
 </style>

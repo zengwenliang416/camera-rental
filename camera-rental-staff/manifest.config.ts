@@ -36,6 +36,8 @@ export default defineManifestConfig({
   },
   /* 5+App特有相关 */
   'app-plus': {
+    // 仓务 PDA 按竖屏单手操作，避免横屏时 rpx 放大挤出登录及扫码控件。
+    screenOrientation: ['portrait-primary'],
     usingComponents: true,
     nvueStyleCompiler: 'uni-app',
     compilerVersion: 3,

@@ -4,12 +4,11 @@ import { onMounted, onUnmounted } from 'vue'
 import { navigateToInterceptor } from '@/router/interceptor'
 import { useDictStore, useTokenStore } from '@/store'
 import { tabbarStore } from '@/tabbar/store'
+import { scanner } from '@/services/scanner'
 
-onLaunch((options) => {
-  console.log('App.vue onLaunch', options)
-})
+onLaunch(() => {})
 onShow((options) => {
-  console.log('App.vue onShow', options)
+  void scanner.initialize()
 
   // 微信环境可能清理本地缓存，导致登录态仍在但字典缓存丢失，这里做一次非阻塞补偿加载
   // 对应 https://t.zsxq.com/boU4A 帖子
@@ -29,7 +28,7 @@ onShow((options) => {
   tabbarStore.syncCurIdxByCurrentPageAsync()
 })
 onHide(() => {
-  console.log('App Hide')
+  void scanner.stop()
 })
 
 // #ifdef H5

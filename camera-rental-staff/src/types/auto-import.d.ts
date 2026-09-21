@@ -93,6 +93,8 @@ declare global {
   const useRouteQuery: typeof import('../hooks/useRouteQuery')['useRouteQuery']
   const useScroll: typeof import('../hooks/useScroll')['useScroll']
   const useSlots: typeof import('vue')['useSlots']
+  const useStaffPageStyle: typeof import('../hooks/useStaffPageStyle')['useStaffPageStyle']
+  const useStaffScanner: typeof import('../hooks/useStaffScanner')['useStaffScanner']
   const useTemplateRef: typeof import('vue')['useTemplateRef']
   const useUpload: typeof import('../hooks/useUpload')['default']
   const watch: typeof import('vue')['watch']
@@ -202,6 +204,8 @@ declare module 'vue' {
     readonly useRouteQuery: UnwrapRef<typeof import('../hooks/useRouteQuery')['useRouteQuery']>
     readonly useScroll: UnwrapRef<typeof import('../hooks/useScroll')['useScroll']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
+    readonly useStaffPageStyle: UnwrapRef<typeof import('../hooks/useStaffPageStyle')['useStaffPageStyle']>
+    readonly useStaffScanner: UnwrapRef<typeof import('../hooks/useStaffScanner')['useStaffScanner']>
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>
     readonly useUpload: UnwrapRef<typeof import('../hooks/useUpload')['default']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>

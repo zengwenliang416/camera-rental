@@ -2,6 +2,7 @@
   <view class="staff-header">
     <view class="row">
       <view class="titles">
+        <wd-img v-if="brand" src="/static/brand/jiezuda-logo.png" width="100rpx" height="80rpx" mode="aspectFit" />
         <view class="title">
           {{ title }}
         </view>
@@ -36,6 +37,7 @@ import { scannerConnected } from '@/services/scanner'
 
 const props = withDefaults(defineProps<{
   title: string
+  brand?: boolean
   warehouse?: string
   connected?: boolean
 }>(), {

@@ -4,6 +4,17 @@ server {
 
     client_max_body_size 50m;
 
+    # Versioned staff APKs live outside atomic web releases.
+    location = /downloads/jiezuda {
+        return 301 /downloads/jiezuda/;
+    }
+
+    location ^~ /downloads/jiezuda/ {
+        alias /opt/camera-rental/downloads/jiezuda/;
+        index index.html;
+        autoindex off;
+    }
+
     location /admin-api/ {
         proxy_pass http://127.0.0.1:48080/admin-api/;
         proxy_set_header Host $host;

@@ -1,45 +1,138 @@
 <template>
-  <view class="yd-page-container yd-page-container-paging">
-    <!-- 顶部导航栏 -->
-    <!-- #ifndef MP-WEIXIN -->
-    <wd-navbar
-      title="工作台"
-      placeholder safe-area-inset-top fixed
-    >
-      <template #right>
-        <view class="pr-10rpx" @click="gotoSearch">
-          <wd-icon name="search-line" size="40rpx" color="#333" />
-        </view>
-      </template>
-    </wd-navbar>
-    <!-- #endif -->
-    <!-- #ifdef MP-WEIXIN -->
-    <wd-navbar title="工作台" placeholder safe-area-inset-top fixed>
-      <template #left>
-        <view class="pl-4rpx" @click="gotoSearch">
-          <wd-icon name="search-line" size="40rpx" color="#333" />
-        </view>
-      </template>
-    </wd-navbar>
-    <!-- #endif -->
+  <view class="page" :style="staffPageStyle">
+    <scroll-view scroll-y class="content">
+      <staff-header title="仓务工作台" @scanner="goScan" />
 
-    <!-- 用户信息头部 -->
-    <UserHeader />
-    <!-- Banner 轮播图 -->
-    <HomeBanner />
-    <!-- 菜单区域 -->
-    <MenuSection />
+      <view class="hero">
+        <view class="hero-label">
+          待分配设备
+        </view>
+        <view class="hero-count">
+          <text class="hero-num">{{ pendingCount }}</text>
+          <text class="hero-unit">台</text>
+        </view>
+      </view>
+
+      <view class="stats">
+        <view class="stat" @click="goOrders">
+          <view class="i-carbon-box stat-ico" />
+          <view class="stat-label">
+            待分配
+          </view>
+          <view class="stat-value">
+            {{ pendingCount }}<text class="unit">台</text><text class="chev">›</text>
+          </view>
+        </view>
+        <view class="stat" @click="goShip">
+          <view class="i-carbon-delivery stat-ico" />
+          <view class="stat-label">
+            待发货
+          </view>
+          <view class="stat-value">
+            {{ shipCount }}<text class="unit">单</text><text class="chev">›</text>
+          </view>
+        </view>
+        <view class="stat" @click="goReturn">
+          <view class="i-carbon-inventory-management stat-ico" />
+          <view class="stat-label">
+            回仓
+          </view>
+          <view class="stat-value">
+            <text class="unit">扫码</text><text class="chev">›</text>
+          </view>
+        </view>
+        <view class="stat alert" @click="goExceptions">
+          <view class="i-carbon-warning stat-ico" />
+          <view class="stat-label">
+            作业失败
+          </view>
+          <view class="stat-value">
+            {{ errorCount }}<text class="unit">条</text><text class="chev">›</text>
+          </view>
+        </view>
+      </view>
+
+      <scan-banner class="cta" @click="goScan" />
+
+      <view class="section-head">
+        <text>待分配</text>
+        <text class="more" @click="goOrders">
+          {{ urgent.length }}项 ›
+        </text>
+      </view>
+      <view v-if="urgent.length" class="task-list">
+        <order-task-card
+          v-for="item in urgent"
+          :key="item.id"
+          tone="accent"
+          :kicker="dispatchByLabel(item)"
+          tag="待分配"
+          :order-no="displayOrderNo(item)"
+          :title="goodsLine(item)"
+          :subtitle="orderMetaLine(item)"
+          action="去处理"
+          @click="openOrder(item.id)"
+          @action="openOrder(item.id)"
+        />
+      </view>
+      <view v-else class="empty">
+        暂无待分配订单
+      </view>
+
+      <view class="section-head">
+        <text>待处理任务</text>
+        <text class="more" @click="goShip">
+          {{ followUps.length }}项 ›
+        </text>
+      </view>
+      <view v-if="error" class="empty error">
+        {{ error }}
+      </view>
+      <view v-else-if="followUps.length" class="task-list">
+        <order-task-card
+          v-for="item in followUps"
+          :key="item.key"
+          :tone="item.tone"
+          :kicker="item.kicker"
+          :tag="item.tag"
+          :order-no="item.orderNo"
+          :title="item.title"
+          :subtitle="item.subtitle"
+          :route-label="item.routeLabel"
+          @click="item.open"
+        />
+      </view>
+      <view v-else class="empty">
+        暂无待处理任务
+      </view>
+    </scroll-view>
   </view>
 </template>
 
 <script lang="ts" setup>
-import HomeBanner from './components/banner.vue'
-import MenuSection from './components/menu-section.vue'
-import UserHeader from './components/user-header.vue'
+import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
+import { onShow } from '@dcloudio/uni-app'
+import { computed, ref } from 'vue'
+import { getPendingAllocationOrders } from '@/api/rental/order'
+import type { PendingAllocationOrder } from '@/api/rental/order'
+import { getXianyuPendingShipOrderPage } from '@/api/rental/xianyu'
+import type { XianyuPendingShipOrder } from '@/api/rental/xianyu'
+import OrderTaskCard from '@/components/rental/order-task-card.vue'
+import ScanBanner from '@/components/rental/scan-banner.vue'
+import StaffHeader from '@/components/rental/staff-header.vue'
+import {
+  dispatchByLabel,
+  displayOrderNo,
+  goodsLine,
+  orderMetaLine,
+} from '@/models/rental/orderDisplay'
+import { useStaffExceptionStore } from '@/store/staffException'
 
 defineOptions({
   name: 'Home',
 })
+
+const staffPageStyle = useStaffPageStyle()
 
 definePage({
   type: 'home',
@@ -48,10 +141,225 @@ definePage({
   },
 })
 
-/** 跳转到菜单搜索页 */
-function gotoSearch() {
-  uni.navigateTo({
-    url: '/pages/index/search/index',
-  })
+const orders = ref<PendingAllocationOrder[]>([])
+const shipOrders = ref<XianyuPendingShipOrder[]>([])
+const error = ref('')
+const pendingCount = ref(0)
+const shipCount = ref(0)
+const exceptions = useStaffExceptionStore()
+const errorCount = computed(() => exceptions.openItems.length)
+const urgent = computed(() => orders.value.slice(0, 1))
+const followUps = computed(() => {
+  const rest = orders.value.slice(1, 4).map(order => ({
+    key: `alloc-${order.id}`,
+    tone: 'info' as const,
+    kicker: `待分配 ${order.remainingQuantity ?? 0}/${order.requiredQuantity ?? 0}`,
+    tag: '待分配',
+    orderNo: displayOrderNo(order),
+    title: goodsLine(order),
+    subtitle: orderMetaLine(order),
+    routeLabel: '',
+    open: () => openOrder(order.id),
+  }))
+  const ships = shipOrders.value.slice(0, 2).map(order => ({
+    key: `ship-${order.id}`,
+    tone: 'accent' as const,
+    kicker: '待发货',
+    tag: '待发货',
+    orderNo: order.externalOrderId || String(order.id),
+    title: order.goodsTitle ? `${order.goodsTitle} × ${order.goodsQuantity ?? 1}` : `闲鱼待发货 × ${order.goodsQuantity ?? 1}`,
+    subtitle: '闲鱼待发货',
+    routeLabel: '',
+    open: () => goShip(),
+  }))
+  return [...rest, ...ships].slice(0, 4)
+})
+
+function queueErrorMessage(err: unknown) {
+  if (err instanceof Error && err.message)
+    return err.message
+  if (err && typeof err === 'object' && 'msg' in err && typeof err.msg === 'string' && err.msg)
+    return err.msg
+  return '任务加载失败'
 }
+
+function sumRemaining(list: PendingAllocationOrder[]) {
+  return list.reduce((sum, order) => sum + (order.remainingQuantity ?? 0), 0)
+}
+
+function sumShipQty(list: XianyuPendingShipOrder[]) {
+  return list.reduce((sum, order) => sum + (order.goodsQuantity ?? 1), 0)
+}
+
+async function load() {
+  error.value = ''
+  const [allocationResult, shipResult] = await Promise.allSettled([
+    getPendingAllocationOrders({ pageNo: 1, pageSize: 100 }),
+    getXianyuPendingShipOrderPage({ pageNo: 1, pageSize: 20 }),
+  ])
+  if (allocationResult.status === 'fulfilled') {
+    orders.value = allocationResult.value.list || []
+    pendingCount.value = sumRemaining(orders.value)
+  } else {
+    orders.value = []
+    pendingCount.value = 0
+    error.value = queueErrorMessage(allocationResult.reason)
+  }
+  if (shipResult.status === 'fulfilled') {
+    shipOrders.value = shipResult.value.list || []
+    shipCount.value = shipResult.value.total || sumShipQty(shipOrders.value)
+  } else {
+    shipOrders.value = []
+    shipCount.value = 0
+  }
+}
+
+function goOrders() {
+  uni.switchTab({ url: '/pages-rental/orders/index' })
+}
+function goScan() {
+  uni.switchTab({ url: '/pages-rental/device-scan/index' })
+}
+function goReturn() {
+  uni.switchTab({ url: '/pages-rental/device-return/index' })
+}
+function goShip() {
+  uni.navigateTo({ url: '/pages-rental/xianyu-ship/index' })
+}
+function goExceptions() {
+  uni.navigateTo({ url: '/pages-rental/exceptions/index' })
+}
+function openOrder(id: number) {
+  uni.navigateTo({ url: `/pages-rental/orders/detail?id=${id}` })
+}
+
+onShow(() => {
+  void load()
+})
 </script>
+
+<style scoped>
+.page {
+  min-height: 100vh;
+  background: #fff;
+}
+.content {
+  height: 100vh;
+  padding: calc(var(--staff-status-bar-height, 0px) + 12rpx) 28rpx 180rpx;
+  box-sizing: border-box;
+}
+.hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 24rpx;
+  padding: 28rpx 0 8rpx;
+}
+.hero-label {
+  color: #6b6b6b;
+  font-size: 24rpx;
+}
+.hero-count {
+  display: flex;
+  align-items: baseline;
+  gap: 12rpx;
+  margin-top: 8rpx;
+}
+.hero-num {
+  color: var(--staff-accent, #e10600);
+  font-size: 88rpx;
+  font-weight: 800;
+  line-height: 1;
+}
+.hero-unit {
+  font-size: 32rpx;
+  font-weight: 800;
+}
+.motto {
+  display: flex;
+  gap: 16rpx;
+  padding-top: 12rpx;
+  color: #6b6b6b;
+  font-size: 20rpx;
+  line-height: 1.55;
+}
+.motto-col {
+  display: flex;
+  flex-direction: column;
+}
+.motto-col.right {
+  color: #111;
+  font-weight: 600;
+}
+.motto-rule {
+  width: 2rpx;
+  background: #d4d4d4;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 8rpx 0 24rpx;
+  border-top: 2rpx solid #e5e5e5;
+  border-bottom: 2rpx solid #e5e5e5;
+}
+.stat {
+  padding: 20rpx 8rpx 18rpx;
+  text-align: left;
+}
+.stat-ico {
+  margin-bottom: 8rpx;
+  font-size: 32rpx;
+}
+.stat-label {
+  color: #6b6b6b;
+  font-size: 22rpx;
+}
+.stat-value {
+  margin-top: 6rpx;
+  font-size: 40rpx;
+  font-weight: 800;
+}
+.unit {
+  margin-left: 4rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+.chev {
+  margin-left: 4rpx;
+  color: #999;
+  font-size: 28rpx;
+  font-weight: 400;
+}
+.stat.alert,
+.stat.alert .stat-label,
+.stat.alert .stat-value {
+  color: var(--staff-accent, #e10600);
+}
+.cta {
+  margin: 8rpx 0 8rpx;
+}
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  margin: 36rpx 0 16rpx;
+  font-size: 28rpx;
+  font-weight: 800;
+}
+.more {
+  color: #6b6b6b;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.empty {
+  padding: 28rpx 8rpx;
+  color: #6b6b6b;
+  font-size: 24rpx;
+}
+.empty.error {
+  color: var(--staff-accent, #e10600);
+}
+</style>

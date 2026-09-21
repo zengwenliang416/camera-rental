@@ -14,7 +14,7 @@
         三方授权成功，请使用账号密码登录完成绑定
       </view>
       <view class="input-item">
-        <wd-icon name="user" size="20px" color="#1890ff" />
+        <wd-icon name="user" size="20px" color="#111111" />
         <wd-input
           v-model="formData.username"
           placeholder="请输入用户名"
@@ -23,7 +23,7 @@
         />
       </view>
       <view class="input-item">
-        <wd-icon name="lock" size="20px" color="#1890ff" />
+        <wd-icon name="lock" size="20px" color="#111111" />
         <wd-input
           v-model="formData.password"
           placeholder="请输入密码"
@@ -45,10 +45,7 @@
 
       <!-- 登录按钮 -->
       <view class="mb-2 mt-2 flex justify-between">
-        <text v-if="!socialBindingContext && !authLoading" class="text-28rpx text-[#1890ff]" @click="goToSmsLogin">
-          验证码登录
-        </text>
-        <text v-if="!authLoading" class="text-28rpx text-[#1890ff]" @click="goToForgetPassword">
+        <text v-if="!authLoading" class="text-28rpx text-[#6b6b6b]" @click="goToForgetPassword">
           忘记密码？
         </text>
       </view>
@@ -56,21 +53,8 @@
         登录
       </wd-button>
 
-      <!-- 第三方登录 -->
-      <SocialLoginPanel
-        v-model="socialBindingContext"
-        v-model:loading="socialLoginLoading"
-        :disabled="authLoading"
-        :redirect-url="redirectUrl"
-        :social-bind="Boolean(pageProps.socialBind)"
-        :validate-tenant="validateTenant"
-      />
-      <!-- 创建账号 -->
-      <view v-if="!socialBindingContext && !authLoading" class="mt-40rpx flex items-center justify-center">
-        <text class="text-28rpx text-[#666]">还没有账号？</text>
-        <text class="text-28rpx text-[#1890ff]" @click="goToRegister">
-          创建账号
-        </text>
+      <view class="mt-48rpx border-t border-[#e5e5e5] pt-28rpx text-center text-24rpx text-[#6b6b6b]">
+        首次使用请联系管理员开通仓务权限
       </view>
     </view>
   </view>
@@ -81,14 +65,11 @@ import type { SocialLoginBindingContext } from '@/utils/social-login'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { computed, reactive, ref } from 'vue'
 import {
-  CODE_LOGIN_PAGE,
   FORGET_PASSWORD_PAGE,
-  REGISTER_PAGE,
 } from '@/router/config'
 import { useTokenStore } from '@/store/token'
 import { ensureDecodeURIComponent, redirectAfterLogin } from '@/utils'
 import Header from './components/header.vue'
-import SocialLoginPanel from './components/social-login-panel.vue'
 import TenantPicker from './components/tenant-picker.vue'
 import Verify from './components/verifition/verify.vue'
 
@@ -185,16 +166,6 @@ async function verifySuccess(params: any) {
   } finally {
     loading.value = false
   }
-}
-
-/** 跳转到注册页面 */
-function goToRegister() {
-  uni.navigateTo({ url: REGISTER_PAGE })
-}
-
-/** 跳转到验证码登录 */
-function goToSmsLogin() {
-  uni.navigateTo({ url: CODE_LOGIN_PAGE })
 }
 
 /** 跳转到忘记密码 */

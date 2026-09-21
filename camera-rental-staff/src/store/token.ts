@@ -196,7 +196,6 @@ export const useTokenStore = defineStore(
         // 清除存储的过期时间
         uni.removeStorageSync('accessTokenExpireTime')
         // uni.removeStorageSync('refreshTokenExpireTime')
-        console.log('退出登录-清除用户信息')
         tokenInfo.value = { ...tokenInfoState }
         uni.removeStorageSync('token')
         uni.$emit('auth:logout')
@@ -226,7 +225,6 @@ export const useTokenStore = defineStore(
 
         const refreshToken = tokenInfo.value.refreshToken
         const res = await _refreshToken(refreshToken)
-        console.log('刷新token-res: ', res)
         setTokenInfo(res)
         return res
       }
@@ -279,7 +277,6 @@ export const useTokenStore = defineStore(
      * 建议使用 tokenStore.updateNowTime().hasLogin
      */
     const hasValidLogin = computed(() => {
-      console.log('hasValidLogin', hasLoginInfo.value, !isTokenExpired.value)
       if (isDoubleTokenMode) {
         // add by 芋艿：双令牌场景下，以刷新令牌过期为准。而刷新令牌是否过期，通过请求时返回 401 来判断（由于后端 refreshToken 不返回过期时间）
         // 即相比下面的判断方式，去掉了“!isTokenExpired.value”

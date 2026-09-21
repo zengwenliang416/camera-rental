@@ -15,13 +15,6 @@ defineOptions({
 /**
  * 中间的鼓包tabbarItem的点击事件
  */
-function handleClickBulge() {
-  uni.showToast({
-    title: '点击了中间的鼓包tabbarItem',
-    icon: 'none',
-  })
-}
-
 function handleClick(index: number) {
   const item = tabbarList[index]
   if (!item || !tabbarStore.isTabbarItemVisible(index)) {
@@ -29,10 +22,6 @@ function handleClick(index: number) {
   }
   // 当前高亮和真实页面都已经是目标 tab 时，不重复跳转
   if (index === tabbarStore.curIdx && tabbarStore.isCurrentRouteTabbarItem(index)) {
-    return
-  }
-  if (item.isBulge) {
-    handleClickBulge()
     return
   }
   const url = item.pagePath
@@ -89,8 +78,8 @@ onMounted(() => {
   })
 })
 // #endif
-const activeColor = 'var(--wot-color-theme, #1890ff)'
-const inactiveColor = '#666'
+const activeColor = 'var(--staff-accent, #e10600)'
+const inactiveColor = '#888888'
 function getColorByIndex(index: number) {
   return tabbarStore.curIdx === index ? activeColor : inactiveColor
 }
@@ -115,12 +104,12 @@ function getImageByIndex(index: number, item: CustomTabBarItem) {
             :style="{ color: getColorByIndex(index) }"
             @click="handleClick(index)"
           >
-            <view v-if="item.isBulge" class="relative">
-              <!-- 中间一个鼓包tabbarItem的处理 -->
-              <view class="bulge">
-                <!-- TODO 2/2: 中间鼓包tabbarItem配置：通常是一个图片，或者icon，点击触发业务逻辑 -->
-                <!-- 常见的是：扫描按钮、发布按钮、更多按钮等 -->
-                <image class="mt-6rpx h-200rpx w-200rpx" src="/static/tabbar/scan.png" />
+            <view v-if="item.isBulge" class="relative flex flex-col items-center">
+              <view class="staff-scan-bulge">
+                <view :class="item.icon" class="text-22px text-white" />
+              </view>
+              <view class="mt-22px text-12px">
+                {{ item.text }}
               </view>
             </view>
             <view v-else class="relative px-3 text-center">
@@ -172,24 +161,19 @@ function getImageByIndex(index: number, item: CustomTabBarItem) {
   border-top: 1px solid #eee;
   box-sizing: border-box;
 }
-// 中间鼓包的样式
-.bulge {
+.staff-scan-bulge {
   position: absolute;
-  top: -20px;
+  top: -36px;
   left: 50%;
-  transform-origin: top center;
-  transform: translateX(-50%) scale(0.5) translateY(-33%);
+  transform: translateX(-50%);
   display: flex;
-  justify-content: center;
   align-items: center;
-  width: 250rpx;
-  height: 250rpx;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border: 4px solid #fff;
   border-radius: 50%;
-  background-color: #fff;
-  box-shadow: inset 0 0 0 1px #fefefe;
-
-  &:active {
-    // opacity: 0.8;
-  }
+  background: var(--staff-accent, #e10600);
+  box-shadow: 0 8px 16px rgba(225, 6, 0, 0.28);
 }
 </style>

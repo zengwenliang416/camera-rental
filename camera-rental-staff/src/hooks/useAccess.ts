@@ -27,6 +27,8 @@ function useAccess() {
    */
   function hasAccessByCodes(codes: string[]): boolean {
     const userCodesSet = new Set(userStore.permissions)
+    if (userCodesSet.has('*:*:*'))
+      return true
     const intersection = codes.filter(item => userCodesSet.has(item))
     return intersection.length > 0
   }

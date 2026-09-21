@@ -1,0 +1,239 @@
+<template>
+  <view class="page" :style="staffPageStyle">
+    <scroll-view scroll-y class="content">
+      <staff-header title="异常中心" @scanner="goScan" />
+      <view class="hero">
+        <view>
+          <view class="muted">
+            待处理
+          </view>
+          <view class="num accent">
+            {{ openItems.length }}
+          </view>
+          <view class="muted">
+            条
+          </view>
+        </view>
+        <view class="rule" />
+        <view>
+          <view class="muted">
+            今日已解决
+          </view>
+          <view class="num">
+            {{ resolvedToday.length }}
+          </view>
+          <view class="muted">
+            条
+          </view>
+        </view>
+      </view>
+
+      <view class="tabs">
+        <view
+          v-for="tab in tabs"
+          :key="tab.key"
+          class="tab"
+          :class="{ on: current === tab.key }"
+          @click="current = tab.key"
+        >
+          {{ tab.label }}
+          <text class="count">
+            ({{ countOf(tab.key) }})
+          </text>
+        </view>
+      </view>
+
+      <view class="section-head">
+        <text>待处理异常</text>
+        <text class="muted">
+          {{ filteredOpen.length }} 条
+        </text>
+      </view>
+      <view v-if="!filteredOpen.length" class="empty">
+        当前没有未处理异常。扫码失败、型号不符和发货失败会记录在这里。
+      </view>
+      <view v-for="item in filteredOpen" :key="item.id" class="card accent" @click="openItem(item)">
+        <view class="card-title">
+          {{ item.title }}
+        </view>
+        <view class="muted">
+          {{ item.detail }}
+        </view>
+        <view class="meta">
+          {{ formatTime(item.createdAt) }} | {{ item.source }}
+        </view>
+        <view class="actions">
+          <wd-button size="small" type="primary" @click.stop="openItem(item)">
+            {{ item.kind === 'scan' ? '重新扫描' : '查看' }}
+          </wd-button>
+          <wd-button size="small" plain @click.stop="exceptions.resolve(item.id)">
+            标记已处理
+          </wd-button>
+        </view>
+      </view>
+
+      <view class="section-head">
+        <text>已解决异常</text>
+        <text class="muted">
+          {{ resolvedItems.length }} 条
+        </text>
+      </view>
+      <view v-for="item in resolvedItems" :key="item.id" class="card">
+        <view class="card-title">
+          {{ item.title }}
+        </view>
+        <view class="muted">
+          {{ item.detail }}
+        </view>
+        <view class="meta">
+          {{ formatTime(item.createdAt) }} | {{ item.source }}
+        </view>
+      </view>
+
+      <view class="note">
+        异常不会在本地伪装为成功。所有异常均需处理后才能继续作业。
+      </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script setup lang="ts">
+import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
+import { computed, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import StaffHeader from '@/components/rental/staff-header.vue'
+import { useStaffExceptionStore } from '@/store/staffException'
+import type { StaffException, StaffExceptionKind } from '@/store/staffException'
+
+const staffPageStyle = useStaffPageStyle()
+
+definePage({
+  style: {
+    navigationStyle: 'custom',
+  },
+})
+
+const exceptions = useStaffExceptionStore()
+const { openItems, resolvedToday, items } = storeToRefs(exceptions)
+const current = ref<'all' | StaffExceptionKind>('all')
+const tabs = [
+  { key: 'all' as const, label: '全部' },
+  { key: 'scan' as const, label: '扫码' },
+  { key: 'order' as const, label: '订单' },
+  { key: 'network' as const, label: '网络' },
+]
+const resolvedItems = computed(() => items.value.filter(item => item.status === 'resolved'))
+const filteredOpen = computed(() => current.value === 'all' ? openItems.value : openItems.value.filter(item => item.kind === current.value))
+
+function countOf(key: 'all' | StaffExceptionKind) {
+  if (key === 'all')
+    return items.value.length
+  return items.value.filter(item => item.kind === key).length
+}
+
+function formatTime(ts: number) {
+  const d = new Date(ts)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getMonth() + 1}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
+function goScan() {
+  uni.switchTab({ url: '/pages-rental/device-scan/index' })
+}
+
+function openItem(item: StaffException) {
+  if (item.kind === 'scan')
+    goScan()
+  else if (item.kind === 'order')
+    uni.switchTab({ url: '/pages-rental/orders/index' })
+}
+</script>
+
+<style scoped>
+.page {
+  min-height: 100vh;
+  background: #fff;
+}
+.content {
+  height: 100vh;
+  padding: calc(var(--staff-status-bar-height, 0px) + 12rpx) 28rpx 160rpx;
+  box-sizing: border-box;
+}
+.hero {
+  display: flex;
+  align-items: flex-end;
+  gap: 40rpx;
+  padding: 24rpx 0;
+}
+.rule {
+  width: 2rpx;
+  height: 80rpx;
+  background: #ddd;
+}
+.muted {
+  color: #6b6b6b;
+  font-size: 22rpx;
+}
+.num {
+  font-size: 72rpx;
+  font-weight: 800;
+  line-height: 1;
+}
+.accent {
+  color: var(--staff-accent, #e10600);
+}
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 8rpx 0 20rpx;
+  border: 2rpx solid #111;
+}
+.tab {
+  padding: 16rpx 0;
+  text-align: center;
+  font-size: 24rpx;
+}
+.tab.on {
+  color: #fff;
+  background: var(--staff-accent, #e10600);
+}
+.count {
+  font-size: 20rpx;
+}
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  margin: 24rpx 0 12rpx;
+  font-weight: 800;
+}
+.card {
+  padding: 20rpx;
+  margin-bottom: 12rpx;
+  border: 2rpx solid #eee;
+  border-left: 8rpx solid #2563eb;
+}
+.card.accent {
+  border-left-color: var(--staff-accent, #e10600);
+}
+.card-title {
+  font-size: 30rpx;
+  font-weight: 800;
+}
+.meta {
+  margin-top: 8rpx;
+  color: #6b6b6b;
+  font-size: 22rpx;
+}
+.actions {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+.empty,
+.note {
+  padding: 20rpx 0;
+  color: #6b6b6b;
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+</style>

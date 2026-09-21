@@ -1,253 +1,200 @@
 <template>
-  <view class="yd-page-container bg-[#f5f7fb]">
-    <wd-navbar
-      title="扫码回仓"
-      left-arrow
-      placeholder
-      safe-area-inset-top
-      fixed
-      @click-left="handleBack"
-    />
+  <view class="page" :style="staffPageStyle">
+    <scroll-view scroll-y class="content">
+      <staff-header title="回仓入库" @scanner="scanDevice" />
+      <scan-banner
+        title="扫描设备永久码"
+        subtitle="扫描设备机身永久码，完成回仓登记"
+        @click="scanDevice"
+      />
 
-    <scroll-view class="min-h-0 flex-1" scroll-y>
-      <view class="p-24rpx pb-180rpx">
-        <view
-          class="mb-24rpx rounded-20rpx bg-[#1f2937] p-28rpx text-white shadow-sm"
-        >
-          <view class="text-34rpx font-semibold">
-            设备回仓登记
-          </view>
-          <view class="mt-12rpx text-26rpx text-[#d1d5db] leading-relaxed">
-            扫设备二维码或输入设备编号，确认检测结论后提交。回仓会同步收窄设备占用排期，检测不通过将转入维修锁定。
-          </view>
+      <view v-if="resolvedDevice" class="card">
+        <view class="card-head">
+          <text>已识别设备</text>
+          <text class="tag">
+            识别成功
+          </text>
         </view>
-
-        <view class="mb-24rpx overflow-hidden rounded-16rpx bg-white shadow-sm">
-          <view class="border-b border-[#edf0f5] p-24rpx">
-            <view class="text-30rpx text-[#222] font-semibold">
-              1. 设备识别
-            </view>
-            <view class="mt-8rpx text-24rpx text-[#888]">
-              优先扫设备机身上的永久二维码；标签破损时可人工输入设备编号。
-            </view>
-          </view>
-          <view class="p-24rpx">
-            <view class="mb-20rpx">
-              <wd-button type="primary" block @click="scanDevice">
-                扫设备二维码
-              </wd-button>
-            </view>
-            <wd-cell-group border>
-              <wd-cell title="设备编号">
-                <wd-input
-                  v-model="deviceNo"
-                  clearable
-                  no-border
-                  placeholder="请输入或扫码设备编号"
-                  @blur="handleDeviceInputBlur"
-                />
-              </wd-cell>
-            </wd-cell-group>
-            <view
-              v-if="resolvedDevice"
-              class="mt-16rpx rounded-12rpx bg-[#f0f7ff] p-20rpx text-26rpx text-[#1c4f8a] leading-relaxed"
-            >
-              <view>设备：{{ resolvedDevice.deviceNo }}</view>
-              <view>型号：{{ resolvedDevice.equipmentModelCode || '-' }}</view>
-              <view>状态：{{ deviceStatusLabel(resolvedDevice.status) }}</view>
-            </view>
-          </view>
+        <view class="device-no">
+          {{ resolvedDevice.deviceNo }}
         </view>
-
-        <view class="mb-24rpx overflow-hidden rounded-16rpx bg-white shadow-sm">
-          <view class="border-b border-[#edf0f5] p-24rpx">
-            <view class="text-30rpx text-[#222] font-semibold">
-              2. 检测结论
-            </view>
-          </view>
-          <view class="p-24rpx">
-            <wd-radio-group v-model="inspectPassed" shape="button" inline>
-              <wd-radio :value="true">检测通过</wd-radio>
-              <wd-radio :value="false">检测不通过</wd-radio>
-            </wd-radio-group>
-            <view class="mt-20rpx">
-              <wd-textarea
-                v-model="note"
-                :maxlength="512"
-                show-word-limit
-                placeholder="检测备注（选填）：外观、配件、异常情况等"
-              />
-            </view>
-          </view>
+        <view class="muted">
+          {{ resolvedDevice.equipmentModelCode }} · {{ deviceStatusLabel(resolvedDevice.status) }}
         </view>
-
-        <view class="fixed bottom-0 left-0 right-0 z-10 bg-white/95 p-24rpx pb-[calc(24rpx+env(safe-area-inset-bottom))] shadow-md">
-          <wd-button
-            type="primary"
-            block
-            :disabled="!canSubmit"
-            :loading="returning"
-            @click="confirmReturn"
-          >
-            确认回仓{{ inspectPassed === false ? '（转维修）' : '' }}
-          </wd-button>
+        <view v-if="resolvedDevice.warehouseCode" class="muted">
+          仓位 {{ resolvedDevice.warehouseCode }}
         </view>
       </view>
+
+      <view class="hint">
+        先识别设备并完成检测，提交检测结果后才登记回仓
+      </view>
+
+      <view class="card">
+        <view class="muted">
+          备注（选填）
+        </view>
+        <wd-textarea v-model="note" :maxlength="200" show-word-limit placeholder="包装、配件或异常备注..." />
+      </view>
+
+      <wd-button plain block @click="manualFocus = true">
+        无法识别，人工输入
+      </wd-button>
+      <view v-if="manualFocus" class="manual">
+        <wd-input v-model="manualCode" placeholder="输入设备编号" clearable @confirm="resolveScannedDevice(manualCode)" />
+        <wd-button plain :loading="resolving" @click="resolveScannedDevice(manualCode)">
+          查询设备
+        </wd-button>
+      </view>
     </scroll-view>
+    <view class="footer">
+      <wd-button type="primary" block :disabled="!canSubmit" @click="goInspect">
+        核对设备并进入检测
+      </wd-button>
+    </view>
   </view>
 </template>
 
 <script lang="ts" setup>
+import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
 import type { RentalDevice } from '@/api/rental/device'
-import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { computed, ref } from 'vue'
-import { resolveRentalDeviceQr, returnRentalDevice } from '@/api/rental/device'
-import { navigateBackPlus } from '@/utils'
+import { resolveRentalDeviceQr } from '@/api/rental/device'
+import ScanBanner from '@/components/rental/scan-banner.vue'
+import StaffHeader from '@/components/rental/staff-header.vue'
+import { useStaffExceptionStore } from '@/store/staffException'
+import { useStaffScanner } from '@/hooks/useStaffScanner'
+import { extractDeviceNo, normalizeCode } from '@/utils/staffScan'
+import { deviceStatusLabel, staffError } from '@/models/rental/staffOperations'
+import { useAccess } from '@/hooks/useAccess'
+
+const staffPageStyle = useStaffPageStyle()
 
 definePage({
   style: {
-    navigationBarTitleText: '',
     navigationStyle: 'custom',
   },
 })
 
 const toast = useToast()
-const dialog = useDialog()
-
+const exceptions = useStaffExceptionStore()
 const deviceNo = ref('')
 const resolvedDevice = ref<RentalDevice>()
-const inspectPassed = ref<boolean | string>(true)
 const note = ref('')
-const returning = ref(false)
+const manualFocus = ref(false)
+const manualCode = ref('')
+const resolving = ref(false)
+const { hasAccessByCodes } = useAccess()
 
-const canSubmit = computed(() => {
-  return Boolean(resolvedDevice.value || normalizeCode(deviceNo.value))
-})
-
-function handleBack() {
-  navigateBackPlus()
-}
-
-function normalizeCode(value?: string) {
-  return String(value || '')
-    .trim()
-    .replace(/\s+/g, '')
-    .toUpperCase()
-}
-
-function deviceStatusLabel(status?: string) {
-  const labels: Record<string, string> = {
-    AVAILABLE: '空闲',
-    RENTED: '在租',
-    MAINTENANCE: '维修中',
-  }
-  return status ? labels[status] || status : '-'
-}
-
-function extractQueryValue(raw: string, keys: string[]) {
-  for (const key of keys) {
-    const matched = raw.match(new RegExp(`[?&]${key}=([^&#]+)`, 'i'))
-    if (matched?.[1]) {
-      return decodeURIComponent(matched[1])
-    }
-  }
-  return ''
-}
-
-function extractJsonValue(raw: string, keys: string[]) {
-  try {
-    const json = JSON.parse(raw) as Record<string, unknown>
-    for (const key of keys) {
-      const value = json[key]
-      if (value !== undefined && value !== null) {
-        return String(value)
-      }
-    }
-  } catch {
-    return ''
-  }
-  return ''
-}
-
-function extractDeviceNo(raw: string) {
-  const queryValue = extractQueryValue(raw, [
-    'deviceNo',
-    'device_no',
-    'serialNo',
-    'serial_no',
-    'sn',
-  ])
-  const jsonValue = extractJsonValue(raw, [
-    'deviceNo',
-    'device_no',
-    'serialNo',
-    'serial_no',
-    'sn',
-  ])
-  return normalizeCode(queryValue || jsonValue || raw)
-}
+const canSubmit = computed(() => Boolean(resolvedDevice.value) && !resolving.value && hasAccessByCodes(['rental:device:assign']))
 
 async function resolveScannedDevice(raw: string) {
   const payload = String(raw || '').trim()
-  if (!payload) {
+  if (!payload || resolving.value)
     return
-  }
-  if (payload.startsWith('CRD1|')) {
-    const device = await resolveRentalDeviceQr(payload)
+  resolving.value = true
+  resolvedDevice.value = undefined
+  deviceNo.value = ''
+  try {
+    const device = await resolveRentalDeviceQr(payload.startsWith('CRD1|') ? payload : extractDeviceNo(payload))
     resolvedDevice.value = device
     deviceNo.value = device.deviceNo
-    return
-  }
-  resolvedDevice.value = undefined
-  deviceNo.value = extractDeviceNo(payload)
-}
-
-function handleDeviceInputBlur() {
-  resolvedDevice.value = undefined
-  deviceNo.value = normalizeCode(deviceNo.value)
-}
-
-async function scanDevice() {
-  try {
-    const res = await uni.scanCode({ scanType: ['qrCode', 'barCode'] })
-    await resolveScannedDevice(res.result)
+    manualCode.value = device.deviceNo
   } catch (error) {
-    const message = error instanceof Error ? error.message : '未获取到设备码'
+    const message = staffError(error, '设备识别失败')
+    exceptions.record({ kind: 'scan', title: '设备识别失败', detail: message, source: '扫码入库' })
     toast.warning(message)
+  } finally {
+    resolving.value = false
   }
 }
 
-async function confirmReturn() {
-  const target = normalizeCode(deviceNo.value)
-  if (!canSubmit.value || (!resolvedDevice.value && !target)) {
+const { scan: scanDevice } = useStaffScanner(result => resolveScannedDevice(result.text))
+
+function goInspect() {
+  const target = normalizeCode(resolvedDevice.value?.deviceNo || deviceNo.value)
+  if (!target || !canSubmit.value) {
     toast.warning('请先识别设备')
     return
   }
-  const passed = inspectPassed.value !== false
-  try {
-    await dialog.confirm({
-      title: '确认回仓',
-      msg: `设备 ${target}\n检测${passed ? '通过（恢复可租）' : '不通过（转入维修）'}`,
-    })
-  } catch {
-    return
-  }
-  returning.value = true
-  try {
-    await returnRentalDevice({
-      deviceId: resolvedDevice.value?.id,
-      deviceNo: resolvedDevice.value ? undefined : target,
-      inspectPassed: passed,
-      note: note.value.trim() || undefined,
-    })
-    toast.success(`回仓完成：${target}`)
-    deviceNo.value = ''
-    resolvedDevice.value = undefined
-    inspectPassed.value = true
-    note.value = ''
-  } finally {
-    returning.value = false
-  }
+  const query = [
+    `deviceNo=${encodeURIComponent(target)}`,
+    resolvedDevice.value?.id ? `deviceId=${resolvedDevice.value.id}` : '',
+    resolvedDevice.value?.equipmentModelCode ? `model=${encodeURIComponent(resolvedDevice.value.equipmentModelCode)}` : '',
+    note.value.trim() ? `note=${encodeURIComponent(note.value.trim())}` : '',
+  ].filter(Boolean).join('&')
+  uni.navigateTo({
+    url: `/pages-rental/inspection/index?${query}`,
+    events: {
+      returned: () => {
+        resolvedDevice.value = undefined
+        deviceNo.value = ''
+        manualCode.value = ''
+        note.value = ''
+      },
+    },
+  })
 }
 </script>
+
+<style scoped>
+.page {
+  min-height: 100vh;
+  background: #fff;
+}
+.content {
+  height: calc(100vh - 140rpx);
+  padding: calc(var(--staff-status-bar-height, 0px) + 12rpx) 28rpx 24rpx;
+  box-sizing: border-box;
+}
+.card {
+  padding: 24rpx 0;
+  border-bottom: 2rpx solid #eee;
+}
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 24rpx;
+}
+.tag {
+  padding: 4rpx 12rpx;
+  color: #1d4ed8;
+  background: #eff6ff;
+  font-size: 20rpx;
+}
+.device-no {
+  margin-top: 12rpx;
+  font-size: 44rpx;
+  font-weight: 800;
+}
+.muted {
+  margin-top: 8rpx;
+  color: #6b6b6b;
+  font-size: 24rpx;
+}
+.strong {
+  margin-top: 6rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+}
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24rpx;
+  margin-top: 20rpx;
+}
+.hint {
+  margin: 16rpx 0;
+  padding: 20rpx;
+  color: #1d4ed8;
+  background: #eff6ff;
+  font-size: 24rpx;
+}
+.manual {
+  margin-top: 12rpx;
+}
+.footer {
+  padding: 16rpx 28rpx calc(16rpx + env(safe-area-inset-bottom));
+}
+</style>

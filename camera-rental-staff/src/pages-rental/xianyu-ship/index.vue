@@ -28,6 +28,9 @@
             本单设备 {{ requiredCount }} 台 · 本次已核验 {{ resolvedDevice ? 1 : 0 }} 台
           </view>
         </view>
+        <template v-if="orderDetail">
+          <StaffDeviceQuantity v-for="item in orderDetail.items || []" :key="item.id" :item="item" :source-type="orderDetail.sourceType" :status="orderDetail.status" @updated="quantityUpdated" />
+        </template>
         <view v-if="orderError" class="error">
           {{ orderError }}<wd-button size="small" variant="plain" @click="reloadOrder">
             重试
@@ -46,7 +49,7 @@
             <view class="strong">
               {{ maskOrderId(item.externalOrderId) }}
             </view><view class="muted">
-              {{ item.goodsTitle || '租赁设备' }} · {{ item.goodsQuantity ?? 1 }} 件
+              {{ item.goodsTitle || '租赁设备' }} · 渠道购买数量 {{ item.goodsQuantity ?? 1 }}（计价用）
             </view>
           </view>
           <view v-if="!orderLoading && !orderList.length" class="muted">
@@ -131,6 +134,7 @@
 </template>
 
 <script lang="ts" setup>
+import StaffDeviceQuantity from '@/components/rental/staff-device-quantity.vue'
 import type { XianyuExpressCompany, XianyuPendingShipOrder } from '@/api/rental/xianyu'
 import type { RentalDevice } from '@/api/rental/device'
 import type { RentalOrderScheduleDetail } from '@/api/rental/order'
@@ -248,6 +252,11 @@ async function selectOrder(item: XianyuPendingShipOrder) {
     if (version === selectionVersion)
       orderLoading.value = false
   }
+}
+async function quantityUpdated() {
+  resolvedDevice.value = undefined
+  deviceError.value = ''
+  await reloadOrder()
 }
 async function reloadOrder() {
   if (!lockedOrder.value) {

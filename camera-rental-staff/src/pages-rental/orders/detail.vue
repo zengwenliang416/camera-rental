@@ -139,6 +139,7 @@
             <view class="muted">
               {{ itemQuantityLabel(item) }}
             </view>
+            <StaffDeviceQuantity :item="item" :source-type="detail?.sourceType" :status="detail?.status" @updated="load(orderId)" />
             <view v-for="assignment in item.assignments || []" :key="assignment.id" class="muted">
               {{ assignment.deviceNo }} · {{ assignment.status === 'DISPATCHED' ? '已出库' : assignment.status === 'ASSIGNED' ? '已分配' : assignment.status === 'RETURNED' ? '已回仓' : assignment.status === 'CANCELED' ? '已取消' : '状态待核对' }}
             </view>
@@ -243,6 +244,7 @@
 </template>
 
 <script setup lang="ts">
+import StaffDeviceQuantity from '@/components/rental/staff-device-quantity.vue'
 import { callReceiver, copyStaffField } from '@/utils/staffContact'
 import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
 import { useAccess } from '@/hooks/useAccess'

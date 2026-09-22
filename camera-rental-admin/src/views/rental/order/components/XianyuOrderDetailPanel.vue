@@ -27,7 +27,7 @@
       <el-descriptions-item :label="t('rental.order.goodsTitle')" :span="2">
         {{ value(order.goodsTitle) }}
       </el-descriptions-item>
-      <el-descriptions-item :label="t('rental.order.goodsQuantity')">
+      <el-descriptions-item label="渠道购买数量（计价用）">
         {{ order.goodsQuantity ?? '-' }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('rental.order.externalProductId')">
@@ -91,10 +91,12 @@
         {{ order.rentalOrderId ?? '-' }}
       </el-descriptions-item>
     </el-descriptions>
+    <RentalDeviceQuantityEditor v-if="order.rentalOrderId" :order-id="order.rentalOrderId" />
   </div>
 </template>
 
 <script lang="ts" setup>
+import RentalDeviceQuantityEditor from './RentalDeviceQuantityEditor.vue'
 import { computed } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import { fenToYuan } from '@/utils'

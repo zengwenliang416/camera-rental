@@ -12,6 +12,7 @@ declare module 'vue' {
     DictTag: typeof import('./../components/dict-tag/dict-tag.vue')['default']
     OrderTaskCard: typeof import('./../components/rental/order-task-card.vue')['default']
     ScanBanner: typeof import('./../components/rental/scan-banner.vue')['default']
+    StaffDeviceQuantity: typeof import('./../components/rental/staff-device-quantity.vue')['default']
     StaffHeader: typeof import('./../components/rental/staff-header.vue')['default']
     StaffThemeSetting: typeof import('./../components/staff-theme-setting.vue')['default']
     UserFormPicker: typeof import('./../components/system-select/user-form-picker.vue')['default']

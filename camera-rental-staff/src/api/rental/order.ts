@@ -119,3 +119,7 @@ export type StaffOrderQueue = 'ALL' | 'PENDING_ALLOCATION' | 'UNSHIPPED' | 'PART
 export function getStaffOrders(params: { pageNo: number, pageSize: number, keyword?: string, queue: StaffOrderQueue }) {
   return http.get<PageResult<PendingAllocationOrder>>('/rental/order/staff-page', params)
 }
+
+export function updateDeviceQuantity(itemId: number, quantity: number, expectedQuantity: number) {
+  return http.put<number>(`/rental/order-item/${itemId}/quantity`, { quantity, expectedQuantity })
+}

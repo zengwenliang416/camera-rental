@@ -328,3 +328,9 @@ export const releaseRentalDeviceLock = (id: number, data: RentalDeviceLockReleas
     data
   })
 }
+
+export const updateDeviceQuantity = (itemId: number, quantity: number, expectedQuantity: number) =>
+  request.put<number>({
+    url: `/rental/order-item/${itemId}/quantity`,
+    data: { quantity, expectedQuantity }
+  })

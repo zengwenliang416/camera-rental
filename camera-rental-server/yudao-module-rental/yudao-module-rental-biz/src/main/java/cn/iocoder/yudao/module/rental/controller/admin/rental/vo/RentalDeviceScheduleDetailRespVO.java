@@ -21,6 +21,7 @@ public class RentalDeviceScheduleDetailRespVO {
     private LocalDate expectedReleaseDate;
     private List<String> reasonCodes;
     private RentalScheduleAssignmentRespVO currentAssignment;
+    private RentalScheduleAssignmentRespVO latestAssignment;
     private List<RentalScheduleSegmentRespVO> schedules;
     private List<RentalScheduleDeliveryRespVO> deliveries;
     private List<RentalScheduleLockRespVO> activeLocks;

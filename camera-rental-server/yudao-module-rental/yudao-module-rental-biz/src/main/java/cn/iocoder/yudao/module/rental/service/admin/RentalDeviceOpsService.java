@@ -109,6 +109,61 @@ public class RentalDeviceOpsService {
         return toResp(device, assignment);
     }
 
+    /** Receive does not release occupancy or make a device rentable. */
+    @Transactional(rollbackFor = Exception.class)
+    public RentalDeviceOpsRespVO receiveDevice(RentalDeviceReturnReqVO reqVO) {
+        RentalDeviceDO device = resolveDeviceForReturn(reqVO);
+        RentalDeviceAssignmentDO assignment = requireTargetAssignment(reqVO, device);
+        if (assignment.getReturnedAt() != null) {
+            return toResp(device, assignment);
+        }
+        if (!DEVICE_RENTED.equals(device.getStatus())
+                || !Set.of(ASSIGN_DISPATCHED, ASSIGN_DISPATCHED_PENDING_PLAN).contains(assignment.getStatus())) {
+            throw exception(RENTAL_DEVICE_RETURN_FAILED, "仅当前已出库的设备可登记收货");
+        }
+        lockService.createSystemLockForLockedDevice(device.getId(), RentalDeviceLockTypeEnum.RETURN_INSPECTION,
+                "WAREHOUSE_RECEIVED", assignment.getRentalOrderId(), assignment.getRentalOrderItemId());
+        assignment.setReturnedAt(LocalDateTime.now(clock)).setInspectionResult("PENDING")
+                .setReturnNote(trimToNull(reqVO.getNote()));
+        assignmentMapper.updateById(assignment);
+        return toResp(device, assignment);
+    }
+
+    /** Explicit inspection also supports reinspection after repair, for the same rental cycle only. */
+    @Transactional(rollbackFor = Exception.class)
+    public RentalDeviceOpsRespVO inspectDevice(RentalDeviceReturnReqVO reqVO) {
+        if (reqVO.getInspectPassed() == null) {
+            throw exception(RENTAL_DEVICE_RETURN_FAILED, "必须明确检测结果");
+        }
+        RentalDeviceDO device = resolveDeviceForReturn(reqVO);
+        RentalDeviceAssignmentDO assignment = requireTargetAssignment(reqVO, device);
+        if (assignment.getReturnedAt() == null) {
+            throw exception(RENTAL_DEVICE_RETURN_FAILED, "请先登记实物收货");
+        }
+        boolean passed = Boolean.TRUE.equals(reqVO.getInspectPassed());
+        if (ASSIGN_RETURNED.equals(assignment.getStatus()) && "PASSED".equals(assignment.getInspectionResult())) {
+            if (!passed) throw exception(RENTAL_DEVICE_RETURN_FAILED, "本次检测已完成，请刷新设备");
+            return toResp(device, assignment);
+        }
+        boolean repair = ASSIGN_RETURNED.equals(assignment.getStatus())
+                && "FAILED".equals(assignment.getInspectionResult()) && DEVICE_MAINTENANCE.equals(device.getStatus());
+        if (!repair && (!DEVICE_RENTED.equals(device.getStatus())
+                || !Set.of(ASSIGN_DISPATCHED, ASSIGN_DISPATCHED_PENDING_PLAN).contains(assignment.getStatus()))) {
+            throw exception(RENTAL_DEVICE_RETURN_FAILED, "设备已进入其他作业，请刷新后核对");
+        }
+        return completeInspection(device, assignment, passed, reqVO.getNote());
+    }
+
+    private RentalDeviceAssignmentDO requireTargetAssignment(RentalDeviceReturnReqVO reqVO, RentalDeviceDO device) {
+        if (reqVO.getAssignmentId() == null) throw exception(RENTAL_DEVICE_RETURN_FAILED, "缺少本次分配记录，请刷新设备");
+        RentalDeviceAssignmentDO latest = assignmentMapper.selectLatestByDeviceIdForUpdate(device.getId());
+        if (latest == null || !latest.getId().equals(reqVO.getAssignmentId())
+                || !device.getId().equals(latest.getDeviceId())) {
+            throw exception(RENTAL_DEVICE_RETURN_FAILED, "设备租赁轮次已变化，请重新扫描");
+        }
+        return latest;
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public RentalDeviceOpsRespVO returnDevice(RentalDeviceReturnReqVO reqVO) {
         RentalDeviceDO device = resolveDeviceForReturn(reqVO);
@@ -123,6 +178,11 @@ public class RentalDeviceOpsService {
         }
 
         boolean passed = reqVO.getInspectPassed() == null || Boolean.TRUE.equals(reqVO.getInspectPassed());
+        return completeInspection(device, assignment, passed, reqVO.getNote());
+    }
+
+    private RentalDeviceOpsRespVO completeInspection(RentalDeviceDO device, RentalDeviceAssignmentDO assignment,
+                                                       boolean passed, String note) {
         lockService.releaseSystemLockForLockedDevice(device.getId(),
                 RentalDeviceLockTypeEnum.RETURN_INSPECTION, "INSPECTION_COMPLETED");
         if (passed) {
@@ -131,7 +191,7 @@ public class RentalDeviceOpsService {
         } else {
             lockService.createSystemLockForLockedDevice(device.getId(),
                     RentalDeviceLockTypeEnum.MAINTENANCE,
-                    StringUtils.hasText(reqVO.getNote()) ? reqVO.getNote() : "INSPECTION_FAILED",
+                    StringUtils.hasText(note) ? note : "INSPECTION_FAILED",
                     assignment.getRentalOrderId(), assignment.getRentalOrderItemId());
         }
         device.setStatus(passed ? DEVICE_AVAILABLE : DEVICE_MAINTENANCE);
@@ -140,10 +200,10 @@ public class RentalDeviceOpsService {
         narrowScheduleForReturn(assignment);
         LocalDateTime completedAt = LocalDateTime.now(clock);
         assignment.setStatus(ASSIGN_RETURNED)
-                .setReturnedAt(completedAt)
+                .setReturnedAt(assignment.getReturnedAt() == null ? completedAt : assignment.getReturnedAt())
                 .setInspectionCompletedAt(completedAt)
                 .setInspectionResult(passed ? "PASSED" : "FAILED")
-                .setReturnNote(trimToNull(reqVO.getNote()));
+                .setReturnNote(trimToNull(note));
         assignmentMapper.updateById(assignment);
 
         return toResp(device, assignment);

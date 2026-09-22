@@ -24,4 +24,7 @@ public class RentalScheduleAssignmentRespVO {
     private LocalDate occupyStartDate;
     private LocalDate occupyEndDateExclusive;
     private LocalDateTime assignedAt;
+    private LocalDateTime returnedAt;
+    private LocalDateTime inspectionCompletedAt;
+    private String inspectionResult;
 }

@@ -17,9 +17,13 @@ public class XianyuOrderShipReqVO {
 
     private Long deviceId;
 
+    @jakarta.validation.constraints.Size(min = 1, max = 100)
+    private java.util.List<@NotNull Long> deviceIds;
+
     private String deviceNo;
 
     @NotBlank
+    @jakarta.validation.constraints.Size(max = 100)
     private String idempotencyKey;
 
     @NotBlank
@@ -46,7 +50,7 @@ public class XianyuOrderShipReqVO {
 
     @AssertTrue(message = "必须传入 deviceId 或 deviceNo")
     public boolean isDevicePresent() {
-        return deviceId != null || StringUtils.hasText(deviceNo);
+        return deviceId != null || StringUtils.hasText(deviceNo) || (deviceIds != null && !deviceIds.isEmpty());
     }
 
 }

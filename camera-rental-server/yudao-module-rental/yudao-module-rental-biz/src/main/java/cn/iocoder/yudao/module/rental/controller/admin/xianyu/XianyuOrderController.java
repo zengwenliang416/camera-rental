@@ -79,6 +79,22 @@ public class XianyuOrderController {
         return success(shipmentOcrService.extract(file));
     }
 
+    @GetMapping("/ship/status")
+    @PreAuthorize("@ss.hasPermission('rental:xianyu:ship')")
+    public CommonResult<XianyuOrderShipService.ShipmentStatus> shipmentStatus(
+            @org.springframework.web.bind.annotation.RequestParam("channelOrderId") Long channelOrderId,
+            @org.springframework.web.bind.annotation.RequestParam("idempotencyKey") String key) {
+        return success(orderShipService.shipmentStatus(channelOrderId, key));
+    }
+
+    @GetMapping("/ship/result")
+    @PreAuthorize("@ss.hasPermission('rental:xianyu:ship')")
+    public CommonResult<XianyuOrderShipRespVO> shipmentResult(
+            @org.springframework.web.bind.annotation.RequestParam("channelOrderId") Long channelOrderId,
+            @org.springframework.web.bind.annotation.RequestParam("idempotencyKey") String idempotencyKey) {
+        return success(orderShipService.shipmentResult(channelOrderId, idempotencyKey));
+    }
+
     @PostMapping("/ship")
     @Operation(summary = "绑定设备并调用闲管家订单发货")
     @PreAuthorize("@ss.hasPermission('rental:xianyu:ship') && "

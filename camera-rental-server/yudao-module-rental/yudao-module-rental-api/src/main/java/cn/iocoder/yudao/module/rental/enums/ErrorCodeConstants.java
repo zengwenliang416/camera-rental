@@ -7,6 +7,8 @@ import cn.iocoder.yudao.framework.common.exception.ErrorCode;
  */
 public interface ErrorCodeConstants {
 
+    ErrorCode STAFF_WORKFLOW_INVALID = new ErrorCode(1_040_007_000, "仓务操作不可执行：{}");
+
     ErrorCode RENTAL_DEVICE_QUANTITY_INVALID = new ErrorCode(1_040_006_000, "设备数量无效，须为 1 至 999 台");
     ErrorCode RENTAL_DEVICE_QUANTITY_NOT_EDITABLE = new ErrorCode(1_040_006_001, "仅未分配、未发货的闲鱼租赁订单可修改设备数量");
     ErrorCode RENTAL_DEVICE_QUANTITY_CHANGED = new ErrorCode(1_040_006_002, "设备数量已变化，请刷新订单后重试");

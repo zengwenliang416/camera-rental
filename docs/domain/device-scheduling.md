@@ -154,3 +154,12 @@ newStart < existingEndExclusive
 - 日期字段使用日期类型或项目约定的时间类型，不用字符串比较。
 - 跨月、跨年和闰年由日期库计算。
 - 预计回仓、检测完成和再次可租日期必须可追踪，不能只记录一个客户发回日期。
+
+## 员工实物收货与检测分离
+
+手机 `/rental/device/receive` 在当前分配轮次登记实物收货时间，建立 RETURN_INSPECTION 锁，
+保持设备不可租与原排期；`returned_at` 此时表示实物已收，不代表检测完成。
+`/rental/staff/inspection` 保存型号清单、配件数量和照片证据，完成检测后才释放检测锁、
+收窄排期并完成该轮次分配；不通过转维修，维修复检通过后恢复可租。
+旧 `/rental/device/return` 仍兼容合并收货/检测操作。
+完整接口、数据迁移及交付边界见 `openspec/changes/staff-warehouse-workflows/design.md`。

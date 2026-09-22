@@ -11,6 +11,9 @@ public class RentalDeviceReturnReqVO {
     @Schema(description = "设备 ID；与 deviceNo 二选一")
     private Long deviceId;
 
+    @Schema(description = "收货/检测针对的分配记录，防止跨租赁轮次重复处理")
+    private Long assignmentId;
+
     @Schema(description = "设备编号（设备二维码缺失时人工录入）")
     @Size(max = 64)
     private String deviceNo;

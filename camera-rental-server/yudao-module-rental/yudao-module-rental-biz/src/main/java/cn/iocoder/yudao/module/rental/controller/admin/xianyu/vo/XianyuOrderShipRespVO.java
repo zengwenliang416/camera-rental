@@ -10,6 +10,8 @@ import java.util.List;
 public class XianyuOrderShipRespVO {
 
     private Long shipmentId;
+    private List<Long> deviceIds;
+    private List<String> deviceNos;
     private Long channelOrderId;
     private Long assignmentId;
     private Long deviceId;

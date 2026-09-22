@@ -150,6 +150,22 @@ public class RentalDeviceController {
         return success(deviceOpsService.dispatch(reqVO));
     }
 
+    @cn.iocoder.yudao.framework.apilog.core.annotation.ApiAccessLog(requestEnable = false, responseEnable = false)
+    @PostMapping("/receive")
+    @Operation(summary = "实物收货，保持待检测锁且不恢复可租")
+    @PreAuthorize("@ss.hasPermission('rental:device:assign')")
+    public CommonResult<RentalDeviceOpsRespVO> receive(@Valid @RequestBody RentalDeviceReturnReqVO reqVO) {
+        return success(deviceOpsService.receiveDevice(reqVO));
+    }
+
+    @cn.iocoder.yudao.framework.apilog.core.annotation.ApiAccessLog(requestEnable = false, responseEnable = false)
+    @PostMapping("/inspect")
+    @Operation(summary = "完成检测或维修复检")
+    @PreAuthorize("@ss.hasPermission('rental:device:assign')")
+    public CommonResult<RentalDeviceOpsRespVO> inspect(@Valid @RequestBody RentalDeviceReturnReqVO reqVO) {
+        return success(deviceOpsService.inspectDevice(reqVO));
+    }
+
     @PostMapping("/return")
     @Operation(summary = "设备回仓（含检测通过/不通过）")
     @PreAuthorize("@ss.hasPermission('rental:device:assign')")

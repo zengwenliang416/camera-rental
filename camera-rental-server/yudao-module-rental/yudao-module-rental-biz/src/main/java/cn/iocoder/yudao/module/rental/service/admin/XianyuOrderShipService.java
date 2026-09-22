@@ -111,6 +111,7 @@ public class XianyuOrderShipService {
     private final XianyuWriteClient writeClient;
     private final XianyuRuntimeConfigService runtimeConfigService;
     private final ObjectMapper objectMapper;
+    private final RentalShipmentAttemptService attempts;
 
     public XianyuOrderShipService(XianyuOrderMapper orderMapper, XianyuShopMapper shopMapper,
                                   RentalDeviceMapper deviceMapper, RentalDeviceModelMapper deviceModelMapper,
@@ -126,7 +127,8 @@ public class XianyuOrderShipService {
                                   RentalDeliveryService deliveryService,
                                   WaybillPrivacy waybillPrivacy,
                                   XianyuWriteClient writeClient, XianyuRuntimeConfigService runtimeConfigService,
-                                  ObjectMapper objectMapper) {
+                                  ObjectMapper objectMapper, RentalShipmentAttemptService attempts) {
+        this.attempts = attempts;
         this.orderMapper = orderMapper;
         this.shopMapper = shopMapper;
         this.deviceMapper = deviceMapper;
@@ -158,8 +160,16 @@ public class XianyuOrderShipService {
 
     @Transactional(rollbackFor = Exception.class)
     public XianyuOrderShipRespVO ship(XianyuOrderShipReqVO reqVO) {
+        if (reqVO.getDeviceIds() != null) return shipDevices(reqVO);
         RentalDeviceShipmentDO replay = shipmentMapper.selectByIdempotencyKeyForUpdate(reqVO.getIdempotencyKey());
         if (replay != null) {
+            RentalDeviceDO replayDevice = deviceMapper.selectById(replay.getDeviceId());
+            if (!Objects.equals(replay.getChannelOrderId(), reqVO.getChannelOrderId())
+                    || !Objects.equals(replay.getWaybillNo(), reqVO.getWaybillNo())
+                    || !Objects.equals(replay.getExpressCode(), reqVO.getExpressCode())
+                    || (reqVO.getDeviceId() != null && !Objects.equals(replay.getDeviceId(), reqVO.getDeviceId()))
+                    || (reqVO.getDeviceId() == null && (replayDevice == null || !Objects.equals(replayDevice.getDeviceNo(), reqVO.getDeviceNo()))))
+                throw exception(XIANYU_SHIP_IDEMPOTENT_KEY_REUSED);
             RentalDeliveryResult tracking = replay.getDeliveryId() == null
                     ? null : deliveryService.getResult(replay.getDeliveryId());
             return toShipResp(replay, deviceMapper.selectById(replay.getDeviceId()),
@@ -190,7 +200,7 @@ public class XianyuOrderShipService {
 
         RentalDeviceAssignmentResult assignment = assignDevice(reqVO, device, item, prepared.pendingPlan());
         ObjectNode shipBody = buildShipBody(order, reqVO);
-        XianyuReadResponse remote = callRemote(shipBody);
+        XianyuReadResponse remote = callRemoteOnce(order.getId(), reqVO.getIdempotencyKey(), shipBody);
 
         RentalDeviceOpsRespVO dispatched = dispatch(device.getId(), assignment.assignmentId());
         if (prepared.pendingPlan()) {
@@ -231,6 +241,125 @@ public class XianyuOrderShipService {
         XianyuOrderShipRespVO resp = toShipResp(shipment, device, dispatched.getAssignmentStatus(), delivery);
         resp.setRemoteMsg(shipment.getShipResponseMsg());
         return resp;
+    }
+
+    private XianyuOrderShipRespVO shipDevices(XianyuOrderShipReqVO request) {
+        List<Long> ids = request.getDeviceIds().stream().sorted().toList();
+        if (ids.isEmpty() || ids.size() > 100 || new java.util.HashSet<>(ids).size() != ids.size()) {
+            throw exception(XIANYU_SHIP_DEVICE_NOT_SHIPPABLE, "设备清单为空、超限或重复");
+        }
+        XianyuOrderDO order = orderMapper.selectByIdForUpdate(request.getChannelOrderId());
+        if (order == null) throw exception(XIANYU_ORDER_NOT_EXISTS);
+        String fingerprint = DigestUtils.md5DigestAsHex((order.getId() + ":" + ids + ":"
+                + request.getExpressCode() + ":" + request.getWaybillNo()).getBytes(StandardCharsets.UTF_8));
+        RentalDeviceShipmentDO replay = shipmentMapper.selectByIdempotencyKeyForUpdate(request.getIdempotencyKey());
+        if (replay != null) {
+            if (!Objects.equals(fingerprint, replay.getShipRequestHash())) throw exception(XIANYU_SHIP_IDEMPOTENT_KEY_REUSED);
+            XianyuOrderShipRespVO response = batchResponse(replay);
+            response.setDeviceIds(ids);
+            return response;
+        }
+        XianyuProperties properties = runtimeConfigService.getCurrent();
+        if (properties.getIntegrationStatus() != XianyuProperties.IntegrationStatus.READY || !properties.isWriteEnabled()) {
+            throw exception(XIANYU_WRITE_DISABLED);
+        }
+        requirePending(order);
+        requireAuthorizedShop(order.getShopId());
+        RentalOrderDO rental = order.getRentalOrderId() == null ? null : rentalOrderMapper.selectByIdForUpdate(order.getRentalOrderId());
+        if (rental == null) throw exception(XIANYU_SHIP_ORDER_NOT_CONVERTED);
+        List<RentalOrderItemDO> items = rentalOrderItemMapper.selectList(new LambdaQueryWrapper<RentalOrderItemDO>()
+                .eq(RentalOrderItemDO::getRentalOrderId, rental.getId()).orderByAsc(RentalOrderItemDO::getId).last("FOR UPDATE"));
+        if (items.isEmpty() || items.stream().anyMatch(i -> i.getQuantity() == null || i.getQuantity() < 1)
+                || items.stream().mapToInt(RentalOrderItemDO::getQuantity).sum() != ids.size()) {
+            throw exception(XIANYU_SHIP_DEVICE_NOT_SHIPPABLE, "扫描台数必须等于本单全部实际设备台数");
+        }
+        for (RentalOrderItemDO item : items) {
+            try { preparationPolicy.requireReady(rental, item); }
+            catch (RentalDeviceAssignmentException ex) { throw exception(XIANYU_SHIP_ORDER_NOT_READY, ex.getCode().name()); }
+        }
+        List<RentalDeviceAssignmentDO> existing = assignmentMapper.selectList(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
+                .eq(RentalDeviceAssignmentDO::getRentalOrderId, rental.getId())
+                .in(RentalDeviceAssignmentDO::getStatus, "ASSIGNED", "DISPATCHED", "DISPATCHED_PENDING_PLAN", "RETURNED")
+                .last("FOR UPDATE"));
+        if (existing.stream().anyMatch(a -> !"ASSIGNED".equals(a.getStatus()) || !ids.contains(a.getDeviceId()))) {
+            throw exception(XIANYU_SHIP_DEVICE_NOT_SHIPPABLE, "本单已有其他设备分配或发货记录，请核对整单");
+        }
+        java.util.Map<Long, Integer> used = new java.util.HashMap<>();
+        for (RentalDeviceAssignmentDO a : existing) used.merge(a.getRentalOrderItemId(), 1, Integer::sum);
+        List<RentalDeviceDO> devices = new java.util.ArrayList<>();
+        List<RentalDeliveryDeviceCommand> links = new java.util.ArrayList<>();
+        for (Long id : ids) {
+            RentalDeviceDO device = deviceMapper.selectByIdForUpdate(id);
+            if (device == null) throw exception(RENTAL_DEVICE_NOT_EXISTS);
+            requireDeviceShippable(device);
+            RentalDeviceAssignmentDO assigned = existing.stream().filter(a -> id.equals(a.getDeviceId())).findFirst().orElse(null);
+            RentalOrderItemDO item = items.stream().filter(i -> assigned != null
+                    ? i.getId().equals(assigned.getRentalOrderItemId())
+                    : Objects.equals(i.getEquipmentModelCode(), device.getEquipmentModelCode())
+                      && used.getOrDefault(i.getId(), 0) < i.getQuantity()).findFirst().orElse(null);
+            if (item == null) throw exception(XIANYU_SHIP_DEVICE_NOT_SHIPPABLE, "扫描设备型号或台数与订单不符");
+            requireDeviceModelMatches(item, device);
+            XianyuOrderShipReqVO perDevice = new XianyuOrderShipReqVO();
+            perDevice.setIdempotencyKey("batch-" + DigestUtils.md5DigestAsHex(
+                    (request.getIdempotencyKey() + ":" + id).getBytes(StandardCharsets.UTF_8)));
+            RentalDeviceAssignmentResult assignment = assignDevice(perDevice, device, item, false);
+            if (assigned == null) used.merge(item.getId(), 1, Integer::sum);
+            devices.add(device);
+            links.add(new RentalDeliveryDeviceCommand(item.getId(), assignment.assignmentId(), id));
+        }
+        // Exactly one channel write for all devices in this package.
+        XianyuReadResponse remote = callRemoteOnce(order.getId(), request.getIdempotencyKey(), buildShipBody(order, request));
+        List<RentalDeviceShipmentDO> records = new java.util.ArrayList<>();
+        for (int index = 0; index < devices.size(); index++) {
+            RentalDeviceDO device = devices.get(index);
+            RentalDeliveryDeviceCommand link = links.get(index);
+            dispatch(device.getId(), link.assignmentId());
+            // Existing unique channel/waybill receipt stays one row; delivery relations hold every device.
+            if (index > 0) continue;
+            RentalDeviceShipmentDO shipment = RentalDeviceShipmentDO.builder()
+                    .channelOrderId(order.getId()).assignmentId(link.assignmentId()).deviceId(device.getId())
+                    .idempotencyKey(index == 0 ? request.getIdempotencyKey() : "batch-part-" + DigestUtils.md5DigestAsHex(
+                            (request.getIdempotencyKey() + ":" + device.getId()).getBytes(StandardCharsets.UTF_8)))
+                    .waybillNo(request.getWaybillNo()).expressCode(request.getExpressCode()).expressName(request.getExpressName())
+                    .shipRequestHash(fingerprint).shipResponseCode(remote.remoteCode()).shipResponseMsg("ok")
+                    .ocrConfirmed(Boolean.TRUE.equals(request.getOcrConfirmed())).source(request.getSource()).build();
+            shipmentMapper.insert(shipment);
+            records.add(shipment);
+        }
+        RentalDeliveryResult delivery = deliveryService.createOrReuse(new RentalDeliveryCreateCommand(
+                rental.getId(), order.getId(), RentalDeliveryDirectionEnum.OUTBOUND, "XIANYU",
+                "shipment:" + DigestUtils.md5DigestAsHex(request.getIdempotencyKey().getBytes(StandardCharsets.UTF_8)),
+                request.getExpressCode(), request.getExpressName(), request.getWaybillNo(), order.getReceiverMobile(), links));
+        for (RentalDeviceShipmentDO record : records) {
+            record.setDeliveryId(delivery.deliveryId());
+            shipmentMapper.updateById(record);
+        }
+        order.setWaybillNo(request.getWaybillNo()); order.setExpressCode(request.getExpressCode());
+        order.setExpressName(request.getExpressName()); order.setConsignTime(LocalDateTime.now(BUSINESS_ZONE));
+        orderMapper.updateById(order);
+        XianyuOrderShipRespVO response = toShipResp(records.get(0), devices.get(0), "DISPATCHED", delivery);
+        response.setDeviceIds(ids); response.setDeviceNos(devices.stream().map(RentalDeviceDO::getDeviceNo).toList());
+        return response;
+    }
+
+    private XianyuOrderShipRespVO batchResponse(RentalDeviceShipmentDO shipment) {
+        XianyuOrderShipRespVO response = toShipResp(shipment, deviceMapper.selectById(shipment.getDeviceId()),
+                assignmentStatus(shipment.getAssignmentId()), shipment.getDeliveryId() == null ? null : deliveryService.getResult(shipment.getDeliveryId()));
+        List<RentalDeviceShipmentDO> records = shipment.getDeliveryId() == null ? List.of(shipment)
+                : shipmentMapper.selectList(new LambdaQueryWrapper<RentalDeviceShipmentDO>()
+                    .eq(RentalDeviceShipmentDO::getDeliveryId, shipment.getDeliveryId()));
+        response.setDeviceIds(records.stream().map(RentalDeviceShipmentDO::getDeviceId).sorted().toList());
+        return response;
+    }
+
+    /** A missing local receipt is UNKNOWN, never proof that the channel write failed. */
+    public XianyuOrderShipRespVO shipmentResult(Long channelOrderId, String idempotencyKey) {
+        XianyuOrderDO order = orderMapper.selectById(channelOrderId);
+        if (order == null) throw exception(XIANYU_ORDER_NOT_EXISTS);
+        RentalDeviceShipmentDO record = shipmentMapper.selectOne(new LambdaQueryWrapper<RentalDeviceShipmentDO>()
+                .eq(RentalDeviceShipmentDO::getChannelOrderId, channelOrderId)
+                .eq(RentalDeviceShipmentDO::getIdempotencyKey, idempotencyKey));
+        return record == null ? null : batchResponse(record);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -623,12 +752,22 @@ public class XianyuOrderShipService {
         return body;
     }
 
-    private XianyuReadResponse callRemote(ObjectNode shipBody) {
+    private XianyuReadResponse callRemoteOnce(Long channelId, String key, ObjectNode body) {
+        attempts.begin(channelId, key, DigestUtils.md5DigestAsHex(body.toString().getBytes(StandardCharsets.UTF_8)));
         try {
-            return writeClient.execute(XianyuWriteEndpoint.ORDER_SHIP, shipBody);
+            return writeClient.execute(XianyuWriteEndpoint.ORDER_SHIP, body);
         } catch (XianyuClientException ex) {
+            if (Set.of(XianyuClientException.Kind.REMOTE_RESPONSE, XianyuClientException.Kind.INTEGRATION_DISABLED,
+                    XianyuClientException.Kind.MISSING_CREDENTIALS, XianyuClientException.Kind.WRITE_DISABLED,
+                    XianyuClientException.Kind.MALFORMED_REQUEST).contains(ex.getKind())) attempts.rejected(channelId, key);
             throw exception(XIANYU_SHIP_REMOTE_ERROR, ex.getKind().name());
         }
+    }
+
+    public record ShipmentStatus(String state, XianyuOrderShipRespVO result) {}
+    public ShipmentStatus shipmentStatus(Long channelOrderId, String key) {
+        var result = shipmentResult(channelOrderId, key);
+        return new ShipmentStatus(result != null ? "SUCCEEDED" : attempts.status(channelOrderId, key), result);
     }
 
     private RentalDeviceOpsRespVO dispatch(Long deviceId, Long assignmentId) {

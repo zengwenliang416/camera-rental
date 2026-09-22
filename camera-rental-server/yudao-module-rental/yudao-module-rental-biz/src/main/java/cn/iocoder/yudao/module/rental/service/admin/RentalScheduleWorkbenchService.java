@@ -232,7 +232,9 @@ public class RentalScheduleWorkbenchService {
             Map<Long, RentalDeviceAssignmentDO> assignmentsByScheduleId,
             List<RentalDeviceAssignmentDO> pendingAssignments,
             List<RentalDeliveryDO> deliveries, Window window) {
-        String logisticsStatus = resolveLogisticsStatus(device, deliveries);
+        boolean receivedPending = java.util.stream.Stream.concat(assignmentsByScheduleId.values().stream(), pendingAssignments.stream())
+                .anyMatch(a -> Objects.equals(a.getDeviceId(), device.getId()) && a.getReturnedAt() != null && a.getInspectionCompletedAt() == null);
+        String logisticsStatus = receivedPending ? LOGISTICS_RETURNED_PENDING_INSPECTION : resolveLogisticsStatus(device, deliveries);
         RentalScheduleWorkbenchDeviceLaneRespVO lane = new RentalScheduleWorkbenchDeviceLaneRespVO();
         lane.setDeviceId(device.getId());
         lane.setDeviceNo(device.getDeviceNo());

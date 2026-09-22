@@ -110,6 +110,7 @@ class XianyuOrderShipServiceTest {
     private final XianyuProperties properties = new XianyuProperties();
     private final XianyuRuntimeConfigService runtimeConfigService = mock(XianyuRuntimeConfigService.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RentalShipmentAttemptService attempts = mock(RentalShipmentAttemptService.class);
 
     @BeforeEach
     void setTenantContext() {
@@ -1312,7 +1313,7 @@ class XianyuOrderShipServiceTest {
         return new XianyuOrderShipService(orderMapper, shopMapper, deviceMapper, deviceModelMapper,
                 assignmentMapper, rentalOrderMapper, rentalOrderItemMapper, shipmentMapper, preparationPolicy,
                 productRuleService, reconciliationService, assignmentService, deviceOpsService,
-                deliveryService, waybillPrivacy, writeClient, runtimeConfigService, objectMapper);
+                deliveryService, waybillPrivacy, writeClient, runtimeConfigService, objectMapper, attempts);
     }
 
     private XianyuOrderDO stubSuccessfulShipment() {
@@ -1439,4 +1440,59 @@ class XianyuOrderShipServiceTest {
         return response;
     }
 
+    @Test
+    void batchShipsTwoDevicesWithOneChannelWriteAndOneWaybillReceipt() {
+        properties.setWriteEnabled(true);
+        stubSuccessfulShipment();
+        var item = convertedOrderItem(); item.setQuantity(2);
+        when(rentalOrderItemMapper.selectList(any())).thenReturn(List.of(item));
+        when(assignmentMapper.selectList(any())).thenReturn(List.of());
+        var first = shippableDevice();
+        var second = shippableDevice(); second.setId(41L); second.setDeviceNo("TEST-SECOND");
+        when(deviceMapper.selectByIdForUpdate(40L)).thenReturn(first);
+        when(deviceMapper.selectByIdForUpdate(41L)).thenReturn(second);
+        when(assignmentService.assign(any())).thenAnswer(invocation -> {
+            cn.iocoder.yudao.module.rental.service.RentalDeviceAssignmentCommand c = invocation.getArgument(0);
+            return new RentalDeviceAssignmentResult(c.deviceId()+100, c.deviceId()+200, c.deviceId(), item.getOccupyStartDate(), item.getOccupyEndDateExclusive());
+        });
+        var request = req(); request.setDeviceIds(List.of(41L,40L));
+        var response = service().ship(request);
+        assertEquals(List.of(40L,41L), response.getDeviceIds());
+        verify(writeClient, org.mockito.Mockito.times(1)).execute(eq(XianyuWriteEndpoint.ORDER_SHIP), any());
+        verify(deviceOpsService, org.mockito.Mockito.times(2)).dispatch(any());
+        verify(shipmentMapper, org.mockito.Mockito.times(1)).insert(any(RentalDeviceShipmentDO.class));
+        var delivery = ArgumentCaptor.forClass(RentalDeliveryCreateCommand.class);
+        verify(deliveryService).createOrReuse(delivery.capture());
+        assertEquals(2, delivery.getValue().devices().size());
+        assertEquals(List.of(40L,41L), delivery.getValue().devices().stream().map(c -> c.deviceId()).toList());
+    }
+    @Test
+    void batchDuplicateAndMissingDevicesNeverReachChannel() {
+        properties.setWriteEnabled(true);
+        var request = req(); request.setDeviceIds(List.of(40L,40L));
+        assertThrows(ServiceException.class, () -> service().ship(request));
+        stubSuccessfulShipment();
+        var item = convertedOrderItem(); item.setQuantity(2);
+        when(rentalOrderItemMapper.selectList(any())).thenReturn(List.of(item));
+        request.setDeviceIds(List.of(40L));
+        assertThrows(ServiceException.class, () -> service().ship(request));
+        verify(writeClient, never()).execute(any(), any());
+    }
+    @Test
+    void batchExistingUnscannedAssignmentCannotBeReplaced() {
+        properties.setWriteEnabled(true);
+        stubSuccessfulShipment();
+        var item = convertedOrderItem();
+        when(rentalOrderItemMapper.selectList(any())).thenReturn(List.of(item));
+        when(assignmentMapper.selectList(any())).thenReturn(List.of(RentalDeviceAssignmentDO.builder().deviceId(55L).status("ASSIGNED").build()));
+        var request = req(); request.setDeviceIds(List.of(40L));
+        assertThrows(ServiceException.class, () -> service().ship(request));
+        verify(writeClient, never()).execute(any(), any());
+    }
+    @Test
+    void missingShipmentReceiptIsNotReportedAsSuccessful() {
+        when(orderMapper.selectById(10L)).thenReturn(pendingOrder());
+        assertNull(service().shipmentResult(10L, "unknown"));
+        verify(writeClient, never()).execute(any(), any());
+    }
 }

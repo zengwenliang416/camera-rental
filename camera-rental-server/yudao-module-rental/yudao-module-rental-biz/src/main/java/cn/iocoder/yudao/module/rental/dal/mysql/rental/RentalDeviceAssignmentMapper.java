@@ -51,6 +51,13 @@ public interface RentalDeviceAssignmentMapper extends BaseMapperX<RentalDeviceAs
                 .last("LIMIT 1"));
     }
 
+    default RentalDeviceAssignmentDO selectLatestByDeviceIdForUpdate(Long deviceId) {
+        return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
+                .eq(RentalDeviceAssignmentDO::getDeviceId, deviceId)
+                .in(RentalDeviceAssignmentDO::getStatus, "DISPATCHED", "DISPATCHED_PENDING_PLAN", "RETURNED")
+                .orderByDesc(RentalDeviceAssignmentDO::getId).last("LIMIT 1"));
+    }
+
     default RentalDeviceAssignmentDO selectByIdForUpdate(Long id) {
         return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceAssignmentDO>()
                 .eq(RentalDeviceAssignmentDO::getId, id));

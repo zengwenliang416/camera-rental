@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalStaffTaskMapper">
+  <sql id="tasks">
+    <choose>
+      <when test="queue == 'SHIP'">
+        SELECT ro.source_type, ro.id order_id, COALESCE(xo.external_order_id,ro.order_no) order_no,
+          NULL device_id, NULL assignment_id, NULL device_no, NULL equipment_model_code, ro.occupy_start_date due_date
+        FROM rental_order ro LEFT JOIN xianyu_order xo ON xo.id=ro.channel_order_id AND xo.tenant_id=ro.tenant_id AND xo.deleted=0
+        WHERE ro.tenant_id=#{tenantId} AND ro.deleted=0 AND ro.status NOT IN ('CANCELED','CANCELLED','COMPLETED')
+          AND ro.occupy_start_date &lt;= #{today}
+          AND (xo.id IS NULL OR (xo.order_status='12' AND xo.consign_time IS NULL AND xo.cancel_time IS NULL))
+          AND EXISTS(SELECT 1 FROM rental_order_item i WHERE i.rental_order_id=ro.id AND i.tenant_id=ro.tenant_id AND i.deleted=0
+            AND i.quantity &gt; (SELECT COUNT(*) FROM rental_device_assignment a WHERE a.rental_order_item_id=i.id
+              AND a.tenant_id=i.tenant_id AND a.deleted=0 AND a.status IN ('DISPATCHED','DISPATCHED_PENDING_PLAN','RETURNED')))
+      </when>
+      <otherwise>
+        SELECT ro.source_type, a.rental_order_id order_id, ro.order_no, d.id device_id, a.id assignment_id, d.device_no,
+          d.equipment_model_code, DATE_SUB(ro.occupy_end_date_exclusive, INTERVAL 1 DAY) due_date
+        FROM rental_device_assignment a
+        JOIN rental_device d ON d.id=a.device_id AND d.tenant_id=a.tenant_id AND d.deleted=0
+        JOIN rental_order ro ON ro.id=a.rental_order_id AND ro.tenant_id=a.tenant_id AND ro.deleted=0
+        WHERE a.tenant_id=#{tenantId} AND a.deleted=0
+        <choose>
+          <when test="queue == 'INSPECT'">
+            AND a.status IN ('DISPATCHED','DISPATCHED_PENDING_PLAN') AND a.returned_at IS NOT NULL AND a.inspection_completed_at IS NULL
+          </when>
+          <when test="queue == 'REPAIR'">
+            AND d.status='MAINTENANCE' AND a.status='RETURNED' AND a.inspection_result='FAILED'
+            AND NOT EXISTS(SELECT 1 FROM rental_device_assignment newer WHERE newer.tenant_id=a.tenant_id AND newer.device_id=a.device_id
+              AND newer.deleted=0 AND newer.id&gt;a.id AND newer.status IN ('DISPATCHED','DISPATCHED_PENDING_PLAN','RETURNED'))
+          </when>
+          <otherwise>
+            AND a.status IN ('DISPATCHED','DISPATCHED_PENDING_PLAN') AND a.returned_at IS NULL
+            <choose>
+              <when test="queue == 'RETURN'">AND ro.occupy_end_date_exclusive=DATE_ADD(#{today}, INTERVAL 1 DAY)</when>
+              <otherwise>AND ro.occupy_end_date_exclusive &lt;= #{today}</otherwise>
+            </choose>
+          </otherwise>
+        </choose>
+      </otherwise>
+    </choose>
+  </sql>
+  <select id="page" resultType="cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalStaffTaskRespVO">
+    SELECT * FROM (<include refid="tasks"/>) t ORDER BY due_date ASC, order_id ASC, device_id ASC LIMIT #{offset},#{limit}
+  </select>
+  <select id="count" resultType="long">SELECT COUNT(*) FROM (<include refid="tasks"/>) t</select>
+</mapper>

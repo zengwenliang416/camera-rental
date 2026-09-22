@@ -19,6 +19,14 @@
         <if test="deviceStatus != null and deviceStatus != ''">
             AND d.status = #{deviceStatus}
         </if>
+        <choose>
+          <when test="logisticsStatus == 'RETURNED_PENDING_INSPECTION'">
+            AND EXISTS (SELECT 1 FROM rental_device_lock inspection_lock
+              WHERE inspection_lock.tenant_id=d.tenant_id AND inspection_lock.device_id=d.id
+              AND inspection_lock.deleted=0 AND inspection_lock.status='ACTIVE'
+              AND inspection_lock.lock_type='RETURN_INSPECTION')
+          </when>
+          <otherwise>
         <if test="logisticsStatus != null and logisticsStatus != ''">
             AND EXISTS (
                 SELECT 1
@@ -43,6 +51,8 @@
                 </choose>
             )
         </if>
+          </otherwise>
+        </choose>
     </sql>
 
     <select id="selectDevicePage"

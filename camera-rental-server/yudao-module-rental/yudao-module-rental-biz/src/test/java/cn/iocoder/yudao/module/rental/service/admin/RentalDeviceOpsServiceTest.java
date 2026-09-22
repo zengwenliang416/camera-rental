@@ -271,4 +271,52 @@ class RentalDeviceOpsServiceTest {
         assertEquals(RENTAL_DEVICE_RETURN_FAILED.getCode(), ex.getCode());
     }
 
+    @Test
+    void receiveKeepsDeviceRentedAndScheduleUntilInspection() {
+        var device = RentalDeviceDO.builder().id(1L).status("RENTED").enabled(true).build();
+        var assignment = RentalDeviceAssignmentDO.builder().id(9L).deviceId(1L).status("DISPATCHED").build();
+        when(deviceMapper.selectByIdForUpdate(1L)).thenReturn(device);
+        when(assignmentMapper.selectLatestByDeviceIdForUpdate(1L)).thenReturn(assignment);
+        var request = new RentalDeviceReturnReqVO(); request.setDeviceId(1L); request.setAssignmentId(9L);
+        service.receiveDevice(request);
+        assertEquals("RENTED", device.getStatus());
+        assertEquals("DISPATCHED", assignment.getStatus());
+        assertEquals("PENDING", assignment.getInspectionResult());
+        assertNotNull(assignment.getReturnedAt());
+        org.junit.jupiter.api.Assertions.assertNull(assignment.getInspectionCompletedAt());
+        verify(scheduleMapper, never()).updateById(any(RentalScheduleDO.class));
+        verify(lockService).createSystemLockForLockedDevice(1L, RentalDeviceLockTypeEnum.RETURN_INSPECTION, "WAREHOUSE_RECEIVED", null, null);
+        service.receiveDevice(request);
+        verify(assignmentMapper, org.mockito.Mockito.times(1)).updateById(assignment);
+        var receivedAt = assignment.getReturnedAt();
+        request.setInspectPassed(true);
+        service.inspectDevice(request);
+        assertEquals("AVAILABLE", device.getStatus());
+        assertEquals("RETURNED", assignment.getStatus());
+        assertEquals(receivedAt, assignment.getReturnedAt());
+    }
+    @Test
+    void inspectWithoutReceiveOrWithStaleCycleCannotChangeState() {
+        var device = RentalDeviceDO.builder().id(1L).status("RENTED").build();
+        var assignment = RentalDeviceAssignmentDO.builder().id(9L).deviceId(1L).status("DISPATCHED").build();
+        when(deviceMapper.selectByIdForUpdate(1L)).thenReturn(device);
+        when(assignmentMapper.selectLatestByDeviceIdForUpdate(1L)).thenReturn(assignment);
+        var request = new RentalDeviceReturnReqVO(); request.setDeviceId(1L); request.setAssignmentId(9L); request.setInspectPassed(true);
+        assertThrows(ServiceException.class, () -> service.inspectDevice(request));
+        request.setAssignmentId(8L);
+        assertThrows(ServiceException.class, () -> service.receiveDevice(request));
+        verify(deviceMapper, never()).updateById(any(RentalDeviceDO.class));
+    }
+    @Test
+    void failedInspectionCanBeReinspectedAfterRepair() {
+        var device = RentalDeviceDO.builder().id(1L).status("MAINTENANCE").build();
+        var assignment = RentalDeviceAssignmentDO.builder().id(9L).deviceId(1L).status("RETURNED")
+                .returnedAt(LocalDateTime.now(FIXED_CLOCK)).inspectionResult("FAILED").build();
+        when(deviceMapper.selectByIdForUpdate(1L)).thenReturn(device);
+        when(assignmentMapper.selectLatestByDeviceIdForUpdate(1L)).thenReturn(assignment);
+        var request = new RentalDeviceReturnReqVO(); request.setDeviceId(1L); request.setAssignmentId(9L); request.setInspectPassed(true);
+        service.inspectDevice(request);
+        assertEquals("AVAILABLE", device.getStatus()); assertEquals("PASSED", assignment.getInspectionResult());
+        verify(lockService).releaseSystemLockForLockedDevice(1L, RentalDeviceLockTypeEnum.MAINTENANCE, "INSPECTION_PASSED");
+    }
 }

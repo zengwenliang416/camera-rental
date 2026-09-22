@@ -171,6 +171,27 @@ public class RentalScheduleAllocationService {
             result.setReasonCodes(List.of("ORDER_NOT_ELIGIBLE"));
         }
 
+        return populateCandidates(result, item, order, tenantId);
+    }
+
+    /** Date-window preview reuses order allocation candidate rules; it does not reserve capacity. */
+    public RentalDeviceCandidatesRespVO previewCandidates(String modelCode, LocalDate from, LocalDate endExclusive) {
+        if ((modelCode == null || modelCode.isBlank()) || !validPeriod(from, endExclusive)
+                || java.time.temporal.ChronoUnit.DAYS.between(from, endExclusive) > 366) {
+            throw cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception(
+                    cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.STAFF_WORKFLOW_INVALID, "请输入型号和有效占用日期（最多 366 天）");
+        }
+        var item = RentalOrderItemDO.builder().equipmentModelCode(modelCode.trim())
+                .occupyStartDate(from).occupyEndDateExclusive(endExclusive).quantity(1).build();
+        var order = RentalOrderDO.builder().status("PENDING_ALLOCATION").build();
+        var result = new RentalDeviceCandidatesRespVO(); result.setEquipmentModelCode(modelCode.trim());
+        result.setOccupyStartDate(from); result.setOccupyEndDateExclusive(endExclusive);
+        result.setReasonCodes(List.of("PREVIEW_ONLY", "LIMIT_" + MAX_CANDIDATE_DEVICES));
+        return populateCandidates(result, item, order, TenantContextHolder.getRequiredTenantId());
+    }
+
+    private RentalDeviceCandidatesRespVO populateCandidates(RentalDeviceCandidatesRespVO result,
+            RentalOrderItemDO item, RentalOrderDO order, Long tenantId) {
         List<RentalDeviceDO> devices = tenantRows(deviceMapper.selectList(new LambdaQueryWrapper<RentalDeviceDO>()
                 .eq(RentalDeviceDO::getEquipmentModelCode, item.getEquipmentModelCode())
                 .orderByAsc(RentalDeviceDO::getId)
@@ -309,6 +330,8 @@ public class RentalScheduleAllocationService {
         result.setEnabled(device.getEnabled());
         result.setActiveLocks(toLockResponses(locks));
         result.setSchedules(toScheduleResponses(schedules, Map.of()));
+        RentalDeviceAssignmentDO latest = assignments.stream().filter(a -> Set.of("DISPATCHED", "DISPATCHED_PENDING_PLAN", "RETURNED").contains(a.getStatus())).findFirst().orElse(null);
+        result.setLatestAssignment(latest == null ? null : toAssignment(latest, deviceMap, schedulesById));
         result.setCurrentAssignment(current == null ? null
                 : toAssignment(current, deviceMap, schedulesById));
         result.setDeliveries(toDeliveryResponses(new java.util.ArrayList<>(deliveriesById.values()),
@@ -498,6 +521,9 @@ public class RentalScheduleAllocationService {
             result.setOccupyEndDateExclusive(schedule.getOccupyEndDateExclusive());
         }
         result.setAssignedAt(assignment.getAssignedAt());
+        result.setReturnedAt(assignment.getReturnedAt());
+        result.setInspectionCompletedAt(assignment.getInspectionCompletedAt());
+        result.setInspectionResult(assignment.getInspectionResult());
         return result;
     }
 

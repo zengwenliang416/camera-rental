@@ -113,6 +113,7 @@ class XianyuOrderShipServiceTest {
 
     @BeforeEach
     void setTenantContext() {
+        when(rentalOrderItemMapper.selectCount(any())).thenReturn(1L);
         TenantContextHolder.setTenantId(9L);
         properties.setEnabled(true);
         properties.setAppKey("test-app");
@@ -1285,6 +1286,28 @@ class XianyuOrderShipServiceTest {
         }
     }
 
+    @Test
+    void rejectsMultipleActualDevicesBeforeAssignmentOrRemoteShipment() {
+        properties.setWriteEnabled(true);
+        stubSuccessfulShipment();
+        RentalOrderItemDO item = convertedOrderItem();
+        item.setQuantity(2);
+        when(rentalOrderItemMapper.selectFirstByRentalOrderIdForUpdate(30L)).thenReturn(item);
+        assertThrows(cn.iocoder.yudao.framework.common.exception.ServiceException.class, () -> service().ship(req()));
+        verify(assignmentService, never()).assign(any());
+        verify(writeClient, never()).execute(any(), any());
+    }
+
+    @Test
+    void rejectsMultipleItemsBeforeRemoteShipment() {
+        properties.setWriteEnabled(true);
+        stubSuccessfulShipment();
+        when(rentalOrderItemMapper.selectCount(any())).thenReturn(2L);
+        assertThrows(cn.iocoder.yudao.framework.common.exception.ServiceException.class, () -> service().ship(req()));
+        verify(assignmentService, never()).assign(any());
+        verify(writeClient, never()).execute(any(), any());
+    }
+
     private XianyuOrderShipService service() {
         return new XianyuOrderShipService(orderMapper, shopMapper, deviceMapper, deviceModelMapper,
                 assignmentMapper, rentalOrderMapper, rentalOrderItemMapper, shipmentMapper, preparationPolicy,
@@ -1387,7 +1410,7 @@ class XianyuOrderShipServiceTest {
     }
 
     private RentalOrderItemDO convertedOrderItem() {
-        return RentalOrderItemDO.builder()
+        return RentalOrderItemDO.builder().quantity(1)
                 .id(50L)
                 .rentalOrderId(30L)
                 .equipmentModelCode("DJI-P4P")

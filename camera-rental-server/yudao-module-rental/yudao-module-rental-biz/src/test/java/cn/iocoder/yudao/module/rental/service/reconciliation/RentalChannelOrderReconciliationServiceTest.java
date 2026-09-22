@@ -93,6 +93,7 @@ class RentalChannelOrderReconciliationServiceTest {
     @Test
     void createsInternalOrderImmediatelyWhenModelAndRemarkAreMissing() {
         XianyuOrderDO source = sourceOrder();
+        source.setGoodsQuantity(28);
         source.setRentalPeriodStatus("PENDING");
         source.setRentalPeriodReasonCode("MISSING_REMARK");
         when(xianyuOrderMapper.selectByIdForUpdate(10L)).thenReturn(source);
@@ -111,6 +112,8 @@ class RentalChannelOrderReconciliationServiceTest {
         ArgumentCaptor<RentalOrderItemDO> itemCaptor = ArgumentCaptor.forClass(RentalOrderItemDO.class);
         verify(rentalOrderItemMapper).insert(itemCaptor.capture());
         assertEquals(9L, itemCaptor.getValue().getTenantId());
+        assertEquals(1, itemCaptor.getValue().getQuantity());
+        assertEquals(28, source.getGoodsQuantity());
         assertNull(itemCaptor.getValue().getEquipmentModelCode());
         assertEquals("item-1", itemCaptor.getValue().getSourceProductId());
         assertEquals("sku-1", itemCaptor.getValue().getSourceSkuId());
@@ -133,7 +136,7 @@ class RentalChannelOrderReconciliationServiceTest {
                 .preparationStatus("WAITING_MODEL")
                 .build();
         RentalOrderItemDO existingItem = RentalOrderItemDO.builder()
-                .id(41L).rentalOrderId(31L).quantity(1).rentAmount(source.getPayAmount()).build();
+                .id(41L).rentalOrderId(31L).quantity(3).rentAmount(source.getPayAmount()).build();
         RentalChannelProductRuleDO rule = RentalChannelProductRuleDO.builder()
                 .id(51L).handlingPolicy("CREATE_RENTAL").mappingMode("SINGLE")
                 .singleDeviceModelId(61L).enabled(true).build();
@@ -148,6 +151,7 @@ class RentalChannelOrderReconciliationServiceTest {
 
         assertEquals("READY", result.preparationStatus());
         assertSame(existingOrder, capturedUpdatedOrder());
+        assertEquals(3, existingItem.getQuantity(), "Reconciliation must preserve manually chosen device counts");
         assertEquals("A7M4", existingItem.getEquipmentModelCode());
         assertEquals(LocalDate.of(2026, 7, 22), existingItem.getOccupyStartDate());
         assertEquals(LocalDate.of(2026, 7, 28), existingItem.getOccupyEndDateExclusive());

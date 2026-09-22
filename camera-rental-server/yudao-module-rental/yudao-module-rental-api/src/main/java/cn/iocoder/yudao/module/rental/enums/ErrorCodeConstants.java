@@ -7,6 +7,12 @@ import cn.iocoder.yudao.framework.common.exception.ErrorCode;
  */
 public interface ErrorCodeConstants {
 
+    ErrorCode RENTAL_DEVICE_QUANTITY_INVALID = new ErrorCode(1_040_006_000, "设备数量无效，须为 1 至 999 台");
+    ErrorCode RENTAL_DEVICE_QUANTITY_NOT_EDITABLE = new ErrorCode(1_040_006_001, "仅未分配、未发货的闲鱼租赁订单可修改设备数量");
+    ErrorCode RENTAL_DEVICE_QUANTITY_CHANGED = new ErrorCode(1_040_006_002, "设备数量已变化，请刷新订单后重试");
+    ErrorCode RENTAL_DEVICE_QUANTITY_NOT_FOUND = new ErrorCode(1_040_006_003, "订单明细不存在或无权访问");
+    ErrorCode XIANYU_SHIP_REQUIRES_SINGLE_DEVICE = new ErrorCode(1_040_006_004, "当前发货接口仅支持一条明细且实际设备数量为 1 台的订单");
+
     // ========== 闲管家集成 1-040-001-000 ==========
     ErrorCode XIANYU_INTEGRATION_DISABLED = new ErrorCode(1_040_001_000, "闲管家集成未启用");
     ErrorCode XIANYU_CREDENTIALS_MISSING = new ErrorCode(1_040_001_001, "闲管家运行时凭据未配置");

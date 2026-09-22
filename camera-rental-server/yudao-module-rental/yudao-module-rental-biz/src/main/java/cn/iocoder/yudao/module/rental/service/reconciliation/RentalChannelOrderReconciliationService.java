@@ -290,8 +290,8 @@ public class RentalChannelOrderReconciliationService {
                 .rentalOrderId(rentalOrderId)
                 .sourceProductId(trimToNull(source.getXianyuItemId()))
                 .sourceSkuId(trimToNull(source.getXgjSkuId()))
-                .quantity(source.getGoodsQuantity() == null || source.getGoodsQuantity() < 1
-                        ? 1 : source.getGoodsQuantity())
+                // Channel purchase units may only be used to make up the rental price.
+                .quantity(1)
                 .rentAmount(source.getPayAmount())
                 .build();
         item.setTenantId(source.getTenantId());

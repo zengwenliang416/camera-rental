@@ -55,6 +55,7 @@ import org.springframework.util.StringUtils;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -66,6 +67,7 @@ import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_DIS
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_DISPATCH_BACKFILL_ORDER_CLOSED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_DISPATCH_BACKFILL_ORDER_NOT_SHIPPED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_ORDER_NOT_EXISTS;
+import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_REQUIRES_SINGLE_DEVICE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_DEVICE_NOT_SHIPPABLE;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_IDEMPOTENT_KEY_REUSED;
 import static cn.iocoder.yudao.module.rental.enums.ErrorCodeConstants.XIANYU_SHIP_ORDER_NOT_CONVERTED;
@@ -179,6 +181,11 @@ public class XianyuOrderShipService {
         requireDeviceShippable(device);
         PreparedShipItem prepared = requirePreparedShipItem(order, reqVO, device);
         RentalOrderItemDO item = prepared.item();
+        if (!Integer.valueOf(1).equals(item.getQuantity())
+                || rentalOrderItemMapper.selectCount(new LambdaQueryWrapper<RentalOrderItemDO>()
+                    .eq(RentalOrderItemDO::getRentalOrderId, item.getRentalOrderId())) != 1L) {
+            throw exception(XIANYU_SHIP_REQUIRES_SINGLE_DEVICE);
+        }
         requireDeviceModelMatches(item, device);
 
         RentalDeviceAssignmentResult assignment = assignDevice(reqVO, device, item, prepared.pendingPlan());

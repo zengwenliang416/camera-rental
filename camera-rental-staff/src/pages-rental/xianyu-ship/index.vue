@@ -422,7 +422,7 @@ onUnload(() => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f4f7f6;
+  background: #f5f5f5;
 }
 .nav {
   display: flex;
@@ -434,7 +434,7 @@ onUnload(() => {
 .title {
   font-size: 36rpx;
   font-weight: 700;
-  color: #143c3a;
+  color: #111111;
 }
 .content {
   flex: 1;
@@ -446,7 +446,7 @@ onUnload(() => {
 .card {
   padding: 24rpx;
   margin-bottom: 20rpx;
-  border: 1rpx solid #e2eae7;
+  border: 1rpx solid #eeeeee;
   border-radius: 20rpx;
   background: #fff;
 }
@@ -466,7 +466,7 @@ onUnload(() => {
   overflow-wrap: anywhere;
 }
 .muted {
-  color: #63736d;
+  color: #6b6b6b;
   font-size: 24rpx;
   line-height: 1.6;
 }
@@ -476,15 +476,15 @@ onUnload(() => {
   margin-top: 16rpx;
 }
 .scan-hint {
-  color: #075c54;
-  background: #e6f4ef;
+  color: #1d4ed8;
+  background: #eff6ff;
   border-radius: 12rpx;
   padding: 18rpx;
   margin-bottom: 20rpx;
   font-size: 26rpx;
 }
 .ok {
-  color: #087f75;
+  color: #15803d;
   font-size: 24rpx;
 }
 .error {
@@ -496,7 +496,7 @@ onUnload(() => {
   line-height: 1.6;
 }
 .manual-toggle {
-  color: #64766f;
+  color: #6b6b6b;
   font-size: 24rpx;
   padding: 20rpx 0 8rpx;
 }
@@ -520,19 +520,19 @@ onUnload(() => {
   flex: 1;
 }
 .order-option {
-  border: 1rpx solid #e1e8e4;
+  border: 1rpx solid #eeeeee;
   padding: 16rpx;
   border-radius: 12rpx;
   margin: 12rpx 0;
 }
 .order-option.selected {
-  border-color: #087f75;
-  background: #edf8f5;
+  border-color: var(--staff-accent, #e10600);
+  background: var(--staff-accent-soft, #fff1f0);
 }
 .footer {
   background: #fff;
   padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom));
-  border-top: 1rpx solid #e2eae7;
+  border-top: 1rpx solid #eeeeee;
 }
 .footer .muted {
   margin-bottom: 12rpx;

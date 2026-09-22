@@ -264,7 +264,7 @@ onHide(endHold)
   border-bottom: 2rpx solid #eee;
 }
 .ok {
-  color: var(--staff-accent, #e10600);
+  color: #15803d;
   font-size: 32rpx;
   font-weight: 800;
 }
@@ -295,7 +295,7 @@ onHide(endHold)
   background: var(--staff-accent, #e10600);
 }
 .hold.on {
-  background: #b80500;
+  background: var(--wot-button-primary-bg-active, #b80500);
 }
 .hold-title {
   font-size: 32rpx;

@@ -78,8 +78,8 @@ onMounted(() => {
   })
 })
 // #endif
-const activeColor = 'var(--staff-accent, #e10600)'
-const inactiveColor = '#888888'
+const activeColor = 'var(--staff-accent-text)'
+const inactiveColor = 'var(--staff-muted)'
 function getColorByIndex(index: number) {
   return tabbarStore.curIdx === index ? activeColor : inactiveColor
 }
@@ -95,7 +95,7 @@ function getImageByIndex(index: number, item: CustomTabBarItem) {
 
 <template>
   <view v-if="customTabbarEnable" class="h-50px pb-safe">
-    <view class="border-and-fixed bg-white" @touchmove.stop.prevent>
+    <view class="border-and-fixed" @touchmove.stop.prevent>
       <view class="h-50px flex items-center">
         <template v-for="(item, index) in tabbarList" :key="index">
           <view
@@ -152,13 +152,14 @@ function getImageByIndex(index: number, item: CustomTabBarItem) {
 
 <style scoped lang="scss">
 .border-and-fixed {
+  background: var(--staff-surface);
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 1000;
 
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--staff-border);
   box-sizing: border-box;
 }
 .staff-scan-bulge {
@@ -171,7 +172,7 @@ function getImageByIndex(index: number, item: CustomTabBarItem) {
   justify-content: center;
   width: 56px;
   height: 56px;
-  border: 4px solid #fff;
+  border: 4px solid var(--staff-surface);
   border-radius: 50%;
   background: var(--staff-accent, #e10600);
   box-shadow: 0 8px 16px rgba(225, 6, 0, 0.28);

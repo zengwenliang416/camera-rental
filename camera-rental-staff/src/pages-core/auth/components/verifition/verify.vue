@@ -289,7 +289,7 @@ defineExpose({ show })
 ::v-deep .verify-bar-area {
   position: relative;
   text-align: center;
-  background: #fff;
+  background: var(--staff-surface);
   border: 1px solid #ddd;
   border-radius: 8px;
   box-sizing: content-box;
@@ -314,7 +314,7 @@ defineExpose({ show })
     top: 0;
     left: 0;
     cursor: pointer;
-    background: #fff;
+    background: var(--staff-surface);
     border-radius: 8px;
     box-shadow: 0 0 2px #888;
     box-sizing: content-box;

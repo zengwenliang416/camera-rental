@@ -65,7 +65,7 @@
       </view>
       <view v-if="error" class="banner error">
         {{ error }}
-        <wd-button plain size="small" :disabled="submitting" @click="load">
+        <wd-button variant="plain" size="small" :disabled="submitting" @click="load">
           刷新候选
         </wd-button>
       </view>
@@ -317,7 +317,7 @@ onLoad((query) => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--staff-surface);
 }
 .content {
   flex: 1;
@@ -332,10 +332,10 @@ onLoad((query) => {
   justify-content: space-between;
   gap: 24rpx;
   padding: 24rpx 0;
-  border-bottom: 2rpx solid #eee;
+  border-bottom: 2rpx solid var(--staff-border);
 }
 .muted {
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 22rpx;
 }
 .strong,
@@ -346,7 +346,7 @@ onLoad((query) => {
 }
 .accent {
   margin-top: 6rpx;
-  color: var(--staff-accent, #e10600);
+  color: var(--staff-accent-text);
   font-size: 26rpx;
   font-weight: 800;
 }
@@ -356,7 +356,7 @@ onLoad((query) => {
   justify-content: center;
   width: 96rpx;
   height: 96rpx;
-  background: #f3f4f6;
+  background: var(--staff-soft);
   font-size: 40rpx;
 }
 .section-head {
@@ -367,7 +367,7 @@ onLoad((query) => {
   font-weight: 800;
 }
 .link {
-  color: #2563eb;
+  color: var(--staff-info);
   font-weight: 600;
 }
 .slot {
@@ -376,11 +376,11 @@ onLoad((query) => {
   gap: 16rpx;
   padding: 22rpx;
   margin-bottom: 12rpx;
-  background: #fff;
-  border: 2rpx solid #eee;
+  background: var(--staff-surface);
+  border: 2rpx solid var(--staff-border);
 }
 .slot.filled {
-  border-left: 8rpx solid #2563eb;
+  border-left: 8rpx solid var(--staff-info);
 }
 .empty-slot {
   border-style: dashed;
@@ -397,8 +397,8 @@ onLoad((query) => {
 .hint {
   margin-top: 16rpx;
   padding: 20rpx;
-  color: #1c4f8a;
-  background: #eff6ff;
+  color: var(--staff-info);
+  background: var(--staff-info-soft);
   font-size: 24rpx;
 }
 .banner {
@@ -406,14 +406,14 @@ onLoad((query) => {
   margin-bottom: 16rpx;
 }
 .banner.error {
-  color: #b42318;
-  background: #fff4f2;
+  color: var(--staff-danger);
+  background: var(--staff-danger-soft);
 }
 .footer {
   padding: 16rpx 28rpx calc(16rpx + env(safe-area-inset-bottom));
 }
 .arrow {
-  color: #999;
+  color: var(--staff-muted);
   font-size: 36rpx;
 }
 </style>

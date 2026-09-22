@@ -37,12 +37,12 @@
         <wd-textarea v-model="note" :maxlength="200" show-word-limit placeholder="包装、配件或异常备注..." />
       </view>
 
-      <wd-button plain block @click="manualFocus = true">
+      <wd-button variant="plain" block @click="manualFocus = true">
         无法识别，人工输入
       </wd-button>
       <view v-if="manualFocus" class="manual">
         <wd-input v-model="manualCode" placeholder="输入设备编号" clearable @confirm="resolveScannedDevice(manualCode)" />
-        <wd-button plain :loading="resolving" @click="resolveScannedDevice(manualCode)">
+        <wd-button variant="plain" :loading="resolving" @click="resolveScannedDevice(manualCode)">
           查询设备
         </wd-button>
       </view>
@@ -153,7 +153,7 @@ function goInspect() {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--staff-surface);
 }
 .content {
   flex: 1;
@@ -164,7 +164,7 @@ function goInspect() {
 }
 .card {
   padding: 24rpx 0;
-  border-bottom: 2rpx solid #eee;
+  border-bottom: 2rpx solid var(--staff-border);
 }
 .card-head {
   display: flex;
@@ -173,8 +173,8 @@ function goInspect() {
 }
 .tag {
   padding: 4rpx 12rpx;
-  color: #1d4ed8;
-  background: #eff6ff;
+  color: var(--staff-info);
+  background: var(--staff-info-soft);
   font-size: 20rpx;
 }
 .device-no {
@@ -184,7 +184,7 @@ function goInspect() {
 }
 .muted {
   margin-top: 8rpx;
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 24rpx;
 }
 .strong {
@@ -201,8 +201,8 @@ function goInspect() {
 .hint {
   margin: 16rpx 0;
   padding: 20rpx;
-  color: #1d4ed8;
-  background: #eff6ff;
+  color: var(--staff-info);
+  background: var(--staff-info-soft);
   font-size: 24rpx;
 }
 .manual {

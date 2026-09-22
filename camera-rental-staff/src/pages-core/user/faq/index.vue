@@ -27,7 +27,7 @@
         :title="category.title"
         :name="index"
       >
-        <view class="min-h-[calc(100vh-300rpx)] bg-white">
+        <view class="staff-bg-surface min-h-[calc(100vh-300rpx)]">
           <wd-collapse v-model="activeNames" custom-class="faq-collapse">
             <wd-collapse-item
               v-for="(item, idx) in filteredList(category.childList)"
@@ -40,7 +40,7 @@
                   <text>{{ item.title }}</text>
                 </view>
               </template>
-              <view class="text-28rpx text-gray-500 leading-relaxed">
+              <view class="staff-text-muted text-28rpx leading-relaxed">
                 {{ item.content }}
               </view>
             </wd-collapse-item>
@@ -86,14 +86,14 @@ function handleBack() {
 
 <style lang="scss" scoped>
 :deep(.faq-collapse) {
-  background: #fff;
+  background: var(--staff-surface);
 
   .wd-collapse-item__header {
     padding: 24rpx;
   }
 
   .wd-collapse-item__wrapper {
-    background: #f9fafb;
+    background: var(--staff-soft);
   }
 }
 </style>

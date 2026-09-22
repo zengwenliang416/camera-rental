@@ -54,7 +54,7 @@
       {{ submitHint }}
     </view>
     <view class="footer">
-      <wd-button plain :disabled="!deviceNo || submitting || !!inspectionBlocker(checks, false) || !canReturn" :loading="submitting" @click="submit(false)">
+      <wd-button variant="plain" :disabled="!deviceNo || submitting || !!inspectionBlocker(checks, false) || !canReturn" :loading="submitting" @click="submit(false)">
         检测不通过 · 转维修
       </wd-button>
       <wd-button type="primary" :disabled="!deviceNo || submitting || !!inspectionBlocker(checks, true) || !canReturn" :loading="submitting" @click="submit(true)">
@@ -172,7 +172,7 @@ onLoad((query) => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--staff-surface);
 }
 .nav {
   display: flex;
@@ -197,7 +197,7 @@ onLoad((query) => {
 }
 .hero {
   padding: 12rpx 0 24rpx;
-  border-bottom: 6rpx solid #111;
+  border-bottom: 6rpx solid var(--staff-ink);
 }
 .strong {
   font-size: 36rpx;
@@ -205,7 +205,7 @@ onLoad((query) => {
 }
 .muted {
   margin-top: 8rpx;
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 22rpx;
 }
 .section-head {
@@ -216,7 +216,7 @@ onLoad((query) => {
 }
 .check {
   padding: 18rpx 0;
-  border-bottom: 2rpx solid #eee;
+  border-bottom: 2rpx solid var(--staff-border);
 }
 .check-name {
   margin-bottom: 12rpx;
@@ -229,31 +229,31 @@ onLoad((query) => {
 .opt {
   flex: 1;
   padding: 12rpx 0;
-  border: 2rpx solid #ddd;
+  border: 2rpx solid var(--staff-border);
   font-size: 22rpx;
   text-align: center;
 }
 .opt.on {
-  color: #1d4ed8;
-  border-color: #2563eb;
-  background: #eff6ff;
+  color: var(--staff-info);
+  border-color: var(--staff-info);
+  background: var(--staff-info-soft);
 }
 .photo {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 24rpx 0;
-  border-bottom: 2rpx solid #eee;
+  border-bottom: 2rpx solid var(--staff-border);
 }
 .warn {
   margin-top: 20rpx;
-  color: var(--staff-accent, #e10600);
+  color: var(--staff-accent-text);
   font-size: 24rpx;
   font-weight: 700;
 }
 .submit-hint {
   padding: 12rpx 28rpx;
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 24rpx;
 }
 .footer {
@@ -263,7 +263,7 @@ onLoad((query) => {
   padding: 12rpx 28rpx calc(16rpx + env(safe-area-inset-bottom));
 }
 .arrow {
-  color: #999;
+  color: var(--staff-muted);
   font-size: 40rpx;
 }
 </style>

@@ -58,12 +58,12 @@
       <!-- 用户协议 -->
       <view class="mb-24rpx flex items-center">
         <wd-checkbox v-model="agreePolicy" type="square" />
-        <text class="text-24rpx text-[#666]">我已阅读并同意</text>
-        <text class="text-24rpx text-[#1890ff]" @click="goToUserAgreement">
+        <text class="staff-text-muted text-24rpx">我已阅读并同意</text>
+        <text class="staff-text-info text-24rpx" @click="goToUserAgreement">
           《用户协议》
         </text>
-        <text class="text-24rpx text-[#666]">与</text>
-        <text class="text-24rpx text-[#1890ff]" @click="goToPrivacyPolicy">
+        <text class="staff-text-muted text-24rpx">与</text>
+        <text class="staff-text-info text-24rpx" @click="goToPrivacyPolicy">
           《隐私政策》
         </text>
       </view>
@@ -80,8 +80,8 @@
 
       <!-- 已有账号 -->
       <view class="mt-40rpx flex items-center justify-center">
-        <text class="text-28rpx text-[#666]">已有账号？</text>
-        <text class="text-28rpx text-[#1890ff]" @click="goToLogin">去登录</text>
+        <text class="staff-text-muted text-28rpx">已有账号？</text>
+        <text class="staff-text-info text-28rpx" @click="goToLogin">去登录</text>
       </view>
     </view>
   </view>

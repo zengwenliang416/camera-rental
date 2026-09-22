@@ -13,7 +13,7 @@
     <!-- Logo 区域 -->
     <view class="flex flex-col items-center py-60rpx">
       <wd-img class="mb-24rpx" src="/static/brand/jiezuda-logo.png" width="188rpx" height="150rpx" mode="aspectFit" />
-      <text class="text-40rpx text-gray-800 font-medium">捷租达</text>
+      <text class="staff-text-ink text-40rpx font-medium">捷租达</text>
     </view>
 
     <!-- 设置列表 -->
@@ -39,20 +39,22 @@
             <wd-icon name="delete" size="20px" color="#faad14" class="mr-16rpx" />
           </template>
         </wd-cell>
+        <wd-cell title="深色模式" :value="themeStore.theme === 'dark' ? '已开启' : '已关闭'" is-link @click="themeStore.toggleTheme()" />
+        <wd-cell title="检查更新" :value="checkingUpdate ? '正在检查…' : updateLabel" is-link @click="checkUpdate" />
       </wd-cell-group>
     </view>
 
     <!-- 底部协议和版权 -->
     <view class="mt-80rpx flex flex-col items-center">
       <view class="mb-40rpx flex items-center text-26rpx">
-        <text class="text-[#1890ff]" @click="handleGoAgreement">《用户协议》</text>
-        <text class="text-gray-500">与</text>
-        <text class="text-[#1890ff]" @click="handleGoPrivacy">《隐私协议》</text>
+        <text class="staff-text-info" @click="handleGoAgreement">《用户协议》</text>
+        <text class="staff-text-muted">与</text>
+        <text class="staff-text-info" @click="handleGoPrivacy">《隐私协议》</text>
       </view>
-      <text class="mb-10rpx text-24rpx text-gray-400">
+      <text class="staff-text-muted mb-10rpx text-24rpx">
         捷租达 · 员工作业端
       </text>
-      <text class="text-24rpx text-gray-400">
+      <text class="staff-text-muted text-24rpx">
         设备租赁与仓务管理
       </text>
     </view>
@@ -65,6 +67,9 @@ import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { onMounted, ref } from 'vue'
 import { navigateBackPlus } from '@/utils'
 import { useDictStore } from '@/store/dict'
+import { trustedRelease } from '@/models/rental/mobileWorkbench'
+import { useThemeStore } from '@/store/theme'
+import { openUrl } from '@/utils/url'
 
 definePage({
   style: {
@@ -73,9 +78,10 @@ definePage({
   },
 })
 
+const themeStore = useThemeStore()
 const toast = useToast()
 const dialog = useDialog()
-const version = ref('1.0.3') // 当前版本号
+const version = ref('1.0.4') // 当前版本号
 const storageSize = ref('') // 本地缓存大小
 
 /** 返回上一页 */
@@ -87,7 +93,7 @@ function handleBack() {
 function getAppVersion() {
   // #ifdef APP-PLUS
   const appInfo = uni.getSystemInfoSync()
-  version.value = appInfo.appVersion || '1.0.3'
+  version.value = appInfo.appVersion || '1.0.4'
   // #endif
 }
 
@@ -99,6 +105,40 @@ function getStorageSize() {
 /** 显示版本信息 */
 function handleShowVersion() {
   toast.info(`当前版本：v${version.value}`)
+}
+
+const checkingUpdate = ref(false)
+const updateLabel = ref('点击检查新版本')
+async function checkUpdate() {
+  if (checkingUpdate.value)
+    return
+  checkingUpdate.value = true
+  try {
+    const raw = await new Promise<unknown>((resolve, reject) => uni.request({
+      url: `https://rental.motion-cover.com/downloads/jiezuda/release.json?t=${Date.now()}`,
+      header: { isToken: false },
+      success: result => result.statusCode === 200 ? resolve(result.data) : reject(new Error('更新服务暂不可用')),
+      fail: () => reject(new Error('网络不可用，请稍后重试')),
+    }))
+    const release = trustedRelease(raw)
+    let installedCode = 104
+    // #ifdef APP-PLUS
+    installedCode = Number(plus.runtime.versionCode) || installedCode
+    // #endif
+    if (release.versionCode <= installedCode) {
+      updateLabel.value = '已是最新版本'
+      toast.success('当前已是最新版本')
+      return
+    }
+    updateLabel.value = `新版本 v${release.version}`
+    await dialog.confirm({ title: `发现新版本 ${release.version}`, msg: `${release.notes || '优化作业体验与稳定性。'}\n将打开浏览器下载安装包，覆盖安装可保留数据。` })
+    openUrl(release.download)
+  } catch (error) {
+    if (error instanceof Error) {
+      updateLabel.value = '检查失败，点击重试'
+      toast.warning(error.message)
+    }
+  } finally { checkingUpdate.value = false }
 }
 
 /** 清除缓存 */

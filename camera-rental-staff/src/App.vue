@@ -9,7 +9,6 @@ import { useThemeStore } from '@/store/theme'
 
 onLaunch(() => {
   const theme = useThemeStore()
-  theme.theme = 'light'
   theme.setThemeVars({ buttonPrimaryBg: '#e10600', buttonPrimaryBgActive: '#b80500', buttonPrimaryColor: '#e10600', buttonPrimaryPlainBorder: '#e10600' })
 })
 onShow((options) => {

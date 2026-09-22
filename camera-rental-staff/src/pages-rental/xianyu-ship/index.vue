@@ -1,14 +1,14 @@
 <template>
   <view class="page" :style="staffPageStyle">
     <view class="nav">
-      <wd-button size="small" plain @click="goBack">
+      <wd-button size="small" variant="plain" @click="goBack">
         返回
       </wd-button><text class="title">订单发货</text>
     </view>
     <scroll-view scroll-y class="content">
       <view class="card">
         <view class="section-head">
-          <text>当前订单</text><wd-button v-if="!lockedOrder" plain size="small" @click="showOrders = !showOrders">
+          <text>当前订单</text><wd-button v-if="!lockedOrder" variant="plain" size="small" @click="showOrders = !showOrders">
             {{ showOrders ? '收起' : selectedOrder ? '更换订单' : '选择订单' }}
           </wd-button>
         </view>
@@ -29,7 +29,7 @@
           </view>
         </view>
         <view v-if="orderError" class="error">
-          {{ orderError }}<wd-button size="small" plain @click="reloadOrder">
+          {{ orderError }}<wd-button size="small" variant="plain" @click="reloadOrder">
             重试
           </wd-button>
         </view>
@@ -52,7 +52,7 @@
           <view v-if="!orderLoading && !orderList.length" class="muted">
             没有匹配的待发货订单
           </view>
-          <wd-button v-if="orderList.length < orderTotal" plain block :loading="orderLoading" @click="searchOrders(false)">
+          <wd-button v-if="orderList.length < orderTotal" variant="plain" block :loading="orderLoading" @click="searchOrders(false)">
             加载更多
           </wd-button>
         </view>
@@ -74,7 +74,7 @@
         <view v-if="deviceError" class="error">
           {{ deviceError }}
         </view>
-        <wd-button plain block :disabled="!selectedOrder || resolving" @click="scanDevice">
+        <wd-button variant="plain" block :disabled="!selectedOrder || resolving" @click="scanDevice">
           {{ resolvedDevice ? '重扫设备' : '扫描设备永久码' }}
         </wd-button>
         <view class="manual-toggle" @click="manualDeviceVisible = !manualDeviceVisible">
@@ -93,7 +93,7 @@
         <view v-if="waybillNo" class="strong">
           {{ maskWaybill(waybillNo) }}
         </view>
-        <wd-button plain block :disabled="!selectedOrder" @click="scanWaybill">
+        <wd-button variant="plain" block :disabled="!selectedOrder" @click="scanWaybill">
           {{ waybillNo ? '重扫运单' : '扫描物流运单码' }}
         </wd-button>
         <view class="manual-toggle" @click="manualWaybillVisible = !manualWaybillVisible">
@@ -105,7 +105,7 @@
           </wd-button>
         </view>
         <view class="carrier">
-          <text>快递公司</text><wd-button plain size="small" @click="carrierVisible = true">
+          <text>快递公司</text><wd-button variant="plain" size="small" @click="carrierVisible = true">
             {{ expressName || '请选择' }} · 修改
           </wd-button>
         </view>
@@ -113,7 +113,7 @@
           未能确定快递公司，请手动选择
         </view>
         <view v-if="expressError" class="error">
-          {{ expressError }}<wd-button plain size="small" @click="loadExpress">
+          {{ expressError }}<wd-button variant="plain" size="small" @click="loadExpress">
             重试
           </wd-button>
         </view>
@@ -422,19 +422,19 @@ onUnload(() => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f5f5f5;
+  background: var(--staff-bg);
 }
 .nav {
   display: flex;
   align-items: center;
   gap: 24rpx;
   padding: calc(var(--staff-status-bar-height, 0px) + 12rpx) 24rpx 16rpx;
-  background: #fff;
+  background: var(--staff-surface);
 }
 .title {
   font-size: 36rpx;
   font-weight: 700;
-  color: #111111;
+  color: var(--staff-ink);
 }
 .content {
   flex: 1;
@@ -446,9 +446,9 @@ onUnload(() => {
 .card {
   padding: 24rpx;
   margin-bottom: 20rpx;
-  border: 1rpx solid #eeeeee;
+  border: 1rpx solid var(--staff-border);
   border-radius: 20rpx;
-  background: #fff;
+  background: var(--staff-surface);
 }
 .section-head {
   display: flex;
@@ -466,7 +466,7 @@ onUnload(() => {
   overflow-wrap: anywhere;
 }
 .muted {
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 24rpx;
   line-height: 1.6;
 }
@@ -476,27 +476,27 @@ onUnload(() => {
   margin-top: 16rpx;
 }
 .scan-hint {
-  color: #1d4ed8;
-  background: #eff6ff;
+  color: var(--staff-info);
+  background: var(--staff-info-soft);
   border-radius: 12rpx;
   padding: 18rpx;
   margin-bottom: 20rpx;
   font-size: 26rpx;
 }
 .ok {
-  color: #15803d;
+  color: var(--staff-success);
   font-size: 24rpx;
 }
 .error {
-  color: #b42318;
-  background: #fff4f2;
+  color: var(--staff-danger);
+  background: var(--staff-danger-soft);
   padding: 14rpx;
   margin: 12rpx 0;
   font-size: 24rpx;
   line-height: 1.6;
 }
 .manual-toggle {
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 24rpx;
   padding: 20rpx 0 8rpx;
 }
@@ -520,19 +520,19 @@ onUnload(() => {
   flex: 1;
 }
 .order-option {
-  border: 1rpx solid #eeeeee;
+  border: 1rpx solid var(--staff-border);
   padding: 16rpx;
   border-radius: 12rpx;
   margin: 12rpx 0;
 }
 .order-option.selected {
-  border-color: var(--staff-accent, #e10600);
+  border-color: var(--staff-accent-text);
   background: var(--staff-accent-soft, #fff1f0);
 }
 .footer {
-  background: #fff;
+  background: var(--staff-surface);
   padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom));
-  border-top: 1rpx solid #eeeeee;
+  border-top: 1rpx solid var(--staff-border);
 }
 .footer .muted {
   margin-bottom: 12rpx;

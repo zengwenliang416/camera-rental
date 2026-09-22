@@ -36,10 +36,10 @@
 
       <!-- 登录按钮 -->
       <view class="mb-2 mt-2 flex justify-between">
-        <text class="text-28rpx text-[#1890ff]" @click="goToLogin">
+        <text class="staff-text-info text-28rpx" @click="goToLogin">
           账号登录
         </text>
-        <text class="text-28rpx text-[#1890ff]" @click="goToForgetPassword">
+        <text class="staff-text-info text-28rpx" @click="goToForgetPassword">
           忘记密码？
         </text>
       </view>

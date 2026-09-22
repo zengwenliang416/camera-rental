@@ -11,10 +11,10 @@
       @update:model-value="$emit('update:modelValue', $event)"
     />
     <view
-      class="whitespace-nowrap border-l-1rpx border-l-[#e5e5e5] border-l-solid px-20rpx text-28rpx text-[#1890ff]"
+      class="staff-text-info whitespace-nowrap border-l-1rpx border-l-[#e5e5e5] border-l-solid px-20rpx text-28rpx"
       @click="handleSendCode"
     >
-      <text :class="{ 'text-gray-400': countdown > 0 }">
+      <text :class="{ 'staff-text-muted': countdown > 0 }">
         {{ countdown > 0 ? `${countdown} 秒后重发` : "获取验证码" }}
       </text>
     </view>

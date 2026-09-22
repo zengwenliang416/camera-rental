@@ -1,3 +1,5 @@
+@use '@wot-ui/ui/styles/theme/index.scss';
+
 // 测试用的 iconfont，可生效
 // @import './iconfont.css';
 
@@ -25,6 +27,71 @@ page {
   --wot-button-primary-plain-border: #e10600;
 }
 
+// All authored pages and Wot overlays share the provider's persisted theme.
+.staff-theme {
+  --staff-bg: #f5f5f5;
+  --staff-surface: #ffffff;
+  --staff-soft: #f3f4f6;
+  --staff-ink: #111111;
+  --staff-muted: #6b6b6b;
+  --staff-border: #e5e5e5;
+  --staff-line: #111111;
+  --staff-accent-text: #c40500;
+  --staff-accent-soft: #fff1f0;
+  --staff-info: #1d4ed8;
+  --staff-info-soft: #eff6ff;
+  --staff-danger: #b42318;
+  --staff-danger-soft: #fff4f2;
+  --staff-success: #15803d;
+  min-height: 100vh;
+  background: var(--staff-bg);
+  color: var(--staff-ink);
+}
+.staff-theme.wot-theme-light,
+.staff-theme.wot-theme-dark {
+  --wot-filled-oppo: var(--staff-surface);
+  --wot-primary-1: var(--staff-accent-soft);
+  --wot-primary-6: var(--staff-accent-text);
+  --wot-primary-7: #b80500;
+}
+.staff-theme.wot-theme-dark {
+  --staff-bg: #111317;
+  --staff-surface: #181a1f;
+  --staff-soft: #24272e;
+  --staff-ink: #f2f3f5;
+  --staff-muted: #b0b5c0;
+  --staff-border: #383d47;
+  --staff-line: #c9cdd4;
+  --staff-accent-text: #ff827d;
+  --staff-accent-soft: #391d20;
+  --staff-info: #91b7ff;
+  --staff-info-soft: #1b2a43;
+  --staff-danger: #ffaaa1;
+  --staff-danger-soft: #3a2124;
+  --staff-success: #80dca2;
+}
+.staff-text-ink {
+  color: var(--staff-ink);
+}
+.staff-text-muted {
+  color: var(--staff-muted);
+}
+.staff-text-info {
+  color: var(--staff-info);
+}
+.staff-bg-surface {
+  background: var(--staff-surface);
+}
+.staff-bg-info {
+  background: var(--staff-info-soft);
+}
+.staff-bg-border {
+  background: var(--staff-border);
+}
+.staff-border {
+  border-color: var(--staff-border);
+}
+
 /*
 border-t-1
 由于uniapp中无法使用*选择器，使用魔法代替*，加上此规则可以简化border与divide的使用，并提升布局的兼容性
@@ -47,7 +114,7 @@ border-t-1
 // 页面容器：灰色背景 + 最小全屏高度
 .yd-page-container {
   @apply min-h-screen;
-  background-color: #f5f5f5;
+  background-color: var(--staff-bg);
 }
 
 // 分页容器：配合 yd-page-container 与 z-paging 的 fixed=false 布局
@@ -61,7 +128,7 @@ border-t-1
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: #fff;
+  background-color: var(--staff-surface);
   padding: 24rpx;
 
   // 按钮容器
@@ -85,7 +152,7 @@ border-t-1
   // 弹窗标题
   &-title {
     @apply mb-24rpx text-32rpx font-semibold;
-    color: #333;
+    color: var(--staff-ink);
   }
 
   // 表单项
@@ -100,7 +167,7 @@ border-t-1
   // 表单项标签
   &-label {
     @apply mb-12rpx text-28rpx;
-    color: #666;
+    color: var(--staff-muted);
   }
 
   // 底部按钮组
@@ -118,7 +185,7 @@ border-t-1
     // 日期选择框
     &-picker {
       @apply h-72rpx flex flex-1 items-center justify-center rounded-8rpx px-24rpx text-28rpx;
-      background-color: #f5f5f5;
+      background-color: var(--staff-bg);
     }
 
     // 确认按钮组
@@ -126,4 +193,57 @@ border-t-1
       @apply mt-16rpx flex justify-end gap-16rpx;
     }
   }
+}
+
+// 排期、设备目录和今日作业的只读工作台布局。
+.mobile-workbench {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--staff-ink);
+  background: var(--staff-bg);
+}
+.workbench-content {
+  flex: 1;
+  min-height: 0;
+  height: 0;
+  padding: 20rpx 24rpx calc(24rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+.workbench-card {
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  border: 1rpx solid var(--staff-border);
+  border-radius: 16rpx;
+  background: var(--staff-surface);
+}
+.workbench-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  font-size: 24rpx;
+}
+.workbench-title {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+.workbench-note {
+  color: var(--staff-muted);
+  font-size: 24rpx;
+  line-height: 1.7;
+  margin: 12rpx 0;
+}
+.workbench-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-top: 16rpx;
+}
+.workbench-error {
+  color: var(--staff-danger);
+  background: var(--staff-danger-soft);
+  padding: 20rpx;
+  margin: 16rpx 0;
+  font-size: 26rpx;
 }

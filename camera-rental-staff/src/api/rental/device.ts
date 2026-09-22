@@ -78,3 +78,7 @@ export interface RentalDeviceScheduleDetail extends RentalDevice {
 export function getDeviceScheduleDetail(id: number) {
   return http.get<RentalDeviceScheduleDetail>(`/rental/device/${id}/schedule-detail`)
 }
+
+export function getRentalDevices(params: { pageNo: number, pageSize: number, keyword?: string, equipmentModelCode?: string, enabled?: boolean }) {
+  return http.get<PageResult<RentalDevice>>('/rental/device/page', params)
+}

@@ -66,7 +66,7 @@
           <wd-button size="small" type="primary" @click.stop="openItem(item)">
             {{ item.itemId || item.rentalOrderId ? '返回相关业务' : item.kind === 'scan' ? '重新查询' : '查看说明' }}
           </wd-button>
-          <wd-button size="small" plain @click.stop="exceptions.resolve(item.id)">
+          <wd-button size="small" variant="plain" @click.stop="exceptions.resolve(item.id)">
             标记已查看
           </wd-button>
         </view>
@@ -155,7 +155,7 @@ function openItem(item: StaffException) {
 <style scoped>
 .page {
   min-height: 100vh;
-  background: #fff;
+  background: var(--staff-surface);
 }
 .content {
   height: 100vh;
@@ -171,10 +171,10 @@ function openItem(item: StaffException) {
 .rule {
   width: 2rpx;
   height: 80rpx;
-  background: #ddd;
+  background: var(--staff-border);
 }
 .muted {
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 22rpx;
 }
 .num {
@@ -183,13 +183,13 @@ function openItem(item: StaffException) {
   line-height: 1;
 }
 .accent {
-  color: var(--staff-accent, #e10600);
+  color: var(--staff-accent-text);
 }
 .tabs {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   margin: 8rpx 0 20rpx;
-  border: 2rpx solid #111;
+  border: 2rpx solid var(--staff-ink);
 }
 .tab {
   padding: 16rpx 0;
@@ -212,11 +212,11 @@ function openItem(item: StaffException) {
 .card {
   padding: 20rpx;
   margin-bottom: 12rpx;
-  border: 2rpx solid #eee;
-  border-left: 8rpx solid #2563eb;
+  border: 2rpx solid var(--staff-border);
+  border-left: 8rpx solid var(--staff-info);
 }
 .card.accent {
-  border-left-color: var(--staff-accent, #e10600);
+  border-left-color: var(--staff-accent-text);
 }
 .card-title {
   font-size: 30rpx;
@@ -224,7 +224,7 @@ function openItem(item: StaffException) {
 }
 .meta {
   margin-top: 8rpx;
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 22rpx;
 }
 .actions {
@@ -235,7 +235,7 @@ function openItem(item: StaffException) {
 .empty,
 .note {
   padding: 20rpx 0;
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 24rpx;
   line-height: 1.6;
 }

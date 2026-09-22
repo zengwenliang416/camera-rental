@@ -83,13 +83,24 @@
             </view><view>{{ draft.receiverAddress || '地址未提供，请返回核对订单' }}</view>
           </view>
         </view>
+        <view class="workbench-actions">
+          <wd-button variant="plain" size="small" @click="copyStaffField(draft.orderNo)">
+            复制订单号
+          </wd-button>
+          <wd-button variant="plain" size="small" @click="copyStaffField(draft.waybillNo)">
+            复制运单号
+          </wd-button>
+          <wd-button v-if="draft.receiverMobile" variant="plain" size="small" @click="callReceiver(draft.receiverMobile)">
+            拨打电话
+          </wd-button>
+        </view>
         <view class="info">
           如提交结果不明，请先核对订单状态，再决定是否重试
         </view>
       </template>
     </scroll-view>
     <view class="footer">
-      <wd-button plain block :disabled="shipping" @click="goBack">
+      <wd-button variant="plain" block :disabled="shipping" @click="goBack">
         返回修改
       </wd-button>
       <view
@@ -114,6 +125,7 @@
 </template>
 
 <script setup lang="ts">
+import { callReceiver, copyStaffField } from '@/utils/staffContact'
 import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
 import { computed, onUnmounted, ref } from 'vue'
 import { onHide } from '@dcloudio/uni-app'
@@ -220,7 +232,7 @@ onHide(endHold)
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--staff-surface);
 }
 .nav {
   display: flex;
@@ -246,7 +258,7 @@ onHide(endHold)
 .warn {
   padding: 20rpx;
   margin-bottom: 24rpx;
-  color: var(--staff-accent, #e10600);
+  color: var(--staff-accent-text);
   background: var(--staff-accent-soft, #fff1f0);
   font-size: 26rpx;
   font-weight: 700;
@@ -261,15 +273,15 @@ onHide(endHold)
   display: flex;
   gap: 16rpx;
   padding: 22rpx 0;
-  border-bottom: 2rpx solid #eee;
+  border-bottom: 2rpx solid var(--staff-border);
 }
 .ok {
-  color: #15803d;
+  color: var(--staff-success);
   font-size: 32rpx;
   font-weight: 800;
 }
 .muted {
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 22rpx;
 }
 .strong {
@@ -280,8 +292,8 @@ onHide(endHold)
 .info {
   margin-top: 16rpx;
   padding: 20rpx;
-  color: #1d4ed8;
-  background: #eff6ff;
+  color: var(--staff-info);
+  background: var(--staff-info-soft);
   font-size: 24rpx;
 }
 .footer {
@@ -308,6 +320,6 @@ onHide(endHold)
 }
 .empty {
   padding: 40rpx 0;
-  color: #6b6b6b;
+  color: var(--staff-muted);
 }
 </style>

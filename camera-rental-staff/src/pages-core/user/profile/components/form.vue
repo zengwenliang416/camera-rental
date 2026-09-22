@@ -7,7 +7,7 @@
     @close="handleClose"
   >
     <view class="p-32rpx">
-      <view class="mb-32rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="staff-text-ink mb-32rpx text-center text-32rpx font-semibold">
         {{ title }}
       </view>
       <!-- 昵称输入 -->

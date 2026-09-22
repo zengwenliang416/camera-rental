@@ -78,31 +78,31 @@ defineEmits<{ click: [], action: [] }>()
 .recipient {
   margin-top: 20rpx;
   padding-top: 16rpx;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--staff-border);
   font-size: 26rpx;
   line-height: 1.7;
   overflow-wrap: anywhere;
-  color: #333;
+  color: var(--staff-ink);
 }
 .card {
   padding: 24rpx;
-  background: #fff;
+  background: var(--staff-surface);
   border-left: 8rpx solid var(--staff-accent, #e10600);
 }
 .card.info {
-  border-left-color: #2563eb;
+  border-left-color: var(--staff-info);
 }
 .kicker {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12rpx;
-  color: var(--staff-accent, #e10600);
+  color: var(--staff-accent-text);
   font-size: 26rpx;
   font-weight: 800;
 }
 .card.info .kicker {
-  color: #2563eb;
+  color: var(--staff-info);
 }
 .kicker-left {
   display: flex;
@@ -119,12 +119,12 @@ defineEmits<{ click: [], action: [] }>()
   background: var(--staff-accent-soft, #fff1f0);
 }
 .tag.info {
-  color: #2563eb;
-  background: #eff6ff;
+  color: var(--staff-info);
+  background: var(--staff-info-soft);
 }
 .order {
   margin-top: 8rpx;
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 22rpx;
 }
 .body {
@@ -140,8 +140,8 @@ defineEmits<{ click: [], action: [] }>()
   justify-content: center;
   width: 96rpx;
   height: 96rpx;
-  color: #111;
-  background: #f3f4f6;
+  color: var(--staff-ink);
+  background: var(--staff-soft);
   font-size: 40rpx;
 }
 .info {
@@ -156,14 +156,14 @@ defineEmits<{ click: [], action: [] }>()
 .meta,
 .source {
   margin-top: 6rpx;
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 22rpx;
 }
 .sep {
   margin-left: 12rpx;
 }
 .arrow {
-  color: #999;
+  color: var(--staff-muted);
   font-size: 40rpx;
 }
 </style>

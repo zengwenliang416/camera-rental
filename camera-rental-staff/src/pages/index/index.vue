@@ -3,6 +3,17 @@
     <scroll-view scroll-y class="content">
       <staff-header title="捷租达" brand @scanner="goScan" />
 
+      <view class="workbench-actions home-shortcuts">
+        <wd-button v-if="hasAccessByCodes(['rental:schedule:query'])" variant="plain" size="small" @click="openWorkbench('schedule')">
+          设备排期
+        </wd-button>
+        <wd-button v-if="hasAccessByCodes(['rental:schedule:query'])" variant="plain" size="small" @click="openWorkbench('tasks')">
+          今日作业
+        </wd-button>
+        <wd-button v-if="hasAccessByCodes(['rental:device:query'])" variant="plain" size="small" @click="openWorkbench('devices')">
+          设备列表
+        </wd-button>
+      </view>
       <view class="hero">
         <view class="hero-label">
           待分配设备
@@ -14,7 +25,7 @@
       </view>
 
       <view v-if="allocationError || shipError" class="empty error">
-        {{ allocationError || shipError }}<wd-button plain size="small" @click="load">
+        {{ allocationError || shipError }}<wd-button variant="plain" size="small" @click="load">
           重试加载
         </wd-button>
       </view>
@@ -115,6 +126,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useAccess } from '@/hooks/useAccess'
 import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
 import { setTabParams } from '@/utils/url'
 import { onShow } from '@dcloudio/uni-app'
@@ -139,6 +151,10 @@ defineOptions({
 })
 
 const staffPageStyle = useStaffPageStyle()
+const { hasAccessByCodes } = useAccess()
+function openWorkbench(page: 'schedule' | 'tasks' | 'devices') {
+  uni.navigateTo({ url: `/pages-rental/${page}/index` })
+}
 
 definePage({
   type: 'home',
@@ -268,7 +284,7 @@ onShow(() => {
 <style scoped>
 .page {
   min-height: 100vh;
-  background: #fff;
+  background: var(--staff-surface);
 }
 .content {
   height: 100vh;
@@ -282,7 +298,7 @@ onShow(() => {
   padding: 28rpx 0 8rpx;
 }
 .hero-label {
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 24rpx;
 }
 .hero-count {
@@ -292,7 +308,7 @@ onShow(() => {
   margin-top: 8rpx;
 }
 .hero-num {
-  color: var(--staff-accent, #e10600);
+  color: var(--staff-accent-text);
   font-size: 88rpx;
   font-weight: 800;
   line-height: 1;
@@ -305,7 +321,7 @@ onShow(() => {
   display: flex;
   gap: 16rpx;
   padding-top: 12rpx;
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 20rpx;
   line-height: 1.55;
 }
@@ -314,19 +330,19 @@ onShow(() => {
   flex-direction: column;
 }
 .motto-col.right {
-  color: #111;
+  color: var(--staff-ink);
   font-weight: 600;
 }
 .motto-rule {
   width: 2rpx;
-  background: #d4d4d4;
+  background: var(--staff-border);
 }
 .stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   margin: 8rpx 0 24rpx;
-  border-top: 2rpx solid #e5e5e5;
-  border-bottom: 2rpx solid #e5e5e5;
+  border-top: 2rpx solid var(--staff-border);
+  border-bottom: 2rpx solid var(--staff-border);
 }
 .stat {
   padding: 20rpx 8rpx 18rpx;
@@ -337,7 +353,7 @@ onShow(() => {
   font-size: 32rpx;
 }
 .stat-label {
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 22rpx;
 }
 .stat-value {
@@ -352,14 +368,14 @@ onShow(() => {
 }
 .chev {
   margin-left: 4rpx;
-  color: #999;
+  color: var(--staff-muted);
   font-size: 28rpx;
   font-weight: 400;
 }
 .stat.alert,
 .stat.alert .stat-label,
 .stat.alert .stat-value {
-  color: var(--staff-accent, #e10600);
+  color: var(--staff-accent-text);
 }
 .cta {
   margin: 8rpx 0 8rpx;
@@ -372,7 +388,7 @@ onShow(() => {
   font-weight: 800;
 }
 .more {
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 24rpx;
   font-weight: 500;
 }
@@ -383,10 +399,10 @@ onShow(() => {
 }
 .empty {
   padding: 28rpx 8rpx;
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 24rpx;
 }
 .empty.error {
-  color: var(--staff-accent, #e10600);
+  color: var(--staff-accent-text);
 }
 </style>

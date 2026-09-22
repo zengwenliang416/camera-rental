@@ -5,9 +5,9 @@
     :class="{ 'pointer-events-none opacity-60': props.disabled }"
   >
     <view class="divider mb-40rpx flex items-center justify-center">
-      <view class="h-1rpx flex-1 bg-[#e5e5e5]" />
-      <text class="px-24rpx text-26rpx text-[#999]">其他登录方式</text>
-      <view class="h-1rpx flex-1 bg-[#e5e5e5]" />
+      <view class="staff-bg-border h-1rpx flex-1" />
+      <text class="staff-text-muted px-24rpx text-26rpx">其他登录方式</text>
+      <view class="staff-bg-border h-1rpx flex-1" />
     </view>
     <view class="icons flex justify-center gap-48rpx">
       <view

@@ -7,10 +7,10 @@
     <view class="form-container flex flex-col items-center">
       <wd-loading v-if="status === 'loading'" color="#1890ff" size="64rpx" />
       <wd-icon v-else name="exclamation-circle" size="64rpx" color="#faad14" />
-      <text class="mt-32rpx text-32rpx text-[#333] font-medium">
+      <text class="staff-text-ink mt-32rpx text-32rpx font-medium">
         {{ status === 'loading' ? `正在完成三方${actionLabel}` : `三方${actionLabel}失败` }}
       </text>
-      <text class="mt-16rpx text-center text-26rpx text-[#999]">
+      <text class="staff-text-muted mt-16rpx text-center text-26rpx">
         {{ message }}
       </text>
       <wd-button v-if="status === 'failed'" class="mt-48rpx" type="primary" @click="handleBack">

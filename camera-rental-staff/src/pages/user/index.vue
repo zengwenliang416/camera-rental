@@ -45,6 +45,10 @@
       </view>
 
       <view class="list">
+        <view class="item" @click="themeStore.toggleTheme()">
+          <text>深色模式</text>
+          <text class="muted">{{ themeStore.theme === 'dark' ? '已开启 · 切换浅色' : '已关闭 · 切换深色' }}</text>
+        </view>
         <view class="item" @click="handleGoSettings">
           <text>应用设置 / 关于捷租达</text>
           <text class="muted">
@@ -77,8 +81,10 @@ import type { UserProfileVO } from '@/api/system/user/profile'
 import { LOGIN_PAGE } from '@/router/config'
 import { scannerConnected } from '@/services/scanner'
 import { useUserStore } from '@/store'
+import { useThemeStore } from '@/store/theme'
 import { useTokenStore } from '@/store/token'
 
+const themeStore = useThemeStore()
 const staffPageStyle = useStaffPageStyle()
 
 definePage({
@@ -142,7 +148,7 @@ async function handleLogout() {
 <style lang="scss" scoped>
 .page {
   min-height: 100vh;
-  background: #fff;
+  background: var(--staff-surface);
 }
 .content {
   height: 100vh;
@@ -155,7 +161,7 @@ async function handleLogout() {
 }
 .card {
   padding: 24rpx 0;
-  border-bottom: 2rpx solid #eee;
+  border-bottom: 2rpx solid var(--staff-border);
 }
 .user {
   display: flex;
@@ -168,7 +174,7 @@ async function handleLogout() {
   justify-content: center;
   width: 96rpx;
   height: 96rpx;
-  border: 2rpx solid #e8eeee;
+  border: 2rpx solid var(--staff-border);
   border-radius: 20rpx;
   overflow: hidden;
   font-size: 48rpx;
@@ -178,7 +184,7 @@ async function handleLogout() {
   font-weight: 800;
 }
 .muted {
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 24rpx;
 }
 .strong {
@@ -204,7 +210,7 @@ async function handleLogout() {
   display: flex;
   justify-content: space-between;
   padding: 28rpx 0;
-  border-bottom: 2rpx solid #eee;
+  border-bottom: 2rpx solid var(--staff-border);
   font-size: 28rpx;
 }
 </style>

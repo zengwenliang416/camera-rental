@@ -60,7 +60,7 @@ const connected = computed(() => props.connected ?? scannerConnected.value)
   gap: 24rpx;
 }
 .title {
-  color: #111;
+  color: var(--staff-ink);
   font-size: 48rpx;
   font-weight: 800;
   line-height: 1.15;
@@ -71,7 +71,7 @@ const connected = computed(() => props.connected ?? scannerConnected.value)
   align-items: center;
   gap: 6rpx;
   margin-top: 8rpx;
-  color: #111;
+  color: var(--staff-ink);
   font-size: 24rpx;
   font-weight: 600;
 }
@@ -101,21 +101,21 @@ const connected = computed(() => props.connected ?? scannerConnected.value)
   border-radius: 50%;
 }
 .dot.on {
-  background: #16a34a;
+  background: var(--staff-success);
 }
 .dot.off {
-  background: #d1d5db;
+  background: var(--staff-border);
 }
 .chev {
-  color: #999;
+  color: var(--staff-muted);
 }
 .scan-sub {
   margin-top: 4rpx;
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 20rpx;
 }
 .rule {
   margin-top: 20rpx;
-  border-bottom: 6rpx solid #111;
+  border-bottom: 6rpx solid var(--staff-ink);
 }
 </style>

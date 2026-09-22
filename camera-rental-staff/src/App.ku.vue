@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, onUnmounted, ref, watch } from 'vue'
 import { useThemeStore } from '@/store'
 import FgTabbar from '@/tabbar/index.vue'
 import { isPageTabbar, tabbarStore } from './tabbar/store'
@@ -13,8 +13,53 @@ themeStore.setThemeVars({
   buttonPrimaryPlainBorder: '#e10600',
 })
 
+const providerThemeVars = computed(() => ({
+  ...themeStore.themeVars,
+  buttonPrimaryColor: themeStore.theme === 'dark' ? '#ff827d' : '#e10600',
+  buttonPrimaryPlainBorder: themeStore.theme === 'dark' ? '#ff827d' : '#e10600',
+}))
+
+let navigationThemeTimer: ReturnType<typeof setTimeout> | undefined
+onUnmounted(() => clearTimeout(navigationThemeTimer))
+
+function syncSystemTheme() {
+  const dark = themeStore.theme === 'dark'
+  const background = dark ? '#181a1f' : '#ffffff'
+  uni.setNavigationBarColor({ frontColor: dark ? '#ffffff' : '#000000', backgroundColor: background })
+  // #ifdef APP-PLUS
+  plus.navigator.setStatusBarStyle(dark ? 'light' : 'dark')
+  plus.navigator.setStatusBarBackground(background)
+  plus.webview.currentWebview().setStyle({ background })
+  if (plus.os.name === 'Android') {
+    clearTimeout(navigationThemeTimer)
+    // Apply after DCloud finishes updating status-bar flags for this page.
+    navigationThemeTimer = setTimeout(() => {
+      try {
+        const activity = plus.android.runtimeMainActivity()
+        const window = plus.android.invoke(activity, 'getWindow')
+        const color = plus.android.invoke('android.graphics.Color', 'parseColor', background)
+        plus.android.invoke(window, 'setNavigationBarColor', color)
+        if (Number.parseInt(plus.os.version || '0', 10) >= 11) {
+          const controller = plus.android.invoke(window, 'getInsetsController')
+          // Apply both bar appearances after page navigation resets native defaults.
+          plus.android.invoke(controller, 'setSystemBarsAppearance', dark ? 0 : 24, 24)
+        } else {
+          const decor = plus.android.invoke(window, 'getDecorView')
+          const flags = Number(plus.android.invoke(decor, 'getSystemUiVisibility'))
+          plus.android.invoke(decor, 'setSystemUiVisibility', dark ? flags & ~0x2010 : flags | 0x2010)
+        }
+      } catch {
+        // Older Android versions retain the system navigation bar appearance.
+      }
+    }, 100)
+  }
+  // #endif
+}
+watch(() => themeStore.theme, syncSystemTheme)
+
 const isCurrentPageTabbar = ref(true)
 onShow(() => {
+  syncSystemTheme()
   tabbarStore.syncCurIdxByCurrentPageAsync()
   const { path } = currRoute()
   // “蜡笔小开心”提到本地是 '/pages/index/index'，线上是 '/' 导致线上 tabbar 不见了
@@ -36,7 +81,7 @@ defineExpose({
 </script>
 
 <template>
-  <wd-config-provider :theme-vars="themeStore.themeVars" :theme="themeStore.theme">
+  <wd-config-provider custom-class="staff-theme" :theme-vars="providerThemeVars" :theme="themeStore.theme">
     <!-- 这个先隐藏了，知道这样用就行 -->
     <view class="hidden text-center">
       {{ helloKuRoot }}，这里可以配置全局的东西

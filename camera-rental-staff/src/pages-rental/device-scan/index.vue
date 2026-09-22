@@ -31,11 +31,18 @@
         正在查询设备…
       </view>
       <view v-if="scheduleError" class="error">
-        {{ scheduleError }}<wd-button plain size="small" @click="retrySchedule">
+        {{ scheduleError }}<wd-button variant="plain" size="small" @click="retrySchedule">
           重试排期查询
         </wd-button>
       </view>
       <template v-if="device">
+        <view class="workbench-actions">
+          <wd-button v-if="hasAccessByCodes(['rental:schedule:query'])" variant="plain" size="small" @click="openSchedule">
+            按日期查看排期
+          </wd-button><wd-button variant="plain" size="small" @click="copyStaffField(device.deviceNo)">
+            复制设备编号
+          </wd-button>
+        </view>
         <view class="hero">
           <view>
             <view class="device-no">
@@ -118,7 +125,7 @@
       </template>
     </scroll-view>
     <view v-if="device" class="footer">
-      <wd-button v-if="device.currentAssignment?.rentalOrderId" plain @click="goOrders">
+      <wd-button v-if="device.currentAssignment?.rentalOrderId" variant="plain" @click="goOrders">
         查看订单
       </wd-button>
       <wd-button type="primary" @click="toastTimeline">
@@ -129,6 +136,8 @@
 </template>
 
 <script setup lang="ts">
+import { useAccess } from '@/hooks/useAccess'
+import { copyStaffField } from '@/utils/staffContact'
 import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
 import { onShow } from '@dcloudio/uni-app'
 import { getAndClearTabParams } from '@/utils/url'
@@ -141,6 +150,7 @@ import { useStaffExceptionStore } from '@/store/staffException'
 import { useStaffScanner } from '@/hooks/useStaffScanner'
 
 const staffPageStyle = useStaffPageStyle()
+const { hasAccessByCodes } = useAccess()
 
 definePage({
   style: {
@@ -233,6 +243,10 @@ async function resolve(payload: string) {
 
 const { scan: scanDevice, scannerConnected } = useStaffScanner(result => resolve(result.text))
 
+function openSchedule() {
+  if (device.value)
+    uni.navigateTo({ url: `/pages-rental/schedule/index?deviceNo=${encodeURIComponent(device.value.deviceNo)}` })
+}
 function goOrders() {
   const id = device.value?.currentAssignment?.rentalOrderId
   if (id)
@@ -257,7 +271,7 @@ onShow(() => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--staff-surface);
 }
 .content {
   flex: 1;
@@ -290,21 +304,21 @@ onShow(() => {
 }
 .search :deep(.wd-input) {
   flex: 1;
-  border: 2rpx solid #111;
+  border: 2rpx solid var(--staff-ink);
   padding: 8rpx 12rpx;
 }
 .hero {
   display: flex;
   justify-content: space-between;
   padding: 24rpx 0;
-  border-bottom: 2rpx solid #eee;
+  border-bottom: 2rpx solid var(--staff-border);
 }
 .device-no {
   font-size: 48rpx;
   font-weight: 800;
 }
 .status {
-  color: var(--staff-accent, #e10600);
+  color: var(--staff-accent-text);
   font-size: 28rpx;
   font-weight: 800;
 }
@@ -315,7 +329,7 @@ onShow(() => {
   padding: 20rpx 0;
 }
 .muted {
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 22rpx;
 }
 .strong {
@@ -334,7 +348,7 @@ onShow(() => {
 }
 .flag {
   padding: 16rpx;
-  border: 2rpx solid #eee;
+  border: 2rpx solid var(--staff-border);
   font-size: 22rpx;
 }
 .dot {
@@ -343,10 +357,10 @@ onShow(() => {
   height: 12rpx;
   margin-right: 8rpx;
   border-radius: 50%;
-  background: #d1d5db;
+  background: var(--staff-border);
 }
 .dot.on {
-  background: #16a34a;
+  background: var(--staff-success);
 }
 .dot.off {
   background: var(--staff-accent, #e10600);
@@ -365,7 +379,7 @@ onShow(() => {
 }
 .error {
   padding: 16rpx;
-  color: var(--staff-accent, #e10600);
+  color: var(--staff-accent-text);
   background: var(--staff-accent-soft, #fff1f0);
 }
 .footer {

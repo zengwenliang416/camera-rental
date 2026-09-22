@@ -107,6 +107,20 @@
           </view>
         </view>
 
+        <view class="workbench-actions">
+          <wd-button v-if="detail?.receiverMobile" variant="plain" size="small" @click="callReceiver(detail.receiverMobile)">
+            拨打电话
+          </wd-button>
+          <wd-button v-if="detail?.receiverMobile" variant="plain" size="small" @click="copyStaffField(detail.receiverMobile)">
+            复制电话
+          </wd-button>
+          <wd-button v-if="detail?.receiverAddress" variant="plain" size="small" @click="copyStaffField(detail.receiverAddress)">
+            复制地址
+          </wd-button>
+          <wd-button v-if="detail?.externalOrderNo || detail?.orderNo" variant="plain" size="small" @click="copyStaffField(detail.externalOrderNo || detail.orderNo)">
+            复制订单号
+          </wd-button>
+        </view>
         <view id="order-devices" />
         <view
           v-for="item in items"
@@ -218,7 +232,7 @@
       </template>
     </scroll-view>
     <view v-if="!loading && !error" class="footer">
-      <wd-button plain @click="openFirstItem">
+      <wd-button variant="plain" @click="openFirstItem">
         查看设备
       </wd-button>
       <wd-button v-if="hasAccessByCodes(['rental:xianyu:ship']) && detail?.sourceType === 'XIANYU'" type="primary" @click="openShipping">
@@ -229,6 +243,7 @@
 </template>
 
 <script setup lang="ts">
+import { callReceiver, copyStaffField } from '@/utils/staffContact'
 import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
 import { useAccess } from '@/hooks/useAccess'
 import { onLoad, onShow } from '@dcloudio/uni-app'
@@ -315,7 +330,7 @@ onShow(() => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--staff-surface);
 }
 .nav {
   display: flex;
@@ -344,7 +359,7 @@ onShow(() => {
   justify-content: space-between;
   gap: 24rpx;
   padding: 12rpx 0 24rpx;
-  border-bottom: 2rpx solid #eee;
+  border-bottom: 2rpx solid var(--staff-border);
 }
 .status-title {
   font-size: 44rpx;
@@ -353,12 +368,12 @@ onShow(() => {
 .status-sub,
 .muted,
 .id-label {
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 22rpx;
 }
 .sla {
   text-align: right;
-  color: var(--staff-accent, #e10600);
+  color: var(--staff-accent-text);
 }
 .sla-kicker {
   font-size: 20rpx;
@@ -383,7 +398,7 @@ onShow(() => {
 }
 .ext {
   margin-bottom: 16rpx;
-  color: #6b6b6b;
+  color: var(--staff-muted);
   font-size: 22rpx;
 }
 .goods {
@@ -391,8 +406,8 @@ onShow(() => {
   align-items: center;
   gap: 16rpx;
   padding: 20rpx 0;
-  border-top: 2rpx solid #eee;
-  border-bottom: 2rpx solid #eee;
+  border-top: 2rpx solid var(--staff-border);
+  border-bottom: 2rpx solid var(--staff-border);
 }
 .thumb {
   display: flex;
@@ -400,7 +415,7 @@ onShow(() => {
   justify-content: center;
   width: 96rpx;
   height: 96rpx;
-  background: #f3f4f6;
+  background: var(--staff-soft);
   font-size: 40rpx;
 }
 .goods-title {
@@ -408,12 +423,12 @@ onShow(() => {
   font-weight: 800;
 }
 .arrow {
-  color: #999;
+  color: var(--staff-muted);
   font-size: 40rpx;
 }
 .block {
   padding: 28rpx 0;
-  border-bottom: 2rpx solid #eee;
+  border-bottom: 2rpx solid var(--staff-border);
 }
 .block-title {
   margin-bottom: 16rpx;
@@ -436,7 +451,7 @@ onShow(() => {
 }
 .accent {
   margin-top: 6rpx;
-  color: var(--staff-accent, #e10600);
+  color: var(--staff-accent-text);
   font-size: 30rpx;
   font-weight: 800;
 }
@@ -445,16 +460,16 @@ onShow(() => {
   grid-template-columns: 1fr 1fr;
   gap: 16rpx;
   padding: 16rpx 28rpx calc(16rpx + env(safe-area-inset-bottom));
-  background: #fff;
-  border-top: 2rpx solid #eee;
+  background: var(--staff-surface);
+  border-top: 2rpx solid var(--staff-border);
 }
 .empty,
 .error {
   padding: 60rpx 20rpx;
   text-align: center;
-  color: #8492a0;
+  color: var(--staff-muted);
 }
 .error {
-  color: #c92a2a;
+  color: var(--staff-danger);
 }
 </style>

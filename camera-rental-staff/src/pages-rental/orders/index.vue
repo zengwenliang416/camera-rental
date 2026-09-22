@@ -47,7 +47,7 @@
         />
       </view>
 
-      <wd-button v-if="orders.length < pendingTotal" plain block :loading="loading" @click="loadMore">
+      <wd-button v-if="orders.length < pendingTotal" variant="plain" block :loading="loading" @click="loadMore">
         加载更多订单
       </wd-button>
       <scan-banner title="扫描设备" subtitle="查询设备状态与排期" class="cta" @click="goScan" />
@@ -179,7 +179,7 @@ async function refreshVisible() {
 <style scoped>
 .page {
   min-height: 100vh;
-  background: #fff;
+  background: var(--staff-surface);
 }
 .content {
   height: 100vh;
@@ -192,7 +192,7 @@ async function refreshVisible() {
   gap: 12rpx;
   padding: 12rpx 20rpx;
   margin: 20rpx 0 8rpx;
-  border: 2rpx solid #111;
+  border: 2rpx solid var(--staff-ink);
 }
 .search-ico {
   font-size: 32rpx;
@@ -205,14 +205,14 @@ async function refreshVisible() {
   gap: 12rpx;
   flex-wrap: wrap;
   margin: 8rpx 0 16rpx;
-  border-bottom: 4rpx solid #111;
+  border-bottom: 4rpx solid var(--staff-ink);
 }
 .queue {
   padding: 16rpx 8rpx 18rpx;
-  color: #6b6b6b;
+  color: var(--staff-muted);
 }
 .queue.active {
-  color: var(--staff-accent, #e10600);
+  color: var(--staff-accent-text);
   box-shadow: inset 0 -6rpx 0 var(--staff-accent, #e10600);
 }
 .queue-label {
@@ -227,12 +227,12 @@ async function refreshVisible() {
 .banner {
   padding: 28rpx;
   margin-bottom: 20rpx;
-  color: #6b6b6b;
-  background: #f5f5f5;
+  color: var(--staff-muted);
+  background: var(--staff-bg);
 }
 .banner.error {
-  color: #b42318;
-  background: #fff4f2;
+  color: var(--staff-danger);
+  background: var(--staff-danger-soft);
 }
 .list {
   display: flex;

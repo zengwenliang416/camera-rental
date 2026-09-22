@@ -6,19 +6,21 @@ import { parse } from '@vue/compiler-sfc'
 
 function load(file, mocks = {}, expose = '') {
   let code = fs.readFileSync(new URL(file, import.meta.url), 'utf8')
-  if (file.endsWith('.vue')) code = parse(code).descriptor.scriptSetup.content
+  if (file.endsWith('.vue'))
+    code = parse(code).descriptor.scriptSetup.content
   code += `\n${expose ? `export { ${expose} }` : ''}`
   const js = ts.transpileModule(code, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText
   const exports = {}
-  vm.runInNewContext(js, { exports, require: name => {
-    if (!(name in mocks)) throw new Error(`Missing mock ${name}`)
+  vm.runInNewContext(js, { exports, require: (name) => {
+    if (!(name in mocks))
+      throw new Error(`Missing mock ${name}`)
     return mocks[name]
   }, definePage: () => {}, uni: globalThis.uni, setTimeout: fn => fn(), getCurrentPages: () => [] })
   return exports
 }
 const model = load('../src/models/rental/staffWorkflow.ts')
 const seen = []
-const found = await model.findPendingShipment(async page => {
+const found = await model.findPendingShipment(async (page) => {
   seen.push(page)
   return page === 1 ? { list: [{ id: 11, rentalOrderId: 12 }], total: 101 } : { list: [{ id: 22, rentalOrderId: 33 }], total: 101 }
 }, { rentalOrderId: 33 })
@@ -33,7 +35,10 @@ console.log('PASS exact order selection beyond page one, mismatched IDs, refresh
 
 const apiCalls = []
 const api = load('../src/api/rental/device.ts', { '@/http/http': { http: {
-  post: async (url, body) => { apiCalls.push({ url, body }); return { id: 3 } },
+  post: async (url, body) => {
+    apiCalls.push({ url, body })
+    return { id: 3 }
+  },
   get: async () => ({ list: [{ id: 1, deviceNo: 'TEST-10' }, { id: 2, deviceNo: 'TEST-1' }], total: 2 }),
 } } })
 assert.equal((await api.lookupRentalDevice('TEST-1')).id, 2)
@@ -44,9 +49,15 @@ console.log('PASS exact manual device lookup, signed QR preserved, partial numbe
 
 const hooks = { load: [], show: [] }
 const draft = { draft: null, setDraft: () => {} }
-const vue = { ref: value => ({ value }), computed: fn => ({ get value() { return fn() } }) }
+const vue = { ref: value => ({ value }), computed: fn => ({
+  get value() {
+    return fn()
+  },
+}) }
 let navigate = ''
-globalThis.uni = { navigateTo: ({ url }) => { navigate = url }, navigateBack() {}, switchTab() {}, showModal: ({ success }) => success({ confirm: true }) }
+globalThis.uni = { navigateTo: ({ url }) => {
+  navigate = url
+}, navigateBack() {}, switchTab() {}, showModal: ({ success }) => success({ confirm: true }) }
 const details = { id: 33, items: [{ requiredQuantity: 1, equipmentModelCode: 'MODEL', assignments: [] }] }
 const mocks = {
   vue,
@@ -83,7 +94,8 @@ const returnPage = load('../src/pages-rental/device-return/index.vue', {
   '@wot-ui/ui/components/wd-toast': { useToast: () => ({ info() {}, warning() {} }) },
   '@/hooks/useStaffPageStyle': mocks['@/hooks/useStaffPageStyle'],
   '@/api/rental/device': { lookupRentalDevice: async code => ({ id: code === 'TEST-A' ? 1 : 2, deviceNo: code }) },
-  '@/components/rental/scan-banner.vue': {}, '@/components/rental/staff-header.vue': {},
+  '@/components/rental/scan-banner.vue': {},
+  '@/components/rental/staff-header.vue': {},
   '@/store/staffException': { useStaffExceptionStore: () => ({ record() {} }) },
   '@/hooks/useStaffScanner': mocks['@/hooks/useStaffScanner'],
   '@/utils/staffScan': { extractDeviceNo: x => x, normalizeCode: x => x },
@@ -105,8 +117,12 @@ const detailPage = load('../src/pages-rental/orders/detail.vue', {
   '@dcloudio/uni-app': { onLoad: fn => detailHooks.load.push(fn), onShow: fn => detailHooks.show.push(fn) },
   '@/hooks/useStaffPageStyle': mocks['@/hooks/useStaffPageStyle'],
   '@/hooks/useAccess': mocks['@/hooks/useAccess'],
-  '@/api/rental/order': { getOrderScheduleDetail: async id => { detailCalls++; return { id, items: [] } } },
+  '@/api/rental/order': { getOrderScheduleDetail: async (id) => {
+    detailCalls++
+    return { id, items: [] }
+  } },
   '@/models/rental/orderDisplay': {},
+  '@/utils/staffContact': { callReceiver() {}, copyStaffField() {} },
 }, 'openShipping, orderId')
 detailHooks.load[0]({ id: '33' })
 detailPage.openShipping()

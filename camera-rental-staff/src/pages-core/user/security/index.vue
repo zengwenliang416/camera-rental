@@ -28,7 +28,7 @@
         <template #icon>
           <wd-icon :name="item.icon" size="20px" :color="item.color" class="mr-16rpx" />
         </template>
-        <view :class="getBindSocialUser(item.type) ? 'text-[#07c160]' : 'text-[#999]'">
+        <view :class="getBindSocialUser(item.type) ? 'text-[#07c160]' : 'staff-text-muted'">
           {{ getSocialStatus(item.type) }}
         </view>
       </wd-cell>

@@ -2,7 +2,7 @@
   <view v-if="tenantEnabled" class="input-item">
     <wd-icon name="home" size="20px" color="#1890ff" />
     <view class="ml-16rpx flex flex-1 items-center justify-between" @click="handleOpen">
-      <text class="text-28rpx text-[#333]">
+      <text class="staff-text-ink text-28rpx">
         {{ getWotPickerDisplay(tenantList, tenantId, { valueKey: 'id', labelKey: 'name', placeholder: '请选择租户' }) }}
       </text>
     </view>

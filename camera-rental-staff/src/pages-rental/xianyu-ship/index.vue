@@ -25,7 +25,7 @@
           <view>{{ orderDetail.receiverName || '收件人未提供' }} · {{ orderDetail.receiverMobile || '电话未提供' }}</view>
           <view>{{ orderDetail.receiverAddress || '地址未提供，请先核对订单收货信息' }}</view>
           <view class="muted">
-            本单设备 {{ requiredCount }} 台 · 本次已核验 {{ resolvedDevice ? 1 : 0 }} 台
+            本单设备 {{ requiredCount }} 台 · 本次已核验 {{ scannedDevices.length }} 台
           </view>
         </view>
         <template v-if="orderDetail">
@@ -74,11 +74,20 @@
         <view v-if="resolvedDevice" class="muted">
           {{ deviceStatusLabel(resolvedDevice.status) }}
         </view>
+        <view v-for="device in scannedDevices" :key="device.id" class="carrier">
+          <text>{{ device.deviceNo }} · {{ device.equipmentModelCode }}</text>
+          <wd-button size="small" variant="plain" @click="removeDevice(device.id)">
+            移除
+          </wd-button>
+        </view>
+        <view class="muted">
+          本单全部设备使用同一张运单，扫齐后再提交。
+        </view>
         <view v-if="deviceError" class="error">
           {{ deviceError }}
         </view>
         <wd-button variant="plain" block :disabled="!selectedOrder || resolving" @click="scanDevice">
-          {{ resolvedDevice ? '重扫设备' : '扫描设备永久码' }}
+          {{ scannedDevices.length ? '继续扫描设备' : '扫描设备永久码' }}
         </wd-button>
         <view class="manual-toggle" @click="manualDeviceVisible = !manualDeviceVisible">
           {{ manualDeviceVisible ? '收起手工输入' : '无法扫码？手工输入设备码' }}
@@ -169,8 +178,12 @@ const orderTotal = ref(0)
 let orderPage = 1
 let searchVersion = 0
 let selectionVersion = 0
-let target: { rentalOrderId?: number, channelOrderId?: number } = {}
-const resolvedDevice = ref<RentalDevice>()
+let target: {
+  rentalOrderId?: number
+  channelOrderId?: number
+} = {}
+const scannedDevices = ref<RentalDevice[]>([])
+const resolvedDevice = computed(() => scannedDevices.value[scannedDevices.value.length - 1])
 const deviceError = ref('')
 const resolving = ref(false)
 const manualDevice = ref('')
@@ -200,21 +213,24 @@ const blocker = computed(() => {
     return unsupported
   if (resolving.value)
     return '正在核验设备'
-  if (deviceError.value)
-    return deviceError.value
-  if (!resolvedDevice.value)
-    return '请扫描本次发货设备'
+  if (scannedDevices.value.length !== requiredCount.value)
+    return `应发 ${requiredCount.value} 台，已扫 ${scannedDevices.value.length} 台，请继续核验`
   if (!waybillNo.value)
     return '请扫描或输入物流运单号'
   if (!expressName.value)
     return '请选择快递公司'
   return ''
 })
+function removeDevice(id: number) {
+  scannedDevices.value = scannedDevices.value.filter(device => device.id !== id)
+  deviceError.value = ''
+  scanTarget.value = 'device'
+}
 function goBack() {
   uni.navigateBack({ fail: () => uni.switchTab({ url: '/pages-rental/orders/index' }) })
 }
 function clearScans() {
-  resolvedDevice.value = undefined
+  scannedDevices.value = []
   deviceError.value = ''
   manualDevice.value = ''
   waybillNo.value = ''
@@ -254,7 +270,7 @@ async function selectOrder(item: XianyuPendingShipOrder) {
   }
 }
 async function quantityUpdated() {
-  resolvedDevice.value = undefined
+  scannedDevices.value = []
   deviceError.value = ''
   await reloadOrder()
 }
@@ -262,7 +278,8 @@ async function reloadOrder() {
   if (!lockedOrder.value) {
     if (selectedOrder.value)
       await selectOrder(selectedOrder.value)
-    else await searchOrders()
+    else
+      await searchOrders()
     return
   }
   const version = ++selectionVersion
@@ -313,7 +330,6 @@ async function acceptDeviceScan(raw: string) {
     return
   const version = selectionVersion
   resolving.value = true
-  resolvedDevice.value = undefined
   deviceError.value = ''
   try {
     const payload = raw.trim()
@@ -323,19 +339,23 @@ async function acceptDeviceScan(raw: string) {
     const unsupported = singleShipmentBlocker(orderDetail.value)
     if (unsupported)
       throw new Error(unsupported)
-    const item = orderDetail.value?.items?.[0]
-    if (item?.equipmentModelCode !== device.equipmentModelCode)
-      throw new Error('扫描设备型号与当前订单不符')
-    const active = item?.assignments?.filter(a => a.status === 'ASSIGNED' || a.status === 'DISPATCHED') || []
-    if (active.length && !active.some(a => a.deviceId === device.id))
-      throw new Error('此订单已分配其他设备，请核对设备编号')
-    resolvedDevice.value = device
-    manualDevice.value = device.deviceNo
-    scanTarget.value = 'waybill'
+    if (scannedDevices.value.some(row => row.id === device.id))
+      throw new Error('这台设备已经扫描，请勿重复添加')
+    const matching = orderDetail.value?.items?.filter(item => item.equipmentModelCode === device.equipmentModelCode) || []
+    const capacity = matching.reduce((sum, item) => sum + (item.requiredQuantity || 0), 0)
+    if (scannedDevices.value.filter(row => row.equipmentModelCode === device.equipmentModelCode).length >= capacity)
+      throw new Error('此型号台数已齐或型号与订单不符')
+    if (device.status !== 'AVAILABLE' || !device.enabled)
+      throw new Error('设备当前不可发货，请核对状态')
+    scannedDevices.value = [...scannedDevices.value, device]
+    manualDevice.value = ''
+    scanTarget.value = scannedDevices.value.length === requiredCount.value ? 'waybill' : 'device'
   } catch (error) {
     if (version === selectionVersion)
       deviceError.value = staffError(error, '设备核验失败')
-  } finally { resolving.value = false }
+  } finally {
+    resolving.value = false
+  }
 }
 function applyWaybill(raw: string) {
   if (!selectedOrder.value)
@@ -359,7 +379,8 @@ function confirmManualWaybill() {
 const { scan } = useStaffScanner(async (result) => {
   if (scanTarget.value === 'device')
     await acceptDeviceScan(result.text)
-  else applyWaybill(result.text)
+  else
+    applyWaybill(result.text)
 })
 async function scanDevice() {
   scanTarget.value = 'device'
@@ -375,7 +396,9 @@ async function loadExpress() {
     expressList.value = await getXianyuExpressCompanyList()
     if (waybillNo.value.startsWith('SF') && !expressCode.value)
       expressCode.value = expressList.value.find(item => /顺丰/.test(item.expressName))?.code || ''
-  } catch (error) { expressError.value = staffError(error, '快递公司获取失败，请重试') }
+  } catch (error) {
+    expressError.value = staffError(error, '快递公司获取失败，请重试')
+  }
 }
 function goConfirm() {
   if (blocker.value || !selectedOrder.value || !resolvedDevice.value)
@@ -388,6 +411,7 @@ function goConfirm() {
     receiverName: orderDetail.value?.receiverName,
     receiverMobile: orderDetail.value?.receiverMobile,
     receiverAddress: orderDetail.value?.receiverAddress,
+    devices: scannedDevices.value.map(device => ({ id: device.id, deviceNo: device.deviceNo })),
     deviceNo: resolvedDevice.value.deviceNo,
     deviceStatus: resolvedDevice.value.status,
     expressCode: expressCode.value,

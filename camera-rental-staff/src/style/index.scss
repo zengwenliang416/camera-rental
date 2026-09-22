@@ -247,3 +247,59 @@ border-t-1
   margin: 16rpx 0;
   font-size: 26rpx;
 }
+
+// 窄屏操作组使用稳定列宽；长文案允许增高，不与下一行重叠。
+.workbench-action-grid,
+.home-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12rpx;
+  margin: 20rpx 0;
+  align-items: stretch;
+}
+.home-shortcuts {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.workbench-action-grid > *,
+.home-shortcuts > * {
+  min-width: 0;
+}
+.workbench-action-grid .wd-button,
+.home-shortcuts .wd-button {
+  width: 100%;
+  min-height: 44px;
+  height: auto;
+  margin: 0;
+  padding: 16rpx 10rpx;
+  white-space: normal;
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+.workbench-primary-action {
+  margin-top: 24rpx;
+}
+.workbench-secondary-action {
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid var(--staff-border);
+}
+.workbench-task-filters {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8rpx;
+}
+.workbench-task-filters > * {
+  min-width: 0;
+}
+.workbench-task-filters .wd-button {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 4rpx;
+}
+.workbench-template-item {
+  margin-top: 24rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid var(--staff-border);
+}

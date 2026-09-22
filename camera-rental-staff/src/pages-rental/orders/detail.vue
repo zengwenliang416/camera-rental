@@ -121,6 +121,9 @@
             复制订单号
           </wd-button>
         </view>
+        <wd-button v-if="hasAccessByCodes(['rental:device:assign', 'rental:xianyu:ship'])" size="small" variant="plain" @click="openPage({ url: `/pages-rental/issues/index?orderId=${orderId}` })">
+          登记订单异常
+        </wd-button>
         <view id="order-devices" />
         <view
           v-for="item in items"
@@ -252,26 +255,15 @@ import { onLoad, onShow } from '@dcloudio/uni-app'
 import { computed, ref } from 'vue'
 import { getOrderScheduleDetail } from '@/api/rental/order'
 import type { RentalOrderItem, RentalOrderScheduleDetail } from '@/api/rental/order'
-import {
-  daysInclusive,
-  displayOrderNo,
-  displayReceiverName,
-  formatMonthDay,
-  itemQuantityLabel,
-  occupyRangeLabel,
-  orderStatusLabel,
-  remainingDeviceLabel,
-  sourceTypeLabel,
-} from '@/models/rental/orderDisplay'
+import { daysInclusive, displayOrderNo, displayReceiverName, formatMonthDay, itemQuantityLabel, occupyRangeLabel, orderStatusLabel, remainingDeviceLabel, sourceTypeLabel } from '@/models/rental/orderDisplay'
 
+const openPage = (options: UniApp.NavigateToOptions) => uni.navigateTo(options)
 const staffPageStyle = useStaffPageStyle()
-
 definePage({
   style: {
     navigationStyle: 'custom',
   },
 })
-
 const { hasAccessByCodes } = useAccess()
 const orderId = ref(0)
 const detailAnchor = ref('')
@@ -280,12 +272,10 @@ const error = ref('')
 const detail = ref<RentalOrderScheduleDetail>()
 const text = (value: unknown) => value == null || value === '' ? '-' : String(value)
 const items = computed<RentalOrderItem[]>(() => detail.value?.items || [])
-const hasCustomer = computed(() => Boolean(
-  detail.value?.receiverName
+const hasCustomer = computed(() => Boolean(detail.value?.receiverName
   || detail.value?.buyerNick
   || detail.value?.receiverMobile
-  || detail.value?.receiverAddress,
-))
+  || detail.value?.receiverAddress))
 async function load(id: number) {
   loading.value = true
   error.value = ''

@@ -27,9 +27,20 @@
       </view>
 
       <view class="hint">
-        先识别设备并完成检测，提交检测结果后才登记回仓
+        先登记实物收货，设备进入待检测；检测通过后才能恢复可租。
       </view>
 
+      <view v-if="received.length" class="card">
+        <view class="strong">
+          本次已收 {{ received.length }} 台
+        </view>
+        <view v-for="item in received" :key="item.assignmentId" class="card-head">
+          <text>{{ item.deviceNo }} · 待检测</text>
+          <wd-button size="small" variant="plain" @click="openInspection(item)">
+            去检测
+          </wd-button>
+        </view>
+      </view>
       <view class="card">
         <view class="muted">
           备注（选填）
@@ -51,8 +62,8 @@
       <view v-if="!canSubmit" class="muted">
         {{ resolving ? '正在识别设备…' : !hasAccessByCodes(['rental:device:assign']) ? '当前账号没有回仓权限' : '请先扫描本次回仓设备' }}
       </view>
-      <wd-button type="primary" block :disabled="!canSubmit" @click="goInspect">
-        核对设备并进入检测
+      <wd-button type="primary" block :disabled="!canSubmit" :loading="receiving" @click="receive">
+        确认收货 · 继续扫下一台
       </wd-button>
     </view>
   </view>
@@ -63,38 +74,40 @@ import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
 import type { RentalDevice } from '@/api/rental/device'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { computed, ref } from 'vue'
-import { lookupRentalDevice } from '@/api/rental/device'
+import { getDeviceScheduleDetail, lookupRentalDevice, receiveRentalDevice } from '@/api/rental/device'
 import ScanBanner from '@/components/rental/scan-banner.vue'
 import StaffHeader from '@/components/rental/staff-header.vue'
 import { useStaffExceptionStore } from '@/store/staffException'
 import { useStaffScanner } from '@/hooks/useStaffScanner'
-import { extractDeviceNo, normalizeCode } from '@/utils/staffScan'
+import { extractDeviceNo } from '@/utils/staffScan'
 import { deviceStatusLabel, staffError } from '@/models/rental/staffOperations'
 import { useAccess } from '@/hooks/useAccess'
 
 const staffPageStyle = useStaffPageStyle()
-
 definePage({
   style: {
     navigationStyle: 'custom',
   },
 })
-
 const toast = useToast()
 const exceptions = useStaffExceptionStore()
 const deviceNo = ref('')
 const resolvedDevice = ref<RentalDevice>()
 const note = ref('')
+const receiving = ref(false)
+const received = ref<Array<{
+  deviceNo: string
+  deviceId: number
+  assignmentId: number
+}>>([])
 const manualFocus = ref(false)
 const manualCode = ref('')
 const resolving = ref(false)
 const { hasAccessByCodes } = useAccess()
-
-const canSubmit = computed(() => Boolean(resolvedDevice.value) && !resolving.value && hasAccessByCodes(['rental:device:assign']))
-
+const canSubmit = computed(() => Boolean(resolvedDevice.value) && !resolving.value && !receiving.value && hasAccessByCodes(['rental:device:assign']))
 async function resolveScannedDevice(raw: string) {
   const payload = String(raw || '').trim()
-  if (!payload || resolving.value)
+  if (!payload || resolving.value || receiving.value)
     return
   const previousDeviceId = resolvedDevice.value?.id
   resolving.value = true
@@ -119,32 +132,38 @@ async function resolveScannedDevice(raw: string) {
     resolving.value = false
   }
 }
-
 const { scan: scanDevice } = useStaffScanner(result => resolveScannedDevice(result.text))
-
-function goInspect() {
-  const target = normalizeCode(resolvedDevice.value?.deviceNo || deviceNo.value)
-  if (!target || !canSubmit.value) {
-    toast.warning('请先识别设备')
+function openInspection(item: {
+  deviceId: number
+  assignmentId: number
+  deviceNo: string
+}) {
+  uni.navigateTo({ url: `/pages-rental/inspection/index?deviceId=${item.deviceId}&assignmentId=${item.assignmentId}&deviceNo=${encodeURIComponent(item.deviceNo)}` })
+}
+async function receive() {
+  const device = resolvedDevice.value
+  if (!device || !canSubmit.value)
     return
+  receiving.value = true
+  try {
+    const detail = await getDeviceScheduleDetail(device.id)
+    const assignment = detail.currentAssignment?.status?.startsWith('DISPATCHED') ? detail.currentAssignment : detail.latestAssignment
+    if (!assignment?.id)
+      throw new Error('没有可收货的出库记录，请核对设备')
+    const result = await receiveRentalDevice(device.id, assignment.id, note.value.trim() || undefined)
+    if (result.assignmentStatus === 'RETURNED')
+      throw new Error('该轮次已完成回仓检测，无需重复收货')
+    if (!received.value.some(item => item.assignmentId === result.assignmentId))
+      received.value.unshift({ deviceId: device.id, deviceNo: device.deviceNo, assignmentId: result.assignmentId })
+    resolvedDevice.value = undefined
+    note.value = ''
+    manualCode.value = ''
+    toast.success('收货成功，待检测；可继续扫描')
+  } catch (error) {
+    toast.warning(staffError(error, '收货结果未确认，请重新查询设备'))
+  } finally {
+    receiving.value = false
   }
-  const query = [
-    `deviceNo=${encodeURIComponent(target)}`,
-    resolvedDevice.value?.id ? `deviceId=${resolvedDevice.value.id}` : '',
-    resolvedDevice.value?.equipmentModelCode ? `model=${encodeURIComponent(resolvedDevice.value.equipmentModelCode)}` : '',
-    note.value.trim() ? `note=${encodeURIComponent(note.value.trim())}` : '',
-  ].filter(Boolean).join('&')
-  uni.navigateTo({
-    url: `/pages-rental/inspection/index?${query}`,
-    events: {
-      returned: () => {
-        resolvedDevice.value = undefined
-        deviceNo.value = ''
-        manualCode.value = ''
-        note.value = ''
-      },
-    },
-  })
 }
 </script>
 

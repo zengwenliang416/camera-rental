@@ -30,8 +30,8 @@ export function singleShipmentBlocker(order?: RentalOrderScheduleDetail) {
   if (!order)
     return '正在获取订单明细，请稍候'
   const count = order.items?.reduce((sum, item) => sum + (item.requiredQuantity || 0), 0) || order.requiredQuantity || 0
-  if (count !== 1 || order.items?.length !== 1)
-    return `本单需发 ${count || '多'} 台设备，手机当前仅支持单设备发货，请在管理后台处理整单。`
+  if (count < 1 || count > 100 || !order.items?.length)
+    return '请核对实际设备台数（每次最多 100 台）'
   return ''
 }
 

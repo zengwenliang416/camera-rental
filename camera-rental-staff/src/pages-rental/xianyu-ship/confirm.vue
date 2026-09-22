@@ -44,7 +44,7 @@
               设备
             </view>
             <view class="strong">
-              {{ draft.deviceNo }}
+              {{ draft.devices?.map(device => device.deviceNo).join('、') || draft.deviceNo }}
             </view>
           </view>
         </view>
@@ -95,7 +95,10 @@
           </wd-button>
         </view>
         <view class="info">
-          如提交结果不明，请先核对订单状态，再决定是否重试
+          {{ resultHint || '提交后自动核对发货记录；结果不明时请勿重复发货' }}
+          <wd-button v-if="resultUnknown" size="small" variant="plain" @click="confirmResult">
+            重新核对结果
+          </wd-button>
         </view>
       </template>
     </scroll-view>
@@ -114,7 +117,7 @@
         @mouseleave="endHold"
       >
         <view class="hold-title">
-          {{ shipping ? '提交中...' : '长按确认发货' }}
+          {{ shipping ? '提交中...' : resultUnknown ? '结果待核对，暂停发货' : '长按确认发货' }}
         </view>
         <view class="hold-sub">
           请按住 2 秒以确认
@@ -128,9 +131,10 @@
 import { callReceiver, copyStaffField } from '@/utils/staffContact'
 import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
 import { computed, onUnmounted, ref } from 'vue'
-import { onHide } from '@dcloudio/uni-app'
+import { onHide, onShow } from '@dcloudio/uni-app'
 import { storeToRefs } from 'pinia'
-import { shipXianyuOrder } from '@/api/rental/xianyu'
+import { createIssue } from '@/api/rental/warehouse'
+import { getShipmentStatus, shipXianyuOrder } from '@/api/rental/xianyu'
 import { useUserStore } from '@/store/user'
 import { useShipDraftStore } from '@/store/shipDraft'
 import { useStaffExceptionStore } from '@/store/staffException'
@@ -139,38 +143,80 @@ import { staffError } from '@/models/rental/staffOperations'
 import { useAccess } from '@/hooks/useAccess'
 
 const staffPageStyle = useStaffPageStyle()
-
 definePage({
   style: {
     navigationStyle: 'custom',
   },
 })
-
 const draftStore = useShipDraftStore()
 const exceptions = useStaffExceptionStore()
 const { draft } = storeToRefs(draftStore)
 const userStore = useUserStore()
 const operator = computed(() => userStore.userInfo.nickname || userStore.userInfo.username || '员工')
 const shipping = ref(false)
+const resultUnknown = ref(false)
+const resultHint = ref('')
+let queryGeneration = 0
+let foreground = true
+async function confirmResult() {
+  if (!draft.value || shipping.value)
+    return
+  const current = ++queryGeneration
+  const submitted = { ...draft.value }
+  resultHint.value = '正在核对服务器发货记录…'
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (!foreground || current !== queryGeneration)
+      return
+    try {
+      const result = await getShipmentStatus(submitted.channelOrderId, submitted.idempotencyKey)
+      if (!foreground || current !== queryGeneration || draft.value?.idempotencyKey !== submitted.idempotencyKey)
+        return
+      if (result.state === 'REJECTED') {
+        resultUnknown.value = false
+        resultHint.value = '渠道明确拒绝了本次发货，请修正信息后重试。'
+        return
+      }
+      if (result.state === 'SUCCEEDED') {
+        resultUnknown.value = false
+        resultHint.value = '已确认发货成功'
+        draftStore.clear()
+        uni.showToast({ title: '已确认发货成功', icon: 'success' })
+        uni.navigateBack()
+        return
+      }
+    } catch {
+      /* A failed read does not mean the original write failed. */
+    }
+    if (attempt < 2)
+      await new Promise(resolve => setTimeout(resolve, 1500))
+  }
+  if (foreground && current === queryGeneration) {
+    resultHint.value = '结果仍未确认，请核对订单或联系管理员处理，勿重复发货。'
+    try {
+      await createIssue({ requestKey: `ship-unknown:${submitted.idempotencyKey}`, rentalOrderId: submitted.rentalOrderId, title: '发货结果待核对', note: '手机未取得成功回执。请核对渠道发货及本地设备记录，勿重复发货。' })
+      if (foreground && current === queryGeneration)
+        resultHint.value += ' 已登记到异常处理。'
+    } catch {
+      /* Keep the visible unknown state if the issue service is also offline. */
+    }
+  }
+}
 const { hasAccessByCodes } = useAccess()
 const holding = ref(false)
 let timer: ReturnType<typeof setTimeout> | null = null
-
 function goBack() {
   endHold()
   if (!shipping.value)
     uni.navigateBack()
 }
-
 function clearTimer() {
   if (timer) {
     clearTimeout(timer)
     timer = null
   }
 }
-
 function startHold() {
-  if (!draft.value || shipping.value || !hasAccessByCodes(['rental:xianyu:ship']))
+  if (!draft.value || shipping.value || resultUnknown.value || !hasAccessByCodes(['rental:xianyu:ship']))
     return
   holding.value = true
   clearTimer()
@@ -179,21 +225,20 @@ function startHold() {
     void submit()
   }, 2000)
 }
-
 function endHold() {
   holding.value = false
   clearTimer()
 }
-
 async function submit() {
-  if (!draft.value || shipping.value || !hasAccessByCodes(['rental:xianyu:ship']))
+  if (!draft.value || shipping.value || resultUnknown.value || !hasAccessByCodes(['rental:xianyu:ship']))
     return
   const submittedDraft = { ...draft.value }
   shipping.value = true
   try {
     const result = await shipXianyuOrder({
       channelOrderId: submittedDraft.channelOrderId,
-      deviceNo: submittedDraft.deviceNo,
+      deviceIds: submittedDraft.devices?.map(device => device.id),
+      deviceNo: submittedDraft.devices?.length ? undefined : submittedDraft.deviceNo,
       idempotencyKey: submittedDraft.idempotencyKey,
       expressCode: submittedDraft.expressCode,
       expressName: submittedDraft.expressName,
@@ -207,10 +252,11 @@ async function submit() {
     draftStore.clear()
     uni.navigateBack({ fail: () => uni.switchTab({ url: '/pages-rental/orders/index' }) })
   } catch (error) {
-    const message = staffError(error, '发货结果未确认，请核对订单后重试')
+    resultUnknown.value = true
+    const message = staffError(error, '发货结果未确认，请核对订单')
     exceptions.record({
       kind: 'order',
-      title: '发货失败',
+      title: '发货结果待核对',
       detail: message,
       source: '发货提交',
       rentalOrderId: submittedDraft.rentalOrderId,
@@ -218,13 +264,25 @@ async function submit() {
     uni.showToast({ title: message, icon: 'none' })
   } finally {
     shipping.value = false
+    if (resultUnknown.value)
+      void confirmResult()
   }
 }
-
 onUnmounted(() => {
   clearTimer()
+  queryGeneration++
+  foreground = false
 })
-onHide(endHold)
+onHide(() => {
+  endHold()
+  foreground = false
+  queryGeneration++
+})
+onShow(() => {
+  foreground = true
+  if (resultUnknown.value)
+    void confirmResult()
+})
 </script>
 
 <style scoped>

@@ -3,7 +3,7 @@
     <scroll-view scroll-y class="content">
       <staff-header title="捷租达" brand @scanner="goScan" />
 
-      <view class="workbench-actions home-shortcuts">
+      <view class="home-shortcuts">
         <wd-button v-if="hasAccessByCodes(['rental:schedule:query'])" variant="plain" size="small" @click="openWorkbench('schedule')">
           设备排期
         </wd-button>
@@ -12,6 +12,16 @@
         </wd-button>
         <wd-button v-if="hasAccessByCodes(['rental:device:query'])" variant="plain" size="small" @click="openWorkbench('devices')">
           设备列表
+        </wd-button>
+
+        <wd-button v-if="hasAccessByCodes(['rental:schedule:query'])" variant="plain" size="small" @click="openWorkbench('issues')">
+          异常与维修
+        </wd-button>
+        <wd-button v-if="hasAccessByCodes(['rental:device:query'])" variant="plain" size="small" @click="openWorkbench('stocktake')">
+          扫码盘点
+        </wd-button>
+        <wd-button variant="plain" size="small" @click="openWorkbench('diagnostics')">
+          扫码诊断
         </wd-button>
       </view>
       <view class="hero">
@@ -138,31 +148,23 @@ import type { XianyuPendingShipOrder } from '@/api/rental/xianyu'
 import OrderTaskCard from '@/components/rental/order-task-card.vue'
 import ScanBanner from '@/components/rental/scan-banner.vue'
 import StaffHeader from '@/components/rental/staff-header.vue'
-import {
-  dispatchByLabel,
-  displayOrderNo,
-  goodsLine,
-  orderMetaLine,
-} from '@/models/rental/orderDisplay'
+import { dispatchByLabel, displayOrderNo, goodsLine, orderMetaLine } from '@/models/rental/orderDisplay'
 import { useStaffExceptionStore } from '@/store/staffException'
 
 defineOptions({
   name: 'Home',
 })
-
 const staffPageStyle = useStaffPageStyle()
 const { hasAccessByCodes } = useAccess()
-function openWorkbench(page: 'schedule' | 'tasks' | 'devices') {
+function openWorkbench(page: 'schedule' | 'tasks' | 'devices' | 'issues' | 'stocktake' | 'diagnostics') {
   uni.navigateTo({ url: `/pages-rental/${page}/index` })
 }
-
 definePage({
   type: 'home',
   style: {
     navigationStyle: 'custom',
   },
 })
-
 const orders = ref<PendingAllocationOrder[]>([])
 const shipOrders = ref<XianyuPendingShipOrder[]>([])
 const error = ref('')
@@ -199,7 +201,6 @@ const followUps = computed(() => {
   }))
   return [...rest, ...ships].slice(0, 4)
 })
-
 function queueErrorMessage(err: unknown) {
   if (err instanceof Error && err.message)
     return err.message
@@ -207,11 +208,9 @@ function queueErrorMessage(err: unknown) {
     return err.msg
   return '任务加载失败'
 }
-
 function sumRemaining(list: PendingAllocationOrder[]) {
   return list.reduce((sum, order) => sum + (order.remainingQuantity ?? 0), 0)
 }
-
 async function loadAllocationQueue() {
   const first = await getPendingAllocationOrders({ pageNo: 1, pageSize: 100 })
   const list = [...(first.list || [])]
@@ -225,7 +224,6 @@ async function loadAllocationQueue() {
   }
   return { list, total: first.total }
 }
-
 async function load() {
   const version = ++loadVersion
   error.value = ''
@@ -255,7 +253,6 @@ async function load() {
     shipError.value = queueErrorMessage(shipResult.reason)
   }
 }
-
 function goOrders() {
   setTabParams({ queue: 'PENDING_ALLOCATION' })
   uni.switchTab({ url: '/pages-rental/orders/index' })
@@ -275,7 +272,6 @@ function goExceptions() {
 function openOrder(id: number) {
   uni.navigateTo({ url: `/pages-rental/orders/detail?id=${id}` })
 }
-
 onShow(() => {
   void load()
 })

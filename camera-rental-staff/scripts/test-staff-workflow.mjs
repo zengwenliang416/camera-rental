@@ -30,7 +30,8 @@ await assert.rejects(() => model.findPendingShipment(async () => ({ list: [{ id:
 assert.equal(model.reconcilePicked([{ id: 1 }, { id: 2 }], [{ id: 1, eligible: false }, { id: 2, eligible: true }], 1)[0].id, 2)
 assert.equal(model.reconcilePicked([{ id: 1 }], [{ id: 1, eligible: true }], 0).length, 0)
 assert.equal(model.singleShipmentBlocker({ items: [{ requiredQuantity: 1 }] }), '')
-assert.match(model.singleShipmentBlocker({ items: [{ requiredQuantity: 2 }] }), /后台/)
+assert.equal(model.singleShipmentBlocker({ items: [{ requiredQuantity: 2 }] }), '')
+assert.match(model.singleShipmentBlocker({ items: [{ requiredQuantity: 101 }] }), /100/)
 console.log('PASS exact order selection beyond page one, mismatched IDs, refreshed candidates, multi-device guard')
 
 const apiCalls = []
@@ -64,7 +65,7 @@ const mocks = {
   '@dcloudio/uni-app': { onLoad: fn => hooks.load.push(fn), onShow: fn => hooks.show.push(fn), onUnload() {} },
   '@wot-ui/ui/components/wd-toast': { useToast: () => ({ warning() {} }) },
   '@/api/rental/order': { getOrderScheduleDetail: async () => details },
-  '@/api/rental/device': { lookupRentalDevice: async () => ({ id: 3, deviceNo: 'TEST-1', equipmentModelCode: 'MODEL', status: 'AVAILABLE' }) },
+  '@/api/rental/device': { lookupRentalDevice: async () => ({ id: 3, deviceNo: 'TEST-1', equipmentModelCode: 'MODEL', status: 'AVAILABLE', enabled: true }) },
   '@/api/rental/xianyu': { getXianyuExpressCompanyList: async () => [{ code: 'SF', expressName: '顺丰速运' }], getXianyuPendingShipOrderPage: async () => ({ list: [{ id: 22, rentalOrderId: 33, externalOrderId: 'TEST-ORDER' }], total: 1 }) },
   '@/hooks/useStaffPageStyle': { useStaffPageStyle: () => ({}) },
   '@/hooks/useStaffScanner': { useStaffScanner: () => ({ scan: async () => {} }) },
@@ -86,7 +87,7 @@ await page.acceptDeviceScan('TEST-1')
 assert.equal(page.waybillNo.value, 'SF1234567890123', 'rescan device preserves waybill')
 page.clearScans()
 assert.equal(page.selectedOrder.value.id, 22, 'reset scans preserves order')
-assert.match(page.blocker.value, /扫描/)
+assert.match(page.blocker.value, /核验/)
 console.log('PASS shipping page preserves order across searches/rescans; blocker follows actual state')
 
 const returnPage = load('../src/pages-rental/device-return/index.vue', {
@@ -133,3 +134,24 @@ detailHooks.show[0]()
 await Promise.resolve()
 assert.equal(detailCalls, 2, 'detail reloads after returning from assignment')
 console.log('PASS detail preserves order in shipping route and reloads on return')
+
+// Multiple devices are accumulated, duplicates do not change the count, and the final draft binds all IDs.
+details.items = [{ id: 7, requiredQuantity: 2, equipmentModelCode: 'MODEL', assignments: [] }]
+mocks['@/api/rental/device'].lookupRentalDevice = async value => ({ id: value === 'TEST-A' ? 1 : 2, deviceNo: value, equipmentModelCode: 'MODEL', status: 'AVAILABLE', enabled: true })
+let draftValue
+mocks['@/store/shipDraft'].useShipDraftStore = () => ({ draft: null, setDraft: value => { draftValue = value } })
+const batchPage = load('../src/pages-rental/xianyu-ship/index.vue', mocks, 'selectOrder, acceptDeviceScan, scannedDevices, deviceError, loadExpress, applyWaybill, blocker, goConfirm')
+await batchPage.selectOrder({ id: 22, rentalOrderId: 33 })
+await batchPage.loadExpress()
+await batchPage.acceptDeviceScan('TEST-A')
+assert.equal(batchPage.scannedDevices.value.length, 1)
+assert.match(batchPage.blocker.value, /已扫 1/)
+await batchPage.acceptDeviceScan('TEST-A')
+assert.equal(batchPage.scannedDevices.value.length, 1)
+assert.match(batchPage.deviceError.value, /已经扫描/)
+await batchPage.acceptDeviceScan('TEST-B')
+batchPage.applyWaybill('SF1234567890123')
+assert.equal(batchPage.blocker.value, '')
+batchPage.goConfirm()
+assert.deepEqual(Array.from(draftValue.devices, d => d.id), [1, 2])
+console.log('PASS multi-device queue, duplicate rejection, exact count and all-device draft')

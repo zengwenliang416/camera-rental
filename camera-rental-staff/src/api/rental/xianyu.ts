@@ -36,6 +36,7 @@ export interface XianyuShipmentOcrResult {
 
 export interface XianyuOrderShipReq {
   channelOrderId: number
+  deviceIds?: number[]
   deviceId?: number
   deviceNo?: string
   idempotencyKey: string
@@ -118,4 +119,12 @@ export async function recognizeXianyuShipmentImage(filePath: string) {
       fail: reject,
     })
   })
+}
+
+export function getShipmentResult(channelOrderId: number, idempotencyKey: string) {
+  return http.get<XianyuOrderShipResult | null>('/rental/xianyu/order/ship/result', { channelOrderId, idempotencyKey })
+}
+
+export function getShipmentStatus(channelOrderId: number, idempotencyKey: string) {
+  return http.get<{ state: 'SUCCEEDED' | 'REJECTED' | 'UNKNOWN', result: XianyuOrderShipResult | null }>('/rental/xianyu/order/ship/status', { channelOrderId, idempotencyKey })
 }

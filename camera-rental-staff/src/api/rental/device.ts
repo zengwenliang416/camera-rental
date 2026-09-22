@@ -57,6 +57,7 @@ export interface RentalDeviceScheduleDetail extends RentalDevice {
   maintenanceState?: string
   expectedReleaseDate?: string | number[]
   reasonCodes?: string[]
+  latestAssignment?: { id?: number, status?: string, returnedAt?: string, inspectionResult?: string }
   currentAssignment?: {
     id?: number
     rentalOrderId?: number
@@ -65,6 +66,8 @@ export interface RentalDeviceScheduleDetail extends RentalDevice {
     occupyStartDate?: string | number[]
     occupyEndDateExclusive?: string | number[]
     assignedAt?: string
+    returnedAt?: string
+    inspectionResult?: string
   }
   schedules?: Array<{
     occupyStartDate?: string | number[]
@@ -81,4 +84,11 @@ export function getDeviceScheduleDetail(id: number) {
 
 export function getRentalDevices(params: { pageNo: number, pageSize: number, keyword?: string, equipmentModelCode?: string, enabled?: boolean }) {
   return http.get<PageResult<RentalDevice>>('/rental/device/page', params)
+}
+
+export function receiveRentalDevice(deviceId: number, assignmentId: number, note?: string) {
+  return http.post<RentalDeviceOpsResult>('/rental/device/receive', { deviceId, assignmentId, note })
+}
+export function inspectRentalDevice(data: { deviceId: number, assignmentId: number, inspectPassed: boolean, note?: string }) {
+  return http.post<RentalDeviceOpsResult>('/rental/device/inspect', data)
 }

@@ -55,7 +55,7 @@ console.log('PASS masked phone blocked, valid phone normalized, explicit clipboa
 
 const calls = []
 let deferred
-const vue = { ref: value => ({ value }) }
+const vue = { ref: value => ({ value }), computed: fn => ({ get value() { return fn() } }), watch() {} }
 const mocks = {
   vue,
   '@dcloudio/uni-app': { onLoad() {}, onUnload() {} },
@@ -63,6 +63,7 @@ const mocks = {
   '@/hooks/useAccess': { useAccess: () => ({ hasAccessByCodes: () => true }) },
   '@/hooks/useStaffScanner': { useStaffScanner() {} },
   '@/api/rental/device': { lookupRentalDevice: async () => ({ deviceNo: 'TEST-1' }) },
+  '@/api/rental/warehouse': { getAvailableDevices: async () => ({ candidates: [] }) },
   '@/api/rental/workbench': { getWorkbench: async (args) => {
     calls.push(args)
     if (args.keyword === 'slow')
@@ -89,41 +90,26 @@ assert.equal(calls[1].toDateExclusive, '2026-10-06')
 assert.equal(calls[1].keyword, 'fast')
 console.log('PASS schedule uses date window and rejects stale filter responses')
 
-// A single tap only loads one server page; retry and old tab responses cannot corrupt the queue.
-let orderCalls = 0
-let detailCalls = 0
-let rejectNext = false
+// The task endpoint filters on the server; paging never requests full order details.
+let callsToTasks = 0
+let failNext = false
 const taskMocks = {
   ...mocks,
   '@dcloudio/uni-app': { onShow() {}, onHide() {} },
-  '@/api/rental/order': {
-    getStaffOrders: async ({ pageNo, pageSize }) => {
-      orderCalls++
-      assert.equal(pageSize, 20)
-      if (rejectNext) {
-        rejectNext = false
-        throw new Error('offline')
-      }
-      return { total: 40, list: [{ id: pageNo, shippingStatus: 'UNSHIPPED', occupyStartDate: '2000-01-01' }] }
-    },
-    getOrderScheduleDetail: async () => {
-      detailCalls++
-      return { items: [{ assignments: [{ status: 'RETURNED' }] }] }
-    },
-  },
-  '@/utils/url': { setTabParams() {} },
+  '@/api/rental/warehouse': { getTasks: async (queue, page) => {
+    callsToTasks++
+    if (failNext) { failNext = false; throw new Error('offline') }
+    return { total: 2, list: [{ orderId: page, orderNo: 'TEST' }] }
+  } },
 }
-const tasksPage = load('../src/pages-rental/tasks/index.vue', taskMocks, 'load, tasks, hasMore, current, error')
+const tasksPage = load('../src/pages-rental/tasks/index.vue', taskMocks, 'load, rows, total, current, error')
 await tasksPage.load(true)
-assert.equal(orderCalls, 1)
-assert.equal(tasksPage.tasks.value.length, 1)
-assert.equal(tasksPage.hasMore.value, true)
-rejectNext = true
+assert.equal(callsToTasks, 1)
+assert.equal(tasksPage.rows.value.length, 1)
+assert.equal(tasksPage.total.value, 2)
+failNext = true
 await tasksPage.load(false)
-assert.equal(tasksPage.tasks.value.length, 1)
-assert.equal(tasksPage.hasMore.value, true)
+assert.equal(tasksPage.rows.value.length, 1)
 await tasksPage.load(false)
-assert.equal(tasksPage.tasks.value.length, 2)
-assert.equal(tasksPage.hasMore.value, false)
-assert.equal(detailCalls, 0)
-console.log('PASS task pagination is bounded per action, failure retains prior results, retry advances correct page')
+assert.equal(tasksPage.rows.value.length, 2)
+console.log('PASS server task queue pagination, failure retains prior results and retry resumes')

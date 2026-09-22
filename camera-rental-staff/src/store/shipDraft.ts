@@ -11,6 +11,7 @@ export interface ShipDraft {
   receiverAddress?: string
   orderNo: string
   goodsTitle?: string
+  devices?: Array<{ id: number, deviceNo: string }>
   deviceNo: string
   deviceStatus?: string
   expressCode: string
@@ -27,7 +28,7 @@ export const useShipDraftStore = defineStore('staff-ship-draft', () => {
 
   function setDraft(value: Omit<ShipDraft, 'idempotencyKey'>) {
     const old = draft.value
-    const unchanged = old && Object.entries(value).every(([key, val]) => old[key as keyof ShipDraft] === val)
+    const unchanged = old && Object.entries(value).every(([key, val]) => JSON.stringify(old[key as keyof ShipDraft]) === JSON.stringify(val))
     draft.value = { ...value, idempotencyKey: unchanged ? old.idempotencyKey : operationKey('staff-ship') }
   }
 

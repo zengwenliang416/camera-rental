@@ -42,7 +42,9 @@ function syncSystemTheme() {
         if (Number.parseInt(plus.os.version || '0', 10) >= 11) {
           const controller = plus.android.invoke(window, 'getInsetsController')
           // Apply both bar appearances after page navigation resets native defaults.
-          plus.android.invoke(controller, 'setSystemBarsAppearance', dark ? 0 : 24, 24)
+          // Native.js is variadic; the SDK types only declare one Java argument.
+          const invokeAppearance = plus.android.invoke as (target: PlusAndroidInstanceObject, method: string, appearance: number, mask: number) => unknown
+          invokeAppearance(controller, 'setSystemBarsAppearance', dark ? 0 : 24, 24)
         } else {
           const decor = plus.android.invoke(window, 'getDecorView')
           const flags = Number(plus.android.invoke(decor, 'getSystemUiVisibility'))
@@ -55,7 +57,7 @@ function syncSystemTheme() {
   }
   // #endif
 }
-watch(() => themeStore.theme, syncSystemTheme)
+watch([() => themeStore.theme, () => themeStore.systemTheme], syncSystemTheme)
 
 const isCurrentPageTabbar = ref(true)
 onShow(() => {

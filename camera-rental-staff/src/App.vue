@@ -9,9 +9,11 @@ import { useThemeStore } from '@/store/theme'
 
 onLaunch(() => {
   const theme = useThemeStore()
+  theme.startThemeListener()
   theme.setThemeVars({ buttonPrimaryBg: '#e10600', buttonPrimaryBgActive: '#b80500', buttonPrimaryColor: '#e10600', buttonPrimaryPlainBorder: '#e10600' })
 })
 onShow((options) => {
+  useThemeStore().startThemeListener()
   void scanner.initialize()
 
   // 微信环境可能清理本地缓存，导致登录态仍在但字典缓存丢失，这里做一次非阻塞补偿加载
@@ -31,6 +33,8 @@ onShow((options) => {
   }
   tabbarStore.syncCurIdxByCurrentPageAsync()
 })
+onUnmounted(() => useThemeStore().stopThemeListener())
+
 onHide(() => {
   void scanner.stop()
 })

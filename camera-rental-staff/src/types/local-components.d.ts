@@ -13,6 +13,7 @@ declare module 'vue' {
     OrderTaskCard: typeof import('./../components/rental/order-task-card.vue')['default']
     ScanBanner: typeof import('./../components/rental/scan-banner.vue')['default']
     StaffHeader: typeof import('./../components/rental/staff-header.vue')['default']
+    StaffThemeSetting: typeof import('./../components/staff-theme-setting.vue')['default']
     UserFormPicker: typeof import('./../components/system-select/user-form-picker.vue')['default']
     UserPicker: typeof import('./../components/system-select/user-picker.vue')['default']
     UserSearchPicker: typeof import('./../components/system-select/user-search-picker.vue')['default']

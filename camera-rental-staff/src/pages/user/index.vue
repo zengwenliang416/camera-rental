@@ -45,10 +45,7 @@
       </view>
 
       <view class="list">
-        <view class="item" @click="themeStore.toggleTheme()">
-          <text>深色模式</text>
-          <text class="muted">{{ themeStore.theme === 'dark' ? '已开启 · 切换浅色' : '已关闭 · 切换深色' }}</text>
-        </view>
+        <StaffThemeSetting list />
         <view class="item" @click="handleGoSettings">
           <text>应用设置 / 关于捷租达</text>
           <text class="muted">
@@ -81,10 +78,9 @@ import type { UserProfileVO } from '@/api/system/user/profile'
 import { LOGIN_PAGE } from '@/router/config'
 import { scannerConnected } from '@/services/scanner'
 import { useUserStore } from '@/store'
-import { useThemeStore } from '@/store/theme'
+import StaffThemeSetting from '@/components/staff-theme-setting.vue'
 import { useTokenStore } from '@/store/token'
 
-const themeStore = useThemeStore()
 const staffPageStyle = useStaffPageStyle()
 
 definePage({

@@ -39,7 +39,7 @@
             <wd-icon name="delete" size="20px" color="#faad14" class="mr-16rpx" />
           </template>
         </wd-cell>
-        <wd-cell title="深色模式" :value="themeStore.theme === 'dark' ? '已开启' : '已关闭'" is-link @click="themeStore.toggleTheme()" />
+        <StaffThemeSetting />
         <wd-cell title="检查更新" :value="checkingUpdate ? '正在检查…' : updateLabel" is-link @click="checkUpdate" />
       </wd-cell-group>
     </view>
@@ -68,7 +68,7 @@ import { onMounted, ref } from 'vue'
 import { navigateBackPlus } from '@/utils'
 import { useDictStore } from '@/store/dict'
 import { trustedRelease } from '@/models/rental/mobileWorkbench'
-import { useThemeStore } from '@/store/theme'
+import StaffThemeSetting from '@/components/staff-theme-setting.vue'
 import { openUrl } from '@/utils/url'
 
 definePage({
@@ -78,10 +78,9 @@ definePage({
   },
 })
 
-const themeStore = useThemeStore()
 const toast = useToast()
 const dialog = useDialog()
-const version = ref('1.0.4') // 当前版本号
+const version = ref('1.0.5') // 当前版本号
 const storageSize = ref('') // 本地缓存大小
 
 /** 返回上一页 */
@@ -93,7 +92,7 @@ function handleBack() {
 function getAppVersion() {
   // #ifdef APP-PLUS
   const appInfo = uni.getSystemInfoSync()
-  version.value = appInfo.appVersion || '1.0.4'
+  version.value = appInfo.appVersion || '1.0.5'
   // #endif
 }
 
@@ -121,7 +120,7 @@ async function checkUpdate() {
       fail: () => reject(new Error('网络不可用，请稍后重试')),
     }))
     const release = trustedRelease(raw)
-    let installedCode = 104
+    let installedCode = 105
     // #ifdef APP-PLUS
     installedCode = Number(plus.runtime.versionCode) || installedCode
     // #endif

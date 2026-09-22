@@ -45,6 +45,7 @@ load('../src/App.vue', {
   'vue': { onMounted() {}, onUnmounted: fn => appHooks.unmount.push(fn) },
   '@/store/theme': { useThemeStore: () => store },
   '@/store': { useTokenStore: () => ({ updateNowTime: () => ({ hasLogin: false }) }), useDictStore: () => ({}) },
+  '@/services/staffUpdate': { scheduleUpdateReminder() {}, pauseUpdateReminder() {} },
   '@/services/scanner': { scanner: { initialize() {} } },
   '@/tabbar/store': { tabbarStore: { syncCurIdxByCurrentPageAsync() {} } },
   '@/router/interceptor': { navigateToInterceptor: { invoke() {} } },

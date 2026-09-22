@@ -6,6 +6,7 @@ import { useDictStore, useTokenStore } from '@/store'
 import { tabbarStore } from '@/tabbar/store'
 import { scanner } from '@/services/scanner'
 import { useThemeStore } from '@/store/theme'
+import { pauseUpdateReminder, scheduleUpdateReminder } from '@/services/staffUpdate'
 
 onLaunch(() => {
   const theme = useThemeStore()
@@ -13,6 +14,7 @@ onLaunch(() => {
   theme.setThemeVars({ buttonPrimaryBg: '#e10600', buttonPrimaryBgActive: '#b80500', buttonPrimaryColor: '#e10600', buttonPrimaryPlainBorder: '#e10600' })
 })
 onShow((options) => {
+  scheduleUpdateReminder()
   useThemeStore().startThemeListener()
   void scanner.initialize()
 
@@ -36,6 +38,7 @@ onShow((options) => {
 onUnmounted(() => useThemeStore().stopThemeListener())
 
 onHide(() => {
+  pauseUpdateReminder()
   void scanner.stop()
 })
 

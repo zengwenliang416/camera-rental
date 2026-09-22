@@ -4,6 +4,7 @@ import { useThemeStore } from '@/store'
 import FgTabbar from '@/tabbar/index.vue'
 import { isPageTabbar, tabbarStore } from './tabbar/store'
 import { currRoute } from './utils'
+import { scheduleUpdateReminder } from '@/services/staffUpdate'
 
 const themeStore = useThemeStore()
 themeStore.setThemeVars({
@@ -61,6 +62,7 @@ watch([() => themeStore.theme, () => themeStore.systemTheme], syncSystemTheme)
 
 const isCurrentPageTabbar = ref(true)
 onShow(() => {
+  scheduleUpdateReminder()
   syncSystemTheme()
   tabbarStore.syncCurIdxByCurrentPageAsync()
   const { path } = currRoute()

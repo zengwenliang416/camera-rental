@@ -3,6 +3,7 @@ import process from 'node:process'
 // manifest.config.ts
 import { defineManifestConfig } from '@uni-helper/vite-plugin-uni-manifest'
 import { loadEnv } from 'vite'
+import { STAFF_VERSION, STAFF_VERSION_CODE } from './src/config/staffVersion'
 
 // 手动解析命令行参数获取 mode
 function getMode() {
@@ -25,8 +26,8 @@ export default defineManifestConfig({
   'name': VITE_APP_TITLE,
   'appid': VITE_UNI_APPID,
   'description': '',
-  'versionName': '1.0.5',
-  'versionCode': '105',
+  'versionName': STAFF_VERSION,
+  'versionCode': String(STAFF_VERSION_CODE),
   'transformPx': false,
   'locale': VITE_FALLBACK_LOCALE, // 'zh-Hans'
   'h5': {

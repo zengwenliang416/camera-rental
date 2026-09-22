@@ -67,9 +67,8 @@ import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { onMounted, ref } from 'vue'
 import { navigateBackPlus } from '@/utils'
 import { useDictStore } from '@/store/dict'
-import { trustedRelease } from '@/models/rental/mobileWorkbench'
+import { checkStaffUpdate, STAFF_VERSION } from '@/services/staffUpdate'
 import StaffThemeSetting from '@/components/staff-theme-setting.vue'
-import { openUrl } from '@/utils/url'
 
 definePage({
   style: {
@@ -80,7 +79,7 @@ definePage({
 
 const toast = useToast()
 const dialog = useDialog()
-const version = ref('1.0.5') // 当前版本号
+const version = ref(STAFF_VERSION) // 当前版本号
 const storageSize = ref('') // 本地缓存大小
 
 /** 返回上一页 */
@@ -92,7 +91,7 @@ function handleBack() {
 function getAppVersion() {
   // #ifdef APP-PLUS
   const appInfo = uni.getSystemInfoSync()
-  version.value = appInfo.appVersion || '1.0.5'
+  version.value = appInfo.appVersion || STAFF_VERSION
   // #endif
 }
 
@@ -113,25 +112,10 @@ async function checkUpdate() {
     return
   checkingUpdate.value = true
   try {
-    const raw = await new Promise<unknown>((resolve, reject) => uni.request({
-      url: `https://rental.motion-cover.com/downloads/jiezuda/release.json?t=${Date.now()}`,
-      header: { isToken: false },
-      success: result => result.statusCode === 200 ? resolve(result.data) : reject(new Error('更新服务暂不可用')),
-      fail: () => reject(new Error('网络不可用，请稍后重试')),
-    }))
-    const release = trustedRelease(raw)
-    let installedCode = 105
-    // #ifdef APP-PLUS
-    installedCode = Number(plus.runtime.versionCode) || installedCode
-    // #endif
-    if (release.versionCode <= installedCode) {
-      updateLabel.value = '已是最新版本'
+    const result = await checkStaffUpdate()
+    updateLabel.value = result === 'current' ? '已是最新版本' : '发现新版本，可再次检查升级'
+    if (result === 'current')
       toast.success('当前已是最新版本')
-      return
-    }
-    updateLabel.value = `新版本 v${release.version}`
-    await dialog.confirm({ title: `发现新版本 ${release.version}`, msg: `${release.notes || '优化作业体验与稳定性。'}\n将打开浏览器下载安装包，覆盖安装可保留数据。` })
-    openUrl(release.download)
   } catch (error) {
     if (error instanceof Error) {
       updateLabel.value = '检查失败，点击重试'

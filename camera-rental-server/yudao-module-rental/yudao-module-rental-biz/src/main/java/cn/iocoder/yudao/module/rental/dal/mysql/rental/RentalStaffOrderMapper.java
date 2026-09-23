@@ -11,4 +11,7 @@ public interface RentalStaffOrderMapper {
             @Param("keyword") String keyword, @Param("beforeId") Long beforeId,
             @Param("offset") long offset, @Param("limit") int limit);
     long count(@Param("tenantId") Long tenantId, @Param("queue") String queue);
+    List<RentalStaffOrderRespVO> selectChannelPage(@Param("tenantId") Long tenantId,
+            @Param("keyword") String keyword, @Param("offset") long offset, @Param("limit") int limit);
+    long countChannel(@Param("tenantId") Long tenantId, @Param("keyword") String keyword);
 }

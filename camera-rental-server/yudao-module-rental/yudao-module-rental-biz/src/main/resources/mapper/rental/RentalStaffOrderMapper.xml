@@ -37,7 +37,7 @@
     SELECT COUNT(*) <include refid="fromAndQueue" />
   </select>
   <select id="selectPage" resultType="cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalStaffOrderRespVO">
-    SELECT ro.id, ro.order_no, ro.channel_order_id, ro.source_type, ro.source_order_id, ro.status,
+    SELECT ro.preparation_status, ro.preparation_reason_code, xo.conversion_status, ro.id, ro.order_no, ro.channel_order_id, ro.source_type, ro.source_order_id, ro.status,
       ro.billable_start_date, ro.billable_end_date, ro.occupy_start_date, ro.occupy_end_date_exclusive,
       xo.external_order_id AS external_order_no, xo.goods_title, xo.receiver_name, xo.receiver_mobile, xo.receiver_address,
       (<include refid="shippingStatus" />) AS shipping_status
@@ -56,5 +56,34 @@
           AND d.tenant_id = ro.tenant_id AND d.deleted = b'0'))
     </if>
     ORDER BY ro.id DESC LIMIT #{offset}, #{limit}
+  </select>
+  <!-- Exclude actual linked orders, not just a possibly stale conversion flag or rental_order_id. -->
+  <sql id="unconvertedChannels">
+    FROM xianyu_order xo
+    WHERE xo.tenant_id = #{tenantId} AND xo.deleted = b'0'
+      AND NOT EXISTS (SELECT 1 FROM rental_order ro WHERE ro.tenant_id = xo.tenant_id
+        AND ro.deleted = b'0' AND ro.channel_order_id = xo.id)
+    <if test="keyword != null">
+      AND (LOWER(xo.external_order_id) LIKE #{keyword} ESCAPE '!'
+        OR LOWER(xo.receiver_name) LIKE #{keyword} ESCAPE '!'
+        OR LOWER(xo.receiver_mobile) LIKE #{keyword} ESCAPE '!'
+        OR LOWER(xo.receiver_address) LIKE #{keyword} ESCAPE '!'
+        OR LOWER(xo.goods_title) LIKE #{keyword} ESCAPE '!')
+    </if>
+  </sql>
+  <select id="countChannel" resultType="long">
+    SELECT COUNT(*) <include refid="unconvertedChannels" />
+  </select>
+  <select id="selectChannelPage" resultType="cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalStaffOrderRespVO">
+    SELECT xo.id AS channel_order_id, xo.external_order_id AS external_order_no,
+      'XIANYU' AS source_type, xo.goods_title, xo.receiver_name, xo.receiver_mobile, xo.receiver_address,
+      xo.preparation_status,
+      COALESCE(xo.preparation_reason_code, xo.rental_period_reason_code) AS preparation_reason_code,
+      xo.conversion_status,
+      CASE WHEN xo.order_status IN ('21','22') THEN 'SHIPPED'
+        WHEN xo.order_status IN ('23','24') THEN 'CANCELED'
+        WHEN xo.order_status = '11' THEN 'UNPAID' ELSE 'UNSHIPPED' END AS shipping_status
+    <include refid="unconvertedChannels" />
+    ORDER BY xo.id DESC LIMIT #{offset}, #{limit}
   </select>
 </mapper>

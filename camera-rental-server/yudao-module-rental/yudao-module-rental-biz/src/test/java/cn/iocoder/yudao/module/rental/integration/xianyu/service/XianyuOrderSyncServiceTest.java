@@ -280,6 +280,22 @@ class XianyuOrderSyncServiceTest {
     }
 
     @Test
+    void unchangedChannelSnapshotStillReconcilesBlockedOrder() throws Exception {
+        when(readClient.execute(eq(XianyuReadEndpoint.ORDERS), any())).thenReturn(response("""
+                {"code":0,"data":{"count":1,"page_no":1,"page_size":50,"list":[
+                {"order_no":"order-1","update_time":1784710800}]}}"""));
+        XianyuOrderDO current = order("order-1", LocalDateTime.of(2026, 7, 22, 17, 0));
+        current.setId(55L);
+        current.setRawPayloadId(31L);
+        current.setConversionStatus("REVIEW_REQUIRED");
+        when(orderMapper.selectRefreshStateList(eq(7L), eq(List.of("order-1"))))
+                .thenReturn(List.of(current));
+        service.syncPage(7L, 88L, window);
+        verify(reconciliationService).reconcile(55L);
+        verify(readClient, never()).execute(eq(XianyuReadEndpoint.ORDER_DETAIL), any());
+    }
+
+    @Test
     void shouldRejectWindowOutsideSixMonthRetentionBeforeRemoteCall() {
         XianyuOrderSyncWindow expired = new XianyuOrderSyncWindow(
                 LocalDateTime.of(2025, 12, 1, 0, 0),

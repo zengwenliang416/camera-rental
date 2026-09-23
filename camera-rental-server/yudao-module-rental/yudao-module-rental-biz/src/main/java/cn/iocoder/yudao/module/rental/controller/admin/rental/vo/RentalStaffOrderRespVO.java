@@ -8,6 +8,9 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public class RentalStaffOrderRespVO extends RentalPendingAllocationOrderRespVO {
     private Long channelOrderId;
+    private String preparationStatus;
+    private String preparationReasonCode;
+    private String conversionStatus;
     @ToString.Exclude private String receiverName;
     @ToString.Exclude private String receiverMobile;
     @ToString.Exclude private String receiverAddress;

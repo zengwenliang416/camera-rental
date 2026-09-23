@@ -19,10 +19,18 @@ public class RentalStaffOrderController {
     private final RentalStaffOrderService service;
     public RentalStaffOrderController(RentalStaffOrderService service) { this.service = service; }
 
+    @cn.iocoder.yudao.framework.apilog.core.annotation.ApiAccessLog(requestEnable = false, responseEnable = false)
     @GetMapping("/staff-page")
     @Operation(summary = "员工订单查询：收件信息、发货状态及模糊搜索")
     @PreAuthorize("@ss.hasPermission('rental:schedule:query')")
     public CommonResult<PageResult<RentalStaffOrderRespVO>> getPage(@Valid RentalStaffOrderPageReqVO req) {
         return success(service.getPage(req));
+    }
+    @GetMapping("/staff-channel-page")
+    @Operation(summary = "员工查询尚未生成租赁订单的渠道记录，只读")
+    @PreAuthorize("@ss.hasPermission('rental:schedule:query')")
+    @cn.iocoder.yudao.framework.apilog.core.annotation.ApiAccessLog(requestEnable = false, responseEnable = false)
+    public CommonResult<PageResult<RentalStaffOrderRespVO>> getChannelPage(@Valid RentalStaffOrderPageReqVO req) {
+        return success(service.getChannelPage(req));
     }
 }

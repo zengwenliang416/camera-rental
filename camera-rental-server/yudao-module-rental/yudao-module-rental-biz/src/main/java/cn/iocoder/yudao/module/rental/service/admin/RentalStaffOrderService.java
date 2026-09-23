@@ -41,7 +41,7 @@ public class RentalStaffOrderService {
         List<RentalStaffOrderRespVO> page = new ArrayList<>();
         long total = 0;
         Long before = null;
-        String pattern = "%" + keyword.replace("!", "!!").replace("%", "!%").replace("_", "!_") + "%";
+        String pattern = likePattern(keyword);
         while (true) {
             List<RentalStaffOrderRespVO> batch = mapper.selectPage(tenant, queue, pattern, before, 0, 200);
             if (batch.isEmpty()) break;
@@ -56,6 +56,20 @@ public class RentalStaffOrderService {
             if (batch.size() < 200) break;
         }
         return new PageResult<>(page, total);
+    }
+
+    /** Channel visibility is read-only: never convert, infer dates, or allocate while searching. */
+    public PageResult<RentalStaffOrderRespVO> getChannelPage(RentalStaffOrderPageReqVO req) {
+        Long tenant = TenantContextHolder.getRequiredTenantId();
+        String keyword = req.getKeyword() == null ? "" : req.getKeyword().trim().toLowerCase(Locale.ROOT);
+        String pattern = keyword.isEmpty() ? null : likePattern(keyword);
+        long total = mapper.countChannel(tenant, pattern);
+        long offset = (long) (req.getPageNo() - 1) * req.getPageSize();
+        return new PageResult<>(mapper.selectChannelPage(tenant, pattern, offset, req.getPageSize()), total);
+    }
+
+    private static String likePattern(String keyword) {
+        return "%" + keyword.replace("!", "!!").replace("%", "!%").replace("_", "!_") + "%";
     }
 
     static boolean matches(RentalStaffOrderRespVO row, String keyword) {

@@ -29,6 +29,9 @@ export interface PendingAllocationOrder {
   receiverName?: string
   receiverMobile?: string
   receiverAddress?: string
+  preparationStatus?: string
+  preparationReasonCode?: string
+  conversionStatus?: string
   shippingStatus?: string
   channelOrderId?: number
   sourceType?: string
@@ -122,4 +125,10 @@ export function getStaffOrders(params: { pageNo: number, pageSize: number, keywo
 
 export function updateDeviceQuantity(itemId: number, quantity: number, expectedQuantity: number) {
   return http.put<number>(`/rental/order-item/${itemId}/quantity`, { quantity, expectedQuantity })
+}
+
+/** Read-only channel records: id is not an internal rental order ID. */
+export type StaffChannelOrder = Omit<PendingAllocationOrder, 'id'> & { channelOrderId: number }
+export function getStaffChannelOrders(params: { pageNo: number, pageSize: number, keyword?: string }) {
+  return http.get<PageResult<StaffChannelOrder>>('/rental/order/staff-channel-page', params)
 }

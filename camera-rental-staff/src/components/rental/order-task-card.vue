@@ -33,7 +33,7 @@
       <wd-button v-if="action" size="small" type="primary" @click.stop="$emit('action')">
         {{ action }}
       </wd-button>
-      <view v-else class="arrow">
+      <view v-else-if="!readonly" class="arrow">
         ›
       </view>
     </view>
@@ -61,6 +61,7 @@ withDefaults(defineProps<{
   receiverName?: string
   receiverMobile?: string
   receiverAddress?: string
+  readonly?: boolean
   showRecipient?: boolean
 }>(), {
   tag: '',

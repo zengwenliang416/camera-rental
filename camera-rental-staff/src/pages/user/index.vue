@@ -143,12 +143,14 @@ async function handleLogout() {
 
 <style lang="scss" scoped>
 .page {
+  padding-top: var(--staff-status-bar-height, 0px);
+  box-sizing: border-box;
   min-height: 100vh;
   background: var(--staff-surface);
 }
 .content {
-  height: 100vh;
-  padding: calc(var(--staff-status-bar-height, 0px) + 12rpx) 28rpx 160rpx;
+  height: calc(100vh - var(--staff-status-bar-height, 0px));
+  padding: 12rpx 28rpx 160rpx;
   box-sizing: border-box;
 }
 .title {

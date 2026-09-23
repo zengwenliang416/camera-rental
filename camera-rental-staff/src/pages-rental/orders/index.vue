@@ -178,12 +178,14 @@ async function refreshVisible() {
 
 <style scoped>
 .page {
+  padding-top: var(--staff-status-bar-height, 0px);
+  box-sizing: border-box;
   min-height: 100vh;
   background: var(--staff-surface);
 }
 .content {
-  height: 100vh;
-  padding: calc(var(--staff-status-bar-height, 0px) + 12rpx) 28rpx 180rpx;
+  height: calc(100vh - var(--staff-status-bar-height, 0px));
+  padding: 12rpx 28rpx 180rpx;
   box-sizing: border-box;
 }
 .search {

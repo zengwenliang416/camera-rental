@@ -169,6 +169,8 @@ async function receive() {
 
 <style scoped>
 .page {
+  padding-top: var(--staff-status-bar-height, 0px);
+  box-sizing: border-box;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -178,7 +180,7 @@ async function receive() {
   flex: 1;
   min-height: 0;
   height: 0;
-  padding: calc(var(--staff-status-bar-height, 0px) + 12rpx) 28rpx 24rpx;
+  padding: 12rpx 28rpx 24rpx;
   box-sizing: border-box;
 }
 .card {

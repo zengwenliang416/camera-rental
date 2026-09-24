@@ -54,10 +54,29 @@
         <el-button type="primary" v-hasPermi="['rental:device:create']" @click="openCreate">
           {{ t('action.create') }}
         </el-button>
+        <el-button
+          v-hasPermi="['rental:device:query']"
+          :disabled="catalogError"
+          @click="deviceImportDialogRef?.open()"
+        >
+          {{ t('rental.deviceImport.entry') }}
+        </el-button>
+        <el-button
+          v-hasPermi="['rental:device:query']"
+          :disabled="!selectedDeviceIds.length"
+          @click="deviceImportDialogRef?.openForDevices(selectedDeviceIds)"
+        >
+          {{ t('rental.deviceImport.printSelected', { count: selectedDeviceIds.length }) }}
+        </el-button>
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" :data="list">
+    <el-table v-loading="loading" :data="list" row-key="id" @selection-change="onDeviceSelection">
+      <el-table-column
+        type="selection"
+        width="45"
+        :selectable="(row: RentalDeviceVO) => row.enabled"
+      />
       <el-table-column prop="id" label="ID" width="80" />
       <el-table-column prop="deviceNo" :label="t('rental.device.deviceNo')" min-width="120" />
       <el-table-column
@@ -312,6 +331,7 @@
       </template>
     </el-dialog>
 
+    <DeviceImportDialog ref="deviceImportDialogRef" :catalog="deviceCatalog" @success="getList" />
     <DeviceEditDialog ref="deviceEditDialogRef" @success="getList" />
   </ContentWrap>
 </template>
@@ -347,6 +367,12 @@ import {
 } from './deviceCatalogModel'
 import { formatPurchaseAmount } from './deviceMaintenanceModel'
 import DeviceEditDialog from './DeviceEditDialog.vue'
+import DeviceImportDialog from './DeviceImportDialog.vue'
+const deviceImportDialogRef = ref<InstanceType<typeof DeviceImportDialog>>()
+const selectedDeviceIds = ref<number[]>([])
+function onDeviceSelection(rows: RentalDeviceVO[]) {
+  selectedDeviceIds.value = rows.map((row) => row.id)
+}
 
 defineOptions({ name: 'RentalDevice' })
 const { t } = useI18n()

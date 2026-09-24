@@ -481,6 +481,99 @@ export default {
     preview: 'Preivew'
   },
   rental: {
+    deviceImport: {
+      printSelected: 'Print selected ({count})',
+      labelCount: '{count} labels',
+      entry: 'Import / print labels',
+      title: 'Batch device import and labels',
+      uploadStep: 'Upload and configure',
+      reviewStep: 'Review devices',
+      printStep: 'Preview and download',
+      mode: 'Operation',
+      reprint: 'Reprint existing devices',
+      create: 'Create devices and print',
+      drop: 'Drop TXT files here or',
+      choose: 'click to upload',
+      limits:
+        'Up to 20 TXT files, 256 KB each and 200 rows per batch. UTF-8, GB18030 and BOM-marked UTF-16 supported.',
+      files: 'Uploaded files ({count})',
+      sample: 'Download sample',
+      file: 'File name',
+      line: 'Line {line}',
+      category: 'Category (brand)',
+      model: 'Device model',
+      selectCategory: 'Select category',
+      selectModel: 'Select model',
+      singleColumn: 'Headerless single column',
+      serial: 'Serial number',
+      deviceNo: 'Device number',
+      count: 'Rows',
+      action: 'Action',
+      remove: 'Remove',
+      empty: 'Upload a device TXT list, then select a category and model',
+      configureHint: 'Select a category and model for every file and resolve file errors.',
+      format: 'TXT format help',
+      formatHelp:
+        'Two columns mean device number and serial number, separated by commas, tabs or spaces. For a headerless single column, explicitly select serial number or device number. Leading zeros are preserved. Add missing models in rental configuration first.',
+      source: 'Source file / line',
+      status: 'Review result',
+      summary:
+        '{matched} matched · {newCount} new · {duplicates} duplicates · {conflicts} need attention',
+      commitHint:
+        'Only NEW devices will be created. Existing devices are reused and duplicate rows skipped. Automatic numbers are allocated on submission.',
+      reprintHint: 'Print labels for matched devices without changing the device ledger.',
+      ready: '{count} devices ready. Enter label details and preview.',
+      shop: 'Shop name on label',
+      phone: 'Business contact phone',
+      printHint:
+        'Labels use the existing print specification. Verify the shop name, phone and sample before downloading.',
+      previewLabel: 'Generate label preview',
+      size: '40 × 20 mm · 945 × 472 px · 600 DPI',
+      zipHint:
+        'ZIP grouped by brand and model: individual PNGs, A4 PDFs, preview sheet, manifest and verification report. Print at 100% and test physical scanning.',
+      downloaded:
+        'The ZIP has been sent to your browser. Downloading again will not create devices again.',
+      total: '{files} files · {count} rows',
+      close: 'Close',
+      cancel: 'Cancel',
+      back: 'Back to configuration',
+      next: 'Next: review devices',
+      commit: 'Create {count} devices and continue',
+      continue: 'Next: preview labels',
+      download: 'Download QR ZIP',
+      fileLimit: 'Upload at most 20 files per batch.',
+      fileInvalid: 'Choose a TXT file up to 256 KB with a name up to 128 characters.',
+      requestFailed:
+        'The operation did not complete. Review the error and retry. If device records changed, return to configuration and review again.',
+      parse: {
+        COLUMNS: 'Invalid columns or quotes; follow the sample',
+        HEADER: 'Headers must be unique device_no and/or serial_number',
+        IDENTIFIER: 'Identifier missing or too long',
+        EMPTY: 'No device records in this file',
+        LIMIT: 'At most 200 rows per batch; split the file',
+        ENCODING: 'Unsupported encoding or control characters; save as UTF-8 TXT',
+        READING: 'Reading file'
+      },
+      statusLabels: {
+        MATCHED: 'Matched',
+        NEW: 'New',
+        DUPLICATE: 'Duplicate',
+        CONFLICT: 'Conflict',
+        MISSING: 'Not found'
+      },
+      reasons: {
+        MATCHED: 'Reuse existing device',
+        NEW: 'Create after confirmation',
+        DUPLICATE_ROW: 'Duplicate row will be skipped',
+        MISSING: 'Device not found; check input or select create mode',
+        IDENTITY_CONFLICT: 'Number, serial or model mismatch; correct the input',
+        MODEL_INVALID: 'Model not in category or disabled',
+        IDENTIFIER_REQUIRED: 'Provide a device number or serial number',
+        NUMBER_INVALID: 'Invalid number or model prefix',
+        SERIAL_INVALID: 'Serial number cannot be used for this label format',
+        DEVICE_DISABLED: 'Device disabled or deleted; cannot recreate'
+      }
+    },
     common: {
       yuanAmount: 'CNY {amount}',
       retry: 'Retry',

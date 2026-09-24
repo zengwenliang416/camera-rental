@@ -120,7 +120,9 @@ export function assignRentalDevice(data: { rentalOrderItemId: number, deviceId: 
 
 export type StaffOrderQueue = 'ALL' | 'PENDING_ALLOCATION' | 'UNSHIPPED' | 'PARTIAL' | 'SHIPPED'
 
-export function getStaffOrders(params: { pageNo: number, pageSize: number, keyword?: string, queue: StaffOrderQueue }) {
+export interface OrderDateFilter { orderDateStart?: string, orderDateEnd?: string }
+
+export function getStaffOrders(params: OrderDateFilter & { pageNo: number, pageSize: number, keyword?: string, queue: StaffOrderQueue }) {
   return http.get<PageResult<PendingAllocationOrder>>('/rental/order/staff-page', params)
 }
 
@@ -130,6 +132,6 @@ export function updateDeviceQuantity(itemId: number, quantity: number, expectedQ
 
 /** Read-only channel records: id is not an internal rental order ID. */
 export type StaffChannelOrder = Omit<PendingAllocationOrder, 'id'> & { channelOrderId: number }
-export function getStaffChannelOrders(params: { pageNo: number, pageSize: number, keyword?: string }) {
+export function getStaffChannelOrders(params: OrderDateFilter & { pageNo: number, pageSize: number, keyword?: string }) {
   return http.get<PageResult<StaffChannelOrder>>('/rental/order/staff-channel-page', params)
 }

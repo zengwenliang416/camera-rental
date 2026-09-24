@@ -11,6 +11,32 @@
         </wd-button>
       </view>
 
+      <view class="date-filter">
+        <picker :range="dateOptions" :value="dateMode" @change="changeDateMode">
+          <view class="date-trigger">
+            下单日期：{{ dateLabel }} ▾
+          </view>
+        </picker>
+        <view v-if="dateMode === 3" class="date-range">
+          <picker mode="date" :value="dateStart" start="2000-01-01" :end="dateEnd || '2100-12-31'" @change="dateStart = $event.detail.value">
+            <view class="date-trigger">
+              {{ dateStart || '开始日期' }} ▾
+            </view>
+          </picker>
+          <text>至</text>
+          <picker mode="date" :value="dateEnd" :start="dateStart || '2000-01-01'" end="2100-12-31" @change="dateEnd = $event.detail.value">
+            <view class="date-trigger">
+              {{ dateEnd || '结束日期' }} ▾
+            </view>
+          </picker>
+          <wd-button size="small" variant="plain" @click="applyDates">
+            应用
+          </wd-button>
+        </view>
+        <view v-if="dateError" class="muted">
+          {{ dateError }}
+        </view>
+      </view>
       <view class="queues">
         <view v-for="tab in queues" :key="tab.value" class="queue" :class="{ active: queue === tab.value }" @click="changeQueue(tab.value)">
           <view class="queue-label">
@@ -91,9 +117,10 @@
 import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
 import { getAndClearTabParams } from '@/utils/url'
 import { onHide, onShow } from '@dcloudio/uni-app'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { businessToday, shiftDate } from '@/models/rental/mobileWorkbench'
+import type { OrderDateFilter, PendingAllocationOrder, StaffChannelOrder, StaffOrderQueue } from '@/api/rental/order'
 import { getStaffChannelOrders, getStaffOrders } from '@/api/rental/order'
-import type { PendingAllocationOrder, StaffChannelOrder, StaffOrderQueue } from '@/api/rental/order'
 import { billableRangeLabel, displayOrderNo, goodsLine, orderMetaLine, shippingLabel } from '@/models/rental/orderDisplay'
 import { staffError } from '@/models/rental/staffOperations'
 import OrderTaskCard from '@/components/rental/order-task-card.vue'
@@ -111,6 +138,36 @@ definePage({
 
 const loading = ref(false)
 const keyword = ref('')
+const dateOptions = ['全部日期', '今天', '昨天', '自定义日期']
+const dateMode = ref(0)
+const dateStart = ref('')
+const dateEnd = ref('')
+const dateError = ref('')
+const appliedDates = ref<OrderDateFilter>({})
+const dateLabel = computed(() => appliedDates.value.orderDateStart
+  ? `${appliedDates.value.orderDateStart} 至 ${appliedDates.value.orderDateEnd}`
+  : '全部日期')
+function changeDateMode(event: { detail: { value: string | number } }) {
+  dateMode.value = Number(event.detail.value)
+  dateError.value = ''
+  if (dateMode.value === 3) {
+    dateStart.value = appliedDates.value.orderDateStart || businessToday()
+    dateEnd.value = appliedDates.value.orderDateEnd || dateStart.value
+    return
+  }
+  const day = shiftDate(businessToday(), dateMode.value === 2 ? -1 : 0)
+  appliedDates.value = dateMode.value === 0 ? {} : { orderDateStart: day, orderDateEnd: day }
+  void load()
+}
+function applyDates() {
+  if (!dateStart.value || !dateEnd.value || dateStart.value > dateEnd.value) {
+    dateError.value = '请选择完整日期，结束日期不能早于开始日期'
+    return
+  }
+  dateError.value = ''
+  appliedDates.value = { orderDateStart: dateStart.value, orderDateEnd: dateEnd.value }
+  void load()
+}
 const error = ref('')
 const orders = ref<PendingAllocationOrder[]>([])
 const pendingTotal = ref(0)
@@ -138,7 +195,7 @@ async function loadChannels(reset = true) {
   }
   channelLoading.value = true
   try {
-    const result = await getStaffChannelOrders({ keyword: keyword.value.trim() || undefined, pageNo: page, pageSize: 20 })
+    const result = await getStaffChannelOrders({ ...appliedDates.value, keyword: keyword.value.trim() || undefined, pageNo: page, pageSize: 20 })
     if (version !== channelGeneration)
       return
     channelOrders.value = reset ? result.list : [...channelOrders.value, ...result.list]
@@ -178,7 +235,7 @@ async function load(reset = true) {
     pendingTotal.value = 0
   }
   try {
-    const result = await getStaffOrders({ keyword: keyword.value.trim() || undefined, pageSize: 20, pageNo: page, queue: queue.value })
+    const result = await getStaffOrders({ ...appliedDates.value, keyword: keyword.value.trim() || undefined, pageSize: 20, pageNo: page, queue: queue.value })
     if (version !== requestVersion)
       return
     orders.value = reset ? result.list || [] : [...orders.value, ...(result.list || [])]
@@ -240,7 +297,7 @@ async function refreshVisible() {
   try {
     const fresh: PendingAllocationOrder[] = []
     for (let page = 1; page <= pages; page++) {
-      const data = await getStaffOrders({ pageNo: page, pageSize: 20, keyword: keyword.value.trim() || undefined, queue: queue.value })
+      const data = await getStaffOrders({ ...appliedDates.value, pageNo: page, pageSize: 20, keyword: keyword.value.trim() || undefined, queue: queue.value })
       if (version !== requestVersion)
         return
       fresh.push(...(data.list || []))
@@ -280,6 +337,20 @@ async function refreshVisible() {
 }
 .search :deep(.wd-input) {
   flex: 1;
+}
+.date-filter {
+  margin: 16rpx 0;
+}
+.date-trigger {
+  padding: 16rpx 0;
+  font-size: 26rpx;
+  color: var(--staff-ink);
+}
+.date-range {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  flex-wrap: wrap;
 }
 .queues {
   display: flex;

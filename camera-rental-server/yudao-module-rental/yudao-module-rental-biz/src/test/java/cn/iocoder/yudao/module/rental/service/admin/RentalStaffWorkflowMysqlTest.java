@@ -73,18 +73,18 @@ class RentalStaffWorkflowMysqlTest {
     @Test void channelSearchIsTenantScopedAndExcludesLinkedOrdersWithoutGuessingQuantity() {
         db.update("INSERT INTO xianyu_order(id,tenant_id,external_order_id,goods_title,receiver_mobile,receiver_name,conversion_status,rental_period_reason_code,order_status) VALUES(10,9,'TEST-CHANNEL-10','TEST 100% camera','19900001234','TEST-NAME','REVIEW_REQUIRED','LOGISTICS_DATE_BEFORE_ORDER','12'),(11,9,'TEST-CHANNEL-11','TEST camera','19900001234','TEST-NAME','PENDING',NULL,'12'),(12,10,'OTHER-TENANT','TEST camera','19900001234','TEST-NAME','PENDING',NULL,'12')");
         db.update("UPDATE rental_order SET channel_order_id=11 WHERE id=1");
-        assertEquals(1,staffOrders.countChannel(9L,"%1234%"));
-        var rows=staffOrders.selectChannelPage(9L,"%1234%",0,20);
+        assertEquals(1,staffOrders.countChannel(9L,"%1234%",null,null));
+        var rows=staffOrders.selectChannelPage(9L,"%1234%",0,20,null,null);
         assertEquals(1,rows.size()); assertEquals(10L,rows.get(0).getChannelOrderId());
         assertNull(rows.get(0).getId()); assertNull(rows.get(0).getRequiredQuantity());
         assertEquals("LOGISTICS_DATE_BEFORE_ORDER",rows.get(0).getPreparationReasonCode());
-        assertEquals(1,staffOrders.countChannel(9L,"%100!%%"));
-        assertEquals(0,staffOrders.countChannel(9L,"%19900001235%"));
-        assertTrue(staffOrders.selectChannelPage(9L,"%1234%",1,20).isEmpty());
+        assertEquals(1,staffOrders.countChannel(9L,"%100!%%",null,null));
+        assertEquals(0,staffOrders.countChannel(9L,"%19900001235%",null,null));
+        assertTrue(staffOrders.selectChannelPage(9L,"%1234%",1,20,null,null).isEmpty());
         db.update("UPDATE xianyu_order SET rental_order_id=1 WHERE id=10");
-        assertEquals(1,staffOrders.countChannel(9L,null), "stale channel link must not hide an unconverted record");
+        assertEquals(1,staffOrders.countChannel(9L,null,null,null), "stale channel link must not hide an unconverted record");
         db.update("INSERT INTO rental_order(id,tenant_id,order_no,source_type,status,channel_order_id) VALUES(2,9,'TEST-CONVERTED','XIANYU','PENDING_ALLOCATION',10)");
-        assertEquals(0,staffOrders.countChannel(9L,null));
+        assertEquals(0,staffOrders.countChannel(9L,null,null,null));
     }
 
     @Test void receiveThenInspectUsesRealRowsAndTaskQueues() {

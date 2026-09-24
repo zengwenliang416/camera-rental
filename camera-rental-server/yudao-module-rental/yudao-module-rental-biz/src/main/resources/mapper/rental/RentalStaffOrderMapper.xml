@@ -21,6 +21,12 @@
     FROM rental_order ro
     LEFT JOIN xianyu_order xo ON xo.id = ro.channel_order_id AND xo.tenant_id = ro.tenant_id AND xo.deleted = b'0'
     WHERE ro.tenant_id = #{tenantId} AND ro.deleted = b'0'
+    <if test="from != null">
+      AND COALESCE(xo.order_time, xo.source_created_at, DATE_ADD(ro.create_time, INTERVAL 8 HOUR)) &gt;= #{from}
+    </if>
+    <if test="until != null">
+      AND COALESCE(xo.order_time, xo.source_created_at, DATE_ADD(ro.create_time, INTERVAL 8 HOUR)) &lt; #{until}
+    </if>
     <if test="queue == 'PENDING_ALLOCATION'">
       AND ro.status = 'PENDING_ALLOCATION' AND ro.preparation_status = 'READY'
       AND EXISTS (SELECT 1 FROM rental_order_item i WHERE i.rental_order_id = ro.id
@@ -63,6 +69,12 @@
     WHERE xo.tenant_id = #{tenantId} AND xo.deleted = b'0'
       AND NOT EXISTS (SELECT 1 FROM rental_order ro WHERE ro.tenant_id = xo.tenant_id
         AND ro.deleted = b'0' AND ro.channel_order_id = xo.id)
+    <if test="from != null">
+      AND COALESCE(xo.order_time, xo.source_created_at, DATE_ADD(xo.create_time, INTERVAL 8 HOUR)) &gt;= #{from}
+    </if>
+    <if test="until != null">
+      AND COALESCE(xo.order_time, xo.source_created_at, DATE_ADD(xo.create_time, INTERVAL 8 HOUR)) &lt; #{until}
+    </if>
     <if test="keyword != null">
       AND (LOWER(xo.external_order_id) LIKE #{keyword} ESCAPE '!'
         OR LOWER(xo.receiver_name) LIKE #{keyword} ESCAPE '!'

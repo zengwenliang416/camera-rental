@@ -31,8 +31,8 @@ public class RentalStaffOrderService {
         String keyword = req.getKeyword() == null ? "" : req.getKeyword().trim().toLowerCase(Locale.ROOT);
         long offset = (long) (req.getPageNo() - 1) * req.getPageSize();
         if (keyword.isEmpty()) {
-            long total = mapper.count(tenant, queue);
-            List<RentalStaffOrderRespVO> rows = mapper.selectPage(tenant, queue, null, null, offset, req.getPageSize());
+            long total = mapper.count(tenant, queue, dateFrom(req), dateUntil(req));
+            List<RentalStaffOrderRespVO> rows = mapper.selectPage(tenant, queue, null, null, offset, req.getPageSize(), dateFrom(req), dateUntil(req));
             hydrate(rows, tenant);
             return new PageResult<>(rows, total);
         }
@@ -43,7 +43,7 @@ public class RentalStaffOrderService {
         Long before = null;
         String pattern = likePattern(keyword);
         while (true) {
-            List<RentalStaffOrderRespVO> batch = mapper.selectPage(tenant, queue, pattern, before, 0, 200);
+            List<RentalStaffOrderRespVO> batch = mapper.selectPage(tenant, queue, pattern, before, 0, 200, dateFrom(req), dateUntil(req));
             if (batch.isEmpty()) break;
             hydrate(batch, tenant);
             for (RentalStaffOrderRespVO row : batch) {
@@ -63,9 +63,16 @@ public class RentalStaffOrderService {
         Long tenant = TenantContextHolder.getRequiredTenantId();
         String keyword = req.getKeyword() == null ? "" : req.getKeyword().trim().toLowerCase(Locale.ROOT);
         String pattern = keyword.isEmpty() ? null : likePattern(keyword);
-        long total = mapper.countChannel(tenant, pattern);
+        long total = mapper.countChannel(tenant, pattern, dateFrom(req), dateUntil(req));
         long offset = (long) (req.getPageNo() - 1) * req.getPageSize();
-        return new PageResult<>(mapper.selectChannelPage(tenant, pattern, offset, req.getPageSize()), total);
+        return new PageResult<>(mapper.selectChannelPage(tenant, pattern, offset, req.getPageSize(), dateFrom(req), dateUntil(req)), total);
+    }
+
+    private static java.time.LocalDateTime dateFrom(RentalStaffOrderPageReqVO req) {
+        return req.getOrderDateStart() == null ? null : req.getOrderDateStart().atStartOfDay();
+    }
+    private static java.time.LocalDateTime dateUntil(RentalStaffOrderPageReqVO req) {
+        return req.getOrderDateEnd() == null ? null : req.getOrderDateEnd().plusDays(1).atStartOfDay();
     }
 
     private static String likePattern(String keyword) {

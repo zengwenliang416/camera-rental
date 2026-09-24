@@ -19,7 +19,7 @@ function load(file, mocks = {}, expose = '') {
   return exports
 }
 const events = { show: [], hide: [] }
-const vue = { ref: value => ({ value }) }
+const vue = { ref: value => ({ value }), computed: fn => ({ get value() { return fn() } }) }
 let metric = { statusBarHeight: 32, safeAreaInsets: { top: 28 } }
 globalThis.uni = { getSystemInfoSync: () => metric }
 const inset = load('../src/hooks/useStaffPageStyle.ts', { vue, '@dcloudio/uni-app': { onShow: fn => events.show.push(fn) } })
@@ -36,16 +36,37 @@ assert.match(hints.preparationHint({ preparationReasonCode: 'LOGISTICS_DATE_BEFO
 assert.match(hints.preparationHint({ preparationReasonCode: 'MISSING_RECEIVE_DATE' }), /实际约定/)
 assert.match(hints.preparationHint({ conversionStatus: 'CONFIG_SKIPPED' }, true), /不生成/)
 assert.equal(hints.preparationHint({ preparationStatus: 'READY' }), '')
+let internalParams, channelParams
 let channelRequest = async () => ({ list: [{ channelOrderId: 8, goodsTitle: 'TEST' }], total: 1 })
 const page = load('../src/pages-rental/orders/index.vue', {
   vue, '@dcloudio/uni-app': { onShow() {}, onHide: fn => events.hide.push(fn) },
   '@/hooks/useStaffPageStyle': { useStaffPageStyle: () => ({}) },
   '@/utils/url': { getAndClearTabParams: () => null },
-  '@/api/rental/order': { getStaffOrders: async () => ({ list: [], total: 0 }), getStaffChannelOrders: params => channelRequest(params) },
+  '@/api/rental/order': { getStaffOrders: async params => { internalParams = params; return { list: [], total: 0 } }, getStaffChannelOrders: params => { channelParams = params; return channelRequest(params) } },
   '@/models/rental/orderDisplay': {}, '@/models/rental/staffOperations': { staffError: e => e.message },
   '@/models/rental/orderSearch': hints,
+  '@/models/rental/mobileWorkbench': { businessToday: () => '2026-09-24', shiftDate: (day, n) => n === -1 ? '2026-09-23' : day },
   '@/components/rental/order-task-card.vue': {}, '@/components/rental/scan-banner.vue': {}, '@/components/rental/staff-header.vue': {},
-}, 'loadChannels, channelOrders, channelTotal, channelError, queue')
+}, 'loadChannels, channelOrders, channelTotal, channelError, queue, load, changeDateMode, dateStart, dateEnd, applyDates, dateError')
+await page.load()
+assert.equal(internalParams.orderDateStart, undefined)
+assert.equal(channelParams.orderDateStart, undefined)
+page.changeDateMode({ detail: { value: 1 } })
+await new Promise(resolve => setTimeout(resolve, 0))
+assert.equal(internalParams.orderDateStart, '2026-09-24')
+assert.equal(channelParams.orderDateEnd, '2026-09-24')
+page.changeDateMode({ detail: { value: 3 } })
+page.dateStart.value = '2026-09-20'; page.dateEnd.value = '2026-09-19'
+page.applyDates(); assert.match(page.dateError.value, /不能早于/)
+assert.equal(internalParams.orderDateStart, '2026-09-24')
+page.dateEnd.value = '2026-09-22'; page.applyDates()
+await new Promise(resolve => setTimeout(resolve, 0))
+assert.equal(internalParams.orderDateStart, '2026-09-20')
+assert.equal(channelParams.orderDateEnd, '2026-09-22')
+page.changeDateMode({ detail: { value: 0 } })
+await new Promise(resolve => setTimeout(resolve, 0))
+assert.equal(internalParams.orderDateStart, undefined)
+assert.equal(channelParams.orderDateEnd, undefined)
 await page.loadChannels()
 assert.equal(page.channelTotal.value, 1)
 assert.equal(page.channelOrders.value[0].channelOrderId, 8)

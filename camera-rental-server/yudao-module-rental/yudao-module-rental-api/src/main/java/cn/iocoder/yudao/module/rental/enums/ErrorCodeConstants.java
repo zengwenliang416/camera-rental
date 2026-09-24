@@ -147,4 +147,8 @@ public interface ErrorCodeConstants {
     ErrorCode RENTAL_MANUAL_ORDER_DEVICE_ASSIGN_FAILED = new ErrorCode(1_040_005_005,
             "线下订单设备绑定失败：{}");
 
+    // Device import and printable labels
+    ErrorCode RENTAL_DEVICE_IMPORT_INVALID = new ErrorCode(1_040_006_000, "设备导入批次无效");
+    ErrorCode RENTAL_DEVICE_IMPORT_EXPIRED = new ErrorCode(1_040_006_001, "设备导入预览已过期，请重新核对");
+    ErrorCode RENTAL_DEVICE_IMPORT_CHANGED = new ErrorCode(1_040_006_002, "设备信息已变化或存在冲突，请重新核对");
 }

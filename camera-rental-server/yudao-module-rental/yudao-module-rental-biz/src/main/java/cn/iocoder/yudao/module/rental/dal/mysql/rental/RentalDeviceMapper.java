@@ -12,6 +12,15 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface RentalDeviceMapper extends BaseMapperX<RentalDeviceDO> {
 
+    @Select({"<script>SELECT * FROM rental_device WHERE tenant_id = #{tenantId} AND (1=0",
+            "<if test='numbers.size() &gt; 0'> OR device_no IN <foreach collection='numbers' item='n' open='(' separator=',' close=')'>#{n}</foreach></if>",
+            "<if test='serials.size() &gt; 0'> OR serial_number IN <foreach collection='serials' item='s' open='(' separator=',' close=')'>#{s}</foreach></if>",
+            ")</script>"})
+    @InterceptorIgnore(tenantLine = "true")
+    java.util.List<RentalDeviceDO> selectImportCandidates(@Param("tenantId") Long tenantId,
+            @Param("numbers") java.util.Collection<String> numbers,
+            @Param("serials") java.util.Collection<String> serials);
+
     default RentalDeviceDO selectByIdForUpdate(Long id) {
         return selectOneForUpdate(new LambdaQueryWrapper<RentalDeviceDO>()
                 .eq(RentalDeviceDO::getId, id));

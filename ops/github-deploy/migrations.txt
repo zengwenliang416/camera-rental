@@ -25,5 +25,4 @@ camera-rental-server/sql/mysql/migrations/20260906_058_rental_offline_manual_ord
 camera-rental-server/sql/mysql/migrations/20260907_059_kuaidi100_address_resolution.sql
 
 camera-rental-server/sql/mysql/migrations/20260922_060_staff_warehouse_workflows.sql
-camera-rental-server/sql/mysql/migrations/20260923_061_rental_device_import_batch.sql
 camera-rental-server/sql/mysql/migrations/20260924_062_device_quantity_provenance.sql

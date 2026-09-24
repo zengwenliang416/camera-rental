@@ -1,7 +1,7 @@
 import { trustedRelease } from '@/models/rental/mobileWorkbench'
 import { openUrl } from '@/utils/url'
 
-import { STAFF_VERSION_CODE } from '@/config/staffVersion'
+import { STAFF_VERSION, STAFF_VERSION_CODE } from '@/config/staffVersion'
 
 export { STAFF_VERSION } from '@/config/staffVersion'
 const CHECK_INTERVAL = 30 * 60 * 1000
@@ -15,7 +15,14 @@ let foreground = false
 let prompting = false
 let timer: ReturnType<typeof setTimeout> | undefined
 
-function installedCode() {
+export function installedVersion() {
+  // #ifdef APP-PLUS
+  if (typeof plus !== 'undefined' && plus.runtime.version)
+    return plus.runtime.version
+  // #endif
+  return STAFF_VERSION
+}
+export function installedCode() {
   // #ifdef APP-PLUS
   if (typeof plus !== 'undefined')
     return Number(plus.runtime.versionCode) || STAFF_VERSION_CODE

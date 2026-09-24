@@ -67,7 +67,7 @@ import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { onMounted, ref } from 'vue'
 import { navigateBackPlus } from '@/utils'
 import { useDictStore } from '@/store/dict'
-import { checkStaffUpdate, STAFF_VERSION } from '@/services/staffUpdate'
+import { checkStaffUpdate, installedVersion } from '@/services/staffUpdate'
 import StaffThemeSetting from '@/components/staff-theme-setting.vue'
 
 definePage({
@@ -79,7 +79,7 @@ definePage({
 
 const toast = useToast()
 const dialog = useDialog()
-const version = ref(STAFF_VERSION) // 当前版本号
+const version = ref(installedVersion()) // 当前版本号
 const storageSize = ref('') // 本地缓存大小
 
 /** 返回上一页 */
@@ -89,10 +89,7 @@ function handleBack() {
 
 /** 获取应用版本号 */
 function getAppVersion() {
-  // #ifdef APP-PLUS
-  const appInfo = uni.getSystemInfoSync()
-  version.value = appInfo.appVersion || STAFF_VERSION
-  // #endif
+  version.value = installedVersion()
 }
 
 /** 获取本地缓存大小 */

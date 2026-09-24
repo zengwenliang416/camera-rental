@@ -44,6 +44,33 @@
         </view>
       </view>
 
+      <view class="card">
+        <view class="item">
+          <text>当前安装版本</text>
+          <text class="muted">v{{ appVersion }}（{{ appVersionCode }}）</text>
+        </view>
+        <view class="item" @click="checkUpdate">
+          <text>检查更新</text>
+          <text class="muted">{{ checkingUpdate ? '正在检查…' : updateLabel }} ›</text>
+        </view>
+        <view class="item" @click="toggleReleaseNotes">
+          <text>版本变更说明</text>
+          <text class="muted">{{ unreadRelease ? '有新说明 · ' : '' }}{{ showReleaseNotes ? '收起' : '查看' }} ›</text>
+        </view>
+        <view v-if="showReleaseNotes">
+          <view v-for="release in releaseHistory" :key="release.version" class="release-note">
+            <view class="strong">
+              v{{ release.version }}{{ release.version === appVersion ? ' · 当前安装版本' : '' }}
+            </view>
+            <view v-for="note in release.notes" :key="note" class="muted">
+              · {{ note }}
+            </view>
+          </view>
+          <view v-if="!releaseHistory.length" class="muted">
+            当前版本暂无随包说明，请检查更新。
+          </view>
+        </view>
+      </view>
       <view class="list">
         <StaffThemeSetting list />
         <view class="item" @click="handleGoSettings">
@@ -73,6 +100,9 @@ import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { checkStaffUpdate, installedCode, installedVersion } from '@/services/staffUpdate'
+import { STAFF_RELEASE_NOTES } from '@/config/staffReleaseNotes'
 import { getUserProfile } from '@/api/system/user/profile'
 import type { UserProfileVO } from '@/api/system/user/profile'
 import { LOGIN_PAGE } from '@/router/config'
@@ -89,9 +119,45 @@ definePage({
   },
 })
 
+const toast = useToast()
+const appVersion = ref(installedVersion())
+const appVersionCode = ref(installedCode())
+const unreadRelease = ref(false)
+const showReleaseNotes = ref(false)
+const checkingUpdate = ref(false)
+const updateLabel = ref('点击检查')
+const releaseHistory = computed(() => {
+  const index = STAFF_RELEASE_NOTES.findIndex(item => item.version === appVersion.value)
+  return index < 0 ? [] : STAFF_RELEASE_NOTES.slice(index)
+})
+onShow(() => {
+  appVersion.value = installedVersion()
+  appVersionCode.value = installedCode()
+  unreadRelease.value = uni.getStorageSync('jiezuda-release-notes-read') !== appVersion.value
+})
+function toggleReleaseNotes() {
+  showReleaseNotes.value = !showReleaseNotes.value
+  if (showReleaseNotes.value) {
+    uni.setStorageSync('jiezuda-release-notes-read', appVersion.value)
+    unreadRelease.value = false
+  }
+}
+async function checkUpdate() {
+  if (checkingUpdate.value)
+    return
+  checkingUpdate.value = true
+  try {
+    const result = await checkStaffUpdate()
+    updateLabel.value = result === 'current' ? '已是最新版本' : '发现新版本'
+  } catch (error) {
+    updateLabel.value = '检查失败，点击重试'
+    toast.warning(error instanceof Error ? error.message : '网络不可用，请重试')
+  } finally {
+    checkingUpdate.value = false
+  }
+}
 const userStore = useUserStore()
 const tokenStore = useTokenStore()
-const toast = useToast()
 const dialog = useDialog()
 const { userInfo, permissions } = storeToRefs(userStore)
 const userProfile = ref<UserProfileVO | null>(null)
@@ -142,6 +208,10 @@ async function handleLogout() {
 </script>
 
 <style lang="scss" scoped>
+.release-note {
+  margin: 24rpx 0;
+  line-height: 1.8;
+}
 .page {
   padding-top: var(--staff-status-bar-height, 0px);
   box-sizing: border-box;

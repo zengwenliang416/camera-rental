@@ -16,7 +16,7 @@ function boot() {
   const exports = {}
   vm.runInNewContext(source, {
     exports, Date: { now: () => now },
-    plus: { runtime: { versionCode: '106' }, os: { name: 'Android' } },
+    plus: { runtime: { versionCode: '106', version: '1.0.6' }, os: { name: 'Android' } },
     getCurrentPages: () => [{ route }],
     setTimeout: fn => { timers.set(1, fn); return 1 }, clearTimeout: id => timers.delete(id),
     uni: {
@@ -25,7 +25,7 @@ function boot() {
       showModal: options => { modalCount++; modalFail ? options.fail() : options.success({ confirm: confirmation }) },
     },
     require: name => ({
-      '@/config/staffVersion': { STAFF_VERSION_CODE: 106, STAFF_VERSION: '1.0.6' },
+      '@/config/staffVersion': { STAFF_VERSION_CODE: 900, STAFF_VERSION: '9.0.0' },
       '@/utils/url': { openUrl: url => opened.push(url) },
       '@/models/rental/mobileWorkbench': { trustedRelease: value => {
         // URL and metadata validation is separately covered by test-mobile-workbench.mjs.
@@ -41,7 +41,7 @@ function boot() {
     counts: () => [requestCount, modalCount] }
 }
 {
-  const h = boot(); h.api.scheduleUpdateReminder()
+  const h = boot(); assert.equal(h.api.installedVersion(), '1.0.6'); assert.equal(h.api.installedCode(), 106); h.api.scheduleUpdateReminder()
   const first = h.api.checkStaffUpdate(true), second = h.api.checkStaffUpdate(true)
   assert.deepEqual(h.counts(), [1, 0], 'single flight shares network request')
   h.settle(); await Promise.all([first, second])

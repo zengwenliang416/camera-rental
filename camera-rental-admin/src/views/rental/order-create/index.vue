@@ -649,8 +649,6 @@ const submit = async () => {
 }
 
 .order-sheet {
-  max-width: 880px;
-  margin: 0 auto;
   background: var(--el-bg-color);
   border: 1px solid var(--el-border-color-lighter);
   border-radius: 6px;
@@ -725,7 +723,7 @@ const submit = async () => {
 
 .field-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 360px));
   gap: 8px 20px;
 }
 

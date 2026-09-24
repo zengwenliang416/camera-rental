@@ -95,7 +95,7 @@ let callsToTasks = 0
 let failNext = false
 const taskMocks = {
   ...mocks,
-  '@dcloudio/uni-app': { onShow() {}, onHide() {} },
+  '@dcloudio/uni-app': { onLoad() {}, onShow() {}, onHide() {} },
   '@/api/rental/warehouse': { getTasks: async (queue, page) => {
     callsToTasks++
     if (failNext) { failNext = false; throw new Error('offline') }

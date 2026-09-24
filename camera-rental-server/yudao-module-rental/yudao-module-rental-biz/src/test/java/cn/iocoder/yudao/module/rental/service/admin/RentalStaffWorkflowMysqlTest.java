@@ -64,7 +64,7 @@ class RentalStaffWorkflowMysqlTest {
         runSql(Files.readString(base.resolve("sql/mysql/migrations/20260922_060_staff_warehouse_workflows.sql")));
         for(String table:List.of("rental_staff_stocktake_line","rental_staff_stocktake","rental_staff_issue","rental_staff_inspection","rental_staff_photo","rental_shipment_attempt","rental_device_lock","rental_device_assignment","rental_schedule","rental_order_item","rental_order","xianyu_order","rental_device")) db.update("DELETE FROM "+table);
         db.update("INSERT INTO rental_device(id,tenant_id,device_no,equipment_model_code,status,warehouse_code,enabled) VALUES(1,9,'TEST-1','MODEL','RENTED','A',1),(2,9,'TEST-2','MODEL','AVAILABLE','B',1)");
-        db.update("INSERT INTO rental_order(id,tenant_id,order_no,source_type,status,occupy_start_date,occupy_end_date_exclusive) VALUES(1,9,'TEST-ORDER','OFFLINE','PENDING_ALLOCATION',CURRENT_DATE(),DATE_ADD(CURRENT_DATE(),INTERVAL 1 DAY))");
+        db.update("INSERT INTO rental_order(id,tenant_id,order_no,source_type,status,occupy_start_date,occupy_end_date_exclusive) VALUES(1,9,'TEST-ORDER','OFFLINE','PENDING_ALLOCATION',?,?)",java.time.LocalDate.now(java.time.ZoneId.of("Asia/Shanghai")),java.time.LocalDate.now(java.time.ZoneId.of("Asia/Shanghai")).plusDays(1));
         db.update("INSERT INTO rental_order_item(id,tenant_id,rental_order_id,equipment_model_code,quantity) VALUES(1,9,1,'MODEL',1)");
         db.update("INSERT INTO rental_device_assignment(id,tenant_id,rental_order_id,rental_order_item_id,device_id,status) VALUES(1,9,1,1,1,'DISPATCHED')");
     }
@@ -87,6 +87,92 @@ class RentalStaffWorkflowMysqlTest {
         assertEquals(0,staffOrders.countChannel(9L,null,null,null));
     }
 
+    @Test void dailyShippingSeparatesBacklogAndExcludesFutureAndFulfilled() {
+        PageParam page=new PageParam(); page.setPageNo(1); page.setPageSize(20);
+        var today=java.time.LocalDate.now(java.time.ZoneId.of("Asia/Shanghai"));
+        db.update("DELETE FROM rental_device_assignment");
+        db.update("UPDATE rental_order SET occupy_start_date=? WHERE id=1",today);
+        assertEquals(1,tasks.page(page,"SHIP_TODAY").getTotal());
+        assertEquals("MODEL",tasks.page(page,"SHIP_TODAY").getList().get(0).getEquipmentModelCode());
+        assertEquals(1,tasks.page(page,"SHIP_TODAY").getList().get(0).getRequiredQuantity());
+        db.update("UPDATE rental_order_item SET quantity=10,quantity_source='LEGACY' WHERE id=1");
+        assertTrue(tasks.page(page,"SHIP_TODAY").getList().get(0).getQuantityNeedsReview());
+        db.update("UPDATE rental_order_item SET quantity=1,quantity_source='DEFAULT' WHERE id=1");
+        assertFalse(tasks.page(page,"SHIP_TODAY").getList().get(0).getQuantityNeedsReview());
+        db.update("UPDATE rental_order SET occupy_start_date=? WHERE id=1",today.minusDays(1));
+        assertEquals(0,tasks.page(page,"SHIP_TODAY").getTotal());
+        assertEquals(1,tasks.page(page,"SHIP_OVERDUE").getTotal());
+        assertEquals(1,tasks.page(page,"SHIP_ALL").getTotal());
+        db.update("UPDATE rental_order SET occupy_start_date=? WHERE id=1",today.plusDays(1));
+        assertEquals(0,tasks.page(page,"SHIP_ALL").getTotal());
+        db.update("UPDATE rental_order SET occupy_start_date=?,source_type='XIANYU',channel_order_id=99 WHERE id=1",today);
+        assertEquals(0,tasks.page(page,"SHIP_TODAY").getTotal(),"missing channel must not be treated as shippable");
+        db.update("INSERT INTO xianyu_order(id,tenant_id,order_status) VALUES(99,9,'12')");
+        assertEquals(1,tasks.page(page,"SHIP_TODAY").getTotal());
+        db.update("INSERT INTO xianyu_order(id,tenant_id,order_status,ship_date,preparation_status) VALUES(100,9,'12',?,'WAITING_MODEL')",today);
+        assertEquals(2,tasks.page(page,"SHIP_TODAY").getTotal());
+        assertEquals(1,tasks.page(page,"SHIP").getTotal(),"legacy APK only receives internal order rows");
+        assertNotNull(tasks.page(page,"SHIP").getList().get(0).getOrderId());
+        var review=tasks.page(page,"SHIP_TODAY").getList().stream().filter(row -> row.getOrderId()==null).findFirst().orElseThrow();
+        assertEquals(100L,review.getChannelOrderId());assertNull(review.getRequiredQuantity());
+        db.update("UPDATE xianyu_order SET ship_date=NULL WHERE id=100");
+        db.update("UPDATE xianyu_order SET refund_status=5 WHERE id=99");
+        assertEquals(0,tasks.page(page,"SHIP_TODAY").getTotal());
+        TenantContextHolder.setTenantId(10L);
+        assertEquals(0,tasks.page(page,"SHIP_ALL").getTotal());
+    }
+    @Test void orderDateRangeUsesChannelPlacementAndShanghaiAuditFallback() {
+        var from=java.time.LocalDateTime.of(2026,9,23,0,0);var until=from.plusDays(1);
+        db.update("INSERT INTO xianyu_order(id,tenant_id,order_status,order_time) VALUES(10,9,'12','2026-09-23 00:00:00'),(11,9,'12','2026-09-23 23:59:59'),(12,9,'12','2026-09-24 00:00:00'),(13,10,'12','2026-09-23 12:00:00')");
+        assertEquals(2,staffOrders.countChannel(9L,null,from,until));
+        assertEquals(2,staffOrders.selectChannelPage(9L,null,0,20,from,until).size());
+        assertEquals(3,staffOrders.countChannel(9L,null,null,null));
+        db.update("UPDATE rental_order SET channel_order_id=10,create_time='2026-09-24 00:00:00' WHERE id=1");
+        assertEquals(1,staffOrders.count(9L,"ALL",from,until),"channel placement wins over late internal creation");
+        assertEquals(1,staffOrders.selectPage(9L,"ALL",null,null,0,20,from,until).size());
+        db.update("UPDATE rental_order SET channel_order_id=NULL,create_time='2026-09-22 16:00:00' WHERE id=1");
+        assertEquals(1,staffOrders.count(9L,"ALL",from,until));
+        db.update("UPDATE rental_order SET create_time='2026-09-23 16:00:00' WHERE id=1");
+        assertEquals(0,staffOrders.count(9L,"ALL",from,until));
+    }
+    @Test void quantityMigrationOnlyRepairsUntouchedPricingCopiesAndAudits() throws Exception {
+        // Dedicated isolated MySQL schema only. Simulate legacy schema before migration.
+        db.execute("DROP TABLE IF EXISTS rental_device_quantity_correction");
+        if (db.queryForObject("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema=DATABASE() AND table_name='rental_order_item' AND column_name='quantity_source'",Integer.class)>0)
+            db.execute("ALTER TABLE rental_order_item DROP COLUMN quantity_source");
+        db.execute("CREATE TABLE IF NOT EXISTS rental_device_shipment (id bigint PRIMARY KEY,tenant_id bigint,channel_order_id bigint,deleted bit DEFAULT 0)");
+        db.update("DELETE FROM rental_device_shipment");
+        for (int id=20;id<=27;id++) {
+            db.update("INSERT INTO xianyu_order(id,tenant_id,order_status,rental_order_id,goods_quantity,pay_amount) VALUES(?,9,'12',?,10,10000)",id,id);
+            db.update("INSERT INTO rental_order(id,tenant_id,source_type,channel_order_id,status,rent_amount) VALUES(?,9,'XIANYU',?,'PENDING_ALLOCATION',10000)",id,id);
+            db.update("INSERT INTO rental_order_item(id,tenant_id,rental_order_id,quantity,rent_amount,creator,updater,create_time,update_time) VALUES(?,9,?,10,10000,'system','system','2026-09-01 00:00:00','2026-09-01 00:00:00')",id,id);
+        }
+        db.update("UPDATE rental_order_item SET updater='operator' WHERE id=21");
+        db.update("UPDATE rental_order_item SET update_time='2026-09-02 00:00:00' WHERE id=22");
+        db.update("INSERT INTO rental_device_assignment(id,tenant_id,rental_order_id,status) VALUES(30,9,23,'CANCELLED')");
+        db.update("INSERT INTO rental_device_shipment(id,tenant_id,channel_order_id) VALUES(31,9,24)");
+        db.update("UPDATE xianyu_order SET consign_time=NOW() WHERE id=25");
+        db.update("INSERT INTO rental_order_item(id,tenant_id,rental_order_id,quantity) VALUES(40,9,26,1)");
+        db.update("UPDATE rental_order_item SET tenant_id=10 WHERE id=27");
+        Path base=Path.of("").toAbsolutePath();
+        while(base!=null && !Files.exists(base.resolve("sql/mysql/migrations/20260924_062_device_quantity_provenance.sql"))) base=base.getParent();
+        assertNotNull(base);
+        try(var connection=ds.getConnection()) {
+            org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(connection,
+                new org.springframework.core.io.FileSystemResource(base.resolve("sql/mysql/migrations/20260924_062_device_quantity_provenance.sql")));
+        }
+        // Retry after successful data commit but missing deployment ledger must be safe.
+        try(var connection=ds.getConnection()) {
+            org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(connection,
+                new org.springframework.core.io.FileSystemResource(base.resolve("sql/mysql/migrations/20260924_062_device_quantity_provenance.sql")));
+        }
+        assertEquals(1,db.queryForObject("SELECT quantity FROM rental_order_item WHERE id=20",Integer.class));
+        assertEquals("DEFAULT",db.queryForObject("SELECT quantity_source FROM rental_order_item WHERE id=20",String.class));
+        assertEquals(7,db.queryForObject("SELECT COUNT(*) FROM rental_order_item WHERE id BETWEEN 21 AND 27 AND quantity=10",Integer.class));
+        assertEquals(1,db.queryForObject("SELECT COUNT(*) FROM rental_device_quantity_correction WHERE old_quantity=10 AND new_quantity=1",Integer.class));
+        assertEquals(8,db.queryForObject("SELECT COUNT(*) FROM xianyu_order WHERE id BETWEEN 20 AND 27 AND goods_quantity=10 AND pay_amount=10000",Integer.class));
+        assertEquals(8,db.queryForObject("SELECT COUNT(*) FROM rental_order_item WHERE id BETWEEN 20 AND 27 AND rent_amount=10000",Integer.class));
+    }
     @Test void receiveThenInspectUsesRealRowsAndTaskQueues() {
         PageParam page=new PageParam(); page.setPageNo(1);page.setPageSize(20);
         assertEquals(1,tasks.page(page,"RETURN").getTotal());

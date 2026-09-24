@@ -3,20 +3,48 @@
 <mapper namespace="cn.iocoder.yudao.module.rental.dal.mysql.rental.RentalStaffTaskMapper">
   <sql id="tasks">
     <choose>
-      <when test="queue == 'SHIP'">
-        SELECT ro.source_type, ro.id order_id, COALESCE(xo.external_order_id,ro.order_no) order_no,
-          NULL device_id, NULL assignment_id, NULL device_no, NULL equipment_model_code, ro.occupy_start_date due_date
+      <when test="queue == 'SHIP' or queue == 'SHIP_TODAY' or queue == 'SHIP_OVERDUE' or queue == 'SHIP_ALL'">
+        SELECT ro.source_type, ro.id order_id, xo.id channel_order_id, COALESCE(xo.external_order_id,ro.order_no) order_no,
+          NULL device_id, NULL assignment_id, NULL device_no,
+          (SELECT GROUP_CONCAT(DISTINCT i.equipment_model_code ORDER BY i.equipment_model_code SEPARATOR ' / ')
+            FROM rental_order_item i WHERE i.rental_order_id=ro.id AND i.tenant_id=ro.tenant_id AND i.deleted=0) equipment_model_code,
+          xo.goods_title, ro.preparation_status, ro.preparation_reason_code,
+          (SELECT SUM(i.quantity) FROM rental_order_item i WHERE i.rental_order_id=ro.id AND i.tenant_id=ro.tenant_id AND i.deleted=0) required_quantity,
+          EXISTS(SELECT 1 FROM rental_order_item i WHERE i.rental_order_id=ro.id AND i.tenant_id=ro.tenant_id
+            AND i.deleted=0 AND i.quantity_source='LEGACY' AND i.quantity>1) quantity_needs_review,
+          ro.occupy_start_date due_date
         FROM rental_order ro LEFT JOIN xianyu_order xo ON xo.id=ro.channel_order_id AND xo.tenant_id=ro.tenant_id AND xo.deleted=0
         WHERE ro.tenant_id=#{tenantId} AND ro.deleted=0 AND ro.status NOT IN ('CANCELED','CANCELLED','COMPLETED')
-          AND ro.occupy_start_date &lt;= #{today}
-          AND (xo.id IS NULL OR (xo.order_status='12' AND xo.consign_time IS NULL AND xo.cancel_time IS NULL))
+          <choose>
+            <when test="queue == 'SHIP_TODAY'">AND ro.occupy_start_date = #{today}</when>
+            <when test="queue == 'SHIP_OVERDUE'">AND ro.occupy_start_date &lt; #{today}</when>
+            <otherwise>AND ro.occupy_start_date &lt;= #{today}</otherwise>
+          </choose>
+          AND (ro.source_type != 'XIANYU' OR (xo.id IS NOT NULL AND xo.order_status='12' AND xo.consign_time IS NULL AND xo.cancel_time IS NULL AND COALESCE(xo.refund_status,0) != 5))
           AND EXISTS(SELECT 1 FROM rental_order_item i WHERE i.rental_order_id=ro.id AND i.tenant_id=ro.tenant_id AND i.deleted=0
             AND i.quantity &gt; (SELECT COUNT(*) FROM rental_device_assignment a WHERE a.rental_order_item_id=i.id
               AND a.tenant_id=i.tenant_id AND a.deleted=0 AND a.status IN ('DISPATCHED','DISPATCHED_PENDING_PLAN','RETURNED')))
+        <if test="queue != 'SHIP'">
+        UNION ALL
+        SELECT 'XIANYU' source_type, NULL order_id, xo.id channel_order_id, xo.external_order_id order_no,
+          NULL device_id, NULL assignment_id, NULL device_no, NULL equipment_model_code,
+          xo.goods_title, xo.preparation_status,
+          COALESCE(xo.preparation_reason_code,xo.rental_period_reason_code) preparation_reason_code,
+          NULL required_quantity, FALSE quantity_needs_review, xo.ship_date due_date
+        FROM xianyu_order xo
+        WHERE xo.tenant_id=#{tenantId} AND xo.deleted=0 AND xo.order_status='12'
+          AND xo.consign_time IS NULL AND xo.cancel_time IS NULL AND COALESCE(xo.refund_status,0) != 5
+          AND NOT EXISTS(SELECT 1 FROM rental_order ro WHERE ro.channel_order_id=xo.id AND ro.tenant_id=xo.tenant_id AND ro.deleted=0)
+          <choose>
+            <when test="queue == 'SHIP_TODAY'">AND xo.ship_date = #{today}</when>
+            <when test="queue == 'SHIP_OVERDUE'">AND xo.ship_date &lt; #{today}</when>
+            <otherwise>AND xo.ship_date &lt;= #{today}</otherwise>
+          </choose>
+        </if>
       </when>
       <otherwise>
-        SELECT ro.source_type, a.rental_order_id order_id, ro.order_no, d.id device_id, a.id assignment_id, d.device_no,
-          d.equipment_model_code, DATE_SUB(ro.occupy_end_date_exclusive, INTERVAL 1 DAY) due_date
+        SELECT ro.source_type, a.rental_order_id order_id, ro.channel_order_id, ro.order_no, d.id device_id, a.id assignment_id, d.device_no,
+          d.equipment_model_code, NULL goods_title, ro.preparation_status, ro.preparation_reason_code, NULL required_quantity, FALSE quantity_needs_review, DATE_SUB(ro.occupy_end_date_exclusive, INTERVAL 1 DAY) due_date
         FROM rental_device_assignment a
         JOIN rental_device d ON d.id=a.device_id AND d.tenant_id=a.tenant_id AND d.deleted=0
         JOIN rental_order ro ON ro.id=a.rental_order_id AND ro.tenant_id=a.tenant_id AND ro.deleted=0
@@ -42,7 +70,7 @@
     </choose>
   </sql>
   <select id="page" resultType="cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalStaffTaskRespVO">
-    SELECT * FROM (<include refid="tasks"/>) t ORDER BY due_date ASC, order_id ASC, device_id ASC LIMIT #{offset},#{limit}
+    SELECT * FROM (<include refid="tasks"/>) t ORDER BY due_date ASC, order_id ASC, channel_order_id ASC, device_id ASC LIMIT #{offset},#{limit}
   </select>
   <select id="count" resultType="long">SELECT COUNT(*) FROM (<include refid="tasks"/>) t</select>
 </mapper>

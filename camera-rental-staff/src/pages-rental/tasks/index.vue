@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { onHide, onShow } from '@dcloudio/uni-app'
-import { ref } from 'vue'
+import { onHide, onLoad, onShow } from '@dcloudio/uni-app'
+import { computed, ref } from 'vue'
+import { preparationHint } from '@/models/rental/orderSearch'
+import { businessToday } from '@/models/rental/mobileWorkbench'
 import { getTasks } from '@/api/rental/warehouse'
 import type { StaffTask, TaskQueue } from '@/api/rental/warehouse'
 import { useStaffPageStyle } from '@/hooks/useStaffPageStyle'
@@ -25,6 +27,15 @@ const tabs: Array<{
   { key: 'REPAIR', label: '维修复检', shortLabel: '维修' },
 ]
 const current = ref<TaskQueue>('SHIP')
+const shipScope = ref(0)
+const shipScopes = ['今日应发', '逾期未发', '全部到期未发']
+const requestQueue = computed<TaskQueue>(() => current.value === 'SHIP'
+  ? (['SHIP_TODAY', 'SHIP_OVERDUE', 'SHIP_ALL'] as const)[shipScope.value]
+  : current.value)
+function changeScope(event: { detail: { value: number | string } }) {
+  shipScope.value = Number(event.detail.value)
+  void load()
+}
 const rows = ref<StaffTask[]>([])
 const total = ref(0)
 const loading = ref(false)
@@ -38,10 +49,12 @@ async function load(reset = true) {
   const next = reset ? 1 : page + 1
   loading.value = true
   error.value = ''
-  if (reset)
+  if (reset) {
     rows.value = []
+    total.value = 0
+  }
   try {
-    const result = await getTasks(current.value, next)
+    const result = await getTasks(requestQueue.value, next)
     if (version !== generation)
       return
     rows.value = reset ? result.list : [...rows.value, ...result.list]
@@ -61,12 +74,16 @@ function change(queue: TaskQueue) {
 }
 function open(task: StaffTask) {
   if (current.value === 'SHIP' && task.sourceType === 'XIANYU')
-    uni.navigateTo({ url: `/pages-rental/xianyu-ship/index?rentalOrderId=${task.orderId}` })
+    uni.navigateTo({ url: `/pages-rental/xianyu-ship/index?${task.orderId ? `rentalOrderId=${task.orderId}` : `channelOrderId=${task.channelOrderId}`}` })
   else if (current.value === 'INSPECT' || current.value === 'REPAIR')
     uni.navigateTo({ url: `/pages-rental/inspection/index?deviceId=${task.deviceId}&assignmentId=${task.assignmentId}&deviceNo=${encodeURIComponent(task.deviceNo || '')}` })
   else
     uni.navigateTo({ url: `/pages-rental/orders/detail?id=${task.orderId}` })
 }
+onLoad((params) => {
+  if (tabs.some(tab => tab.key === params?.queue))
+    current.value = params?.queue as TaskQueue
+})
 onShow(() => {
   void load()
 })
@@ -89,8 +106,19 @@ const back = () => uni.navigateBack()
             </wd-button>
           </view>
         </view>
+        <picker v-if="current === 'SHIP'" :range="shipScopes" :value="shipScope" @change="changeScope">
+          <view class="workbench-title">
+            {{ shipScopes[shipScope] }} ▾
+          </view>
+        </picker>
+        <view v-if="current === 'SHIP'" class="workbench-note">
+          日期未确认的订单请到订单页查询；待核对订单需补齐资料后发货。
+        </view>
         <view class="workbench-note">
-          {{ tabs.find(tab => tab.key === current)?.label }} · 共 {{ total }} {{ current === 'SHIP' ? '单' : '台' }}
+          {{ businessToday() }} · 按北京时间更新
+        </view>
+        <view class="workbench-note">
+          {{ current === 'SHIP' ? shipScopes[shipScope] : tabs.find(tab => tab.key === current)?.label }} · 共 {{ total }} {{ current === 'SHIP' ? '单' : '台' }}
           <view v-if="current === 'RETURN' || current === 'OVERDUE'">
             回仓计划含运输与检测，不代表客户承诺寄回日。
           </view>
@@ -103,18 +131,24 @@ const back = () => uni.navigateBack()
         {{ error }}
       </view>
       <view v-if="!loading && !error && !rows.length" class="workbench-card">
-        当前没有待办
+        {{ current === 'SHIP' && shipScope === 0 ? '今天没有计划发货订单，可切换查看逾期未发。' : '当前没有待办' }}
       </view>
-      <view v-for="task in rows" :key="task.assignmentId || task.orderId" class="workbench-card">
+      <view v-for="task in rows" :key="task.assignmentId ? `assignment-${task.assignmentId}` : task.orderId ? `order-${task.orderId}` : `channel-${task.channelOrderId}`" class="workbench-card">
         <view class="workbench-title">
           {{ task.deviceNo || maskOrderId(task.orderNo) }}
         </view>
         <view class="workbench-note">
-          {{ task.equipmentModelCode || '订单发货' }} · 计划 {{ formatApiDate(task.dueDate) || '日期待确认' }}
+          {{ task.goodsTitle || task.equipmentModelCode || '设备信息待核对' }} · 计划 {{ formatApiDate(task.dueDate) || '日期待确认' }}
+        </view>
+        <view v-if="current === 'SHIP'" class="workbench-note">
+          {{ task.requiredQuantity == null ? '实际设备台数待确认' : `${task.quantityNeedsReview ? '历史台数待核对：' : '实际设备'} ${task.requiredQuantity} 台` }}
+        </view>
+        <view v-if="current === 'SHIP' && preparationHint(task, !task.orderId)" class="workbench-note">
+          {{ preparationHint(task, !task.orderId) }}
         </view>
         <view class="workbench-action-grid">
           <wd-button v-if="current === 'SHIP' ? hasAccessByCodes(['rental:xianyu:ship']) : hasAccessByCodes(['rental:device:assign'])" size="small" @click="open(task)">
-            {{ current === 'SHIP' ? task.sourceType === 'XIANYU' ? '开始发货' : '核对订单' : current === 'INSPECT' ? '开始检测' : current === 'REPAIR' ? '维修复检' : '核对订单' }}
+            {{ current === 'SHIP' ? task.sourceType === 'XIANYU' && task.orderId && task.preparationStatus === 'READY' ? '开始发货' : '核对订单' : current === 'INSPECT' ? '开始检测' : current === 'REPAIR' ? '维修复检' : '核对订单' }}
           </wd-button>
           <wd-button v-if="current === 'REPAIR'" size="small" variant="plain" @click="openPage({ url: `/pages-rental/issues/index?deviceId=${task.deviceId}&orderId=${task.orderId}` })">
             记录维修进度

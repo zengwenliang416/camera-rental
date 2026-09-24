@@ -33,7 +33,7 @@ public class RentalStaffWarehouseController {
     @ApiAccessLog(requestEnable = false, responseEnable = false)
     @GetMapping("/tasks") @PreAuthorize("@ss.hasPermission('rental:schedule:query')")
     public CommonResult<PageResult<cn.iocoder.yudao.module.rental.controller.admin.rental.vo.RentalStaffTaskRespVO>> tasks(
-            @Valid PageParam page, @RequestParam @Pattern(regexp="SHIP|RETURN|OVERDUE|INSPECT|REPAIR") String queue) {
+            @Valid PageParam page, @RequestParam @Pattern(regexp="SHIP|SHIP_TODAY|SHIP_OVERDUE|SHIP_ALL|RETURN|OVERDUE|INSPECT|REPAIR") String queue) {
         return success(tasks.page(page, queue));
     }
     private final RentalStaffIssueService issues;

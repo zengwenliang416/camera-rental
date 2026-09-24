@@ -1,4 +1,4 @@
-import type { PendingAllocationOrder, StaffChannelOrder } from '@/api/rental/order'
+import type { PendingAllocationOrder } from '@/api/rental/order'
 
 const reasons: Record<string, string> = {
   LOGISTICS_DATE_BEFORE_ORDER: '物流日期早于下单日期，请核对备注中的月份和日期',
@@ -22,7 +22,7 @@ const reasons: Record<string, string> = {
   ORDER_REFUNDED: '渠道订单已退款',
   ORDER_CLOSED: '渠道订单已关闭',
 }
-export function preparationHint(order: PendingAllocationOrder | StaffChannelOrder, channelOnly = false) {
+export function preparationHint(order: Pick<PendingAllocationOrder, 'preparationReasonCode' | 'preparationStatus' | 'conversionStatus' | 'shippingStatus'>, channelOnly = false) {
   if (order.preparationReasonCode && reasons[order.preparationReasonCode])
     return reasons[order.preparationReasonCode]
   if (order.conversionStatus === 'CONFIG_SKIPPED')

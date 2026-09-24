@@ -2,6 +2,14 @@
   <view class="page" :style="staffPageStyle">
     <scroll-view scroll-y class="content">
       <staff-header title="回仓入库" @scanner="scanDevice" />
+      <view class="card-head">
+        <wd-button size="small" variant="plain" @click="openReturnTasks('RETURN')">
+          今日回仓计划
+        </wd-button>
+        <wd-button size="small" variant="plain" @click="openReturnTasks('OVERDUE')">
+          超期核对
+        </wd-button>
+      </view>
       <scan-banner
         title="扫描设备永久码"
         subtitle="扫描设备机身永久码，完成回仓登记"
@@ -82,6 +90,10 @@ import { useStaffScanner } from '@/hooks/useStaffScanner'
 import { extractDeviceNo } from '@/utils/staffScan'
 import { deviceStatusLabel, staffError } from '@/models/rental/staffOperations'
 import { useAccess } from '@/hooks/useAccess'
+
+function openReturnTasks(queue: string) {
+  uni.navigateTo({ url: `/pages-rental/tasks/index?queue=${queue}` })
+}
 
 const staffPageStyle = useStaffPageStyle()
 definePage({

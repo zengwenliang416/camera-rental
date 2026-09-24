@@ -2,8 +2,8 @@ import { http } from '@/http/http'
 import type { PageResult } from '@/http/types'
 import type { RentalDeviceOpsResult } from './device'
 
-export type TaskQueue = 'SHIP' | 'RETURN' | 'OVERDUE' | 'INSPECT' | 'REPAIR'
-export interface StaffTask { sourceType?: string, orderId?: number, deviceId?: number, assignmentId?: number, orderNo?: string, deviceNo?: string, equipmentModelCode?: string, dueDate?: string | number[] }
+export type TaskQueue = 'SHIP' | 'SHIP_TODAY' | 'SHIP_OVERDUE' | 'SHIP_ALL' | 'RETURN' | 'OVERDUE' | 'INSPECT' | 'REPAIR'
+export interface StaffTask { quantityNeedsReview?: boolean, channelOrderId?: number, goodsTitle?: string, requiredQuantity?: number, preparationStatus?: string, preparationReasonCode?: string, sourceType?: string, orderId?: number, deviceId?: number, assignmentId?: number, orderNo?: string, deviceNo?: string, equipmentModelCode?: string, dueDate?: string | number[] }
 export interface StaffIssue { id: number, rentalOrderId?: number, deviceId?: number, title: string, note: string, status: string, ownerId?: number, revision: number }
 export interface StocktakeLine { deviceId: number, deviceNo: string, originalWarehouse?: string, expected: boolean, scanned: boolean, adjusted: boolean }
 export interface Stocktake { id: number, warehouseCode: string, status: string, lines?: StocktakeLine[] }

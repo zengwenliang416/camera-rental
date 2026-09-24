@@ -16,6 +16,12 @@
     <description>相机租赁模块业务实现</description>
 
     <dependencies>
+        <!-- Print-ready A4 pages; QR PNG rendering uses the existing ZXing dependency. -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.7</version>
+        </dependency>
         <dependency>
             <groupId>cn.iocoder.boot</groupId>
             <artifactId>yudao-module-rental-api</artifactId>

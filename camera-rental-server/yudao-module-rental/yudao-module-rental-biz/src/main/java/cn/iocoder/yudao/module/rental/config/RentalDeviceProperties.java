@@ -16,6 +16,9 @@ public class RentalDeviceProperties {
      */
     private String qrSecret = "";
 
+    /** Installed Chinese-capable font family; no font bytes or secrets in exports. */
+    private String labelFontFamily = "SansSerif";
+
     public boolean isQrSigned() {
         return StringUtils.hasText(qrSecret);
     }

@@ -151,4 +151,5 @@ public interface ErrorCodeConstants {
     ErrorCode RENTAL_DEVICE_IMPORT_INVALID = new ErrorCode(1_040_006_000, "设备导入批次无效");
     ErrorCode RENTAL_DEVICE_IMPORT_EXPIRED = new ErrorCode(1_040_006_001, "设备导入预览已过期，请重新核对");
     ErrorCode RENTAL_DEVICE_IMPORT_CHANGED = new ErrorCode(1_040_006_002, "设备信息已变化或存在冲突，请重新核对");
+    ErrorCode RENTAL_DEVICE_LABEL_UNAVAILABLE = new ErrorCode(1_040_006_003, "标签生成失败，请检查二维码签名配置及中文字体后重试");
 }

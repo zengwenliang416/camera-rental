@@ -292,6 +292,7 @@ public class RentalChannelOrderReconciliationService {
                 .sourceSkuId(trimToNull(source.getXgjSkuId()))
                 // Channel purchase units may only be used to make up the rental price.
                 .quantity(1)
+                .quantitySource("DEFAULT")
                 .rentAmount(source.getPayAmount())
                 .build();
         item.setTenantId(source.getTenantId());

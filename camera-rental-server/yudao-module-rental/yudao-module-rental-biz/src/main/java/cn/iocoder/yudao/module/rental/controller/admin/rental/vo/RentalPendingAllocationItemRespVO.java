@@ -15,6 +15,7 @@ public class RentalPendingAllocationItemRespVO {
 
     @Schema(description = "订单明细需要的设备数量")
     private Integer requiredQuantity;
+    private String quantitySource;
 
     @Schema(description = "订单明细已经分配的设备数量")
     private Integer assignedQuantity;

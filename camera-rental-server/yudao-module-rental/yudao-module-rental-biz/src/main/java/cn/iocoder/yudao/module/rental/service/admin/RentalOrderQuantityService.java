@@ -84,8 +84,9 @@ public class RentalOrderQuantityService {
             throw exception(RENTAL_DEVICE_QUANTITY_CHANGED);
         }
         Integer previous = item.getQuantity();
-        if (!Objects.equals(previous, request.getQuantity())) {
+        if (!Objects.equals(previous, request.getQuantity()) || !"CONFIRMED".equals(item.getQuantitySource())) {
             item.setQuantity(request.getQuantity());
+            item.setQuantitySource("CONFIRMED");
             itemMapper.updateById(item);
             log.info("[rental][device-quantity] tenantId={} orderId={} itemId={} from={} to={}",
                     tenantId, order.getId(), itemId, previous, request.getQuantity());

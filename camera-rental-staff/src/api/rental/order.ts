@@ -6,6 +6,7 @@ export type ApiDate = string | number[]
 
 /** 对齐 RentalPendingAllocationItemRespVO / RentalScheduleOrderItemRespVO */
 export interface RentalOrderItem {
+  quantitySource?: string
   id: number
   rentalOrderId?: number
   equipmentModelCode?: string

@@ -158,6 +158,7 @@ public class RentalManualOrderServiceImpl implements RentalManualOrderService {
                     .rentalOrderId(order.getId())
                     .equipmentModelCode(item.getModelCode().trim())
                     .quantity(item.getQuantity())
+                    .quantitySource("CONFIRMED")
                     .rentAmount(item.getRentAmount())
                     .billableStartDate(start)
                     .billableEndDate(end)

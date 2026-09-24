@@ -194,8 +194,8 @@ const followUps = computed(() => {
     kicker: '待发货',
     tag: '待发货',
     orderNo: order.externalOrderId || String(order.id),
-    title: order.goodsTitle ? `${order.goodsTitle} × ${order.goodsQuantity ?? 1}` : `闲鱼待发货 × ${order.goodsQuantity ?? 1}`,
-    subtitle: '闲鱼待发货',
+    title: order.goodsTitle || '闲鱼待发货',
+    subtitle: '渠道计价数量不代表设备台数，实际台数见订单',
     routeLabel: '',
     open: () => goShip(order.id),
   }))

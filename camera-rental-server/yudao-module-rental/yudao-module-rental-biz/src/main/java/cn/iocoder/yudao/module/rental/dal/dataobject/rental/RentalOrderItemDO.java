@@ -32,6 +32,8 @@ public class RentalOrderItemDO extends TenantBaseDO {
     private String sourceProductId;
     private String sourceSkuId;
     private Integer quantity;
+    /** LEGACY: historical unclassified quantity; DEFAULT: one device; CONFIRMED: operator specified. */
+    private String quantitySource;
     private Long rentAmount;
     private LocalDate billableStartDate;
     private LocalDate billableEndDate;

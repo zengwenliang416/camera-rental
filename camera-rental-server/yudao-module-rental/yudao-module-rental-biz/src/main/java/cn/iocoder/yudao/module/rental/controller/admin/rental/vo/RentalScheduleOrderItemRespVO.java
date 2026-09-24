@@ -14,6 +14,7 @@ public class RentalScheduleOrderItemRespVO {
     private Long rentalOrderId;
     private String equipmentModelCode;
     private Integer requiredQuantity;
+    private String quantitySource;
     private Integer assignedQuantity;
     private Integer remainingQuantity;
     private Long rentAmount;

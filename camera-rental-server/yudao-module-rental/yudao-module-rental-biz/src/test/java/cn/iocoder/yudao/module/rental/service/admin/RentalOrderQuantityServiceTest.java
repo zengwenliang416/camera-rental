@@ -94,6 +94,11 @@ class RentalOrderQuantityServiceTest {
         });
         blocked(RENTAL_DEVICE_QUANTITY_NOT_EDITABLE.getCode());
     }
+    @Test void savingSameCountRecordsExplicitConfirmation() {
+        assertEquals(28,service.update(20L,request(28,28)));
+        assertEquals("CONFIRMED",item.getQuantitySource());
+        verify(items).updateById(item);
+    }
     @Test void explicitMultipleDevicesAreAllowed() {
         assertEquals(3, service.update(20L, request(3, 28)));
     }

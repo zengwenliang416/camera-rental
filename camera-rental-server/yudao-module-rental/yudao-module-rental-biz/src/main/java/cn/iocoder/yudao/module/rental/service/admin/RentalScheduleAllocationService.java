@@ -402,6 +402,7 @@ public class RentalScheduleAllocationService {
         result.setId(item.getId());
         result.setRentalOrderId(item.getRentalOrderId());
         result.setEquipmentModelCode(item.getEquipmentModelCode());
+        result.setQuantitySource(item.getQuantitySource());
         result.setRequiredQuantity(quantity(item));
         result.setAssignedQuantity(assignments.size());
         result.setRemainingQuantity(Math.max(0, quantity(item) - assignments.size()));
@@ -483,6 +484,7 @@ public class RentalScheduleAllocationService {
         result.setId(item.getId());
         result.setRentalOrderId(item.getRentalOrderId());
         result.setEquipmentModelCode(item.getEquipmentModelCode());
+        result.setQuantitySource(item.getQuantitySource());
         result.setRequiredQuantity(quantity(item));
         result.setAssignedQuantity(activeAssignments.size());
         result.setRemainingQuantity(Math.max(0, quantity(item) - activeAssignments.size()));

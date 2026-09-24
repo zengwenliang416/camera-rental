@@ -105,6 +105,7 @@ public class RentalStaffOrderService {
                 var result = new RentalPendingAllocationItemRespVO();
                 result.setId(item.getId()); result.setRentalOrderId(item.getRentalOrderId());
                 result.setEquipmentModelCode(item.getEquipmentModelCode());
+                result.setQuantitySource(item.getQuantitySource());
                 result.setRequiredQuantity(item.getQuantity() == null ? 0 : item.getQuantity());
                 result.setAssignedQuantity(counts.getOrDefault(item.getId(), 0L).intValue());
                 result.setRemainingQuantity(Math.max(0, result.getRequiredQuantity() - result.getAssignedQuantity()));

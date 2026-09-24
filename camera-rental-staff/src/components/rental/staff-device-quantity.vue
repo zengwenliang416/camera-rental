@@ -50,6 +50,9 @@ async function save() {
 
 <template>
   <view v-if="editable" class="quantity-editor" @click.stop>
+    <view v-if="item.quantitySource === 'LEGACY'" class="hint">
+      历史设备台数尚未确认，可能沿用了渠道计价数量。请核对实际台数；单台租赁请改为 1 台。
+    </view>
     <wd-button v-if="!editing" size="small" variant="plain" @click="edit">
       修改实际台数
     </wd-button>
